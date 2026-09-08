@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Devine le poids</title>
+<style>
+  :root { --bleu:#1F4E79; --vert:#2E7D32; --rouge:#B00000; --fond:#F4F6F9; --carte:#FFFFFF; --encre:#202020; --gris:#6B7280; --jaune:#FFF2CC;
+          --u0:#6B7280; --u1:#2E86AB; --u2:#2E7D32; --u3:#E67E22; --u4:#8E44AD; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family: Calibri, "Segoe UI", system-ui, sans-serif; background:var(--fond); color:var(--encre); }
+  header { background:var(--bleu); color:#fff; padding:14px 20px; display:flex; justify-content:space-between; align-items:center; }
+  header h1 { margin:0; font-size:22px; font-weight:700; letter-spacing:.3px; }
+  header .compteur { font-size:16px; opacity:.95; }
+  main { max-width:760px; margin:0 auto; padding:18px 16px 40px; }
+
+  /* Le plateau : dix cases, un pion qui avance à chaque tour. */
+  .plateau { position:relative; display:grid; grid-template-columns:repeat(10,1fr); gap:6px; margin:6px 0 34px; padding-top:34px; }
+  .case { height:26px; border-radius:6px; background:#E3E8EF; border:2px solid #D0D7E2; font-size:12px; color:var(--gris); display:flex; align-items:center; justify-content:center; }
+  .case.bon { background:#CDEBD0; border-color:var(--vert); color:var(--vert); }
+  .case.faux { background:#F6D2D2; border-color:var(--rouge); color:var(--rouge); }
+  .case.ici { border-color:var(--bleu); }
+  .pion { position:absolute; top:0; width:10%; display:flex; justify-content:center; transition:left .35s ease; }
+  .pion svg { width:34px; height:30px; image-rendering:pixelated; }
+
+  .carte { background:var(--carte); border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,.08); padding:24px; }
+  .objet { display:flex; align-items:center; justify-content:center; gap:14px; margin:4px 0 4px; }
+  .objet svg { width:44px; height:44px; flex:none; }
+  .objet .nom { font-size:28px; font-weight:700; color:var(--bleu); }
+  .indice { text-align:center; color:var(--gris); font-size:16px; margin-bottom:18px; }
+  .choix { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .choix button { font: inherit; font-size:22px; font-weight:700; padding:18px 10px; border:2px solid #D0D7E2; border-radius:10px; background:#fff; cursor:pointer; transition: transform .05s; }
+  .choix button:hover { border-color:var(--bleu); }
+  .choix button:active { transform:scale(.98); }
+  .choix button.bon { background:#E3F4E5; border-color:var(--vert); color:var(--vert); }
+  .choix button.faux { background:#FBE7E7; border-color:var(--rouge); color:var(--rouge); }
+  .choix button[disabled] { cursor:default; }
+  .verdict { margin-top:18px; padding:14px 16px; border-radius:10px; background:var(--jaune); font-size:17px; line-height:1.45; display:none; }
+  .verdict b { color:var(--bleu); }
+
+  /* Les zéros : le poids écrit en octets, groupés par trois, chaque groupe à la couleur de son unité. */
+  .zeros { display:none; margin-top:12px; text-align:center; font-size:26px; font-weight:800; letter-spacing:1px; font-variant-numeric:tabular-nums; }
+  .zeros .g { padding:0 3px; border-bottom:4px solid; }
+  .zeros .eq { color:var(--gris); font-weight:400; font-size:20px; margin:0 8px; }
+  .zeros .lib { display:block; font-size:13px; font-weight:400; color:var(--gris); margin-top:6px; letter-spacing:0; }
+
+  .echelle { margin-top:14px; display:flex; gap:6px; }
+  .echelle span { flex:1; text-align:center; font-size:13px; padding:6px 0; border-top:4px solid #D0D7E2; color:var(--gris); }
+  .echelle span.ici { font-weight:700; }
+  .suite { margin-top:16px; text-align:right; }
+  .suite button, .fin button { font:inherit; font-size:18px; font-weight:700; padding:12px 22px; border:none; border-radius:10px; background:var(--bleu); color:#fff; cursor:pointer; }
+  .fin { text-align:center; }
+  .fin .score { font-size:52px; font-weight:800; color:var(--bleu); margin:10px 0; }
+  .fin p { font-size:18px; color:var(--gris); }
+  .fin ul { text-align:left; display:inline-block; margin:10px auto 20px; padding-left:20px; font-size:16px; }
+  footer { text-align:center; color:var(--gris); font-size:13px; margin-top:26px; }
+  @media (max-width:520px) { .objet .nom { font-size:22px; } .choix button { font-size:19px; padding:14px 8px; } .zeros { font-size:20px; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>Devine le poids</h1>
+  <div class="compteur"><span id="tour">1</span> / <span id="total">10</span> &nbsp;·&nbsp; score <span id="score">0</span></div>
+</header>
+<main>
+  <div class="plateau" id="plateau"></div>
+  <div class="carte" id="jeu">
+    <div class="objet"><span id="icone"></span><span class="nom" id="objet"></span></div>
+    <div class="indice" id="indice">Combien ça pèse ? Choisis l'ordre de grandeur.</div>
+    <div class="choix" id="choix"></div>
+    <div class="verdict" id="verdict"></div>
+    <div class="zeros" id="zeros"></div>
+    <div class="echelle" id="echelle"></div>
+    <div class="suite" id="suite" style="display:none"><button id="btn-suite">Suivant →</button></div>
+  </div>
+  <footer>Info &amp; Labo — 3e TTR — Labo 04 — M. Louviaux</footer>
+</main>
+
+<script>
+// ------------------------------------------------------------
+// Les objets : un poids vrai, dans une unité, une icône, et le pourquoi.
+// Les ordres de grandeur sont arrondis pour être retenus, pas exacts au Ko près.
+// ------------------------------------------------------------
+const UNITES = ["o", "Ko", "Mo", "Go", "To"];
+const NOMS = ["octets", "kilooctets", "mégaoctets", "gigaoctets", "téraoctets"];
+const OBJETS = [
+  { nom: "Un SMS de 160 caractères", n: 160, u: 0, ico: "message", why: "Une lettre, c'est un octet. 160 caractères, 160 octets — le SMS est la chose la plus légère que ton téléphone envoie." },
+  { nom: "Une page de texte", n: 3, u: 1, ico: "page", why: "Environ 3 000 caractères par page, donc 3 000 octets : 3 Ko. Le texte est léger." },
+  { nom: "Un e-mail sans pièce jointe", n: 10, u: 1, ico: "mail", why: "Quelques lignes plus l'adresse, la date, l'en-tête : une dizaine de Ko. C'est la pièce jointe qui pèse, jamais le message." },
+  { nom: "Une icône d'application", n: 20, u: 1, ico: "appli", why: "Une petite image de quelques dizaines de points de côté : quelques dizaines de Ko." },
+  { nom: "Un document Word de 10 pages, sans image", n: 50, u: 1, ico: "page", why: "Dix pages de texte, c'est 30 Ko de lettres ; le reste, c'est la mise en forme. 50 Ko en tout." },
+  { nom: "Une disquette des années 1990", n: 1.44, u: 2, ico: "disquette", why: "1,44 Mo : la moitié d'une photo d'aujourd'hui. Toute une génération a transporté ses devoirs là-dessus." },
+  { nom: "Une chanson en MP3 (3 minutes)", n: 3, u: 2, ico: "musique", why: "Le son compressé pèse environ 1 Mo par minute. Une chanson, 3 à 5 Mo." },
+  { nom: "Une photo prise au smartphone", n: 4, u: 2, ico: "photo", why: "Douze millions de points, chacun avec sa couleur, compressés : environ 4 Mo. Mille pages de texte." },
+  { nom: "Le texte des sept Harry Potter", n: 6, u: 2, ico: "livre", why: "Un million de mots, environ six millions de caractères : 6 Mo. Sept romans pèsent moins que deux photos." },
+  { nom: "Une minute de vidéo HD au smartphone", n: 100, u: 2, ico: "video", why: "Vingt-cinq images par seconde, soixante secondes : 100 Mo la minute. La vidéo est énorme." },
+  { nom: "Un CD audio", n: 700, u: 2, ico: "disque", why: "Environ 80 minutes de musique non compressée. Trois CD tiennent sur un DVD." },
+  { nom: "Un DVD", n: 4.7, u: 3, ico: "disque", why: "De quoi tenir un film en qualité standard — six CD, ou mille photos." },
+  { nom: "Un film en HD", n: 5, u: 3, ico: "video", why: "Une heure et demie à 100 Mo la minute, compressée davantage : environ 5 Go." },
+  { nom: "Une clé USB courante", n: 32, u: 3, ico: "usb", why: "Les clés du commerce font 16, 32 ou 64 Go. Trente-deux gigaoctets, c'est 8 000 photos." },
+  { nom: "Un jeu récent sur console", n: 60, u: 3, ico: "manette", why: "Entre 50 et 100 Go : des heures de vidéo, de sons et de décors en haute définition." },
+  { nom: "Une carte SD d'appareil photo", n: 64, u: 3, ico: "carte", why: "64 Go — et l'appareil affichera 59 Go : c'est le piège 2, le 1 000 contre le 1 024." },
+  { nom: "La mémoire d'un smartphone", n: 128, u: 3, ico: "telephone", why: "128 ou 256 Go. Le système en occupe déjà une partie avant la première photo : piège 4." },
+  { nom: "Un disque dur externe", n: 2, u: 4, ico: "disquedur", why: "Un ou deux téraoctets : 2 000 Go, soit 400 films en HD, ou 500 000 photos." }
+];
+
+// Icônes : des dessins simples, en traits, sans marque ni mascotte.
+const S = (inner) => `<svg viewBox="0 0 48 48" fill="none" stroke="#1F4E79" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">${inner}</svg>`;
+const ICONES = {
+  message:   S('<path d="M8 12h32v20H20l-8 7v-7H8z"/><path d="M15 20h18M15 26h10"/>'),
+  page:      S('<path d="M12 6h16l8 8v28H12z"/><path d="M28 6v8h8M17 22h14M17 28h14M17 34h9"/>'),
+  mail:      S('<rect x="6" y="12" width="36" height="24" rx="3"/><path d="M6 14l18 13 18-13"/>'),
+  appli:     S('<rect x="8" y="8" width="32" height="32" rx="8"/><circle cx="24" cy="24" r="7"/>'),
+  disquette: S('<path d="M8 8h26l6 6v26H8z"/><rect x="15" y="8" width="14" height="10"/><rect x="14" y="26" width="20" height="14"/>'),
+  musique:   S('<path d="M18 36V12l20-4v24"/><circle cx="13" cy="36" r="5"/><circle cx="33" cy="32" r="5"/>'),
+  photo:     S('<rect x="6" y="10" width="36" height="28" rx="3"/><circle cx="17" cy="20" r="4"/><path d="M6 34l11-10 8 8 6-6 11 10"/>'),
+  livre:     S('<path d="M8 8h14a4 4 0 0 1 4 4v28a4 4 0 0 0-4-4H8zM40 8H26a4 4 0 0 0-4 4v28a4 4 0 0 1 4-4h14z"/>'),
+  video:     S('<rect x="6" y="10" width="36" height="28" rx="3"/><path d="M6 18h36M6 30h36M14 10v28M34 10v28"/>'),
+  disque:    S('<circle cx="24" cy="24" r="18"/><circle cx="24" cy="24" r="5"/><path d="M24 6a18 18 0 0 1 12.7 5.3" stroke-dasharray="3 4"/>'),
+  usb:       S('<rect x="6" y="18" width="24" height="12" rx="2"/><rect x="30" y="20" width="12" height="8"/><path d="M34 22h4M34 26h4"/>'),
+  manette:   S('<path d="M14 14h20a10 10 0 0 1 10 10v4a6 6 0 0 1-10 4l-4-4H18l-4 4a6 6 0 0 1-10-4v-4a10 10 0 0 1 10-10z"/><path d="M15 22v6M12 25h6"/><circle cx="33" cy="23" r="1.6" fill="#1F4E79"/><circle cx="37" cy="27" r="1.6" fill="#1F4E79"/>'),
+  carte:     S('<path d="M14 6h14l8 8v28H14z"/><path d="M19 12v6M23 12v6M27 12v6"/>'),
+  telephone: S('<rect x="14" y="4" width="20" height="40" rx="4"/><path d="M21 8h6M22 38h4"/>'),
+  disquedur: S('<rect x="6" y="12" width="36" height="24" rx="3"/><circle cx="20" cy="24" r="7"/><circle cx="20" cy="24" r="1.5" fill="#1F4E79"/><path d="M32 20v8M37 20v8"/>')
+};
+
+// Le pion : un petit dinosaure en pixels, dessiné ici, à nous.
+const DINO = `<svg viewBox="0 0 12 10" shape-rendering="crispEdges">
+<rect x="1" y="4" width="3" height="2" fill="#2E7D32"/><rect x="0" y="5" width="1" height="1" fill="#2E7D32"/>
+<rect x="3" y="3" width="5" height="4" fill="#2E7D32"/><rect x="7" y="1" width="4" height="4" fill="#2E7D32"/>
+<rect x="9" y="2" width="1" height="1" fill="#FFFFFF"/><rect x="11" y="3" width="1" height="1" fill="#2E7D32"/>
+<rect x="4" y="7" width="1" height="2" fill="#2E7D32"/><rect x="6" y="7" width="1" height="2" fill="#2E7D32"/>
+<rect x="4" y="9" width="2" height="1" fill="#2E7D32"/><rect x="6" y="9" width="2" height="1" fill="#2E7D32"/>
+<rect x="5" y="2" width="1" height="1" fill="#2E7D32"/><rect x="6" y="1" width="1" height="1" fill="#2E7D32"/>
+</svg>`;
+
+const fmt = (n, u) => String(n).replace(".", ",") + " " + UNITES[u];
+const COULEUR = (u) => getComputedStyle(document.documentElement).getPropertyValue("--u" + u).trim();
+
+// Le poids écrit en octets : chaque groupe de trois chiffres prend la couleur de son unité.
+function zeros(o) {
+  const total = Math.round(o.n * Math.pow(1000, o.u));
+  const s = String(total);
+  const groupes = [];
+  for (let i = s.length; i > 0; i -= 3) groupes.unshift(s.slice(Math.max(0, i - 3), i));
+  const html = groupes.map((g, i) => {
+    const rang = groupes.length - 1 - i;           // 0 = unités, 1 = milliers (Ko), 2 = millions (Mo)…
+    return `<span class="g" style="color:${COULEUR(rang)};border-color:${COULEUR(rang)}">${g}</span>`;
+  }).join(" ");
+  const lib = o.u === 0 ? "Pas de zéros à ajouter : on est déjà en octets."
+    : `${o.u} groupe${o.u > 1 ? "s" : ""} de trois zéros — un par unité montée.`;
+  return `<span style="color:${COULEUR(o.u)}">${fmt(o.n, o.u)}</span><span class="eq">=</span>${html}<span class="eq">${NOMS[0]}</span><span class="lib">${lib}</span>`;
+}
+
+// Quatre propositions : la bonne, la même valeur une unité en dessous et au-dessus,
+// et une valeur voisine dans la bonne unité. Si l'échelle déborde, on décale.
+function propositions(o) {
+  const set = new Map();
+  set.set(fmt(o.n, o.u), true);
+  const bas = o.u > 0 ? [o.n, o.u - 1] : [o.n * 1000, o.u];
+  const haut = o.u < 4 ? [o.n, o.u + 1] : [o.n / 1000, o.u];
+  set.set(fmt(bas[0], bas[1]), false);
+  set.set(fmt(haut[0], haut[1]), false);
+  const voisin = o.n >= 10 ? [Math.round(o.n / 10), o.u] : [o.n * 100, o.u];
+  const v = fmt(voisin[0], voisin[1]);
+  if (!set.has(v)) set.set(v, false); else set.set(fmt(o.n * 10, o.u), false);
+  const arr = [...set.entries()].map(([t, ok]) => ({ t, ok }));
+  for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; }
+  return arr.slice(0, 4).some(x => x.ok) ? arr.slice(0, 4) : [arr.find(x => x.ok)].concat(arr.filter(x => !x.ok).slice(0, 3));
+}
+
+// ------------------------------------------------------------
+const TOTAL = 10;
+let tour = 0, score = 0, serie = [], rates = [], resultats = [];
+
+function melange(a) { const b = a.slice(); for (let i = b.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [b[i], b[j]] = [b[j], b[i]]; } return b; }
+
+function plateau() {
+  const p = document.getElementById("plateau");
+  p.innerHTML = "";
+  for (let i = 0; i < TOTAL; i++) {
+    const c = document.createElement("div");
+    c.className = "case" + (resultats[i] === true ? " bon" : resultats[i] === false ? " faux" : "") + (i === tour ? " ici" : "");
+    c.textContent = i + 1;
+    p.appendChild(c);
+  }
+  const pion = document.createElement("div");
+  pion.className = "pion"; pion.innerHTML = DINO;
+  pion.style.left = (Math.min(tour, TOTAL - 1) * 10) + "%";
+  p.appendChild(pion);
+}
+
+function demarrer() {
+  tour = 0; score = 0; rates = []; resultats = [];
+  serie = melange(OBJETS).slice(0, TOTAL);
+  document.getElementById("total").textContent = TOTAL;
+  document.getElementById("score").textContent = 0;
+  afficher();
+}
+
+function echelle(u) {
+  const e = document.getElementById("echelle");
+  e.innerHTML = UNITES.map((x, i) => `<span class="${i === u ? "ici" : ""}" style="border-top-color:${COULEUR(i)};${i === u ? "color:" + COULEUR(i) : ""}">${x}</span>`).join("");
+}
+
+function afficher() {
+  const o = serie[tour];
+  plateau();
+  document.getElementById("tour").textContent = tour + 1;
+  document.getElementById("icone").innerHTML = ICONES[o.ico] || "";
+  document.getElementById("objet").textContent = o.nom;
+  const c = document.getElementById("choix");
+  c.innerHTML = "";
+  propositions(o).forEach(p => {
+    const b = document.createElement("button");
+    b.textContent = p.t;
+    b.onclick = () => repondre(b, p.ok, o);
+    c.appendChild(b);
+  });
+  document.getElementById("verdict").style.display = "none";
+  document.getElementById("zeros").style.display = "none";
+  document.getElementById("suite").style.display = "none";
+  echelle(-1);
+}
+
+function repondre(btn, ok, o) {
+  [...document.getElementById("choix").children].forEach(b => {
+    b.disabled = true;
+    if (b.textContent === fmt(o.n, o.u)) b.classList.add("bon");
+  });
+  resultats[tour] = ok;
+  if (!ok) { btn.classList.add("faux"); rates.push(o); }
+  else { score++; document.getElementById("score").textContent = score; }
+  plateau();
+  const v = document.getElementById("verdict");
+  v.innerHTML = (ok ? "<b>Oui — " : "<b>Non — c'est ") + fmt(o.n, o.u) + ".</b> " + o.why;
+  v.style.display = "block";
+  const z = document.getElementById("zeros");
+  z.innerHTML = zeros(o); z.style.display = "block";
+  echelle(o.u);
+  const s = document.getElementById("suite");
+  s.style.display = "block";
+  document.getElementById("btn-suite").textContent = tour + 1 < TOTAL ? "Suivant →" : "Voir mon résultat";
+  document.getElementById("btn-suite").focus();
+}
+
+function suivant() {
+  tour++;
+  if (tour < TOTAL) { afficher(); return; }
+  plateau();
+  let record = null;
+  try {
+    record = Number(localStorage.getItem("devine-le-poids-record") || 0);
+    if (score > record) { localStorage.setItem("devine-le-poids-record", String(score)); record = score; }
+  } catch (e) { record = null; }
+  const j = document.getElementById("jeu");
+  const mot = score >= 9 ? "Tu as l'œil." : score >= 7 ? "Bien vu — les ordres de grandeur sont là." : score >= 5 ? "À moitié. Relis la table des cinq unités et rejoue." : "Rejoue : à chaque partie, les mêmes objets reviennent, et le poids finit par rester.";
+  j.innerHTML = `<div class="fin">
+    <div class="score">${score} / ${TOTAL}</div>
+    <p>${mot}${record !== null ? " &nbsp;·&nbsp; ton record sur ce poste : " + record + " / " + TOTAL : ""}</p>
+    ${rates.length ? "<p>À retenir :</p><ul>" + rates.map(o => "<li><b>" + o.nom + "</b> — " + fmt(o.n, o.u) + "</li>").join("") + "</ul>" : "<p>Aucune erreur.</p>"}
+    <button id="btn-rejouer">Rejouer</button>
+  </div>`;
+  document.getElementById("btn-rejouer").onclick = () => { location.reload(); };
+}
+
+document.getElementById("btn-suite").onclick = suivant;
+demarrer();
+</script>
+</body>
+</html>
