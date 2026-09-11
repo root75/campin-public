@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>:root{color-scheme:light dark}body{margin:0;font-family:system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Nomme l'écran</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:ital,wght@0,400;1,400&display=swap">
+
+
+</head>
+<body>
+<style>
+/* ============================================================
+   NOMME L'ÉCRAN — vocabulaire de l'interface
+   Direction : planche de manuel technique. Le papier (la page)
+   entoure la machine (la maquette), qui garde ses couleurs d'écran.
+   ============================================================ */
+
+:root{
+  --ink:#141A24;
+  --ink-2:#4A5566;
+  --ink-3:#77839A;
+  --paper:#ECEFF4;
+  --surface:#FFFFFF;
+  --surface-2:#E0E5EC;
+  --line:#C2CAD8;
+  --line-soft:#D9DFE8;
+  --accent:#B4630A;
+  --accent-2:#8A4B06;
+  --accent-soft:#FAE9D2;
+  --on-accent:#FFFFFF;
+  --ok:#15694A;
+  --ok-soft:#D6EEE3;
+  --no:#9E2A20;
+  --no-soft:#F8DEDA;
+  --shadow-1:0 1px 2px rgba(20,26,36,.07);
+  --shadow-2:0 2px 6px rgba(20,26,36,.08), 0 18px 40px -24px rgba(20,26,36,.45);
+  --r:10px;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --serif:"IBM Plex Serif",Georgia,serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ink:#E7EBF2;
+    --ink-2:#A3AEC0;
+    --ink-3:#7C889B;
+    --paper:#0F131A;
+    --surface:#171D26;
+    --surface-2:#212934;
+    --line:#333D4C;
+    --line-soft:#28313D;
+    --accent:#E8A356;
+    --accent-2:#F0BC82;
+    --accent-soft:#3A2A16;
+    --on-accent:#1B1206;
+    --ok:#5FC795;
+    --ok-soft:#132C22;
+    --no:#F08A82;
+    --no-soft:#331917;
+    --shadow-1:0 1px 2px rgba(0,0,0,.5);
+    --shadow-2:0 2px 6px rgba(0,0,0,.5), 0 18px 40px -24px rgba(0,0,0,.9);
+  }
+}
+:root[data-theme="dark"]{
+  --ink:#E7EBF2; --ink-2:#A3AEC0; --ink-3:#7C889B;
+  --paper:#0F131A; --surface:#171D26; --surface-2:#212934;
+  --line:#333D4C; --line-soft:#28313D;
+  --accent:#E8A356; --accent-2:#F0BC82; --accent-soft:#3A2A16; --on-accent:#1B1206;
+  --ok:#5FC795; --ok-soft:#132C22; --no:#F08A82; --no-soft:#331917;
+  --shadow-1:0 1px 2px rgba(0,0,0,.5);
+  --shadow-2:0 2px 6px rgba(0,0,0,.5), 0 18px 40px -24px rgba(0,0,0,.9);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:var(--sans); font-size:16px; line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1280px; margin:0 auto; padding-inline:18px; padding-block:18px 40px}
+
+/* ---------- en-tête ---------- */
+.top{
+  display:flex; flex-wrap:wrap; align-items:baseline; gap:10px 16px;
+  padding-bottom:14px; border-bottom:2px solid var(--ink); margin-bottom:18px;
+}
+.brand{font-size:clamp(24px,4.2vw,34px); font-weight:700; letter-spacing:-.02em; margin:0; text-wrap:balance}
+.brand em{font-style:normal; color:var(--accent)}
+.kicker{
+  font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--ink-3); margin-left:auto;
+}
+
+/* ---------- réglages ---------- */
+.setup{display:flex; flex-wrap:wrap; gap:14px 22px; align-items:flex-end; margin-bottom:18px}
+.field{display:flex; flex-direction:column; gap:6px; min-width:0}
+.field > span{
+  font-family:var(--mono); font-size:10.5px; letter-spacing:.13em;
+  text-transform:uppercase; color:var(--ink-3);
+}
+.seg{display:flex; gap:0; border:1px solid var(--line); border-radius:var(--r); overflow:hidden; background:var(--surface)}
+.seg button{
+  font:inherit; font-size:14px; font-weight:500; color:var(--ink-2);
+  background:transparent; border:0; border-right:1px solid var(--line-soft);
+  padding:8px 13px; cursor:pointer; white-space:nowrap;
+}
+.seg button:last-child{border-right:0}
+.seg button:hover{background:var(--surface-2); color:var(--ink)}
+.seg button[aria-pressed="true"]{background:var(--ink); color:var(--paper)}
+.seg button .lv{font-family:var(--mono); font-weight:600; letter-spacing:.02em}
+.go{
+  font:inherit; font-weight:600; font-size:15px; color:var(--on-accent);
+  background:var(--accent); border:0; border-radius:var(--r);
+  padding:10px 20px; cursor:pointer; box-shadow:var(--shadow-1);
+}
+.go:hover{background:var(--accent-2)}
+
+/* ---------- grille principale ---------- */
+.stage{display:grid; grid-template-columns:1fr; gap:20px; align-items:start}
+@media (min-width:940px){ .stage{grid-template-columns:minmax(0,1.9fr) minmax(300px,1fr)} }
+
+/* ---------- cadre de la maquette ---------- */
+.screenbox{
+  background:var(--surface); border:1px solid var(--line); border-radius:14px;
+  padding:12px; box-shadow:var(--shadow-2); min-width:0;
+}
+.screenbox h2{
+  margin:0 0 10px; font-size:12px; font-family:var(--mono); font-weight:500;
+  letter-spacing:.12em; text-transform:uppercase; color:var(--ink-3);
+  display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;
+}
+.screenbox h2 b{color:var(--ink); font-weight:600; letter-spacing:.06em}
+.mk{
+  position:relative; width:100%; aspect-ratio:16/10; min-height:300px;
+  border-radius:8px; overflow:hidden; border:1px solid var(--line);
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  font-size:clamp(8px,1.15vw,13px); color:#1c2430; user-select:none;
+}
+@media (max-width:939px){ .mk{aspect-ratio:16/11} }
+
+/* cibles cliquables */
+[data-el]{cursor:pointer}
+.mk.pick [data-el]:hover{outline:2px dashed var(--accent); outline-offset:-2px}
+.spot{
+  outline:3px solid var(--accent) !important; outline-offset:1px;
+  z-index:40; position:relative; animation:beat 1.4s ease-in-out infinite;
+  border-radius:3px;
+}
+@keyframes beat{0%,100%{box-shadow:0 0 0 0 rgba(180,99,10,.55)}50%{box-shadow:0 0 0 8px rgba(180,99,10,0)}}
+.good{outline:3px solid #15694A !important; outline-offset:1px; z-index:40; position:relative}
+.bad{outline:3px solid #9E2A20 !important; outline-offset:1px; z-index:40; position:relative; animation:shake .35s}
+@keyframes shake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+@media (prefers-reduced-motion:reduce){.spot,.bad{animation:none}}
+
+/* étiquette flottante (mode découverte) */
+.tag{
+  position:absolute; z-index:60; pointer-events:none; max-width:min(300px,80%);
+  background:var(--ink); color:var(--paper); border-radius:8px; padding:8px 11px;
+  box-shadow:var(--shadow-2); opacity:0; transform:translateY(4px); transition:opacity .12s, transform .12s;
+}
+.tag.on{opacity:1; transform:translateY(0)}
+.tag b{display:block; font-size:14px; font-weight:600; font-family:var(--sans)}
+.tag span{display:block; font-family:var(--serif); font-size:12.5px; line-height:1.4; opacity:.82; margin-top:3px}
+
+/* ============================================================
+   MAQUETTE 1 — BUREAU WINDOWS
+   ============================================================ */
+/* les maquettes occupent tout le cadre */
+.s-win,.s-br,.s-doc{position:absolute; inset:0}
+.s-win{background:linear-gradient(160deg,#1E4B78 0%,#2F7AA8 48%,#67A8B8 100%)}
+.s-icons{position:absolute; top:3%; left:2.4%; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:2% 4%; width:34%}
+.s-ic{
+  display:flex; flex-direction:column; align-items:center; gap:4px; padding:6px 3px 7px;
+  border-radius:6px; text-align:center; color:#fff; line-height:1.15;
+  text-shadow:0 1px 3px rgba(0,0,0,.6); font-size:.85em;
+}
+.s-ic:hover{background:rgba(255,255,255,.16)}
+.s-ic svg{width:2.6em; height:2.6em; display:block; filter:drop-shadow(0 2px 3px rgba(0,0,0,.35))}
+.s-bar{
+  position:absolute; left:0; right:0; bottom:0; height:11.5%;
+  background:rgba(238,242,248,.93); backdrop-filter:blur(8px);
+  border-top:1px solid rgba(0,0,0,.12);
+  display:flex; align-items:center; justify-content:center; gap:.5em; padding:0 .6em;
+}
+.s-start{
+  display:grid; grid-template-columns:repeat(2,1fr); grid-template-rows:repeat(2,1fr);
+  gap:2px; width:1.9em; height:1.9em; padding:.35em; border-radius:6px; flex:none;
+}
+.s-start i{background:#2F7AA8; border-radius:1px; display:block}
+.s-start:hover{background:rgba(0,0,0,.08)}
+.s-search{
+  display:flex; align-items:center; gap:.45em; height:1.9em; padding:0 .8em;
+  background:#fff; border:1px solid #c8d1de; border-radius:999px; color:#5b6676;
+  font-size:.9em; white-space:nowrap; overflow:hidden; max-width:26%;
+}
+.s-pin{display:flex; align-items:center; gap:.35em}
+.s-app{width:1.9em; height:1.9em; border-radius:6px; display:grid; place-items:center}
+.s-app:hover{background:rgba(0,0,0,.08)}
+.s-app svg{width:1.35em; height:1.35em}
+.s-app.act{position:relative}
+.s-app.act::after{content:""; position:absolute; bottom:1px; left:30%; right:30%; height:2px; border-radius:2px; background:#2F7AA8}
+.s-tray{display:flex; align-items:center; gap:.5em; margin-left:auto; padding:.25em .5em; border-radius:5px; color:#3b4756}
+.s-tray:hover{background:rgba(0,0,0,.07)}
+.s-tray svg{width:1.05em; height:1.05em}
+.s-clock{
+  text-align:right; line-height:1.15; font-size:.82em; color:#2a3442;
+  padding:.25em .5em; border-radius:5px; white-space:nowrap;
+}
+.s-clock:hover{background:rgba(0,0,0,.07)}
+.s-ptr{position:absolute; left:58%; top:44%; width:3.4%; min-width:14px}
+.s-glyph{position:relative; display:block; line-height:0}
+.s-glyph > svg{width:2.6em; height:2.6em}
+.s-badge{position:absolute; left:-2px; bottom:-2px; width:1.1em; height:1.1em; background:#fff; border-radius:3px; display:grid; place-items:center; box-shadow:0 1px 2px rgba(0,0,0,.4)}
+.s-badge svg{width:.8em; height:.8em}
+
+/* ============================================================
+   MAQUETTE 2 — NAVIGATEUR
+   ============================================================ */
+.s-br{background:#fff; display:flex; flex-direction:column}
+.s-tabbar{display:flex; align-items:flex-end; gap:.25em; background:#DDE3EC; padding:.5em .5em 0; flex:none}
+.s-tab{
+  display:flex; align-items:center; gap:.5em; max-width:32%; padding:.5em .7em;
+  background:#EDF1F6; border-radius:7px 7px 0 0; color:#4b5666; font-size:.88em;
+  white-space:nowrap; overflow:hidden;
+}
+.s-tab.act{background:#fff; color:#1c2430}
+.s-tab .dot{width:.9em; height:.9em; border-radius:50%; background:#4F8FD0; flex:none}
+.s-tab .x{margin-left:auto; opacity:.55; font-size:.9em}
+.s-newtab{width:1.8em; height:1.8em; margin-bottom:.35em; border-radius:5px; display:grid; place-items:center; color:#4b5666; font-size:1.1em; flex:none}
+.s-newtab:hover{background:rgba(0,0,0,.08)}
+.s-wctl{display:flex; margin-left:auto; align-self:flex-start}
+.s-wctl > div{width:2.4em; height:1.9em; display:grid; place-items:center; color:#3b4756; font-size:.85em}
+.s-wctl > div:hover{background:rgba(0,0,0,.1)}
+.s-wctl > div:last-child:hover{background:#D8382B; color:#fff}
+.s-navbar{display:flex; align-items:center; gap:.45em; padding:.5em .7em; background:#fff; border-bottom:1px solid #E4E8EF; flex:none}
+.s-nb{width:1.8em; height:1.8em; border-radius:50%; display:grid; place-items:center; color:#54606f; flex:none}
+.s-nb:hover{background:#EDF1F6}
+.s-nb svg{width:1.05em; height:1.05em}
+.s-url{
+  flex:1; min-width:0; display:flex; align-items:center; gap:.5em; height:2em; padding:0 .8em;
+  background:#F1F4F9; border-radius:999px; color:#3b4756; font-size:.88em;
+  white-space:nowrap; overflow:hidden;
+}
+.s-url b{font-weight:400; color:#8b95a3}
+.s-fav{display:flex; align-items:center; gap:1.1em; padding:.4em .9em; background:#fff; border-bottom:1px solid #E4E8EF; color:#54606f; font-size:.85em; flex:none; overflow:hidden; white-space:nowrap}
+.s-fav i{width:.9em; height:.9em; border-radius:2px; background:#9FB4CC; display:inline-block; vertical-align:-1px; margin-right:.35em}
+.s-view{flex:1; position:relative; background:#fff; overflow:hidden; display:flex}
+.s-page{flex:1; padding:1.4em 1.6em; min-width:0; color:#2a3442}
+.s-page h3{margin:0 0 .3em; font-size:1.5em; color:#1c2430}
+.s-page p{margin:.45em 0; font-size:.92em; line-height:1.5; color:#4b5666}
+.s-page .card{margin-top:.9em; padding:.7em .9em; border:1px solid #E0E5EC; border-radius:8px; background:#FAFBFD}
+.s-scroll{width:.85em; flex:none; background:#F1F4F9; position:relative}
+.s-scroll::after{content:""; position:absolute; left:15%; right:15%; top:6%; height:38%; background:#AEB9C8; border-radius:999px}
+
+/* ============================================================
+   MAQUETTE 3 — TRAITEMENT DE TEXTE
+   ============================================================ */
+.s-doc{background:#F6F8FB; display:flex; flex-direction:column}
+.s-dhead{display:flex; align-items:flex-start; gap:.7em; padding:.6em .9em .3em; background:#fff; flex:none}
+.s-dlogo{width:2.2em; height:2.6em; flex:none; margin-top:.15em}
+.s-dtitles{min-width:0; flex:1}
+.s-dtitle{font-size:1.15em; color:#1c2430; padding:.1em .25em; border-radius:4px; display:inline-block; max-width:100%; overflow:hidden; white-space:nowrap; text-overflow:ellipsis}
+.s-dtitle:hover{background:#EDF1F6}
+.s-menus{display:flex; gap:.85em; color:#4b5666; font-size:.86em; margin-top:.2em; padding:.15em .25em; border-radius:4px; flex-wrap:wrap}
+.s-save{display:flex; align-items:center; gap:.35em; color:#5b6676; font-size:.8em; padding:.25em .4em; border-radius:4px; white-space:nowrap}
+.s-save svg{width:1.1em; height:1.1em}
+.s-share{
+  display:flex; align-items:center; gap:.4em; padding:.45em .9em; border-radius:999px;
+  background:#C2E7FF; color:#0b3a5c; font-size:.85em; white-space:nowrap; flex:none; margin-left:auto;
+}
+.s-tools{
+  display:flex; align-items:center; gap:.55em; margin:.1em .9em .5em; padding:.35em .8em;
+  background:#EDF2FA; border-radius:999px; color:#3b4756; font-size:.86em; flex:none;
+  overflow:hidden; white-space:nowrap;
+}
+.s-tools .sep{width:1px; height:1.1em; background:#C6D0DE; flex:none}
+.s-zoom{padding:.15em .4em; border-radius:4px; background:#fff; border:1px solid #D5DDE8; font-size:.92em}
+.s-tools b{font-weight:700}.s-tools i{font-style:italic}.s-tools u{text-underline-offset:2px}
+.s-canvas{flex:1; position:relative; overflow:hidden; display:flex; flex-direction:column; align-items:center; padding-top:.35em}
+.s-rule{
+  width:min(74%,640px); height:1.1em; background:#fff; border:1px solid #DDE3EC; border-bottom:0;
+  position:relative; display:flex; align-items:center; flex:none;
+}
+.s-rule .zone{position:absolute; top:0; bottom:0; background:#DDE4EE}
+.s-rule .tick{position:absolute; top:38%; bottom:30%; width:1px; background:#9FAAB9}
+.s-rule .ind{position:absolute; top:1px; width:0; height:0; border-left:.35em solid transparent; border-right:.35em solid transparent; border-top:.45em solid #4b5666}
+.s-sheet{
+  width:min(74%,640px); flex:1; background:#fff; border:1px solid #DDE3EC; position:relative;
+  padding:1.5em 2.6em; overflow:hidden; color:#2a3442;
+}
+.s-margin{position:absolute; top:0; bottom:0; left:0; width:2.6em; border-right:1px dashed #C6D0DE; background:linear-gradient(90deg,rgba(210,220,235,.35),rgba(210,220,235,0))}
+.s-sheet p{margin:0 0 .55em; font-size:.92em; line-height:1.55}
+.s-sheet h4{margin:0 0 .5em; font-size:1.2em; color:#1c2430}
+.s-caret{display:inline-block; width:.5em; text-align:center; vertical-align:-.1em}
+.s-caret i{display:inline-block; width:1.5px; height:1.05em; background:#1c2430; vertical-align:-.18em; animation:blink 1.1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+@media (prefers-reduced-motion:reduce){.s-caret i{animation:none}}
+.s-dscroll{position:absolute; right:.25em; top:.35em; bottom:.35em; width:.8em; background:#E6EBF2; border-radius:999px}
+.s-dscroll::after{content:""; position:absolute; left:15%; right:15%; top:4%; height:45%; background:#AEB9C8; border-radius:999px}
+
+/* ============================================================
+   PANNEAU DE JEU
+   ============================================================ */
+.panel{
+  background:var(--surface); border:1px solid var(--line); border-radius:14px;
+  box-shadow:var(--shadow-1); overflow:hidden; min-width:0;
+}
+.panel-head{
+  display:flex; align-items:center; gap:10px; padding:11px 16px;
+  border-bottom:1px solid var(--line-soft); background:var(--surface-2);
+}
+.pill{
+  font-family:var(--mono); font-size:11px; font-weight:600; letter-spacing:.08em;
+  text-transform:uppercase; padding:3px 8px; border-radius:5px;
+  background:var(--ink); color:var(--paper);
+}
+.pill.lv{background:var(--accent); color:var(--on-accent)}
+.count{margin-left:auto; font-family:var(--mono); font-size:12.5px; color:var(--ink-2); font-variant-numeric:tabular-nums}
+.bar{height:4px; background:var(--line-soft)}
+.bar i{display:block; height:100%; background:var(--accent); transition:width .3s ease}
+.panel-body{padding:16px}
+
+.prompt{font-size:19px; line-height:1.35; margin:0 0 14px; text-wrap:balance}
+.prompt .q{font-family:var(--mono); font-size:11px; letter-spacing:.13em; text-transform:uppercase; color:var(--ink-3); display:block; margin-bottom:6px}
+.prompt strong{color:var(--accent); font-weight:600}
+
+.choices{display:grid; gap:8px; margin:0; padding:0; list-style:none}
+.choices button{
+  width:100%; text-align:left; font:inherit; font-size:15px; color:var(--ink);
+  background:var(--surface); border:1px solid var(--line); border-radius:var(--r);
+  padding:11px 13px; cursor:pointer; display:flex; gap:10px; align-items:baseline;
+}
+.choices button:hover:not(:disabled){border-color:var(--accent); background:var(--accent-soft)}
+.choices button:disabled{cursor:default; opacity:.75}
+.choices button .k{font-family:var(--mono); font-size:12px; color:var(--ink-3); flex:none}
+.choices button.pick-ok{border-color:var(--ok); background:var(--ok-soft); opacity:1}
+.choices button.pick-no{border-color:var(--no); background:var(--no-soft); opacity:1}
+
+.typerow{display:flex; gap:8px; flex-wrap:wrap}
+.typerow input{
+  flex:1; min-width:160px; font:inherit; font-family:var(--mono); font-size:15px;
+  color:var(--ink); background:var(--surface); border:1px solid var(--line);
+  border-radius:var(--r); padding:11px 13px;
+}
+.typerow input:focus{outline:2px solid var(--accent); outline-offset:1px; border-color:var(--accent)}
+.btn{
+  font:inherit; font-size:14px; font-weight:600; border-radius:var(--r); padding:11px 16px;
+  cursor:pointer; border:1px solid var(--line); background:var(--surface); color:var(--ink);
+}
+.btn:hover{background:var(--surface-2)}
+.btn.main{background:var(--ink); color:var(--paper); border-color:var(--ink)}
+.btn.main:hover{background:var(--ink-2); border-color:var(--ink-2)}
+.btn.ghost{border:0; color:var(--ink-3); font-weight:500; padding-inline:6px}
+.btn.ghost:hover{background:transparent; color:var(--accent); text-decoration:underline}
+button:focus-visible,input:focus-visible,.seg button:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+
+.verdict{margin-top:14px; border-radius:var(--r); padding:12px 14px; border:1px solid var(--line)}
+.verdict.ok{background:var(--ok-soft); border-color:var(--ok)}
+.verdict.no{background:var(--no-soft); border-color:var(--no)}
+.verdict h3{margin:0 0 4px; font-size:15px; font-weight:600}
+.verdict.ok h3{color:var(--ok)} .verdict.no h3{color:var(--no)}
+.verdict p{margin:0; font-family:var(--serif); font-size:14px; line-height:1.5; color:var(--ink-2)}
+.verdict .next{margin-top:11px}
+
+.hint{margin-top:10px; font-family:var(--mono); font-size:13px; color:var(--ink-2); letter-spacing:.12em}
+
+/* fin de manche */
+.score-big{font-size:52px; font-weight:700; line-height:1; letter-spacing:-.03em; font-variant-numeric:tabular-nums}
+.score-big small{font-size:22px; font-weight:500; color:var(--ink-3)}
+.review{list-style:none; margin:14px 0 0; padding:0; display:grid; gap:0}
+.review li{display:flex; gap:10px; align-items:baseline; padding:8px 0; border-top:1px solid var(--line-soft); font-size:14.5px}
+.review li span{font-family:var(--serif); color:var(--ink-2); font-size:13.5px}
+.review li b{font-weight:600; color:var(--no); flex:none}
+.endrow{display:flex; gap:8px; flex-wrap:wrap; margin-top:16px}
+
+/* découverte */
+.disco{font-family:var(--serif); font-size:14.5px; line-height:1.55; color:var(--ink-2); margin:0}
+.disco b{font-family:var(--sans); font-weight:600; color:var(--ink)}
+.legend{list-style:none; margin:14px 0 0; padding:0; display:grid; gap:0}
+.legend li{
+  display:grid; grid-template-columns:auto 1fr; gap:10px; align-items:baseline;
+  padding:7px 0; border-top:1px solid var(--line-soft); cursor:pointer;
+}
+.legend li:hover b{color:var(--accent)}
+.legend li .n{font-family:var(--mono); font-size:11px; color:var(--ink-3); font-variant-numeric:tabular-nums}
+.legend li b{font-weight:600; font-size:14.5px}
+.legend li em{display:block; font-family:var(--serif); font-style:normal; font-size:13px; color:var(--ink-3); margin-top:1px}
+.legend li .n.n1{color:var(--ok)} .legend li .n.n2{color:var(--accent)} .legend li .n.n3{color:var(--no)}
+
+.foot{
+  margin-top:26px; padding-top:14px; border-top:1px solid var(--line);
+  font-family:var(--serif); font-size:13.5px; line-height:1.6; color:var(--ink-3);
+  display:flex; gap:8px 26px; flex-wrap:wrap; justify-content:space-between;
+}
+.foot b{font-family:var(--sans); font-weight:600; color:var(--ink-2)}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <h1 class="brand">Nomme l'<em>écran</em></h1>
+    <p class="kicker" id="kicker">Vocabulaire de l'interface · S1 · S2 · S3</p>
+  </header>
+
+  <div class="setup">
+    <label class="field">
+      <span>Écran</span>
+      <div class="seg" id="segScene"></div>
+    </label>
+    <label class="field">
+      <span>Niveau</span>
+      <div class="seg" id="segLevel"></div>
+    </label>
+    <label class="field">
+      <span>Mode</span>
+      <div class="seg" id="segMode">
+        <button type="button" data-mode="decouverte" aria-pressed="true">Découverte</button>
+        <button type="button" data-mode="jeu" aria-pressed="false">Jeu</button>
+      </div>
+    </label>
+    <button class="go" id="btnStart" type="button">Lancer une manche</button>
+  </div>
+
+  <div class="stage">
+    <section class="screenbox">
+      <h2><b id="scName">Le bureau Windows</b><span id="scHint">Survole un élément pour lire son nom</span></h2>
+      <div class="mk" id="mk"></div>
+    </section>
+
+    <aside class="panel">
+      <div class="panel-head">
+        <span class="pill" id="pillScene">Bureau</span>
+        <span class="pill lv" id="pillLevel">S1</span>
+        <span class="count" id="count"></span>
+      </div>
+      <div class="bar"><i id="bar" style="width:0%"></i></div>
+      <div class="panel-body" id="body"></div>
+    </aside>
+  </div>
+
+  <footer class="foot">
+    <p style="margin:0"><b>Comment ça marche.</b> S1 : on donne le nom, tu cliques dessus. S2 : un élément est entouré, tu choisis son nom. S3 : tu écris le nom toi-même. Chaque manche mêle des éléments à nommer et des gestes à reconnaître.</p>
+    <p style="margin:0"><b>AR Robert Campin</b> · Formation numérique</p>
+  </footer>
+</div>
+
+<script>
+/* ==========================================================
+   DONNÉES
+   ========================================================== */
+
+const MK = {
+bureau:`
+<div class="s-win" data-el="bureau">
+  <div class="s-icons">
+    <div class="s-ic" data-el="corbeille">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M5 7h14l-1 13a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 7Z" fill="#D7E2EE" stroke="#5B6E85" stroke-width="1.2"/><path d="M3 6h18M9.5 6V4.2A1.2 1.2 0 0 1 10.7 3h2.6a1.2 1.2 0 0 1 1.2 1.2V6" stroke="#5B6E85" stroke-width="1.4" stroke-linecap="round"/><path d="M10 11v7M14 11v7" stroke="#8FA3BA" stroke-width="1.2" stroke-linecap="round"/></svg>
+      Corbeille</div>
+    <div class="s-ic" data-el="dossier">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M3 6.5A1.5 1.5 0 0 1 4.5 5h4.2l1.8 2H19a1.5 1.5 0 0 1 1.5 1.5V18a1.5 1.5 0 0 1-1.5 1.5H4.5A1.5 1.5 0 0 1 3 18V6.5Z" fill="#F0C34B" stroke="#B08A1E" stroke-width="1.1"/></svg>
+      1B Travaux</div>
+    <div class="s-ic" data-el="fichier">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M6 3h7.5L19 8.5V21H6V3Z" fill="#fff" stroke="#5B6E85" stroke-width="1.2"/><path d="M13.5 3v5.5H19" stroke="#5B6E85" stroke-width="1.2"/><path d="M8.5 12h7M8.5 15h7M8.5 18h4" stroke="#7E9ABC" stroke-width="1.2" stroke-linecap="round"/></svg>
+      Mon portrait.docx</div>
+    <div class="s-ic" data-el="raccourci">
+      <span class="s-glyph">
+        <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" fill="#4F8FD0" stroke="#2F6CA8" stroke-width="1.2"/><circle cx="12" cy="12" r="3.4" fill="#fff"/></svg>
+        <span class="s-badge"><svg viewBox="0 0 24 24" fill="none"><path d="M7 17 17 7M10 7h7v7" stroke="#2a3442" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </span>
+      Navigateur
+    </div>
+  </div>
+
+  <svg class="s-ptr" viewBox="0 0 24 32" fill="none"><path d="M2 1.5 21 17.5h-8.6l-2.6 12L2 1.5Z" fill="#fff" stroke="#1c2430" stroke-width="1.6" stroke-linejoin="round"/></svg>
+
+  <div class="s-bar" data-el="barre-taches">
+    <div class="s-start" data-el="demarrer"><i></i><i></i><i></i><i></i></div>
+    <div class="s-search" data-el="recherche">
+      <svg viewBox="0 0 24 24" fill="none" style="width:1em;height:1em;flex:none"><circle cx="11" cy="11" r="6.2" stroke="#5b6676" stroke-width="1.8"/><path d="m16 16 4.5 4.5" stroke="#5b6676" stroke-width="1.8" stroke-linecap="round"/></svg>
+      Rechercher</div>
+    <div class="s-pin" data-el="epingle">
+      <div class="s-app act"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" fill="#4F8FD0"/><circle cx="12" cy="12" r="3.4" fill="#fff"/></svg></div>
+      <div class="s-app"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="3" width="16" height="18" rx="2" fill="#4E7FD4"/><path d="M8 9h8M8 13h8M8 17h5" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></svg></div>
+      <div class="s-app"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="2" fill="#2D9B63"/><path d="M3 9h18M9 9v11" stroke="#fff" stroke-width="1.4"/></svg></div>
+    </div>
+    <div class="s-tray" data-el="systray">
+      <svg viewBox="0 0 24 24" fill="none"><path d="m7 14 5-5 5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg viewBox="0 0 24 24" fill="none"><path d="M3 9a14 14 0 0 1 18 0M6.5 12.5a9 9 0 0 1 11 0M10 16a4 4 0 0 1 4 0" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><circle cx="12" cy="19" r="1.2" fill="currentColor"/></svg>
+      <svg viewBox="0 0 24 24" fill="none"><path d="M4 9.5h3.5L12 5.5v13L7.5 14.5H4v-5Z" fill="currentColor"/><path d="M15.5 9.5a4 4 0 0 1 0 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+    </div>
+    <div class="s-clock" data-el="horloge">14:15<br>11/09/2026</div>
+  </div>
+</div>`,
+
+chrome:`
+<div class="s-br" data-el="fenetre">
+  <div class="s-tabbar">
+    <div class="s-tab act" data-el="onglet"><span class="dot"></span>Formation numérique — 1B<span class="x">✕</span></div>
+    <div class="s-tab"><span class="dot" style="background:#2D9B63"></span>Mon portrait<span class="x">✕</span></div>
+    <div class="s-newtab" data-el="nouvel-onglet">+</div>
+    <div class="s-wctl">
+      <div data-el="reduire">—</div>
+      <div data-el="agrandir">▢</div>
+      <div data-el="fermer">✕</div>
+    </div>
+  </div>
+  <div class="s-navbar">
+    <div class="s-nb" data-el="precedent"><svg viewBox="0 0 24 24" fill="none"><path d="M15 5 8 12l7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div class="s-nb"><svg viewBox="0 0 24 24" fill="none"><path d="m9 5 7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div class="s-nb" data-el="actualiser"><svg viewBox="0 0 24 24" fill="none"><path d="M20 12a8 8 0 1 1-2.6-5.9M20 4v5h-5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div class="s-url" data-el="barre-adresse">
+      <svg viewBox="0 0 24 24" fill="none" style="width:1em;height:1em;flex:none"><rect x="5" y="10" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8.5 10V7.5a3.5 3.5 0 0 1 7 0V10" stroke="currentColor" stroke-width="1.6"/></svg>
+      <span><b>https://</b>classroom.google.com/c/formation-numerique</span>
+    </div>
+    <div class="s-nb" data-el="menu-nav"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5.5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="18.5" r="1.6"/></svg></div>
+  </div>
+  <div class="s-fav" data-el="favoris"><span><i></i>Classroom</span><span><i></i>Drive</span><span><i></i>École en ligne</span><span><i></i>Agile Fingers</span></div>
+  <div class="s-view">
+    <div class="s-page" data-el="page">
+      <h3>Formation numérique — 1B</h3>
+      <p>Journal de classe · vendredi 11 septembre</p>
+      <div class="card"><b>Je prépare</b> — Mon portrait chinois, à terminer pour le prochain cours.</div>
+      <p>On le fait au cours, pas à la maison : la date dit seulement pour quand ce doit être prêt.</p>
+    </div>
+    <div class="s-scroll" data-el="ascenseur"></div>
+  </div>
+</div>`,
+
+docs:`
+<div class="s-doc" data-el="fenetre-docs">
+  <div class="s-dhead">
+    <svg class="s-dlogo" viewBox="0 0 24 30" fill="none"><path d="M2 2h13l7 7v19H2V2Z" fill="#fff" stroke="#4E7FD4" stroke-width="1.6"/><path d="M15 2v7h7" stroke="#4E7FD4" stroke-width="1.6"/><path d="M6 14h12M6 18h12M6 22h8" stroke="#7E9ABC" stroke-width="1.5" stroke-linecap="round"/></svg>
+    <div class="s-dtitles">
+      <div class="s-dtitle" data-el="titre-doc">Mon portrait chinois</div>
+      <div class="s-menus" data-el="barre-menus"><span>Fichier</span><span>Édition</span><span>Affichage</span><span>Insertion</span><span>Format</span><span>Outils</span><span>Aide</span></div>
+    </div>
+    <div class="s-save" data-el="enregistrement">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M7.5 18.5a4.5 4.5 0 0 1-.4-8.98 6 6 0 0 1 11.5 1.6A3.9 3.9 0 0 1 17.5 18.5h-10Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="m9.8 13.4 1.8 1.8 3.2-3.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Enregistré</div>
+    <div class="s-share" data-el="partager">
+      <svg viewBox="0 0 24 24" fill="none" style="width:1.05em;height:1.05em"><circle cx="12" cy="8" r="3.2" stroke="currentColor" stroke-width="1.6"/><path d="M5.5 19.5a6.5 6.5 0 0 1 13 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      Partager</div>
+  </div>
+  <div class="s-tools" data-el="barre-outils">
+    <span class="s-zoom" data-el="zoom">100 %</span>
+    <span class="sep"></span><span>Texte normal ▾</span>
+    <span class="sep"></span><span>Arial ▾</span><span>11 ▾</span>
+    <span class="sep"></span><b>G</b><i>I</i><u>S</u>
+    <span class="sep"></span><span>≡</span><span>≔</span><span>⤢</span>
+  </div>
+  <div class="s-canvas">
+    <div class="s-rule" data-el="regle">
+      <span class="zone" style="left:0;width:9%"></span>
+      <span class="zone" style="right:0;width:9%"></span>
+      <span class="tick" style="left:20%"></span><span class="tick" style="left:30%"></span>
+      <span class="tick" style="left:40%"></span><span class="tick" style="left:50%"></span>
+      <span class="tick" style="left:60%"></span><span class="tick" style="left:70%"></span>
+      <span class="tick" style="left:80%"></span>
+      <span class="ind" style="left:8%"></span><span class="ind" style="left:90%"></span>
+    </div>
+    <div class="s-sheet" data-el="page-doc">
+      <div class="s-margin" data-el="marge"></div>
+      <h4>Mon portrait chinois</h4>
+      <p>Si j'étais un animal, je serais un héron : il attend longtemps, puis il ne rate pas.</p>
+      <p>Si j'étais une couleur, je serais le bleu du soir, celui d'avant la nuit.</p>
+      <p>Si j'étais un son, je serais<span class="s-caret" data-el="curseur"><i></i></span></p>
+    </div>
+    <div class="s-dscroll" data-el="ascenseur-doc"></div>
+  </div>
+</div>`
+};
+
+const SCENES = [
+ {id:'bureau', court:'Bureau',  nom:"Le bureau Windows"},
+ {id:'chrome', court:'Chrome',  nom:"Le navigateur (Chrome)"},
+ {id:'docs',   court:'Docs',    nom:"Le traitement de texte (Google Docs)"}
+];
+
+/* n = niveau d'apparition (1 = dès S1) */
+const ITEMS = {
+bureau:[
+ {el:'bureau', nom:"le bureau", n:1, alt:["fond d ecran","le fond d ecran"], def:"La grande zone où sont posées les icônes. C'est l'écran d'accueil de Windows."},
+ {el:'fichier', nom:"un fichier", n:1, alt:["fichier","document"], def:"Un document enregistré. Le petit dessin qui le représente s'appelle une icône ; un double-clic l'ouvre."},
+ {el:'dossier', nom:"un dossier", n:1, alt:["repertoire"], def:"Une boîte qui contient des fichiers. On y range, on n'y écrit pas."},
+ {el:'corbeille', nom:"la corbeille", n:1, alt:[], def:"Là où vont les fichiers supprimés. Tant qu'elle n'est pas vidée, on peut encore les récupérer."},
+ {el:'demarrer', nom:"le bouton Démarrer", n:1, alt:["bouton demarrer","menu demarrer","bouton windows"], def:"Il ouvre le menu Démarrer et donne accès à tous les programmes. La touche Windows fait la même chose."},
+ {el:'barre-taches', nom:"la barre des tâches", n:1, alt:["barre de taches","barre du bas"], def:"La bande en bas de l'écran : bouton Démarrer, recherche, programmes épinglés, heure."},
+ {el:'horloge', nom:"l'horloge", n:1, alt:["heure","date et heure"], def:"L'heure et la date, tout à droite de la barre des tâches."},
+ {el:'recherche', nom:"la barre de recherche", n:2, alt:["recherche","champ de recherche"], def:"On y tape le nom d'un programme ou d'un fichier pour le retrouver sans le chercher des yeux."},
+ {el:'epingle', nom:"les applications épinglées", n:2, alt:["application epinglee","applications epinglees","programme epingle","icones epinglees"], def:"Des programmes accrochés à la barre des tâches : un seul clic suffit pour les ouvrir. Le trait sous l'icône signale que le programme est déjà ouvert."},
+ {el:'systray', nom:"la zone de notification", n:2, alt:["systray","zone des notifications","barre d etat systeme"], def:"À droite de la barre des tâches : réseau, son, batterie. On l'appelle aussi le systray."},
+ {el:'raccourci', nom:"un raccourci", n:3, alt:["raccourci vers un programme"], def:"Une icône qui pointe vers un programme rangé ailleurs. La petite flèche en bas à gauche le signale : supprimer le raccourci ne supprime pas le programme."},
+ {el:'pointeur', nom:"le pointeur de la souris", n:3, alt:["pointeur","curseur de la souris","fleche de la souris"], def:"La flèche que la souris déplace. À ne pas confondre avec le curseur, qui clignote dans un texte."}
+],
+chrome:[
+ {el:'fenetre', nom:"la fenêtre", n:1, alt:["fenetre du navigateur"], def:"Le cadre entier du programme. On peut la réduire, l'agrandir, la fermer, ou en ouvrir plusieurs côte à côte."},
+ {el:'onglet', nom:"un onglet", n:1, alt:["onglet actif"], def:"Une page ouverte dans la même fenêtre. Plusieurs onglets, une seule fenêtre : c'est ce qui évite d'encombrer le bureau."},
+ {el:'barre-adresse', nom:"la barre d'adresse", n:1, alt:["barre d url","adresse","url","barre d adresses"], def:"On y lit et on y tape l'adresse du site. Le cadenas dit que la connexion est sécurisée."},
+ {el:'fermer', nom:"le bouton Fermer", n:1, alt:["fermer","croix","bouton fermer la fenetre"], def:"La croix en haut à droite ferme toute la fenêtre, donc tous ses onglets."},
+ {el:'precedent', nom:"le bouton Précédent", n:1, alt:["precedent","retour","bouton retour","fleche retour"], def:"Il revient à la page vue juste avant. Le réflexe à avoir avant de retaper une adresse."},
+ {el:'page', nom:"la page web", n:2, alt:["page","contenu de la page","zone d affichage"], def:"Le contenu du site lui-même. Tout ce qui l'entoure appartient au navigateur, pas au site."},
+ {el:'actualiser', nom:"le bouton Actualiser", n:2, alt:["actualiser","recharger","rafraichir"], def:"Il recharge la page pour en obtenir la dernière version. Utile quand un travail vient d'être ajouté."},
+ {el:'nouvel-onglet', nom:"le bouton Nouvel onglet", n:2, alt:["nouvel onglet","bouton plus","ajouter un onglet"], def:"Il ouvre un onglet vide. Au clavier : Ctrl + T."},
+ {el:'ascenseur', nom:"l'ascenseur", n:2, alt:["barre de defilement","ascenseur vertical","defilement"], def:"La barre verticale qui montre où on se trouve dans la page et permet de la faire défiler."},
+ {el:'favoris', nom:"la barre de favoris", n:2, alt:["favoris","barre des favoris","marque pages","signets"], def:"Les sites mis de côté pour y revenir en un clic, sans retaper l'adresse."},
+ {el:'reduire', nom:"le bouton Réduire", n:3, alt:["reduire","minimiser"], def:"Il range la fenêtre dans la barre des tâches sans fermer le programme."},
+ {el:'agrandir', nom:"le bouton Agrandir", n:3, alt:["agrandir","maximiser","plein ecran"], def:"Il fait occuper tout l'écran à la fenêtre, ou lui rend sa taille précédente."},
+ {el:'menu-nav', nom:"le menu du navigateur", n:3, alt:["menu","trois points","menu trois points","parametres"], def:"Les trois points ouvrent les réglages, l'historique, l'impression et les téléchargements."}
+],
+docs:[
+ {el:'titre-doc', nom:"le titre du document", n:1, alt:["titre","nom du document","nom du fichier"], def:"Un clic dessus permet de le renommer. Il n'y a pas de bouton Enregistrer : le nom, c'est ici qu'il se donne."},
+ {el:'barre-menus', nom:"la barre de menus", n:1, alt:["menus","barre des menus","menu fichier"], def:"Fichier, Édition, Affichage, Insertion, Format, Outils. Tout ce que le logiciel sait faire est rangé là."},
+ {el:'barre-outils', nom:"la barre d'outils", n:1, alt:["outils","barre des outils"], def:"Les boutons les plus utilisés, sortis des menus pour aller plus vite : police, taille, gras, italique, alignement."},
+ {el:'regle', nom:"la règle", n:1, alt:["regle horizontale"], def:"Elle montre la largeur du texte et porte les marqueurs de marge et de retrait."},
+ {el:'page-doc', nom:"la page", n:1, alt:["feuille","zone de texte","document"], def:"La feuille blanche où le texte s'écrit, aux dimensions de la page imprimée."},
+ {el:'curseur', nom:"le curseur", n:2, alt:["point d insertion","curseur de texte","barre clignotante"], def:"Le trait qui clignote : il dit où la prochaine lettre s'écrira. Ce n'est pas le pointeur de la souris."},
+ {el:'partager', nom:"le bouton Partager", n:2, alt:["partager"], def:"Il donne l'accès du document à quelqu'un d'autre, en lecture ou en modification."},
+ {el:'marge', nom:"la marge", n:2, alt:["marge de gauche","marges"], def:"L'espace blanc entre le bord de la feuille et le texte. Rien ne s'y écrit."},
+ {el:'ascenseur-doc', nom:"l'ascenseur", n:2, alt:["barre de defilement","defilement"], def:"La barre verticale qui fait défiler le document."},
+ {el:'enregistrement', nom:"l'enregistrement automatique", n:3, alt:["enregistrement","enregistre","sauvegarde automatique","enregistrement auto"], def:"Le document est enregistré dans Drive à chaque frappe. Il n'y a donc rien à sauvegarder à la main."},
+ {el:'zoom', nom:"le zoom", n:3, alt:["zoom 100"], def:"Il grossit l'affichage sans changer la taille réelle du texte imprimé."}
+]};
+
+/* gestes : QCM, bonne réponse toujours en position 0 avant mélange */
+const GESTES = {
+bureau:[
+ {n:1, q:"Quel geste ouvre un fichier depuis son icône sur le bureau ?", r:["Un double-clic","Un clic simple","Un clic droit","Un glisser-déposer"], def:"Un clic simple sélectionne, un double-clic ouvre."},
+ {n:1, q:"Quelle touche du clavier ouvre le menu Démarrer ?", r:["La touche Windows","La touche Échap","La touche Tab","La touche Verr. Maj"], def:"La touche Windows, entre Ctrl et Alt, remplace le clic sur le bouton Démarrer."},
+ {n:2, q:"Comment renommer un fichier ?", r:["Clic droit ▸ Renommer, ou la touche F2","Double-clic sur le fichier","Le glisser sur le bureau","Le supprimer et le recréer"], def:"Clic droit ▸ Renommer, ou la touche F2 quand le fichier est sélectionné. On ne change que le nom, pas l'extension."},
+ {n:2, q:"Quel geste fait apparaître un menu contextuel ?", r:["Le clic droit","Le double-clic","Le clic molette","Le survol"], def:"Le clic droit ouvre le menu des actions possibles sur l'élément visé."},
+ {n:3, q:"Comment ranger un fichier dans un dossier ?", r:["Le glisser-déposer sur le dossier","Double-cliquer sur le dossier","Le renommer avec le nom du dossier","Clic droit ▸ Actualiser"], def:"On clique sans lâcher, on déplace, on lâche sur le dossier : c'est le glisser-déposer."},
+ {n:3, q:"Que se passe-t-il si on supprime un raccourci ?", r:["Le programme reste installé","Le programme est désinstallé","Tous ses fichiers disparaissent","Windows redémarre"], def:"Le raccourci n'est qu'un panneau indicateur : le supprimer n'efface pas ce qu'il désigne."}
+],
+chrome:[
+ {n:1, q:"Comment fermer un seul onglet sans fermer la fenêtre ?", r:["Cliquer sur la croix de l'onglet","Cliquer sur la croix en haut à droite","Cliquer sur le bouton Précédent","Appuyer sur Échap"], def:"La croix de la fenêtre ferme tout ; celle de l'onglet ne ferme que cette page."},
+ {n:1, q:"Où faut-il taper l'adresse d'un site ?", r:["Dans la barre d'adresse","Dans la barre de favoris","Dans la barre des tâches","Dans la page elle-même"], def:"La barre d'adresse est la seule qui accepte une adresse (une URL)."},
+ {n:2, q:"La page semble figée et un travail vient d'être ajouté. Que fait-on ?", r:["On clique sur Actualiser","On ferme le navigateur","On clique sur Précédent","On change d'onglet"], def:"Actualiser recharge la page et affiche sa dernière version."},
+ {n:2, q:"Combien de pages peut contenir une seule fenêtre ?", r:["Autant qu'il y a d'onglets","Une seule","Deux au maximum","Aucune"], def:"Une fenêtre, plusieurs onglets : c'est tout l'intérêt des onglets."},
+ {n:3, q:"Quel raccourci clavier ouvre un nouvel onglet ?", r:["Ctrl + T","Ctrl + N","Ctrl + S","Ctrl + P"], def:"Ctrl + T pour un onglet (tab), Ctrl + N pour une nouvelle fenêtre."},
+ {n:3, q:"Un site mis en favori, à quoi ça sert ?", r:["Y revenir sans retaper l'adresse","Le rendre plus rapide","L'enregistrer sur l'ordinateur","Le partager automatiquement"], def:"Le favori garde l'adresse à ta place."}
+],
+docs:[
+ {n:1, q:"Comment renommer un document dans Google Docs ?", r:["Cliquer sur son titre en haut à gauche","Fichier ▸ Enregistrer sous","Clic droit sur la page","Il faut le retélécharger"], def:"Un clic sur le titre suffit : on efface, on écrit le nouveau nom, on valide par Entrée."},
+ {n:1, q:"Où faut-il cliquer pour enregistrer son travail ?", r:["Nulle part : l'enregistrement est automatique","Sur le bouton Enregistrer","Sur Fichier ▸ Quitter","Sur le bouton Partager"], def:"Tout est enregistré dans Drive à mesure qu'on écrit. Le message « Enregistré » le confirme."},
+ {n:2, q:"Où trouve-t-on le bouton pour mettre un mot en gras ?", r:["Dans la barre d'outils","Dans la barre de menus","Sur la règle","Dans la marge"], def:"La barre d'outils sort des menus les commandes les plus fréquentes."},
+ {n:2, q:"Quel élément indique où la prochaine lettre s'écrira ?", r:["Le curseur qui clignote","Le pointeur de la souris","La règle","La marge"], def:"Le pointeur suit la souris ; le curseur, lui, reste dans le texte."},
+ {n:3, q:"Que change le zoom affiché à 100 % ?", r:["La taille à l'écran seulement","La taille du texte imprimé","La taille de la feuille","Le nombre de pages"], def:"Le zoom ne touche qu'à l'affichage : le document imprimé reste identique."},
+ {n:3, q:"Une touche Entrée au milieu d'un paragraphe, est-ce correct ?", r:["Non : on tape au kilomètre, le texte va à la ligne tout seul","Oui, pour aérer le texte","Oui, en fin de chaque ligne","Seulement dans les titres"], def:"Entrée sert à changer de paragraphe, pas à changer de ligne : sinon la mise en page se casse au moindre changement."}
+]};
+
+/* ==========================================================
+   ÉTAT + OUTILS
+   ========================================================== */
+const $ = s => document.querySelector(s);
+const mk = $('#mk'), body = $('#body');
+let S = {scene:'bureau', level:1, mode:'decouverte', round:[], i:0, score:0, misses:[], locked:false};
+
+const strip = s => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+const norm = s => strip(s).replace(/[^a-z0-9]+/g,' ')
+  .replace(/\b(le|la|les|l|un|une|des|du|de|d|au|aux)\b/g,' ')
+  .replace(/\s+/g,' ').trim();
+const shuffle = a => {const b=a.slice(); for(let i=b.length-1;i>0;i--){const j=Math.random()*(i+1)|0; [b[i],b[j]]=[b[j],b[i]];} return b;};
+const items = (sc,lv) => ITEMS[sc].filter(x=>x.n<=lv);
+const esc = s => s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+function clearMarks(){ mk.querySelectorAll('.spot,.good,.bad').forEach(e=>e.classList.remove('spot','good','bad')); }
+function node(el){ return mk.querySelector('[data-el="'+el+'"]'); }
+
+/* ==========================================================
+   RÉGLAGES (onglets)
+   ========================================================== */
+$('#segScene').innerHTML = SCENES.map(s=>
+  `<button type="button" data-scene="${s.id}" aria-pressed="${s.id===S.scene}">${s.court}</button>`).join('');
+$('#segLevel').innerHTML = [1,2,3].map(n=>
+  `<button type="button" data-level="${n}" aria-pressed="${n===1}"><span class="lv">S${n}</span></button>`).join('');
+
+function press(seg, attr, val){
+  seg.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed', String(b.dataset[attr]===String(val))));
+}
+$('#segScene').addEventListener('click', e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  S.scene=b.dataset.scene; press($('#segScene'),'scene',S.scene); drawScene(); render();
+});
+$('#segLevel').addEventListener('click', e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  S.level=+b.dataset.level; press($('#segLevel'),'level',S.level); render();
+});
+$('#segMode').addEventListener('click', e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  S.mode=b.dataset.mode; press($('#segMode'),'mode',S.mode);
+  if(S.mode==='jeu') startRound(); else render();
+});
+$('#btnStart').addEventListener('click', ()=>{
+  S.mode='jeu'; press($('#segMode'),'mode','jeu'); startRound();
+});
+
+/* ==========================================================
+   MAQUETTE
+   ========================================================== */
+function drawScene(){
+  mk.innerHTML = MK[S.scene] + '<div class="tag" id="tag"></div>';
+  $('#scName').textContent = SCENES.find(s=>s.id===S.scene).nom;
+  $('#pillScene').textContent = SCENES.find(s=>s.id===S.scene).court;
+}
+
+mk.addEventListener('click', e=>{
+  const t = e.target.closest('[data-el]'); if(!t) return;
+  if(S.mode==='decouverte'){ showTag(t); return; }
+  onPick(t.dataset.el, t);
+});
+mk.addEventListener('mousemove', e=>{
+  if(S.mode!=='decouverte') return;
+  const t = e.target.closest('[data-el]');
+  if(t) showTag(t, e); else hideTag();
+});
+mk.addEventListener('mouseleave', hideTag);
+
+function showTag(t, ev){
+  const it = ITEMS[S.scene].find(x=>x.el===t.dataset.el); if(!it) return;
+  const tag = $('#tag'); if(!tag) return;
+  tag.innerHTML = `<b>${esc(it.nom)}</b><span>${esc(it.def)}</span>`;
+  const r = mk.getBoundingClientRect(), b = t.getBoundingClientRect();
+  let x = (ev ? ev.clientX - r.left : b.left - r.left + b.width/2) + 14;
+  let y = (ev ? ev.clientY - r.top  : b.top  - r.top  + b.height) + 14;
+  tag.classList.add('on');
+  const tw = tag.offsetWidth, th = tag.offsetHeight;
+  if(x + tw > r.width - 8) x = Math.max(8, r.width - tw - 8);
+  if(y + th > r.height - 8) y = Math.max(8, y - th - 28);
+  tag.style.left = x+'px'; tag.style.top = y+'px';
+  clearMarks(); t.classList.add('spot');
+}
+function hideTag(){ const t=$('#tag'); if(t) t.classList.remove('on'); clearMarks(); }
+
+/* ==========================================================
+   MANCHE
+   ========================================================== */
+function startRound(){
+  const list = items(S.scene, S.level);
+  const ges  = GESTES[S.scene].filter(g=>g.n<=S.level);
+  const nGes = Math.min(3, ges.length);
+  const nEl  = Math.min(list.length, 10 - nGes);
+  const qs = [];
+  shuffle(list).slice(0,nEl).forEach((it,k)=>{
+    let type = 'montrer';
+    if(S.level===2) type = (k%2===0) ? 'qcm' : 'montrer';
+    if(S.level===3) type = 'ecrire';
+    qs.push({kind:'el', type, it});
+  });
+  shuffle(ges).slice(0,nGes).forEach(g=>qs.push({kind:'geste', g}));
+  S.round = shuffle(qs); S.i=0; S.score=0; S.misses=[]; S.locked=false;
+  drawScene(); render();
+}
+
+function render(){
+  $('#pillLevel').textContent = 'S'+S.level;
+  $('#pillScene').textContent = SCENES.find(s=>s.id===S.scene).court;
+  clearMarks();
+
+  if(S.mode==='decouverte'){
+    $('#scHint').textContent = 'Survole un élément pour lire son nom';
+    $('#count').textContent = items(S.scene,S.level).length + ' éléments';
+    $('#bar').style.width = '0%';
+    mk.classList.remove('pick');
+    const lg = items(S.scene,S.level).map((it,k)=>
+      `<li data-go="${it.el}"><span class="n n${it.n}">S${it.n}</span><div><b>${esc(it.nom)}</b><em>${esc(it.def)}</em></div></li>`).join('');
+    body.innerHTML = `<p class="disco"><b>Mode découverte.</b> Promène la souris sur l'écran : chaque élément donne son nom et ce qu'il fait. Quand tu les reconnais, passe en <b>Jeu</b>.</p>
+      <ul class="legend">${lg}</ul>`;
+    body.querySelectorAll('[data-go]').forEach(li=>{
+      li.addEventListener('mouseenter',()=>{const n=node(li.dataset.go); if(n){clearMarks(); n.classList.add('spot');}});
+      li.addEventListener('mouseleave',clearMarks);
+      li.addEventListener('click',()=>{const n=node(li.dataset.go); if(n) showTag(n);});
+    });
+    return;
+  }
+
+  if(S.i >= S.round.length){ return renderEnd(); }
+
+  mk.classList.add('pick');
+  const q = S.round[S.i];
+  $('#count').textContent = (S.i+1)+' / '+S.round.length+' · '+S.score+' pt';
+  $('#bar').style.width = (S.i/S.round.length*100)+'%';
+  $('#scHint').textContent = q.kind==='el' && q.type==='montrer' ? 'Clique dans l\'écran' : 'Regarde l\'élément entouré';
+
+  if(q.kind==='geste'){
+    const opts = shuffle(q.g.r.map((t,idx)=>({t, ok:idx===0})));
+    body.innerHTML = `<p class="prompt"><span class="q">Le bon geste</span>${esc(q.g.q)}</p>
+      <div class="choices" id="ch">${opts.map((o,k)=>
+        `<button type="button" data-ok="${o.ok}"><span class="k">${'ABCD'[k]}</span>${esc(o.t)}</button>`).join('')}</div>`;
+    body.querySelector('#ch').addEventListener('click', e=>{
+      const b=e.target.closest('button'); if(!b||S.locked) return;
+      S.locked=true;
+      const ok = b.dataset.ok==='true';
+      body.querySelectorAll('#ch button').forEach(x=>{x.disabled=true; if(x.dataset.ok==='true') x.classList.add('pick-ok');});
+      if(!ok) b.classList.add('pick-no');
+      settle(ok, q.g.r[0], q.g.def);
+    });
+    return;
+  }
+
+  const it = q.it;
+  if(q.type==='montrer'){
+    body.innerHTML = `<p class="prompt"><span class="q">Montre-moi</span>Clique sur <strong>${esc(it.nom)}</strong> dans l'écran.</p>
+      <p class="disco" style="font-size:13.5px">Survole l'écran : les zones cliquables se signalent.</p>`;
+  } else if(q.type==='qcm'){
+    const wrong = shuffle(ITEMS[S.scene].filter(x=>x.el!==it.el)).slice(0,3);
+    const opts = shuffle([{t:it.nom, ok:true}, ...wrong.map(w=>({t:w.nom, ok:false}))]);
+    node(it.el)?.classList.add('spot');
+    body.innerHTML = `<p class="prompt"><span class="q">Comment ça s'appelle</span>L'élément entouré en orange, c'est…</p>
+      <div class="choices" id="ch">${opts.map((o,k)=>
+        `<button type="button" data-ok="${o.ok}"><span class="k">${'ABCD'[k]}</span>${esc(o.t)}</button>`).join('')}</div>`;
+    body.querySelector('#ch').addEventListener('click', e=>{
+      const b=e.target.closest('button'); if(!b||S.locked) return;
+      S.locked=true;
+      const ok = b.dataset.ok==='true';
+      body.querySelectorAll('#ch button').forEach(x=>{x.disabled=true; if(x.dataset.ok==='true') x.classList.add('pick-ok');});
+      if(!ok) b.classList.add('pick-no');
+      markNode(it.el, ok); settle(ok, it.nom, it.def, it);
+    });
+  } else {
+    node(it.el)?.classList.add('spot');
+    body.innerHTML = `<p class="prompt"><span class="q">Écris son nom</span>Comment s'appelle l'élément entouré en orange ?</p>
+      <div class="typerow">
+        <input id="ans" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="ton mot ici…" aria-label="Nom de l'élément">
+        <button class="btn main" id="val" type="button">Valider</button>
+      </div>
+      <div class="hint" id="hint"></div>
+      <button class="btn ghost" id="giveup" type="button" style="margin-top:8px">Je ne trouve pas</button>`;
+    const input = body.querySelector('#ans'); input.focus();
+    const check = () => {
+      if(S.locked) return;
+      const v = norm(input.value);
+      if(!v) return;
+      const all = [it.nom, ...(it.alt||[])].map(norm);
+      const ok = all.includes(v);
+      if(!ok && !input.dataset.tried){
+        input.dataset.tried = '1';
+        const n = it.nom.replace(/^(le |la |les |l'|un |une )/,'');
+        body.querySelector('#hint').textContent = 'Presque. Indice : ' + n[0].toUpperCase() + ' · ' + n.replace(/[^a-zà-ÿ]/gi,'').length + ' lettres';
+        input.select(); return;
+      }
+      S.locked = true; markNode(it.el, ok); settle(ok, it.nom, it.def, it);
+    };
+    body.querySelector('#val').addEventListener('click', check);
+    input.addEventListener('keydown', e=>{ if(e.key==='Enter') check(); });
+    body.querySelector('#giveup').addEventListener('click', ()=>{
+      if(S.locked) return; S.locked=true; markNode(it.el,false); settle(false, it.nom, it.def, it);
+    });
+  }
+}
+
+function markNode(el, ok){ clearMarks(); node(el)?.classList.add(ok?'good':'bad'); }
+
+/* clic dans la maquette pendant une question « montrer » */
+function onPick(el, target){
+  const q = S.round[S.i]; if(!q || S.locked || q.kind!=='el' || q.type!=='montrer') return;
+  S.locked = true;
+  const ok = el === q.it.el;
+  clearMarks();
+  target.classList.add(ok?'good':'bad');
+  if(!ok) node(q.it.el)?.classList.add('spot');
+  settle(ok, q.it.nom, q.it.def, q.it);
+}
+
+function settle(ok, bonne, def, it){
+  if(ok) S.score++;
+  else if(it) S.misses.push(it);
+  else S.misses.push({nom:bonne, def});
+  const v = document.createElement('div');
+  v.className = 'verdict ' + (ok?'ok':'no');
+  v.innerHTML = `<h3>${ok?'Exact.':'Raté — c\'est ' + esc(bonne) + '.'}</h3><p>${esc(def)}</p>
+    <div class="next"><button class="btn main" id="nx" type="button">${S.i+1>=S.round.length?'Voir le résultat':'Question suivante'}</button></div>`;
+  body.appendChild(v);
+  v.querySelector('#nx').focus();
+  v.querySelector('#nx').addEventListener('click', ()=>{ S.i++; S.locked=false; render(); });
+}
+
+function renderEnd(){
+  mk.classList.remove('pick'); clearMarks();
+  $('#bar').style.width = '100%';
+  $('#count').textContent = 'manche terminée';
+  $('#scHint').textContent = 'Manche terminée';
+  const n = S.round.length, s = S.score;
+  const mot = s===n ? "Sans faute. Tu peux passer au niveau suivant."
+    : s >= n*0.8 ? "Solide. Encore un ou deux mots à fixer."
+    : s >= n*0.5 ? "C'est en place, mais les noms se mélangent encore. Refais une manche."
+    : "Retourne en mode Découverte quelques minutes, puis reviens.";
+  const rev = S.misses.length ? `<ul class="review">${S.misses.map(m=>
+    `<li><b>${esc(m.nom)}</b><span>${esc(m.def)}</span></li>`).join('')}</ul>` : '';
+  const up = S.level<3 ? `<button class="btn" id="up" type="button">Passer en S${S.level+1}</button>` : '';
+  body.innerHTML = `<p class="prompt" style="margin-bottom:8px"><span class="q">Résultat</span></p>
+    <div class="score-big">${s}<small> / ${n}</small></div>
+    <p class="disco" style="margin-top:8px">${mot}</p>
+    ${S.misses.length ? '<p class="prompt" style="font-size:13px;margin:18px 0 0"><span class="q">À revoir</span></p>' : ''}
+    ${rev}
+    <div class="endrow">
+      <button class="btn main" id="again" type="button">Rejouer</button>
+      ${up}
+      <button class="btn" id="disco" type="button">Revoir les noms</button>
+    </div>`;
+  body.querySelector('#again').addEventListener('click', startRound);
+  body.querySelector('#disco').addEventListener('click', ()=>{
+    S.mode='decouverte'; press($('#segMode'),'mode','decouverte'); render();
+  });
+  const u = body.querySelector('#up');
+  if(u) u.addEventListener('click', ()=>{ S.level++; press($('#segLevel'),'level',S.level); startRound(); });
+}
+
+/* ==========================================================
+   DÉPART
+   ========================================================== */
+drawScene();
+render();
+</script>
+
+</body>
+</html>
