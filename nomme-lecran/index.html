@@ -145,16 +145,18 @@ body{
 /* cibles cliquables */
 [data-el]{cursor:pointer}
 .mk.pick [data-el]:hover{outline:2px dashed var(--accent); outline-offset:-2px}
-.spot{
-  outline:3px solid var(--accent) !important; outline-offset:1px;
-  z-index:40; position:relative; animation:beat 1.4s ease-in-out infinite;
-  border-radius:3px;
+/* le cadre est un calque posé sur la maquette, et non un outline sur l'élément :
+   les conteneurs en overflow:hidden (barre d'outils, fenêtre, écran) le coupaient. */
+.ring{
+  position:absolute; z-index:50; pointer-events:none; border-radius:5px;
+  border:3px solid var(--accent); box-shadow:0 0 0 2px rgba(255,255,255,.9), inset 0 0 0 1px rgba(255,255,255,.9);
 }
-@keyframes beat{0%,100%{box-shadow:0 0 0 0 rgba(180,99,10,.55)}50%{box-shadow:0 0 0 8px rgba(180,99,10,0)}}
-.good{outline:3px solid #15694A !important; outline-offset:1px; z-index:40; position:relative}
-.bad{outline:3px solid #9E2A20 !important; outline-offset:1px; z-index:40; position:relative; animation:shake .35s}
+.ring.spot{animation:beat 1.4s ease-in-out infinite}
+@keyframes beat{0%,100%{box-shadow:0 0 0 2px rgba(255,255,255,.9), inset 0 0 0 1px rgba(255,255,255,.9), 0 0 0 2px rgba(180,99,10,.6)}50%{box-shadow:0 0 0 2px rgba(255,255,255,.9), inset 0 0 0 1px rgba(255,255,255,.9), 0 0 0 10px rgba(180,99,10,0)}}
+.ring.good{border-color:#15694A}
+.ring.bad{border-color:#9E2A20; animation:shake .35s}
 @keyframes shake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
-@media (prefers-reduced-motion:reduce){.spot,.bad{animation:none}}
+@media (prefers-reduced-motion:reduce){.ring{animation:none!important}}
 
 /* étiquette flottante (mode découverte) */
 .tag{
@@ -746,7 +748,24 @@ const shuffle = a => {const b=a.slice(); for(let i=b.length-1;i>0;i--){const j=M
 const items = sc => ITEMS[sc];
 const esc = s => s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
-function clearMarks(){ mk.querySelectorAll('.spot,.good,.bad').forEach(e=>e.classList.remove('spot','good','bad')); }
+let MARKS = [];
+function clearMarks(){ MARKS.forEach(m=>m.ring.remove()); MARKS = []; }
+function mark(n, cls){
+  if(!n) return;
+  const ring = document.createElement('div');
+  ring.className = 'ring ' + cls;
+  mk.appendChild(ring); MARKS.push({n, ring}); placeMarks(); requestAnimationFrame(placeMarks);
+}
+function placeMarks(){
+  const r = mk.getBoundingClientRect(), pad = 4, edge = 2;
+  MARKS.forEach(({n, ring})=>{
+    const b = n.getBoundingClientRect();
+    const x1 = Math.max(edge, b.left - r.left - pad), y1 = Math.max(edge, b.top - r.top - pad);
+    const x2 = Math.min(r.width - edge, b.right - r.left + pad), y2 = Math.min(r.height - edge, b.bottom - r.top + pad);
+    Object.assign(ring.style, {left:x1+'px', top:y1+'px', width:Math.max(0,x2-x1)+'px', height:Math.max(0,y2-y1)+'px'});
+  });
+}
+new ResizeObserver(placeMarks).observe(mk);
 function node(el){ return mk.querySelector('[data-el="'+el+'"]'); }
 
 /* ==========================================================
@@ -801,7 +820,7 @@ mk.addEventListener('mousemove', e=>{
   const t = e.target.closest('[data-el]');
   if(t) showTag(t, e); else hideTag();
 });
-mk.addEventListener('mouseleave', hideTag);
+mk.addEventListener('mouseleave', ()=>{ if(S.mode==='decouverte') hideTag(); });
 
 function showTag(t, ev){
   const it = ITEMS[S.scene].find(x=>x.el===t.dataset.el); if(!it) return;
@@ -815,7 +834,7 @@ function showTag(t, ev){
   if(x + tw > r.width - 8) x = Math.max(8, r.width - tw - 8);
   if(y + th > r.height - 8) y = Math.max(8, y - th - 28);
   tag.style.left = x+'px'; tag.style.top = y+'px';
-  clearMarks(); t.classList.add('spot');
+  clearMarks(); mark(t,'spot');
 }
 function hideTag(){ const t=$('#tag'); if(t) t.classList.remove('on'); clearMarks(); }
 
@@ -853,7 +872,7 @@ function render(){
     body.innerHTML = `<p class="disco"><b>Mode découverte.</b> Promène la souris sur l'écran : chaque élément donne son nom et ce qu'il fait. Quand tu les reconnais, passe en <b>Jeu</b>.</p>
       <ul class="legend">${lg}</ul>`;
     body.querySelectorAll('[data-go]').forEach(li=>{
-      li.addEventListener('mouseenter',()=>{const n=node(li.dataset.go); if(n){clearMarks(); n.classList.add('spot');}});
+      li.addEventListener('mouseenter',()=>{const n=node(li.dataset.go); if(n){clearMarks(); mark(n,'spot');}});
       li.addEventListener('mouseleave',clearMarks);
       li.addEventListener('click',()=>{const n=node(li.dataset.go); if(n) showTag(n);});
     });
@@ -909,7 +928,7 @@ function render(){
   } else if(q.type==='qcm'){
     const wrong = shuffle(ITEMS[S.scene].filter(x=>x.el!==it.el)).slice(0,3);
     const opts = shuffle([{t:it.nom, ok:true}, ...wrong.map(w=>({t:w.nom, ok:false}))]);
-    node(it.el)?.classList.add('spot');
+    mark(node(it.el),'spot');
     body.innerHTML = `<p class="prompt"><span class="q">Comment ça s'appelle</span>L'élément entouré en orange, c'est…</p>
       <div class="choices" id="ch">${opts.map((o,k)=>
         `<button type="button" data-ok="${o.ok}"><span class="k">${'ABCD'[k]}</span>${esc(o.t)}</button>`).join('')}</div>`;
@@ -922,7 +941,7 @@ function render(){
       markNode(it.el, ok); settle(ok, it.nom, it.def, it);
     });
   } else {
-    node(it.el)?.classList.add('spot');
+    mark(node(it.el),'spot');
     body.innerHTML = `<p class="prompt"><span class="q">Écris son nom</span>Comment s'appelle l'élément entouré en orange ?</p>
       <div class="typerow">
         <input id="ans" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="ton mot ici…" aria-label="Nom de l'élément">
@@ -953,7 +972,7 @@ function render(){
   }
 }
 
-function markNode(el, ok){ clearMarks(); node(el)?.classList.add(ok?'good':'bad'); }
+function markNode(el, ok){ clearMarks(); mark(node(el), ok?'good':'bad'); }
 
 /* clic dans la maquette pendant une question « montrer » */
 function onPick(el, target){
@@ -961,8 +980,8 @@ function onPick(el, target){
   S.locked = true;
   const ok = el === q.it.el;
   clearMarks();
-  target.classList.add(ok?'good':'bad');
-  if(!ok) node(q.it.el)?.classList.add('spot');
+  mark(target, ok?'good':'bad');
+  if(!ok) mark(node(q.it.el),'spot');
   settle(ok, q.it.nom, q.it.def, q.it);
 }
 
