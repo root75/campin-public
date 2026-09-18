@@ -144,7 +144,9 @@ body{
 
 /* cibles cliquables */
 [data-el]{cursor:pointer}
+[data-nul]{cursor:default}
 .mk.pick [data-el]:hover{outline:2px dashed var(--accent); outline-offset:-2px}
+.mk.pick [data-nul]:hover{outline:none}
 /* le cadre est un calque posé sur la maquette, et non un outline sur l'élément :
    les conteneurs en overflow:hidden (barre d'outils, fenêtre, écran) le coupaient. */
 .ring{
@@ -504,7 +506,7 @@ chrome:`
 <div class="s-br" data-el="fenetre">
   <div class="s-tabbar">
     <div class="s-tab act" data-el="onglet"><span class="dot"></span>Formation numérique — 1B<span class="x">✕</span></div>
-    <div class="s-tab"><span class="dot" style="background:#2D9B63"></span>Mon portrait<span class="x">✕</span></div>
+    <div class="s-tab" data-el="onglet"><span class="dot" style="background:#2D9B63"></span>Mon portrait<span class="x">✕</span></div>
     <div class="s-newtab" data-el="nouvel-onglet">+</div>
     <div class="s-wctl">
       <div data-el="reduire">—</div>
@@ -514,7 +516,7 @@ chrome:`
   </div>
   <div class="s-navbar">
     <div class="s-nb" data-el="precedent"><svg viewBox="0 0 24 24" fill="none"><path d="M15 5 8 12l7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-    <div class="s-nb"><svg viewBox="0 0 24 24" fill="none"><path d="m9 5 7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div class="s-nb" data-nul><svg viewBox="0 0 24 24" fill="none"><path d="m9 5 7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
     <div class="s-nb" data-el="actualiser"><svg viewBox="0 0 24 24" fill="none"><path d="M20 12a8 8 0 1 1-2.6-5.9M20 4v5h-5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
     <div class="s-url" data-el="barre-adresse">
       <svg viewBox="0 0 24 24" fill="none" style="width:1em;height:1em;flex:none"><rect x="5" y="10" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8.5 10V7.5a3.5 3.5 0 0 1 7 0V10" stroke="currentColor" stroke-width="1.6"/></svg>
@@ -811,14 +813,14 @@ function drawScene(){
 }
 
 mk.addEventListener('click', e=>{
-  const t = e.target.closest('[data-el]'); if(!t) return;
+  const t = e.target.closest('[data-el],[data-nul]'); if(!t || t.hasAttribute('data-nul')) return;
   if(S.mode==='decouverte'){ showTag(t); return; }
   onPick(t.dataset.el, t);
 });
 mk.addEventListener('mousemove', e=>{
   if(S.mode!=='decouverte') return;
-  const t = e.target.closest('[data-el]');
-  if(t) showTag(t, e); else hideTag();
+  const t = e.target.closest('[data-el],[data-nul]');
+  if(t && !t.hasAttribute('data-nul')) showTag(t, e); else hideTag();
 });
 mk.addEventListener('mouseleave', ()=>{ if(S.mode==='decouverte') hideTag(); });
 
