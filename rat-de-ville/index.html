@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Le rat de ville — je révise</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,600;0,800;1,600&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
+<style>
+/* Page d'entraînement : bandeau titre, onglets, une carte de travail centrée (largeur de lecture). */
+:root{
+  --papier:#f3f5f7; --carte:#ffffff; --encre:#1f2a33; --doux:#5b6873;
+  --trait:#d5dce2; --encre-bouton:#1d5a73; --fromage:#e3a922; --fromage-pale:#fbf0d4;
+  --juste:#1f7a4d; --juste-pale:#e2f3ea; --faux:#b23a2e; --faux-pale:#f8e3e0;
+  --display:"Alegreya", Georgia, "Times New Roman", serif;
+  --texte:"Atkinson Hyperlegible", "Segoe UI", Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --papier:#141a1f; --carte:#1d252c; --encre:#e8edf1; --doux:#a3b0ba;
+  --trait:#33404a; --encre-bouton:#7cc3de; --fromage:#e9b84a; --fromage-pale:#3a3120;
+  --juste:#6fd0a0; --juste-pale:#183427; --faux:#f08b7f; --faux-pale:#3d2120; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --papier:#141a1f; --carte:#1d252c; --encre:#e8edf1; --doux:#a3b0ba;
+  --trait:#33404a; --encre-bouton:#7cc3de; --fromage:#e9b84a; --fromage-pale:#3a3120;
+  --juste:#6fd0a0; --juste-pale:#183427; --faux:#f08b7f; --faux-pale:#3d2120; color-scheme:dark }
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--papier);color:var(--encre);font-family:var(--texte);font-size:1.125rem;line-height:1.55;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:0 48px}
+.page{max-width:44rem;margin:0 auto;display:grid;gap:20px}
+header{padding-top:28px;display:grid;gap:4px}
+.surtitre{font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;color:var(--doux);font-weight:700}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(2rem,7vw,2.8rem);line-height:1.05;margin:0;text-wrap:balance}
+h1 em{font-style:italic;font-weight:600;color:var(--doux)}
+.consigne{margin:6px 0 0;color:var(--doux);font-size:1rem}
+
+nav{display:flex;flex-wrap:wrap;gap:8px}
+nav button{font:inherit;font-size:1rem;font-weight:700;padding:10px 16px;border-radius:999px;border:2px solid var(--trait);
+  background:var(--carte);color:var(--encre);cursor:pointer}
+nav button[aria-selected="true"]{background:var(--encre-bouton);border-color:var(--encre-bouton);color:var(--carte)}
+button:focus-visible{outline:3px solid var(--fromage);outline-offset:2px}
+
+.panneau{background:var(--carte);border:1px solid var(--trait);border-radius:14px;padding:22px clamp(16px,4vw,28px);display:grid;gap:16px;min-width:0}
+h2{font-family:var(--display);font-weight:800;font-size:1.6rem;margin:0;line-height:1.15}
+h3{font-family:var(--display);font-weight:600;font-size:1.25rem;margin:0}
+p{margin:0}
+
+/* Les boutons de la barre Docs, en petites touches */
+.touche{display:inline-flex;align-items:center;justify-content:center;min-width:1.7em;padding:0 .4em;height:1.6em;
+  border:1px solid var(--trait);border-bottom-width:3px;border-radius:6px;background:var(--papier);
+  font-family:var(--texte);font-size:.95em;font-weight:700;line-height:1;white-space:nowrap;vertical-align:.08em}
+.touche.i{font-style:italic}.touche.u{text-decoration:underline}
+
+ol.resume{margin:0;padding:0;list-style:none;display:grid;gap:12px;counter-reset:r}
+ol.resume li{display:grid;grid-template-columns:2rem 1fr;gap:10px;align-items:start}
+ol.resume li::before{counter-increment:r;content:counter(r);font-family:var(--display);font-weight:800;font-size:1.4rem;
+  color:var(--encre-bouton);line-height:1.1;text-align:right}
+.note{font-size:.95rem;color:var(--doux)}
+
+.progres{display:flex;gap:6px}
+.progres span{flex:1;height:6px;border-radius:3px;background:var(--trait)}
+.progres span.fait{background:var(--encre-bouton)}
+.progres span.ok{background:var(--juste)}
+.progres span.ko{background:var(--faux)}
+.numero{font-size:.9rem;font-weight:700;color:var(--doux);letter-spacing:.04em;text-transform:uppercase}
+.question{font-size:1.2rem;font-weight:700;margin:0}
+.choix{display:grid;gap:10px}
+.choix button{font:inherit;text-align:left;padding:12px 14px;border-radius:10px;border:2px solid var(--trait);
+  background:var(--carte);color:var(--encre);cursor:pointer;display:grid;grid-template-columns:1.8rem 1fr;gap:8px;align-items:start}
+.choix button:hover:not(:disabled){border-color:var(--encre-bouton)}
+.choix button .lettre{font-weight:700;color:var(--doux)}
+.choix button:disabled{cursor:default}
+.choix button.juste{border-color:var(--juste);background:var(--juste-pale)}
+.choix button.faux{border-color:var(--faux);background:var(--faux-pale)}
+.choix button.estompe{opacity:.55}
+
+.indice{background:var(--fromage-pale);border-left:5px solid var(--fromage);border-radius:6px;padding:10px 14px;font-size:1rem}
+.retour{border-radius:10px;padding:12px 14px;display:grid;gap:6px;font-size:1rem}
+.retour.juste{background:var(--juste-pale)} .retour.faux{background:var(--faux-pale)}
+.retour strong{font-size:1.05rem}
+.actions{display:flex;flex-wrap:wrap;gap:10px}
+.btn{font:inherit;font-weight:700;font-size:1rem;padding:10px 18px;border-radius:10px;cursor:pointer;border:2px solid var(--encre-bouton)}
+.btn.plein{background:var(--encre-bouton);color:var(--carte)}
+.btn.vide{background:transparent;color:var(--encre-bouton)}
+.btn:disabled{opacity:.4;cursor:default}
+
+.score{font-family:var(--display);font-weight:800;font-size:3.2rem;line-height:1;color:var(--encre-bouton)}
+
+/* Cartes mémoire */
+.carte-memoire{perspective:1200px;min-height:18rem}
+.carte-memoire .tourne{position:relative;width:100%;min-height:18rem;transition:transform .45s ease;transform-style:preserve-3d;cursor:pointer;border:0;padding:0;background:none;font:inherit;color:inherit;text-align:left;display:block}
+.carte-memoire .tourne.verso{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;border-radius:14px;padding:20px;display:grid;align-content:center;gap:10px;
+  border:2px solid var(--trait);background:var(--papier)}
+.face.dos{transform:rotateY(180deg);background:var(--fromage-pale);border-color:var(--fromage)}
+.face .etiquette{font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:var(--doux)}
+.face .grand{font-size:1.2rem;font-weight:700}
+.compteur{font-variant-numeric:tabular-nums;color:var(--doux);font-weight:700;align-self:center}
+
+.deux{display:grid;gap:16px}
+.bloc{border:1px solid var(--trait);border-radius:12px;padding:16px;display:grid;gap:12px;min-width:0}
+.bloc.coince{border-top:5px solid var(--encre-bouton)}
+.bloc.fini{border-top:5px solid var(--fromage)}
+.etapes{margin:0;padding-left:1.4rem;display:grid;gap:4px}
+
+footer{font-size:.9rem;color:var(--doux);text-align:center}
+@media (prefers-reduced-motion: reduce){.carte-memoire .tourne{transition:none}}
+</style>
+</head>
+<body>
+
+<div class="page">
+  <header>
+    <div class="surtitre">Numérique · 1re · mise en forme dans Docs</div>
+    <h1>Le rat de ville <em>je révise</em></h1>
+    <p class="consigne">Pour t'entraîner avant le formatif et le bilan. Rien n'est coté.</p>
+  </header>
+
+  <nav role="tablist" aria-label="Parties de la page">
+    <button role="tab" id="t-resume" aria-controls="p-resume" aria-selected="true">L'essentiel</button>
+    <button role="tab" id="t-quiz" aria-controls="p-quiz" aria-selected="false">Quiz</button>
+    <button role="tab" id="t-cartes" aria-controls="p-cartes" aria-selected="false">Cartes</button>
+    <button role="tab" id="t-plus" aria-controls="p-plus" aria-selected="false">Ça coince ? · J'ai fini</button>
+  </nav>
+
+  <section class="panneau" id="p-resume" role="tabpanel" aria-labelledby="t-resume">
+    <h2>L'essentiel en 5 lignes</h2>
+    <ol class="resume">
+      <li><span>D'abord je <strong>sélectionne</strong> ce que je veux changer, ensuite je clique sur le bouton.</span></li>
+      <li><span>Aligner, c'est un <strong>bouton</strong> <span class="touche">≡ ▾</span>, jamais des espaces.</span></li>
+      <li><span><span class="touche">B</span> = gras, <span class="touche i">I</span> = italique, <span class="touche u">U</span> = souligné.</span></li>
+      <li><span>Une vraie liste se fait avec le bouton : <strong>puces</strong> quand l'ordre ne compte pas, <strong>numéros</strong> quand il compte.</span></li>
+      <li><span>Mon document s'appelle <strong>AAAAMMJJ Le rat de ville – Prénom Nom</strong>.</span></li>
+    </ol>
+    <p class="note">Ensuite : le quiz (5 questions), puis les cartes pour réviser.</p>
+    <div class="actions"><button class="btn plein" type="button" data-aller="quiz">Commencer le quiz</button></div>
+  </section>
+
+  <section class="panneau" id="p-quiz" role="tabpanel" aria-labelledby="t-quiz" hidden>
+    <div id="quiz"></div>
+  </section>
+
+  <section class="panneau" id="p-cartes" role="tabpanel" aria-labelledby="t-cartes" hidden>
+    <h2>Cartes mémoire</h2>
+    <p class="note">Lis la question, réponds dans ta tête, puis clique sur la carte pour la retourner.</p>
+    <div class="carte-memoire">
+      <button class="tourne" id="carte" type="button" aria-live="polite">
+        <div class="face"><span class="etiquette">Question</span><span class="grand" id="carte-q"></span></div>
+        <div class="face dos"><span class="etiquette">Réponse</span><span class="grand" id="carte-r"></span><span id="carte-e"></span></div>
+      </button>
+    </div>
+    <div class="actions">
+      <button class="btn vide" type="button" id="carte-avant">← Précédente</button>
+      <button class="btn plein" type="button" id="carte-retourne">Retourner</button>
+      <button class="btn vide" type="button" id="carte-apres">Suivante →</button>
+      <span class="compteur" id="carte-n"></span>
+    </div>
+  </section>
+
+  <section class="panneau" id="p-plus" role="tabpanel" aria-labelledby="t-plus" hidden>
+    <div class="deux">
+      <div class="bloc coince">
+        <h3>Ça coince ?</h3>
+        <p>Retiens trois gestes, toujours dans cet ordre :</p>
+        <ol class="etapes"><li>Je sélectionne (le texte devient bleu).</li><li>Je clique sur le bouton.</li><li>Je regarde si ça a changé.</li></ol>
+        <div id="consolidation"></div>
+      </div>
+      <div class="bloc fini">
+        <h3>J'ai fini</h3>
+        <div id="depassement"></div>
+        <p class="note">Défi : mets les strophes 1 et 2 en Garamond 14 en <strong>une seule</strong> sélection.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>Ton score reste sur cet ordinateur. Aucune donnée n'est envoyée.</footer>
+</div>
+
+<script>
+/* Bonne réponse TOUJOURS en première position : l'ordre est mélangé à l'affichage.
+   p = ce qu'on dit à l'élève qui choisit ce piège. */
+const QUIZ = [
+  { q:"Je veux pousser le nom de l'auteur tout à droite. Que fais-je ?",
+    c:["Je sélectionne l'auteur, puis je clique sur le bouton ≡ ▾ et sur « Aligner à droite ».",
+       "J'appuie sur la barre d'espace jusqu'au bord de la page.",
+       "J'appuie plusieurs fois sur la touche Tab.",
+       "Je mets l'auteur en gras."],
+    p:[null,
+       "Ça semble juste à l'écran, mais dès que la police ou la taille change, l'auteur se décale.",
+       "Tab avance par sauts : l'auteur ne sera pas collé au bord de la page.",
+       "Le gras rend les lettres plus épaisses. Il ne les déplace pas."],
+    h:"Aligner, c'est un bouton de la barre d'outils, pas une touche du clavier.",
+    e:"L'alignement est un réglage du paragraphe : il reste juste même si on change la police ou la taille." },
+  { q:"Je veux mettre seulement la 3e strophe en Calibri 10. Que fais-je en premier ?",
+    c:["Je sélectionne la 3e strophe, du premier mot au dernier.",
+       "Je choisis Calibri tout de suite dans le menu « Arial ▾ ».",
+       "J'appuie sur Ctrl + A.",
+       "Je clique à la fin du document."],
+    p:[null,
+       "Sans sélection, Docs ne sait pas quelle strophe tu veux changer.",
+       "Ctrl + A sélectionne tout le document : toutes les strophes changeraient.",
+       "Un clic place le curseur. Il ne sélectionne rien."],
+    h:"Docs change seulement ce qui est surligné en bleu.",
+    e:"Règle d'or : d'abord je sélectionne, ensuite je clique sur le bouton." },
+  { q:"L'auteur doit être en italique et souligné. Sur quels boutons je clique ?",
+    c:["I puis U", "B puis U", "B puis I", "I seulement"],
+    p:[null,
+       "B, c'est le gras. Il manque l'italique.",
+       "B, c'est le gras. Il manque le souligné.",
+       "Il manque le souligné : le bouton U."],
+    h:"I comme italique, U comme « underline », souligné en anglais.",
+    e:"Tant que l'auteur reste sélectionné, tu peux cliquer sur I et sur U dans n'importe quel ordre." },
+  { q:"Dans le bloc-notes, je veux les 3 choses du festin en liste à puces. Comment faire ?",
+    c:["Je clique sur le bouton « Liste à puces » de la barre d'outils.",
+       "Je clique sur le bouton « Liste numérotée ».",
+       "J'écris les trois choses sur une seule ligne, séparées par des virgules.",
+       "Je centre les trois lignes."],
+    p:[null,
+       "Les numéros, c'est quand l'ordre compte : c'est pour ta liste « Mes gestes ».",
+       "Ce n'est pas une liste : il faut une ligne par chose, avec une puce devant.",
+       "Centrer change la place des lignes. Ça n'ajoute pas de puces."],
+    h:"Une puce, c'est le petit rond devant chaque ligne.",
+    e:"Puces quand l'ordre ne compte pas (le festin). Numéros quand il compte (mes gestes, étape par étape)." },
+  { q:"Tu remets ton travail le 12 novembre 2026. Quel est le bon nom ?",
+    c:["20261112 Le rat de ville – Léa Dupont",
+       "12112026 Le rat de ville – Léa Dupont",
+       "2026 11 12 Le rat de ville",
+       "Document sans titre"],
+    p:[null,
+       "La date est à l'envers : on écrit l'année d'abord, puis le mois, puis le jour.",
+       "Pas d'espace dans la date, et il manque ton prénom et ton nom.",
+       "C'est le nom que Docs donne tout seul. Il faut le changer."],
+    h:"AAAA = l'année, MM = le mois, JJ = le jour.",
+    e:"Année, mois, jour : les fichiers se rangent tout seuls dans l'ordre des dates." }
+];
+const CONSOLIDATION = { q:"Avant de cliquer sur B, I, U ou sur la police, je dois toujours…",
+  c:["sélectionner le texte à changer.", "enregistrer le document.", "remettre le devoir.", "effacer tout le texte."],
+  p:[null, "Docs enregistre tout seul. Ce n'est pas l'étape qui manque.", "On remet à la fin, quand tout est fini.", "Surtout pas : tu perdrais ta recopie."],
+  h:"Docs change seulement ce qui est bleu.", e:"Sélectionner, puis cliquer, puis vérifier : c'est le même geste pour tous les boutons." };
+const DEPASSEMENT = { q:"J'ai poussé l'auteur à droite avec des espaces. Puis je mets l'auteur en Arial Black 8. Que se passe-t-il ?",
+  c:["L'auteur se déplace : il n'est plus au bord de la page.", "Rien : il reste au bord.", "L'auteur disparaît.", "Docs remplace les espaces tout seul."],
+  p:[null, "Les espaces n'ont pas la même largeur dans chaque police et chaque taille.", "Il ne disparaît pas, mais il bouge.", "Docs ne corrige pas tes espaces : c'est à toi de choisir le bouton."],
+  h:"Une petite police a des espaces plus petits.",
+  e:"Avec le bouton « Aligner à droite », Docs recalcule la place à chaque changement. Avec des espaces, non. C'est pour ça qu'on aligne avec le bouton." };
+
+const LETTRES = "ABCD";
+const melange = a => { const b=a.slice(); for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];} return b; };
+const el = (tag, cls, txt) => { const n=document.createElement(tag); if(cls) n.className=cls; if(txt!=null) n.textContent=txt; return n; };
+
+/* Une question : rend la carte, appelle fin(juste) quand l'élève a répondu. */
+function question(cible, Q, fin){
+  cible.replaceChildren();
+  cible.append(el("p","question",Q.q));
+  const ind = el("div","indice","Indice : "+Q.h); ind.hidden = true;
+  const liste = el("div","choix"); const retour = el("div","retour"); retour.hidden = true;
+  const ordre = melange([0,1,2,3]); const boutons = [];
+  ordre.forEach((k,pos)=>{
+    const b = el("button"); b.type="button";
+    b.append(el("span","lettre",LETTRES[pos]), el("span",null,Q.c[k]));
+    b.addEventListener("click",()=>{
+      boutons.forEach(x=>x.disabled=true);
+      const juste = k===0;
+      boutons.forEach(x=>{ if(x.dataset.k==="0") x.classList.add("juste"); else if(x!==b) x.classList.add("estompe"); });
+      if(!juste) b.classList.add("faux");
+      retour.className = "retour "+(juste?"juste":"faux");
+      retour.replaceChildren(el("strong",null, juste?"Oui, c'est ça.":"Pas tout à fait."));
+      if(!juste) retour.append(el("p",null,Q.p[k]));
+      retour.append(el("p",null,Q.e)); retour.hidden=false; btnInd.disabled=true;
+      fin && fin(juste);
+    });
+    b.dataset.k = k; boutons.push(b); liste.append(b);
+  });
+  const btnInd = el("button","btn vide","Un indice"); btnInd.type="button";
+  btnInd.addEventListener("click",()=>{ ind.hidden=false; btnInd.disabled=true; });
+  const act = el("div","actions"); act.append(btnInd);
+  cible.append(liste, ind, retour, act);
+  return act;
+}
+
+/* Le quiz : une question à la fois, score à la fin */
+const zoneQuiz = document.getElementById("quiz");
+let n=0, resultats=[];
+function barre(){ const b=el("div","progres"); QUIZ.forEach((_,i)=>{ const s=el("span"); if(i<resultats.length) s.className=resultats[i]?"ok":"ko"; else if(i===n) s.className="fait"; b.append(s); }); return b; }
+function afficheQuiz(){
+  zoneQuiz.replaceChildren();
+  const wrap = el("div"); wrap.style.display="grid"; wrap.style.gap="14px";
+  zoneQuiz.append(wrap);
+  if(n>=QUIZ.length){
+    const s = resultats.filter(Boolean).length;
+    wrap.append(barre(), el("h2",null,"Ton score"), el("div","score",s+" / "+QUIZ.length),
+      el("p",null, s===QUIZ.length ? "Tout juste. Passe à « J'ai fini » pour un défi." :
+                   s>=3 ? "Bien. Relis les cartes des questions ratées, puis recommence." :
+                          "Relis « L'essentiel », regarde « Ça coince ? », puis recommence."));
+    const act = el("div","actions");
+    const r = el("button","btn plein","Recommencer"); r.type="button"; r.addEventListener("click",()=>{n=0;resultats=[];afficheQuiz();});
+    const c = el("button","btn vide","Réviser avec les cartes"); c.type="button"; c.addEventListener("click",()=>montre("cartes"));
+    act.append(r,c); wrap.append(act); return;
+  }
+  wrap.append(barre(), el("div","numero","Question "+(n+1)+" sur "+QUIZ.length));
+  const zq = el("div"); zq.style.display="grid"; zq.style.gap="14px"; wrap.append(zq);
+  const act = question(zq, QUIZ[n], juste=>{
+    resultats.push(juste);
+    const suiv = el("button","btn plein", n+1<QUIZ.length?"Question suivante":"Voir mon score"); suiv.type="button";
+    suiv.addEventListener("click",()=>{ n++; afficheQuiz(); });
+    act.append(suiv); suiv.focus();
+  });
+}
+afficheQuiz();
+
+/* Consolidation et dépassement : une question chacun, avec « Recommencer » */
+function seule(id, Q){
+  const z=document.getElementById(id); z.style.display="grid"; z.style.gap="12px";
+  const go=()=>{ const act=question(z,Q,()=>{ const r=el("button","btn vide","Recommencer"); r.type="button"; r.addEventListener("click",go); act.append(r); }); };
+  go();
+}
+seule("consolidation", CONSOLIDATION);
+seule("depassement", DEPASSEMENT);
+
+/* Cartes mémoire : les mêmes questions que le quiz */
+let ic=0; const carte=document.getElementById("carte");
+function afficheCarte(){
+  carte.classList.remove("verso");
+  const Q=QUIZ[ic];
+  document.getElementById("carte-q").textContent=Q.q;
+  document.getElementById("carte-r").textContent=Q.c[0];
+  document.getElementById("carte-e").textContent=Q.e;
+  document.getElementById("carte-n").textContent=(ic+1)+" / "+QUIZ.length;
+  document.getElementById("carte-avant").disabled = ic===0;
+  document.getElementById("carte-apres").disabled = ic===QUIZ.length-1;
+}
+const retourne=()=>carte.classList.toggle("verso");
+carte.addEventListener("click",retourne);
+document.getElementById("carte-retourne").addEventListener("click",retourne);
+document.getElementById("carte-avant").addEventListener("click",()=>{ if(ic>0){ic--;afficheCarte();} });
+document.getElementById("carte-apres").addEventListener("click",()=>{ if(ic<QUIZ.length-1){ic++;afficheCarte();} });
+afficheCarte();
+
+/* Onglets */
+const onglets=["resume","quiz","cartes","plus"];
+function montre(nom){
+  onglets.forEach(o=>{
+    document.getElementById("t-"+o).setAttribute("aria-selected", o===nom?"true":"false");
+    document.getElementById("p-"+o).hidden = o!==nom;
+  });
+}
+onglets.forEach(o=>document.getElementById("t-"+o).addEventListener("click",()=>montre(o)));
+document.querySelectorAll("[data-aller]").forEach(b=>b.addEventListener("click",()=>montre(b.dataset.aller)));
+if(onglets.includes(location.hash.slice(1))) montre(location.hash.slice(1));
+</script>
+
+</body>
+</html>
