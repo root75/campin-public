@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mon premier message — je révise</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,600;0,800;1,600&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
+<style>
+/* Page d'entraînement : bandeau titre, onglets, une carte de travail centrée (largeur de lecture). */
+:root{
+  --papier:#f3f5f7; --carte:#ffffff; --encre:#1f2a33; --doux:#5b6873;
+  --trait:#d5dce2; --encre-bouton:#1d5a73; --fromage:#e3a922; --fromage-pale:#fbf0d4;
+  --juste:#1f7a4d; --juste-pale:#e2f3ea; --faux:#b23a2e; --faux-pale:#f8e3e0;
+  --display:"Alegreya", Georgia, "Times New Roman", serif;
+  --texte:"Atkinson Hyperlegible", "Segoe UI", Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --papier:#141a1f; --carte:#1d252c; --encre:#e8edf1; --doux:#a3b0ba;
+  --trait:#33404a; --encre-bouton:#7cc3de; --fromage:#e9b84a; --fromage-pale:#3a3120;
+  --juste:#6fd0a0; --juste-pale:#183427; --faux:#f08b7f; --faux-pale:#3d2120; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --papier:#141a1f; --carte:#1d252c; --encre:#e8edf1; --doux:#a3b0ba;
+  --trait:#33404a; --encre-bouton:#7cc3de; --fromage:#e9b84a; --fromage-pale:#3a3120;
+  --juste:#6fd0a0; --juste-pale:#183427; --faux:#f08b7f; --faux-pale:#3d2120; color-scheme:dark }
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--papier);color:var(--encre);font-family:var(--texte);font-size:1.125rem;line-height:1.55;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:0 48px}
+.page{max-width:44rem;margin:0 auto;display:grid;gap:20px}
+header{padding-top:28px;display:grid;gap:4px}
+.surtitre{font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;color:var(--doux);font-weight:700}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(2rem,7vw,2.8rem);line-height:1.05;margin:0;text-wrap:balance}
+h1 em{font-style:italic;font-weight:600;color:var(--doux)}
+.consigne{margin:6px 0 0;color:var(--doux);font-size:1rem}
+
+nav{display:flex;flex-wrap:wrap;gap:8px}
+nav button{font:inherit;font-size:1rem;font-weight:700;padding:10px 16px;border-radius:999px;border:2px solid var(--trait);
+  background:var(--carte);color:var(--encre);cursor:pointer}
+nav button[aria-selected="true"]{background:var(--encre-bouton);border-color:var(--encre-bouton);color:var(--carte)}
+button:focus-visible{outline:3px solid var(--fromage);outline-offset:2px}
+
+.panneau{background:var(--carte);border:1px solid var(--trait);border-radius:14px;padding:22px clamp(16px,4vw,28px);display:grid;gap:16px;min-width:0}
+h2{font-family:var(--display);font-weight:800;font-size:1.6rem;margin:0;line-height:1.15}
+h3{font-family:var(--display);font-weight:600;font-size:1.25rem;margin:0}
+p{margin:0}
+
+/* Les boutons de la barre Docs, en petites touches */
+.touche{display:inline-flex;align-items:center;justify-content:center;min-width:1.7em;padding:0 .4em;height:1.6em;
+  border:1px solid var(--trait);border-bottom-width:3px;border-radius:6px;background:var(--papier);
+  font-family:var(--texte);font-size:.95em;font-weight:700;line-height:1;white-space:nowrap;vertical-align:.08em}
+.touche.i{font-style:italic}.touche.u{text-decoration:underline}
+
+ol.resume{margin:0;padding:0;list-style:none;display:grid;gap:12px;counter-reset:r}
+ol.resume li{display:grid;grid-template-columns:2rem 1fr;gap:10px;align-items:start}
+ol.resume li::before{counter-increment:r;content:counter(r);font-family:var(--display);font-weight:800;font-size:1.4rem;
+  color:var(--encre-bouton);line-height:1.1;text-align:right}
+.note{font-size:.95rem;color:var(--doux)}
+
+.progres{display:flex;gap:6px}
+.progres span{flex:1;height:6px;border-radius:3px;background:var(--trait)}
+.progres span.fait{background:var(--encre-bouton)}
+.progres span.ok{background:var(--juste)}
+.progres span.ko{background:var(--faux)}
+.numero{font-size:.9rem;font-weight:700;color:var(--doux);letter-spacing:.04em;text-transform:uppercase}
+.question{font-size:1.2rem;font-weight:700;margin:0}
+.choix{display:grid;gap:10px}
+.choix button{font:inherit;text-align:left;padding:12px 14px;border-radius:10px;border:2px solid var(--trait);
+  background:var(--carte);color:var(--encre);cursor:pointer;display:grid;grid-template-columns:1.8rem 1fr;gap:8px;align-items:start}
+.choix button:hover:not(:disabled){border-color:var(--encre-bouton)}
+.choix button .lettre{font-weight:700;color:var(--doux)}
+.choix button:disabled{cursor:default}
+.choix button.juste{border-color:var(--juste);background:var(--juste-pale)}
+.choix button.faux{border-color:var(--faux);background:var(--faux-pale)}
+.choix button.estompe{opacity:.55}
+
+.indice{background:var(--fromage-pale);border-left:5px solid var(--fromage);border-radius:6px;padding:10px 14px;font-size:1rem}
+.retour{border-radius:10px;padding:12px 14px;display:grid;gap:6px;font-size:1rem}
+.retour.juste{background:var(--juste-pale)} .retour.faux{background:var(--faux-pale)}
+.retour strong{font-size:1.05rem}
+.actions{display:flex;flex-wrap:wrap;gap:10px}
+.btn{font:inherit;font-weight:700;font-size:1rem;padding:10px 18px;border-radius:10px;cursor:pointer;border:2px solid var(--encre-bouton)}
+.btn.plein{background:var(--encre-bouton);color:var(--carte)}
+.btn.vide{background:transparent;color:var(--encre-bouton)}
+.btn:disabled{opacity:.4;cursor:default}
+
+.score{font-family:var(--display);font-weight:800;font-size:3.2rem;line-height:1;color:var(--encre-bouton)}
+
+/* Cartes mémoire */
+.carte-memoire{perspective:1200px;min-height:18rem}
+.carte-memoire .tourne{position:relative;width:100%;min-height:18rem;transition:transform .45s ease;transform-style:preserve-3d;cursor:pointer;border:0;padding:0;background:none;font:inherit;color:inherit;text-align:left;display:block}
+.carte-memoire .tourne.verso{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;border-radius:14px;padding:20px;display:grid;align-content:center;gap:10px;
+  border:2px solid var(--trait);background:var(--papier)}
+.face.dos{transform:rotateY(180deg);background:var(--fromage-pale);border-color:var(--fromage)}
+.face .etiquette{font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:var(--doux)}
+.face .grand{font-size:1.2rem;font-weight:700}
+.compteur{font-variant-numeric:tabular-nums;color:var(--doux);font-weight:700;align-self:center}
+
+.deux{display:grid;gap:16px}
+.bloc{border:1px solid var(--trait);border-radius:12px;padding:16px;display:grid;gap:12px;min-width:0}
+.bloc.coince{border-top:5px solid var(--encre-bouton)}
+.bloc.fini{border-top:5px solid var(--fromage)}
+.etapes{margin:0;padding-left:1.4rem;display:grid;gap:4px}
+
+footer{font-size:.9rem;color:var(--doux);text-align:center}
+@media (prefers-reduced-motion: reduce){.carte-memoire .tourne{transition:none}}
+</style>
+</head>
+<body>
+
+<div class="page">
+  <header>
+    <div class="surtitre">Activités Info · 2e · la messagerie</div>
+    <h1>Mon premier message <em>je révise</em></h1>
+    <p class="consigne">Pour t'entraîner après la leçon 1 de messagerie. Rien n'est coté.</p>
+  </header>
+
+  <nav role="tablist" aria-label="Parties de la page">
+    <button role="tab" id="t-resume" aria-controls="p-resume" aria-selected="true">L'essentiel</button>
+    <button role="tab" id="t-quiz" aria-controls="p-quiz" aria-selected="false">Quiz</button>
+    <button role="tab" id="t-cartes" aria-controls="p-cartes" aria-selected="false">Cartes</button>
+    <button role="tab" id="t-plus" aria-controls="p-plus" aria-selected="false">Ça coince ? · J'ai fini</button>
+  </nav>
+
+  <section class="panneau" id="p-resume" role="tabpanel" aria-labelledby="t-resume">
+    <h2>L'essentiel en 5 lignes</h2>
+    <ol class="resume">
+      <li><span>Un e-mail, c'est une lettre : <strong>À</strong> = l'adresse sur l'enveloppe, <strong>l'objet</strong> = de quoi ça parle.</span></li>
+      <li><span>Un message bien écrit : <strong>Bonjour…</strong>, mon texte, une formule pour finir, <strong>ma signature</strong> (prénom, nom, classe).</span></li>
+      <li><span><strong>Boîte de réception</strong> = ce que je reçois. <strong>Éléments envoyés</strong> = ce que j'ai envoyé.</span></li>
+      <li><span><strong>Brouillons</strong> = ce que j'ai commencé sans l'envoyer.</span></li>
+      <li><span>Un message envoyé ne se reprend pas : je relis <strong>avant</strong> <span class="touche">Envoyer</span>.</span></li>
+    </ol>
+    <p class="note">Ensuite : le quiz (5 questions), puis les cartes pour réviser.</p>
+    <div class="actions"><button class="btn plein" type="button" data-aller="quiz">Commencer le quiz</button></div>
+  </section>
+
+  <section class="panneau" id="p-quiz" role="tabpanel" aria-labelledby="t-quiz" hidden>
+    <div id="quiz"></div>
+  </section>
+
+  <section class="panneau" id="p-cartes" role="tabpanel" aria-labelledby="t-cartes" hidden>
+    <h2>Cartes mémoire</h2>
+    <p class="note">Lis la question, réponds dans ta tête, puis clique sur la carte pour la retourner.</p>
+    <div class="carte-memoire">
+      <button class="tourne" id="carte" type="button" aria-live="polite">
+        <div class="face"><span class="etiquette">Question</span><span class="grand" id="carte-q"></span></div>
+        <div class="face dos"><span class="etiquette">Réponse</span><span class="grand" id="carte-r"></span><span id="carte-e"></span></div>
+      </button>
+    </div>
+    <div class="actions">
+      <button class="btn vide" type="button" id="carte-avant">← Précédente</button>
+      <button class="btn plein" type="button" id="carte-retourne">Retourner</button>
+      <button class="btn vide" type="button" id="carte-apres">Suivante →</button>
+      <span class="compteur" id="carte-n"></span>
+    </div>
+  </section>
+
+  <section class="panneau" id="p-plus" role="tabpanel" aria-labelledby="t-plus" hidden>
+    <div class="deux">
+      <div class="bloc coince">
+        <h3>Ça coince ?</h3>
+        <p>Retiens quatre gestes, toujours dans cet ordre :</p>
+        <ol class="etapes"><li>Je remplis <strong>À</strong>, puis <strong>Ajouter un objet</strong>, puis le texte.</li><li>Je relis les cinq points.</li><li>Je clique sur <span class="touche">Envoyer</span>.</li><li>Je vérifie dans <strong>Éléments envoyés</strong>.</li></ol>
+        <div id="consolidation"></div>
+      </div>
+      <div class="bloc fini">
+        <h3>J'ai fini</h3>
+        <div id="depassement"></div>
+        <p class="note">Défi : écris un second message à ton voisin, objet <strong>Question - prénom</strong>, avec les quatre parties d'un message bien écrit.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>Ton score reste sur cet ordinateur. Aucune donnée n'est envoyée.</footer>
+</div>
+
+<script>
+/* Bonne réponse TOUJOURS en première position : l'ordre est mélangé à l'affichage.
+   p = ce qu'on dit à l'élève qui choisit ce piège. */
+const QUIZ = [
+  { q:"Je veux envoyer un message à mon professeur. Où est-ce que je tape son adresse ?",
+    c:["Dans la ligne « À ».",
+       "Dans « Ajouter un objet ».",
+       "Dans la ligne « Cci ».",
+       "Dans la grande zone blanche du texte."],
+    p:[null,
+       "L'objet, c'est le titre du message : de quoi il parle. Ce n'est pas une adresse.",
+       "Cci, c'est une copie cachée. Ton professeur doit être le destinataire, dans la ligne À.",
+       "Dans le texte, Outlook ne lit pas l'adresse : il ne saura pas à qui envoyer."],
+    h:"Sur une lettre, l'adresse va sur l'enveloppe.",
+    e:"La ligne À, c'est l'enveloppe : sans adresse, le message n'arrive nulle part." },
+  { q:"Léa écrit son premier message. Quel est le bon objet ?",
+    c:["Mon premier message - Léa",
+       "Bonjour Monsieur",
+       "Rien : elle laisse l'objet vide.",
+       "salut"],
+    p:[null,
+       "« Bonjour Monsieur », c'est le début du texte, pas l'objet.",
+       "Sans objet, le professeur ne sait pas de quoi parle le message avant de l'ouvrir.",
+       "Ce n'est pas l'objet demandé, et un objet dit de quoi parle le message."],
+    h:"L'objet dit en quelques mots de quoi parle le message.",
+    e:"L'objet, c'est ce qu'on lit dans la liste avant d'ouvrir : il doit dire de quoi il s'agit." },
+  { q:"J'ai cliqué sur Envoyer. Où est-ce que je vérifie que mon message est bien parti ?",
+    c:["Dans Éléments envoyés.",
+       "Dans Boîte de réception.",
+       "Dans Brouillons.",
+       "Dans Courrier indésirable."],
+    p:[null,
+       "La boîte de réception contient les messages que tu REÇOIS.",
+       "Brouillons, ce sont les messages pas encore partis. S'il y est, il n'est pas envoyé.",
+       "Le courrier indésirable, c'est la publicité et les messages douteux."],
+    h:"Pour une lettre postée, je garde un double.",
+    e:"Éléments envoyés, c'est le double de chaque message parti. S'il y est, ton professeur l'a reçu." },
+  { q:"J'ai fermé mon message par erreur, sans l'envoyer. Où est-ce que je le retrouve ?",
+    c:["Dans Brouillons.",
+       "Dans Éléments supprimés.",
+       "Dans Éléments envoyés.",
+       "Nulle part : il est perdu."],
+    p:[null,
+       "Tu ne l'as pas jeté : il attend que tu le finisses.",
+       "Il n'est pas parti : il ne peut pas être dans les envoyés.",
+       "Outlook le garde tout seul : il n'est pas perdu."],
+    h:"C'est la lettre pas encore postée, restée sur le bureau.",
+    e:"Brouillons = commencé, pas envoyé. Je clique dessus pour continuer, puis Envoyer." },
+  { q:"Je veux que le message s'ouvre en dessous de la liste, pas à droite. Quel chemin ?",
+    c:["Afficher ▸ Disposition ▸ Volet de lecture ▸ Afficher en bas",
+       "Accueil ▸ Nouveau message",
+       "Fichier ▸ Volet de lecture ▸ Afficher en bas",
+       "Aide ▸ Disposition ▸ Afficher en bas"],
+    p:[null,
+       "Ça ouvre un nouveau message. Ça ne change pas la vue.",
+       "Les réglages de la vue sont dans l'onglet Afficher, pas Fichier.",
+       "L'onglet Aide sert à chercher de l'aide, pas à régler la vue."],
+    h:"Je veux changer ce que j'affiche…",
+    e:"Onglet Afficher : tout ce qui change la vue. Le réglage reste pour les prochaines fois." }
+];
+const CONSOLIDATION = { q:"Un message envoyé avec une faute…",
+  c:["ne se reprend pas : c'est pour ça que je relis avant d'envoyer.", "se corrige tout seul.", "peut être corrigé par moi dans la boîte du professeur.", "s'efface tout seul après une heure."],
+  p:[null, "Outlook ne corrige pas tes fautes après l'envoi.", "Tu n'as pas accès à la boîte de ton professeur.", "Il reste chez ton professeur."],
+  h:"Comme une lettre postée.", e:"Un message parti est chez le destinataire. Relire avant Envoyer, c'est le seul moment pour corriger." };
+const DEPASSEMENT = { q:"J'envoie le même message à toute ma classe, mais je ne veux pas que chacun voie les adresses des autres. Où est-ce que je mets les adresses ?",
+  c:["Dans la ligne Cci.", "Dans la ligne Cc.", "Dans la ligne À.", "Dans l'objet."],
+  p:[null, "Avec Cc, tout le monde voit qui a reçu une copie.", "Dans À, chacun voit toutes les adresses.", "L'objet est le titre du message, pas une adresse."],
+  h:"Cci, c'est la copie… cachée.",
+  e:"Cci = copie cachée : chacun reçoit le message, mais personne ne voit les adresses des autres. On l'apprend en leçon 2." };
+
+const LETTRES = "ABCD";
+const melange = a => { const b=a.slice(); for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];} return b; };
+const el = (tag, cls, txt) => { const n=document.createElement(tag); if(cls) n.className=cls; if(txt!=null) n.textContent=txt; return n; };
+
+/* Une question : rend la carte, appelle fin(juste) quand l'élève a répondu. */
+function question(cible, Q, fin){
+  cible.replaceChildren();
+  cible.append(el("p","question",Q.q));
+  const ind = el("div","indice","Indice : "+Q.h); ind.hidden = true;
+  const liste = el("div","choix"); const retour = el("div","retour"); retour.hidden = true;
+  const ordre = melange([0,1,2,3]); const boutons = [];
+  ordre.forEach((k,pos)=>{
+    const b = el("button"); b.type="button";
+    b.append(el("span","lettre",LETTRES[pos]), el("span",null,Q.c[k]));
+    b.addEventListener("click",()=>{
+      boutons.forEach(x=>x.disabled=true);
+      const juste = k===0;
+      boutons.forEach(x=>{ if(x.dataset.k==="0") x.classList.add("juste"); else if(x!==b) x.classList.add("estompe"); });
+      if(!juste) b.classList.add("faux");
+      retour.className = "retour "+(juste?"juste":"faux");
+      retour.replaceChildren(el("strong",null, juste?"Oui, c'est ça.":"Pas tout à fait."));
+      if(!juste) retour.append(el("p",null,Q.p[k]));
+      retour.append(el("p",null,Q.e)); retour.hidden=false; btnInd.disabled=true;
+      fin && fin(juste);
+    });
+    b.dataset.k = k; boutons.push(b); liste.append(b);
+  });
+  const btnInd = el("button","btn vide","Un indice"); btnInd.type="button";
+  btnInd.addEventListener("click",()=>{ ind.hidden=false; btnInd.disabled=true; });
+  const act = el("div","actions"); act.append(btnInd);
+  cible.append(liste, ind, retour, act);
+  return act;
+}
+
+/* Le quiz : une question à la fois, score à la fin */
+const zoneQuiz = document.getElementById("quiz");
+let n=0, resultats=[];
+function barre(){ const b=el("div","progres"); QUIZ.forEach((_,i)=>{ const s=el("span"); if(i<resultats.length) s.className=resultats[i]?"ok":"ko"; else if(i===n) s.className="fait"; b.append(s); }); return b; }
+function afficheQuiz(){
+  zoneQuiz.replaceChildren();
+  const wrap = el("div"); wrap.style.display="grid"; wrap.style.gap="14px";
+  zoneQuiz.append(wrap);
+  if(n>=QUIZ.length){
+    const s = resultats.filter(Boolean).length;
+    wrap.append(barre(), el("h2",null,"Ton score"), el("div","score",s+" / "+QUIZ.length),
+      el("p",null, s===QUIZ.length ? "Tout juste. Passe à « J'ai fini » pour un défi." :
+                   s>=3 ? "Bien. Relis les cartes des questions ratées, puis recommence." :
+                          "Relis « L'essentiel », regarde « Ça coince ? », puis recommence."));
+    const act = el("div","actions");
+    const r = el("button","btn plein","Recommencer"); r.type="button"; r.addEventListener("click",()=>{n=0;resultats=[];afficheQuiz();});
+    const c = el("button","btn vide","Réviser avec les cartes"); c.type="button"; c.addEventListener("click",()=>montre("cartes"));
+    act.append(r,c); wrap.append(act); return;
+  }
+  wrap.append(barre(), el("div","numero","Question "+(n+1)+" sur "+QUIZ.length));
+  const zq = el("div"); zq.style.display="grid"; zq.style.gap="14px"; wrap.append(zq);
+  const act = question(zq, QUIZ[n], juste=>{
+    resultats.push(juste);
+    const suiv = el("button","btn plein", n+1<QUIZ.length?"Question suivante":"Voir mon score"); suiv.type="button";
+    suiv.addEventListener("click",()=>{ n++; afficheQuiz(); });
+    act.append(suiv); suiv.focus();
+  });
+}
+afficheQuiz();
+
+/* Consolidation et dépassement : une question chacun, avec « Recommencer » */
+function seule(id, Q){
+  const z=document.getElementById(id); z.style.display="grid"; z.style.gap="12px";
+  const go=()=>{ const act=question(z,Q,()=>{ const r=el("button","btn vide","Recommencer"); r.type="button"; r.addEventListener("click",go); act.append(r); }); };
+  go();
+}
+seule("consolidation", CONSOLIDATION);
+seule("depassement", DEPASSEMENT);
+
+/* Cartes mémoire : les mêmes questions que le quiz */
+let ic=0; const carte=document.getElementById("carte");
+function afficheCarte(){
+  carte.classList.remove("verso");
+  const Q=QUIZ[ic];
+  document.getElementById("carte-q").textContent=Q.q;
+  document.getElementById("carte-r").textContent=Q.c[0];
+  document.getElementById("carte-e").textContent=Q.e;
+  document.getElementById("carte-n").textContent=(ic+1)+" / "+QUIZ.length;
+  document.getElementById("carte-avant").disabled = ic===0;
+  document.getElementById("carte-apres").disabled = ic===QUIZ.length-1;
+}
+const retourne=()=>carte.classList.toggle("verso");
+carte.addEventListener("click",retourne);
+document.getElementById("carte-retourne").addEventListener("click",retourne);
+document.getElementById("carte-avant").addEventListener("click",()=>{ if(ic>0){ic--;afficheCarte();} });
+document.getElementById("carte-apres").addEventListener("click",()=>{ if(ic<QUIZ.length-1){ic++;afficheCarte();} });
+afficheCarte();
+
+/* Onglets */
+const onglets=["resume","quiz","cartes","plus"];
+function montre(nom){
+  onglets.forEach(o=>{
+    document.getElementById("t-"+o).setAttribute("aria-selected", o===nom?"true":"false");
+    document.getElementById("p-"+o).hidden = o!==nom;
+  });
+}
+onglets.forEach(o=>document.getElementById("t-"+o).addEventListener("click",()=>montre(o)));
+document.querySelectorAll("[data-aller]").forEach(b=>b.addEventListener("click",()=>montre(b.dataset.aller)));
+if(onglets.includes(location.hash.slice(1))) montre(location.hash.slice(1));
+</script>
+
+</body>
+</html>
