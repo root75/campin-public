@@ -315,9 +315,11 @@ function envoie(evt){
   if(!SUIVI) return;
   google.script.run.withFailureHandler(()=>{}).noter(COURS, evt);
 }
+/* Avancement local, seulement sans suivi : avec le suivi, il vient du serveur et de la séance,
+   pour qu'un poste partagé n'hérite pas de l'élève de l'heure précédente. */
 const CLE = "pas-a-pas:"+COURS;
-const lit = () => { try { return JSON.parse(localStorage.getItem(CLE)) || {}; } catch(e){ return {}; } };
-const ecrit = o => { try { localStorage.setItem(CLE, JSON.stringify(o)); } catch(e){} };
+const lit = () => { if(SUIVI) return {}; try { return JSON.parse(localStorage.getItem(CLE)) || {}; } catch(e){ return {}; } };
+const ecrit = o => { if(SUIVI) return; try { localStorage.setItem(CLE, JSON.stringify(o)); } catch(e){} };
 
 let etat = Object.assign({ atteint:0, erreurs:0 }, lit());   // atteint = premier bloc non validé
 let ici = Math.min(etat.atteint, BLOCS.length);
@@ -453,6 +455,11 @@ function fin(z){
   const avant = txt("button","btn vide","← Revoir les blocs"); avant.type="button";
   avant.addEventListener("click",()=>{ ici=0; affiche(); });
   nav.append(avant);
+  if(!SUIVI){
+    const zero = txt("button","btn vide","Recommencer à zéro"); zero.type="button";
+    zero.addEventListener("click",()=>{ etat = { atteint:0, erreurs:0 }; ecrit(etat); ici=0; affiche(); });
+    nav.append(zero);
+  }
   z.append(plus, nav);
   if(!etat.fini){ etat.fini = true; ecrit(etat); envoie({ etape:BLOCS.length, type:"fini" }); }
 }
@@ -476,8 +483,8 @@ const qui = document.getElementById("qui"), pied = document.getElementById("pied
 if(SUIVI){
   pied.textContent = "Ton avancement est visible par ton professeur.";
   google.script.run.withSuccessHandler(s=>{
-    if(s && s.email){ qui.textContent = "Connecté : "; qui.append(txt("strong",null,s.email)); }
-    if(s && s.atteint > etat.atteint){ etat.atteint = s.atteint; ecrit(etat); ici = Math.min(s.atteint, BLOCS.length); }
+    if(s && s.email){ qui.textContent = "Connecté : "; qui.append(txt("strong",null,s.email)); if(s.classe) qui.append(" · "+s.classe); }
+    if(s && s.atteint){ etat.atteint = s.atteint; etat.fini = s.atteint >= BLOCS.length; ici = Math.min(s.atteint, BLOCS.length); }
     affiche();
     envoie({ etape:Math.min(ici,BLOCS.length-1)+1, type:"ouvert" });
   }).withFailureHandler(()=>affiche()).etat(COURS);
