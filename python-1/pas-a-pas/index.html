@@ -1,0 +1,510 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Premiers pas en Python 1 — pas à pas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,600;0,800;1,600&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
+<style>
+/* Fiche pas à pas : un bloc à l'écran, une question de preuve avant le bloc suivant.
+   Même palette que les pages « je révise ». */
+:root{
+  --papier:#f3f5f7; --carte:#ffffff; --encre:#1f2a33; --doux:#5b6873;
+  --trait:#d5dce2; --encre-bouton:#1d5a73; --fromage:#e3a922; --fromage-pale:#fbf0d4;
+  --juste:#1f7a4d; --juste-pale:#e2f3ea; --faux:#b23a2e; --faux-pale:#f8e3e0;
+  --display:"Alegreya", Georgia, "Times New Roman", serif;
+  --texte:"Atkinson Hyperlegible", "Segoe UI", Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --papier:#141a1f; --carte:#1d252c; --encre:#e8edf1; --doux:#a3b0ba;
+  --trait:#33404a; --encre-bouton:#7cc3de; --fromage:#e9b84a; --fromage-pale:#3a3120;
+  --juste:#6fd0a0; --juste-pale:#183427; --faux:#f08b7f; --faux-pale:#3d2120; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --papier:#141a1f; --carte:#1d252c; --encre:#e8edf1; --doux:#a3b0ba;
+  --trait:#33404a; --encre-bouton:#7cc3de; --fromage:#e9b84a; --fromage-pale:#3a3120;
+  --juste:#6fd0a0; --juste-pale:#183427; --faux:#f08b7f; --faux-pale:#3d2120; color-scheme:dark }
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--papier);color:var(--encre);font-family:var(--texte);font-size:1.125rem;line-height:1.55;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:0 48px}
+.page{max-width:44rem;margin:0 auto;display:grid;gap:18px}
+header{padding-top:24px;display:grid;gap:4px}
+.surtitre{font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;color:var(--doux);font-weight:700}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(1.9rem,6vw,2.6rem);line-height:1.05;margin:0;text-wrap:balance}
+h1 em{font-style:italic;font-weight:600;color:var(--doux)}
+.qui{font-size:.95rem;color:var(--doux)}
+.qui strong{color:var(--encre)}
+h2{font-family:var(--display);font-weight:800;font-size:1.55rem;margin:0;line-height:1.15;text-wrap:balance}
+h3{font-family:var(--display);font-weight:600;font-size:1.2rem;margin:0}
+p{margin:0}
+button{font:inherit}
+button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--fromage);outline-offset:2px}
+
+.progres{display:flex;gap:4px}
+.progres span{flex:1;height:8px;border-radius:4px;background:var(--trait)}
+.progres span.fait{background:var(--juste)}
+.progres span.ici{background:var(--encre-bouton)}
+
+.panneau{background:var(--carte);border:1px solid var(--trait);border-radius:14px;padding:22px clamp(16px,4vw,28px);display:grid;gap:16px;min-width:0}
+.numero{font-size:.85rem;font-weight:700;color:var(--doux);letter-spacing:.06em;text-transform:uppercase;display:flex;flex-wrap:wrap;gap:4px 14px;justify-content:space-between}
+.lignes{display:grid;gap:10px;margin:0}
+.ligne{display:grid;grid-template-columns:7.2rem 1fr;gap:10px;align-items:start}
+.ligne dt{font-weight:700;color:var(--doux);white-space:nowrap}
+.ligne dd{margin:0;min-width:0}
+.ligne.fais dd{font-weight:700}
+.chemin{display:inline;background:var(--papier);border:1px solid var(--trait);border-radius:6px;padding:1px 6px;font-weight:700;
+  box-decoration-break:clone;-webkit-box-decoration-break:clone;line-height:1.9}
+.stop{background:var(--faux-pale);border-left:5px solid var(--faux);border-radius:6px;padding:10px 14px;font-weight:700}
+.encart{border:1px solid var(--trait);border-radius:10px;padding:12px 14px;display:grid;gap:8px;background:var(--papier)}
+.encart table{border-collapse:collapse;width:100%;font-size:1rem}
+.encart th,.encart td{text-align:left;padding:4px 8px 4px 0;vertical-align:top;border-bottom:1px solid var(--trait)}
+.encart tr:last-child td{border-bottom:0}
+.modele{font-family:var(--texte);white-space:pre-wrap;margin:0;font-size:1rem;line-height:1.6}
+.modele b{background:var(--fromage-pale);border-radius:4px;padding:0 3px;font-weight:700}
+.cases{margin:0;padding:0;list-style:none;display:grid;gap:8px}
+.cases label{display:grid;grid-template-columns:1.6rem 1fr;gap:8px;align-items:start;cursor:pointer}
+.cases input{width:1.3rem;height:1.3rem;margin:.15rem 0 0;accent-color:var(--juste)}
+
+.preuve{border-top:2px dashed var(--trait);padding-top:16px;display:grid;gap:12px}
+.preuve .etiquette{font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:var(--encre-bouton)}
+.question{font-size:1.15rem;font-weight:700}
+.choix{display:grid;gap:10px}
+.choix button{text-align:left;padding:12px 14px;border-radius:10px;border:2px solid var(--trait);
+  background:var(--carte);color:var(--encre);cursor:pointer;display:grid;grid-template-columns:1.8rem 1fr;gap:8px;align-items:start}
+.choix button:hover:not(:disabled){border-color:var(--encre-bouton)}
+.choix button .lettre{font-weight:700;color:var(--doux)}
+.choix button:disabled{cursor:default}
+.choix button.juste{border-color:var(--juste);background:var(--juste-pale)}
+.choix button.faux{border-color:var(--faux);background:var(--faux-pale)}
+.choix button.estompe{opacity:.5}
+.saisie{display:flex;flex-wrap:wrap;gap:10px}
+.saisie input{flex:1 1 16rem;min-width:0;font:inherit;padding:10px 12px;border-radius:10px;border:2px solid var(--trait);background:var(--carte);color:var(--encre)}
+.retour{border-radius:10px;padding:12px 14px;display:grid;gap:6px;font-size:1rem}
+.retour.juste{background:var(--juste-pale)} .retour.faux{background:var(--faux-pale)}
+
+.actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.btn{font-weight:700;font-size:1rem;padding:10px 18px;border-radius:10px;cursor:pointer;border:2px solid var(--encre-bouton)}
+.btn.plein{background:var(--encre-bouton);color:var(--carte)}
+.btn.vide{background:transparent;color:var(--encre-bouton)}
+.btn:disabled{opacity:.4;cursor:default}
+.espace{flex:1}
+
+details.coince{border:1px solid var(--trait);border-top:5px solid var(--encre-bouton);border-radius:12px;padding:12px 16px;background:var(--carte)}
+details.coince summary{cursor:pointer;font-family:var(--display);font-weight:800;font-size:1.2rem}
+details.coince ul{margin:10px 0 0;padding-left:1.2rem;display:grid;gap:8px}
+details.coince .protocole{margin-top:12px;font-size:1rem;color:var(--doux)}
+
+.aide{border:2px solid var(--trait);border-radius:12px;padding:12px 16px;display:grid;gap:8px;background:var(--carte)}
+.aide.active{border-color:var(--fromage);background:var(--fromage-pale)}
+.aide p{font-size:1rem}
+
+dialog{border:1px solid var(--trait);border-radius:14px;background:var(--carte);color:var(--encre);padding:20px;max-width:min(40rem,calc(100vw - 32px))}
+dialog::backdrop{background:rgb(0 0 0 / .45)}
+
+code,pre.code{font-family:ui-monospace,"Cascadia Mono",Consolas,"Courier New",monospace;font-size:.95em}
+pre.code{margin:0;background:var(--papier);border:1px solid var(--trait);border-left:5px solid var(--encre-bouton);border-radius:8px;padding:12px 14px;line-height:1.5;overflow-x:auto;white-space:pre}
+.panneau>*{min-width:0} .ligne dd,.chemin{overflow-wrap:anywhere}
+
+footer{font-size:.9rem;color:var(--doux);display:flex;flex-wrap:wrap;gap:4px 16px;justify-content:space-between}
+footer .auteur{margin-left:auto;font-weight:700}
+</style>
+</head>
+<body>
+
+<div class="page">
+  <header>
+    <div class="surtitre">Logique et programmation · 3e · LogProg 04 · séance 1</div>
+    <h1>Premiers pas en Python <em>pas à pas</em></h1>
+    <p class="qui" id="qui"></p>
+  </header>
+
+  <div class="progres" id="progres" aria-hidden="true"></div>
+
+  <main class="panneau" id="bloc" aria-live="polite"></main>
+
+  <details class="coince" id="coince">
+    <summary>Ça coince ?</summary>
+    <ul id="coince-liste"></ul>
+    <p class="protocole">Toujours bloqué ? Je relis le bloc → je demande à mon voisin (il explique, il ne touche pas ma souris) → je pose mon chevalet sur l'écran.</p>
+  </details>
+
+  <div class="aide" id="aide">
+    <p id="aide-texte">Je suis bloqué malgré « Ça coince ? » et mon voisin :</p>
+    <div class="actions"><button class="btn vide" type="button" id="aide-btn">J'attends de l'aide</button></div>
+  </div>
+
+  <div class="actions">
+    <button class="btn vide" type="button" id="memo-btn">🐍 Du logigramme à Python</button>
+  </div>
+
+  <footer><span id="pied"></span><span class="auteur">M. Louviaux</span></footer>
+</div>
+
+<dialog id="memo">
+  <h3>🐍 Du logigramme à Python</h3>
+  <div class="encart" style="margin-top:10px">
+    <table>
+      <tr><th>Dans le logigramme</th><th>En Python</th></tr>
+      <tr><td>la flèche <b>←</b> : vies ← 3</td><td><code>vies = 3</code></td></tr>
+      <tr><td>le parallélogramme <b>Afficher</b></td><td><code>print(vies)</code></td></tr>
+      <tr><td>un texte à afficher</td><td>entre guillemets : <code>print("Bonjour")</code></td></tr>
+      <tr><td>le tableau de trace</td><td>je prédis, ligne par ligne, AVANT d'exécuter</td></tr>
+      <tr><td>une note pour le lecteur</td><td>un commentaire : <code># je range 3</code></td></tr>
+    </table>
+  </div>
+  <p style="margin-top:12px"><b>⭐ = n'est pas une égalité.</b> À droite je calcule, à gauche je range : la boîte est toujours à gauche.</p>
+  <p style="margin-top:6px">Python lit chaque lettre : <code>Vies</code> n'est pas <code>vies</code>.</p>
+  <form method="dialog" class="actions" style="margin-top:14px"><button class="btn plein">Fermer</button></form>
+</dialog>
+
+<script>
+/* ===== Contenu de la séance 1 =====
+   Pas de fiche élève : blocs écrits depuis le déroulé de « LogProg04_PROF_Premiers-pas-en-Python »
+   (séance 1, minutes 5 à 50). La question de preuve est la prédiction, comme une trace.
+   Chaque bloc : veux / fais / vois, stop, minutes, coince (les pièges de CE bloc),
+   et une preuve : QCM (bonne réponse TOUJOURS en premier, mélangée à l'affichage,
+   p = ce qu'on dit à l'élève qui choisit ce piège) ou saisie (ok = test de la réponse,
+   faux = texte ou fonction de la réponse). */
+const COURS = "python-1";
+const SANS_ESPACE = r => (r||"").replace(/\s+/g,"");
+const CODE = s => `<pre class="code">${s}</pre>`;
+const SITE = "cscircles.cemc.uwaterloo.ca";
+
+const BLOCS = [
+  { partie:"A — Leçon 0 « Bonjour ! », sur le site", titre:"J'ouvre la leçon 0", min:2, stop:true,
+    veux:"Être sur la première leçon du site Cercles informatiques.",
+    fais:`Dans Chrome, un nouvel onglet (Ctrl+T) ▸ <span class="chemin">barre d'adresse ▸ je tape ${SITE}/0-fr/ ▸ touche Entrée</span>`,
+    vois:"La leçon 0 « Bonjour ! » s'affiche, avec des cadres de code.",
+    coince:["La page ne s'ouvre pas : je vérifie l'adresse lettre par lettre, avec le tiret dans 0-fr.",
+            "Le site ne s'ouvre toujours pas : je pose mon chevalet. Le professeur me fait passer à Thonny, qui marche sans le site.",
+            "Le site me propose de m'inscrire : pas besoin aujourd'hui, les leçons marchent sans compte.",
+            "Je garde deux onglets : celui-ci pour la fiche, un autre pour le site."],
+    q:{ type:"qcm", q:"Comment s'appelle la leçon 0 ?",
+        c:["Bonjour !","Variables","Erreurs","Console"],
+        p:[null,"Variables, c'est la leçon 1 : tu es allé trop loin. Reprends l'adresse avec 0-fr.","Erreurs, c'est la leçon 1E, pour la séance 2.","La console est un outil du site, pas une leçon."] } },
+
+  { partie:"A — Leçon 0 « Bonjour ! », sur le site", titre:"J'exécute le premier exemple", min:3,
+    veux:"Voir ce qu'un programme affiche.",
+    fais:`Sous le premier exemple de code, bouton <span class="chemin">Exécuter le programme</span>.`,
+    vois:"Sous le code, le texte écrit par le programme s'affiche.",
+    coince:["Je ne trouve pas le bouton : il est juste sous le premier cadre de code, je descends un peu dans la page."],
+    q:{ type:"qcm", q:"Où s'affiche ce que le programme écrit ?",
+        c:["Sous le code, après Exécuter le programme.","Dans un nouvel onglet.","Dans Thonny.","Nulle part : il faut un compte."],
+        p:[null,"Rien ne s'ouvre ailleurs : regarde juste sous le cadre de code.","Thonny, c'est pour la fin de l'heure. Ici, tout se passe sur le site.","Sans compte, les leçons marchent : clique sur Exécuter le programme."] } },
+
+  { partie:"A — Leçon 0 « Bonjour ! », sur le site", titre:"Je le casse exprès", min:5,
+    veux:"Savoir à quoi ressemble un message d'erreur, et à quoi servent les guillemets.",
+    fais:`Dans le cadre du premier exemple, j'efface les deux guillemets <b>"</b> ▸ <span class="chemin">Exécuter le programme</span> ▸ je lis le message d'erreur à voix haute à mon voisin. Puis je remets les deux guillemets.`,
+    vois:"Un message d'erreur à la place du texte. Avec les guillemets remis, le programme marche de nouveau.",
+    coince:["Le guillemet \" est la touche 3 du clavier, sans Maj.",
+            "Je me suis perdu dans le code : je recharge la page (F5 dans Chrome), l'exemple revient."],
+    q:{ type:"qcm", q:"Sans les guillemets, pourquoi Python se plaint-il ?",
+        c:["Il croit que les mots sont des noms de variables.","Le texte est trop long.","print doit prendre une majuscule.","Le site est en panne."],
+        p:[null,"La longueur ne change rien : ce sont les guillemets qui manquent.","print s'écrit toujours en minuscules : Print n'existe pas.","Le site marche : remets les guillemets, le programme repart."] } },
+
+  { partie:"A — Leçon 0 « Bonjour ! », sur le site", titre:"Je réussis « Hello world! »", min:5, stop:true,
+    veux:"Mon premier programme accepté par le site.",
+    fais:`Je descends jusqu'à l'exercice <b>Hello world!</b> ▸ je tape la ligne qui affiche <b>Hello world!</b> ▸ <span class="chemin">Exécuter le programme</span>.`,
+    vois:"Le site dit que l'exercice est réussi.",
+    coince:["Le site refuse : il n'accepte que le texte exact. Je compare lettre par lettre : majuscule à Hello, pas de virgule, le ! collé au mot.",
+            "Message d'erreur : les guillemets et les deux parenthèses sont-ils là ?"],
+    q:{ type:"saisie", q:"Recopie la ligne que le site a acceptée.",
+        ok: r => ['print("Helloworld!")',"print('Helloworld!')"].includes(SANS_ESPACE(r)) && /Hello world!/.test(r),
+        faux: r => !/["']/.test(r) ? "Il manque les guillemets : sans eux, Python cherche des variables. C'est un texte ou un nom de variable ?"
+                 : /^print/.test(r.trim()) ? "Compare lettre par lettre avec Hello world! : majuscule à Hello, pas de virgule, le ! collé."
+                 : "La ligne commence par print, en minuscules, puis la parenthèse.",
+        juste:"C'est la ligne attendue. Bouton « Suivant », en bas de la page : on passe aux variables." } },
+
+  { partie:"B — Leçon 1 « Variables », sur le site", titre:"J'ouvre la leçon 1", min:2,
+    veux:"Être sur la leçon 1, et connaître LA consigne de la leçon.",
+    fais:`En bas de la leçon 0, bouton <span class="chemin">Suivant</span> (ou l'adresse ${SITE}/1-fr/).`,
+    vois:"La leçon 1 « Variables ». La consigne : <b>je prédis ce qui va s'afficher AVANT de cliquer sur Exécuter le programme</b>, comme pour une trace.",
+    coince:["Pas de bouton Suivant : je tape l'adresse dans la barre d'adresse."],
+    q:{ type:"qcm", q:"Quelle est la consigne de toute la leçon 1 ?",
+        c:["Je prédis ce qui va s'afficher, puis j'exécute.","Je clique jusqu'à ce que ça passe au vert.","Je recopie la réponse du voisin.","Je lis sans rien essayer."],
+        p:[null,"Cliquer au hasard finit par passer, mais tu n'apprends rien. Prédis d'abord.","Ta prédiction, c'est la tienne : c'est elle qui t'entraîne.","Il faut essayer : mais après avoir prédit."] } },
+
+  { partie:"B — Leçon 1 « Variables », sur le site", titre:"« x factor », comme une trace", min:5, stop:true,
+    veux:"Lire trois lignes et trouver la valeur de x, sans rien programmer.",
+    fais:"Avec le professeur, au projecteur. Je fais la trace ligne par ligne : quelle valeur a x après chaque ligne ? J'écris ma réponse ici AVANT de la taper sur le site.",
+    vois:"La valeur finale de x.",
+    extra: CODE("x = 10\nx = x + x\nx = x - 5"),
+    coince:["= n'est pas une égalité : à droite je calcule, à gauche je range. C'est la flèche ← du logigramme.",
+            "Je fais un petit tableau de trace sur un brouillon : une ligne par instruction, la valeur de x à côté."],
+    q:{ type:"saisie", q:"Quelle est la valeur finale de x ?",
+        ok: r => r.trim()==="15",
+        faux: r => r.trim()==="10" ? "x ne garde pas sa première valeur : chaque ligne range une nouvelle valeur dans la boîte."
+                 : r.trim()==="20" ? "Tu t'arrêtes à la 2e ligne. La 3e, x = x - 5, change encore x."
+                 : r.trim()==="5" ? "À la 2e ligne, x = x + x : x vaut 10, donc 10 + 10. Ensuite seulement on enlève 5."
+                 : "Refais la trace : 1re ligne, x vaut 10. 2e ligne, x vaut ? 3e ligne, x vaut ?",
+        juste:"10, puis 10 + 10 = 20, puis 20 − 5 = 15. Tape 15 dans le cadre « x factor » du site." } },
+
+  { partie:"B — Leçon 1 « Variables », sur le site", titre:"« L'anatomie Python », seul", min:10,
+    veux:"Créer mes propres variables à partir d'une autre.",
+    fais:`Dans l'exercice <b>L'anatomie Python</b>, je complète une ligne par partie du corps (têtes, épaules, genoux, orteils), à partir de la variable <b>personnes</b> ▸ <span class="chemin">Exécuter le programme</span>.`,
+    vois:"Le site dit que l'exercice est réussi.",
+    extra:`<div class="encart"><h3>⚡ Fini avant la minute 40 ?</h3><p>Sur le même site : « Calculette vitesse », puis « Programme d'échange ». Je prédis toujours avant d'exécuter. Au signal du professeur, je passe au bloc suivant, même si ce n'est pas fini.</p></div>`,
+    coince:["Pas de print dans cet exercice : le correcteur lit les variables lui-même.",
+            "Une personne a 1 tête, 2 épaules, 2 genoux et 10 orteils : tetes = 1 * personnes, et ainsi de suite.",
+            "Le site dit qu'une variable n'existe pas : je vérifie son nom, sans accent et sans majuscule."],
+    q:{ type:"saisie", q:"Sans exécuter : si personnes vaut 3, que vaut genoux ?",
+        ok: r => r.trim()==="6",
+        faux: r => r.trim()==="2" ? "2, c'est pour UNE personne. genoux = 2 * personnes : 2 fois 3."
+                 : r.trim()==="5" ? "Le signe * multiplie : 2 * 3, pas 2 + 3."
+                 : "genoux = 2 * personnes, et personnes vaut 3 : calcule.",
+        juste:"2 × 3 = 6. Ton programme fait le même calcul pour chaque partie du corps." } },
+
+  { partie:"C — Défi « Les vies », dans Thonny", titre:"Je crée mon dossier Python", min:2,
+    veux:"Un endroit où ranger tous mes programmes de l'année. Au signal du professeur seulement.",
+    fais:`Explorateur de fichiers : <span class="chemin">icône dossier jaune de la barre des tâches (touche Windows+E) ▸ colonne de gauche ▸ Documents ▸ bouton Nouveau, en haut à gauche ▸ Dossier (Ctrl+Maj+N)</span> ▸ je tape <b>Python</b> ▸ touche Entrée.`,
+    vois:"Un dossier Python dans Documents.",
+    coince:["Le dossier s'appelle « Nouveau dossier » : clic droit dessus ▸ Renommer (touche F2) ▸ je tape Python ▸ Entrée.",
+            "Pas de bouton Nouveau : clic droit dans une zone vide de Documents ▸ Nouveau ▸ Dossier."],
+    q:{ type:"qcm", q:"Où est ton dossier Python ?",
+        c:["Dans Documents.","Sur le Bureau.","Dans Téléchargements.","Dans Thonny."],
+        p:[null,"Sur le Bureau, on ne le retrouve pas sur un autre poste. Recrée-le dans Documents.","Téléchargements se vide : recrée-le dans Documents.","Thonny est un programme, pas un dossier : le dossier Python va dans Documents."] } },
+
+  { partie:"C — Défi « Les vies », dans Thonny", titre:"J'ouvre Thonny et j'enregistre", min:3, stop:true,
+    veux:"Un fichier à mon nom, enregistré AVANT d'écrire, pour ne rien perdre.",
+    fais:`<span class="chemin">touche Windows ▸ je tape Thonny ▸ Entrée</span>. Puis <span class="chemin">menu Fichier ▸ Enregistrer sous… (Ctrl+Maj+S) ▸ Documents ▸ Python ▸ Nom du fichier</span> : <b>01_Les-vies_Nom.py</b> (avec MON nom) ▸ bouton <span class="chemin">Enregistrer</span>.`,
+    vois:"L'onglet du haut, dans Thonny, affiche le nom de mon fichier.",
+    coince:["Thonny ne se lance pas : je fais le défi dans la console du site (menu noir en haut ▸ Console). Elle n'enregistre rien : je montre mon écran au professeur.",
+            "Sans .py à la fin, Thonny n'exécute pas comme attendu : Fichier ▸ Enregistrer sous… et je corrige le nom.",
+            "Deux signes différents : le tiret - entre Les et vies, le trait de soulignement _ partout ailleurs."],
+    q:{ type:"saisie", q:"Recopie le nom de ton fichier, tel que Thonny l'affiche.",
+        ok: r => /^01_les-vies_[^\s_]{2,}.*\.py$/i.test(r.trim()) && !/_nom\.py$/i.test(r.trim()),
+        faux: r => !/\.py$/i.test(r.trim()) ? "Il manque .py à la fin : sans lui, Thonny n'exécute pas comme attendu. Fichier ▸ Enregistrer sous… et corrige."
+                 : /_nom\.py$/i.test(r.trim()) ? "Remplace Nom par TON nom : sinon, ton fichier ne se retrouve pas. Fichier ▸ Enregistrer sous… et corrige."
+                 : "Le nom doit être 01_Les-vies_ suivi de ton nom, puis .py. Vérifie les _ et le - .",
+        juste:"Le fichier est à ton nom, dans Documents ▸ Python." } },
+
+  { partie:"C — Défi « Les vies », dans Thonny", titre:"Je tape les trois lignes", min:3,
+    veux:"Traduire le logigramme « Les vies » en Python : la flèche ← devient =, Afficher devient print.",
+    fais:`Dans la grande zone du haut de Thonny, je tape les trois lignes ▸ <span class="chemin">icône disquette « Enregistrer » (Ctrl+S)</span>. Je n'exécute pas encore.`,
+    vois:"Les trois lignes, exactement comme le modèle.",
+    extra: CODE("vies = 3\nvies = vies - 1\nprint(vies)"),
+    coince:["J'ai tapé dans la console du bas : je tape dans la zone du haut, celle qui porte le nom du fichier.",
+            "Tout en minuscules : Vies n'est pas vies, Print n'est pas print."],
+    q:{ type:"saisie", q:"AVANT d'exécuter : que va afficher ton programme ?",
+        ok: r => r.trim()==="2",
+        faux: r => r.trim()==="3" ? "La 2e ligne calcule 3 − 1 et range le résultat dans vies : la boîte ne contient plus 3."
+                 : norm(r)==="vies" ? "Sans guillemets, print affiche ce qu'il y a dans la boîte, pas son nom."
+                 : "Fais la trace : quelle valeur a vies après chaque ligne ?",
+        juste:"À droite je calcule, à gauche je range : vies passe de 3 à 2. Vérifions." } },
+
+  { partie:"C — Défi « Les vies », dans Thonny", titre:"J'exécute et je montre", min:2, stop:true,
+    veux:"Voir si ma prédiction était juste.",
+    fais:`<span class="chemin">icône ▶ verte « Exécuter le script courant » (touche F5)</span>. Puis je montre mon écran au professeur.`,
+    vois:"Dans la console du bas, le nombre 2.",
+    coince:["NameError : Python ne connaît pas un nom. Je vérifie les majuscules : vies partout.",
+            "SyntaxError : c'est l'écriture. Je vérifie les parenthèses de print( ).",
+            "Thonny demande d'enregistrer : je clique sur Oui (ou Ctrl+S, puis F5)."],
+    q:{ type:"qcm", q:"Qu'affiche la console du bas ?",
+        c:["2","3","vies","Un message d'erreur"],
+        p:[null,"Tu as écrit vies - 1 seul sur sa ligne ? Le calcul est fait, puis jeté. Où ranges-tu le résultat ? Corrige, Ctrl+S, F5.",
+               "print(\"vies\") affiche le mot. Tu veux le mot, ou ce qu'il y a dans la boîte ? Enlève les guillemets, Ctrl+S, F5.",
+               "Lis le message : quel nom ne connaît-il pas ? Compare chaque ligne avec le modèle du bloc précédent, corrige, Ctrl+S, F5."] } }
+];
+
+const FIN = {
+  titre:"🎉 J'ai fini la séance 1",
+  texte:"Mon fichier 01_Les-vies est enregistré dans Documents ▸ Python : je ne le supprime pas, on le reprend à la séance 2.",
+  plus:"Je change DEUX touches de mon programme pour qu'il affiche 1. Je prédis, puis F5. Ensuite, sur le site : « Calculette vitesse » et « Programme d'échange ».",
+  lien:'<a href="https://root75.github.io/campin-public/python-je-revise/" target="_blank" rel="noopener">Premiers pas en Python — je révise</a>'
+};
+
+/* ===== Moteur ===== */
+const LETTRES = "ABCD";
+const norm = s => (s||"").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase()
+  .replace(/[’']/g,"'").replace(/[«»"“”.]/g,"").replace(/\s+/g," ").trim();
+const melange = a => { const b=a.slice(); for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];} return b; };
+const el = (tag, cls, html) => { const n=document.createElement(tag); if(cls) n.className=cls; if(html!=null) n.innerHTML=html; return n; };
+const txt = (tag, cls, t) => { const n=document.createElement(tag); if(cls) n.className=cls; n.textContent=t; return n; };
+
+/* Suivi : servie par Apps Script (outils/pas-a-pas), la page envoie chaque événement
+   au tableau de bord du professeur. Ouverte depuis GitHub Pages, rien ne part. */
+const SUIVI = typeof google !== "undefined" && google.script && google.script.run;
+function envoie(evt){
+  if(!SUIVI) return;
+  google.script.run.withFailureHandler(()=>{}).noter(COURS, evt);
+}
+/* Avancement local, seulement sans suivi : avec le suivi, il vient du serveur et de la séance,
+   pour qu'un poste partagé n'hérite pas de l'élève de l'heure précédente. */
+const CLE = "pas-a-pas:"+COURS;
+const lit = () => { if(SUIVI) return {}; try { return JSON.parse(localStorage.getItem(CLE)) || {}; } catch(e){ return {}; } };
+const ecrit = o => { if(SUIVI) return; try { localStorage.setItem(CLE, JSON.stringify(o)); } catch(e){} };
+
+let etat = Object.assign({ atteint:0, erreurs:0 }, lit());   // atteint = premier bloc non validé
+let ici = Math.min(etat.atteint, BLOCS.length);
+let enAide = false;
+
+function barre(){
+  const b = document.getElementById("progres"); b.replaceChildren();
+  BLOCS.forEach((_,i)=>{ const s=el("span"); s.className = i<etat.atteint ? "fait" : (i===ici ? "ici" : ""); b.append(s); });
+}
+
+function affiche(){
+  barre();
+  const z = document.getElementById("bloc"); z.replaceChildren();
+  const liste = document.getElementById("coince-liste"); liste.replaceChildren();
+  document.getElementById("coince").open = false;
+  if(ici >= BLOCS.length){ fin(z); return; }
+  const B = BLOCS[ici];
+
+  const num = el("div","numero");
+  num.append(txt("span",null,"Bloc "+(ici+1)+" sur "+BLOCS.length+" · Partie "+B.partie.split(" — ")[0]), txt("span",null,"⏱ "+B.min+" min"));
+  z.append(num, txt("h2",null,(ici+1)+". "+B.titre));
+
+  const dl = el("dl","lignes");
+  [["🎯 Je veux","veux",B.veux],["👉 Je fais","fais",B.fais],["👀 Je vois","vois",B.vois]].forEach(([t,c,h])=>{
+    const d = el("div","ligne "+c); d.append(txt("dt",null,t), el("dd",null,h)); dl.append(d);
+  });
+  z.append(dl);
+  if(B.extra) z.append(el("div",null,B.extra));
+  if(B.stop) z.append(txt("p","stop","🛑 STOP — je ne continue pas tant que je ne vois pas ça."));
+
+  B.coince.forEach(c=>liste.append(txt("li",null,c)));
+
+  const pr = el("div","preuve");
+  const fait = etat.atteint > ici;
+  if(fait){
+    pr.append(txt("p","retour juste","✅ Bloc déjà validé."));
+  } else if(B.cases){
+    pr.append(txt("div","etiquette","✅ Les cinq points (mon message est noté sur 5)"));
+    const ul = el("ul","cases");
+    B.cases.forEach(c=>{ const li=el("li"); const lab=el("label"); const cb=el("input"); cb.type="checkbox";
+      lab.append(cb, txt("span",null,c)); li.append(lab); ul.append(li); });
+    const go = txt("button","btn plein","Les cinq points sont bons, j'ai cliqué sur Envoyer"); go.type="button"; go.disabled=true;
+    ul.addEventListener("change",()=>{ go.disabled = [...ul.querySelectorAll("input")].some(x=>!x.checked); });
+    go.addEventListener("click",()=>{ ul.remove(); go.remove(); preuve(pr,B); });
+    pr.append(ul, go);
+  } else {
+    const go = txt("button","btn plein","👀 Je vois ça"); go.type="button";
+    go.addEventListener("click",()=>{ go.remove(); preuve(pr,B); });
+    pr.append(go);
+  }
+  z.append(pr);
+
+  const nav = el("div","actions");
+  const avant = txt("button","btn vide","← Bloc précédent"); avant.type="button"; avant.disabled = ici===0;
+  avant.addEventListener("click",()=>{ ici--; affiche(); });
+  nav.append(avant, el("span","espace"));
+  if(fait){ const s=txt("button","btn plein","Bloc suivant →"); s.type="button"; s.addEventListener("click",()=>{ici++;affiche();}); nav.append(s); }
+  z.append(nav);
+}
+
+/* La question de preuve. Faux : on explique, on compte, et on recommence. */
+function preuve(pr, B){
+  const Q = B.q;
+  pr.append(txt("div","etiquette","Je prouve que j'ai fait le bloc"), txt("p","question",Q.q));
+  const retour = el("div","retour"); retour.hidden = true;
+  const zone = el("div"); pr.append(zone, retour);
+  let essais = 0;
+
+  const reussi = (reponse) => {
+    retour.className="retour juste"; retour.replaceChildren(txt("strong",null,"Oui, c'est ça."));
+    if(Q.juste) retour.append(txt("p",null,Q.juste));
+    retour.hidden=false;
+    envoie({ etape:ici+1, type:"juste", essais:essais, reponse:reponse });
+    etat.atteint = Math.max(etat.atteint, ici+1); ecrit(etat); barre();
+    if(enAide) basculeAide();
+    const s = txt("button","btn plein", ici+1<BLOCS.length ? "Bloc suivant →" : "J'ai fini ✓"); s.type="button";
+    s.addEventListener("click",()=>{ ici++; affiche(); });
+    pr.append(s); s.focus();
+  };
+  const rate = (explication, reponse) => {
+    essais++; etat.erreurs++; ecrit(etat);
+    envoie({ etape:ici+1, type:"faux", essais:essais, reponse:reponse });
+    retour.className="retour faux"; retour.replaceChildren(txt("strong",null,"Pas encore."), txt("p",null,explication));
+    if(essais>=2){ retour.append(txt("p",null,"Ouvre « Ça coince ? » juste en dessous.")); document.getElementById("coince").open = true; }
+    if(essais>=3) retour.append(txt("p",null,"Toujours bloqué : demande à ton voisin, puis pose ton chevalet sur l'écran."));
+    retour.hidden=false;
+  };
+
+  if(Q.type==="qcm"){
+    const tour = () => {
+      zone.replaceChildren();
+      const liste = el("div","choix"); const boutons=[];
+      melange([0,1,2,3]).forEach((k,pos)=>{
+        const b = el("button"); b.type="button";
+        b.append(txt("span","lettre",LETTRES[pos]), txt("span",null,Q.c[k]));
+        b.addEventListener("click",()=>{
+          boutons.forEach(x=>x.disabled=true);
+          if(k===0){ b.classList.add("juste"); boutons.forEach(x=>{ if(x!==b) x.classList.add("estompe"); }); reussi(Q.c[k]); }
+          else {
+            b.classList.add("faux"); rate(Q.p[k], Q.c[k]);
+            const r = txt("button","btn vide","Réessayer"); r.type="button";
+            r.addEventListener("click",()=>{ r.remove(); retour.hidden=true; tour(); });
+            zone.append(r);
+          }
+        });
+        boutons.push(b); liste.append(b);
+      });
+      zone.append(liste);
+    };
+    tour();
+  } else {
+    const f = el("form","saisie"); const inp = el("input"); inp.type="text"; inp.autocomplete="off"; inp.spellcheck=false;
+    inp.setAttribute("aria-label", Q.q);
+    const ok = txt("button","btn plein","Vérifier"); ok.type="submit";
+    f.append(inp, ok);
+    f.addEventListener("submit", e=>{
+      e.preventDefault(); const r = inp.value.trim(); if(!r) return;
+      if(Q.ok(r)){ inp.disabled=true; ok.disabled=true; reussi(r); } else { rate(typeof Q.faux==="function" ? Q.faux(r) : Q.faux, r); inp.select(); }
+    });
+    zone.append(f); inp.focus();
+  }
+}
+
+function fin(z){
+  z.append(txt("h2",null,FIN.titre), txt("p",null,FIN.texte));
+  const plus = el("div","encart");
+  plus.append(txt("h3",null,"⚡ J'ai fini avant les autres"), txt("p",null,FIN.plus),
+    el("p",null,"Puis je révise : "+FIN.lien+"."));
+  const nav = el("div","actions");
+  const avant = txt("button","btn vide","← Revoir les blocs"); avant.type="button";
+  avant.addEventListener("click",()=>{ ici=0; affiche(); });
+  nav.append(avant);
+  if(!SUIVI){
+    const zero = txt("button","btn vide","Recommencer à zéro"); zero.type="button";
+    zero.addEventListener("click",()=>{ etat = { atteint:0, erreurs:0 }; ecrit(etat); ici=0; affiche(); });
+    nav.append(zero);
+  }
+  z.append(plus, nav);
+  if(!etat.fini){ etat.fini = true; ecrit(etat); envoie({ etape:BLOCS.length, type:"fini" }); }
+}
+
+/* « J'attends de l'aide » : l'équivalent de la case entourée. Le chevalet reste le signal. */
+function basculeAide(){
+  enAide = !enAide;
+  const a = document.getElementById("aide"), b = document.getElementById("aide-btn");
+  a.classList.toggle("active", enAide);
+  document.getElementById("aide-texte").textContent = enAide
+    ? "✋ Ton professeur sait que tu attends au bloc "+(ici+1)+". Pose ton chevalet sur l'écran, et en attendant relis « Ça coince ? »."
+    : "Je suis bloqué malgré « Ça coince ? » et mon voisin :";
+  b.textContent = enAide ? "Je me suis débloqué" : "J'attends de l'aide";
+  envoie({ etape:Math.min(ici,BLOCS.length-1)+1, type: enAide ? "aide" : "aide-fin" });
+}
+document.getElementById("aide-btn").addEventListener("click", basculeAide);
+document.getElementById("memo-btn").addEventListener("click",()=>document.getElementById("memo").showModal());
+
+/* Démarrage. Avec le suivi : on reprend où le serveur s'est arrêté (autre poste, onglet fermé). */
+const qui = document.getElementById("qui"), pied = document.getElementById("pied");
+if(SUIVI){
+  pied.textContent = "Ton avancement est visible par ton professeur.";
+  google.script.run.withSuccessHandler(s=>{
+    if(s && s.email){ qui.textContent = "Connecté : "; qui.append(txt("strong",null,s.email)); if(s.classe) qui.append(" · "+s.classe); }
+    if(s && s.atteint){ etat.atteint = s.atteint; etat.fini = s.atteint >= BLOCS.length; ici = Math.min(s.atteint, BLOCS.length); }
+    affiche();
+    envoie({ etape:Math.min(ici,BLOCS.length-1)+1, type:"ouvert" });
+  }).withFailureHandler(()=>affiche()).etat(COURS);
+} else {
+  qui.textContent = "Garde deux fenêtres : cette fiche, et le site ou Thonny.";
+  pied.textContent = "Ton avancement reste sur cet ordinateur. Aucune donnée n'est envoyée.";
+  affiche();
+}
+</script>
+</body>
+</html>
