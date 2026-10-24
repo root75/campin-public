@@ -111,6 +111,20 @@ pre.code{margin:0;background:var(--papier);border:1px solid var(--trait);border-
 .console .err{display:block;color:var(--faux);font-weight:700}
 .console .vide{display:block;color:var(--doux);font-style:italic}
 .credit{font-size:.8rem;color:var(--doux);margin:0}
+.ordre{list-style:none;margin:0;padding:0;display:grid;gap:6px;counter-reset:l}
+.ordre li{display:grid;grid-template-columns:1.6rem 1fr auto auto;gap:8px;align-items:center;background:var(--papier);border:1px solid var(--trait);border-radius:8px;padding:6px 8px;counter-increment:l}
+.ordre li::before{content:counter(l);font-weight:700;color:var(--doux);text-align:right}
+.ordre code{font-family:ui-monospace,"Cascadia Mono",Consolas,"Courier New",monospace;white-space:pre-wrap;overflow-wrap:anywhere;min-width:0}
+.fleche{font:inherit;width:2.4rem;height:2.2rem;border-radius:8px;border:2px solid var(--encre-bouton);background:var(--carte);color:var(--encre-bouton);cursor:pointer}
+.fleche:disabled{opacity:.3;cursor:default}
+.defile{overflow-x:auto}
+table.trace{border-collapse:collapse;font-size:1rem}
+table.trace th,table.trace td{border:1px solid var(--trait);padding:6px 10px;text-align:left}
+table.trace code{font-family:ui-monospace,"Cascadia Mono",Consolas,"Courier New",monospace;white-space:pre}
+table.trace input{width:4.5rem;font:inherit;padding:4px 6px;border-radius:6px;border:2px solid var(--trait);background:var(--carte);color:var(--encre)}
+table.trace input.faux{border-color:var(--faux);background:var(--faux-pale)} table.trace input.juste{border-color:var(--juste)}
+.lignes-code button{grid-template-columns:1.8rem 1fr}
+.lignes-code code{font-family:ui-monospace,"Cascadia Mono",Consolas,"Courier New",monospace;white-space:pre}
 .panneau>*{min-width:0} .ligne dd,.chemin{overflow-wrap:anywhere}
 
 footer{font-size:.9rem;color:var(--doux);display:flex;flex-wrap:wrap;gap:4px 16px;justify-content:space-between}
@@ -173,8 +187,10 @@ footer .auteur{margin-left:auto;font-weight:700}
    CC BY-NC-SA 3.0), réécrits et exécutés dans la page. Thonny reste pour « Les vies ».
    Chaque bloc : veux / fais / vois, stop, minutes, coince (les pièges de CE bloc), et une preuve :
    QCM (bonne réponse TOUJOURS en premier, mélangée à l'affichage, p = ce qu'on dit au piège),
-   saisie (ok = test, faux = texte ou fonction de la réponse), ou code (depart = programme de
-   départ, test(r) = true ou l'explication ; r = { sortie, erreur:{type,ligne,message}, vars, code }). */
+   saisie (ok = test, faux = texte ou fonction de la réponse), code (depart = programme de départ,
+   test(r) = true ou l'explication ; r = { sortie, erreur:{type,ligne,message}, vars, code }),
+   ordre (lignes à remettre dans l'ordre, puis test(r) comme code), trace (code, vars, valeurs
+   après chaque ligne, aide par ligne) ou ligne (code, bonne = la ligne fautive, p par ligne). */
 const COURS = "python-2";
 const CODE = s => `<pre class="code">${s}</pre>`;
 const SORTIE = r => r.sortie.replace(/\s+$/,"");
@@ -222,6 +238,16 @@ const BLOCS = [
         test: r => r.erreur ? (r.erreur.type==="NameError" ? "NameError, ligne "+r.erreur.ligne+" : Python cherche une variable Joe. Un texte s'écrit entre guillemets." : "Lis la ligne rouge : il manque un guillemet ?")
                  : SORTIE(r)==="Bonjour Joe" ? true : "Python affiche « "+SORTIE(r)+" ». Il doit afficher Bonjour Joe : ↺ Code de départ et ajoute seulement deux guillemets.",
         juste:"Avec les guillemets, Joe est un texte rangé dans la boîte nom." } },
+
+  { partie:"B — Je lis les messages d'erreur", titre:"Quelle ligne cloche ?", min:3,
+    veux:"Trouver une erreur de logique en lisant, sans exécuter.",
+    fais:"Je lis le programme ligne par ligne, comme une trace. Je clique sur la ligne fautive.",
+    vois:"Le score doit valoir 15 : 10 points, plus un bonus de 5. Le programme affiche 5.",
+    coince:["Aucune ligne rouge ici : le programme tourne, mais il calcule faux. C'est une erreur de logique.",
+            "Je fais la trace : que vaut score après chaque ligne ?"],
+    q:{ type:"ligne", q:"Clique sur la ligne fautive.", code:["score = 10","bonus = 5","score = score - bonus","print(score)"], bonne:3,
+        p:["score = 10 : le score de départ est bien 10.","bonus = 5 : le bonus vaut bien 5.",null,"print(score) affiche bien le score. Le problème est dans le calcul, juste avant."],
+        juste:"Le signe − enlève le bonus au lieu de l'ajouter : score = score + bonus." } },
 
   { partie:"B — Je lis les messages d'erreur", titre:"Les soldes", min:6, stop:true,
     veux:"Trouver une erreur de logique : pas de ligne rouge, mais un résultat faux.",
@@ -380,16 +406,98 @@ function editeur(zone, Q, reussi, rate){
       ecran.textContent = "Le moteur Python ne se charge pas. Je réessaie dans un instant ; sinon, je pose mon chevalet.";
       lance.disabled = false; return;
     }
-    ecran.replaceChildren(txt("span", null, r.sortie));
-    if(r.erreur){
-      ecran.append(txt("span","err", (r.erreur.ligne ? "Ligne " + r.erreur.ligne + " — " : "") + r.erreur.message));
-      if(ERREURS[r.erreur.type]) ecran.append(txt("span","vide","→ " + ERREURS[r.erreur.type]));
-    }
-    if(!r.sortie && !r.erreur) ecran.append(txt("span","vide","(rien n'est affiché)"));
+    montre(ecran, r);
     const verdict = Q.test(r);
     if(verdict === true){ ta.readOnly = true; depart.disabled = true; reussi(ta.value); }
     else { lance.disabled = false; rate(verdict, ta.value); }
   }
+}
+
+/* Code mélangé : l'élève remet les lignes dans l'ordre (▲ ▼), puis la fiche EXÉCUTE le programme
+   et applique test(r) comme pour un programme écrit : tous les ordres qui marchent sont justes. */
+function ordre(zone, Q, reussi, rate){
+  let lignes = melange(Q.lignes);
+  while(lignes.join("\n") === Q.lignes.join("\n")) lignes = melange(Q.lignes);
+  const ol = el("ol","ordre");
+  const ecran = el("pre","console"); ecran.hidden = true;
+  const ok = txt("button","btn plein","▶ Exécuter dans cet ordre"); ok.type = "button";
+  const dessine = () => {
+    ol.replaceChildren();
+    lignes.forEach((l,i) => {
+      const li = el("li"); const c = txt("code", null, l);
+      const haut = txt("button","fleche","▲"); haut.type="button"; haut.disabled = i===0; haut.setAttribute("aria-label","Monter la ligne « "+l+" »");
+      const bas = txt("button","fleche","▼"); bas.type="button"; bas.disabled = i===lignes.length-1; bas.setAttribute("aria-label","Descendre la ligne « "+l+" »");
+      haut.addEventListener("click",()=>{ [lignes[i-1],lignes[i]]=[lignes[i],lignes[i-1]]; dessine(); ol.children[i-1].querySelector(".fleche").focus(); });
+      bas.addEventListener("click",()=>{ [lignes[i+1],lignes[i]]=[lignes[i],lignes[i+1]]; dessine(); ol.children[i+1].querySelectorAll(".fleche")[1].focus(); });
+      li.append(c, haut, bas); ol.append(li);
+    });
+  };
+  dessine();
+  zone.append(ol, el("div","actions"), ecran); zone.children[1].append(ok);
+  chargePython().catch(() => {});
+  ok.addEventListener("click", async () => {
+    ok.disabled = true; ecran.hidden = false; ecran.textContent = "⏳ Python se prépare… (la première fois seulement, quelques secondes)";
+    let r;
+    try { r = await executePython(lignes.join("\n")); }
+    catch(e){ ecran.textContent = "Le moteur Python ne se charge pas. Je réessaie dans un instant ; sinon, je pose mon chevalet."; ok.disabled = false; return; }
+    montre(ecran, r);
+    const verdict = Q.test(r);
+    if(verdict === true){ ol.querySelectorAll("button").forEach(b=>b.disabled=true); reussi(lignes.join(" / ")); }
+    else { ok.disabled = false; rate(verdict, lignes.join(" / ")); }
+  });
+}
+
+/* Tableau de trace : la valeur de chaque variable après chaque ligne, comme en LogProg 03. */
+function trace(zone, Q, reussi, rate){
+  const t = el("table","trace"); const tete = el("tr");
+  tete.append(txt("th",null,"Ligne"), txt("th",null,"Instruction"));
+  Q.vars.forEach(v => tete.append(txt("th",null,v)));
+  t.append(tete);
+  const cases = Q.code.map((l,i) => {
+    const tr = el("tr"); tr.append(txt("td",null,String(i+1)), el("td",null,"<code></code>")); tr.children[1].firstChild.textContent = l;
+    const ins = Q.vars.map(v => { const td = el("td"); const inp = el("input"); inp.type="text"; inp.inputMode="numeric"; inp.autocomplete="off";
+      inp.setAttribute("aria-label", v+" après la ligne "+(i+1)); td.append(inp); tr.append(td); return inp; });
+    t.append(tr); return ins;
+  });
+  const ok = txt("button","btn plein","Vérifier ma trace"); ok.type="button";
+  const barre = el("div","actions"); barre.append(ok);
+  zone.append(el("div","defile"), barre); zone.firstChild.append(t);
+  ok.addEventListener("click", () => {
+    const reponse = cases.map(l => l.map(x => x.value.trim()).join(",")).join(" / ");
+    let premiere = -1;
+    cases.forEach((l,i) => l.forEach((x,j) => {
+      const juste = x.value.trim().replace(",",".") === String(Q.valeurs[i][j]);
+      x.classList.toggle("faux", !juste); x.classList.toggle("juste", juste);
+      if(!juste && premiere<0) premiere = i;
+    }));
+    if(premiere < 0){ cases.flat().forEach(x=>x.disabled=true); ok.disabled=true; reussi(reponse); }
+    else rate((Q.aide && Q.aide[premiere]) || "Ligne "+(premiere+1)+" : refais le calcul. À droite je calcule avec la valeur d'avant, à gauche je range.", reponse);
+  });
+}
+
+/* Ligne fautive : l'élève montre la ligne qui cloche AVANT de toucher au code.
+   bonne = numéro de la ligne (à partir de 1), p = ce qu'on dit pour chaque autre ligne. */
+function ligneFautive(zone, Q, reussi, rate){
+  const liste = el("div","choix lignes-code"); const boutons = [];
+  Q.code.forEach((l,i) => {
+    const b = el("button"); b.type="button";
+    b.append(txt("span","lettre",String(i+1)), txt("code",null,l));
+    b.addEventListener("click", () => {
+      if(i+1 === Q.bonne){ boutons.forEach(x=>{ x.disabled=true; if(x!==b) x.classList.add("estompe"); }); b.classList.add("juste"); reussi("ligne "+(i+1)); }
+      else { b.classList.add("faux"); b.disabled = true; rate((Q.p && Q.p[i]) || "La ligne "+(i+1)+" fait bien ce qu'elle dit. Cherche ailleurs.", "ligne "+(i+1)); }
+    });
+    boutons.push(b); liste.append(b);
+  });
+  zone.append(liste);
+}
+
+function montre(ecran, r){
+  ecran.replaceChildren(txt("span", null, r.sortie));
+  if(r.erreur){
+    ecran.append(txt("span","err", (r.erreur.ligne ? "Ligne " + r.erreur.ligne + " — " : "") + r.erreur.message));
+    if(ERREURS[r.erreur.type]) ecran.append(txt("span","vide","→ " + ERREURS[r.erreur.type]));
+  }
+  if(!r.sortie && !r.erreur) ecran.append(txt("span","vide","(rien n'est affiché)"));
 }
 
 /* ===== Moteur ===== */
@@ -457,7 +565,7 @@ function affiche(){
     ul.addEventListener("change",()=>{ go.disabled = [...ul.querySelectorAll("input")].some(x=>!x.checked); });
     go.addEventListener("click",()=>{ ul.remove(); go.remove(); preuve(pr,B); });
     pr.append(ul, go);
-  } else if(B.q.type==="code"){
+  } else if(["code","ordre","trace","ligne"].includes(B.q.type)){
     preuve(pr,B);
   } else {
     const go = txt("button","btn plein","👀 Je vois ça"); go.type="button";
@@ -477,7 +585,7 @@ function affiche(){
 /* La question de preuve. Faux : on explique, on compte, et on recommence. */
 function preuve(pr, B){
   const Q = B.q;
-  pr.append(txt("div","etiquette", Q.type==="code" ? "Mon programme" : "Je prouve que j'ai fait le bloc"), txt("p","question",Q.q));
+  pr.append(txt("div","etiquette", ["code","ordre"].includes(Q.type) ? "Mon programme" : "Je prouve que j'ai fait le bloc"), txt("p","question",Q.q));
   const retour = el("div","retour"); retour.hidden = true;
   const zone = el("div"); pr.append(zone, retour);
   let essais = 0;
@@ -503,6 +611,9 @@ function preuve(pr, B){
   };
 
   if(Q.type==="code"){ editeur(zone, Q, reussi, rate); return; }
+  if(Q.type==="ordre"){ ordre(zone, Q, reussi, rate); return; }
+  if(Q.type==="trace"){ trace(zone, Q, reussi, rate); return; }
+  if(Q.type==="ligne"){ ligneFautive(zone, Q, reussi, rate); return; }
   if(Q.type==="qcm"){
     const tour = () => {
       zone.replaceChildren();
