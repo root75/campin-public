@@ -103,7 +103,8 @@ details.coince .protocole{margin-top:12px;font-size:1rem;color:var(--doux)}
 dialog{border:1px solid var(--trait);border-radius:14px;background:var(--carte);color:var(--encre);padding:20px;max-width:min(40rem,calc(100vw - 32px))}
 dialog::backdrop{background:rgb(0 0 0 / .45)}
 
-footer{font-size:.9rem;color:var(--doux);text-align:center}
+footer{font-size:.9rem;color:var(--doux);display:flex;flex-wrap:wrap;gap:4px 16px;justify-content:space-between}
+footer .auteur{margin-left:auto;font-weight:700}
 </style>
 </head>
 <body>
@@ -134,7 +135,7 @@ footer{font-size:.9rem;color:var(--doux);text-align:center}
     <button class="btn vide" type="button" id="memo-btn">✉️ Un e-mail, c'est une lettre</button>
   </div>
 
-  <footer id="pied"></footer>
+  <footer><span id="pied"></span><span class="auteur">M. Louviaux</span></footer>
 </div>
 
 <dialog id="memo">
