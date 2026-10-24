@@ -105,6 +105,12 @@ dialog::backdrop{background:rgb(0 0 0 / .45)}
 
 code,pre.code{font-family:ui-monospace,"Cascadia Mono",Consolas,"Courier New",monospace;font-size:.95em}
 pre.code{margin:0;background:var(--papier);border:1px solid var(--trait);border-left:5px solid var(--encre-bouton);border-radius:8px;padding:12px 14px;line-height:1.5;overflow-x:auto;white-space:pre}
+.editeur{width:100%;font-family:ui-monospace,"Cascadia Mono",Consolas,"Courier New",monospace;font-size:1rem;line-height:1.5;padding:12px 14px;border:2px solid var(--trait);border-radius:10px;background:var(--carte);color:var(--encre);resize:vertical;tab-size:4}
+.editeur:focus-visible{outline:3px solid var(--fromage);outline-offset:2px}
+.console{margin:0;font-family:ui-monospace,"Cascadia Mono",Consolas,"Courier New",monospace;font-size:1rem;background:var(--papier);border:1px solid var(--trait);border-radius:8px;padding:10px 14px;min-height:2.6rem;white-space:pre-wrap;overflow-wrap:anywhere}
+.console .err{display:block;color:var(--faux);font-weight:700}
+.console .vide{display:block;color:var(--doux);font-style:italic}
+.credit{font-size:.8rem;color:var(--doux);margin:0}
 .panneau>*{min-width:0} .ligne dd,.chemin{overflow-wrap:anywhere}
 
 footer{font-size:.9rem;color:var(--doux);display:flex;flex-wrap:wrap;gap:4px 16px;justify-content:space-between}
@@ -140,6 +146,7 @@ footer .auteur{margin-left:auto;font-weight:700}
   </div>
 
   <footer><span id="pied"></span><span class="auteur">M. Louviaux</span></footer>
+  <p class="credit">Exercices inspirés de <a href="https://cscircles.cemc.uwaterloo.ca/0-fr/" target="_blank" rel="noopener">Cercles informatiques</a> (CEMC, Université de Waterloo), sous licence <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/deed.fr" target="_blank" rel="noopener">CC BY-NC-SA 3.0</a>, réécrits pour l'école ; cette fiche est sous la même licence. Python dans la page : Pyodide.</p>
 </div>
 
 <dialog id="memo">
@@ -161,16 +168,16 @@ footer .auteur{margin-left:auto;font-weight:700}
 
 <script>
 /* ===== Contenu de la séance 2 =====
-   Pas de fiche élève : blocs écrits depuis le déroulé de « LogProg04_PROF_Premiers-pas-en-Python »
-   (séance 2, après le congé). La question de preuve est la prédiction, ou la ligne fautive
-   trouvée AVANT de toucher au code.
-   Chaque bloc : veux / fais / vois, stop, minutes, coince (les pièges de CE bloc),
-   et une preuve : QCM (bonne réponse TOUJOURS en premier, mélangée à l'affichage,
-   p = ce qu'on dit à l'élève qui choisit ce piège) ou saisie (ok = test de la réponse,
-   faux = texte ou fonction de la réponse). */
+   Pas de fiche élève : blocs écrits depuis le déroulé de « LogProg04_PROF_Premiers-pas-en-Python ».
+   Exercices inspirés de la leçon 1E de Cercles informatiques (CEMC, Université de Waterloo,
+   CC BY-NC-SA 3.0), réécrits et exécutés dans la page. Thonny reste pour « Les vies ».
+   Chaque bloc : veux / fais / vois, stop, minutes, coince (les pièges de CE bloc), et une preuve :
+   QCM (bonne réponse TOUJOURS en premier, mélangée à l'affichage, p = ce qu'on dit au piège),
+   saisie (ok = test, faux = texte ou fonction de la réponse), ou code (depart = programme de
+   départ, test(r) = true ou l'explication ; r = { sortie, erreur:{type,ligne,message}, vars, code }). */
 const COURS = "python-2";
 const CODE = s => `<pre class="code">${s}</pre>`;
-const SITE = "cscircles.cemc.uwaterloo.ca";
+const SORTIE = r => r.sortie.replace(/\s+$/,"");
 const VIES = CODE("vies = 3\nvies = vies - 1\nprint(vies)");
 
 const BLOCS = [
@@ -178,43 +185,57 @@ const BLOCS = [
     veux:"Me rappeler print, les variables et = après le congé. Rien n'est coté.",
     fais:`Dans Chrome, un nouvel onglet (Ctrl+T) ▸ <span class="chemin">barre d'adresse ▸ root75.github.io/campin-public/python-je-revise/ ▸ Entrée ▸ onglet Quiz ▸ Commencer le quiz</span>. Puis je regarde le projecteur : le professeur reprend la question la plus ratée.`,
     vois:"Mon score sur 5, et la trace au projecteur.",
-    coince:["Je garde deux onglets : celui-ci pour la fiche, un autre pour le site.",
+    coince:["Je garde deux onglets : celui-ci pour la fiche, un autre pour le quiz.",
             "Je ne sais plus : l'onglet « L'essentiel » de la même page redit tout en cinq lignes."],
     q:{ type:"qcm", q:"Dans vies = vies - 1, que fait Python ?",
         c:["Il calcule à droite, puis il range à gauche.","Il vérifie que vies est égal à vies - 1.","Il range 1 dans vies.","Il affiche vies."],
         p:[null,"= n'est pas une égalité : c'est la flèche ← du logigramme. À droite je calcule, à gauche je range.","1 fait partie du calcul : vies - 1 est calculé d'abord, puis rangé dans vies.","Rien ne s'affiche sans print."] } },
 
-  { partie:"B — Leçon 1E « Erreurs », sur le site", titre:"J'ouvre la leçon 1E", min:2,
-    veux:"Être sur la leçon des erreurs, et connaître LA consigne de la leçon.",
-    fais:`<span class="chemin">barre d'adresse ▸ je tape ${SITE}/1e-fr/ ▸ Entrée</span>`,
-    vois:"La leçon 1E « Erreurs ». La consigne : <b>je lis le message et je dis quelle ligne est fautive AVANT de toucher au code.</b>",
-    coince:["La page ne s'ouvre pas : je vérifie l'adresse, 1e-fr avec un e minuscule.",
-            "Le site ne s'ouvre toujours pas : je pose mon chevalet. Le professeur me fait passer à Thonny, qui marche sans le site."],
+  { partie:"B — Je lis les messages d'erreur", titre:"La consigne de toute la leçon", min:2,
+    veux:"Réparer un programme en lisant, pas en changeant au hasard.",
+    fais:"Je lis la consigne. Devant un programme cassé : j'exécute, je lis la ligne rouge, je dis à mon voisin quelle ligne est fautive, et SEULEMENT ensuite je touche au code.",
+    vois:"Trois sortes d'erreurs : <b>SyntaxError</b> (l'écriture est cassée), une erreur <b>pendant l'exécution</b> (NameError : un nom inconnu), et l'erreur <b>de logique</b> (pas de ligne rouge, mais le résultat est faux).",
+    coince:["Je me suis perdu dans un programme : bouton ↺ Code de départ, sous le cadre."],
     q:{ type:"qcm", q:"Devant un programme qui ne marche pas, je commence par :",
-        c:["Lire le message et trouver la ligne fautive.","Changer des caractères au hasard.","Tout effacer et recommencer.","Cliquer sur Réinitialiser code."],
-        p:[null,"Au hasard, ça finit parfois par marcher, mais tu ne sauras pas pourquoi. Le message dit où chercher.","Tu perdrais ce qui est juste : souvent, un seul caractère est faux.","Réinitialiser code, c'est quand tu t'es perdu : ça remet le programme cassé du départ."] } },
+        c:["Lire le message et trouver la ligne fautive.","Changer des caractères au hasard.","Tout effacer et recommencer.","Cliquer sur ↺ Code de départ."],
+        p:[null,"Au hasard, ça finit parfois par marcher, mais tu ne sauras pas pourquoi. Le message dit où chercher.","Tu perdrais ce qui est juste : souvent, un seul caractère est faux.","↺ Code de départ, c'est quand tu t'es perdu : ça remet le programme cassé du départ."] } },
 
-  { partie:"B — Leçon 1E « Erreurs », sur le site", titre:"« Additionneur »", min:7,
-    veux:"Réparer une erreur de syntaxe : une faute d'écriture, un seul caractère.",
-    fais:`Dans l'exercice <b>Additionneur</b> : <span class="chemin">Exécuter le programme</span> tel quel ▸ je lis le message ▸ je trouve le caractère fautif ▸ je le corrige ▸ <span class="chemin">Exécuter le programme</span>.`,
-    vois:"Le programme affiche 55 et le site dit que l'exercice est réussi.",
-    coince:["Le message montre l'endroit de l'erreur : je regarde juste avant la parenthèse finale.",
-            "Je me suis perdu : bouton Réinitialiser code, sous le cadre, et je recommence."],
-    q:{ type:"saisie", q:"Quel caractère était en trop ?",
-        ok: r => r.trim()==="+",
-        faux:"Relis le message : il montre l'endroit. Un seul caractère est en trop, collé juste avant la parenthèse finale.",
-        juste:"Le + collé avant la parenthèse : il n'y avait rien après lui à additionner." } },
+  { partie:"B — Je lis les messages d'erreur", titre:"L'additionneur", min:5,
+    veux:"Réparer une faute d'écriture : un seul caractère.",
+    fais:`<span class="chemin">▶ Exécuter (Ctrl+Entrée)</span> tel quel ▸ je lis la ligne rouge ▸ je trouve le caractère fautif ▸ je le corrige ▸ Exécuter.`,
+    vois:"Le programme affiche 55.",
+    coince:["SyntaxError : l'écriture est cassée. Je regarde juste avant la parenthèse finale.",
+            "Un seul caractère à enlever, rien à ajouter."],
+    q:{ type:"code", q:"Répare le programme.", depart:"print(1 + 2 + 3 + 4 + 5 + 6 + 7 + 8 + 9 + 10 +)",
+        test: r => r.erreur ? "Lis la ligne rouge : une SyntaxError, c'est un caractère de trop ou de moins. Regarde juste avant la parenthèse finale."
+                 : SORTIE(r)==="55" ? true : "Python affiche « "+SORTIE(r)+" » : un nombre a disparu. ↺ Code de départ, et n'enlève qu'UN caractère.",
+        juste:"Le + collé à la parenthèse n'avait rien après lui à additionner." } },
 
-  { partie:"B — Leçon 1E « Erreurs », sur le site", titre:"« Bonjour Joe »", min:7, stop:true,
-    veux:"Réparer une erreur d'exécution : le programme s'écrit bien, mais plante en tournant. Deux caractères.",
-    fais:`Dans l'exercice <b>Bonjour Joe</b> : <span class="chemin">Exécuter le programme</span> tel quel ▸ je lis le nom de l'erreur ▸ je dis à mon voisin quelle ligne est fautive ▸ je corrige ▸ <span class="chemin">Exécuter le programme</span>.`,
-    vois:"Le site dit que l'exercice est réussi.",
-    extra:`<div class="encart"><h3>⚡ Fini avant les autres ?</h3><p>L'exercice « Croissance » : une erreur logique. Le programme tourne, mais il calcule faux. Trois caractères à changer. Bouton Réinitialiser code si je me perds.</p></div>`,
-    coince:["Joe, c'est un texte ou un nom de variable ? Un texte s'écrit entre guillemets.",
+  { partie:"B — Je lis les messages d'erreur", titre:"Bonjour Joe", min:5,
+    veux:"Réparer une erreur qui arrive pendant l'exécution. Deux caractères.",
+    fais:`<span class="chemin">▶ Exécuter (Ctrl+Entrée)</span> tel quel ▸ je lis le nom de l'erreur ▸ je dis à mon voisin quelle ligne est fautive ▸ je corrige ▸ Exécuter.`,
+    vois:"Le programme affiche Bonjour Joe.",
+    coince:["NameError : Python cherche une variable qui n'existe pas. Joe, c'est un texte ou un nom de variable ?",
             "Deux caractères à ajouter, pas à enlever."],
-    q:{ type:"qcm", q:"Avant ta correction, quel message Python affichait-il ?",
-        c:["NameError","SyntaxError","Aucun message","ZeroDivisionError"],
-        p:[null,"SyntaxError, c'est une faute d'écriture, comme dans Additionneur. Ici, Python lit tout, puis cherche un nom qu'il ne connaît pas.","Il y en avait un : clique sur Réinitialiser code, Exécuter, et lis-le.","ZeroDivisionError, c'est une division par zéro : il n'y en a pas ici."] } },
+    q:{ type:"code", q:"Répare le programme.", depart:'nom = Joe\nprint("Bonjour", nom)',
+        test: r => r.erreur ? (r.erreur.type==="NameError" ? "NameError, ligne "+r.erreur.ligne+" : Python cherche une variable Joe. Un texte s'écrit entre guillemets." : "Lis la ligne rouge : il manque un guillemet ?")
+                 : SORTIE(r)==="Bonjour Joe" ? true : "Python affiche « "+SORTIE(r)+" ». Il doit afficher Bonjour Joe : ↺ Code de départ et ajoute seulement deux guillemets.",
+        juste:"Avec les guillemets, Joe est un texte rangé dans la boîte nom." } },
+
+  { partie:"B — Je lis les messages d'erreur", titre:"Les soldes", min:6, stop:true,
+    veux:"Trouver une erreur de logique : pas de ligne rouge, mais un résultat faux.",
+    fais:`Un pull à 20 € est soldé à −10 % : il doit coûter 18 €. <span class="chemin">▶ Exécuter (Ctrl+Entrée)</span> ▸ je compare avec 18 ▸ je trouve la ligne qui calcule faux ▸ je la corrige.`,
+    vois:"Le programme affiche 18.0.",
+    extra:`<div class="encart"><h3>Pourquoi 18.0 ?</h3><p>Dès qu'un calcul utilise un nombre à virgule (0.9), Python donne un nombre à virgule : 18.0. Une virgule s'écrit avec un POINT en Python.</p></div>`,
+    coince:["prix * 0.1, c'est 10 % du prix : 2 €. Ce qu'on garde, c'est 90 % du prix.",
+            "90 %, c'est 0.9 : un seul caractère à changer."],
+    q:{ type:"code", q:"Corrige le calcul.", depart:"prix = 20\n# les soldes : moins 10 %\nprix = prix * 0.1\nprint(prix)",
+        test: r => r.erreur ? "Lis la ligne rouge. Une virgule s'écrit avec un point en Python : 0.9, pas 0,9."
+                 : !/\bprix\b\s*\*/.test(r.code.split("\n").slice(1).join("\n")) && !/\*\s*\bprix\b/.test(r.code.split("\n").slice(1).join("\n")) ? "Calcule à partir de prix : le programme doit marcher pour un autre prix."
+                 : SORTIE(r).startsWith("(") ? "Python affiche « "+SORTIE(r)+" » : avec une virgule, il voit deux nombres. Un nombre à virgule s'écrit avec un POINT : 0.9."
+                 : Math.abs(r.vars.prix-18)<1e-9 ? true
+                 : "Python affiche « "+SORTIE(r)+" » : on veut 18. Quelle part du prix garde-t-on après −10 % ?",
+        juste:"0.1 gardait 10 % du prix au lieu d'en enlever 10 %. Aucune ligne rouge : c'est à toi de comparer avec le résultat attendu." } },
 
   { partie:"C — « Les vies » cassé, réparé, commenté, dans Thonny", titre:"J'ouvre mon fichier", min:3, stop:true,
     veux:"Retrouver le programme de la séance 1.",
@@ -222,7 +243,7 @@ const BLOCS = [
     vois:"Mes trois lignes, et 2 dans la console du bas.",
     extra: VIES,
     coince:["Mon fichier n'est pas là : je le recrée. Documents ▸ bouton Nouveau ▸ Dossier ▸ Python ; puis dans Thonny, Fichier ▸ Enregistrer sous… (Ctrl+Maj+S) ▸ 01_Les-vies_Nom.py, et je tape les trois lignes du modèle.",
-            "Thonny ne se lance pas : console du site (menu noir en haut ▸ Console). Elle n'enregistre rien : je montre mon écran au professeur."],
+            "Thonny ne se lance pas : je reviens au bloc 3 (bouton ← Bloc précédent) et j'y tape « Les vies ». Rien n'y est enregistré : je montre mon écran au professeur."],
     q:{ type:"qcm", q:"F5 : qu'affiche la console du bas ?",
         c:["2","3","vies","Un message d'erreur"],
         p:[null,"vies - 1 doit être rangé : vies = vies - 1. Corrige, Ctrl+S, F5.","print(\"vies\") affiche le mot : enlève les guillemets, Ctrl+S, F5.","Lis le message, compare avec le modèle, corrige, Ctrl+S, F5."] } },
@@ -260,9 +281,115 @@ const BLOCS = [
 const FIN = {
   titre:"🎉 J'ai fini la séance 2",
   texte:"Mon programme est réparé, commenté et enregistré. J'écoute l'annonce de la première évaluation : quoi et quand.",
-  plus:"Sur le site, l'exercice « Croissance » si je ne l'ai pas fait. Puis : changer DEUX touches de « Les vies » pour qu'il affiche 1, et corriger mon commentaire.",
+  plus:"Changer DEUX touches de « Les vies » pour qu'il affiche 1, et corriger mon commentaire.",
   lien:'<a href="https://root75.github.io/campin-public/python-je-revise/" target="_blank" rel="noopener">Premiers pas en Python — je révise</a> (onglet Cartes)'
 };
+
+/* ===== Python dans la page =====
+   Pyodide (le vrai Python, compilé pour le navigateur), servi par campin-public/python-moteur :
+   même domaine que la fiche, rien d'autre à laisser passer par le filtre de l'école.
+   Chargé une seule fois, dès le premier bloc qui a un cadre « Mon programme ». */
+const MOTEUR = /google/.test(location.hostname) ? "https://root75.github.io/campin-public/python-moteur/"
+                                                : new URL("../../python-moteur/", location.href).href;
+/* Le lanceur rend ce que les tests regardent : l'erreur (type, ligne, message comme dans Thonny)
+   et les variables simples. Le compteur de lignes arrête une boucle sans fin au lieu de figer l'onglet. */
+const LANCEUR = `
+import json, sys, traceback
+def _lance(code):
+    g = {"__name__": "__main__"}
+    err = None
+    n = [0]
+    def garde(frame, evt, arg):
+        n[0] += 1
+        if n[0] > 200000:
+            raise TimeoutError("le programme tourne sans fin")
+        return garde
+    try:
+        prog = compile(code, "programme.py", "exec")
+        sys.settrace(garde)
+        try:
+            exec(prog, g)
+        finally:
+            sys.settrace(None)
+    except SyntaxError as e:
+        err = {"type": type(e).__name__, "ligne": e.lineno, "message": type(e).__name__ + ": " + str(e.msg)}
+    except Exception as e:
+        lignes = [f.lineno for f in traceback.extract_tb(e.__traceback__) if f.filename == "programme.py"]
+        err = {"type": type(e).__name__, "ligne": lignes[-1] if lignes else None, "message": type(e).__name__ + ": " + str(e)}
+    v = {k: x for k, x in g.items() if not k.startswith("__") and type(x) in (int, float, str, bool)}
+    return json.dumps({"erreur": err, "vars": v})
+`;
+/* Le nom de l'erreur reste en anglais, comme dans Thonny ; la fiche le traduit dessous. */
+const ERREURS = {
+  SyntaxError:"l'écriture de la ligne est cassée : guillemet, parenthèse, signe en trop ou en moins ?",
+  IndentationError:"la ligne commence par des espaces en trop ou en moins.",
+  NameError:"Python ne connaît pas ce nom : majuscules ? guillemets oubliés ? variable créée avant ?",
+  TypeError:"on mélange des choses qui ne vont pas ensemble, par exemple un texte et un nombre.",
+  ZeroDivisionError:"une division par zéro.",
+  TimeoutError:"le programme ne s'arrête jamais : je relis ma boucle."
+};
+let python = null;
+function chargePython(){
+  if(!python){
+    python = new Promise((ok, ko) => {
+      const s = document.createElement("script"); s.src = MOTEUR + "pyodide.js";
+      s.onload = () => loadPyodide({ indexURL: MOTEUR }).then(ok, ko);
+      s.onerror = ko; document.head.append(s);
+    }).then(py => { py.runPython(LANCEUR); return py; });
+    python.catch(() => { python = null; });   // un échec n'est pas définitif : le clic suivant réessaie
+  }
+  return python;
+}
+async function executePython(code){
+  const py = await chargePython();
+  let sortie = "";
+  py.setStdout({ batched: s => sortie += s + "\n" });
+  py.setStderr({ batched: s => sortie += s + "\n" });
+  const lance = py.globals.get("_lance");
+  const r = JSON.parse(lance(code)); lance.destroy();
+  return Object.assign(r, { sortie, code });
+}
+
+/* Le cadre « Mon programme » : la preuve, c'est le programme qui passe le test. */
+function editeur(zone, Q, reussi, rate){
+  const ta = el("textarea","editeur"); ta.value = Q.depart || ""; ta.spellcheck = false;
+  ta.setAttribute("autocapitalize","off"); ta.setAttribute("aria-label","Mon programme");
+  ta.rows = Math.max(4, ta.value.split("\n").length + 1);
+  const lance = txt("button","btn plein","▶ Exécuter (Ctrl+Entrée)"); lance.type = "button";
+  const depart = txt("button","btn vide","↺ Code de départ"); depart.type = "button";
+  const ecran = el("pre","console"); ecran.hidden = true; ecran.setAttribute("aria-live","polite");
+  const barre = el("div","actions"); barre.append(lance, depart);
+  zone.append(ta, barre, ecran);
+  chargePython().catch(() => {});
+
+  ta.addEventListener("keydown", e => {
+    if(e.key === "Enter" && (e.ctrlKey || e.metaKey)){ e.preventDefault(); go(); }
+    else if(e.key === "Tab" && !e.shiftKey){ e.preventDefault(); ta.setRangeText("    ", ta.selectionStart, ta.selectionEnd, "end"); }
+  });
+  depart.addEventListener("click", () => { ta.value = Q.depart || ""; ecran.hidden = true; ta.focus(); });
+  lance.addEventListener("click", go);
+
+  async function go(){
+    if(lance.disabled) return;
+    lance.disabled = true; ecran.hidden = false; ecran.className = "console";
+    ecran.textContent = "⏳ Python se prépare… (la première fois seulement, quelques secondes)";
+    let r;
+    try { r = await executePython(ta.value); }
+    catch(e){
+      ecran.textContent = "Le moteur Python ne se charge pas. Je réessaie dans un instant ; sinon, je pose mon chevalet.";
+      lance.disabled = false; return;
+    }
+    ecran.replaceChildren(txt("span", null, r.sortie));
+    if(r.erreur){
+      ecran.append(txt("span","err", (r.erreur.ligne ? "Ligne " + r.erreur.ligne + " — " : "") + r.erreur.message));
+      if(ERREURS[r.erreur.type]) ecran.append(txt("span","vide","→ " + ERREURS[r.erreur.type]));
+    }
+    if(!r.sortie && !r.erreur) ecran.append(txt("span","vide","(rien n'est affiché)"));
+    const verdict = Q.test(r);
+    if(verdict === true){ ta.readOnly = true; depart.disabled = true; reussi(ta.value); }
+    else { lance.disabled = false; rate(verdict, ta.value); }
+  }
+}
 
 /* ===== Moteur ===== */
 const LETTRES = "ABCD";
@@ -329,6 +456,8 @@ function affiche(){
     ul.addEventListener("change",()=>{ go.disabled = [...ul.querySelectorAll("input")].some(x=>!x.checked); });
     go.addEventListener("click",()=>{ ul.remove(); go.remove(); preuve(pr,B); });
     pr.append(ul, go);
+  } else if(B.q.type==="code"){
+    preuve(pr,B);
   } else {
     const go = txt("button","btn plein","👀 Je vois ça"); go.type="button";
     go.addEventListener("click",()=>{ go.remove(); preuve(pr,B); });
@@ -347,7 +476,7 @@ function affiche(){
 /* La question de preuve. Faux : on explique, on compte, et on recommence. */
 function preuve(pr, B){
   const Q = B.q;
-  pr.append(txt("div","etiquette","Je prouve que j'ai fait le bloc"), txt("p","question",Q.q));
+  pr.append(txt("div","etiquette", Q.type==="code" ? "Mon programme" : "Je prouve que j'ai fait le bloc"), txt("p","question",Q.q));
   const retour = el("div","retour"); retour.hidden = true;
   const zone = el("div"); pr.append(zone, retour);
   let essais = 0;
@@ -372,6 +501,7 @@ function preuve(pr, B){
     retour.hidden=false;
   };
 
+  if(Q.type==="code"){ editeur(zone, Q, reussi, rate); return; }
   if(Q.type==="qcm"){
     const tour = () => {
       zone.replaceChildren();
@@ -450,7 +580,7 @@ if(SUIVI){
     envoie({ etape:Math.min(ici,BLOCS.length-1)+1, type:"ouvert" });
   }).withFailureHandler(()=>affiche()).etat(COURS);
 } else {
-  qui.textContent = "Garde deux fenêtres : cette fiche, et le site ou Thonny.";
+  qui.textContent = "Garde deux fenêtres : cette fiche, et Thonny quand elle le demande.";
   pied.textContent = "Ton avancement reste sur cet ordinateur. Aucune donnée n'est envoyée.";
   affiche();
 }
