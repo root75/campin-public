@@ -183,9 +183,10 @@ const VIES = CODE("vies = 3\nvies = vies - 1\nprint(vies)");
 const BLOCS = [
   { partie:"A — Je me remets en route", titre:"Le quiz « Python — je révise »", min:8, stop:true,
     veux:"Me rappeler print, les variables et = après le congé. Rien n'est coté.",
-    fais:`Dans Chrome, un nouvel onglet (Ctrl+T) ▸ <span class="chemin">barre d'adresse ▸ root75.github.io/campin-public/python-je-revise/ ▸ Entrée ▸ onglet Quiz ▸ Commencer le quiz</span>. Puis je regarde le projecteur : le professeur reprend la question la plus ratée.`,
+    fais:`Je clique sur le lien <a href="https://root75.github.io/campin-public/python-je-revise/" target="_blank" rel="noopener">Python — je révise</a> : il s'ouvre dans un nouvel onglet ▸ <span class="chemin">onglet Quiz ▸ Commencer le quiz</span>. Puis je regarde le projecteur : le professeur reprend la question la plus ratée.`,
     vois:"Mon score sur 5, et la trace au projecteur.",
-    coince:["Je garde deux onglets : celui-ci pour la fiche, un autre pour le quiz.",
+    coince:["Je garde deux onglets : celui-ci pour la fiche, l'autre pour le quiz. Pour revenir à la fiche : clic sur son onglet, en haut de Chrome.",
+            "Le lien ne s'ouvre pas : nouvel onglet (Ctrl+T) ▸ barre d'adresse ▸ root75.github.io/campin-public/python-je-revise/ ▸ Entrée.",
             "Je ne sais plus : l'onglet « L'essentiel » de la même page redit tout en cinq lignes."],
     q:{ type:"qcm", q:"Dans vies = vies - 1, que fait Python ?",
         c:["Il calcule à droite, puis il range à gauche.","Il vérifie que vies est égal à vies - 1.","Il range 1 dans vies.","Il affiche vies."],
