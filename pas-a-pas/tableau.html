@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pas à pas — tableau de bord</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:wght@0,800&family=Atkinson+Hyperlegible:wght@0,400;0,700&display=swap">
+<style>
+/* Tableau de bord du professeur : qui attend, qui avance, où le groupe bute.
+   Servi par Apps Script (outils/pas-a-pas) ; ouvert ailleurs, il montre des données fictives. */
+:root{
+  --papier:#f3f5f7; --carte:#ffffff; --encre:#1f2a33; --doux:#5b6873;
+  --trait:#d5dce2; --encre-bouton:#1d5a73; --fromage:#e3a922; --fromage-pale:#fbf0d4;
+  --juste:#1f7a4d; --juste-pale:#e2f3ea; --faux:#b23a2e; --faux-pale:#f8e3e0;
+  --display:"Alegreya", Georgia, serif; --texte:"Atkinson Hyperlegible", "Segoe UI", Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --papier:#141a1f; --carte:#1d252c; --encre:#e8edf1; --doux:#a3b0ba;
+  --trait:#33404a; --encre-bouton:#7cc3de; --fromage:#e9b84a; --fromage-pale:#3a3120;
+  --juste:#6fd0a0; --juste-pale:#183427; --faux:#f08b7f; --faux-pale:#3d2120; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --papier:#141a1f; --carte:#1d252c; --encre:#e8edf1; --doux:#a3b0ba;
+  --trait:#33404a; --encre-bouton:#7cc3de; --fromage:#e9b84a; --fromage-pale:#3a3120;
+  --juste:#6fd0a0; --juste-pale:#183427; --faux:#f08b7f; --faux-pale:#3d2120; color-scheme:dark }
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--papier);color:var(--encre);font-family:var(--texte);font-size:1rem;line-height:1.45;
+  padding:0 max(16px, env(safe-area-inset-right, 0px)) 40px max(16px, env(safe-area-inset-left, 0px))}
+.page{max-width:72rem;margin:0 auto;display:grid;gap:16px}
+header{padding-top:20px;display:flex;flex-wrap:wrap;gap:10px 20px;align-items:end;justify-content:space-between}
+h1{font-family:var(--display);font-weight:800;font-size:1.9rem;margin:0;line-height:1.1}
+h2{font-family:var(--display);font-weight:800;font-size:1.3rem;margin:0}
+.reglages{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+select{font:inherit;padding:6px 10px;border-radius:8px;border:2px solid var(--trait);background:var(--carte);color:var(--encre)}
+.maj{font-size:.9rem;color:var(--doux)}
+.demo{background:var(--fromage-pale);border-left:5px solid var(--fromage);border-radius:6px;padding:8px 12px}
+
+.chiffres{display:grid;grid-template-columns:repeat(auto-fit,minmax(9rem,1fr));gap:10px}
+.chiffre{background:var(--carte);border:1px solid var(--trait);border-radius:12px;padding:10px 14px}
+.chiffre b{display:block;font-family:var(--display);font-size:2rem;line-height:1.1;font-variant-numeric:tabular-nums}
+.chiffre.alerte{border-color:var(--fromage);background:var(--fromage-pale)}
+
+.panneau{background:var(--carte);border:1px solid var(--trait);border-radius:14px;padding:14px clamp(12px,3vw,20px);display:grid;gap:10px;min-width:0}
+table{border-collapse:collapse;width:100%}
+th{font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;color:var(--doux);text-align:left;padding:6px 8px;border-bottom:2px solid var(--trait)}
+td{padding:8px;border-bottom:1px solid var(--trait);vertical-align:middle}
+tr.aide td{background:var(--fromage-pale)}
+tr.fini td{color:var(--doux)}
+.nom{font-weight:700}
+.num{font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+.barre{display:flex;gap:2px;min-width:8rem}
+.barre span{flex:1;height:10px;border-radius:2px;background:var(--trait)}
+.barre span.fait{background:var(--juste)}
+.barre span.ici{background:var(--encre-bouton)}
+.pastille{display:inline-block;padding:2px 8px;border-radius:999px;font-size:.85rem;font-weight:700;white-space:nowrap}
+.pastille.aide{background:var(--fromage);color:#1f2a33}
+.pastille.bute{background:var(--faux-pale);color:var(--faux)}
+.pastille.fini{background:var(--juste-pale);color:var(--juste)}
+.inactif{color:var(--faux)}
+.defile{overflow-x:auto}
+
+.blocs{display:grid;gap:6px}
+.bl{display:grid;grid-template-columns:4.5rem 1fr 2.5rem;gap:8px;align-items:center;font-size:.95rem}
+.bl .jauge{height:14px;border-radius:3px;background:var(--faux);opacity:.85;min-width:2px}
+.vide{color:var(--doux)}
+</style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <h1>Pas à pas — tableau de bord</h1>
+    <div class="reglages">
+      <select id="cours" aria-label="Cours"></select>
+      <select id="periode" aria-label="Période">
+        <option value="60">Depuis 1 h</option>
+        <option value="120" selected>Depuis 2 h</option>
+        <option value="jour">Aujourd'hui</option>
+        <option value="0">Tout</option>
+      </select>
+      <span class="maj" id="maj"></span>
+    </div>
+  </header>
+  <p class="demo" id="demo" hidden>Aperçu avec des données fictives. Le vrai tableau s'ouvre par l'adresse Apps Script, suivie de <b>?vue=prof</b>.</p>
+
+  <div class="chiffres" id="chiffres"></div>
+
+  <section class="panneau">
+    <h2>Les élèves</h2>
+    <div class="defile"><table>
+      <thead><tr><th>Élève</th><th>Avancement</th><th class="num">Bloc</th><th class="num">Erreurs ici</th><th class="num">Erreurs</th><th>État</th><th class="num">Dernière action</th></tr></thead>
+      <tbody id="lignes"></tbody>
+    </table></div>
+  </section>
+
+  <section class="panneau">
+    <h2>Où le groupe bute — erreurs par bloc</h2>
+    <div class="blocs" id="blocs"></div>
+  </section>
+</div>
+
+<script>
+const NB_BLOCS = { "messagerie-1": 12 };
+const RAFRAICHIR = 15000;
+const INACTIF = 8 * 60000;
+const SUIVI = typeof google !== "undefined" && google.script && google.script.run;
+
+const $ = id => document.getElementById(id);
+const txt = (tag, cls, t) => { const n=document.createElement(tag); if(cls) n.className=cls; if(t!=null) n.textContent=t; return n; };
+const nom = email => email.split("@")[0].split(/[._]/).filter(Boolean).map(m=>m[0].toUpperCase()+m.slice(1)).join(" ");
+const ilya = ms => ms < 60000 ? "à l'instant" : "il y a " + Math.round(ms/60000) + " min";
+
+function minutes(){
+  const v = $("periode").value;
+  if(v === "jour"){ const d=new Date(); return Math.ceil((d - new Date(d.getFullYear(),d.getMonth(),d.getDate()))/60000); }
+  return Number(v);
+}
+
+function dessine(d){
+  const n = NB_BLOCS[$("cours").value] || Math.max(1, ...d.eleves.map(e=>e.atteint+1));
+  const el = d.eleves.slice().sort((a,b)=>
+    (!!b.aide - !!a.aide) || (a.aide && b.aide ? a.aide.depuis - b.aide.depuis : 0) ||
+    (a.fini - b.fini) || (a.atteint - b.atteint) || (b.erreursIci - a.erreursIci));
+
+  const attend = el.filter(e=>e.aide).length, finis = el.filter(e=>e.fini).length;
+  const butent = el.filter(e=>!e.fini && e.erreursIci>=3).length;
+  const median = el.length ? el.map(e=>e.atteint).sort((a,b)=>a-b)[Math.floor(el.length/2)] : 0;
+  $("chiffres").replaceChildren(...[
+    ["Élèves", el.length, ""], ["Attendent de l'aide", attend, attend ? "alerte" : ""],
+    ["Butent (3 erreurs ou +)", butent, butent ? "alerte" : ""], ["Ont fini", finis, ""],
+    ["Bloc médian validé", median+" / "+n, ""]
+  ].map(([t,v,c])=>{ const x=txt("div","chiffre "+c); x.append(txt("b",null,v), txt("span",null,t)); return x; }));
+
+  const tb = $("lignes"); tb.replaceChildren();
+  if(!el.length){ const tr=txt("tr"); const td=txt("td","vide","Personne n'a encore ouvert la fiche sur cette période."); td.colSpan=7; tr.append(td); tb.append(tr); }
+  el.forEach(e=>{
+    const tr = txt("tr", e.aide ? "aide" : e.fini ? "fini" : "");
+    const td = (cls,t) => { const c=txt("td",cls,t); tr.append(c); return c; };
+    const n1 = td("nom", nom(e.email)); n1.title = e.email;
+    const b = txt("div","barre");
+    for(let i=0;i<n;i++){ const s=txt("span"); s.className = i<e.atteint ? "fait" : (i===e.atteint && !e.fini ? "ici" : ""); b.append(s); }
+    td().append(b);
+    td("num", e.fini ? "fini" : (e.atteint+1)+" / "+n);
+    td("num", e.fini ? "" : e.erreursIci || "");
+    td("num", e.erreurs || "");
+    const etat = td();
+    if(e.aide) etat.append(txt("span","pastille aide","✋ aide · bloc "+e.aide.bloc+" · "+ilya(d.maintenant-e.aide.depuis).replace("il y a ","")));
+    else if(e.fini) etat.append(txt("span","pastille fini","✓ fini"));
+    else if(e.erreursIci>=3) etat.append(txt("span","pastille bute","bute"));
+    const der = td("num", ilya(d.maintenant - e.derniere));
+    if(!e.fini && d.maintenant - e.derniere > INACTIF) der.classList.add("inactif");
+    tb.append(tr);
+  });
+
+  const zb = $("blocs"); zb.replaceChildren();
+  const max = Math.max(1, ...Object.values(d.parBloc));
+  for(let i=1;i<=n;i++){
+    const v = d.parBloc[i] || 0;
+    const r = txt("div","bl"); const j = txt("div","jauge"); j.style.width = (v/max*100)+"%"; if(!v) j.style.opacity=".15";
+    const w = txt("div"); w.append(j);
+    r.append(txt("span",null,"Bloc "+i), w, txt("span","num",v)); zb.append(r);
+  }
+  $("maj").textContent = "Mis à jour à " + new Date(d.maintenant).toLocaleTimeString("fr-BE",{hour:"2-digit",minute:"2-digit",second:"2-digit"});
+}
+
+function charge(){
+  if(!SUIVI){ dessine(demo()); return; }
+  google.script.run.withSuccessHandler(dessine)
+    .withFailureHandler(err=>{ $("maj").textContent = "Erreur : " + err.message; })
+    .donnees($("cours").value, minutes());
+}
+
+/* Données fictives : l'aperçu hors Apps Script. */
+function demo(){
+  const t = Date.now(), m = 60000;
+  const e = (email, atteint, erreurs, erreursIci, derniere, extra) => Object.assign({email, atteint, erreurs, erreursIci, aide:null, fini:false, derniere:t-derniere*m}, extra||{});
+  return { maintenant:t, parBloc:{1:2,4:5,5:3,6:9,8:4,9:6,10:2,12:1}, eleves:[
+    e("lina.dubois@arcampin.be",5,7,4,1,{aide:{bloc:6,depuis:t-3*m}}),
+    e("noah.martin@arcampin.be",9,3,1,0),
+    e("ines.lambert@arcampin.be",12,2,0,2,{fini:true}),
+    e("adam.peeters@arcampin.be",3,5,3,1),
+    e("sara.janssens@arcampin.be",7,4,0,11),
+    e("yanis.leroy@arcampin.be",8,6,2,0,{aide:{bloc:9,depuis:t-1*m}}),
+    e("emma.dupont@arcampin.be",10,1,0,1)
+  ]};
+}
+
+function demarre(cours){
+  $("cours").replaceChildren(...cours.map(c=>{ const o=txt("option",null,c); o.value=c; return o; }));
+  $("cours").addEventListener("change", charge);
+  $("periode").addEventListener("change", charge);
+  charge(); setInterval(charge, RAFRAICHIR);
+}
+if(SUIVI) google.script.run.withSuccessHandler(demarre).withFailureHandler(err=>{ $("maj").textContent = "Erreur : " + err.message; }).listeCours();
+else { $("demo").hidden = false; demarre(Object.keys(NB_BLOCS)); }
+</script>
+</body>
+</html>
