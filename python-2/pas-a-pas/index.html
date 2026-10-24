@@ -1,0 +1,589 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Premiers pas en Python 2 — pas à pas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,600;0,800;1,600&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
+<style>
+/* Fiche pas à pas : un bloc à l'écran, une question de preuve avant le bloc suivant.
+   Même palette que les pages « je révise ». */
+:root{
+  --papier:#f3f5f7; --carte:#ffffff; --encre:#1f2a33; --doux:#5b6873;
+  --trait:#d5dce2; --encre-bouton:#1d5a73; --fromage:#e3a922; --fromage-pale:#fbf0d4;
+  --juste:#1f7a4d; --juste-pale:#e2f3ea; --faux:#b23a2e; --faux-pale:#f8e3e0;
+  --display:"Alegreya", Georgia, "Times New Roman", serif;
+  --texte:"Atkinson Hyperlegible", "Segoe UI", Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --papier:#141a1f; --carte:#1d252c; --encre:#e8edf1; --doux:#a3b0ba;
+  --trait:#33404a; --encre-bouton:#7cc3de; --fromage:#e9b84a; --fromage-pale:#3a3120;
+  --juste:#6fd0a0; --juste-pale:#183427; --faux:#f08b7f; --faux-pale:#3d2120; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --papier:#141a1f; --carte:#1d252c; --encre:#e8edf1; --doux:#a3b0ba;
+  --trait:#33404a; --encre-bouton:#7cc3de; --fromage:#e9b84a; --fromage-pale:#3a3120;
+  --juste:#6fd0a0; --juste-pale:#183427; --faux:#f08b7f; --faux-pale:#3d2120; color-scheme:dark }
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--papier);color:var(--encre);font-family:var(--texte);font-size:1.125rem;line-height:1.55;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:0 48px}
+.page{max-width:44rem;margin:0 auto;display:grid;gap:18px}
+header{padding-top:24px;display:grid;gap:4px}
+.surtitre{font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;color:var(--doux);font-weight:700}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(1.9rem,6vw,2.6rem);line-height:1.05;margin:0;text-wrap:balance}
+h1 em{font-style:italic;font-weight:600;color:var(--doux)}
+.qui{font-size:.95rem;color:var(--doux)}
+.qui strong{color:var(--encre)}
+h2{font-family:var(--display);font-weight:800;font-size:1.55rem;margin:0;line-height:1.15;text-wrap:balance}
+h3{font-family:var(--display);font-weight:600;font-size:1.2rem;margin:0}
+p{margin:0}
+button{font:inherit}
+button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--fromage);outline-offset:2px}
+
+.progres{display:flex;gap:4px}
+.progres span{flex:1;height:8px;border-radius:4px;background:var(--trait)}
+.progres span.fait{background:var(--juste)}
+.progres span.ici{background:var(--encre-bouton)}
+
+.panneau{background:var(--carte);border:1px solid var(--trait);border-radius:14px;padding:22px clamp(16px,4vw,28px);display:grid;gap:16px;min-width:0}
+.numero{font-size:.85rem;font-weight:700;color:var(--doux);letter-spacing:.06em;text-transform:uppercase;display:flex;flex-wrap:wrap;gap:4px 14px;justify-content:space-between}
+.lignes{display:grid;gap:10px;margin:0}
+.ligne{display:grid;grid-template-columns:7.2rem 1fr;gap:10px;align-items:start}
+.ligne dt{font-weight:700;color:var(--doux);white-space:nowrap}
+.ligne dd{margin:0;min-width:0}
+.ligne.fais dd{font-weight:700}
+.chemin{display:inline;background:var(--papier);border:1px solid var(--trait);border-radius:6px;padding:1px 6px;font-weight:700;
+  box-decoration-break:clone;-webkit-box-decoration-break:clone;line-height:1.9}
+.stop{background:var(--faux-pale);border-left:5px solid var(--faux);border-radius:6px;padding:10px 14px;font-weight:700}
+.encart{border:1px solid var(--trait);border-radius:10px;padding:12px 14px;display:grid;gap:8px;background:var(--papier)}
+.encart table{border-collapse:collapse;width:100%;font-size:1rem}
+.encart th,.encart td{text-align:left;padding:4px 8px 4px 0;vertical-align:top;border-bottom:1px solid var(--trait)}
+.encart tr:last-child td{border-bottom:0}
+.modele{font-family:var(--texte);white-space:pre-wrap;margin:0;font-size:1rem;line-height:1.6}
+.modele b{background:var(--fromage-pale);border-radius:4px;padding:0 3px;font-weight:700}
+.cases{margin:0;padding:0;list-style:none;display:grid;gap:8px}
+.cases label{display:grid;grid-template-columns:1.6rem 1fr;gap:8px;align-items:start;cursor:pointer}
+.cases input{width:1.3rem;height:1.3rem;margin:.15rem 0 0;accent-color:var(--juste)}
+
+.preuve{border-top:2px dashed var(--trait);padding-top:16px;display:grid;gap:12px}
+.preuve .etiquette{font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:var(--encre-bouton)}
+.question{font-size:1.15rem;font-weight:700}
+.choix{display:grid;gap:10px}
+.choix button{text-align:left;padding:12px 14px;border-radius:10px;border:2px solid var(--trait);
+  background:var(--carte);color:var(--encre);cursor:pointer;display:grid;grid-template-columns:1.8rem 1fr;gap:8px;align-items:start}
+.choix button:hover:not(:disabled){border-color:var(--encre-bouton)}
+.choix button .lettre{font-weight:700;color:var(--doux)}
+.choix button:disabled{cursor:default}
+.choix button.juste{border-color:var(--juste);background:var(--juste-pale)}
+.choix button.faux{border-color:var(--faux);background:var(--faux-pale)}
+.choix button.estompe{opacity:.5}
+.saisie{display:flex;flex-wrap:wrap;gap:10px}
+.saisie input{flex:1 1 16rem;min-width:0;font:inherit;padding:10px 12px;border-radius:10px;border:2px solid var(--trait);background:var(--carte);color:var(--encre)}
+.retour{border-radius:10px;padding:12px 14px;display:grid;gap:6px;font-size:1rem}
+.retour.juste{background:var(--juste-pale)} .retour.faux{background:var(--faux-pale)}
+
+.actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.btn{font-weight:700;font-size:1rem;padding:10px 18px;border-radius:10px;cursor:pointer;border:2px solid var(--encre-bouton)}
+.btn.plein{background:var(--encre-bouton);color:var(--carte)}
+.btn.vide{background:transparent;color:var(--encre-bouton)}
+.btn:disabled{opacity:.4;cursor:default}
+.espace{flex:1}
+
+details.coince{border:1px solid var(--trait);border-top:5px solid var(--encre-bouton);border-radius:12px;padding:12px 16px;background:var(--carte)}
+details.coince summary{cursor:pointer;font-family:var(--display);font-weight:800;font-size:1.2rem}
+details.coince ul{margin:10px 0 0;padding-left:1.2rem;display:grid;gap:8px}
+details.coince .protocole{margin-top:12px;font-size:1rem;color:var(--doux)}
+
+.aide{border:2px solid var(--trait);border-radius:12px;padding:12px 16px;display:grid;gap:8px;background:var(--carte)}
+.aide.active{border-color:var(--fromage);background:var(--fromage-pale)}
+.aide p{font-size:1rem}
+
+dialog{border:1px solid var(--trait);border-radius:14px;background:var(--carte);color:var(--encre);padding:20px;max-width:min(40rem,calc(100vw - 32px))}
+dialog::backdrop{background:rgb(0 0 0 / .45)}
+
+code,pre.code{font-family:ui-monospace,"Cascadia Mono",Consolas,"Courier New",monospace;font-size:.95em}
+pre.code{margin:0;background:var(--papier);border:1px solid var(--trait);border-left:5px solid var(--encre-bouton);border-radius:8px;padding:12px 14px;line-height:1.5;overflow-x:auto;white-space:pre}
+.editeur{width:100%;font-family:ui-monospace,"Cascadia Mono",Consolas,"Courier New",monospace;font-size:1rem;line-height:1.5;padding:12px 14px;border:2px solid var(--trait);border-radius:10px;background:var(--carte);color:var(--encre);resize:vertical;tab-size:4}
+.editeur:focus-visible{outline:3px solid var(--fromage);outline-offset:2px}
+.console{margin:0;font-family:ui-monospace,"Cascadia Mono",Consolas,"Courier New",monospace;font-size:1rem;background:var(--papier);border:1px solid var(--trait);border-radius:8px;padding:10px 14px;min-height:2.6rem;white-space:pre-wrap;overflow-wrap:anywhere}
+.console .err{display:block;color:var(--faux);font-weight:700}
+.console .vide{display:block;color:var(--doux);font-style:italic}
+.credit{font-size:.8rem;color:var(--doux);margin:0}
+.panneau>*{min-width:0} .ligne dd,.chemin{overflow-wrap:anywhere}
+
+footer{font-size:.9rem;color:var(--doux);display:flex;flex-wrap:wrap;gap:4px 16px;justify-content:space-between}
+footer .auteur{margin-left:auto;font-weight:700}
+</style>
+</head>
+<body>
+
+<div class="page">
+  <header>
+    <div class="surtitre">Logique et programmation · 3e · LogProg 04 · séance 2</div>
+    <h1>Premiers pas en Python <em>pas à pas</em></h1>
+    <p class="qui" id="qui"></p>
+  </header>
+
+  <div class="progres" id="progres" aria-hidden="true"></div>
+
+  <main class="panneau" id="bloc" aria-live="polite"></main>
+
+  <details class="coince" id="coince">
+    <summary>Ça coince ?</summary>
+    <ul id="coince-liste"></ul>
+    <p class="protocole">Toujours bloqué ? Je relis le bloc → je demande à mon voisin (il explique, il ne touche pas ma souris) → je pose mon chevalet sur l'écran.</p>
+  </details>
+
+  <div class="aide" id="aide">
+    <p id="aide-texte">Je suis bloqué malgré « Ça coince ? » et mon voisin :</p>
+    <div class="actions"><button class="btn vide" type="button" id="aide-btn">J'attends de l'aide</button></div>
+  </div>
+
+  <div class="actions">
+    <button class="btn vide" type="button" id="memo-btn">🐍 Du logigramme à Python</button>
+  </div>
+
+  <footer><span id="pied"></span><span class="auteur">M. Louviaux</span></footer>
+  <p class="credit">Exercices inspirés de <a href="https://cscircles.cemc.uwaterloo.ca/0-fr/" target="_blank" rel="noopener">Cercles informatiques</a> (CEMC, Université de Waterloo), sous licence <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/deed.fr" target="_blank" rel="noopener">CC BY-NC-SA 3.0</a>, réécrits pour l'école ; cette fiche est sous la même licence. Python dans la page : Pyodide.</p>
+</div>
+
+<dialog id="memo">
+  <h3>🐍 Du logigramme à Python</h3>
+  <div class="encart" style="margin-top:10px">
+    <table>
+      <tr><th>Dans le logigramme</th><th>En Python</th></tr>
+      <tr><td>la flèche <b>←</b> : vies ← 3</td><td><code>vies = 3</code></td></tr>
+      <tr><td>le parallélogramme <b>Afficher</b></td><td><code>print(vies)</code></td></tr>
+      <tr><td>un texte à afficher</td><td>entre guillemets : <code>print("Bonjour")</code></td></tr>
+      <tr><td>le tableau de trace</td><td>je prédis, ligne par ligne, AVANT d'exécuter</td></tr>
+      <tr><td>une note pour le lecteur</td><td>un commentaire : <code># je range 3</code></td></tr>
+    </table>
+  </div>
+  <p style="margin-top:12px"><b>⭐ = n'est pas une égalité.</b> À droite je calcule, à gauche je range : la boîte est toujours à gauche.</p>
+  <p style="margin-top:6px">Python lit chaque lettre : <code>Vies</code> n'est pas <code>vies</code>.</p>
+  <form method="dialog" class="actions" style="margin-top:14px"><button class="btn plein">Fermer</button></form>
+</dialog>
+
+<script>
+/* ===== Contenu de la séance 2 =====
+   Pas de fiche élève : blocs écrits depuis le déroulé de « LogProg04_PROF_Premiers-pas-en-Python ».
+   Exercices inspirés de la leçon 1E de Cercles informatiques (CEMC, Université de Waterloo,
+   CC BY-NC-SA 3.0), réécrits et exécutés dans la page. Thonny reste pour « Les vies ».
+   Chaque bloc : veux / fais / vois, stop, minutes, coince (les pièges de CE bloc), et une preuve :
+   QCM (bonne réponse TOUJOURS en premier, mélangée à l'affichage, p = ce qu'on dit au piège),
+   saisie (ok = test, faux = texte ou fonction de la réponse), ou code (depart = programme de
+   départ, test(r) = true ou l'explication ; r = { sortie, erreur:{type,ligne,message}, vars, code }). */
+const COURS = "python-2";
+const CODE = s => `<pre class="code">${s}</pre>`;
+const SORTIE = r => r.sortie.replace(/\s+$/,"");
+const VIES = CODE("vies = 3\nvies = vies - 1\nprint(vies)");
+
+const BLOCS = [
+  { partie:"A — Je me remets en route", titre:"Le quiz « Python — je révise »", min:8, stop:true,
+    veux:"Me rappeler print, les variables et = après le congé. Rien n'est coté.",
+    fais:`Dans Chrome, un nouvel onglet (Ctrl+T) ▸ <span class="chemin">barre d'adresse ▸ root75.github.io/campin-public/python-je-revise/ ▸ Entrée ▸ onglet Quiz ▸ Commencer le quiz</span>. Puis je regarde le projecteur : le professeur reprend la question la plus ratée.`,
+    vois:"Mon score sur 5, et la trace au projecteur.",
+    coince:["Je garde deux onglets : celui-ci pour la fiche, un autre pour le quiz.",
+            "Je ne sais plus : l'onglet « L'essentiel » de la même page redit tout en cinq lignes."],
+    q:{ type:"qcm", q:"Dans vies = vies - 1, que fait Python ?",
+        c:["Il calcule à droite, puis il range à gauche.","Il vérifie que vies est égal à vies - 1.","Il range 1 dans vies.","Il affiche vies."],
+        p:[null,"= n'est pas une égalité : c'est la flèche ← du logigramme. À droite je calcule, à gauche je range.","1 fait partie du calcul : vies - 1 est calculé d'abord, puis rangé dans vies.","Rien ne s'affiche sans print."] } },
+
+  { partie:"B — Je lis les messages d'erreur", titre:"La consigne de toute la leçon", min:2,
+    veux:"Réparer un programme en lisant, pas en changeant au hasard.",
+    fais:"Je lis la consigne. Devant un programme cassé : j'exécute, je lis la ligne rouge, je dis à mon voisin quelle ligne est fautive, et SEULEMENT ensuite je touche au code.",
+    vois:"Trois sortes d'erreurs : <b>SyntaxError</b> (l'écriture est cassée), une erreur <b>pendant l'exécution</b> (NameError : un nom inconnu), et l'erreur <b>de logique</b> (pas de ligne rouge, mais le résultat est faux).",
+    coince:["Je me suis perdu dans un programme : bouton ↺ Code de départ, sous le cadre."],
+    q:{ type:"qcm", q:"Devant un programme qui ne marche pas, je commence par :",
+        c:["Lire le message et trouver la ligne fautive.","Changer des caractères au hasard.","Tout effacer et recommencer.","Cliquer sur ↺ Code de départ."],
+        p:[null,"Au hasard, ça finit parfois par marcher, mais tu ne sauras pas pourquoi. Le message dit où chercher.","Tu perdrais ce qui est juste : souvent, un seul caractère est faux.","↺ Code de départ, c'est quand tu t'es perdu : ça remet le programme cassé du départ."] } },
+
+  { partie:"B — Je lis les messages d'erreur", titre:"L'additionneur", min:5,
+    veux:"Réparer une faute d'écriture : un seul caractère.",
+    fais:`<span class="chemin">▶ Exécuter (Ctrl+Entrée)</span> tel quel ▸ je lis la ligne rouge ▸ je trouve le caractère fautif ▸ je le corrige ▸ Exécuter.`,
+    vois:"Le programme affiche 55.",
+    coince:["SyntaxError : l'écriture est cassée. Je regarde juste avant la parenthèse finale.",
+            "Un seul caractère à enlever, rien à ajouter."],
+    q:{ type:"code", q:"Répare le programme.", depart:"print(1 + 2 + 3 + 4 + 5 + 6 + 7 + 8 + 9 + 10 +)",
+        test: r => r.erreur ? "Lis la ligne rouge : une SyntaxError, c'est un caractère de trop ou de moins. Regarde juste avant la parenthèse finale."
+                 : SORTIE(r)==="55" ? true : "Python affiche « "+SORTIE(r)+" » : un nombre a disparu. ↺ Code de départ, et n'enlève qu'UN caractère.",
+        juste:"Le + collé à la parenthèse n'avait rien après lui à additionner." } },
+
+  { partie:"B — Je lis les messages d'erreur", titre:"Bonjour Joe", min:5,
+    veux:"Réparer une erreur qui arrive pendant l'exécution. Deux caractères.",
+    fais:`<span class="chemin">▶ Exécuter (Ctrl+Entrée)</span> tel quel ▸ je lis le nom de l'erreur ▸ je dis à mon voisin quelle ligne est fautive ▸ je corrige ▸ Exécuter.`,
+    vois:"Le programme affiche Bonjour Joe.",
+    coince:["NameError : Python cherche une variable qui n'existe pas. Joe, c'est un texte ou un nom de variable ?",
+            "Deux caractères à ajouter, pas à enlever."],
+    q:{ type:"code", q:"Répare le programme.", depart:'nom = Joe\nprint("Bonjour", nom)',
+        test: r => r.erreur ? (r.erreur.type==="NameError" ? "NameError, ligne "+r.erreur.ligne+" : Python cherche une variable Joe. Un texte s'écrit entre guillemets." : "Lis la ligne rouge : il manque un guillemet ?")
+                 : SORTIE(r)==="Bonjour Joe" ? true : "Python affiche « "+SORTIE(r)+" ». Il doit afficher Bonjour Joe : ↺ Code de départ et ajoute seulement deux guillemets.",
+        juste:"Avec les guillemets, Joe est un texte rangé dans la boîte nom." } },
+
+  { partie:"B — Je lis les messages d'erreur", titre:"Les soldes", min:6, stop:true,
+    veux:"Trouver une erreur de logique : pas de ligne rouge, mais un résultat faux.",
+    fais:`Un pull à 20 € est soldé à −10 % : il doit coûter 18 €. <span class="chemin">▶ Exécuter (Ctrl+Entrée)</span> ▸ je compare avec 18 ▸ je trouve la ligne qui calcule faux ▸ je la corrige.`,
+    vois:"Le programme affiche 18.0.",
+    extra:`<div class="encart"><h3>Pourquoi 18.0 ?</h3><p>Dès qu'un calcul utilise un nombre à virgule (0.9), Python donne un nombre à virgule : 18.0. Une virgule s'écrit avec un POINT en Python.</p></div>`,
+    coince:["prix * 0.1, c'est 10 % du prix : 2 €. Ce qu'on garde, c'est 90 % du prix.",
+            "90 %, c'est 0.9 : un seul caractère à changer."],
+    q:{ type:"code", q:"Corrige le calcul.", depart:"prix = 20\n# les soldes : moins 10 %\nprix = prix * 0.1\nprint(prix)",
+        test: r => r.erreur ? "Lis la ligne rouge. Une virgule s'écrit avec un point en Python : 0.9, pas 0,9."
+                 : !/\bprix\b\s*\*/.test(r.code.split("\n").slice(1).join("\n")) && !/\*\s*\bprix\b/.test(r.code.split("\n").slice(1).join("\n")) ? "Calcule à partir de prix : le programme doit marcher pour un autre prix."
+                 : SORTIE(r).startsWith("(") ? "Python affiche « "+SORTIE(r)+" » : avec une virgule, il voit deux nombres. Un nombre à virgule s'écrit avec un POINT : 0.9."
+                 : Math.abs(r.vars.prix-18)<1e-9 ? true
+                 : "Python affiche « "+SORTIE(r)+" » : on veut 18. Quelle part du prix garde-t-on après −10 % ?",
+        juste:"0.1 gardait 10 % du prix au lieu d'en enlever 10 %. Aucune ligne rouge : c'est à toi de comparer avec le résultat attendu." } },
+
+  { partie:"C — « Les vies » cassé, réparé, commenté, dans Thonny", titre:"J'ouvre mon fichier", min:3, stop:true,
+    veux:"Retrouver le programme de la séance 1.",
+    fais:`<span class="chemin">touche Windows ▸ je tape Thonny ▸ Entrée</span> ▸ <span class="chemin">menu Fichier ▸ Ouvrir… (Ctrl+O) ▸ Documents ▸ Python ▸ 01_Les-vies_Nom.py ▸ Ouvrir</span> ▸ <span class="chemin">icône ▶ verte « Exécuter le script courant » (F5)</span>.`,
+    vois:"Mes trois lignes, et 2 dans la console du bas.",
+    extra: VIES,
+    coince:["Mon fichier n'est pas là : je le recrée. Documents ▸ bouton Nouveau ▸ Dossier ▸ Python ; puis dans Thonny, Fichier ▸ Enregistrer sous… (Ctrl+Maj+S) ▸ 01_Les-vies_Nom.py, et je tape les trois lignes du modèle.",
+            "Thonny ne se lance pas : je reviens au bloc 3 (bouton ← Bloc précédent) et j'y tape « Les vies ». Rien n'y est enregistré : je montre mon écran au professeur."],
+    q:{ type:"qcm", q:"F5 : qu'affiche la console du bas ?",
+        c:["2","3","vies","Un message d'erreur"],
+        p:[null,"vies - 1 doit être rangé : vies = vies - 1. Corrige, Ctrl+S, F5.","print(\"vies\") affiche le mot : enlève les guillemets, Ctrl+S, F5.","Lis le message, compare avec le modèle, corrige, Ctrl+S, F5."] } },
+
+  { partie:"C — « Les vies » cassé, réparé, commenté, dans Thonny", titre:"Je le casse : Vies", min:4,
+    veux:"Voir que Python lit chaque lettre : Vies n'est pas vies.",
+    fais:"À la 3e ligne, je remplace vies par <b>Vies</b> : print(Vies). Je réponds à la question AVANT de faire F5. Puis F5, je lis le message, et je répare (vies en minuscules), F5.",
+    vois:"Un message d'erreur, puis de nouveau 2 après la réparation.",
+    coince:["Le message est long : je lis la dernière ligne, c'est elle qui donne le nom de l'erreur."],
+    q:{ type:"qcm", q:"Prédis : avec print(Vies), que va-t-il se passer ?",
+        c:["Une erreur NameError : Python ne connaît pas Vies.","Il affiche 2.","Il affiche Vies.","Une erreur SyntaxError."],
+        p:[null,"La boîte s'appelle vies, en minuscules. Vies est un autre nom, que Python ne connaît pas.","Sans guillemets, Vies n'est pas un texte : c'est un nom de variable.","L'écriture est correcte : c'est le nom qui est inconnu. Ce n'est pas une faute de syntaxe."] } },
+
+  { partie:"C — « Les vies » cassé, réparé, commenté, dans Thonny", titre:"Je le casse : une parenthèse", min:4,
+    veux:"Reconnaître une faute d'écriture.",
+    fais:"À la 3e ligne, j'efface la dernière parenthèse : print(vies. Je réponds AVANT de faire F5. Puis F5, je lis le message, et je remets la parenthèse, F5.",
+    vois:"Un message d'erreur, puis de nouveau 2 après la réparation.",
+    coince:["La parenthèse ) est la touche à droite du 0, sans Maj."],
+    q:{ type:"qcm", q:"Prédis : avec print(vies sans la parenthèse finale, quelle erreur ?",
+        c:["SyntaxError : une faute d'écriture.","NameError : un nom inconnu.","Aucune : il affiche 2.","Il affiche vies."],
+        p:[null,"Le nom vies est connu : c'est l'écriture qui est cassée.","Python ne devine pas la parenthèse manquante.","Rien ne s'affiche quand l'écriture est cassée."] } },
+
+  { partie:"C — « Les vies » cassé, réparé, commenté, dans Thonny", titre:"Je commente chaque ligne", min:6, stop:true,
+    veux:"Un programme que n'importe qui comprend en le lisant.",
+    fais:`Au-dessus de chaque ligne, j'ajoute une ligne qui commence par <b>#</b> et dit ce que fait la ligne ▸ <span class="chemin">icône disquette (Ctrl+S)</span> ▸ F5. Puis je montre mon écran au professeur.`,
+    vois:"Six lignes : trois commentaires, trois instructions. La console affiche toujours 2.",
+    extra: CODE("# je range 3 dans la boîte vies\nvies = 3\n# …\nvies = vies - 1\n# …\nprint(vies)"),
+    coince:["Le # est AltGr + 3.",
+            "Je ne sais pas quoi écrire : je dis ce que fait la ligne, comme dans le logigramme (je range, je calcule, j'affiche)."],
+    q:{ type:"qcm", q:"Avec tes trois commentaires, qu'affiche le programme ?",
+        c:["2, comme avant : Python ignore ce qui suit #.","Les commentaires, puis 2.","Une erreur.","Rien."],
+        p:[null,"Les commentaires sont pour les humains : Python ne les affiche pas.","Si tu as une erreur, un # manque au début d'une ligne de commentaire.","print(vies) est toujours là : il affiche 2."] } }
+];
+
+const FIN = {
+  titre:"🎉 J'ai fini la séance 2",
+  texte:"Mon programme est réparé, commenté et enregistré. J'écoute l'annonce de la première évaluation : quoi et quand.",
+  plus:"Changer DEUX touches de « Les vies » pour qu'il affiche 1, et corriger mon commentaire.",
+  lien:'<a href="https://root75.github.io/campin-public/python-je-revise/" target="_blank" rel="noopener">Premiers pas en Python — je révise</a> (onglet Cartes)'
+};
+
+/* ===== Python dans la page =====
+   Pyodide (le vrai Python, compilé pour le navigateur), servi par campin-public/python-moteur :
+   même domaine que la fiche, rien d'autre à laisser passer par le filtre de l'école.
+   Chargé une seule fois, dès le premier bloc qui a un cadre « Mon programme ». */
+const MOTEUR = /google/.test(location.hostname) ? "https://root75.github.io/campin-public/python-moteur/"
+                                                : new URL("../../python-moteur/", location.href).href;
+/* Le lanceur rend ce que les tests regardent : l'erreur (type, ligne, message comme dans Thonny)
+   et les variables simples. Le compteur de lignes arrête une boucle sans fin au lieu de figer l'onglet. */
+const LANCEUR = `
+import json, sys, traceback
+def _lance(code):
+    g = {"__name__": "__main__"}
+    err = None
+    n = [0]
+    def garde(frame, evt, arg):
+        n[0] += 1
+        if n[0] > 200000:
+            raise TimeoutError("le programme tourne sans fin")
+        return garde
+    try:
+        prog = compile(code, "programme.py", "exec")
+        sys.settrace(garde)
+        try:
+            exec(prog, g)
+        finally:
+            sys.settrace(None)
+    except SyntaxError as e:
+        err = {"type": type(e).__name__, "ligne": e.lineno, "message": type(e).__name__ + ": " + str(e.msg)}
+    except Exception as e:
+        lignes = [f.lineno for f in traceback.extract_tb(e.__traceback__) if f.filename == "programme.py"]
+        err = {"type": type(e).__name__, "ligne": lignes[-1] if lignes else None, "message": type(e).__name__ + ": " + str(e)}
+    v = {k: x for k, x in g.items() if not k.startswith("__") and type(x) in (int, float, str, bool)}
+    return json.dumps({"erreur": err, "vars": v})
+`;
+/* Le nom de l'erreur reste en anglais, comme dans Thonny ; la fiche le traduit dessous. */
+const ERREURS = {
+  SyntaxError:"l'écriture de la ligne est cassée : guillemet, parenthèse, signe en trop ou en moins ?",
+  IndentationError:"la ligne commence par des espaces en trop ou en moins.",
+  NameError:"Python ne connaît pas ce nom : majuscules ? guillemets oubliés ? variable créée avant ?",
+  TypeError:"on mélange des choses qui ne vont pas ensemble, par exemple un texte et un nombre.",
+  ZeroDivisionError:"une division par zéro.",
+  TimeoutError:"le programme ne s'arrête jamais : je relis ma boucle."
+};
+let python = null;
+function chargePython(){
+  if(!python){
+    python = new Promise((ok, ko) => {
+      const s = document.createElement("script"); s.src = MOTEUR + "pyodide.js";
+      s.onload = () => loadPyodide({ indexURL: MOTEUR }).then(ok, ko);
+      s.onerror = ko; document.head.append(s);
+    }).then(py => { py.runPython(LANCEUR); return py; });
+    python.catch(() => { python = null; });   // un échec n'est pas définitif : le clic suivant réessaie
+  }
+  return python;
+}
+async function executePython(code){
+  const py = await chargePython();
+  let sortie = "";
+  py.setStdout({ batched: s => sortie += s + "\n" });
+  py.setStderr({ batched: s => sortie += s + "\n" });
+  const lance = py.globals.get("_lance");
+  const r = JSON.parse(lance(code)); lance.destroy();
+  return Object.assign(r, { sortie, code });
+}
+
+/* Le cadre « Mon programme » : la preuve, c'est le programme qui passe le test. */
+function editeur(zone, Q, reussi, rate){
+  const ta = el("textarea","editeur"); ta.value = Q.depart || ""; ta.spellcheck = false;
+  ta.setAttribute("autocapitalize","off"); ta.setAttribute("aria-label","Mon programme");
+  ta.rows = Math.max(4, ta.value.split("\n").length + 1);
+  const lance = txt("button","btn plein","▶ Exécuter (Ctrl+Entrée)"); lance.type = "button";
+  const depart = txt("button","btn vide","↺ Code de départ"); depart.type = "button";
+  const ecran = el("pre","console"); ecran.hidden = true; ecran.setAttribute("aria-live","polite");
+  const barre = el("div","actions"); barre.append(lance, depart);
+  zone.append(ta, barre, ecran);
+  chargePython().catch(() => {});
+
+  ta.addEventListener("keydown", e => {
+    if(e.key === "Enter" && (e.ctrlKey || e.metaKey)){ e.preventDefault(); go(); }
+    else if(e.key === "Tab" && !e.shiftKey){ e.preventDefault(); ta.setRangeText("    ", ta.selectionStart, ta.selectionEnd, "end"); }
+  });
+  depart.addEventListener("click", () => { ta.value = Q.depart || ""; ecran.hidden = true; ta.focus(); });
+  lance.addEventListener("click", go);
+
+  async function go(){
+    if(lance.disabled) return;
+    lance.disabled = true; ecran.hidden = false; ecran.className = "console";
+    ecran.textContent = "⏳ Python se prépare… (la première fois seulement, quelques secondes)";
+    let r;
+    try { r = await executePython(ta.value); }
+    catch(e){
+      ecran.textContent = "Le moteur Python ne se charge pas. Je réessaie dans un instant ; sinon, je pose mon chevalet.";
+      lance.disabled = false; return;
+    }
+    ecran.replaceChildren(txt("span", null, r.sortie));
+    if(r.erreur){
+      ecran.append(txt("span","err", (r.erreur.ligne ? "Ligne " + r.erreur.ligne + " — " : "") + r.erreur.message));
+      if(ERREURS[r.erreur.type]) ecran.append(txt("span","vide","→ " + ERREURS[r.erreur.type]));
+    }
+    if(!r.sortie && !r.erreur) ecran.append(txt("span","vide","(rien n'est affiché)"));
+    const verdict = Q.test(r);
+    if(verdict === true){ ta.readOnly = true; depart.disabled = true; reussi(ta.value); }
+    else { lance.disabled = false; rate(verdict, ta.value); }
+  }
+}
+
+/* ===== Moteur ===== */
+const LETTRES = "ABCD";
+const norm = s => (s||"").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase()
+  .replace(/[’']/g,"'").replace(/[«»"“”.]/g,"").replace(/\s+/g," ").trim();
+const melange = a => { const b=a.slice(); for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];} return b; };
+const el = (tag, cls, html) => { const n=document.createElement(tag); if(cls) n.className=cls; if(html!=null) n.innerHTML=html; return n; };
+const txt = (tag, cls, t) => { const n=document.createElement(tag); if(cls) n.className=cls; n.textContent=t; return n; };
+
+/* Suivi : servie par Apps Script (outils/pas-a-pas), la page envoie chaque événement
+   au tableau de bord du professeur. Ouverte depuis GitHub Pages, rien ne part. */
+const SUIVI = typeof google !== "undefined" && google.script && google.script.run;
+function envoie(evt){
+  if(!SUIVI) return;
+  google.script.run.withFailureHandler(()=>{}).noter(COURS, evt);
+}
+/* Avancement local, seulement sans suivi : avec le suivi, il vient du serveur et de la séance,
+   pour qu'un poste partagé n'hérite pas de l'élève de l'heure précédente. */
+const CLE = "pas-a-pas:"+COURS;
+const lit = () => { if(SUIVI) return {}; try { return JSON.parse(localStorage.getItem(CLE)) || {}; } catch(e){ return {}; } };
+const ecrit = o => { if(SUIVI) return; try { localStorage.setItem(CLE, JSON.stringify(o)); } catch(e){} };
+
+let etat = Object.assign({ atteint:0, erreurs:0 }, lit());   // atteint = premier bloc non validé
+let ici = Math.min(etat.atteint, BLOCS.length);
+let enAide = false;
+
+function barre(){
+  const b = document.getElementById("progres"); b.replaceChildren();
+  BLOCS.forEach((_,i)=>{ const s=el("span"); s.className = i<etat.atteint ? "fait" : (i===ici ? "ici" : ""); b.append(s); });
+}
+
+function affiche(){
+  barre();
+  const z = document.getElementById("bloc"); z.replaceChildren();
+  const liste = document.getElementById("coince-liste"); liste.replaceChildren();
+  document.getElementById("coince").open = false;
+  if(ici >= BLOCS.length){ fin(z); return; }
+  const B = BLOCS[ici];
+
+  const num = el("div","numero");
+  num.append(txt("span",null,"Bloc "+(ici+1)+" sur "+BLOCS.length+" · Partie "+B.partie.split(" — ")[0]), txt("span",null,"⏱ "+B.min+" min"));
+  z.append(num, txt("h2",null,(ici+1)+". "+B.titre));
+
+  const dl = el("dl","lignes");
+  [["🎯 Je veux","veux",B.veux],["👉 Je fais","fais",B.fais],["👀 Je vois","vois",B.vois]].forEach(([t,c,h])=>{
+    const d = el("div","ligne "+c); d.append(txt("dt",null,t), el("dd",null,h)); dl.append(d);
+  });
+  z.append(dl);
+  if(B.extra) z.append(el("div",null,B.extra));
+  if(B.stop) z.append(txt("p","stop","🛑 STOP — je ne continue pas tant que je ne vois pas ça."));
+
+  B.coince.forEach(c=>liste.append(txt("li",null,c)));
+
+  const pr = el("div","preuve");
+  const fait = etat.atteint > ici;
+  if(fait){
+    pr.append(txt("p","retour juste","✅ Bloc déjà validé."));
+  } else if(B.cases){
+    pr.append(txt("div","etiquette","✅ Les cinq points (mon message est noté sur 5)"));
+    const ul = el("ul","cases");
+    B.cases.forEach(c=>{ const li=el("li"); const lab=el("label"); const cb=el("input"); cb.type="checkbox";
+      lab.append(cb, txt("span",null,c)); li.append(lab); ul.append(li); });
+    const go = txt("button","btn plein","Les cinq points sont bons, j'ai cliqué sur Envoyer"); go.type="button"; go.disabled=true;
+    ul.addEventListener("change",()=>{ go.disabled = [...ul.querySelectorAll("input")].some(x=>!x.checked); });
+    go.addEventListener("click",()=>{ ul.remove(); go.remove(); preuve(pr,B); });
+    pr.append(ul, go);
+  } else if(B.q.type==="code"){
+    preuve(pr,B);
+  } else {
+    const go = txt("button","btn plein","👀 Je vois ça"); go.type="button";
+    go.addEventListener("click",()=>{ go.remove(); preuve(pr,B); });
+    pr.append(go);
+  }
+  z.append(pr);
+
+  const nav = el("div","actions");
+  const avant = txt("button","btn vide","← Bloc précédent"); avant.type="button"; avant.disabled = ici===0;
+  avant.addEventListener("click",()=>{ ici--; affiche(); });
+  nav.append(avant, el("span","espace"));
+  if(fait){ const s=txt("button","btn plein","Bloc suivant →"); s.type="button"; s.addEventListener("click",()=>{ici++;affiche();}); nav.append(s); }
+  z.append(nav);
+}
+
+/* La question de preuve. Faux : on explique, on compte, et on recommence. */
+function preuve(pr, B){
+  const Q = B.q;
+  pr.append(txt("div","etiquette", Q.type==="code" ? "Mon programme" : "Je prouve que j'ai fait le bloc"), txt("p","question",Q.q));
+  const retour = el("div","retour"); retour.hidden = true;
+  const zone = el("div"); pr.append(zone, retour);
+  let essais = 0;
+
+  const reussi = (reponse) => {
+    retour.className="retour juste"; retour.replaceChildren(txt("strong",null,"Oui, c'est ça."));
+    if(Q.juste) retour.append(txt("p",null,Q.juste));
+    retour.hidden=false;
+    envoie({ etape:ici+1, type:"juste", essais:essais, reponse:reponse });
+    etat.atteint = Math.max(etat.atteint, ici+1); ecrit(etat); barre();
+    if(enAide) basculeAide();
+    const s = txt("button","btn plein", ici+1<BLOCS.length ? "Bloc suivant →" : "J'ai fini ✓"); s.type="button";
+    s.addEventListener("click",()=>{ ici++; affiche(); });
+    pr.append(s); s.focus();
+  };
+  const rate = (explication, reponse) => {
+    essais++; etat.erreurs++; ecrit(etat);
+    envoie({ etape:ici+1, type:"faux", essais:essais, reponse:reponse });
+    retour.className="retour faux"; retour.replaceChildren(txt("strong",null,"Pas encore."), txt("p",null,explication));
+    if(essais>=2){ retour.append(txt("p",null,"Ouvre « Ça coince ? » juste en dessous.")); document.getElementById("coince").open = true; }
+    if(essais>=3) retour.append(txt("p",null,"Toujours bloqué : demande à ton voisin, puis pose ton chevalet sur l'écran."));
+    retour.hidden=false;
+  };
+
+  if(Q.type==="code"){ editeur(zone, Q, reussi, rate); return; }
+  if(Q.type==="qcm"){
+    const tour = () => {
+      zone.replaceChildren();
+      const liste = el("div","choix"); const boutons=[];
+      melange([0,1,2,3]).forEach((k,pos)=>{
+        const b = el("button"); b.type="button";
+        b.append(txt("span","lettre",LETTRES[pos]), txt("span",null,Q.c[k]));
+        b.addEventListener("click",()=>{
+          boutons.forEach(x=>x.disabled=true);
+          if(k===0){ b.classList.add("juste"); boutons.forEach(x=>{ if(x!==b) x.classList.add("estompe"); }); reussi(Q.c[k]); }
+          else {
+            b.classList.add("faux"); rate(Q.p[k], Q.c[k]);
+            const r = txt("button","btn vide","Réessayer"); r.type="button";
+            r.addEventListener("click",()=>{ r.remove(); retour.hidden=true; tour(); });
+            zone.append(r);
+          }
+        });
+        boutons.push(b); liste.append(b);
+      });
+      zone.append(liste);
+    };
+    tour();
+  } else {
+    const f = el("form","saisie"); const inp = el("input"); inp.type="text"; inp.autocomplete="off"; inp.spellcheck=false;
+    inp.setAttribute("aria-label", Q.q);
+    const ok = txt("button","btn plein","Vérifier"); ok.type="submit";
+    f.append(inp, ok);
+    f.addEventListener("submit", e=>{
+      e.preventDefault(); const r = inp.value.trim(); if(!r) return;
+      if(Q.ok(r)){ inp.disabled=true; ok.disabled=true; reussi(r); } else { rate(typeof Q.faux==="function" ? Q.faux(r) : Q.faux, r); inp.select(); }
+    });
+    zone.append(f); inp.focus();
+  }
+}
+
+function fin(z){
+  z.append(txt("h2",null,FIN.titre), txt("p",null,FIN.texte));
+  const plus = el("div","encart");
+  plus.append(txt("h3",null,"⚡ J'ai fini avant les autres"), txt("p",null,FIN.plus),
+    el("p",null,"Puis je révise : "+FIN.lien+"."));
+  const nav = el("div","actions");
+  const avant = txt("button","btn vide","← Revoir les blocs"); avant.type="button";
+  avant.addEventListener("click",()=>{ ici=0; affiche(); });
+  nav.append(avant);
+  if(!SUIVI){
+    const zero = txt("button","btn vide","Recommencer à zéro"); zero.type="button";
+    zero.addEventListener("click",()=>{ etat = { atteint:0, erreurs:0 }; ecrit(etat); ici=0; affiche(); });
+    nav.append(zero);
+  }
+  z.append(plus, nav);
+  if(!etat.fini){ etat.fini = true; ecrit(etat); envoie({ etape:BLOCS.length, type:"fini" }); }
+}
+
+/* « J'attends de l'aide » : l'équivalent de la case entourée. Le chevalet reste le signal. */
+function basculeAide(){
+  enAide = !enAide;
+  const a = document.getElementById("aide"), b = document.getElementById("aide-btn");
+  a.classList.toggle("active", enAide);
+  document.getElementById("aide-texte").textContent = enAide
+    ? "✋ Ton professeur sait que tu attends au bloc "+(ici+1)+". Pose ton chevalet sur l'écran, et en attendant relis « Ça coince ? »."
+    : "Je suis bloqué malgré « Ça coince ? » et mon voisin :";
+  b.textContent = enAide ? "Je me suis débloqué" : "J'attends de l'aide";
+  envoie({ etape:Math.min(ici,BLOCS.length-1)+1, type: enAide ? "aide" : "aide-fin" });
+}
+document.getElementById("aide-btn").addEventListener("click", basculeAide);
+document.getElementById("memo-btn").addEventListener("click",()=>document.getElementById("memo").showModal());
+
+/* Démarrage. Avec le suivi : on reprend où le serveur s'est arrêté (autre poste, onglet fermé). */
+const qui = document.getElementById("qui"), pied = document.getElementById("pied");
+if(SUIVI){
+  pied.textContent = "Ton avancement est visible par ton professeur.";
+  google.script.run.withSuccessHandler(s=>{
+    if(s && s.email){ qui.textContent = "Connecté : "; qui.append(txt("strong",null,s.email)); if(s.classe) qui.append(" · "+s.classe); }
+    if(s && s.atteint){ etat.atteint = s.atteint; etat.fini = s.atteint >= BLOCS.length; ici = Math.min(s.atteint, BLOCS.length); }
+    affiche();
+    envoie({ etape:Math.min(ici,BLOCS.length-1)+1, type:"ouvert" });
+  }).withFailureHandler(()=>affiche()).etat(COURS);
+} else {
+  qui.textContent = "Garde deux fenêtres : cette fiche, et Thonny quand elle le demande.";
+  pied.textContent = "Ton avancement reste sur cet ordinateur. Aucune donnée n'est envoyée.";
+  affiche();
+}
+</script>
+</body>
+</html>
