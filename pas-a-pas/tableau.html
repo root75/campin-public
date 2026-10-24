@@ -34,6 +34,13 @@ h2{font-family:var(--display);font-weight:800;font-size:1.3rem;margin:0}
 .reglages{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 select{font:inherit;padding:6px 10px;border-radius:8px;border:2px solid var(--trait);background:var(--carte);color:var(--encre)}
 .maj{font-size:.9rem;color:var(--doux)}
+.classe{color:var(--encre-bouton)}
+.btn{font:inherit;font-weight:700;padding:6px 14px;border-radius:8px;cursor:pointer;border:2px solid var(--encre-bouton);background:var(--encre-bouton);color:var(--carte)}
+.btn.vide{background:transparent;color:var(--encre-bouton)}
+dialog{border:1px solid var(--trait);border-radius:14px;background:var(--carte);color:var(--encre);padding:20px;max-width:min(26rem,calc(100vw - 32px))}
+dialog::backdrop{background:rgb(0 0 0 / .45)}
+dialog form{display:grid;gap:12px}
+dialog input{font:inherit;padding:8px 10px;border-radius:8px;border:2px solid var(--trait);background:var(--carte);color:var(--encre)}
 .demo{background:var(--fromage-pale);border-left:5px solid var(--fromage);border-radius:6px;padding:8px 12px}
 
 .chiffres{display:grid;grid-template-columns:repeat(auto-fit,minmax(9rem,1fr));gap:10px}
@@ -69,15 +76,11 @@ tr.fini td{color:var(--doux)}
 <body>
 <div class="page">
   <header>
-    <h1>Pas à pas — tableau de bord</h1>
+    <h1><span class="classe" id="titre-classe"></span>Pas à pas — tableau de bord</h1>
     <div class="reglages">
       <select id="cours" aria-label="Cours"></select>
-      <select id="periode" aria-label="Période">
-        <option value="60">Depuis 1 h</option>
-        <option value="120" selected>Depuis 2 h</option>
-        <option value="jour">Aujourd'hui</option>
-        <option value="0">Tout</option>
-      </select>
+      <select id="seance" aria-label="Séance"></select>
+      <button class="btn" type="button" id="nouvelle">Nouvelle séance</button>
       <span class="maj" id="maj"></span>
     </div>
   </header>
@@ -99,6 +102,16 @@ tr.fini td{color:var(--doux)}
   </section>
 </div>
 
+<dialog id="dlg">
+  <form method="dialog" id="dlg-form">
+    <h2>Nouvelle séance</h2>
+    <p>Le tableau repart à zéro pour cette classe. Les séances passées restent dans la liste et dans la feuille.</p>
+    <label>Classe <input id="dlg-classe" list="classes" required maxlength="20" autocomplete="off" placeholder="1C"></label>
+    <datalist id="classes"></datalist>
+    <div class="reglages"><button class="btn" value="ok">Démarrer</button><button class="btn vide" value="annuler" formnovalidate>Annuler</button></div>
+  </form>
+</dialog>
+
 <script>
 const NB_BLOCS = { "messagerie-1": 12 };
 const RAFRAICHIR = 15000;
@@ -110,11 +123,25 @@ const txt = (tag, cls, t) => { const n=document.createElement(tag); if(cls) n.cl
 const nom = email => email.split("@")[0].split(/[._]/).filter(Boolean).map(m=>m[0].toUpperCase()+m.slice(1)).join(" ");
 const ilya = ms => ms < 60000 ? "à l'instant" : "il y a " + Math.round(ms/60000) + " min";
 
-function minutes(){
-  const v = $("periode").value;
-  if(v === "jour"){ const d=new Date(); return Math.ceil((d - new Date(d.getFullYear(),d.getMonth(),d.getDate()))/60000); }
-  return Number(v);
+let SEANCES = [];
+const heure = t => new Date(t).toLocaleString("fr-BE",{weekday:"short",day:"numeric",month:"numeric",hour:"2-digit",minute:"2-digit"});
+const choisie = () => SEANCES[Number($("seance").value)] || { classe:"", debut:0, fin:null };
+
+/* La liste des séances : la plus récente d'abord, sélectionnée par défaut. */
+function remplitSeances(liste){
+  SEANCES = liste;
+  const sel = $("seance");
+  sel.replaceChildren(...(liste.length ? liste : [{classe:"", debut:0}]).map((s,i)=>{
+    const o = txt("option", null, s.debut ? (i===0 && !s.fin ? "En cours · " : "") + s.classe + " · " + heure(s.debut) : "Toutes (aucune séance démarrée)");
+    o.value = i; return o; }));
+  $("classes").replaceChildren(...[...new Set(liste.map(s=>s.classe))].map(c=>{ const o=txt("option"); o.value=c; return o; }));
+  charge();
 }
+function chargeSeances(){
+  if(!SUIVI){ remplitSeances(demoSeances()); return; }
+  google.script.run.withSuccessHandler(remplitSeances).withFailureHandler(erreur).seances($("cours").value);
+}
+const erreur = err => { $("maj").textContent = "Erreur : " + err.message; };
 
 function dessine(d){
   const n = NB_BLOCS[$("cours").value] || Math.max(1, ...d.eleves.map(e=>e.atteint+1));
@@ -160,14 +187,14 @@ function dessine(d){
     const w = txt("div"); w.append(j);
     r.append(txt("span",null,"Bloc "+i), w, txt("span","num",v)); zb.append(r);
   }
+ const s = choisie(); $("titre-classe").textContent = s.classe ? s.classe + " · " : "";
   $("maj").textContent = "Mis à jour à " + new Date(d.maintenant).toLocaleTimeString("fr-BE",{hour:"2-digit",minute:"2-digit",second:"2-digit"});
 }
 
 function charge(){
   if(!SUIVI){ dessine(demo()); return; }
-  google.script.run.withSuccessHandler(dessine)
-    .withFailureHandler(err=>{ $("maj").textContent = "Erreur : " + err.message; })
-    .donnees($("cours").value, minutes());
+  const s = choisie();
+  google.script.run.withSuccessHandler(dessine).withFailureHandler(erreur).donnees($("cours").value, s.debut, s.fin);
 }
 
 /* Données fictives : l'aperçu hors Apps Script. */
@@ -185,13 +212,27 @@ function demo(){
   ]};
 }
 
+function demoSeances(){
+  const t = Date.now(), h = 3600000;
+  return [{classe:"1C", debut:t-40*60000, fin:null}, {classe:"1B", debut:t-2*h, fin:t-40*60000}, {classe:"2F", debut:t-26*h, fin:t-2*h}];
+}
+
+/* Nouvelle séance : demande la classe, la démarre côté serveur, recharge la liste. */
+$("nouvelle").addEventListener("click", ()=>{ $("dlg-classe").value = ""; $("dlg").showModal(); });
+$("dlg").addEventListener("close", ()=>{
+  const classe = $("dlg-classe").value.trim();
+  if($("dlg").returnValue !== "ok" || !classe) return;
+  if(!SUIVI){ const l = demoSeances(); l[0].fin = Date.now(); remplitSeances([{classe, debut:Date.now(), fin:null}, ...l]); return; }
+  google.script.run.withSuccessHandler(remplitSeances).withFailureHandler(erreur).nouvelleSeance($("cours").value, classe);
+});
+
 function demarre(cours){
   $("cours").replaceChildren(...cours.map(c=>{ const o=txt("option",null,c); o.value=c; return o; }));
-  $("cours").addEventListener("change", charge);
-  $("periode").addEventListener("change", charge);
-  charge(); setInterval(charge, RAFRAICHIR);
+  $("cours").addEventListener("change", chargeSeances);
+  $("seance").addEventListener("change", charge);
+  chargeSeances(); setInterval(charge, RAFRAICHIR);
 }
-if(SUIVI) google.script.run.withSuccessHandler(demarre).withFailureHandler(err=>{ $("maj").textContent = "Erreur : " + err.message; }).listeCours();
+if(SUIVI) google.script.run.withSuccessHandler(demarre).withFailureHandler(erreur).listeCours();
 else { $("demo").hidden = false; demarre(Object.keys(NB_BLOCS)); }
 </script>
 </body>
