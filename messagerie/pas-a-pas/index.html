@@ -226,7 +226,8 @@ const BLOCS = [
     veux:"Savoir ce que je devrai écrire au bloc 10.",
     fais:"Je lis le message en entier, sans répondre. Je garde l'onglet ouvert.",
     vois:"Je peux montrer à mon voisin : l'objet du message (son titre), la date et l'heure d'envoi, et la question qu'il me pose.",
-    coince:["L'objet, c'est le titre du message : la ligne en gras, tout en haut du message ouvert.","La date et l'heure sont à droite, au-dessus du texte."],
+    coince:["L'objet, c'est le titre du message : la ligne en gras, tout en haut du message ouvert.","La date et l'heure sont à droite, au-dessus du texte.",
+            "Mon voisin n'a pas la même question que moi : c'est normal. Je réponds à MA question, pas à la sienne."],
     q:{ type:"saisie", q:"Recopie l'objet du message de ton professeur.",
         ok: r => OBJETS_PROF.length===0 ? r.length>3 : OBJETS_PROF.some(o=>norm(o)===norm(r)),
         faux:"Ce n'est pas l'objet. L'objet est la ligne en gras, tout en haut du message ouvert : recopie-la mot pour mot.",
@@ -236,6 +237,15 @@ const BLOCS = [
     veux:"Une page blanche pour écrire.",
     fais:`<span class="chemin">Onglet Accueil ▸ bouton bleu Nouveau message</span>`,
     vois:"En haut, le bouton Envoyer ; dessous, la ligne À, la ligne Cc, et Cci au bout de la ligne À ; puis Ajouter un objet.",
+    extra:`<div class="encart"><h3>📝 Ce message est coté sur 5 par mon professeur</h3>
+  <p>Il reçoit mon message et compte un point pour chaque critère :</p>
+  <table>
+  <tr><td><b>1</b></td><td>L'adresse est celle de mon professeur.</td></tr>
+  <tr><td><b>2</b></td><td>L'objet est « Mon premier message - » suivi de mon prénom.</td></tr>
+  <tr><td><b>3</b></td><td>Le texte commence par « Bonjour Monsieur, » ou « Bonjour Madame, ».</td></tr>
+  <tr><td><b>4</b></td><td>Tous les crochets sont remplacés (l'objet, la date, l'heure, MA réponse), avec une majuscule et un point à chaque phrase.</td></tr>
+  <tr><td><b>5</b></td><td>Le message finit par mon prénom, mon nom et ma classe.</td></tr></table>
+  <p>Je relis ces cinq points au bloc 11, avant d'envoyer.</p></div>`,
     coince:["J'ai fermé mon message sans l'envoyer : il est dans Brouillons, je clique dessus pour continuer."],
     q:{ type:"qcm", q:"Dans ton nouveau message, où se trouve Cci ?",
         c:["Au bout de la ligne À.","Sous Ajouter un objet.","Dans l'onglet Afficher.","Il n'y en a pas."],
@@ -362,7 +372,7 @@ function affiche(){
   if(fait){
     pr.append(txt("p","retour juste","✅ Bloc déjà validé."));
   } else if(B.cases){
-    pr.append(txt("div","etiquette","✅ Les cinq points (mon message est noté sur 5)"));
+    pr.append(txt("div","etiquette","✅ Les cinq points (mon message est coté sur 5)"));
     const ul = el("ul","cases");
     B.cases.forEach(c=>{ const li=el("li"); const lab=el("label"); const cb=el("input"); cb.type="checkbox";
       lab.append(cb, txt("span",null,c)); li.append(lab); ul.append(li); });
@@ -450,7 +460,7 @@ function preuve(pr, B){
 
 function fin(z){
   z.append(txt("h2",null,"🎉 J'ai fini la leçon 1"),
-    txt("p",null,"Mon message est parti. Je coche le dernier bloc sur ma feuille de route."));
+    txt("p",null,"Mon message est parti. Mon professeur va le coter sur 5. Je coche le dernier bloc sur ma feuille de route."));
   const plus = el("div","encart");
   plus.append(txt("h3",null,"⚡ J'ai fini avant les autres"),
     txt("p",null,"J'écris un second message à mon voisin (je tape son nom dans À et je le choisis dans la liste). Objet : Question - prénom. Je lui pose une question sur le cours, avec les quatre parties d'un message bien écrit."));
