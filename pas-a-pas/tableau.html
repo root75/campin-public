@@ -73,6 +73,14 @@ tr.fini td{color:var(--doux)}
 .bl{display:grid;grid-template-columns:4.5rem 1fr 2.5rem;gap:8px;align-items:center;font-size:.95rem}
 .bl .jauge{height:14px;border-radius:3px;background:var(--faux);opacity:.85;min-width:2px}
 .vide{color:var(--doux)}
+.hum{text-align:center;font-size:1.3rem;line-height:1}
+.hm{display:grid;grid-template-columns:2rem 6rem 1fr 2.5rem;gap:8px;align-items:center;font-size:.95rem}
+.hm .emoji{font-size:1.5rem;line-height:1}
+.hm .jauge{height:14px;border-radius:3px;background:var(--encre-bouton);opacity:.85;min-width:2px}
+.avis{display:grid;grid-template-columns:repeat(auto-fit,minmax(16rem,1fr));gap:12px 20px}
+.avis h3{font-size:1rem;margin:0 0 6px}
+.avis ul{margin:0;padding-left:1.1rem;display:grid;gap:6px}
+.avis .qui{color:var(--doux);font-size:.9rem}
 </style>
 </head>
 <body>
@@ -93,15 +101,25 @@ tr.fini td{color:var(--doux)}
   <section class="panneau">
     <h2>Les élèves</h2>
     <div class="defile"><table>
-      <thead><tr><th>Élève</th><th>Avancement</th><th class="num">Bloc</th><th class="num">Erreurs ici</th><th class="num">Erreurs</th><th>État</th><th class="num">Dernière action</th></tr></thead>
+      <thead><tr><th>Élève</th><th title="Humeur du jour">Humeur</th><th>Avancement</th><th class="num">Bloc</th><th class="num">Erreurs ici</th><th class="num">Erreurs</th><th>État</th><th class="num">Dernière action</th></tr></thead>
       <tbody id="lignes"></tbody>
     </table></div>
+  </section>
+
+  <section class="panneau">
+    <h2>Humeur de la classe</h2>
+    <div class="blocs" id="humeurs"></div>
   </section>
 
   <section class="panneau">
     <h2>Où le groupe bute — erreurs par bloc</h2>
     <p class="astuce">Clic sur « Bloc N » (ici ou dans la colonne Bloc) : la fiche s'ouvre à ce bloc, en aperçu, pour la projeter. Rien n'y est enregistré.</p>
     <div class="blocs" id="blocs"></div>
+  </section>
+
+  <section class="panneau">
+    <h2>Leurs avis — fin de la fiche</h2>
+    <div class="avis" id="avis"></div>
   </section>
 </div>
 
@@ -128,6 +146,9 @@ const lienBloc = (i, texte) => {
   const a = txt("a", null, texte); a.href = url + "#bloc=" + i; a.target = "_blank"; a.rel = "noopener";
   a.title = "Ouvrir le bloc " + i + " en aperçu (rien n'est enregistré)"; return a;
 };
+/* Mêmes listes que dans les fiches : l'humeur est enregistrée « emoji libellé ». */
+const HUMEURS = [["😄","Super"],["🙂","Bien"],["😐","Bof"],["🙁","Pas top"],["😣","Pas bien"]];
+const AVIS = [["plu","Ce qui m'a plu"],["progres","Ce qui m'a aidé à progresser"],["gene","Ce qui m'a gêné dans le cours en ligne"]];
 const NB_BLOCS = { "messagerie-1": 12, "python-1": 12, "python-2": 10 };
 const RAFRAICHIR = 15000;
 const INACTIF = 8 * 60000;
@@ -174,11 +195,12 @@ function dessine(d){
   ].map(([t,v,c])=>{ const x=txt("div","chiffre "+c); x.append(txt("b",null,v), txt("span",null,t)); return x; }));
 
   const tb = $("lignes"); tb.replaceChildren();
-  if(!el.length){ const tr=txt("tr"); const td=txt("td","vide","Personne n'a encore ouvert la fiche sur cette période."); td.colSpan=7; tr.append(td); tb.append(tr); }
+  if(!el.length){ const tr=txt("tr"); const td=txt("td","vide","Personne n'a encore ouvert la fiche sur cette période."); td.colSpan=8; tr.append(td); tb.append(tr); }
   el.forEach(e=>{
     const tr = txt("tr", e.aide ? "aide" : e.fini ? "fini" : "");
     const td = (cls,t) => { const c=txt("td",cls,t); tr.append(c); return c; };
     const n1 = td("nom", nom(e.email)); n1.title = e.email;
+    const h = td("hum", e.humeur ? e.humeur.split(" ")[0] : ""); if(e.humeur) h.title = e.humeur;
     const b = txt("div","barre");
     for(let i=0;i<n;i++){ const s=txt("span"); s.className = i<e.atteint ? "fait" : (i===e.atteint && !e.fini ? "ici" : ""); b.append(s); }
     td().append(b);
@@ -202,7 +224,27 @@ function dessine(d){
     const w = txt("div"); w.append(j);
     r.append(lienBloc(i, "Bloc "+i), w, txt("span","num",v)); zb.append(r);
   }
- const s = choisie(); $("titre-classe").textContent = s.classe ? s.classe + " · " : "";
+  const zh = $("humeurs"); zh.replaceChildren();
+  const parHumeur = HUMEURS.map(([m])=>el.filter(e=>e.humeur.split(" ")[0]===m).length);
+  const maxH = Math.max(1, ...parHumeur);
+  HUMEURS.forEach(([m,t],i)=>{
+    const r = txt("div","hm"); const j = txt("div","jauge"); j.style.width = (parHumeur[i]/maxH*100)+"%"; if(!parHumeur[i]) j.style.opacity=".15";
+    const w = txt("div"); w.append(j);
+    r.append(txt("span","emoji",m), txt("span",null,t), w, txt("span","num",parHumeur[i])); zh.append(r);
+  });
+  const sans = el.filter(e=>!e.humeur).length;
+  if(sans) zh.append(txt("p","astuce",sans+" élève"+(sans>1?"s n'ont":" n'a")+" pas encore choisi."));
+
+  const za = $("avis"); za.replaceChildren();
+  AVIS.forEach(([k,t])=>{
+    const col = txt("div"); col.append(txt("h3",null,t));
+    const rep = el.filter(e=>e.avis && e.avis[k]);
+    if(!rep.length) col.append(txt("p","vide","Pas encore de réponse."));
+    else { const ul = txt("ul"); rep.forEach(e=>{ const li = txt("li",null,e.avis[k]+" "); li.append(txt("span","qui","— "+nom(e.email))); ul.append(li); }); col.append(ul); }
+    za.append(col);
+  });
+
+  const s = choisie(); $("titre-classe").textContent = s.classe ? s.classe + " · " : "";
   $("maj").textContent = "Mis à jour à " + new Date(d.maintenant).toLocaleTimeString("fr-BE",{hour:"2-digit",minute:"2-digit",second:"2-digit"});
 }
 
@@ -215,15 +257,15 @@ function charge(){
 /* Données fictives : l'aperçu hors Apps Script. */
 function demo(){
   const t = Date.now(), m = 60000;
-  const e = (email, atteint, erreurs, erreursIci, derniere, extra) => Object.assign({email, atteint, erreurs, erreursIci, aide:null, fini:false, derniere:t-derniere*m}, extra||{});
+  const e = (email, atteint, erreurs, erreursIci, derniere, extra) => Object.assign({email, atteint, erreurs, erreursIci, aide:null, fini:false, derniere:t-derniere*m, humeur:"", avis:null}, extra||{});
   return { maintenant:t, parBloc:{1:2,4:5,5:3,6:9,8:4,9:6,10:2,12:1}, eleves:[
-    e("lina.dubois@arcampin.be",5,7,4,1,{aide:{bloc:6,depuis:t-3*m}}),
-    e("noah.martin@arcampin.be",9,3,1,0),
-    e("ines.lambert@arcampin.be",12,2,0,2,{fini:true}),
-    e("adam.peeters@arcampin.be",3,5,3,1),
+    e("lina.dubois@arcampin.be",5,7,4,1,{aide:{bloc:6,depuis:t-3*m}, humeur:"🙁 Pas top"}),
+    e("noah.martin@arcampin.be",9,3,1,0,{humeur:"🙂 Bien"}),
+    e("ines.lambert@arcampin.be",12,2,0,2,{fini:true, humeur:"😄 Super", avis:{plu:"Les questions pour passer au bloc suivant, on sait tout de suite si c'est juste.", progres:"Ça coince ? quand je me trompais.", gene:""}}),
+    e("adam.peeters@arcampin.be",3,5,3,1,{humeur:"😣 Pas bien"}),
     e("sara.janssens@arcampin.be",7,4,0,11),
-    e("yanis.leroy@arcampin.be",8,6,2,0,{aide:{bloc:9,depuis:t-1*m}}),
-    e("emma.dupont@arcampin.be",10,1,0,1)
+    e("yanis.leroy@arcampin.be",8,6,2,0,{aide:{bloc:9,depuis:t-1*m}, humeur:"😐 Bof"}),
+    e("emma.dupont@arcampin.be",12,1,0,1,{fini:true, humeur:"🙂 Bien", avis:{plu:"Travailler à mon rythme.", progres:"Refaire le programme moi-même.", gene:"Attendre que la page charge au début."}})
   ]};
 }
 
