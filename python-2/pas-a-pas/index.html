@@ -127,6 +127,20 @@ table.trace input.faux{border-color:var(--faux);background:var(--faux-pale)} tab
 .lignes-code code{font-family:ui-monospace,"Cascadia Mono",Consolas,"Courier New",monospace;white-space:pre}
 .panneau>*{min-width:0} .ligne dd,.chemin{overflow-wrap:anywhere}
 
+.humeur{background:var(--carte);border:1px solid var(--trait);border-radius:14px;padding:14px clamp(16px,4vw,28px);display:grid;gap:10px}
+.humeur.faite{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:center;padding:8px clamp(16px,4vw,28px);font-size:1rem;color:var(--doux)}
+.smileys{display:flex;flex-wrap:wrap;gap:8px}
+.smileys button{flex:1 1 5.5rem;display:grid;justify-items:center;gap:2px;padding:8px 6px;border-radius:12px;border:2px solid var(--trait);
+  background:var(--carte);color:var(--encre);cursor:pointer;font-size:.95rem}
+.smileys button:hover{border-color:var(--encre-bouton)}
+.smileys button.choisi{border-color:var(--encre-bouton);background:var(--papier)}
+.smileys .emoji{font-size:2rem;line-height:1}
+.note{font-size:.95rem;color:var(--doux)}
+.lien{background:none;border:0;padding:0;color:var(--encre-bouton);text-decoration:underline;cursor:pointer;font-size:inherit}
+.bilan label{display:grid;gap:4px;font-weight:700}
+.bilan textarea{font:inherit;font-weight:400;padding:8px 10px;border-radius:10px;border:2px solid var(--trait);background:var(--carte);color:var(--encre);resize:vertical;min-width:0}
+.bilan textarea:focus-visible{outline:3px solid var(--fromage);outline-offset:2px}
+
 footer{font-size:.9rem;color:var(--doux);display:flex;flex-wrap:wrap;gap:4px 16px;justify-content:space-between}
 footer .auteur{margin-left:auto;font-weight:700}
 </style>
@@ -139,6 +153,8 @@ footer .auteur{margin-left:auto;font-weight:700}
     <h1>Premiers pas en Python <em>pas à pas</em></h1>
     <p class="qui" id="qui"></p>
   </header>
+
+  <section class="humeur" id="humeur" hidden aria-label="Humeur du jour"></section>
 
   <div class="progres" id="progres" aria-hidden="true"></div>
 
@@ -664,11 +680,60 @@ function fin(z){
   nav.append(avant);
   if(!SUIVI){
     const zero = txt("button","btn vide","Recommencer à zéro"); zero.type="button";
-    zero.addEventListener("click",()=>{ etat = { atteint:0, erreurs:0 }; ecrit(etat); ici=0; affiche(); });
+    zero.addEventListener("click",()=>{ etat = { atteint:0, erreurs:0 }; ecrit(etat); ici=0; humeur(); affiche(); });
     nav.append(zero);
   }
-  z.append(plus, nav);
+  z.append(bilan(), plus, nav);
   if(!etat.fini){ etat.fini = true; ecrit(etat); envoie({ etape:BLOCS.length, type:"fini" }); }
+}
+
+/* Humeur du jour : un clic, au-dessus du bloc 1. Ce n'est pas un bloc : rien n'est compté,
+   rien n'est bloqué. Même liste dans pas-a-pas/tableau.html. */
+const HUMEURS = [["😄","Super"],["🙂","Bien"],["😐","Bof"],["🙁","Pas top"],["😣","Pas bien"]];
+function humeur(changer){
+  const h = document.getElementById("humeur"); h.replaceChildren(); h.hidden = false;
+  if(etat.humeur && !changer){
+    h.className = "humeur faite";
+    h.append(txt("span",null,"Mon humeur du jour : "+etat.humeur));
+    const c = txt("button","lien","changer"); c.type="button";
+    c.addEventListener("click",()=>humeur(true));
+    h.append(c); return;
+  }
+  h.className = "humeur";
+  h.append(txt("p","question","Comment je me sens aujourd'hui ?"));
+  const l = el("div","smileys");
+  HUMEURS.forEach(([e,t])=>{
+    const b = el("button", etat.humeur===e+" "+t ? "choisi" : ""); b.type="button";
+    b.append(txt("span","emoji",e), txt("span",null,t));
+    b.addEventListener("click",()=>{ etat.humeur = e+" "+t; ecrit(etat); envoie({ etape:0, type:"humeur", reponse:etat.humeur }); humeur(); });
+    l.append(b);
+  });
+  h.append(l, txt("p","note", SUIVI && !APERCU ? "Un clic, puis je commence. Mon professeur voit l'humeur de la classe." : "Un clic, puis je commence."));
+}
+
+/* Mon avis, à la fin : trois questions ouvertes, une ligne du journal chacune.
+   Même liste dans pas-a-pas/tableau.html. */
+const AVIS = [["plu","Ce qui m'a plu"],["progres","Ce qui m'a aidé à progresser"],["gene","Ce qui m'a gêné dans le cours en ligne"]];
+function bilan(){
+  const f = el("form","encart bilan");
+  f.append(txt("h3",null,"💬 Mon avis sur ce cours"), txt("p","note","Quelques mots suffisent. Je peux laisser une case vide."));
+  const champs = AVIS.map(([k,t])=>{
+    const lab = el("label"), ta = el("textarea"); ta.rows = 2; ta.maxLength = 200; ta.value = (etat.avis||{})[k] || "";
+    lab.append(txt("span",null,t), ta); f.append(lab); return ta;
+  });
+  const ok = txt("button","btn plein", etat.avis ? "Modifier mon avis" : "Envoyer mon avis"); ok.type="submit";
+  const merci = txt("p","note", etat.avis ? "✅ Avis envoyé. Merci !" : "");
+  const act = el("div","actions"); act.append(ok, merci); f.append(act);
+  f.addEventListener("submit", e=>{
+    e.preventDefault();
+    const a = {}; AVIS.forEach(([k],i)=>{ a[k] = champs[i].value.trim(); });
+    if(!Object.values(a).some(Boolean)){ merci.textContent = "J'écris au moins quelques mots dans une des cases."; return; }
+    etat.avis = a; ecrit(etat);
+    AVIS.forEach(([k])=>envoie({ etape:BLOCS.length, type:"avis-"+k, reponse:a[k] }));
+    ok.textContent = "Modifier mon avis";
+    merci.textContent = SUIVI && !APERCU ? "✅ Avis envoyé à mon professeur. Merci !" : "✅ Merci ! (Rien n'est envoyé : la fiche n'est pas suivie.)";
+  });
+  return f;
 }
 
 /* « J'attends de l'aide » : l'équivalent de la case entourée. Le chevalet reste le signal. */
@@ -692,18 +757,23 @@ if(APERCU){
   qui.textContent = "👁 Aperçu professeur : navigation libre, rien n'est enregistré.";
   pied.textContent = "Aperçu : les réponses ne sont ni envoyées ni gardées.";
   document.getElementById("aide").hidden = true;
+  humeur();
   affiche();
 } else if(SUIVI){
   pied.textContent = "Ton avancement est visible par ton professeur.";
   google.script.run.withSuccessHandler(s=>{
     if(s && s.email){ qui.textContent = "Connecté : "; qui.append(txt("strong",null,s.email)); if(s.classe) qui.append(" · "+s.classe); }
+    if(s && s.humeur) etat.humeur = s.humeur;
+    if(s && s.avis) etat.avis = s.avis;
+    humeur();
     if(s && s.atteint){ etat.atteint = s.atteint; etat.fini = s.atteint >= BLOCS.length; ici = Math.min(s.atteint, BLOCS.length); }
     affiche();
     envoie({ etape:Math.min(ici,BLOCS.length-1)+1, type:"ouvert" });
-  }).withFailureHandler(()=>affiche()).etat(COURS);
+  }).withFailureHandler(()=>{ humeur(); affiche(); }).etat(COURS);
 } else {
   qui.textContent = "Garde deux fenêtres : cette fiche, et Thonny quand elle le demande.";
   pied.textContent = "Ton avancement reste sur cet ordinateur. Aucune donnée n'est envoyée.";
+  humeur();
   affiche();
 }
 </script>
