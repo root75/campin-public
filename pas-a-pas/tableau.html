@@ -68,6 +68,8 @@ tr.fini td{color:var(--doux)}
 .defile{overflow-x:auto}
 
 .blocs{display:grid;gap:6px}
+.astuce{margin:0 0 8px;font-size:.9rem;color:var(--doux)}
+#blocs a,#lignes a{color:var(--encre-bouton);font-weight:700}
 .bl{display:grid;grid-template-columns:4.5rem 1fr 2.5rem;gap:8px;align-items:center;font-size:.95rem}
 .bl .jauge{height:14px;border-radius:3px;background:var(--faux);opacity:.85;min-width:2px}
 .vide{color:var(--doux)}
@@ -98,6 +100,7 @@ tr.fini td{color:var(--doux)}
 
   <section class="panneau">
     <h2>Où le groupe bute — erreurs par bloc</h2>
+    <p class="astuce">Clic sur « Bloc N » (ici ou dans la colonne Bloc) : la fiche s'ouvre à ce bloc, en aperçu, pour la projeter. Rien n'y est enregistré.</p>
     <div class="blocs" id="blocs"></div>
   </section>
 </div>
@@ -113,6 +116,18 @@ tr.fini td{color:var(--doux)}
 </dialog>
 
 <script>
+/* Les fiches sur GitHub Pages : « Bloc N » ouvre la fiche en aperçu à ce bloc (#bloc=N). */
+const FICHES = {
+  "messagerie-1": "https://root75.github.io/campin-public/messagerie/pas-a-pas/",
+  "python-1": "https://root75.github.io/campin-public/python-1/pas-a-pas/",
+  "python-2": "https://root75.github.io/campin-public/python-2/pas-a-pas/"
+};
+const lienBloc = (i, texte) => {
+  const url = FICHES[$("cours").value];
+  if(!url) return txt("span", null, texte);
+  const a = txt("a", null, texte); a.href = url + "#bloc=" + i; a.target = "_blank"; a.rel = "noopener";
+  a.title = "Ouvrir le bloc " + i + " en aperçu (rien n'est enregistré)"; return a;
+};
 const NB_BLOCS = { "messagerie-1": 12, "python-1": 12, "python-2": 10 };
 const RAFRAICHIR = 15000;
 const INACTIF = 8 * 60000;
@@ -167,7 +182,7 @@ function dessine(d){
     const b = txt("div","barre");
     for(let i=0;i<n;i++){ const s=txt("span"); s.className = i<e.atteint ? "fait" : (i===e.atteint && !e.fini ? "ici" : ""); b.append(s); }
     td().append(b);
-    td("num", e.fini ? "fini" : (e.atteint+1)+" / "+n);
+    const nb = td("num"); nb.append(e.fini ? txt("span",null,"fini") : lienBloc(e.atteint+1, (e.atteint+1)+" / "+n));
     td("num", e.fini ? "" : e.erreursIci || "");
     td("num", e.erreurs || "");
     const etat = td();
@@ -185,7 +200,7 @@ function dessine(d){
     const v = d.parBloc[i] || 0;
     const r = txt("div","bl"); const j = txt("div","jauge"); j.style.width = (v/max*100)+"%"; if(!v) j.style.opacity=".15";
     const w = txt("div"); w.append(j);
-    r.append(txt("span",null,"Bloc "+i), w, txt("span","num",v)); zb.append(r);
+    r.append(lienBloc(i, "Bloc "+i), w, txt("span","num",v)); zb.append(r);
   }
  const s = choisie(); $("titre-classe").textContent = s.classe ? s.classe + " · " : "";
   $("maj").textContent = "Mis à jour à " + new Date(d.maintenant).toLocaleTimeString("fr-BE",{hour:"2-digit",minute:"2-digit",second:"2-digit"});
