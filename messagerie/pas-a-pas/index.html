@@ -312,15 +312,19 @@ const txt = (tag, cls, t) => { const n=document.createElement(tag); if(cls) n.cl
 /* Suivi : servie par Apps Script (outils/pas-a-pas), la page envoie chaque événement
    au tableau de bord du professeur. Ouverte depuis GitHub Pages, rien ne part. */
 const SUIVI = typeof google !== "undefined" && google.script && google.script.run;
+/* Aperçu professeur : l'adresse finit par #bloc=7. La fiche s'ouvre à ce bloc, la navigation est
+   libre et rien n'est enregistré, ni dans le journal ni sur l'ordinateur. Lien depuis le tableau de bord. */
+const APERCU = /^#bloc=\d+$/.test(location.hash);
+addEventListener("hashchange", () => location.reload());
 function envoie(evt){
-  if(!SUIVI) return;
+  if(!SUIVI || APERCU) return;
   google.script.run.withFailureHandler(()=>{}).noter(COURS, evt);
 }
 /* Avancement local, seulement sans suivi : avec le suivi, il vient du serveur et de la séance,
    pour qu'un poste partagé n'hérite pas de l'élève de l'heure précédente. */
 const CLE = "pas-a-pas:"+COURS;
-const lit = () => { if(SUIVI) return {}; try { return JSON.parse(localStorage.getItem(CLE)) || {}; } catch(e){ return {}; } };
-const ecrit = o => { if(SUIVI) return; try { localStorage.setItem(CLE, JSON.stringify(o)); } catch(e){} };
+const lit = () => { if(SUIVI || APERCU) return {}; try { return JSON.parse(localStorage.getItem(CLE)) || {}; } catch(e){ return {}; } };
+const ecrit = o => { if(SUIVI || APERCU) return; try { localStorage.setItem(CLE, JSON.stringify(o)); } catch(e){} };
 
 let etat = Object.assign({ atteint:0, erreurs:0 }, lit());   // atteint = premier bloc non validé
 let ici = Math.min(etat.atteint, BLOCS.length);
@@ -377,7 +381,7 @@ function affiche(){
   const avant = txt("button","btn vide","← Bloc précédent"); avant.type="button"; avant.disabled = ici===0;
   avant.addEventListener("click",()=>{ ici--; affiche(); });
   nav.append(avant, el("span","espace"));
-  if(fait){ const s=txt("button","btn plein","Bloc suivant →"); s.type="button"; s.addEventListener("click",()=>{ici++;affiche();}); nav.append(s); }
+  if(fait || (APERCU && ici+1<BLOCS.length)){ const s=txt("button","btn plein","Bloc suivant →"); s.type="button"; s.addEventListener("click",()=>{ici++;affiche();}); nav.append(s); }
   z.append(nav);
 }
 
@@ -481,7 +485,13 @@ document.getElementById("memo-btn").addEventListener("click",()=>document.getEle
 
 /* Démarrage. Avec le suivi : on reprend où le serveur s'est arrêté (autre poste, onglet fermé). */
 const qui = document.getElementById("qui"), pied = document.getElementById("pied");
-if(SUIVI){
+if(APERCU){
+  ici = Math.max(0, Math.min(BLOCS.length-1, parseInt(location.hash.slice(6),10)-1));
+  qui.textContent = "👁 Aperçu professeur : navigation libre, rien n'est enregistré.";
+  pied.textContent = "Aperçu : les réponses ne sont ni envoyées ni gardées.";
+  document.getElementById("aide").hidden = true;
+  affiche();
+} else if(SUIVI){
   pied.textContent = "Ton avancement est visible par ton professeur.";
   google.script.run.withSuccessHandler(s=>{
     if(s && s.email){ qui.textContent = "Connecté : "; qui.append(txt("strong",null,s.email)); if(s.classe) qui.append(" · "+s.classe); }
