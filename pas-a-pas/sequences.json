@@ -1,0 +1,26 @@
+{
+  "messagerie-1": {
+    "titre": "Leçon 1 — Un e-mail, c'est une lettre",
+    "moments": [
+      { "type": "ecran", "titre": "Accroche", "min": 2, "methode": "Question projetée, à l'oral",
+        "lignes": ["Pour prévenir un copain que tu arrives, tu utilises quoi ?", "Et pour écrire à ton professeur ?"] },
+      { "type": "mots", "titre": "Récolte des mots-clés", "min": 5, "methode": "Individuel, sur le poste",
+        "question": "Un e-mail, c'est…", "max": 3 },
+      { "type": "tri", "titre": "Mise en commun", "min": 5, "methode": "Collectif : chaque mot rangé est justifié",
+        "source": 1, "colonnes": ["Messagerie instantanée", "On hésite", "E-mail"] },
+      { "type": "ecran", "titre": "Notion clé : asynchrone", "min": 3, "methode": "Exposé bref",
+        "paires": [["synchrone", "Le coup de fil : l'autre doit être là, maintenant."],
+                   ["asynchrone", "La lettre : elle attend dans la boîte."]],
+        "exemple": "J'écris à Monsieur le soir. Il me répond le lendemain." },
+      { "type": "vote", "titre": "Vérification", "min": 3, "methode": "Vote sur le poste",
+        "question": "E-mail ou instantané ?", "choix": ["E-mail", "Instantané"],
+        "situations": [
+          { "texte": "Prévenir un professeur d'une absence", "bonne": 0 },
+          { "texte": "Envoyer un document au secrétariat", "bonne": 0 },
+          { "texte": "Dire à un ami que tu es en retard", "bonne": 1 }
+        ] },
+      { "type": "fin", "titre": "Bascule", "min": 2, "methode": "Travail autonome",
+        "lignes": ["Ouvre ton pas-à-pas", "Il s'affiche sur ton poste. Commence par ton humeur du jour."] }
+    ]
+  }
+}
