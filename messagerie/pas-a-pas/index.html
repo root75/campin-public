@@ -9,6 +9,13 @@ addEventListener("error", e => {
   const p = document.createElement("p");
   p.style.cssText = "background:#f8e3e0;color:#b23a2e;border-left:5px solid #b23a2e;padding:8px 12px;margin:8px 0;font:14px/1.4 Arial,sans-serif";
   p.textContent = "⚠ Erreur dans la page : " + (e.message || (e.target && e.target.src ? "chargement de " + e.target.src : "inconnue")) + (e.lineno ? " (ligne " + e.lineno + ")" : "");
+  if(e.lineno){   // les lignes telles que la page les a reçues : ce que le serveur a pu y changer
+    const pre = document.createElement("pre");
+    pre.style.cssText = "white-space:pre-wrap;word-break:break-all;margin:6px 0 0;font:12px/1.35 monospace";
+    pre.textContent = document.documentElement.outerHTML.split("\n").slice(Math.max(0, e.lineno-4), e.lineno+2)
+      .map((l,i) => (Math.max(0, e.lineno-4)+i+1) + "│" + l).join("\n");
+    p.append(pre);
+  }
   (document.body || document.documentElement).prepend(p);
 }, true);
 </script>
