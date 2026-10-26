@@ -3,8 +3,9 @@
    moment en cours : un seul geste à la fois. Elle le demande au serveur toutes les 5 s
    (moment(cours) dans Code.gs) ; sans séquence lancée, ou au dernier moment (« fin »),
    la fiche redevient la fiche.
-   Utilisation, dans la fiche servie par Apps Script :
-     PasAPasSequence.suivre({ cours: COURS, envoie });   // envoie = celle de la fiche (noter) */
+   Utilisation, dans la fiche : <script defer src=".../sequence-eleve.js"> dans la page, et en fin
+   du script de la fiche  window.PAS_A_PAS = { cours: COURS, envoie };  (envoie = celle de la fiche).
+   Chargé en différé, il démarre après la fiche et ne peut jamais l'empêcher de s'afficher. */
 (function(){
   const RYTHME = 5000;
   const css = `
@@ -115,4 +116,5 @@
   }
 
   window.PasAPasSequence = { suivre };
+  if(window.PAS_A_PAS) suivre(window.PAS_A_PAS);
 })();
