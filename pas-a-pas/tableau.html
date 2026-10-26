@@ -81,6 +81,51 @@ tr.fini td{color:var(--doux)}
 .avis h3{font-size:1rem;margin:0 0 6px}
 .avis ul{margin:0;padding-left:1.1rem;display:grid;gap:6px}
 .avis .qui{color:var(--doux);font-size:.9rem}
+
+/* ===== Mode séquence : la classe pilotée comme un diaporama, un message par écran ===== */
+.seq-etat{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.projection{position:fixed;inset:0;z-index:10;background:var(--papier);display:grid;grid-template-rows:1fr auto;overflow:hidden}
+.scene{overflow:auto;display:grid;place-items:center;padding:3vh 5vw;text-align:center}
+.scene > div{width:100%;max-width:90rem;display:grid;gap:3.5vh;justify-items:center}
+.sur{font-size:clamp(1rem,1.8vw,1.6rem);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--doux)}
+.grand{font-family:var(--display);font-weight:800;font-size:clamp(2.2rem,5.5vw,5.5rem);line-height:1.08;margin:0;text-wrap:balance}
+.moyen{font-size:clamp(1.4rem,3.2vw,3rem);line-height:1.2;margin:0;text-wrap:balance}
+.compteur{font-family:var(--display);font-weight:800;font-size:clamp(4rem,14vw,12rem);line-height:1;color:var(--encre-bouton);font-variant-numeric:tabular-nums}
+.paires{display:grid;grid-template-columns:repeat(auto-fit,minmax(18rem,1fr));gap:3vw;width:100%}
+.paire{background:var(--carte);border:2px solid var(--trait);border-radius:20px;padding:3vh 2vw;display:grid;gap:1.5vh}
+.paire b{font-family:var(--display);font-size:clamp(2rem,5vw,4.5rem);line-height:1;color:var(--encre-bouton)}
+.paire span{font-size:clamp(1.2rem,2.4vw,2.2rem)}
+.exemple{font-size:clamp(1.3rem,2.6vw,2.4rem);font-style:italic;color:var(--doux);margin:0}
+.nuage{display:flex;flex-wrap:wrap;gap:1.2vh 2.2vw;justify-content:center;align-items:baseline;max-width:80rem}
+.mot{position:relative;font-weight:700;line-height:1.1;color:var(--encre);border-radius:10px;padding:2px 10px}
+.mot sup{font-size:.45em;color:var(--doux);margin-left:2px}
+.mot .masquer{position:absolute;top:-8px;right:-10px;font:inherit;font-size:14px;line-height:1;width:24px;height:24px;border-radius:50%;border:1px solid var(--trait);background:var(--carte);color:var(--faux);cursor:pointer;opacity:0}
+.mot:hover .masquer,.mot .masquer:focus-visible{opacity:1}
+.tri{display:grid;gap:2.5vh;width:100%}
+.reserve{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;min-height:3.5rem;padding:10px;border:2px dashed var(--trait);border-radius:14px}
+.colonnes{display:grid;grid-template-columns:1fr .8fr 1fr;gap:2vw}
+.colonne{background:var(--carte);border:2px solid var(--trait);border-radius:16px;padding:12px;display:grid;align-content:start;gap:10px;min-height:40vh;cursor:pointer}
+.colonne h3{font-family:var(--display);font-size:clamp(1.3rem,2.6vw,2.4rem);margin:0}
+.colonne.milieu{background:var(--papier);border-style:dashed}
+.colonne .liste{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.colonne.cible,.reserve.cible{border-color:var(--encre-bouton);outline:3px solid var(--encre-bouton)}
+.jeton{font:inherit;font-weight:700;font-size:clamp(1.1rem,2vw,1.8rem);padding:6px 14px;border-radius:999px;border:2px solid var(--trait);background:var(--carte);color:var(--encre);cursor:grab}
+.jeton.choisi{border-color:var(--fromage);background:var(--fromage-pale)}
+.situations{display:grid;gap:2.2vh;width:100%;max-width:70rem;text-align:left}
+.situations .grand{font-size:clamp(1.8rem,4.2vw,4rem)}
+.situation{display:grid;gap:.6vh}
+.situation .moyen{font-weight:700;font-size:clamp(1.2rem,2.7vw,2.5rem)}
+.barres{display:grid;gap:4px}
+.vb{display:grid;grid-template-columns:minmax(8rem,14rem) 1fr 7rem;gap:14px;align-items:center;font-size:clamp(1.1rem,2vw,1.8rem)}
+.vb .jauge{height:clamp(14px,2.4vh,30px);border-radius:6px;background:var(--encre-bouton);opacity:.8;min-width:3px}
+.vb.bonne{font-weight:700;color:var(--juste)}
+.vb.bonne .jauge{background:var(--juste);opacity:1}
+.commande{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;padding:8px 16px;border-top:1px solid var(--trait);background:var(--carte);font-size:.95rem}
+.commande .ou{flex:1;min-width:12rem;color:var(--doux)}
+.commande .ou b{color:var(--encre)}
+.chrono{font-variant-numeric:tabular-nums;font-weight:700}
+.chrono.depasse{color:var(--fromage)}
+@media (max-width:40rem){.colonnes{grid-template-columns:1fr}.colonne{min-height:8rem}}
 </style>
 </head>
 <body>
@@ -91,6 +136,7 @@ tr.fini td{color:var(--doux)}
       <select id="cours" aria-label="Cours"></select>
       <select id="seance" aria-label="Séance"></select>
       <button class="btn" type="button" id="nouvelle">Nouvelle séance</button>
+      <span class="seq-etat" id="seq-etat" hidden></span>
       <span class="maj" id="maj"></span>
     </div>
   </header>
@@ -122,6 +168,20 @@ tr.fini td{color:var(--doux)}
     <div class="avis" id="avis"></div>
   </section>
 </div>
+
+
+<section class="projection" id="projection" hidden aria-label="Mode séquence">
+  <div class="scene" id="scene" aria-live="polite"></div>
+  <div class="commande">
+    <button class="btn vide" type="button" id="seq-prec" title="Moment précédent (←)">◀</button>
+    <span class="ou" id="seq-ou"></span>
+    <span class="chrono" id="seq-chrono"></span>
+    <button class="btn" type="button" id="seq-action" hidden></button>
+    <button class="btn" type="button" id="seq-suiv" title="Moment suivant (→, Espace)">Suivant ▶</button>
+    <button class="btn vide" type="button" id="seq-plein" title="Plein écran (F)">⛶</button>
+    <button class="btn vide" type="button" id="seq-tableau" title="Retour au tableau de bord : la séquence continue">Tableau</button>
+  </div>
+</section>
 
 <dialog id="dlg">
   <form method="dialog" id="dlg-form">
@@ -283,11 +343,215 @@ $("dlg").addEventListener("close", ()=>{
   google.script.run.withSuccessHandler(remplitSeances).withFailureHandler(erreur).nouvelleSeance($("cours").value, classe);
 });
 
+/* ===== Mode séquence =====
+   Le contenu vient de sequences.json (le serveur le lit ; l'aperçu le charge à côté de cette page).
+   Le serveur tient le moment en cours : la fiche de l'élève n'affiche que lui.
+   À l'écran, rien de nominatif : les noms restent dans l'onglet Journal. */
+const SEQ = { contenu:null, etat:null, rep:null, depuis:0, montre:false, choisi:null, minuterie:null };
+const cleSeq = quoi => "pas-a-pas-seq:" + $("cours").value + ":" + (SEQ.etat ? SEQ.etat.lance : 0) + ":" + quoi;
+const litSeq = (quoi, defaut) => { try { return JSON.parse(localStorage.getItem(cleSeq(quoi))) ?? defaut; } catch(e){ return defaut; } };
+const ecritSeq = (quoi, v) => { try { localStorage.setItem(cleSeq(quoi), JSON.stringify(v)); } catch(e){} };
+
+/* Un seul chemin vers le serveur ; sans Apps Script, une imitation pour l'aperçu. */
+function serveur(fn, ...args){
+  if(SUIVI) return new Promise((ok, ko) => google.script.run.withSuccessHandler(ok).withFailureHandler(ko)[fn](...args));
+  return Promise.resolve(DEMO_SEQ[fn](...args));
+}
+let DEMO_CONTENU = null, DEMO_ETAT = null;
+const DEMO_SEQ = {
+  sequence: () => fetch("sequences.json").then(r=>r.json()).then(j=>{ DEMO_CONTENU = j; return { sequence: j[$("cours").value] || null, etat: DEMO_ETAT }; }).catch(()=>({ sequence:null, etat:null })),
+  piloter: (cours, i, phase, nouvelle) => {
+    const m = DEMO_CONTENU[cours].moments[i];
+    DEMO_ETAT = { lance: nouvelle || !DEMO_ETAT ? Date.now() : DEMO_ETAT.lance, i, phase: phase || (m.type==="vote" ? "ouvert" : "") };
+    return DEMO_ETAT;
+  },
+  arreterSequence: () => { DEMO_ETAT = null; return null; },
+  reponses: (cours, i) => {
+    const m = DEMO_CONTENU[cours].moments[i], t = Math.floor((Date.now() - DEMO_ETAT.lance) / 4000);
+    const mots = [["lent",5],["une lettre",4],["pour les profs",3],["sérieux",3],["on attend la réponse",2],["Outlook",2],["@",2],["avec un objet",1],["officiel",1],["long",1],["gratuit",1],["message",2]]
+      .slice(0, Math.min(12, 3 + t)).map(([texte,n])=>({ cle:texte, texte, n }));
+    return { maintenant: Date.now(), repondants: Math.min(21, 4 + 2*t), mots: m.type==="vote" ? [] : mots,
+      votes: m.type==="vote" ? [[17,3],[19,1],[2,18]] : [] };
+  }
+};
+
+/* L'état dans l'en-tête du tableau : lancer, reprendre, arrêter. */
+function dessineEtatSeq(){
+  const z = $("seq-etat"); z.replaceChildren();
+  if(!SEQ.contenu){ z.hidden = true; return; }
+  z.hidden = false;
+  const b = (t, cls, f) => { const x = txt("button", "btn "+cls, t); x.type = "button"; x.addEventListener("click", f); z.append(x); };
+  if(SEQ.etat){
+    z.append(txt("span","maj","Séquence en cours · moment "+(SEQ.etat.i+1)+" / "+SEQ.contenu.moments.length));
+    b("Reprendre la séquence", "", ()=>ouvreProjection());
+    b("Arrêter", "vide", ()=>serveur("arreterSequence", $("cours").value).then(()=>{ SEQ.etat = null; dessineEtatSeq(); }).catch(erreur));
+  } else b("Lancer la séquence", "", ()=>allerA(0, "", true));
+}
+function chargeSequence(){
+  SEQ.contenu = null; SEQ.etat = null; dessineEtatSeq();
+  serveur("sequence", $("cours").value).then(r=>{ SEQ.contenu = r.sequence; SEQ.etat = r.etat; dessineEtatSeq(); }).catch(()=>{});
+}
+
+function allerA(i, phase, nouvelle){
+  const n = SEQ.contenu.moments.length;
+  if(i < 0 || i >= n) return;
+  serveur("piloter", $("cours").value, i, phase || "", !!nouvelle).then(e=>{
+    if(!SEQ.etat || e.i !== SEQ.etat.i || nouvelle){ SEQ.depuis = Date.now(); SEQ.montre = false; SEQ.choisi = null; SEQ.rep = null; }
+    SEQ.etat = e; ouvreProjection();
+  }).catch(erreur);
+}
+function ouvreProjection(){
+  $("projection").hidden = false; document.body.style.overflow = "hidden";
+  if(!SEQ.depuis) SEQ.depuis = Date.now();
+  dessineEtatSeq(); scene(); rafraichitReponses();
+  clearInterval(SEQ.minuterie);
+  SEQ.minuterie = setInterval(()=>{ chrono(); rafraichitReponses(); }, 3000);
+}
+function fermeProjection(){
+  $("projection").hidden = true; document.body.style.overflow = "";
+  clearInterval(SEQ.minuterie);
+  if(document.fullscreenElement) document.exitFullscreen().catch(()=>{});
+}
+const momentCourant = () => SEQ.contenu.moments[SEQ.etat.i];
+/* Le moment dont on lit les réponses : le tri range les mots récoltés plus tôt. */
+const momentLu = () => { const m = momentCourant(); return m.type === "tri" ? m.source : ["mots","vote"].includes(m.type) ? SEQ.etat.i : null; };
+
+function rafraichitReponses(){
+  if(!SEQ.etat || $("projection").hidden) return;
+  const i = momentLu(); if(i == null) return;
+  const avant = SEQ.etat.i;
+  serveur("reponses", $("cours").value, i).then(r=>{ if(SEQ.etat && SEQ.etat.i === avant){ SEQ.rep = r; scene(); } }).catch(erreur);
+}
+
+function chrono(){
+  const m = momentCourant(), s = Math.floor((Date.now() - SEQ.depuis)/1000);
+  const c = $("seq-chrono");
+  c.textContent = Math.floor(s/60) + ":" + String(s%60).padStart(2,"0") + (m.min ? " / ≈" + m.min + " min" : "");
+  c.classList.toggle("depasse", !!m.min && s > m.min*60);
+}
+
+/* L'action propre au moment, dans la barre du bas. */
+function action(){
+  const m = momentCourant(), a = $("seq-action"), ph = SEQ.etat.phase;
+  let t = "", f = null;
+  if(m.type === "mots" && !SEQ.montre){ t = "Montrer les mots"; f = ()=>{ SEQ.montre = true; scene(); }; }
+  if(m.type === "vote" && ph === "ouvert"){ t = "Clore le vote"; f = ()=>allerA(SEQ.etat.i, "clos"); }
+  if(m.type === "vote" && ph === "clos"){ t = "Montrer la bonne réponse"; f = ()=>allerA(SEQ.etat.i, "corrige"); }
+  a.hidden = !f; a.textContent = t; a.onclick = f;
+}
+
+function scene(){
+  const m = momentCourant(), n = SEQ.contenu.moments.length, r = SEQ.rep;
+  const box = txt("div");
+  box.append(txt("p","sur", m.titre));
+  $("seq-ou").replaceChildren(txt("b",null,(SEQ.etat.i+1)+" / "+n+" · "+m.titre), " — "+(m.methode||""));
+  $("seq-prec").disabled = SEQ.etat.i === 0;
+  $("seq-suiv").disabled = SEQ.etat.i === n-1;
+  if(m.type === "ecran" || m.type === "fin"){
+    (m.lignes||[]).forEach((l,k)=>box.append(txt(k ? "p" : "h2", k ? "moyen" : "grand", l)));
+    if(m.paires){ const g = txt("div","paires"); m.paires.forEach(([a,b])=>{ const c = txt("div","paire"); c.append(txt("b",null,a), txt("span",null,b)); g.append(c); }); box.append(g); }
+    if(m.exemple) box.append(txt("p","exemple", m.exemple));
+  }
+  if(m.type === "mots"){
+    box.append(txt("h2","grand", m.question));
+    const masques = litSeq("masques", []);
+    const mots = r ? r.mots.filter(x=>!masques.includes(x.cle)) : [];
+    if(!SEQ.montre){
+      box.append(txt("div","compteur", r ? r.repondants : "…"), txt("p","moyen", (r && r.repondants === 1 ? "élève a" : "élèves ont") + " répondu. Tape tes mots sur ton poste."));
+    } else {
+      const max = Math.max(1, ...mots.map(x=>x.n)), nu = txt("div","nuage");
+      if(!mots.length) nu.append(txt("p","moyen","Pas encore de mot."));
+      mots.forEach(x=>{
+        const s = txt("span","mot", x.texte); s.style.fontSize = "clamp(1.2rem," + (1.6 + 2.6*x.n/max).toFixed(2) + "vw,5rem)";
+        if(x.n > 1) s.append(txt("sup",null,"×"+x.n));
+        const k = txt("button","masquer","×"); k.type = "button"; k.title = "Masquer ce mot (il reste dans le Journal)";
+        k.addEventListener("click", ()=>{ ecritSeq("masques", [...litSeq("masques", []), x.cle]); scene(); });
+        s.append(k); nu.append(s);
+      });
+      box.append(nu);
+    }
+  }
+  if(m.type === "tri") box.append(tri(m, r));
+  if(m.type === "vote") box.append(vote(m, r, SEQ.etat.phase));
+  $("scene").replaceChildren(box);
+  action(); chrono();
+}
+
+/* Mise en commun : glisser un mot dans une colonne, ou cliquer le mot puis la colonne. */
+function tri(m, r){
+  const masques = litSeq("masques", []), place = litSeq("tri", {});
+  const mots = r ? r.mots.filter(x=>!masques.includes(x.cle)) : [];
+  const ranger = (cle, col) => { const p = litSeq("tri", {}); if(col == null) delete p[cle]; else p[cle] = col; ecritSeq("tri", p); SEQ.choisi = null; scene(); };
+  const jeton = x => {
+    const j = txt("button","jeton"+(SEQ.choisi === x.cle ? " choisi" : ""), x.texte); j.type = "button"; j.draggable = true;
+    j.addEventListener("dragstart", e=>{ e.dataTransfer.setData("text/plain", x.cle); });
+    j.addEventListener("click", e=>{ e.stopPropagation(); SEQ.choisi = SEQ.choisi === x.cle ? null : x.cle; scene(); });
+    return j;
+  };
+  const cible = (zone, col) => {
+    zone.addEventListener("dragover", e=>{ e.preventDefault(); zone.classList.add("cible"); });
+    zone.addEventListener("dragleave", ()=>zone.classList.remove("cible"));
+    zone.addEventListener("drop", e=>{ e.preventDefault(); ranger(e.dataTransfer.getData("text/plain"), col); });
+    zone.addEventListener("click", ()=>{ if(SEQ.choisi) ranger(SEQ.choisi, col); });
+  };
+  const t = txt("div","tri"), res = txt("div","reserve");
+  const libres = mots.filter(x=>place[x.cle] == null);
+  if(!libres.length) res.append(txt("span","maj", mots.length ? "Tous les mots sont rangés." : "Pas de mot récolté."));
+  libres.forEach(x=>res.append(jeton(x)));
+  cible(res, null);
+  const cols = txt("div","colonnes");
+  m.colonnes.forEach((c,k)=>{
+    const z = txt("div","colonne"+(m.colonnes.length === 3 && k === 1 ? " milieu" : "")), l = txt("div","liste");
+    z.append(txt("h3",null,c), l);
+    mots.filter(x=>place[x.cle] === k).forEach(x=>l.append(jeton(x)));
+    cible(z, k); cols.append(z);
+  });
+  t.append(res, cols);
+  return t;
+}
+
+/* Vote : le nombre de votants pendant le vote, les barres après la clôture, la bonne réponse ensuite. */
+function vote(m, r, phase){
+  const z = txt("div","situations");
+  z.append(txt("h2","grand", m.question));
+  if(phase === "ouvert"){
+    z.style.textAlign = "center";
+    z.append(txt("div","compteur", r ? r.repondants : "…"), txt("p","moyen", (r && r.repondants === 1 ? "élève a" : "élèves ont") + " voté. Vote sur ton poste."));
+    m.situations.forEach((s,k)=>z.append(txt("p","moyen", (k+1)+". "+s.texte)));
+    return z;
+  }
+  m.situations.forEach((s,k)=>{
+    const d = txt("div","situation"); d.append(txt("p","moyen",(k+1)+". "+s.texte));
+    const c = (r && r.votes[k]) || [], tot = m.choix.reduce((a,_,j)=>a+(c[j]||0), 0), b = txt("div","barres");
+    m.choix.forEach((ch,j)=>{
+      const v = c[j] || 0, bon = phase === "corrige" && s.bonne === j;
+      const l = txt("div","vb"+(bon ? " bonne" : "")), w = txt("div"), g = txt("div","jauge");
+      g.style.width = (tot ? v/tot*100 : 0) + "%"; w.append(g);
+      l.append(txt("span",null,(bon ? "✓ " : "")+ch), w, txt("span","num", v+(tot ? " · "+Math.round(v/tot*100)+" %" : "")));
+      b.append(l);
+    });
+    d.append(b); z.append(d);
+  });
+  return z;
+}
+
+$("seq-prec").addEventListener("click", ()=>allerA(SEQ.etat.i-1));
+$("seq-suiv").addEventListener("click", ()=>allerA(SEQ.etat.i+1));
+$("seq-tableau").addEventListener("click", fermeProjection);
+$("seq-plein").addEventListener("click", ()=>document.fullscreenElement ? document.exitFullscreen() : $("projection").requestFullscreen().catch(()=>{}));
+/* Clavier et télécommande de présentation (elle envoie Page suivante / Page précédente). */
+document.addEventListener("keydown", e=>{
+  if($("projection").hidden || e.target.closest("input,select,textarea")) return;
+  if(["ArrowRight","PageDown"].includes(e.key) || (e.key === " " && e.target === document.body)){ e.preventDefault(); allerA(SEQ.etat.i+1); }
+  else if(["ArrowLeft","PageUp"].includes(e.key)){ e.preventDefault(); allerA(SEQ.etat.i-1); }
+  else if(e.key === "f" || e.key === "F") $("seq-plein").click();
+});
+
 function demarre(cours){
   $("cours").replaceChildren(...cours.map(c=>{ const o=txt("option",null,c); o.value=c; return o; }));
-  $("cours").addEventListener("change", chargeSeances);
+  $("cours").addEventListener("change", ()=>{ chargeSeances(); chargeSequence(); });
   $("seance").addEventListener("change", charge);
-  chargeSeances(); setInterval(charge, RAFRAICHIR);
+  chargeSeances(); chargeSequence(); setInterval(charge, RAFRAICHIR);
 }
 if(SUIVI) google.script.run.withSuccessHandler(demarre).withFailureHandler(erreur).listeCours();
 else { $("demo").hidden = false; demarre(Object.keys(NB_BLOCS)); }

@@ -175,6 +175,8 @@ footer .auteur{margin-left:auto;font-weight:700}
   <form method="dialog" class="actions" style="margin-top:14px"><button class="btn plein">Fermer</button></form>
 </dialog>
 
+<!-- Mode séquence (vue prof) : la fiche affiche le moment que le professeur projette. -->
+<script src="https://root75.github.io/campin-public/pas-a-pas/sequence-eleve.js"></script>
 <script>
 /* ===== Contenu de la leçon =====
    Repris mot pour mot de « Eleve - J'ecris mon premier message - Lecon 1.docx ».
@@ -578,6 +580,7 @@ if(APERCU){
     affiche();
     envoie({ etape:Math.min(ici,BLOCS.length-1)+1, type:"ouvert" });
   }).withFailureHandler(()=>{ humeur(); affiche(); }).etat(COURS);
+  if(window.PasAPasSequence) PasAPasSequence.suivre({ cours: COURS, envoie });
 } else {
   qui.textContent = "Garde deux onglets : celui-ci pour la fiche, un autre pour Courrier.";
   pied.textContent = "Ton avancement reste sur cet ordinateur. Aucune donnée n'est envoyée.";
