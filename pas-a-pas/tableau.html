@@ -81,6 +81,12 @@ tr.fini td{color:var(--doux)}
 .avis h3{font-size:1rem;margin:0 0 6px}
 .avis ul{margin:0;padding-left:1.1rem;display:grid;gap:6px}
 .avis .qui{color:var(--doux);font-size:.9rem}
+.cl input[type=checkbox]{width:1.2rem;height:1.2rem;cursor:pointer}
+.cl td,.cl th{text-align:center}
+.cl td:first-child,.cl th:first-child{text-align:left}
+.ajout{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.ajout input{font:inherit;padding:6px 10px;border-radius:8px;border:2px solid var(--trait);background:var(--carte);color:var(--encre);width:7rem}
+.retirer{font:inherit;border:0;background:none;color:var(--faux);cursor:pointer;padding:0 4px}
 
 /* ===== Mode séquence : la classe pilotée comme un diaporama, un message par écran ===== */
 .seq-etat{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
@@ -166,6 +172,18 @@ tr.fini td{color:var(--doux)}
   <section class="panneau">
     <h2>Leurs avis — fin de la fiche</h2>
     <div class="avis" id="avis"></div>
+  </section>
+
+  <!-- Caché tant que le serveur ne connaît pas « Mes cours » (déploiement antérieur). -->
+  <section class="panneau" id="panneau-classes" hidden>
+    <h2>Mes cours — classes et cours ouverts</h2>
+    <p class="astuce">Cochée = le cours apparaît dans « Mes cours » (adresse sans paramètre) pour cette classe.</p>
+    <div class="defile"><table class="cl"><thead id="cl-tete"></thead><tbody id="cl-corps"></tbody></table></div>
+    <form class="ajout" id="cl-ajout"><input id="cl-nom" maxlength="20" placeholder="2B" aria-label="Nouvelle classe" required><button class="btn vide">Ajouter la classe</button></form>
+    <h2>Classe de chaque élève</h2>
+    <p class="astuce">L'élève choisit sa classe au premier passage. Une erreur ? Change-la ici. « À choisir » = il la choisira à son prochain passage.</p>
+    <div class="ajout"><select id="el-filtre" aria-label="Filtrer par classe"></select><span class="maj" id="el-compte"></span></div>
+    <div class="defile"><table><thead><tr><th>Élève</th><th>Classe</th></tr></thead><tbody id="el-corps"></tbody></table></div>
   </section>
 </div>
 
@@ -547,11 +565,69 @@ document.addEventListener("keydown", e=>{
   else if(e.key === "f" || e.key === "F") $("seq-plein").click();
 });
 
+/* ===== Mes cours : classes, cours ouverts, classe de chaque élève ===== */
+let CL = null;
+const DEMO_CL = {
+  d: { cours:[{cle:"messagerie-1",titre:"Mon premier message"},{cle:"python-1",titre:"Premiers pas en Python 1"},{cle:"python-2",titre:"Premiers pas en Python 2"}],
+       classes:{ "2B":["messagerie-1"], "2E":["messagerie-1"], "3F":["python-1"] },
+       eleves:[{email:"lea.dupont@arcampin.be",classe:"2B"},{email:"noah.martin@arcampin.be",classe:"2E"},{email:"sami.benali@arcampin.be",classe:"2B"}] },
+  classesEtCours(){ return this.d; },
+  ajouterClasse(c){ this.d.classes[c] = this.d.classes[c] || []; return this.d; },
+  retirerClasse(c){ delete this.d.classes[c]; return this.d; },
+  activerCours(c, k, oui){ const l = this.d.classes[c].filter(x=>x!==k); if(oui) l.push(k); this.d.classes[c] = l; return this.d; },
+  changerClasse(e, c){ if(c) this.d.eleves.find(x=>x.email===e).classe = c; else this.d.eleves = this.d.eleves.filter(x=>x.email!==e); return this.d; }
+};
+function serveurCl(fn, ...args){
+  if(SUIVI) return new Promise((ok, ko) => google.script.run.withSuccessHandler(ok).withFailureHandler(ko)[fn](...args));
+  return Promise.resolve(DEMO_CL[fn](...args));
+}
+const appelCl = (fn, ...args) => serveurCl(fn, ...args).then(dessineClasses, erreur);
+function dessineClasses(d){
+  CL = d;
+  const noms = Object.keys(d.classes).sort();
+  const tete = txt("tr"); tete.append(txt("th", null, "Classe"), ...d.cours.map(c=>{ const th = txt("th", null, c.titre); th.title = c.cle; return th; }), txt("th"));
+  $("cl-tete").replaceChildren(tete);
+  $("cl-corps").replaceChildren(...noms.map(n=>{
+    const tr = txt("tr"); tr.append(txt("td", "nom", n));
+    d.cours.forEach(c=>{
+      const td = txt("td"), cb = txt("input"); cb.type = "checkbox"; cb.checked = d.classes[n].includes(c.cle);
+      cb.setAttribute("aria-label", c.titre + " pour " + n);
+      cb.addEventListener("change", ()=>appelCl("activerCours", n, c.cle, cb.checked));
+      td.append(cb); tr.append(td); });
+    const td = txt("td"), x = txt("button", "retirer", "Retirer"); x.type = "button";
+    x.addEventListener("click", ()=>{ if(confirm("Retirer la classe " + n + " ? Ses élèves ne verront plus aucun cours tant que tu ne les as pas déplacés.")) appelCl("retirerClasse", n); });
+    td.append(x); tr.append(td); return tr; }));
+  if(!noms.length) $("cl-corps").replaceChildren(Object.assign(txt("tr"), { innerHTML:'<td colspan="9" class="vide">Aucune classe : ajoute-en une ci-dessous.</td>' }));
+  const filtre = $("el-filtre"), avant = filtre.value;
+  filtre.replaceChildren(...[["", "Toutes les classes"], ...noms.map(n=>[n, n]), ["?", "Classe retirée"]].map(([v, t])=>{ const o = txt("option", null, t); o.value = v; return o; }));
+  filtre.value = [...filtre.options].some(o=>o.value===avant) ? avant : "";
+  dessineEleves();
+  $("panneau-classes").hidden = false;
+}
+function dessineEleves(){
+  const noms = Object.keys(CL.classes).sort(), f = $("el-filtre").value;
+  const liste = CL.eleves.filter(e => !f || (f === "?" ? !CL.classes[e.classe] : e.classe === f))
+    .sort((a, b) => a.classe.localeCompare(b.classe) || nom(a.email).localeCompare(nom(b.email)));
+  $("el-compte").textContent = liste.length + " élève" + (liste.length > 1 ? "s" : "");
+  $("el-corps").replaceChildren(...liste.map(e=>{
+    const tr = txt("tr"), td = txt("td"), sel = txt("select");
+    const nomEl = txt("td", "nom", nom(e.email)); nomEl.title = e.email;
+    const options = [["", "À choisir"], ...(CL.classes[e.classe] ? [] : [[e.classe, e.classe + " (retirée)"]]), ...noms.map(n=>[n, n])];
+    sel.replaceChildren(...options.map(([v, t])=>{ const o = txt("option", null, t); o.value = v; return o; }));
+    sel.value = e.classe; sel.setAttribute("aria-label", "Classe de " + nom(e.email));
+    sel.addEventListener("change", ()=>appelCl("changerClasse", e.email, sel.value));
+    td.append(sel); tr.append(nomEl, td); return tr; }));
+}
+$("el-filtre").addEventListener("change", dessineEleves);
+$("cl-ajout").addEventListener("submit", ev=>{ ev.preventDefault(); const n = $("cl-nom").value.trim(); if(n){ $("cl-nom").value = ""; appelCl("ajouterClasse", n); } });
+/* Un déploiement antérieur ne connaît pas classesEtCours : le panneau reste caché, sans erreur. */
+const chargeClasses = () => serveurCl("classesEtCours").then(dessineClasses, ()=>{});
+
 function demarre(cours){
   $("cours").replaceChildren(...cours.map(c=>{ const o=txt("option",null,c); o.value=c; return o; }));
   $("cours").addEventListener("change", ()=>{ chargeSeances(); chargeSequence(); });
   $("seance").addEventListener("change", charge);
-  chargeSeances(); chargeSequence(); setInterval(charge, RAFRAICHIR);
+  chargeSeances(); chargeSequence(); chargeClasses(); setInterval(charge, RAFRAICHIR);
 }
 if(SUIVI) google.script.run.withSuccessHandler(demarre).withFailureHandler(erreur).listeCours();
 else { $("demo").hidden = false; demarre(Object.keys(NB_BLOCS)); }
