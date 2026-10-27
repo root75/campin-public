@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mes cours — pas à pas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:wght@0,800&family=Atkinson+Hyperlegible:wght@0,400;0,700&display=swap">
+<style>
+/* Mes cours : le point d'entrée unique de l'élève, un bouton par cours ouvert pour sa classe.
+   Servi par Apps Script (outils/pas-a-pas), adresse sans paramètre ; ouvert ailleurs, il montre un aperçu. */
+:root{
+  --papier:#f3f5f7; --carte:#ffffff; --encre:#1f2a33; --doux:#5b6873;
+  --trait:#d5dce2; --encre-bouton:#1d5a73; --fromage:#e3a922; --fromage-pale:#fbf0d4;
+  --display:"Alegreya", Georgia, serif; --texte:"Atkinson Hyperlegible", "Segoe UI", Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --papier:#141a1f; --carte:#1d252c; --encre:#e8edf1; --doux:#a3b0ba;
+  --trait:#33404a; --encre-bouton:#7cc3de; --fromage:#e9b84a; --fromage-pale:#3a3120; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --papier:#141a1f; --carte:#1d252c; --encre:#e8edf1; --doux:#a3b0ba;
+  --trait:#33404a; --encre-bouton:#7cc3de; --fromage:#e9b84a; --fromage-pale:#3a3120; color-scheme:dark }
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--papier);color:var(--encre);font-family:var(--texte);font-size:1.1rem;line-height:1.45;
+  padding:0 max(16px, env(safe-area-inset-right, 0px)) 40px max(16px, env(safe-area-inset-left, 0px))}
+.page{max-width:40rem;margin:0 auto;display:grid;gap:16px;padding-top:24px}
+h1{font-family:var(--display);font-weight:800;font-size:2rem;margin:0;line-height:1.1}
+h2{font-family:var(--display);font-weight:800;font-size:1.3rem;margin:0}
+p{margin:0}
+.doux{color:var(--doux)}
+.classe{color:var(--encre-bouton)}
+.panneau{background:var(--carte);border:1px solid var(--trait);border-radius:14px;padding:16px clamp(12px,3vw,20px);display:grid;gap:12px}
+.liste{display:grid;gap:10px}
+.choix{display:flex;flex-wrap:wrap;gap:10px}
+.btn{font:inherit;font-weight:700;padding:10px 18px;border-radius:10px;cursor:pointer;border:2px solid var(--encre-bouton);background:var(--encre-bouton);color:var(--carte);text-decoration:none;text-align:center}
+.btn.vide{background:transparent;color:var(--encre-bouton)}
+.btn.cours{display:block;text-align:left;font-size:1.2rem;padding:14px 18px}
+.coince{background:var(--fromage-pale);border-left:5px solid var(--fromage);border-radius:6px;padding:10px 14px;display:grid;gap:6px}
+.coince ul{margin:0;padding-left:1.2rem;display:grid;gap:4px}
+.demo{background:var(--fromage-pale);border-left:5px solid var(--fromage);border-radius:6px;padding:8px 12px;font-size:1rem}
+</style>
+</head>
+<body>
+<main class="page">
+  <h1>Mes cours<span class="classe" id="titre-classe"></span></h1>
+  <p class="demo" id="demo" hidden>Aperçu : rien n'est enregistré. La vraie page s'ouvre par l'adresse Apps Script, sans rien derrière <b>/exec</b>.</p>
+  <p class="doux" id="attente">Chargement…</p>
+
+  <!-- Premier passage : choisir sa classe, puis confirmer. -->
+  <section class="panneau" id="choisir" hidden>
+    <h2>Quelle est ta classe ?</h2>
+    <p>☐ Clique sur ta classe.</p>
+    <div class="choix" id="classes"></div>
+  </section>
+  <section class="panneau" id="confirmer" hidden>
+    <h2>Tu es en <span class="classe" id="classe-choisie"></span> ?</h2>
+    <p>☐ Vérifie : tu ne pourras plus changer toi-même.</p>
+    <div class="choix">
+      <button class="btn" type="button" id="oui">Oui, c'est ma classe</button>
+      <button class="btn vide" type="button" id="non">Non, je me suis trompé·e</button>
+    </div>
+  </section>
+
+  <!-- Ensuite : un bouton par cours ouvert pour la classe. -->
+  <section class="panneau" id="mes-cours" hidden>
+    <h2>Choisis ton cours</h2>
+    <div class="liste" id="cours"></div>
+    <p class="doux" id="aucun" hidden>Aucun cours n'est ouvert pour ta classe pour l'instant. Ton professeur te dira quand.</p>
+  </section>
+
+  <p class="panneau" id="erreur" hidden></p>
+
+  <aside class="coince">
+    <h2>Ça coince ?</h2>
+    <ul>
+      <li><b>Mauvaise classe ?</b> Continue avec le cours de ton voisin et pose ta feuille pliée sur ton écran : ton professeur corrige ta classe.</li>
+      <li><b>« Ouvre ce lien avec ton compte de l'école »</b> : en haut à droite de Chrome, clique sur ton rond ▸ choisis ton compte arcampin.be ▸ rouvre le lien depuis Classroom.</li>
+      <li><b>Ton cours n'est pas dans la liste</b> : ton professeur ne l'a pas encore ouvert. Attends sa consigne.</li>
+    </ul>
+  </aside>
+</main>
+
+<script src="https://root75.github.io/campin-public/pas-a-pas/mes-cours.js"></script>
+</body>
+</html>
