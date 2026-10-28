@@ -3,12 +3,13 @@
    sur GitHub Pages marche). Un fichier externe arrive au navigateur tel quel. */
 /* ===== Contenu de la leçon =====
    Repris mot pour mot de « Eleve - J'ecris mon premier message - Lecon 1.docx ».
-   Chaque bloc : veux / fais / vois, stop, minutes, coince (les pièges de CE bloc),
-   et une preuve : QCM (bonne réponse TOUJOURS en premier, mélangée à l'affichage,
-   p = ce qu'on dit à l'élève qui choisit ce piège) ou saisie (ok = test de la réponse). */
+   Chaque bloc : veux / fais / vois, stop, minutes, coince (les pièges de CE bloc).
+   Sa question de preuve, en trois variantes, est dans preuves.json (même ordre que BLOCS). */
 const COURS = "messagerie-1";
-const OBJETS_PROF = ["Bienvenue dans ta boîte de l'école"];   // l'objet du message envoyé avant la séance
-const ADRESSES_PROF = ["vlouviaux@arcampin.be", "alexia.michiels@arcampin.be"];
+/* Les questions de preuve et leurs réponses : dans preuves.json, pas ici. Servie par Apps Script,
+   la fiche reçoit du serveur la variante de l'élève, sans la réponse, et le serveur corrige.
+   Hors Apps Script (GitHub Pages, aperçu professeur), elle lit le fichier et corrige elle-même. */
+const PREUVES = "https://root75.github.io/campin-public/messagerie/pas-a-pas/preuves.json";
 
 const PROF_TABLE = `<div class="encart"><table>
   <tr><th>Ma classe</th><th>Mon professeur</th><th>Son adresse</th></tr>
@@ -22,57 +23,38 @@ const BLOCS = [
     vois:"L'onglet de Chrome affiche « Courrier - mon nom - Outlook ».",
     coince:["Je ne vois pas « Favoris du domaine arcampin.com » : je ne suis pas dans Chrome avec mon compte de l'école. En haut à droite de Chrome, le rond du profil ▸ je choisis mon compte de l'école.",
             "Outlook me demande de me connecter : mon adresse de l'école, puis mon mot de passe.",
-            "Je garde deux onglets : celui-ci pour la fiche, un autre pour Courrier."],
-    q:{ type:"qcm", q:"Qu'est-ce qui est écrit sur l'onglet de Chrome ?",
-        c:["Courrier - mon nom - Outlook","Gmail - Boîte de réception","Nouvel onglet","Google Classroom"],
-        p:[null,"Gmail, c'est la boîte Google. Celle de l'école s'ouvre par Microsoft 365 ▸ Courrier.","Courrier n'est pas encore ouvert : reprends le chemin des favoris.","Classroom, c'est pour les devoirs. Le courrier est dans Microsoft 365."] } },
+            "Je garde deux onglets : celui-ci pour la fiche, un autre pour Courrier."] },
 
   { partie:"A — J'ouvre Courrier et je m'y repère", titre:"Je trouve mes dossiers", min:3,
     veux:"Savoir où sont rangés mes messages.",
     fais:"Je regarde la colonne de gauche et je montre chaque dossier à mon voisin.",
     vois:"Boîte de réception, Brouillons, Éléments envoyés, Éléments supprimés, Courrier indésirable.",
-    coince:["Je ne vois pas la colonne de gauche : en haut à gauche, je clique sur les trois traits ☰."],
-    q:{ type:"qcm", q:"Lequel de ces dossiers n'est PAS dans ta colonne de gauche ?",
-        c:["Mes devoirs","Brouillons","Éléments envoyés","Courrier indésirable"],
-        p:[null,"Brouillons y est : c'est la lettre pas encore postée.","Éléments envoyés y est : c'est le double de ce que j'envoie.","Courrier indésirable y est : la publicité et les messages douteux."] } },
+    coince:["Je ne vois pas la colonne de gauche : en haut à gauche, je clique sur les trois traits ☰."] },
 
   { partie:"A — J'ouvre Courrier et je m'y repère", titre:"Je trouve la liste des messages", min:3,
     veux:"Savoir où s'affichent les messages du dossier choisi.",
     fais:`Au milieu de l'écran, je clique sur l'onglet <span class="chemin">Autres</span>, puis de nouveau sur <span class="chemin">Prioritaire</span>.`,
     vois:"La liste change, puis revient. Le message le plus récent est en haut.",
-    coince:["Un message que je cherche n'est pas dans Prioritaire ? Il est peut-être dans Autres."],
-    q:{ type:"qcm", q:"Où est le message le plus récent dans la liste ?",
-        c:["En haut de la liste.","En bas de la liste.","Dans l'onglet Autres, toujours.","Dans Éléments envoyés."],
-        p:[null,"En bas, ce sont les plus anciens.","Autres trie les messages, il ne change pas l'ordre : le plus récent reste en haut.","Éléments envoyés, c'est ce que j'ai envoyé, pas ce que je reçois."] } },
+    coince:["Un message que je cherche n'est pas dans Prioritaire ? Il est peut-être dans Autres."] },
 
   { partie:"A — J'ouvre Courrier et je m'y repère", titre:"Je place le message en dessous de la liste", min:4,
     veux:"Une liste large, où les objets des messages se lisent en entier.",
     fais:`<span class="chemin">Onglet Afficher ▸ Disposition ▸ Volet de lecture ▸ Afficher en bas</span>`,
     vois:"La liste prend toute la largeur. Quand je clique sur un message, il s'ouvre en dessous. Le réglage reste pour les prochaines fois.",
-    coince:["Je ne vois pas l'onglet Afficher : tout en haut à gauche, à côté de Fichier et Accueil."],
-    q:{ type:"qcm", q:"Tu cliques sur un message. Où s'ouvre-t-il maintenant ?",
-        c:["En dessous de la liste.","À droite de la liste.","Dans un nouvel onglet de Chrome.","Il ne s'ouvre pas."],
-        p:[null,"À droite, c'était avant le réglage : reprends Afficher ▸ Disposition ▸ Volet de lecture ▸ Afficher en bas.","Un clic simple l'ouvre dans Courrier, pas dans un nouvel onglet.","Un clic sur le message l'ouvre. Clique bien sur la ligne du message."] } },
+    coince:["Je ne vois pas l'onglet Afficher : tout en haut à gauche, à côté de Fichier et Accueil."] },
 
   { partie:"B — Je lis le message de mon professeur", titre:"J'ouvre le message de mon professeur", min:5, stop:true,
     veux:"Lire le message que mon professeur m'a envoyé avant le cours.",
     fais:`<span class="chemin">Volet des dossiers ▸ Boîte de réception ▸ un clic sur son message</span>. Pas dans Prioritaire ? Je regarde dans Autres. Toujours pas ? Je tape son nom dans Rechercher, tout en haut.`,
     vois:"Le message s'ouvre sous la liste.",
-    coince:["Pas dans Prioritaire ? Onglet Autres.","Toujours pas ? Je tape le nom de mon professeur dans Rechercher, tout en haut."],
-    q:{ type:"qcm", q:"Le message de ton professeur n'est pas dans Prioritaire. Où regardes-tu d'abord ?",
-        c:["Dans l'onglet Autres.","Dans Éléments envoyés.","Dans Brouillons.","Nulle part : il n'est pas arrivé."],
-        p:[null,"Éléments envoyés, c'est ce que TU as envoyé.","Brouillons, ce sont tes messages pas finis.","Il est sans doute arrivé : il est rangé dans l'onglet Autres."] } },
+    coince:["Pas dans Prioritaire ? Onglet Autres.","Toujours pas ? Je tape le nom de mon professeur dans Rechercher, tout en haut."] },
 
   { partie:"B — Je lis le message de mon professeur", titre:"Je repère trois informations", min:5,
     veux:"Savoir ce que je devrai écrire au bloc 10.",
     fais:"Je lis le message en entier, sans répondre. Je garde l'onglet ouvert.",
     vois:"Je peux montrer à mon voisin : l'objet du message (son titre), la date et l'heure d'envoi, et la question qu'il me pose.",
     coince:["L'objet, c'est le titre du message : la ligne en gras, tout en haut du message ouvert.","La date et l'heure sont à droite, au-dessus du texte.",
-            "Mon voisin n'a pas la même question que moi : c'est normal. Je réponds à MA question, pas à la sienne."],
-    q:{ type:"saisie", q:"Recopie l'objet du message de ton professeur.",
-        ok: r => OBJETS_PROF.length===0 ? r.length>3 : OBJETS_PROF.some(o=>norm(o)===norm(r)),
-        faux:"Ce n'est pas l'objet. L'objet est la ligne en gras, tout en haut du message ouvert : recopie-la mot pour mot.",
-        juste:"C'est bien l'objet. Garde aussi en tête la date, l'heure et la question : tu les écris au bloc 10." } },
+            "Mon voisin n'a pas la même question que moi : c'est normal. Je réponds à MA question, pas à la sienne."] },
 
   { partie:"C — J'écris et j'envoie mon premier message", titre:"J'ouvre un nouveau message", min:3,
     veux:"Une page blanche pour écrire.",
@@ -87,31 +69,20 @@ const BLOCS = [
   <tr><td><b>4</b></td><td>Tous les crochets sont remplacés (l'objet, la date, l'heure, MA réponse), avec une majuscule et un point à chaque phrase.</td></tr>
   <tr><td><b>5</b></td><td>Le message finit par mon prénom, mon nom et ma classe.</td></tr></table>
   <p>Je relis ces cinq points au bloc 11, avant d'envoyer.</p></div>`,
-    coince:["J'ai fermé mon message sans l'envoyer : il est dans Brouillons, je clique dessus pour continuer."],
-    q:{ type:"qcm", q:"Dans ton nouveau message, où se trouve Cci ?",
-        c:["Au bout de la ligne À.","Sous Ajouter un objet.","Dans l'onglet Afficher.","Il n'y en a pas."],
-        p:[null,"Sous l'objet, c'est la zone du texte.","Afficher règle la vue, pas le message.","Il y est : regarde tout au bout, à droite de la ligne À."] } },
+    coince:["J'ai fermé mon message sans l'envoyer : il est dans Brouillons, je clique dessus pour continuer."] },
 
   { partie:"C — J'écris et j'envoie mon premier message", titre:"Je mets l'adresse de mon professeur", min:5,
     veux:"Que mon message arrive chez mon professeur, et chez personne d'autre.",
     fais:"Je clique dans la ligne À, je tape le début de son nom, puis je clique sur son nom dans la liste qui s'ouvre.",
     vois:"Son nom est dans la ligne À. Je vérifie l'adresse dans le tableau « Mon professeur ».",
     extra: PROF_TABLE,
-    coince:["Le nom de mon professeur ne s'affiche pas dans la liste : je tape son adresse en entier, sans espace."],
-    q:{ type:"saisie", q:"Tape l'adresse de ton professeur, celle du tableau.",
-        ok: r => ADRESSES_PROF.includes(r.trim().toLowerCase()),
-        faux:"Ce n'est pas une adresse du tableau. Vérifie chaque lettre, le @ et la fin : @arcampin.be.",
-        juste:"C'est la bonne adresse. Vérifie que c'est elle, et elle seule, dans ta ligne À." } },
+    coince:["Le nom de mon professeur ne s'affiche pas dans la liste : je tape son adresse en entier, sans espace."] },
 
   { partie:"C — J'écris et j'envoie mon premier message", titre:"Je mets l'objet", min:4,
     veux:"Que mon professeur sache de quoi parle mon message avant de l'ouvrir.",
     fais:`Je clique dans <span class="chemin">Ajouter un objet</span> et je tape : <b>Mon premier message - prénom</b> (avec MON prénom).`,
     vois:"L'objet est écrit, sans faute.",
-    coince:["Le tiret est la touche 6 du clavier, sans Maj : « - »."],
-    q:{ type:"saisie", q:"Recopie ici l'objet que tu as écrit dans ton message.",
-        ok: r => /^mon premier message\s*-\s*\S{2,}/.test(norm(r)) && !/prenom$/.test(norm(r)),
-        faux:"L'objet doit être « Mon premier message - » suivi de TON prénom. Corrige aussi dans ton message.",
-        juste:"Objet correct." } },
+    coince:["Le tiret est la touche 6 du clavier, sans Maj : « - »."] },
 
   { partie:"C — J'écris et j'envoie mon premier message", titre:"J'écris le texte", min:20,
     veux:"Un message complet : saluer, dire, finir, signer.",
@@ -123,10 +94,7 @@ J'ai bien reçu votre message. Son objet était « <b>[l'objet du message]</b> �
 Un message que je reçois arrive dans le dossier <b>[nom du dossier]</b>. Un message que j'envoie se range dans le dossier <b>[nom du dossier]</b>.
 Bonne journée,
 <b>[Prénom Nom]</b>, <b>[classe]</b></p></div>`,
-    coince:["Je ne retrouve plus la date, l'heure ou la question : je retourne dans Boîte de réception, le message de mon professeur est toujours là.","Les deux dossiers à écrire : regarde le bouton ✉️ « Un e-mail, c'est une lettre » en bas de la page."],
-    q:{ type:"qcm", q:"Un message que tu envoies se range dans quel dossier ?",
-        c:["Éléments envoyés.","Boîte de réception.","Brouillons.","Éléments supprimés."],
-        p:[null,"Boîte de réception, ce sont les messages que tu REÇOIS.","Brouillons, ce sont les messages pas encore partis.","Éléments supprimés, c'est la poubelle."] } },
+    coince:["Je ne retrouve plus la date, l'heure ou la question : je retourne dans Boîte de réception, le message de mon professeur est toujours là.","Les deux dossiers à écrire : regarde le bouton ✉️ « Un e-mail, c'est une lettre » en bas de la page."] },
 
   { partie:"C — J'écris et j'envoie mon premier message", titre:"Je relis, puis j'envoie", min:8,
     veux:"Un message sans erreur : il ne se reprend pas.",
@@ -137,19 +105,13 @@ Bonne journée,
            "Le texte commence par « Bonjour Monsieur, » ou « Bonjour Madame, ».",
            "Tous les crochets sont remplacés, avec une majuscule et un point à chaque phrase.",
            "Le message finit par mon prénom, mon nom et ma classe."],
-    coince:["Je me suis trompé d'adresse après l'envoi : j'écris un nouveau message, avec la bonne adresse."],
-    q:{ type:"qcm", q:"Tu as cliqué sur Envoyer et tu vois une faute. Que se passe-t-il ?",
-        c:["Le message est parti avec la faute : il ne se reprend pas.","Je peux la corriger dans la boîte de mon professeur.","Outlook la corrige tout seul.","Le message attend une heure avant de partir."],
-        p:[null,"Tu n'as pas accès à la boîte de ton professeur.","Outlook ne corrige rien après l'envoi.","Le message part tout de suite."] } },
+    coince:["Je me suis trompé d'adresse après l'envoi : j'écris un nouveau message, avec la bonne adresse."] },
 
   { partie:"C — J'écris et j'envoie mon premier message", titre:"Je vérifie que mon message est parti", min:5, stop:true,
     veux:"Être sûr que mon professeur va le recevoir.",
     fais:`<span class="chemin">Volet des dossiers ▸ Éléments envoyés</span>`,
     vois:"Mon message est en haut de la liste. Je l'ouvre : les cinq points sont bons. S'il en manque un, j'envoie un nouveau message corrigé.",
-    coince:["Mon message n'est pas dans Éléments envoyés : je regarde dans Brouillons. Il n'est pas parti, je l'ouvre et je clique sur Envoyer."],
-    q:{ type:"qcm", q:"Où est ton message maintenant ?",
-        c:["Dans Éléments envoyés, en haut de la liste.","Dans Brouillons.","Dans ma Boîte de réception.","Je ne le trouve nulle part."],
-        p:[null,"S'il est dans Brouillons, il n'est PAS parti : ouvre-le et clique sur Envoyer.","La boîte de réception, ce sont les messages reçus, pas envoyés.","Regarde dans Brouillons : ouvre-le et clique sur Envoyer. Sinon, pose ton chevalet."] } }
+    coince:["Mon message n'est pas dans Éléments envoyés : je regarde dans Brouillons. Il n'est pas parti, je l'ouvre et je clique sur Envoyer."] }
 ];
 
 /* ===== Moteur ===== */
@@ -236,50 +198,119 @@ function affiche(){
   z.append(nav);
 }
 
-/* La question de preuve. Faux : on explique, on compte, et on recommence. */
+/* Hors Apps Script : les preuves sont lues dans preuves.json, une fois. */
+let preuvesLocales = null;
+const chargePreuves = () => preuvesLocales || (preuvesLocales = fetch(PREUVES).then(r=>{ if(!r.ok) throw new Error(r.status); return r.json(); }));
+
+/* Le test d'une saisie : mêmes règles que regle_() dans Code.gs. */
+function regle(r, rep){
+  const n = norm(rep);
+  if(!n) return false;
+  if(r.sauf && new RegExp(r.sauf).test(n)) return false;
+  if(r.egal && !r.egal.some(x=>norm(x)===n)) return false;
+  if(r.exact && !r.exact.includes(rep.trim().toLowerCase())) return false;
+  if(r.contient && !r.contient.some(x=>n.includes(norm(x)))) return false;
+  if(r.motif && !new RegExp(r.motif).test(n)) return false;
+  return true;   // r.prenom : vérifié seulement par le serveur, qui connaît l'adresse
+}
+/* Une variante corrigée ici : bonne réponse en premier dans le fichier, mélangée par question(). */
+const locale = V => ({ type:V.type, q:V.q, c: V.type==="qcm" ? V.c : null,
+  corrige: (rep, essais, fin) => {
+    if(V.type==="qcm"){ const k = V.c.indexOf(rep); fin({ juste:k===0, texte: k===0 ? "" : V.p[k] }); }
+    else { const j = regle(V.regle, rep); fin({ juste:j, texte: j ? (V.juste||"") : V.faux }); }
+  } });
+
+/* La question de preuve. Servie par Apps Script : la variante de l'élève vient du serveur, qui
+   corrige et écrit le journal. Aperçu professeur : les trois variantes du bloc. */
 function preuve(pr, B){
-  const Q = B.q;
-  pr.append(txt("div","etiquette","Je prouve que j'ai fait le bloc"), txt("p","question",Q.q));
+  pr.append(txt("div","etiquette","Je prouve que j'ai fait le bloc"));
+  const attente = txt("p","note","Chargement de la question…"); pr.append(attente);
+  const bloc = ici+1;
+  const panne = () => { attente.textContent = "La question n'a pas pu se charger. Recharge la page (F5)."; };
+  const surPlace = () => chargePreuves().then(P=>{
+    const V = P.blocs[bloc-1] || [];
+    if(!V.length){ panne(); return; }
+    attente.remove();
+    if(!APERCU){
+      /* La variante 1, corrigée ici. Servie par un Code.gs d'avant les variantes, la page note
+         elle-même juste / faux, comme avant ; sans suivi, envoie() ne fait rien. */
+      const Q = locale(V[0]), corrige = Q.corrige;
+      Q.corrige = (rep, essais, fin) => corrige(rep, essais, r=>{ envoie({ etape:bloc, type: r.juste ? "juste" : "faux", essais, reponse:rep }); fin(r); });
+      question(pr, Q, true); return;
+    }
+    V.forEach((v,k)=>{
+      const d = el("div","variante"); d.append(txt("div","etiquette","Variante "+(k+1)+" sur "+V.length));
+      pr.append(d); question(d, locale(v), false);
+    });
+  }).catch(panne);
+  if(SUIVI && !APERCU){
+    google.script.run.withSuccessHandler(Q=>{
+      if(!Q){ panne(); return; }
+      attente.remove();
+      Q.corrige = (rep, essais, fin) => google.script.run
+        .withSuccessHandler(fin).withFailureHandler(()=>fin({ panne:true })).verifier(COURS, bloc, rep, essais);
+      question(pr, Q, true);
+      if(Q.total>1) pr.append(txt("p","note","Ton voisin a peut-être une autre question que toi : c'est normal, chacun a la sienne."));
+    }).withFailureHandler(surPlace).preuve(COURS, bloc);   // un serveur sans preuve() : comme avant
+    return;
+  }
+  surPlace();
+}
+
+/* Une question : la poser, corriger, expliquer. Faux : on compte, et on recommence.
+   avance = false en aperçu : trois variantes à l'écran, pas trois boutons « Bloc suivant ». */
+function question(pr, Q, avance){
+  pr.append(txt("p","question",Q.q));
   const retour = el("div","retour"); retour.hidden = true;
   const zone = el("div"); pr.append(zone, retour);
   let essais = 0;
 
-  const reussi = (reponse) => {
+  const reussi = () => {
     retour.className="retour juste"; retour.replaceChildren(txt("strong",null,"Oui, c'est ça."));
     if(Q.juste) retour.append(txt("p",null,Q.juste));
     retour.hidden=false;
-    envoie({ etape:ici+1, type:"juste", essais:essais, reponse:reponse });
+    if(!avance) return;
     etat.atteint = Math.max(etat.atteint, ici+1); ecrit(etat); barre();
     if(enAide) basculeAide();
     const s = txt("button","btn plein", ici+1<BLOCS.length ? "Bloc suivant →" : "J'ai fini ✓"); s.type="button";
     s.addEventListener("click",()=>{ ici++; affiche(); });
     pr.append(s); s.focus();
   };
-  const rate = (explication, reponse) => {
+  const rate = (explication) => {
     essais++; etat.erreurs++; ecrit(etat);
-    envoie({ etape:ici+1, type:"faux", essais:essais, reponse:reponse });
     retour.className="retour faux"; retour.replaceChildren(txt("strong",null,"Pas encore."), txt("p",null,explication));
     if(essais>=2){ retour.append(txt("p",null,"Ouvre « Ça coince ? » juste en dessous.")); document.getElementById("coince").open = true; }
     if(essais>=3) retour.append(txt("p",null,"Toujours bloqué : demande à ton voisin, puis pose ton chevalet sur l'écran."));
     retour.hidden=false;
   };
+  const panne = () => {
+    retour.className="retour faux"; retour.replaceChildren(txt("strong",null,"La réponse n'est pas arrivée."), txt("p",null,"Vérifie la connexion, puis réessaie."));
+    retour.hidden=false;
+  };
+  /* Le verdict : du serveur ou de la fiche. Q.juste sert au message de réussite d'une saisie. */
+  const corrige = (rep, fin) => Q.corrige(rep, essais+1, r=>{
+    if(r.panne){ panne(); fin(null); return; }
+    if(r.juste){ Q.juste = r.texte; reussi(); } else rate(r.texte);
+    fin(r.juste);
+  });
 
   if(Q.type==="qcm"){
     const tour = () => {
       zone.replaceChildren();
       const liste = el("div","choix"); const boutons=[];
-      melange([0,1,2,3]).forEach((k,pos)=>{
+      melange(Q.c).forEach((c,pos)=>{
         const b = el("button"); b.type="button";
-        b.append(txt("span","lettre",LETTRES[pos]), txt("span",null,Q.c[k]));
+        b.append(txt("span","lettre",LETTRES[pos]), txt("span",null,c));
         b.addEventListener("click",()=>{
           boutons.forEach(x=>x.disabled=true);
-          if(k===0){ b.classList.add("juste"); boutons.forEach(x=>{ if(x!==b) x.classList.add("estompe"); }); reussi(Q.c[k]); }
-          else {
-            b.classList.add("faux"); rate(Q.p[k], Q.c[k]);
+          corrige(c, juste=>{
+            if(juste===null){ boutons.forEach(x=>x.disabled=false); return; }
+            if(juste){ b.classList.add("juste"); boutons.forEach(x=>{ if(x!==b) x.classList.add("estompe"); }); return; }
+            b.classList.add("faux");
             const r = txt("button","btn vide","Réessayer"); r.type="button";
             r.addEventListener("click",()=>{ r.remove(); retour.hidden=true; tour(); });
             zone.append(r);
-          }
+          });
         });
         boutons.push(b); liste.append(b);
       });
@@ -292,10 +323,11 @@ function preuve(pr, B){
     const ok = txt("button","btn plein","Vérifier"); ok.type="submit";
     f.append(inp, ok);
     f.addEventListener("submit", e=>{
-      e.preventDefault(); const r = inp.value.trim(); if(!r) return;
-      if(Q.ok(r)){ inp.disabled=true; ok.disabled=true; reussi(r); } else { rate(Q.faux, r); inp.select(); }
+      e.preventDefault(); const r = inp.value.trim(); if(!r || ok.disabled) return;
+      ok.disabled = true;
+      corrige(r, juste=>{ if(juste){ inp.disabled=true; } else { ok.disabled=false; inp.select(); } });
     });
-    zone.append(f); inp.focus();
+    zone.append(f); if(avance) inp.focus();
   }
 }
 

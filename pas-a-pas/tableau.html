@@ -71,6 +71,7 @@ tr.fini td{color:var(--doux)}
 .astuce{margin:0 0 8px;font-size:.9rem;color:var(--doux)}
 #blocs a,#lignes a{color:var(--encre-bouton);font-weight:700}
 .bl{display:grid;grid-template-columns:4.5rem 1fr 2.5rem;gap:8px;align-items:center;font-size:.95rem}
+.bl.detail > div{cursor:help}
 .bl .jauge{height:14px;border-radius:3px;background:var(--faux);opacity:.85;min-width:2px}
 .vide{color:var(--doux)}
 .hum{text-align:center;font-size:1.3rem;line-height:1}
@@ -165,7 +166,8 @@ tr.fini td{color:var(--doux)}
 
   <section class="panneau">
     <h2>Où le groupe bute — erreurs par bloc</h2>
-    <p class="astuce">Clic sur « Bloc N » (ici ou dans la colonne Bloc) : la fiche s'ouvre à ce bloc, en aperçu, pour la projeter. Rien n'y est enregistré.</p>
+    <p class="astuce">Clic sur « Bloc N » (ici ou dans la colonne Bloc) : la fiche s'ouvre à ce bloc, en aperçu, pour la projeter. Rien n'y est enregistré.
+      Chaque élève a sa variante de la question : survoler la jauge donne les erreurs par variante.</p>
     <div class="blocs" id="blocs"></div>
   </section>
 
@@ -301,6 +303,9 @@ function dessine(d){
     const r = txt("div","bl"); const j = txt("div","jauge"); j.style.width = (v/max*100)+"%"; if(!v) j.style.opacity=".15";
     const w = txt("div"); w.append(j);
     r.append(lienBloc(i, "Bloc "+i), w, txt("span","num",v)); zb.append(r);
+    /* Cours à variantes : le détail au survol. Une variante qui fait bien plus d'erreurs que les autres est mal écrite. */
+    const dv = d.variantes && d.variantes[i];
+    if(dv){ r.classList.add("detail"); w.title = r.lastChild.title = dv.map(x=>"Variante "+x.v+" : "+x.erreurs+" erreur"+(x.erreurs>1?"s":"")+", "+x.eleves+" élève"+(x.eleves>1?"s":"")).join(" · "); }
   }
   const zh = $("humeurs"); zh.replaceChildren();
   const parHumeur = HUMEURS.map(([m])=>el.filter(e=>e.humeur.split(" ")[0]===m).length);
@@ -336,7 +341,9 @@ function charge(){
 function demo(){
   const t = Date.now(), m = 60000;
   const e = (email, atteint, erreurs, erreursIci, derniere, extra) => Object.assign({email, atteint, erreurs, erreursIci, aide:null, fini:false, derniere:t-derniere*m, humeur:"", avis:null}, extra||{});
-  return { maintenant:t, parBloc:{1:2,4:5,5:3,6:9,8:4,9:6,10:2,12:1}, eleves:[
+  const vr = (...l) => l.map(([erreurs,eleves],k)=>({v:k+1, erreurs, eleves}));
+  return { maintenant:t, parBloc:{1:2,4:5,5:3,6:9,8:4,9:6,10:2,12:1},
+    variantes:{1:vr([1,3],[1,2],[0,3]), 4:vr([1,3],[4,3],[0,2]), 6:vr([2,3],[1,2],[6,3]), 9:vr([2,2],[2,3],[2,3])}, eleves:[
     e("lina.dubois@arcampin.be",5,7,4,1,{aide:{bloc:6,depuis:t-3*m}, humeur:"🙁 Pas top"}),
     e("noah.martin@arcampin.be",9,3,1,0,{humeur:"🙂 Bien"}),
     e("ines.lambert@arcampin.be",12,2,0,2,{fini:true, humeur:"😄 Super", avis:{plu:"Les questions pour passer au bloc suivant, on sait tout de suite si c'est juste.", progres:"Ça coince ? quand je me trompais.", gene:""}}),
