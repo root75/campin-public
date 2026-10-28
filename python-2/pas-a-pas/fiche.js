@@ -14,7 +14,63 @@
 const COURS = "python-2";
 const CODE = s => `<pre class="code">${s}</pre>`;
 const SORTIE = r => r.sortie.replace(/\s+$/,"");
-const VIES = CODE("vies = 3\nvies = vies - 1\nprint(vies)");
+
+/* ===== Variantes (contre la copie) =====
+   Un bloc peut porter `variantes` : deux autres versions de sa preuve (même compétence, même
+   difficulté, même format), écrites comme des morceaux de bloc qui remplacent ceux de la version 1.
+   Chaque élève a la sienne, tirée de son adresse : un rechargement ou un autre poste la redonne.
+   `cle` partage un tirage entre blocs et entre séances (« vies » : python-1 et python-2).
+   Hors Apps Script : la version 1. Aperçu professeur : un bouton par version.
+   « Les vies » : {D} (la valeur de départ), {K} (ce qu'on enlève) et {R} (le résultat)
+   sont remplacés dans les textes ; les tests lisent LV. */
+const VIES_V = [{d:3,k:1,r:2},{d:5,k:2,r:3},{d:6,k:2,r:4}];
+let LV = VIES_V[0];
+let EMAIL = "";
+const hache = s => {   // FNV-1a brassé, comme hache_() dans Code.gs
+  let h = 2166136261;
+  for(let i=0;i<s.length;i++){ h ^= s.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; }
+  h ^= h >>> 16; h = Math.imul(h, 0x85ebca6b); h ^= h >>> 13; h = Math.imul(h, 0xc2b2ae35); h ^= h >>> 16;
+  return h >>> 0;
+};
+const tirage = (cle, n) => n<2 || !EMAIL ? 1 : 1 + hache(EMAIL.toLowerCase()+"|"+cle) % n;
+const VIES = CODE("vies = {D}\nvies = vies - {K}\nprint(vies)");
+
+/* Les exercices à nombres variables : une fonction rend la partie du bloc qui change. */
+const additionneur = n => {
+  const somme = n*(n+1)/2, termes = Array.from({length:n},(_,i)=>i+1).join(" + ");
+  return {
+    vois:"Le programme affiche "+somme+".",
+    q:{ type:"code", q:"Répare le programme.", depart:"print("+termes+" +)",
+        test: r => r.erreur ? "Lis la ligne rouge : une SyntaxError, c'est un caractère de trop ou de moins. Regarde juste avant la parenthèse finale."
+                 : SORTIE(r)===String(somme) ? true : "Python affiche « "+SORTIE(r)+" » : un nombre a disparu. ↺ Code de départ, et n'enlève qu'UN caractère.",
+        juste:"Le + collé à la parenthèse n'avait rien après lui à additionner." } };
+};
+const bonjour = nom => ({
+  titre:"Bonjour "+nom,
+  vois:"Le programme affiche Bonjour "+nom+".",
+  coince:["NameError : Python cherche une variable qui n'existe pas. "+nom+", c'est un texte ou un nom de variable ?",
+          "Deux caractères à ajouter, pas à enlever."],
+  q:{ type:"code", q:"Répare le programme.", depart:"nom = "+nom+'\nprint("Bonjour", nom)',
+      test: r => r.erreur ? (r.erreur.type==="NameError" ? "NameError, ligne "+r.erreur.ligne+" : Python cherche une variable "+nom+". Un texte s'écrit entre guillemets." : "Lis la ligne rouge : il manque un guillemet ?")
+               : SORTIE(r)==="Bonjour "+nom ? true : "Python affiche « "+SORTIE(r)+" ». Il doit afficher Bonjour "+nom+" : ↺ Code de départ et ajoute seulement deux guillemets.",
+      juste:"Avec les guillemets, "+nom+" est un texte rangé dans la boîte nom." } });
+const fr = x => String(x).replace(".", ",");
+const soldes = (prix, pct) => {
+  const faux = pct/100, garde = (100-pct)/100, reste = prix*(100-pct)/100;
+  return {
+    fais:`Un pull à ${prix} € est soldé à −${pct} % : il doit coûter ${reste} €. <span class="chemin">▶ Exécuter (Ctrl+Entrée)</span> ▸ je compare avec ${reste} ▸ je trouve la ligne qui calcule faux ▸ je la corrige.`,
+    vois:`Le programme affiche ${reste}.0.`,
+    extra:`<div class="encart"><h3>Pourquoi ${reste}.0 ?</h3><p>Dès qu'un calcul utilise un nombre à virgule (${garde}), Python donne un nombre à virgule : ${reste}.0. Une virgule s'écrit avec un POINT en Python.</p></div>`,
+    coince:[`prix * ${faux}, c'est ${pct} % du prix : ${fr(prix*faux)} €. Ce qu'on garde, c'est ${100-pct} % du prix.`,
+            `${100-pct} %, c'est ${garde} : un seul caractère à changer.`],
+    q:{ type:"code", q:"Corrige le calcul.", depart:`prix = ${prix}\n# les soldes : moins ${pct} %\nprix = prix * ${faux}\nprint(prix)`,
+        test: r => r.erreur ? "Lis la ligne rouge. Une virgule s'écrit avec un point en Python : "+garde+", pas "+fr(garde)+"."
+                 : !/\bprix\b\s*\*/.test(r.code.split("\n").slice(1).join("\n")) && !/\*\s*\bprix\b/.test(r.code.split("\n").slice(1).join("\n")) ? "Calcule à partir de prix : le programme doit marcher pour un autre prix."
+                 : SORTIE(r).startsWith("(") ? "Python affiche « "+SORTIE(r)+" » : avec une virgule, il voit deux nombres. Un nombre à virgule s'écrit avec un POINT : "+garde+"."
+                 : Math.abs(r.vars.prix-reste)<1e-9 ? true
+                 : "Python affiche « "+SORTIE(r)+" » : on veut "+reste+". Quelle part du prix garde-t-on après −"+pct+" % ?",
+        juste:faux+" gardait "+pct+" % du prix au lieu d'en enlever "+pct+" %. Aucune ligne rouge : c'est à toi de comparer avec le résultat attendu." } };
+};
 
 const BLOCS = [
   { partie:"A — Je me remets en route", titre:"Le quiz « Python — je révise »", min:8, stop:true,
@@ -26,7 +82,14 @@ const BLOCS = [
             "Je ne sais plus : l'onglet « L'essentiel » de la même page redit tout en cinq lignes."],
     q:{ type:"qcm", q:"Dans vies = vies - 1, que fait Python ?",
         c:["Il calcule à droite, puis il range à gauche.","Il vérifie que vies est égal à vies - 1.","Il range 1 dans vies.","Il affiche vies."],
-        p:[null,"= n'est pas une égalité : c'est la flèche ← du logigramme. À droite je calcule, à gauche je range.","1 fait partie du calcul : vies - 1 est calculé d'abord, puis rangé dans vies.","Rien ne s'affiche sans print."] } },
+        p:[null,"= n'est pas une égalité : c'est la flèche ← du logigramme. À droite je calcule, à gauche je range.","1 fait partie du calcul : vies - 1 est calculé d'abord, puis rangé dans vies.","Rien ne s'affiche sans print."] },
+    variantes:[
+      { q:{ type:"qcm", q:"Après x = 5 puis x = x + 2, que vaut x ?",
+            c:["7","5","2","x + 2"],
+            p:[null,"5, c'était la valeur d'avant : la 2e ligne la remplace.","2, c'est ce qu'on ajoute, pas le résultat.","Python calcule x + 2 avant de ranger : la boîte contient un nombre."] } },
+      { q:{ type:"qcm", q:"Que fait print(score) ?",
+            c:["Il affiche la valeur rangée dans score.","Il affiche le mot score.","Il range une valeur dans score.","Il efface score."],
+            p:[null,"Pour afficher le mot, il faut des guillemets : print(\"score\").","Ranger, c'est le = : à droite je calcule, à gauche je range.","print n'efface rien : il montre."] } } ] },
 
   { partie:"B — Je lis les messages d'erreur", titre:"La consigne de toute la leçon", min:2,
     veux:"Réparer un programme en lisant, pas en changeant au hasard.",
@@ -40,24 +103,16 @@ const BLOCS = [
   { partie:"B — Je lis les messages d'erreur", titre:"L'additionneur", min:5,
     veux:"Réparer une faute d'écriture : un seul caractère.",
     fais:`<span class="chemin">▶ Exécuter (Ctrl+Entrée)</span> tel quel ▸ je lis la ligne rouge ▸ je trouve le caractère fautif ▸ je le corrige ▸ Exécuter.`,
-    vois:"Le programme affiche 55.",
     coince:["SyntaxError : l'écriture est cassée. Je regarde juste avant la parenthèse finale.",
             "Un seul caractère à enlever, rien à ajouter."],
-    q:{ type:"code", q:"Répare le programme.", depart:"print(1 + 2 + 3 + 4 + 5 + 6 + 7 + 8 + 9 + 10 +)",
-        test: r => r.erreur ? "Lis la ligne rouge : une SyntaxError, c'est un caractère de trop ou de moins. Regarde juste avant la parenthèse finale."
-                 : SORTIE(r)==="55" ? true : "Python affiche « "+SORTIE(r)+" » : un nombre a disparu. ↺ Code de départ, et n'enlève qu'UN caractère.",
-        juste:"Le + collé à la parenthèse n'avait rien après lui à additionner." } },
+    ...additionneur(10),
+    variantes:[additionneur(8), additionneur(12)] },
 
-  { partie:"B — Je lis les messages d'erreur", titre:"Bonjour Joe", min:5,
+  { partie:"B — Je lis les messages d'erreur", min:5,
     veux:"Réparer une erreur qui arrive pendant l'exécution. Deux caractères.",
     fais:`<span class="chemin">▶ Exécuter (Ctrl+Entrée)</span> tel quel ▸ je lis le nom de l'erreur ▸ je dis à mon voisin quelle ligne est fautive ▸ je corrige ▸ Exécuter.`,
-    vois:"Le programme affiche Bonjour Joe.",
-    coince:["NameError : Python cherche une variable qui n'existe pas. Joe, c'est un texte ou un nom de variable ?",
-            "Deux caractères à ajouter, pas à enlever."],
-    q:{ type:"code", q:"Répare le programme.", depart:'nom = Joe\nprint("Bonjour", nom)',
-        test: r => r.erreur ? (r.erreur.type==="NameError" ? "NameError, ligne "+r.erreur.ligne+" : Python cherche une variable Joe. Un texte s'écrit entre guillemets." : "Lis la ligne rouge : il manque un guillemet ?")
-                 : SORTIE(r)==="Bonjour Joe" ? true : "Python affiche « "+SORTIE(r)+" ». Il doit afficher Bonjour Joe : ↺ Code de départ et ajoute seulement deux guillemets.",
-        juste:"Avec les guillemets, Joe est un texte rangé dans la boîte nom." } },
+    ...bonjour("Joe"),
+    variantes:[bonjour("Léa"), bonjour("Sam")] },
 
   { partie:"B — Je lis les messages d'erreur", titre:"Quelle ligne cloche ?", min:3,
     veux:"Trouver une erreur de logique en lisant, sans exécuter.",
@@ -67,62 +122,86 @@ const BLOCS = [
             "Je fais la trace : que vaut score après chaque ligne ?"],
     q:{ type:"ligne", q:"Clique sur la ligne fautive.", code:["score = 10","bonus = 5","score = score - bonus","print(score)"], bonne:3,
         p:["score = 10 : le score de départ est bien 10.","bonus = 5 : le bonus vaut bien 5.",null,"print(score) affiche bien le score. Le problème est dans le calcul, juste avant."],
-        juste:"Le signe − enlève le bonus au lieu de l'ajouter : score = score + bonus." } },
+        juste:"Le signe − enlève le bonus au lieu de l'ajouter : score = score + bonus." },
+    variantes:[
+      { vois:"Le total doit valoir 24 : 3 objets à 8 €. Le programme affiche 11.",
+        coince:["Aucune ligne rouge ici : le programme tourne, mais il calcule faux. C'est une erreur de logique.",
+                "Je fais la trace : que vaut total après chaque ligne ?"],
+        q:{ type:"ligne", q:"Clique sur la ligne fautive.", code:["prix = 8","quantite = 3","total = prix + quantite","print(total)"], bonne:3,
+            p:["prix = 8 : un objet coûte bien 8 €.","quantite = 3 : on en achète bien 3.",null,"print(total) affiche bien le total. Le problème est dans le calcul, juste avant."],
+            juste:"Le + additionne le prix et la quantité au lieu de les multiplier : total = prix * quantite." } },
+      { vois:"Le programme doit afficher la température après la baisse : 15. Il affiche 5.",
+        coince:["Aucune ligne rouge ici : le programme tourne, mais il affiche faux. C'est une erreur de logique.",
+                "Je fais la trace : que vaut temperature après chaque ligne ? Et quelle boîte la dernière ligne affiche-t-elle ?"],
+        q:{ type:"ligne", q:"Clique sur la ligne fautive.", code:["temperature = 20","baisse = 5","temperature = temperature - baisse","print(baisse)"], bonne:4,
+            p:["temperature = 20 : la température de départ est bien 20.","baisse = 5 : la baisse vaut bien 5.","temperature - baisse = 15, rangé dans temperature : le calcul est juste.",null],
+            juste:"Le calcul est juste, mais la dernière ligne affiche la mauvaise boîte : print(temperature)." } } ] },
 
   { partie:"B — Je lis les messages d'erreur", titre:"Les soldes", min:6, stop:true,
     veux:"Trouver une erreur de logique : pas de ligne rouge, mais un résultat faux.",
-    fais:`Un pull à 20 € est soldé à −10 % : il doit coûter 18 €. <span class="chemin">▶ Exécuter (Ctrl+Entrée)</span> ▸ je compare avec 18 ▸ je trouve la ligne qui calcule faux ▸ je la corrige.`,
-    vois:"Le programme affiche 18.0.",
-    extra:`<div class="encart"><h3>Pourquoi 18.0 ?</h3><p>Dès qu'un calcul utilise un nombre à virgule (0.9), Python donne un nombre à virgule : 18.0. Une virgule s'écrit avec un POINT en Python.</p></div>`,
-    coince:["prix * 0.1, c'est 10 % du prix : 2 €. Ce qu'on garde, c'est 90 % du prix.",
-            "90 %, c'est 0.9 : un seul caractère à changer."],
-    q:{ type:"code", q:"Corrige le calcul.", depart:"prix = 20\n# les soldes : moins 10 %\nprix = prix * 0.1\nprint(prix)",
-        test: r => r.erreur ? "Lis la ligne rouge. Une virgule s'écrit avec un point en Python : 0.9, pas 0,9."
-                 : !/\bprix\b\s*\*/.test(r.code.split("\n").slice(1).join("\n")) && !/\*\s*\bprix\b/.test(r.code.split("\n").slice(1).join("\n")) ? "Calcule à partir de prix : le programme doit marcher pour un autre prix."
-                 : SORTIE(r).startsWith("(") ? "Python affiche « "+SORTIE(r)+" » : avec une virgule, il voit deux nombres. Un nombre à virgule s'écrit avec un POINT : 0.9."
-                 : Math.abs(r.vars.prix-18)<1e-9 ? true
-                 : "Python affiche « "+SORTIE(r)+" » : on veut 18. Quelle part du prix garde-t-on après −10 % ?",
-        juste:"0.1 gardait 10 % du prix au lieu d'en enlever 10 %. Aucune ligne rouge : c'est à toi de comparer avec le résultat attendu." } },
+    ...soldes(20, 10),
+    variantes:[soldes(30, 20), soldes(50, 10)] },
 
-  { partie:"C — « Les vies » cassé, réparé, commenté, dans Thonny", titre:"J'ouvre mon fichier", min:3, stop:true,
+  { partie:"C — « Les vies » cassé, réparé, commenté, dans Thonny", titre:"J'ouvre mon fichier", min:3, stop:true, cle:"vies", variantes:[{},{}],
     veux:"Retrouver le programme de la séance 1.",
     fais:`<span class="chemin">touche Windows ▸ je tape Thonny ▸ Entrée</span> ▸ <span class="chemin">menu Fichier ▸ Ouvrir… (Ctrl+O) ▸ Documents ▸ Python ▸ 01_Les-vies_Nom.py ▸ Ouvrir</span> ▸ <span class="chemin">icône ▶ verte « Exécuter le script courant » (F5)</span>.`,
-    vois:"Mes trois lignes, et 2 dans la console du bas.",
+    vois:"Mes trois lignes, et {R} dans la console du bas.",
     extra: VIES,
     coince:["Mon fichier n'est pas là : je le recrée. Documents ▸ bouton Nouveau ▸ Dossier ▸ Python ; puis dans Thonny, Fichier ▸ Enregistrer sous… (Ctrl+Maj+S) ▸ 01_Les-vies_Nom.py, et je tape les trois lignes du modèle.",
             "Thonny ne se lance pas : je reviens au bloc 3 (bouton ← Bloc précédent) et j'y tape « Les vies ». Rien n'y est enregistré : je montre mon écran au professeur."],
     q:{ type:"qcm", q:"F5 : qu'affiche la console du bas ?",
-        c:["2","3","vies","Un message d'erreur"],
-        p:[null,"vies - 1 doit être rangé : vies = vies - 1. Corrige, Ctrl+S, F5.","print(\"vies\") affiche le mot : enlève les guillemets, Ctrl+S, F5.","Lis le message, compare avec le modèle, corrige, Ctrl+S, F5."] } },
+        c:["{R}","{D}","vies","Un message d'erreur"],
+        p:[null,"vies - {K} doit être rangé : vies = vies - {K}. Corrige, Ctrl+S, F5.","print(\"vies\") affiche le mot : enlève les guillemets, Ctrl+S, F5.","Lis le message, compare avec le modèle, corrige, Ctrl+S, F5."] } },
 
   { partie:"C — « Les vies » cassé, réparé, commenté, dans Thonny", titre:"Je le casse : Vies", min:4,
     veux:"Voir que Python lit chaque lettre : Vies n'est pas vies.",
     fais:"À la 3e ligne, je remplace vies par <b>Vies</b> : print(Vies). Je réponds à la question AVANT de faire F5. Puis F5, je lis le message, et je répare (vies en minuscules), F5.",
-    vois:"Un message d'erreur, puis de nouveau 2 après la réparation.",
+    vois:"Un message d'erreur, puis de nouveau {R} après la réparation.",
     coince:["Le message est long : je lis la dernière ligne, c'est elle qui donne le nom de l'erreur."],
     q:{ type:"qcm", q:"Prédis : avec print(Vies), que va-t-il se passer ?",
-        c:["Une erreur NameError : Python ne connaît pas Vies.","Il affiche 2.","Il affiche Vies.","Une erreur SyntaxError."],
-        p:[null,"La boîte s'appelle vies, en minuscules. Vies est un autre nom, que Python ne connaît pas.","Sans guillemets, Vies n'est pas un texte : c'est un nom de variable.","L'écriture est correcte : c'est le nom qui est inconnu. Ce n'est pas une faute de syntaxe."] } },
+        c:["Une erreur NameError : Python ne connaît pas Vies.","Il affiche {R}.","Il affiche Vies.","Une erreur SyntaxError."],
+        p:[null,"La boîte s'appelle vies, en minuscules. Vies est un autre nom, que Python ne connaît pas.","Sans guillemets, Vies n'est pas un texte : c'est un nom de variable.","L'écriture est correcte : c'est le nom qui est inconnu. Ce n'est pas une faute de syntaxe."] },
+    variantes:[
+      { q:{ type:"qcm", q:"Prédis : avec print(vie), sans le s, que va-t-il se passer ?",
+            c:["Une erreur NameError : Python ne connaît pas vie.","Il affiche {R}.","Il affiche vie.","Une erreur SyntaxError."],
+            p:[null,"La boîte s'appelle vies, avec un s. vie est un autre nom, que Python ne connaît pas.","Sans guillemets, vie n'est pas un texte : c'est un nom de variable.","L'écriture est correcte : c'est le nom qui est inconnu. Ce n'est pas une faute de syntaxe."] } },
+      { q:{ type:"qcm", q:"Prédis : avec prnt(vies), que va-t-il se passer ?",
+            c:["Une erreur NameError : Python ne connaît pas prnt.","Il affiche {R}.","Il affiche vies.","Une erreur SyntaxError."],
+            p:[null,"prnt n'est pas print : Python ne devine pas, il ne connaît pas ce nom.","Python ne connaît pas prnt : rien ne s'affiche.","L'écriture est correcte (un nom suivi de parenthèses) : c'est le nom qui est inconnu."] } } ] },
 
   { partie:"C — « Les vies » cassé, réparé, commenté, dans Thonny", titre:"Je le casse : une parenthèse", min:4,
     veux:"Reconnaître une faute d'écriture.",
     fais:"À la 3e ligne, j'efface la dernière parenthèse : print(vies. Je réponds AVANT de faire F5. Puis F5, je lis le message, et je remets la parenthèse, F5.",
-    vois:"Un message d'erreur, puis de nouveau 2 après la réparation.",
+    vois:"Un message d'erreur, puis de nouveau {R} après la réparation.",
     coince:["La parenthèse ) est la touche à droite du 0, sans Maj."],
     q:{ type:"qcm", q:"Prédis : avec print(vies sans la parenthèse finale, quelle erreur ?",
-        c:["SyntaxError : une faute d'écriture.","NameError : un nom inconnu.","Aucune : il affiche 2.","Il affiche vies."],
-        p:[null,"Le nom vies est connu : c'est l'écriture qui est cassée.","Python ne devine pas la parenthèse manquante.","Rien ne s'affiche quand l'écriture est cassée."] } },
+        c:["SyntaxError : une faute d'écriture.","NameError : un nom inconnu.","Aucune : il affiche {R}.","Il affiche vies."],
+        p:[null,"Le nom vies est connu : c'est l'écriture qui est cassée.","Python ne devine pas la parenthèse manquante.","Rien ne s'affiche quand l'écriture est cassée."] },
+    variantes:[
+      { q:{ type:"qcm", q:"Prédis : avec print vies), sans la parenthèse ouvrante, quelle erreur ?",
+            c:["SyntaxError : une faute d'écriture.","NameError : un nom inconnu.","Aucune : il affiche {R}.","Il affiche vies."],
+            p:[null,"Le nom vies est connu : c'est l'écriture qui est cassée.","Python ne devine pas la parenthèse manquante.","Rien ne s'affiche quand l'écriture est cassée."] } },
+      { q:{ type:"qcm", q:"Prédis : avec print(vies)), une parenthèse en trop, quelle erreur ?",
+            c:["SyntaxError : une faute d'écriture.","NameError : un nom inconnu.","Aucune : il affiche {R}.","Il affiche vies."],
+            p:[null,"Le nom vies est connu : c'est l'écriture qui est cassée.","Python ne devine pas qu'il faut ignorer la parenthèse en trop.","Rien ne s'affiche quand l'écriture est cassée."] } } ] },
 
   { partie:"C — « Les vies » cassé, réparé, commenté, dans Thonny", titre:"Je commente chaque ligne", min:6, stop:true,
     veux:"Un programme que n'importe qui comprend en le lisant.",
     fais:`Au-dessus de chaque ligne, j'ajoute une ligne qui commence par <b>#</b> et dit ce que fait la ligne ▸ <span class="chemin">icône disquette (Ctrl+S)</span> ▸ F5. Puis je montre mon écran au professeur.`,
-    vois:"Six lignes : trois commentaires, trois instructions. La console affiche toujours 2.",
-    extra: CODE("# je range 3 dans la boîte vies\nvies = 3\n# …\nvies = vies - 1\n# …\nprint(vies)"),
+    vois:"Six lignes : trois commentaires, trois instructions. La console affiche toujours {R}.",
+    extra: CODE("# je range {D} dans la boîte vies\nvies = {D}\n# …\nvies = vies - {K}\n# …\nprint(vies)"),
     coince:["Le # est AltGr + 3.",
             "Je ne sais pas quoi écrire : je dis ce que fait la ligne, comme dans le logigramme (je range, je calcule, j'affiche)."],
     q:{ type:"qcm", q:"Avec tes trois commentaires, qu'affiche le programme ?",
-        c:["2, comme avant : Python ignore ce qui suit #.","Les commentaires, puis 2.","Une erreur.","Rien."],
-        p:[null,"Les commentaires sont pour les humains : Python ne les affiche pas.","Si tu as une erreur, un # manque au début d'une ligne de commentaire.","print(vies) est toujours là : il affiche 2."] } }
+        c:["{R}, comme avant : Python ignore ce qui suit #.","Les commentaires, puis {R}.","Une erreur.","Rien."],
+        p:[null,"Les commentaires sont pour les humains : Python ne les affiche pas.","Si tu as une erreur, un # manque au début d'une ligne de commentaire.","print(vies) est toujours là : il affiche {R}."] },
+    variantes:[
+      { q:{ type:"qcm", q:"À quoi sert une ligne qui commence par # ?",
+            c:["À expliquer le programme aux humains : Python l'ignore.","À afficher un texte.","À arrêter le programme.","À ranger une valeur."],
+            p:[null,"Pour afficher, c'est print( ). Python n'affiche jamais un commentaire.","Le programme continue : Python saute simplement la ligne.","Ranger, c'est le = . Une ligne qui commence par # ne fait rien."] } },
+      { q:{ type:"qcm", q:"Tu écris # devant print(vies). Qu'affiche le programme ?",
+            c:["Rien : la ligne est devenue un commentaire.","{R}","# print(vies)","Une erreur."],
+            p:[null,"La ligne print(vies) est devenue un commentaire : Python ne l'exécute plus.","Python n'affiche jamais un commentaire, même s'il contient print.","Un commentaire n'est jamais une erreur : Python l'ignore."] } } ] }
 ];
 
 const FIN = {
@@ -349,6 +428,18 @@ let etat = Object.assign({ atteint:0, erreurs:0 }, lit());   // atteint = premie
 let ici = Math.min(etat.atteint, BLOCS.length);
 let enAide = false;
 
+/* Le bloc tel que CET élève le voit : sa version, et les nombres de « Les vies ». */
+const apercuV = {};
+const remplace = o => typeof o==="string" ? o.replace(/\{([DKR])\}/g, (_,x)=>LV[x.toLowerCase()])
+  : Array.isArray(o) ? o.map(remplace)
+  : o && typeof o==="object" ? Object.fromEntries(Object.entries(o).map(([k,x])=>[k, remplace(x)])) : o;
+function blocVu(i){
+  const B = BLOCS[i], n = 1 + (B.variantes||[]).length;
+  const v = APERCU ? (apercuV[i] || 1) : tirage(B.cle || COURS+"|"+(i+1), n);
+  LV = B.cle==="vies" ? VIES_V[v-1] : VIES_V[tirage("vies", 3)-1];
+  return remplace(Object.assign({}, B, v>1 ? B.variantes[v-2] : {}, { _v:v, _n:n }));
+}
+
 function barre(){
   const b = document.getElementById("progres"); b.replaceChildren();
   BLOCS.forEach((_,i)=>{ const s=el("span"); s.className = i<etat.atteint ? "fait" : (i===ici ? "ici" : ""); b.append(s); });
@@ -360,11 +451,17 @@ function affiche(){
   const liste = document.getElementById("coince-liste"); liste.replaceChildren();
   document.getElementById("coince").open = false;
   if(ici >= BLOCS.length){ fin(z); return; }
-  const B = BLOCS[ici];
+  const B = blocVu(ici);
 
   const num = el("div","numero");
   num.append(txt("span",null,"Bloc "+(ici+1)+" sur "+BLOCS.length+" · Partie "+B.partie.split(" — ")[0]), txt("span",null,"⏱ "+B.min+" min"));
   z.append(num, txt("h2",null,(ici+1)+". "+B.titre));
+  if(APERCU && B._n>1){
+    const sel = el("div","actions"); sel.append(txt("span","note","Version de la preuve :"));
+    for(let k=1;k<=B._n;k++){ const b = txt("button","btn "+(k===B._v ? "plein" : "vide"),String(k)); b.type="button";
+      b.addEventListener("click",()=>{ apercuV[ici]=k; affiche(); }); sel.append(b); }
+    z.append(sel);
+  }
 
   const dl = el("dl","lignes");
   [["🎯 Je veux","veux",B.veux],["👉 Je fais","fais",B.fais],["👀 Je vois","vois",B.vois]].forEach(([t,c,h])=>{
@@ -377,7 +474,7 @@ function affiche(){
   B.coince.forEach(c=>liste.append(txt("li",null,c)));
 
   const pr = el("div","preuve");
-  const fait = etat.atteint > ici;
+  const fait = !APERCU && etat.atteint > ici;   // en aperçu, chaque version reste à essayer
   if(fait){
     pr.append(txt("p","retour juste","✅ Bloc déjà validé."));
   } else if(B.cases){
@@ -396,6 +493,7 @@ function affiche(){
     go.addEventListener("click",()=>{ go.remove(); preuve(pr,B); });
     pr.append(go);
   }
+  if(!fait && SUIVI && !APERCU && B._n>1) pr.append(txt("p","note","Ton voisin a peut-être une autre version que toi : c'est normal, chacun a la sienne."));
   z.append(pr);
 
   const nav = el("div","actions");
@@ -409,6 +507,7 @@ function affiche(){
 /* La question de preuve. Faux : on explique, on compte, et on recommence. */
 function preuve(pr, B){
   const Q = B.q;
+  const v = r => (B._n>1 ? "v"+B._v+":" : "") + (r==null ? "" : r);   // le Journal note la version
   pr.append(txt("div","etiquette", ["code","ordre"].includes(Q.type) ? "Mon programme" : "Je prouve que j'ai fait le bloc"), txt("p","question",Q.q));
   const retour = el("div","retour"); retour.hidden = true;
   const zone = el("div"); pr.append(zone, retour);
@@ -418,7 +517,7 @@ function preuve(pr, B){
     retour.className="retour juste"; retour.replaceChildren(txt("strong",null,"Oui, c'est ça."));
     if(Q.juste) retour.append(txt("p",null,Q.juste));
     retour.hidden=false;
-    envoie({ etape:ici+1, type:"juste", essais:essais, reponse:reponse });
+    envoie({ etape:ici+1, type:"juste", essais:essais, reponse:v(reponse) });
     etat.atteint = Math.max(etat.atteint, ici+1); ecrit(etat); barre();
     if(enAide) basculeAide();
     const s = txt("button","btn plein", ici+1<BLOCS.length ? "Bloc suivant →" : "J'ai fini ✓"); s.type="button";
@@ -427,7 +526,7 @@ function preuve(pr, B){
   };
   const rate = (explication, reponse) => {
     essais++; etat.erreurs++; ecrit(etat);
-    envoie({ etape:ici+1, type:"faux", essais:essais, reponse:reponse });
+    envoie({ etape:ici+1, type:"faux", essais:essais, reponse:v(reponse) });
     retour.className="retour faux"; retour.replaceChildren(txt("strong",null,"Pas encore."), txt("p",null,explication));
     if(essais>=2){ retour.append(txt("p",null,"Ouvre « Ça coince ? » juste en dessous.")); document.getElementById("coince").open = true; }
     if(essais>=3) retour.append(txt("p",null,"Toujours bloqué : demande à ton voisin, puis pose ton chevalet sur l'écran."));
@@ -566,6 +665,7 @@ if(APERCU){
 } else if(SUIVI){
   pied.textContent = "Ton avancement est visible par ton professeur.";
   google.script.run.withSuccessHandler(s=>{
+    if(s && s.email) EMAIL = s.email;
     if(s && s.email){ qui.textContent = "Connecté : "; qui.append(txt("strong",null,s.email)); if(s.classe) qui.append(" · "+s.classe); }
     if(s && s.humeur) etat.humeur = s.humeur;
     if(s && s.avis) etat.avis = s.avis;

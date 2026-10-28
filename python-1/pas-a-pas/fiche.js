@@ -15,16 +15,87 @@ const COURS = "python-1";
 const CODE = s => `<pre class="code">${s}</pre>`;
 const SORTIE = r => r.sortie.replace(/\s+$/,"");
 
-const LOGIGRAMME_VIES = `<figure class="logigramme"><svg viewBox="0 0 240 380" role="img" aria-label="Logigramme Les vies : Début, vies ← 3, vies ← vies − 1, Afficher vies, Fin">
+/* ===== Variantes (contre la copie) =====
+   Un bloc peut porter `variantes` : deux autres versions de sa preuve (même compétence, même
+   difficulté, même format), écrites comme des morceaux de bloc qui remplacent ceux de la version 1.
+   Chaque élève a la sienne, tirée de son adresse : un rechargement ou un autre poste la redonne.
+   `cle` partage un tirage entre blocs et entre séances (« vies » : python-1 et python-2).
+   Hors Apps Script : la version 1. Aperçu professeur : un bouton par version.
+   « Les vies » : {D} (la valeur de départ), {K} (ce qu'on enlève) et {R} (le résultat)
+   sont remplacés dans les textes ; les tests lisent LV. */
+const VIES_V = [{d:3,k:1,r:2},{d:5,k:2,r:3},{d:6,k:2,r:4}];
+let LV = VIES_V[0];
+let EMAIL = "";
+const hache = s => {   // FNV-1a brassé, comme hache_() dans Code.gs
+  let h = 2166136261;
+  for(let i=0;i<s.length;i++){ h ^= s.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; }
+  h ^= h >>> 16; h = Math.imul(h, 0x85ebca6b); h ^= h >>> 13; h = Math.imul(h, 0xc2b2ae35); h ^= h >>> 16;
+  return h >>> 0;
+};
+const tirage = (cle, n) => n<2 || !EMAIL ? 1 : 1 + hache(EMAIL.toLowerCase()+"|"+cle) % n;
+
+const LOGIGRAMME_VIES = `<figure class="logigramme"><svg viewBox="0 0 240 380" role="img" aria-label="Logigramme Les vies : Début, vies ← {D}, vies ← vies − {K}, Afficher vies, Fin">
   <defs><marker id="pointe" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5b6873"/></marker></defs>
   <g stroke="#5b6873" stroke-width="2" marker-end="url(#pointe)"><line x1="120" y1="50" x2="120" y2="78"/><line x1="120" y1="126" x2="120" y2="154"/><line x1="120" y1="202" x2="120" y2="230"/><line x1="120" y1="278" x2="120" y2="306"/></g>
   <g stroke-width="2" font-family="Atkinson Hyperlegible, Segoe UI, Arial, sans-serif" font-size="19" text-anchor="middle" fill="#1f2a33">
     <ellipse cx="120" cy="27" rx="70" ry="23" fill="#d5e8d4" stroke="#82b366"/><text x="120" y="34" stroke="none">Début</text>
-    <rect x="25" y="80" width="190" height="46" rx="8" fill="#dae8fc" stroke="#6c8ebf"/><text x="120" y="110" stroke="none">vies ← 3</text>
-    <rect x="25" y="156" width="190" height="46" rx="8" fill="#dae8fc" stroke="#6c8ebf"/><text x="120" y="186" stroke="none">vies ← vies − 1</text>
+    <rect x="25" y="80" width="190" height="46" rx="8" fill="#dae8fc" stroke="#6c8ebf"/><text x="120" y="110" stroke="none">vies ← {D}</text>
+    <rect x="25" y="156" width="190" height="46" rx="8" fill="#dae8fc" stroke="#6c8ebf"/><text x="120" y="186" stroke="none">vies ← vies − {K}</text>
     <path d="M45 232H225L195 278H15Z" fill="#e1d5e7" stroke="#9673a6"/><text x="120" y="262" stroke="none">Afficher vies</text>
     <ellipse cx="120" cy="331" rx="70" ry="23" fill="#f8cecc" stroke="#b85450"/><text x="120" y="338" stroke="none">Fin</text>
   </g></svg><figcaption>Le logigramme « Les vies » (LogProg 03)</figcaption></figure>`;
+
+/* Les exercices à nombres variables : une fonction rend la partie du bloc qui change. */
+const afficheExact = (t, detail) => ({
+  titre:"Je fais afficher « "+t+" »",
+  fais:`J'écris UNE ligne qui affiche exactement <b>${t}</b> ▸ <span class="chemin">▶ Exécuter (Ctrl+Entrée)</span>.`,
+  vois:"Le cadre affiche "+t+" et la fiche dit « Oui, c'est ça ».",
+  coince:["Ligne rouge : il manque les guillemets ou une parenthèse.",
+          "Python affiche autre chose : je compare lettre par lettre. "+detail[0].toUpperCase()+detail.slice(1)+"."],
+  q:{ type:"code", q:"Écris la ligne qui affiche "+t, depart:"",
+      test: r => r.erreur ? "Lis la ligne rouge. C'est un texte : il faut des guillemets, et print( ) autour."
+               : SORTIE(r)===t ? true
+               : SORTIE(r)==="" ? "Rien ne s'affiche : il faut print( ) autour du texte."
+               : "Python affiche « "+SORTIE(r)+" ». Compare lettre par lettre avec "+t+" : "+detail+".",
+      juste:"Exact à la lettre près. Un ordinateur ne devine pas : il fait ce qui est écrit." } });
+const xFactor = (a, b) => ({
+  q:{ type:"trace", q:"Remplis la valeur de x après chaque ligne.",
+      code:["x = "+a,"x = x + x","x = x - "+b], vars:["x"], valeurs:[[a],[2*a],[2*a-b]],
+      aide:["Ligne 1 : on range "+a+" dans x.",
+            "Ligne 2 : avant, x vaut "+a+". À droite, x + x = "+a+" + "+a+". On range le résultat dans x.",
+            "Ligne 3 : avant, x vaut "+(2*a)+" (pas "+a+" : la ligne 2 l'a changé). On enlève "+b+"."],
+      juste:a+", puis "+a+" + "+a+" = "+(2*a)+", puis "+(2*a)+" − "+b+" = "+(2*a-b)+". La valeur finale de x est "+(2*a-b)+"." } });
+const cartes = n => ({
+  vois:`Avec ${n} paquets : ${4*n} rois, ${12*n} figures, ${52*n} cartes. Et si je change paquets = ${n} en paquets = 5, tout suit.`,
+  q:{ type:"code", q:"Complète les trois lignes.", depart:"paquets = "+n+"\nrois = \nfigures = \ncartes = \nprint(rois, figures, cartes)",
+      test: r => {
+        if(r.erreur) return r.erreur.type==="SyntaxError" ? "Lis la ligne rouge : une ligne n'a rien à droite du =. Complète-la avec un calcul."
+                                                           : "Lis la ligne rouge : quel nom Python ne connaît-il pas ? Vérifie l'orthographe de paquets.";
+        const sansPaquets = ["rois","figures","cartes"].filter(v => !new RegExp("^\\s*"+v+"\\s*=.*\\bpaquets\\b","m").test(r.code));
+        if(sansPaquets.length) return "La ligne de "+sansPaquets[0]+" n'utilise pas paquets : si on change le nombre de paquets, elle sera fausse. Écris un calcul avec * paquets.";
+        const p = r.vars.paquets;
+        return (r.vars.rois===4*p && r.vars.figures===12*p && r.vars.cartes===52*p) || "Un calcul est faux : un paquet, c'est 4 rois, 12 figures, 52 cartes. Relis chaque ligne.";
+      },
+      juste:"Le programme marche pour n'importe quel nombre de paquets : c'est tout l'intérêt d'une variable." } });
+const tickets = (prix, nombre) => ({
+  vois:`Le programme affiche ${prix*nombre} : le prix total de ${nombre} tickets à ${prix} €.`,
+  q:{ type:"ordre", q:"Remets les lignes dans l'ordre.", lignes:["prix = "+prix,"nombre = "+nombre,"total = prix * nombre","print(total)"],
+      test: r => r.erreur ? (r.erreur.type==="NameError" ? "Ligne "+r.erreur.ligne+" : Python ne connaît pas encore ce nom. La variable doit être créée AVANT, plus haut." : "Lis la ligne rouge.")
+               : SORTIE(r)===String(prix*nombre) ? true : "Python affiche « "+SORTIE(r)+" » : on veut "+(prix*nombre)+". Vérifie l'ordre.",
+      juste:"Python lit de haut en bas : chaque variable est créée avant d'être utilisée." } });
+const echange = (a, b) => ({
+  fais:`J'ajoute des lignes pour que <b>a</b> contienne ${b} et <b>b</b> contienne ${a}, sans taper ces nombres. J'ai droit à une troisième boîte, <b>temp</b> ▸ <span class="chemin">▶ Exécuter (Ctrl+Entrée)</span>.`,
+  vois:`Le programme affiche ${b} ${a}.`,
+  coince:[`a = b tout seul écrase le ${a} : il est perdu. Je le mets d'abord à l'abri : temp = a.`,
+          "Trois lignes, comme pour échanger deux verres de jus : un troisième verre vide sert d'abri."],
+  q:{ type:"code", q:"Échange a et b.", depart:`a = ${a}\nb = ${b}\n\nprint(a, b)`,
+      test: r => r.erreur ? "Lis la ligne rouge : quelle ligne, quel nom ?"
+               : new RegExp("^\\s*[ab]\\s*=\\s*("+a+"|"+b+")\\s*$","m").test(r.code.split("\n").slice(2).join("\n")) ? "Tu as tapé "+a+" ou "+b+" : le programme doit marcher quels que soient les nombres. Utilise temp."
+               : (r.vars.a===b && r.vars.b===a) || "Python affiche « "+SORTIE(r)+" ». Fais la trace : après a = b, que reste-t-il du "+a+" ?",
+      juste:"temp = a, a = b, b = temp : sans la troisième boîte, une des deux valeurs est perdue." } });
+/* Le nom du fichier doit porter le nom de l'élève : le prénom ou le nom de son adresse. */
+const nomsEleve = () => EMAIL ? EMAIL.split("@")[0].split(".").map(m=>norm(m).replace(/[^a-z]/g,"")).filter(m=>m.length>1) : [];
+const portemonNom = f => { const n = nomsEleve(); return !n.length || n.some(m => norm(f).replace(/[^a-z]/g,"").includes(m)); };
 
 const BLOCS = [
   { partie:"A — Mon premier programme", titre:"J'exécute un programme", min:3,
@@ -47,18 +118,11 @@ const BLOCS = [
         test: r => r.erreur ? true : "Pas d'erreur : il reste au moins un guillemet. Efface les deux, puis Exécuter.",
         juste:"Sans guillemets, Python croit que Bonjour est un nom de variable, et ne comprend plus la ligne. Le message dit OÙ (la ligne) et QUOI (le nom de l'erreur)." } },
 
-  { partie:"A — Mon premier programme", titre:"Je fais afficher « Hello world! »", min:6, stop:true,
+  { partie:"A — Mon premier programme", min:6, stop:true,
     veux:"Mon premier programme écrit seul, exact à la lettre près.",
-    fais:`J'écris UNE ligne qui affiche exactement <b>Hello world!</b> ▸ <span class="chemin">▶ Exécuter (Ctrl+Entrée)</span>.`,
-    vois:"Le cadre affiche Hello world! et la fiche dit « Oui, c'est ça ».",
-    coince:["Ligne rouge : il manque les guillemets ou une parenthèse.",
-            "Python affiche autre chose : je compare lettre par lettre. Majuscule à Hello, pas de virgule, le ! collé au mot."],
-    q:{ type:"code", q:"Écris la ligne qui affiche Hello world!", depart:"",
-        test: r => r.erreur ? "Lis la ligne rouge. C'est un texte : il faut des guillemets, et print( ) autour."
-                 : SORTIE(r)==="Hello world!" ? true
-                 : SORTIE(r)==="" ? "Rien ne s'affiche : il faut print( ) autour du texte."
-                 : "Python affiche « "+SORTIE(r)+" ». Compare lettre par lettre avec Hello world! : majuscule à Hello, pas de virgule, le ! collé.",
-        juste:"Exact à la lettre près. Un ordinateur ne devine pas : il fait ce qui est écrit." } },
+    ...afficheExact("Hello world!", "majuscule à Hello, pas de virgule, le ! collé"),
+    variantes:[afficheExact("Bonjour Python!", "majuscules à Bonjour et à Python, le ! collé"),
+               afficheExact("Salut tout le monde!", "une seule majuscule, à Salut, et le ! collé")] },
 
   { partie:"B — Les variables", titre:"La consigne de toute la leçon", min:2,
     veux:"Apprendre en prédisant, pas en cliquant au hasard.",
@@ -75,55 +139,32 @@ const BLOCS = [
     vois:"La valeur de x après chaque ligne. La dernière est la valeur finale.",
     coince:["= n'est pas une égalité : à droite je calcule avec la valeur d'avant, à gauche je range.",
             "Je descends ligne par ligne : la valeur de la ligne d'avant sert au calcul de la ligne suivante."],
-    q:{ type:"trace", q:"Remplis la valeur de x après chaque ligne.",
-        code:["x = 10","x = x + x","x = x - 5"], vars:["x"], valeurs:[[10],[20],[15]],
-        aide:["Ligne 1 : on range 10 dans x.",
-              "Ligne 2 : avant, x vaut 10. À droite, x + x = 10 + 10. On range le résultat dans x.",
-              "Ligne 3 : avant, x vaut 20 (pas 10 : la ligne 2 l'a changé). On enlève 5."],
-        juste:"10, puis 10 + 10 = 20, puis 20 − 5 = 15. La valeur finale de x est 15." } },
+    ...xFactor(10, 5),
+    variantes:[xFactor(7, 4), xFactor(12, 6)] },
 
   { partie:"B — Les variables", titre:"Le compte des cartes", min:7,
     veux:"Calculer des variables à partir d'une autre.",
     fais:`Un paquet de jeu, c'est 4 rois, 12 figures et 52 cartes. Je complète les trois lignes avec la variable <b>paquets</b> ▸ <span class="chemin">▶ Exécuter (Ctrl+Entrée)</span>.`,
-    vois:"Avec 3 paquets : 12 rois, 36 figures, 156 cartes. Et si je change paquets = 3 en paquets = 5, tout suit.",
     coince:["Le signe de la multiplication est * (étoile), pas x.",
             "Je n'écris pas 12 : j'écris 4 * paquets. Sinon, le programme est faux dès qu'on change le nombre de paquets.",
             "Ligne rouge sur « rois = » : il manque le calcul à droite du =."],
-    q:{ type:"code", q:"Complète les trois lignes.", depart:"paquets = 3\nrois = \nfigures = \ncartes = \nprint(rois, figures, cartes)",
-        test: r => {
-          if(r.erreur) return r.erreur.type==="SyntaxError" ? "Lis la ligne rouge : une ligne n'a rien à droite du =. Complète-la avec un calcul."
-                                                             : "Lis la ligne rouge : quel nom Python ne connaît-il pas ? Vérifie l'orthographe de paquets.";
-          const sansPaquets = ["rois","figures","cartes"].filter(v => !new RegExp("^\\s*"+v+"\\s*=.*\\bpaquets\\b","m").test(r.code));
-          if(sansPaquets.length) return "La ligne de "+sansPaquets[0]+" n'utilise pas paquets : si on change le nombre de paquets, elle sera fausse. Écris un calcul avec * paquets.";
-          const p = r.vars.paquets;
-          return (r.vars.rois===4*p && r.vars.figures===12*p && r.vars.cartes===52*p) || "Un calcul est faux : un paquet, c'est 4 rois, 12 figures, 52 cartes. Relis chaque ligne.";
-        },
-        juste:"Le programme marche pour n'importe quel nombre de paquets : c'est tout l'intérêt d'une variable." } },
+    ...cartes(3),
+    variantes:[cartes(2), cartes(4)] },
 
   { partie:"B — Les variables", titre:"Le code mélangé", min:4,
     veux:"Comprendre qu'une variable doit exister AVANT qu'on s'en serve.",
     fais:`Les lignes du programme sont mélangées. Je les remets dans l'ordre avec les boutons <span class="chemin">▲ ▼</span> ▸ bouton <span class="chemin">▶ Exécuter dans cet ordre</span>.`,
-    vois:"Le programme affiche 12 : le prix total de 3 tickets à 4 €.",
     coince:["NameError : une ligne utilise une variable qui n'est pas encore créée. Elle doit descendre.",
             "Le print vient à la fin : on affiche le total quand il est calculé.",
             "Les deux premières lignes peuvent être dans n'importe quel ordre."],
-    q:{ type:"ordre", q:"Remets les lignes dans l'ordre.", lignes:["prix = 4","nombre = 3","total = prix * nombre","print(total)"],
-        test: r => r.erreur ? (r.erreur.type==="NameError" ? "Ligne "+r.erreur.ligne+" : Python ne connaît pas encore ce nom. La variable doit être créée AVANT, plus haut." : "Lis la ligne rouge.")
-                 : SORTIE(r)==="12" ? true : "Python affiche « "+SORTIE(r)+" » : on veut 12. Vérifie l'ordre.",
-        juste:"Python lit de haut en bas : chaque variable est créée avant d'être utilisée." } },
+    ...tickets(4, 3),
+    variantes:[tickets(5, 2), tickets(6, 3)] },
 
   { partie:"B — Les variables", titre:"J'échange deux boîtes", min:7,
     veux:"Échanger le contenu de deux variables, sans rien perdre.",
-    fais:`J'ajoute des lignes pour que <b>a</b> contienne 7 et <b>b</b> contienne 4, sans taper ces nombres. J'ai droit à une troisième boîte, <b>temp</b> ▸ <span class="chemin">▶ Exécuter (Ctrl+Entrée)</span>.`,
-    vois:"Le programme affiche 7 4.",
     extra:`<div class="encart"><h3>⚡ Fini avant la minute 40 ?</h3><p>Je prédis : avec a = b puis b = a, sans temp, que vaut b ? Je le teste dans le cadre, puis ↺ Code de départ pour revenir. Au signal du professeur, je passe au bloc suivant, même si ce n'est pas fini.</p></div>`,
-    coince:["a = b tout seul écrase le 4 : il est perdu. Je le mets d'abord à l'abri : temp = a.",
-            "Trois lignes, comme pour échanger deux verres de jus : un troisième verre vide sert d'abri."],
-    q:{ type:"code", q:"Échange a et b.", depart:"a = 4\nb = 7\n\nprint(a, b)",
-        test: r => r.erreur ? "Lis la ligne rouge : quelle ligne, quel nom ?"
-                 : /^\s*[ab]\s*=\s*[47]\s*$/m.test(r.code.split("\n").slice(2).join("\n")) ? "Tu as tapé 4 ou 7 : le programme doit marcher quels que soient les nombres. Utilise temp."
-                 : (r.vars.a===7 && r.vars.b===4) || "Python affiche « "+SORTIE(r)+" ». Fais la trace : après a = b, que reste-t-il du 4 ?",
-        juste:"temp = a, a = b, b = temp : sans la troisième boîte, une des deux valeurs est perdue." } },
+    ...echange(4, 7),
+    variantes:[echange(3, 9), echange(5, 8)] },
 
   { partie:"C — Défi « Les vies », dans Thonny", titre:"Je crée mon dossier Python", min:2,
     veux:"Un endroit où ranger tous mes programmes de l'année. Au signal du professeur seulement.",
@@ -133,7 +174,14 @@ const BLOCS = [
             "Pas de bouton Nouveau : clic droit dans une zone vide de Documents ▸ Nouveau ▸ Dossier."],
     q:{ type:"qcm", q:"Où est ton dossier Python ?",
         c:["Dans Documents.","Sur le Bureau.","Dans Téléchargements.","Dans Thonny."],
-        p:[null,"Sur le Bureau, on ne le retrouve pas sur un autre poste. Recrée-le dans Documents.","Téléchargements se vide : recrée-le dans Documents.","Thonny est un programme, pas un dossier : le dossier Python va dans Documents."] } },
+        p:[null,"Sur le Bureau, on ne le retrouve pas sur un autre poste. Recrée-le dans Documents.","Téléchargements se vide : recrée-le dans Documents.","Thonny est un programme, pas un dossier : le dossier Python va dans Documents."] },
+    variantes:[
+      { q:{ type:"qcm", q:"Comment s'appelle le dossier où tu ranges tes programmes ?",
+            c:["Python","Thonny","Documents","Mes programmes"],
+            p:[null,"Thonny est le programme, pas le dossier.","Documents contient ton dossier : lui s'appelle Python.","Tu l'as nommé Python : c'est ce nom qu'on cherchera à chaque séance."] } },
+      { q:{ type:"qcm", q:"Dans l'Explorateur de fichiers, quel raccourci crée un nouveau dossier ?",
+            c:["Ctrl+Maj+N","Ctrl+N","Ctrl+S","F2"],
+            p:[null,"Ctrl+N ouvre une nouvelle fenêtre de l'Explorateur.","Ctrl+S enregistre un fichier.","F2 renomme ce qui est sélectionné."] } } ] },
 
   { partie:"C — Défi « Les vies », dans Thonny", titre:"J'ouvre Thonny et j'enregistre", min:3, stop:true,
     veux:"Un fichier à mon nom, enregistré AVANT d'écrire, pour ne rien perdre.",
@@ -143,13 +191,14 @@ const BLOCS = [
             "Sans .py à la fin, Thonny n'exécute pas comme attendu : Fichier ▸ Enregistrer sous… et je corrige le nom.",
             "Deux signes différents : le tiret - entre Les et vies, le trait de soulignement _ partout ailleurs."],
     q:{ type:"saisie", q:"Recopie le nom de ton fichier, tel que Thonny l'affiche.",
-        ok: r => /^01_les-vies_[^\s_]{2,}.*\.py$/i.test(r.trim()) && !/_nom\.py$/i.test(r.trim()),
+        ok: r => /^01_les-vies_[^\s_]{2,}.*\.py$/i.test(r.trim()) && !/_nom\.py$/i.test(r.trim()) && portemonNom(r.trim().slice(12)),
         faux: r => !/\.py$/i.test(r.trim()) ? "Il manque .py à la fin : sans lui, Thonny n'exécute pas comme attendu. Fichier ▸ Enregistrer sous… et corrige."
                  : /_nom\.py$/i.test(r.trim()) ? "Remplace Nom par TON nom : sinon, ton fichier ne se retrouve pas. Fichier ▸ Enregistrer sous… et corrige."
+                 : /^01_les-vies_[^\s_]{2,}.*\.py$/i.test(r.trim()) ? "Après 01_Les-vies_, écris TON nom, celui de ton adresse de l'école. Fichier ▸ Enregistrer sous… et corrige."
                  : "Le nom doit être 01_Les-vies_ suivi de ton nom, puis .py. Vérifie les _ et le - .",
         juste:"Le fichier est à ton nom, dans Documents ▸ Python." } },
 
-  { partie:"C — Défi « Les vies », dans Thonny", titre:"Je traduis le logigramme", min:4,
+  { partie:"C — Défi « Les vies », dans Thonny", titre:"Je traduis le logigramme", min:4, cle:"vies", variantes:[{},{}],
     veux:"Écrire en Python le logigramme « Les vies », sans modèle.",
     fais:`Dans la zone du haut de Thonny, j'écris une ligne par forme, en suivant les flèches ▸ <span class="chemin">icône disquette « Enregistrer » (Ctrl+S)</span>. Je n'exécute pas encore.`,
     vois:"Trois lignes de Python, une par forme du milieu.",
@@ -162,24 +211,24 @@ const BLOCS = [
             "Le signe − du logigramme s'écrit avec la touche - du clavier.",
             "J'ai tapé dans la console du bas : je tape dans la zone du haut, celle qui porte le nom du fichier.",
             "Tout en minuscules : Vies n'est pas vies, Print n'est pas print.",
-            "Toujours bloqué après mon voisin : la 1re ligne est vies = 3. Je cherche les deux autres seul."],
+            "Toujours bloqué après mon voisin : la 1re ligne est vies = {D}. Je cherche les deux autres seul."],
     q:{ type:"saisie", q:"AVANT d'exécuter : que va afficher ton programme ?",
-        ok: r => r.trim()==="2",
-        faux: r => r.trim()==="3" ? "La 2e ligne calcule 3 − 1 et range le résultat dans vies : la boîte ne contient plus 3."
+        ok: r => r.trim()===String(LV.r),
+        faux: r => r.trim()===String(LV.d) ? "La 2e ligne calcule "+LV.d+" − "+LV.k+" et range le résultat dans vies : la boîte ne contient plus "+LV.d+"."
                  : norm(r)==="vies" ? "Sans guillemets, print affiche ce qu'il y a dans la boîte, pas son nom."
                  : "Fais la trace : quelle valeur a vies après chaque ligne ?",
-        juste:"À droite je calcule, à gauche je range : vies passe de 3 à 2. Vérifions." } },
+        juste:"À droite je calcule, à gauche je range : vies passe de {D} à {R}. Vérifions." } },
 
-  { partie:"C — Défi « Les vies », dans Thonny", titre:"J'exécute et je montre", min:2, stop:true,
+  { partie:"C — Défi « Les vies », dans Thonny", titre:"J'exécute et je montre", min:2, stop:true, cle:"vies", variantes:[{},{}],
     veux:"Voir si ma prédiction était juste.",
     fais:`<span class="chemin">icône ▶ verte « Exécuter le script courant » (touche F5)</span>. Puis je montre mon écran au professeur.`,
-    vois:"Dans la console du bas, le nombre 2.",
+    vois:"Dans la console du bas, le nombre {R}.",
     coince:["NameError : Python ne connaît pas un nom. Je vérifie les majuscules : vies partout.",
             "SyntaxError : c'est l'écriture. Je vérifie les parenthèses de print( ).",
             "Thonny demande d'enregistrer : je clique sur Oui (ou Ctrl+S, puis F5)."],
     q:{ type:"qcm", q:"Qu'affiche la console du bas ?",
-        c:["2","3","vies","Un message d'erreur"],
-        p:[null,"Tu as écrit vies - 1 seul sur sa ligne ? Le calcul est fait, puis jeté. Où ranges-tu le résultat ? Corrige, Ctrl+S, F5.",
+        c:["{R}","{D}","vies","Un message d'erreur"],
+        p:[null,"Tu as écrit vies - {K} seul sur sa ligne ? Le calcul est fait, puis jeté. Où ranges-tu le résultat ? Corrige, Ctrl+S, F5.",
                "print(\"vies\") affiche le mot. Tu veux le mot, ou ce qu'il y a dans la boîte ? Enlève les guillemets, Ctrl+S, F5.",
                "Lis le message : quel nom ne connaît-il pas ? Compare chaque ligne avec le logigramme du bloc précédent, corrige, Ctrl+S, F5."] } }
 ];
@@ -408,6 +457,18 @@ let etat = Object.assign({ atteint:0, erreurs:0 }, lit());   // atteint = premie
 let ici = Math.min(etat.atteint, BLOCS.length);
 let enAide = false;
 
+/* Le bloc tel que CET élève le voit : sa version, et les nombres de « Les vies ». */
+const apercuV = {};
+const remplace = o => typeof o==="string" ? o.replace(/\{([DKR])\}/g, (_,x)=>LV[x.toLowerCase()])
+  : Array.isArray(o) ? o.map(remplace)
+  : o && typeof o==="object" ? Object.fromEntries(Object.entries(o).map(([k,x])=>[k, remplace(x)])) : o;
+function blocVu(i){
+  const B = BLOCS[i], n = 1 + (B.variantes||[]).length;
+  const v = APERCU ? (apercuV[i] || 1) : tirage(B.cle || COURS+"|"+(i+1), n);
+  LV = B.cle==="vies" ? VIES_V[v-1] : VIES_V[tirage("vies", 3)-1];
+  return remplace(Object.assign({}, B, v>1 ? B.variantes[v-2] : {}, { _v:v, _n:n }));
+}
+
 function barre(){
   const b = document.getElementById("progres"); b.replaceChildren();
   BLOCS.forEach((_,i)=>{ const s=el("span"); s.className = i<etat.atteint ? "fait" : (i===ici ? "ici" : ""); b.append(s); });
@@ -419,11 +480,17 @@ function affiche(){
   const liste = document.getElementById("coince-liste"); liste.replaceChildren();
   document.getElementById("coince").open = false;
   if(ici >= BLOCS.length){ fin(z); return; }
-  const B = BLOCS[ici];
+  const B = blocVu(ici);
 
   const num = el("div","numero");
   num.append(txt("span",null,"Bloc "+(ici+1)+" sur "+BLOCS.length+" · Partie "+B.partie.split(" — ")[0]), txt("span",null,"⏱ "+B.min+" min"));
   z.append(num, txt("h2",null,(ici+1)+". "+B.titre));
+  if(APERCU && B._n>1){
+    const sel = el("div","actions"); sel.append(txt("span","note","Version de la preuve :"));
+    for(let k=1;k<=B._n;k++){ const b = txt("button","btn "+(k===B._v ? "plein" : "vide"),String(k)); b.type="button";
+      b.addEventListener("click",()=>{ apercuV[ici]=k; affiche(); }); sel.append(b); }
+    z.append(sel);
+  }
 
   const dl = el("dl","lignes");
   [["🎯 Je veux","veux",B.veux],["👉 Je fais","fais",B.fais],["👀 Je vois","vois",B.vois]].forEach(([t,c,h])=>{
@@ -436,7 +503,7 @@ function affiche(){
   B.coince.forEach(c=>liste.append(txt("li",null,c)));
 
   const pr = el("div","preuve");
-  const fait = etat.atteint > ici;
+  const fait = !APERCU && etat.atteint > ici;   // en aperçu, chaque version reste à essayer
   if(fait){
     pr.append(txt("p","retour juste","✅ Bloc déjà validé."));
   } else if(B.cases){
@@ -455,6 +522,7 @@ function affiche(){
     go.addEventListener("click",()=>{ go.remove(); preuve(pr,B); });
     pr.append(go);
   }
+  if(!fait && SUIVI && !APERCU && B._n>1) pr.append(txt("p","note","Ton voisin a peut-être une autre version que toi : c'est normal, chacun a la sienne."));
   z.append(pr);
 
   const nav = el("div","actions");
@@ -468,6 +536,7 @@ function affiche(){
 /* La question de preuve. Faux : on explique, on compte, et on recommence. */
 function preuve(pr, B){
   const Q = B.q;
+  const v = r => (B._n>1 ? "v"+B._v+":" : "") + (r==null ? "" : r);   // le Journal note la version
   pr.append(txt("div","etiquette", ["code","ordre"].includes(Q.type) ? "Mon programme" : "Je prouve que j'ai fait le bloc"), txt("p","question",Q.q));
   const retour = el("div","retour"); retour.hidden = true;
   const zone = el("div"); pr.append(zone, retour);
@@ -477,7 +546,7 @@ function preuve(pr, B){
     retour.className="retour juste"; retour.replaceChildren(txt("strong",null,"Oui, c'est ça."));
     if(Q.juste) retour.append(txt("p",null,Q.juste));
     retour.hidden=false;
-    envoie({ etape:ici+1, type:"juste", essais:essais, reponse:reponse });
+    envoie({ etape:ici+1, type:"juste", essais:essais, reponse:v(reponse) });
     etat.atteint = Math.max(etat.atteint, ici+1); ecrit(etat); barre();
     if(enAide) basculeAide();
     const s = txt("button","btn plein", ici+1<BLOCS.length ? "Bloc suivant →" : "J'ai fini ✓"); s.type="button";
@@ -486,7 +555,7 @@ function preuve(pr, B){
   };
   const rate = (explication, reponse) => {
     essais++; etat.erreurs++; ecrit(etat);
-    envoie({ etape:ici+1, type:"faux", essais:essais, reponse:reponse });
+    envoie({ etape:ici+1, type:"faux", essais:essais, reponse:v(reponse) });
     retour.className="retour faux"; retour.replaceChildren(txt("strong",null,"Pas encore."), txt("p",null,explication));
     if(essais>=2){ retour.append(txt("p",null,"Ouvre « Ça coince ? » juste en dessous.")); document.getElementById("coince").open = true; }
     if(essais>=3) retour.append(txt("p",null,"Toujours bloqué : demande à ton voisin, puis pose ton chevalet sur l'écran."));
@@ -625,6 +694,7 @@ if(APERCU){
 } else if(SUIVI){
   pied.textContent = "Ton avancement est visible par ton professeur.";
   google.script.run.withSuccessHandler(s=>{
+    if(s && s.email) EMAIL = s.email;
     if(s && s.email){ qui.textContent = "Connecté : "; qui.append(txt("strong",null,s.email)); if(s.classe) qui.append(" · "+s.classe); }
     if(s && s.humeur) etat.humeur = s.humeur;
     if(s && s.avis) etat.avis = s.avis;
