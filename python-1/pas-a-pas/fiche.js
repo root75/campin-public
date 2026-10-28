@@ -115,7 +115,10 @@ const BLOCS = [
     coince:["Le guillemet \" est la touche 3 du clavier, sans Maj.",
             "Le programme marche encore : il reste un guillemet. J'efface les deux."],
     q:{ type:"code", q:"Efface les guillemets, puis exécute.", depart:'print("Bonjour !")',
-        test: r => r.erreur ? true : "Pas d'erreur : il reste au moins un guillemet. Efface les deux, puis Exécuter.",
+        test: r => !r.erreur ? "Pas d'erreur : il reste au moins un guillemet. Efface les deux, puis Exécuter."
+                 : r.code.includes('"') ? "Il reste un guillemet : efface les deux, puis Exécuter."
+                 : /^print\(\s*Bonjour\s*!?\s*\)$/.test(r.code.trim()) ? true
+                 : "Tu as effacé plus que les guillemets. Clique sur ↺ Code de départ, puis efface seulement les deux \".",
         juste:"Sans guillemets, Python croit que Bonjour est un nom de variable, et ne comprend plus la ligne. Le message dit OÙ (la ligne) et QUOI (le nom de l'erreur)." } },
 
   { partie:"A — Mon premier programme", min:6, stop:true,
