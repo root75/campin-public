@@ -1,0 +1,146 @@
+{
+  "_lisezmoi": "Les questions de preuve de « Mon premier message » : une liste par bloc, la variante 1 d'abord. QCM : bonne réponse TOUJOURS en premier (mélangée à l'affichage), p = ce qu'on dit à l'élève qui choisit ce piège. Saisie : regle = egal (signes, accents et majuscules ignorés), exact (majuscules seules ignorées), contient, motif (expression régulière sur la réponse simplifiée), sauf, prenom (servi par Apps Script : le prénom de l'adresse). Voir campin-pedagogique/outils/pas-a-pas/LISEZMOI.md, section Variantes.",
+  "blocs": [
+    [
+      { "type":"qcm", "q":"Qu'est-ce qui est écrit sur l'onglet de Chrome ?",
+        "c":["Courrier - mon nom - Outlook","Gmail - Boîte de réception","Nouvel onglet","Google Classroom"],
+        "p":[null,"Gmail, c'est la boîte Google. Celle de l'école s'ouvre par Microsoft 365 ▸ Courrier.","Courrier n'est pas encore ouvert : reprends le chemin des favoris.","Classroom, c'est pour les devoirs. Le courrier est dans Microsoft 365."] },
+      { "type":"qcm", "q":"Par quel chemin as-tu ouvert Courrier ?",
+        "c":["Favoris du domaine arcampin.com ▸ Microsoft 365 ▸ Courrier","Favoris du domaine arcampin.com ▸ Google ▸ Gmail","J'ai tapé « courrier » dans Google","Classroom ▸ Courrier"],
+        "p":[null,"Gmail, c'est la boîte Google. Celle de l'école s'ouvre par Microsoft 365 ▸ Courrier.","Une recherche peut mener à une autre boîte. Reprends le chemin des favoris.","Classroom, c'est pour les devoirs. Le courrier est dans Microsoft 365."] },
+      { "type":"qcm", "q":"Comment s'appelle le programme qui ouvre ta boîte de l'école ?",
+        "c":["Outlook","Gmail","Classroom","Chrome"],
+        "p":[null,"Gmail, c'est la boîte Google, pas celle de l'école.","Classroom, c'est pour les devoirs.","Chrome est le navigateur : Outlook s'ouvre dedans."] }
+    ],
+    [
+      { "type":"qcm", "q":"Lequel de ces dossiers n'est PAS dans ta colonne de gauche ?",
+        "c":["Mes devoirs","Brouillons","Éléments envoyés","Courrier indésirable"],
+        "p":[null,"Brouillons y est : c'est la lettre pas encore postée.","Éléments envoyés y est : c'est le double de ce que j'envoie.","Courrier indésirable y est : la publicité et les messages douteux."] },
+      { "type":"qcm", "q":"Où vont les messages que tu supprimes ?",
+        "c":["Éléments supprimés","Brouillons","Courrier indésirable","Éléments envoyés"],
+        "p":[null,"Brouillons, c'est la lettre pas encore postée.","C'est la publicité et les messages douteux, pas ce que tu jettes.","C'est le double de ce que tu envoies."] },
+      { "type":"qcm", "q":"Où Outlook range-t-il la publicité et les messages douteux ?",
+        "c":["Courrier indésirable","Éléments supprimés","Boîte de réception","Brouillons"],
+        "p":[null,"C'est ce que TU jettes.","C'est là qu'arrivent les messages normaux.","Ce sont tes messages pas finis."] }
+    ],
+    [
+      { "type":"qcm", "q":"Où est le message le plus récent dans la liste ?",
+        "c":["En haut de la liste.","En bas de la liste.","Dans l'onglet Autres, toujours.","Dans Éléments envoyés."],
+        "p":[null,"En bas, ce sont les plus anciens.","Autres trie les messages, il ne change pas l'ordre : le plus récent reste en haut.","Éléments envoyés, c'est ce que j'ai envoyé, pas ce que je reçois."] },
+      { "type":"qcm", "q":"Tu cliques sur l'onglet Autres. Que se passe-t-il ?",
+        "c":["La liste change : elle montre d'autres messages.","Mes messages sont effacés.","Un nouveau message s'ouvre.","La colonne de gauche disparaît."],
+        "p":[null,"Rien n'est effacé : reclique sur Prioritaire, ils reviennent.","Nouveau message, c'est le bouton bleu de l'onglet Accueil.","La colonne reste : seule la liste change."] },
+      { "type":"qcm", "q":"Où s'affichent les messages du dossier que tu as choisi ?",
+        "c":["Au milieu de l'écran, dans la liste.","Dans la colonne de gauche.","Dans la barre de favoris de Chrome.","Dans l'onglet Afficher."],
+        "p":[null,"La colonne de gauche montre les dossiers, pas les messages.","Les favoris servent à ouvrir Courrier.","Afficher règle la vue, il ne montre pas les messages."] }
+    ],
+    [
+      { "type":"qcm", "q":"Tu cliques sur un message. Où s'ouvre-t-il maintenant ?",
+        "c":["En dessous de la liste.","À droite de la liste.","Dans un nouvel onglet de Chrome.","Il ne s'ouvre pas."],
+        "p":[null,"À droite, c'était avant le réglage : reprends Afficher ▸ Disposition ▸ Volet de lecture ▸ Afficher en bas.","Un clic simple l'ouvre dans Courrier, pas dans un nouvel onglet.","Un clic sur le message l'ouvre. Clique bien sur la ligne du message."] },
+      { "type":"qcm", "q":"Par quel chemin places-tu le message en dessous de la liste ?",
+        "c":["Afficher ▸ Disposition ▸ Volet de lecture ▸ Afficher en bas","Afficher ▸ Disposition ▸ Volet de lecture ▸ Afficher à droite","Accueil ▸ Nouveau message","Afficher ▸ Zoom"],
+        "p":[null,"À droite, c'est le réglage de départ, celui qu'on quitte.","Nouveau message ouvre une page pour écrire.","Le zoom agrandit, il ne déplace pas le message."] },
+      { "type":"qcm", "q":"Demain, tu rouvres Courrier. Où s'ouvrira un message ?",
+        "c":["Toujours en dessous de la liste.","De nouveau à droite.","Dans un nouvel onglet de Chrome.","Il faudra refaire le réglage à chaque message."],
+        "p":[null,"Le réglage reste pour les prochaines fois.","Un clic l'ouvre dans Courrier, pas dans un onglet.","Le réglage vaut pour tous les messages."] }
+    ],
+    [
+      { "type":"qcm", "q":"Le message de ton professeur n'est pas dans Prioritaire. Où regardes-tu d'abord ?",
+        "c":["Dans l'onglet Autres.","Dans Éléments envoyés.","Dans Brouillons.","Nulle part : il n'est pas arrivé."],
+        "p":[null,"Éléments envoyés, c'est ce que TU as envoyé.","Brouillons, ce sont tes messages pas finis.","Il est sans doute arrivé : il est rangé dans l'onglet Autres."] },
+      { "type":"qcm", "q":"Le message de ton professeur n'est ni dans Prioritaire ni dans Autres. Que fais-tu ?",
+        "c":["Je tape le nom de mon professeur dans Rechercher, tout en haut.","Je regarde dans Éléments envoyés.","J'écris à mon professeur pour qu'il le renvoie.","Je ferme Courrier."],
+        "p":[null,"Éléments envoyés, c'est ce que TU as envoyé.","Cherche d'abord avec Rechercher. Toujours rien : pose ton chevalet.","Fermer ne le fait pas apparaître. Essaie Rechercher."] },
+      { "type":"qcm", "q":"Dans quel dossier arrive le message de ton professeur ?",
+        "c":["Boîte de réception.","Éléments envoyés.","Brouillons.","Éléments supprimés."],
+        "p":[null,"C'est ce que TU envoies.","Ce sont tes messages pas finis.","C'est la poubelle."] }
+    ],
+    [
+      { "type":"saisie", "q":"Recopie l'objet du message de ton professeur.",
+        "regle":{ "egal":["Bienvenue dans ta boîte de l'école"] },
+        "faux":"Ce n'est pas l'objet. L'objet est la ligne en gras, tout en haut du message ouvert : recopie-la mot pour mot.",
+        "juste":"C'est bien l'objet. Garde aussi en tête la date, l'heure et la question : tu les écris au bloc 10." },
+      { "type":"saisie", "q":"Qui t'a envoyé ce message ? Tape son nom de famille.",
+        "regle":{ "contient":["louviaux","michiels"] },
+        "faux":"Regarde le nom écrit au-dessus du message ouvert : c'est l'expéditeur.",
+        "juste":"C'est bien l'expéditeur. Garde aussi en tête l'objet, la date, l'heure et la question : tu les écris au bloc 10." },
+      { "type":"saisie", "q":"Recopie la question que ton professeur te pose.",
+        "regle":{ "motif":".{8,}\\?$" },
+        "faux":"Ce n'est pas la question de ton message. Recopie-la mot pour mot, jusqu'au point d'interrogation.",
+        "juste":"C'est ta question. Garde aussi en tête l'objet, la date et l'heure : tu les écris au bloc 10." }
+    ],
+    [
+      { "type":"qcm", "q":"Dans ton nouveau message, où se trouve Cci ?",
+        "c":["Au bout de la ligne À.","Sous Ajouter un objet.","Dans l'onglet Afficher.","Il n'y en a pas."],
+        "p":[null,"Sous l'objet, c'est la zone du texte.","Afficher règle la vue, pas le message.","Il y est : regarde tout au bout, à droite de la ligne À."] },
+      { "type":"qcm", "q":"Dans ton nouveau message, où est le bouton Envoyer ?",
+        "c":["En haut, au-dessus de la ligne À.","En bas, sous le texte.","Dans l'onglet Afficher.","Il n'y en a pas : le message part tout seul."],
+        "p":[null,"Regarde tout en haut de la fenêtre du message.","Afficher règle la vue, pas le message.","Il ne part jamais tout seul : il faut cliquer sur Envoyer."] },
+      { "type":"qcm", "q":"Dans ton nouveau message, où se trouve la ligne Cc ?",
+        "c":["Sous la ligne À.","Au bout de la ligne À.","Sous Ajouter un objet.","Dans l'onglet Accueil."],
+        "p":[null,"Au bout de la ligne À, c'est Cci.","Sous l'objet, c'est la zone du texte.","Accueil porte le bouton Nouveau message, pas Cc."] }
+    ],
+    [
+      { "type":"saisie", "q":"Tape l'adresse de ton professeur, celle du tableau.",
+        "regle":{ "exact":["vlouviaux@arcampin.be","alexia.michiels@arcampin.be"] },
+        "faux":"Ce n'est pas une adresse du tableau. Vérifie chaque lettre, le @ et la fin : @arcampin.be.",
+        "juste":"C'est la bonne adresse. Vérifie que c'est elle, et elle seule, dans ta ligne À." },
+      { "type":"saisie", "q":"Tape la partie de l'adresse de ton professeur qui est AVANT le @.",
+        "regle":{ "exact":["vlouviaux","alexia.michiels"] },
+        "faux":"Regarde le tableau « Mon professeur » : recopie tout ce qui est avant le @, point compris.",
+        "juste":"C'est bien le début de son adresse. Vérifie que c'est elle, et elle seule, dans ta ligne À." },
+      { "type":"saisie", "q":"Combien d'adresses y a-t-il dans ta ligne À ? Tape le nombre.",
+        "regle":{ "egal":["1","un","une"] },
+        "faux":"Ton message va à ton professeur, et à personne d'autre : une seule adresse dans la ligne À.",
+        "juste":"Une seule adresse : ton message n'ira que chez ton professeur." }
+    ],
+    [
+      { "type":"saisie", "q":"Recopie ici l'objet que tu as écrit dans ton message.",
+        "regle":{ "motif":"^mon premier message\\s*-\\s*\\S{2,}", "sauf":"prenom$" },
+        "faux":"L'objet doit être « Mon premier message - » suivi de TON prénom. Corrige aussi dans ton message.",
+        "juste":"Objet correct." },
+      { "type":"saisie", "q":"Tape seulement ce qui vient après le tiret dans ton objet.",
+        "regle":{ "motif":"^[^\\s-]\\S+( \\S+)?$", "sauf":"^prenom$", "prenom":true },
+        "faux":"Après le tiret vient TON prénom, celui de ton adresse de l'école. Corrige aussi dans ton message.",
+        "juste":"C'est ton prénom. Vérifie qu'il est aussi dans l'objet de ton message." },
+      { "type":"saisie", "q":"Quel signe sépare « Mon premier message » de ton prénom dans l'objet ? Tape-le.",
+        "regle":{ "egal":["-","–","tiret"] },
+        "faux":"C'est le tiret : la touche 6 du clavier, sans Maj.",
+        "juste":"C'est le tiret. Vérifie qu'il est bien dans l'objet de ton message." }
+    ],
+    [
+      { "type":"qcm", "q":"Un message que tu envoies se range dans quel dossier ?",
+        "c":["Éléments envoyés.","Boîte de réception.","Brouillons.","Éléments supprimés."],
+        "p":[null,"Boîte de réception, ce sont les messages que tu REÇOIS.","Brouillons, ce sont les messages pas encore partis.","Éléments supprimés, c'est la poubelle."] },
+      { "type":"qcm", "q":"Un message que tu reçois arrive dans quel dossier ?",
+        "c":["Boîte de réception.","Éléments envoyés.","Brouillons.","Courrier indésirable."],
+        "p":[null,"Éléments envoyés, c'est ce que tu envoies.","Brouillons, ce sont les messages pas encore partis.","Courrier indésirable, c'est la publicité, pas les messages normaux."] },
+      { "type":"qcm", "q":"Par quoi commence ton texte ?",
+        "c":["Bonjour Monsieur, (ou Bonjour Madame,)","Salut !","Mon premier message - prénom","[Prénom Nom], [classe]"],
+        "p":[null,"On écrit à un professeur : « Bonjour Monsieur, » ou « Bonjour Madame, ».","Ça, c'est l'objet : il va dans Ajouter un objet.","C'est la signature : elle va à la fin."] }
+    ],
+    [
+      { "type":"qcm", "q":"Tu as cliqué sur Envoyer et tu vois une faute. Que se passe-t-il ?",
+        "c":["Le message est parti avec la faute : il ne se reprend pas.","Je peux la corriger dans la boîte de mon professeur.","Outlook la corrige tout seul.","Le message attend une heure avant de partir."],
+        "p":[null,"Tu n'as pas accès à la boîte de ton professeur.","Outlook ne corrige rien après l'envoi.","Le message part tout de suite."] },
+      { "type":"qcm", "q":"Avant de cliquer sur Envoyer, que fais-tu ?",
+        "c":["Je contrôle les cinq points.","Je ferme la fenêtre du message.","Je clique sur Cci.","Rien : je corrigerai après."],
+        "p":[null,"Fermé, il va dans Brouillons : il ne part pas.","Cci met quelqu'un en copie cachée, il ne vérifie rien.","Un message envoyé ne se reprend pas."] },
+      { "type":"qcm", "q":"Tu t'es trompé d'adresse et le message est parti. Que fais-tu ?",
+        "c":["J'écris un nouveau message, avec la bonne adresse.","J'attends qu'Outlook corrige l'adresse.","Je le supprime dans Éléments envoyés : il disparaît chez l'autre.","Je le reprends dans Brouillons."],
+        "p":[null,"Outlook ne corrige rien après l'envoi.","Le supprimer chez toi ne le retire pas chez l'autre.","Il est parti : il n'est plus dans Brouillons."] }
+    ],
+    [
+      { "type":"qcm", "q":"Où est ton message maintenant ?",
+        "c":["Dans Éléments envoyés, en haut de la liste.","Dans Brouillons.","Dans ma Boîte de réception.","Je ne le trouve nulle part."],
+        "p":[null,"S'il est dans Brouillons, il n'est PAS parti : ouvre-le et clique sur Envoyer.","La boîte de réception, ce sont les messages reçus, pas envoyés.","Regarde dans Brouillons : ouvre-le et clique sur Envoyer. Sinon, pose ton chevalet."] },
+      { "type":"qcm", "q":"Ton message est dans Brouillons. Que fais-tu ?",
+        "c":["Je l'ouvre et je clique sur Envoyer.","Rien : il est parti.","Je le supprime.","J'attends qu'il parte tout seul."],
+        "p":[null,"Dans Brouillons, il n'est PAS parti.","Supprimé, il n'y a plus de message. Ouvre-le et envoie-le.","Il ne part jamais tout seul."] },
+      { "type":"qcm", "q":"Dans Éléments envoyés, où est ton message ?",
+        "c":["En haut de la liste : c'est le plus récent.","En bas de la liste.","Dans l'onglet Autres.","Il n'y est pas tant que le professeur ne l'a pas lu."],
+        "p":[null,"En bas, ce sont les plus anciens.","Prioritaire et Autres trient la boîte de réception.","Il y est dès qu'il est parti, lu ou pas."] }
+    ]
+  ]
+}
