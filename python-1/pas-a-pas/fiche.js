@@ -240,7 +240,12 @@ const FIN = {
   titre:"🎉 J'ai fini la séance 1",
   texte:"Mon fichier 01_Les-vies est enregistré dans Documents ▸ Python : je ne le supprime pas, on le reprend à la séance 2.",
   plus:"Je change DEUX touches de mon programme pour qu'il affiche 1. Je prédis, puis F5.",
-  lien:'<a href="https://root75.github.io/campin-public/python-je-revise/" target="_blank" rel="noopener">Premiers pas en Python — je révise</a>'
+  lien:'<a href="https://root75.github.io/campin-public/python-je-revise/" target="_blank" rel="noopener">Premiers pas en Python — je révise</a>',
+  citation:{
+    texte:"Déjà essayé. Déjà échoué. Peu importe. Essayer encore. Échouer encore. Échouer mieux.",
+    auteur:"Samuel Beckett", source:"Cap au pire (1983)",
+    lien:"Un message d'erreur rouge n'est pas un échec : il me dit quoi corriger."
+  }
 };
 
 /* ===== Python dans la page =====
@@ -604,8 +609,17 @@ function preuve(pr, B){
   }
 }
 
+/* La phrase de la fin : une citation réelle, avec son auteur, et une ligne qui la relie au cours.
+   Une surprise, pas une récompense : elle s'affiche pour tous, quel que soit le nombre d'erreurs. */
+function citation(c){
+  const f = el("figure","citation");
+  f.append(txt("blockquote",null,"« "+c.texte+" »"), txt("figcaption",null,"— "+c.auteur+", "+c.source));
+  if(c.lien) f.append(txt("p",null,c.lien));
+  return f;
+}
+
 function fin(z){
-  z.append(txt("h2",null,FIN.titre), txt("p",null,FIN.texte));
+  z.append(txt("h2",null,FIN.titre), txt("p",null,FIN.texte), citation(FIN.citation));
   const plus = el("div","encart");
   plus.append(txt("h3",null,"⚡ J'ai fini avant les autres"), txt("p",null,FIN.plus),
     el("p",null,"Puis je révise : "+FIN.lien+"."));
