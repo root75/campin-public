@@ -720,6 +720,7 @@ if(APERCU){
     affiche();
     envoie({ etape:Math.min(ici,BLOCS.length-1)+1, type:"ouvert" });
   }).withFailureHandler(()=>{ humeur(); affiche(); }).etat(COURS);
+  window.PAS_A_PAS = { cours: COURS, envoie };   // lu par sequence-eleve.js (chargé en différé : il ne bloque jamais la fiche)
 } else {
   qui.textContent = "Garde deux fenêtres : cette fiche, et Thonny quand elle le demande.";
   pied.textContent = "Ton avancement reste sur cet ordinateur. Aucune donnée n'est envoyée.";
