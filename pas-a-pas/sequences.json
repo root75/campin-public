@@ -22,5 +22,24 @@
       { "type": "fin", "titre": "Bascule", "min": 2, "methode": "Travail autonome",
         "lignes": ["Ouvre ton pas-à-pas", "Il s'affiche sur ton poste. Commence par ton humeur du jour."] }
     ]
+    },
+  "python-1": {
+    "titre": "Séance 1 — Du logigramme au code",
+    "moments": [
+      { "type": "ecran", "titre": "Accroche", "min": 1, "methode": "Question projetée, à l'oral",
+        "lignes": ["Le logigramme « Les vies », l'ordinateur sait-il le lire ?", "Non : il lui faut un langage. Aujourd'hui, Python."] },
+      { "type": "ecran", "titre": "Notion clé : traduire", "min": 2, "methode": "Exposé bref, logigramme à côté",
+        "paires": [["vies ← 3", "devient  vies = 3"],
+                   ["Afficher vies", "devient  print(vies)"]],
+        "exemple": "= n'est pas une égalité : à droite je calcule, à gauche je range." },
+      { "type": "vote", "titre": "Je prédis", "min": 3, "methode": "Vote sur le poste, puis correction en trace",
+        "question": "Qu'est-ce que Python affiche ?", "choix": ["2", "3", "vies"],
+        "situations": [
+          { "texte": "vies = 3   ·   vies = vies - 1   ·   print(vies)", "bonne": 0 },
+          { "texte": "vies = 3   ·   vies - 1   ·   print(vies)", "bonne": 1 }
+        ] },
+      { "type": "fin", "titre": "Bascule", "min": 1, "methode": "Travail autonome",
+        "lignes": ["Ouvre ta fiche pas à pas", "Elle s'affiche sur ton poste. Ton humeur du jour, puis le bloc 1 : tu vas vérifier tes prédictions."] }
+    ]
   }
 }
