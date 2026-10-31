@@ -331,9 +331,25 @@ function question(pr, Q, avance){
   }
 }
 
+const CITATION = {
+  texte:"Ce que l'on conçoit bien s'énonce clairement,\nEt les mots pour le dire arrivent aisément.",
+  auteur:"Nicolas Boileau", source:"L'Art poétique (1674)",
+  lien:"Avant d'écrire, je sais ce que je veux dire : mon message s'écrit plus vite."
+};
+
+/* La phrase de la fin : une citation réelle, avec son auteur, et une ligne qui la relie au cours.
+   Une surprise, pas une récompense : elle s'affiche pour tous, quel que soit le nombre d'erreurs. */
+function citation(c){
+  const f = el("figure","citation");
+  f.append(txt("blockquote",null,"« "+c.texte+" »"), txt("figcaption",null,"— "+c.auteur+", "+c.source));
+  if(c.lien) f.append(txt("p",null,c.lien));
+  return f;
+}
+
 function fin(z){
   z.append(txt("h2",null,"🎉 J'ai fini la leçon 1"),
-    txt("p",null,"Mon message est parti. Mon professeur va le coter sur 5. Je coche le dernier bloc sur ma feuille de route."));
+    txt("p",null,"Mon message est parti. Mon professeur va le coter sur 5. Je coche le dernier bloc sur ma feuille de route."),
+    citation(CITATION));
   const plus = el("div","encart");
   plus.append(txt("h3",null,"⚡ J'ai fini avant les autres"),
     txt("p",null,"J'écris un second message à mon voisin (je tape son nom dans À et je le choisis dans la liste). Objet : Question - prénom. Je lui pose une question sur le cours, avec les quatre parties d'un message bien écrit."));
