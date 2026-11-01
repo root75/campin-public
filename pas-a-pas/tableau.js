@@ -369,17 +369,25 @@ function tri(m, r){
 }
 
 /* Vote : le nombre de votants pendant le vote, les barres après la clôture, la bonne réponse ensuite. */
+function situationVote(texte, numero){
+  if(!$("cours").value.startsWith("python-")) return txt("p","moyen",numero+". "+texte);
+  const zone = txt("div","situation");
+  const pre = txt("pre","programme-projete");
+  pre.append(txt("code",null,texte));
+  zone.append(txt("p","moyen","Programme "+numero),pre);
+  return zone;
+}
 function vote(m, r, phase){
   const z = txt("div","situations");
   z.append(txt("h2","grand", m.question));
   if(phase === "ouvert"){
     z.style.textAlign = "center";
     z.append(txt("div","compteur", r ? r.repondants : "…"), txt("p","moyen", (r && r.repondants === 1 ? "élève a" : "élèves ont") + " voté. Vote sur ton poste."));
-    m.situations.forEach((s,k)=>z.append(txt("p","moyen", (k+1)+". "+s.texte)));
+    m.situations.forEach((s,k)=>z.append(situationVote(s.texte,k+1)));
     return z;
   }
   m.situations.forEach((s,k)=>{
-    const d = txt("div","situation"); d.append(txt("p","moyen",(k+1)+". "+s.texte));
+    const d = txt("div","situation"); d.append(situationVote(s.texte,k+1));
     const c = (r && r.votes[k]) || [], tot = m.choix.reduce((a,_,j)=>a+(c[j]||0), 0), b = txt("div","barres");
     m.choix.forEach((ch,j)=>{
       const v = c[j] || 0, bon = phase === "corrige" && s.bonne === j;

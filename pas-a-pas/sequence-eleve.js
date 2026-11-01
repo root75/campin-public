@@ -22,6 +22,8 @@
 #seq .sq-btn:disabled{opacity:.5;cursor:default}
 #seq .sq-sit{display:grid;gap:10px;text-align:left;border-top:1px solid var(--trait);padding-top:14px}
 #seq .sq-sit p{margin:0;font-weight:700}
+#seq .sq-programme{white-space:pre;text-align:left;font-family:"SFMono-Regular",Consolas,"Liberation Mono",monospace;font-size:clamp(1rem,3vw,1.4rem);line-height:1.55;background:#111827;color:#e5e7eb;border:1px solid #475569;border-radius:10px;padding:14px;margin:0;max-width:100%;min-width:0;overflow-x:auto;tab-size:4}
+#seq .sq-programme code{font:inherit;color:inherit;white-space:inherit}
 #seq .sq-choix{display:flex;flex-wrap:wrap;gap:10px}
 #seq .sq-choix button{flex:1;min-width:8rem}
 #seq .sq-choix button.pris{background:var(--fromage-pale);border-color:var(--fromage);color:var(--encre)}
@@ -95,7 +97,10 @@
         : m.phase === "clos" ? "Le vote est clos. Regarde le tableau." : "Regarde le tableau : on corrige ensemble."));
       m.situations.forEach((s, k) => {
         const d = el("div", "sq-sit"), c = el("div", "sq-choix");
-        d.append(el("p", null, (k+1) + ". " + s), c);
+        if(o.cours.startsWith("python-")){
+          const pre = el("pre", "sq-programme"); pre.append(el("code", null, s));
+          d.append(el("p", null, "Programme " + (k+1)), pre, c);
+        } else d.append(el("p", null, (k+1) + ". " + s), c);
         m.choix.forEach((t, j) => {
           const b = el("button", "sq-btn vide" + (moi[k] === j ? " pris" : ""), t); b.type = "button"; b.disabled = !ouvert;
           b.addEventListener("click", () => { moi[k] = j; o.envoie({ etape: m.n, type: "vote", reponse: k + ":" + j }); dessine(m); });
