@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "cours": [
+    {
+      "id": "messagerie-1",
+      "titre": "Mon premier message",
+      "chemin": "messagerie/pas-a-pas/",
+      "etapes": 12,
+      "preuves": "messagerie/pas-a-pas/preuves.json"
+    },
+    {
+      "id": "python-1",
+      "titre": "Premiers pas en Python 1",
+      "chemin": "python-1/pas-a-pas/",
+      "etapes": 12
+    },
+    {
+      "id": "python-2",
+      "titre": "Premiers pas en Python 2",
+      "chemin": "python-2/pas-a-pas/",
+      "etapes": 10
+    },
+    {
+      "id": "labo-07",
+      "titre": "Labo 07 — Dans les coulisses du PC",
+      "chemin": "labo-07/pas-a-pas/",
+      "etapes": 7
+    }
+  ]
+}

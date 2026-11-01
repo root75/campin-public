@@ -14,3 +14,8 @@ est public. Les sources pédagogiques (fiches, mémoire) restent dans `campin-pe
 Les anciennes adresses des activités et des parcours pas à pas restent disponibles.
 
 Le serveur choisit la séance avec la classe enregistrée du compte scolaire et les cours ouverts. Sans séance, il affiche Mes cours. Ce comportement nécessite la mise à jour de `campin-pedagogique/outils/pas-a-pas/Code.gs` dans le déploiement Apps Script.
+
+Le [catalogue commun](pas-a-pas/cours.json) centralise titres, liens et nombres d’étapes.
+[Ajouter un cours et installer la lecture dynamique](pas-a-pas/CATALOGUE.md) : une dernière
+mise à jour de Code.gs est nécessaire ; ensuite, le tableau propose **Actualiser le catalogue**.
+Les autorisations par classe restent privées.

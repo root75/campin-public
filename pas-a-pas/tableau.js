@@ -1,10 +1,5 @@
 /* Les fiches sur GitHub Pages : « Bloc N » ouvre la fiche en aperçu à ce bloc (#bloc=N). */
-const FICHES = {
-  "messagerie-1": "https://root75.github.io/campin-public/messagerie/pas-a-pas/",
-  "python-1": "https://root75.github.io/campin-public/python-1/pas-a-pas/",
-  "python-2": "https://root75.github.io/campin-public/python-2/pas-a-pas/",
-  "labo-07": "https://root75.github.io/campin-public/labo-07/pas-a-pas/"
-};
+const FICHES = Object.create(null), NB_BLOCS = Object.create(null), TITRES_COURS = Object.create(null);
 const lienBloc = (i, texte) => {
   const url = FICHES[$("cours").value];
   if(!url) return txt("span", null, texte);
@@ -14,7 +9,6 @@ const lienBloc = (i, texte) => {
 /* Mêmes listes que dans les fiches : l'humeur est enregistrée « emoji libellé ». */
 const HUMEURS = [["😄","Super"],["🙂","Bien"],["😐","Bof"],["🙁","Pas top"],["😣","Pas bien"]];
 const AVIS = [["plu","Ce qui m'a plu"],["progres","Ce qui m'a aidé à progresser"],["gene","Ce qui m'a gêné dans le cours en ligne"]];
-const NB_BLOCS = { "messagerie-1": 12, "python-1": 12, "python-2": 10, "labo-07": 7 };
 const RAFRAICHIR = 15000;
 const INACTIF = 8 * 60000;
 const SUIVI = typeof google !== "undefined" && google.script && google.script.run;
@@ -421,7 +415,7 @@ $("conducteur-actualiser").addEventListener("click",()=>chargeSequence(true));
 /* ===== Mes cours : classes, cours ouverts, classe de chaque élève ===== */
 let CL = null;
 const DEMO_CL = {
-  d: { cours:[{cle:"messagerie-1",titre:"Mon premier message"},{cle:"python-1",titre:"Premiers pas en Python 1"},{cle:"python-2",titre:"Premiers pas en Python 2"},{cle:"labo-07",titre:"Labo 07 — Dans les coulisses du PC"}],
+  d: { cours:[],
        classes:{ "2B":["messagerie-1"], "2E":["messagerie-1"], "3F":["python-1"] },
        eleves:[{email:"lea.dupont@arcampin.be",classe:"2B"},{email:"noah.martin@arcampin.be",classe:"2E"},{email:"sami.benali@arcampin.be",classe:"2B"}] },
   classesEtCours(){ return this.d; },
@@ -476,11 +470,61 @@ $("cl-ajout").addEventListener("submit", ev=>{ ev.preventDefault(); const n = $(
 /* Un déploiement antérieur ne connaît pas classesEtCours : le panneau reste caché, sans erreur. */
 const chargeClasses = () => serveurCl("classesEtCours").then(dessineClasses, ()=>{});
 
-function demarre(cours){
-  $("cours").replaceChildren(...cours.map(c=>{ const o=txt("option",null,c); o.value=c; return o; }));
-  $("cours").addEventListener("change", ()=>{ chargeSeances(); chargeSequence(); });
-  $("seance").addEventListener("change", charge);
-  chargeSeances(); chargeSequence(); chargeClasses(); setInterval(charge, RAFRAICHIR);
+function lecteurCatalogue(){
+  return globalThis.CatalogueCours ? Promise.resolve(globalThis.CatalogueCours)
+    : new Promise((ok,ko)=>{const s=document.createElement('script');s.src='https://root75.github.io/campin-public/pas-a-pas/catalogue.js';s.onload=()=>ok(globalThis.CatalogueCours);s.onerror=()=>ko(Error('Le lecteur du catalogue ne se charge pas.'));document.head.append(s);});
 }
-if(SUIVI) google.script.run.withSuccessHandler(demarre).withFailureHandler(erreur).listeCours();
-else { document.title = "APERÇU FICTIF — tableau professeur"; $("demo").hidden = false; demarre(Object.keys(NB_BLOCS)); }
+function cataloguePublic(frais=false){return lecteurCatalogue().then(c=>c.charger(frais));}
+
+let tableauDemarre=false;
+function demarre(cours){
+  const avant=$("cours").value;
+  $("cours").replaceChildren(...cours.map(c=>{const o=txt("option",null,TITRES_COURS[c]||c);o.value=c;return o;}));
+  const meme=cours.includes(avant);
+  if(meme) $("cours").value=avant;
+  if(!tableauDemarre){
+    $("cours").addEventListener("change",()=>{chargeSeances();chargeSequence();});
+    $("seance").addEventListener("change",charge);
+    setInterval(charge,RAFRAICHIR);tableauDemarre=true;
+  }
+  if(!meme || !$("seance").options.length) chargeSeances(); else charge();
+  chargeSequence();chargeClasses();
+}
+function appliqueCatalogue(data){
+  for(const obj of [FICHES,NB_BLOCS,TITRES_COURS]) Object.keys(obj).forEach(k=>delete obj[k]);
+  data.cours.forEach(c=>{FICHES[c.id]=CatalogueCours.BASE+c.chemin;NB_BLOCS[c.id]=c.etapes;TITRES_COURS[c.id]=c.titre;});
+  DEMO_CL.d.cours=data.cours.map(c=>({cle:c.id,titre:c.titre}));
+}
+const actualiser=txt("button","btn vide","Actualiser le catalogue");actualiser.type="button";actualiser.id="catalogue-actualiser";
+document.querySelector("header .reglages").append(actualiser);
+const catalogueEtat=txt("p","astuce");catalogueEtat.id="catalogue-etat";catalogueEtat.setAttribute("role","status");
+document.querySelector("header").append(catalogueEtat);
+async function chargeCatalogue(frais=false){
+  actualiser.disabled=true;catalogueEtat.textContent="Chargement du catalogue…";
+  try{
+    let data, liste, avertissement="";
+    if(SUIVI){
+      try{
+        const d=await new Promise((ok,ko)=>google.script.run.withSuccessHandler(ok).withFailureHandler(ko).catalogueCours(frais));
+        // Le même schéma est vérifié dans le navigateur ; le serveur garde son contrôle indépendant.
+        await lecteurCatalogue(); // ne relit pas le JSON : le serveur peut utiliser son dernier catalogue valide
+        data=CatalogueCours.valider({version:d.version,cours:d.cours});liste=data.cours.map(c=>c.id);
+        avertissement=d.avertissement||"";
+      }catch(e){
+        // Ancien serveur : garder uniquement ses cours réellement reconnus, jamais en inventer.
+        liste=await new Promise((ok,ko)=>google.script.run.withSuccessHandler(ok).withFailureHandler(ko).listeCours());
+        data=await cataloguePublic(frais);
+        liste=liste.filter(id=>data.cours.some(c=>c.id===id));
+        avertissement="Le serveur utilise encore sa liste fixe : mettre à jour Code.gs une fois pour activer le catalogue dynamique.";
+      }
+    }else{
+      data=await cataloguePublic(frais);liste=data.cours.map(c=>c.id);
+    }
+    appliqueCatalogue(data);demarre(liste);
+    catalogueEtat.textContent=avertissement || ("Catalogue à jour · "+data.cours.length+" cours. Actualiser ne modifie ni les ouvertures ni la séance.");
+  }catch(e){catalogueEtat.textContent="Catalogue non actualisé : "+e.message+" Les réglages et la séance sont conservés.";}
+  finally{actualiser.disabled=false;}
+}
+actualiser.addEventListener("click",()=>chargeCatalogue(true));
+if(!SUIVI){document.title="APERÇU FICTIF — tableau professeur";$("demo").hidden=false;}
+chargeCatalogue();
