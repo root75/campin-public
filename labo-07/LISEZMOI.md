@@ -12,7 +12,8 @@ L’aperçu libre ne transmet ni ne conserve de réponse ; hors Apps Script, seu
 reste sur ce navigateur. En classe, passer par Mes cours, avec le compte de l’école.
 
 Rapport : `pas-a-pas/trame-rapport.txt` donne un plan sans mise en forme, copiable depuis
-« Mon rapport et ma remise ». L’élève crée un seul document Google Docs, le met en page et y saisit
+« Mon rapport et ma remise ». La grille critériée complète /10 (descripteurs et points) est
+accessible dans ce même dialogue et copiée en fin de rapport avec la trame. L’élève crée un seul document Google Docs, le met en page et y saisit
 observations, conclusions et une capture ciblée. À la fin seulement, il joint ce document dans le
 nouveau devoir Classroom que le professeur devra préparer et publier lui-même.
 

@@ -169,6 +169,7 @@ footer{font-size:.9rem;color:var(--doux);display:flex;flex-wrap:wrap;gap:4px 16p
 footer .auteur{margin-left:auto;font-weight:700}
 .etapes{padding-left:1.3rem}.etapes li{margin:0 0 .65rem}.etapes label{display:block}.etapes input{margin-right:.5rem}.bilan{display:grid;gap:12px}.bilan textarea{width:100%}
 dialog{max-height:90vh;overflow-y:auto}#rapport{display:none;width:min(95vw,48rem);max-width:48rem}#rapport[open]{display:grid;gap:16px}#rapport{overflow-wrap:anywhere}#rapport>*{min-width:0}#rapport textarea{min-width:0}#rapport textarea{box-sizing:border-box;width:100%;font:inherit}#rapport details{padding:12px;border:1px solid var(--trait);border-radius:8px}#rapport summary{cursor:pointer}#rapport ul{padding-left:1.3rem}
+.grille{width:100%;border-collapse:collapse;font-size:1rem}.grille th,.grille td{border:1px solid var(--trait);padding:8px;text-align:left;vertical-align:top}.grille th:nth-child(2),.grille td:nth-child(2){white-space:nowrap}.grille caption{font-weight:700;text-align:left;margin-bottom:8px}#grille-criteree .defile{max-width:100%;overflow-x:auto}
 </style>
 </head>
 <body>
@@ -240,6 +241,26 @@ dialog{max-height:90vh;overflow-y:auto}#rapport{display:none;width:min(95vw,48re
     <li><b>Titres et tableau — /1 :</b> même style pour les quatre titres de partie ; vrai tableau lisible de trois colonnes et quatre lignes pour les mesures, avec % dans les en-têtes.</li>
     <li><b>Capture et remise — /1 :</b> capture ciblée, lisible, proportionnée et légendée ; le bon document est joint, accessible au professeur et sa remise est confirmée.</li>
   </ul>
+  <details id="grille-criteree">
+    <summary>Grille critériée complète — travail quotidien /10</summary>
+    <p>L’enquête finale compte pour 7 points ; le document et sa remise pour 3 points. Le professeur examine les preuves et les gestes. Les cases du site ne donnent pas de point.</p>
+    <div class="defile"><table class="grille">
+      <caption>Critères, points et descripteurs de réussite</caption>
+      <thead><tr><th scope="col">Critère</th><th scope="col">Points</th><th scope="col">Comment les points sont attribués</th></tr></thead>
+      <tbody>
+      <tr><th scope="row">Hypothèse initiale (site, bloc 12)</th><td>/1</td><td>1 : plausible et testable ; 0,5 : plausible mais imprécise ; 0 : absente ou hors sujet.</td></tr>
+      <tr><th scope="row">Choix et réalisation du test</th><td>/2</td><td>2 : pertinent, réversible, personnel ; 1 : pertinent mais incomplet ou encore guidé ; 0 : absent ou dangereux non corrigé.</td></tr>
+      <tr><th scope="row">Preuve dans le rapport</th><td>/1</td><td>1 : indice précis, réel et distingué du cas donné ; 0,5 : partiel ; 0 : inexploitable.</td></tr>
+      <tr><th scope="row">Conclusion finale justifiée</th><td>/2</td><td>2 : décision correcte liée à la preuve et au nuage donné, arrêt de Windows écarté avec raison ; 1 : décision pertinente mais justification partielle ; 0 : sans lien ou erronée.</td></tr>
+      <tr><th scope="row">Machine / système / application / fichier</th><td>/1</td><td>1 : quatre rôles distingués dans le cas ; 0,5 : distinction partielle ; 0 : confusion persistante.</td></tr>
+      <tr><th scope="row">Identification et nom du fichier</th><td>/1</td><td>0,5 : titre, prénom/nom, classe/date présents ; 0,5 : nom 07_CoulissesPC_Prenom_Nom respecté.</td></tr>
+      <tr><th scope="row">Titres et tableau</th><td>/1</td><td>0,5 : même style de titre pour les quatre parties ; 0,5 : vrai tableau 3×4, lisible, lignes et unités identifiées.</td></tr>
+      <tr><th scope="row">Capture et remise</th><td>/1</td><td>0,5 : capture utile, lisible, proportionnée, avec légende explicative ; 0,5 : bon document joint, accessible au professeur, remise confirmée dans Classroom.</td></tr>
+      </tbody>
+    </table></div>
+    <p><b>Total /10.</b> Non observé faute de temps ou poste indisponible : à compléter, pas zéro. La vitesse et l’utilisation d’un indice ne sont pas pénalisées. La qualité de l’enquête est distinguée de celle du document.</p>
+    <p>Bilan sommatif global réservé à décembre, sans date fixée.</p>
+  </details>
   <details><summary>Un geste à retrouver : titre, tableau ou image</summary>
     <ul>
       <li>Titres : sélectionne une ligne de partie ▸ liste « Normal » de la barre d’outils ▸ Titre 1 ; applique le même style aux quatre parties.</li>

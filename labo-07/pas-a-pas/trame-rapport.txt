@@ -59,7 +59,32 @@ Différence éventuelle entre mon poste et le nuage donné dans le scénario : [
 Décision pour le scénario et justification : [à compléter]
 Lien entre machine, Windows, application et fichier : [à compléter]
 
-Critères annoncés — Proposition de travail quotidien /10
-Enquête /7 : hypothèse initiale 1 ; choix et réalisation du test 2 ; preuve 1 ; conclusion justifiée 2 ; distinction machine / système / application / fichier 1.
-Document et remise /3 : titre, identification et nom de fichier 1 ; titres cohérents et vrai tableau lisible 1 ; capture ciblée et légendée, bon document joint et accessible au professeur, remise confirmée 1.
-Bilan sommatif global en décembre, sans date fixée.
+Grille critériée — Travail quotidien /10
+Enquête finale /7 ; document et remise /3.
+
+Hypothèse initiale (site, bloc 12) — /1
+1 : plausible et testable ; 0,5 : plausible mais imprécise ; 0 : absente ou hors sujet.
+
+Choix et réalisation du test — /2
+2 : pertinent, réversible, personnel ; 1 : pertinent mais incomplet ou encore guidé ; 0 : absent ou dangereux non corrigé.
+
+Preuve dans le rapport — /1
+1 : indice précis, réel et distingué du cas donné ; 0,5 : partiel ; 0 : inexploitable.
+
+Conclusion finale justifiée — /2
+2 : décision correcte liée à la preuve et au nuage donné, arrêt de Windows écarté avec raison ; 1 : décision pertinente mais justification partielle ; 0 : sans lien ou erronée.
+
+Machine / système / application / fichier — /1
+1 : quatre rôles distingués dans le cas ; 0,5 : distinction partielle ; 0 : confusion persistante.
+
+Identification et nom du fichier — /1
+0,5 : titre, prénom/nom, classe/date présents ; 0,5 : nom 07_CoulissesPC_Prenom_Nom respecté.
+
+Titres et tableau — /1
+0,5 : même style de titre pour les quatre parties ; 0,5 : vrai tableau 3×4, lisible, lignes et unités identifiées.
+
+Capture et remise — /1
+0,5 : capture utile, lisible, proportionnée, avec légende explicative ; 0,5 : bon document joint, accessible au professeur, remise confirmée dans Classroom.
+
+Total /10. Non observé faute de temps ou poste indisponible : à compléter, pas zéro. La vitesse et l’utilisation d’un indice ne sont pas pénalisées.
+Bilan sommatif global réservé à décembre, sans date fixée.
