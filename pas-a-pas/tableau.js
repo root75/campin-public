@@ -480,4 +480,4 @@ function demarre(cours){
   chargeSeances(); chargeSequence(); chargeClasses(); setInterval(charge, RAFRAICHIR);
 }
 if(SUIVI) google.script.run.withSuccessHandler(demarre).withFailureHandler(erreur).listeCours();
-else { $("demo").hidden = false; demarre(Object.keys(NB_BLOCS)); }
+else { document.title = "APERÇU FICTIF — tableau professeur"; $("demo").hidden = false; demarre(Object.keys(NB_BLOCS)); }
