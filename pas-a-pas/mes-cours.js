@@ -19,10 +19,12 @@ function serveur(fn, ...args){
 
 let choisie = "";
 function affiche(d){
-  // L'identité et la classe confirmée viennent du serveur, jamais du choix local.
-  if(d.identite) document.querySelectorAll(".compte-connecte .compte-role")
-    .forEach(n => { n.textContent = d.identite.libelle; });
-  ["attente","choisir","confirmer","mes-cours","erreur"].forEach(id => $(id).hidden = true);
+  // L’identité et la classe confirmée viennent du serveur.
+  if(d.identite){
+    document.querySelectorAll(".compte-adresse").forEach(n => n.textContent = d.identite.email || "Adresse indisponible");
+    document.querySelectorAll(".compte-role").forEach(n => n.textContent = d.identite.libelle);
+  }
+  ["attente","choisir","confirmer","mes-cours","seance-en-cours","erreur"].forEach(id => { const n = $(id); if(n) n.hidden = true; });
   if(!d.email){ montreErreur("Ouvre ce lien avec ton compte de l'école (arcampin.be)."); return; }
   if(!d.classe){
     if(!d.classes.length){ montreErreur("Ton professeur n'a pas encore créé les classes. Attends sa consigne."); return; }
@@ -35,12 +37,23 @@ function affiche(d){
     return;
   }
   $("titre-classe").textContent = " · " + d.classe;
+  // Après le premier choix, le lien _top ouvre la séance avec un geste explicite,
+  // nécessaire pour quitter l'iframe Google. Aux visites suivantes, doGet sert la fiche directement.
+  // L'ancien HTML peut rester dix minutes dans le cache du serveur pendant la publication.
+  if($("seance-en-cours") && $("seance")){
+    $("seance").replaceChildren();
+    if(d.seance){
+      const a = txt("a", "btn cours", "Ouvrir ma séance · " + d.seance.titre + " ▸");
+      a.href = d.seance.url; a.target = "_top"; $("seance").append(a);
+    }
+    $("seance-en-cours").hidden = !d.seance;
+  }
   $("cours").replaceChildren(...d.cours.map(c=>{
     const a = txt("a", "btn cours", c.titre + " ▸"); a.href = c.url; a.target = "_top"; return a; }));
   $("aucun").hidden = d.cours.length > 0;
   $("mes-cours").hidden = false;
 }
-function montreErreur(m){ ["attente","choisir","confirmer","mes-cours"].forEach(id => $(id).hidden = true); $("erreur").textContent = m; $("erreur").hidden = false; }
+function montreErreur(m){ ["attente","choisir","confirmer","mes-cours","seance-en-cours"].forEach(id => { const n = $(id); if(n) n.hidden = true; }); $("erreur").textContent = m; $("erreur").hidden = false; }
 const echec = err => montreErreur("Erreur : " + err.message + " — recharge la page (F5).");
 
 $("non").addEventListener("click", ()=>{ $("confirmer").hidden = true; $("choisir").hidden = false; });
