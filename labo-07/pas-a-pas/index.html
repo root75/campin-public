@@ -169,7 +169,7 @@ footer{font-size:.9rem;color:var(--doux);display:flex;flex-wrap:wrap;gap:4px 16p
 footer .auteur{margin-left:auto;font-weight:700}
 .etapes{padding-left:1.3rem}.etapes li{margin:0 0 .65rem}.etapes label{display:block}.etapes input{margin-right:.5rem}.bilan{display:grid;gap:12px}.bilan textarea{width:100%}
 dialog{max-height:90vh;overflow-y:auto}#rapport{display:none;width:min(95vw,48rem);max-width:48rem}#rapport[open]{display:grid;gap:16px}#rapport{overflow-wrap:anywhere}#rapport>*{min-width:0}#rapport textarea{min-width:0}#rapport textarea{box-sizing:border-box;width:100%;font:inherit}#rapport details{padding:12px;border:1px solid var(--trait);border-radius:8px}#rapport summary{cursor:pointer}#rapport ul{padding-left:1.3rem}
-.grille{width:100%;border-collapse:collapse;font-size:1rem}.grille th,.grille td{border:1px solid var(--trait);padding:8px;text-align:left;vertical-align:top}.grille th:nth-child(2),.grille td:nth-child(2){white-space:nowrap}.grille caption{font-weight:700;text-align:left;margin-bottom:8px}#grille-criteree .defile{max-width:100%;overflow-x:auto}
+.incident{padding:12px;border:1px solid var(--trait);border-radius:8px;margin-bottom:12px}.incident summary{cursor:pointer;font-weight:700}.incident details{padding:8px}.grille{width:100%;border-collapse:collapse;font-size:1rem}.grille th,.grille td{border:1px solid var(--trait);padding:8px;text-align:left;vertical-align:top}.grille th:nth-child(2),.grille td:nth-child(2){white-space:nowrap}.grille caption{font-weight:700;text-align:left;margin-bottom:8px}#grille-criteree .defile{max-width:100%;overflow-x:auto}
 </style>
 </head>
 <body>
@@ -180,7 +180,7 @@ dialog{max-height:90vh;overflow-y:auto}#rapport{display:none;width:min(95vw,48re
     <h1>Dans les coulisses du PC <em>une enquête</em></h1>
     <p class="qui" id="qui"></p>
     <div class="actions"><button class="btn vide" type="button" id="rapport-btn">📄 Mon rapport et ma remise</button></div>
-    <p class="note">Un seul rapport personnel dans Google Docs, à compléter au fil de ton travail puis à joindre dans Classroom. Le site garde les hypothèses initiales et l’avancement ; les preuves restent dans le rapport.</p>
+    <p class="note">Un seul rapport personnel dans Google Docs, à compléter au fil de ton travail puis à joindre dans Classroom. Trois missions et un défi final. Le site garde les hypothèses initiales ; le rapport contient les preuves courtes. Un seul incident est rédigé, les trois autres sont expliqués à l’oral.</p>
   </header>
 
   <section class="humeur" id="humeur" hidden aria-label="Humeur du jour"></section>
@@ -236,6 +236,13 @@ dialog{max-height:90vh;overflow-y:auto}#rapport{display:none;width:min(95vw,48re
     <p id="rapport-statut" class="note" role="status"></p>
     <p><a href="https://root75.github.io/campin-public/labo-07/pas-a-pas/trame-rapport.txt" target="_blank" rel="noopener">Trame en texte brut</a> si la copie ne fonctionne pas.</p>
   </details>
+  <h3>Un rapport court : ce que j’écris</h3>
+  <ul>
+    <li>Mission 1 : un tableau, une capture légendée et deux phrases de conclusion.</li>
+    <li>Mission 2 : fichier, chemin, statut et une phrase de justification.</li>
+    <li>Mission 3 : un seul incident en quatre lignes. Je manipule et explique les trois autres à l’oral au professeur.</li>
+    <li>Défi final : une ligne de preuve et deux phrases maximum ; je montre ma manipulation au professeur.</li>
+  </ul>
   <h3>2. Trois exigences de présentation et de remise — /3</h3>
   <ul>
     <li><b>Identification et nom — /1 :</b> titre visible, prénom, nom, classe, date ; fichier correctement nommé.</li>
@@ -249,11 +256,11 @@ dialog{max-height:90vh;overflow-y:auto}#rapport{display:none;width:min(95vw,48re
       <caption>Critères, points et descripteurs de réussite</caption>
       <thead><tr><th scope="col">Critère</th><th scope="col">Points</th><th scope="col">Comment les points sont attribués</th></tr></thead>
       <tbody>
-      <tr><th scope="row">Hypothèse initiale (site, bloc 12)</th><td>/1</td><td>1 : plausible et testable ; 0,5 : plausible mais imprécise ; 0 : absente ou hors sujet.</td></tr>
+      <tr><th scope="row">Hypothèse initiale (site, défi final)</th><td>/1</td><td>1 : plausible et testable ; 0,5 : plausible mais imprécise ; 0 : absente ou hors sujet.</td></tr>
       <tr><th scope="row">Choix et réalisation du test</th><td>/2</td><td>2 : pertinent, réversible, personnel ; 1 : pertinent mais incomplet ou encore guidé ; 0 : absent ou dangereux non corrigé.</td></tr>
       <tr><th scope="row">Preuve dans le rapport</th><td>/1</td><td>1 : indice précis, réel et distingué du cas donné ; 0,5 : partiel ; 0 : inexploitable.</td></tr>
       <tr><th scope="row">Conclusion finale justifiée</th><td>/2</td><td>2 : décision correcte liée à la preuve et au nuage donné, arrêt de Windows écarté avec raison ; 1 : décision pertinente mais justification partielle ; 0 : sans lien ou erronée.</td></tr>
-      <tr><th scope="row">Machine / système / application / fichier</th><td>/1</td><td>1 : quatre rôles distingués dans le cas ; 0,5 : distinction partielle ; 0 : confusion persistante.</td></tr>
+      <tr><th scope="row">Machine / système / application / fichier</th><td>/1</td><td>1 : quatre rôles distingués à l’oral dans le cas ; 0,5 : distinction partielle ; 0 : confusion persistante.</td></tr>
       <tr><th scope="row">Identification et nom du fichier</th><td>/1</td><td>0,5 : titre, prénom/nom, classe/date présents ; 0,5 : nom 07_CoulissesPC_Prenom_Nom respecté.</td></tr>
       <tr><th scope="row">Titres et tableau</th><td>/1</td><td>0,5 : même style de titre pour les quatre parties ; 0,5 : vrai tableau 3×4, lisible, lignes et unités identifiées.</td></tr>
       <tr><th scope="row">Capture et remise</th><td>/1</td><td>0,5 : capture utile, lisible, proportionnée, avec légende explicative ; 0,5 : bon document joint, remise confirmée dans Classroom.</td></tr>

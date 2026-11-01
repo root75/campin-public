@@ -20,7 +20,7 @@ function envoie(evt){
 }
 /* Avancement local, seulement sans suivi : avec le suivi, il vient du serveur et de la séance,
    pour qu'un poste partagé n'hérite pas de l'élève de l'heure précédente. */
-const CLE = "pas-a-pas:"+COURS;
+const CLE = "pas-a-pas:"+COURS+(typeof VERSION_PARCOURS!=="undefined" ? ":"+VERSION_PARCOURS : "");
 const lit = () => { if(SUIVI || APERCU) return {}; try { return JSON.parse(localStorage.getItem(CLE)) || {}; } catch(e){ return {}; } };
 const ecrit = o => { if(SUIVI || APERCU) return; try { localStorage.setItem(CLE, JSON.stringify(o)); } catch(e){} };
 
@@ -40,9 +40,20 @@ function blocVu(i){
   return remplace(Object.assign({}, B, v>1 ? B.variantes[v-2] : {}, { _v:v, _n:n }));
 }
 
+function groupeCourant(i=ici){
+  return typeof PARCOURS!=="undefined" ? PARCOURS.find(g=>i>=g.debut && i<g.fin) : null;
+}
+function suite(){
+  if(typeof PARCOURS==="undefined") return ici+1<BLOCS.length ? "Bloc suivant →" : "J'ai fini ✓";
+  if(ici+1>=BLOCS.length) return "J’ai terminé l’enquête ✓";
+  const avant=groupeCourant(), apres=groupeCourant(ici+1);
+  return avant===apres ? "Continuer →" : apres===PARCOURS[PARCOURS.length-1] ? "Défi final →" : "Mission suivante →";
+}
 function barre(){
   const b = document.getElementById("progres"); b.replaceChildren();
-  BLOCS.forEach((_,i)=>{ const s=el("span"); s.className = i<etat.atteint ? "fait" : (i===ici ? "ici" : ""); b.append(s); });
+  if(typeof PARCOURS!=="undefined"){
+    PARCOURS.forEach(g=>{const s=el("span");s.className=etat.atteint>=g.fin ? "fait" : (ici>=g.debut && ici<g.fin ? "ici" : "");s.title=g.titre;b.append(s);});
+  }else BLOCS.forEach((_,i)=>{ const s=el("span"); s.className = i<etat.atteint ? "fait" : (i===ici ? "ici" : ""); b.append(s); });
 }
 
 function affiche(){
@@ -54,8 +65,13 @@ function affiche(){
   const B = blocVu(ici);
 
   const num = el("div","numero");
-  num.append(txt("span",null,"Bloc "+(ici+1)+" sur "+BLOCS.length+" · Partie "+B.partie.split(" — ")[0]), txt("span",null,"⏱ "+B.min+" min"));
-  z.append(num, txt("h2",null,(ici+1)+". "+B.titre));
+  const groupe=groupeCourant();
+  if(groupe){
+    num.append(txt("span",null,groupe.titre));
+    if(groupe.fin-groupe.debut>1)num.append(txt("span",null,"Étape "+(ici-groupe.debut+1)+" sur "+(groupe.fin-groupe.debut)));
+  }
+  else num.append(txt("span",null,"Bloc "+(ici+1)+" sur "+BLOCS.length+" · Partie "+B.partie.split(" — ")[0]), txt("span",null,"⏱ "+B.min+" min"));
+  z.append(num, txt("h2",null,groupe ? B.titre : (ici+1)+". "+B.titre));
   if(APERCU && B._n>1){
     const sel = el("div","actions"); sel.append(txt("span","note","Version de la preuve :"));
     for(let k=1;k<=B._n;k++){ const b = txt("button","btn "+(k===B._v ? "plein" : "vide"),String(k)); b.type="button";
@@ -80,10 +96,10 @@ function affiche(){
 
   const pr = el("div","preuve");
   const fait = !APERCU && etat.atteint > ici;   // en aperçu, chaque version reste à essayer
-  if(!fait && ["enquete","rapport"].includes(B.q.type)){
+  if(!fait && ["enquete","rapport","mixte"].includes(B.q.type)){
     preuve(pr,B);
   } else if(fait){
-    pr.append(txt("p","retour juste",["enquete","rapport"].includes(B.q.type) ? "✅ Étape déjà enregistrée. Les preuves du rapport restent à examiner par le professeur." : "✅ Bloc déjà validé."));
+    pr.append(txt("p","retour juste",["enquete","rapport","mixte"].includes(B.q.type) ? "✅ Étape déjà enregistrée. Les preuves du rapport restent à examiner par le professeur." : "✅ Bloc déjà validé."));
   } else if(B.cases){
     pr.append(txt("div","etiquette","✅ Les cinq points (mon message est noté sur 5)"));
     const ul = el("ul","cases");
@@ -104,18 +120,19 @@ function affiche(){
   z.append(pr);
 
   const nav = el("div","actions");
-  const avant = txt("button","btn vide","← Bloc précédent"); avant.type="button"; avant.disabled = ici===0;
+  const avant = txt("button","btn vide",groupe ? "← Étape précédente" : "← Bloc précédent"); avant.type="button"; avant.disabled = ici===0;
   avant.addEventListener("click",()=>{ ici--; affiche(); });
   nav.append(avant, el("span","espace"));
-  if(fait || (APERCU && ici+1<BLOCS.length)){ const s=txt("button","btn plein","Bloc suivant →"); s.type="button"; s.addEventListener("click",()=>{ici++;affiche();}); nav.append(s); }
+  if(fait || (APERCU && ici+1<BLOCS.length)){ const s=txt("button","btn plein",suite()); s.type="button"; s.addEventListener("click",()=>{ici++;affiche();}); nav.append(s); }
   z.append(nav);
 }
 
 /* La question de preuve. Faux : on explique, on compte, et on recommence. */
-function preuve(pr, B){
+function preuve(pr, B, apres){
   const Q = B.q;
   const v = r => (B._n>1 ? "v"+B._v+":" : "") + (r==null ? "" : r);   // le Journal note la version
-  pr.append(txt("div","etiquette", ["code","ordre"].includes(Q.type) ? "Mon programme" : Q.type==="rapport" ? "Mon rapport individuel" : "Je prouve que j'ai fait le bloc"), txt("p","question",Q.q));
+  if(Q.type!=="mixte") pr.append(txt("div","etiquette", ["code","ordre"].includes(Q.type) ? "Mon programme" : Q.type==="rapport" ? "Mon rapport individuel" : typeof PARCOURS!=="undefined" ? "Je vérifie mon raisonnement" : "Je prouve que j’ai fait le bloc"));
+  pr.append(txt("p","question",Q.q));
   const retour = el("div","retour"); retour.hidden = true;
   const zone = el("div"); pr.append(zone, retour);
   let essais = 0;
@@ -124,10 +141,14 @@ function preuve(pr, B){
     retour.className="retour juste"; retour.replaceChildren(txt("strong",null,Q.type==="rapport" ? "Étape déclarée faite." : Q.type==="enquete" ? (SUIVI && !APERCU ? "Réponse enregistrée." : "Réponse saisie pour cet essai.") : "Oui, c'est ça."));
     if(Q.juste) retour.append(txt("p",null,Q.juste));
     retour.hidden=false;
+    if(apres){
+      envoie({etape:ici+1,type:"ouvert",reponse:"activité:"+v(reponse)});
+      apres();return; // L’exercice prépare la mission ; sa réussite ne valide pas le rapport.
+    }
     if(!["enquete","rapport"].includes(Q.type)) envoie({ etape:ici+1, type:"juste", essais:essais, reponse:v(reponse) });
     etat.atteint = Math.max(etat.atteint, ici+1); ecrit(etat); barre();
     if(enAide) basculeAide();
-    const s = txt("button","btn plein", ici+1<BLOCS.length ? "Bloc suivant →" : "J'ai fini ✓"); s.type="button";
+    const s = txt("button","btn plein",typeof PARCOURS!=="undefined" ? suite() : (ici+1<BLOCS.length ? "Bloc suivant →" : "J'ai fini ✓")); s.type="button";
     s.addEventListener("click",()=>{ ici++; affiche(); });
     pr.append(s); s.focus();
   };
@@ -140,6 +161,37 @@ function preuve(pr, B){
     retour.hidden=false;
   };
 
+  if(Q.type==="mixte"){
+    preuve(zone,Object.assign({},B,{q:Q.activite}),()=>{
+      const validation=el("div");pr.append(validation);
+      preuve(validation,Object.assign({},B,{q:Q.validation}));
+    });
+    return;
+  }
+  if(Q.type==="ordre-gestes"){
+    let cartes=melange(Q.cartes);
+    if(cartes.join("|")===Q.cartes.join("|")) cartes=cartes.slice(1).concat(cartes[0]);
+    const liste=el("ol","ordre"), verifier=txt("button","btn plein","Vérifier mon ordre");verifier.type="button";
+    const dessine=()=>{
+      liste.replaceChildren();
+      cartes.forEach((t,i)=>{
+        const li=el("li"),texte=txt("span",null,t);
+        const haut=txt("button","fleche","▲"),bas=txt("button","fleche","▼");haut.type=bas.type="button";
+        haut.setAttribute("aria-label","Monter l’étape "+(i+1));bas.setAttribute("aria-label","Descendre l’étape "+(i+1));
+        haut.disabled=i===0;bas.disabled=i===cartes.length-1;
+        const bouge=j=>{[cartes[i],cartes[j]]=[cartes[j],cartes[i]];dessine();liste.children[j].querySelector("button:not(:disabled)").focus();};
+        haut.addEventListener("click",()=>bouge(i-1));bas.addEventListener("click",()=>bouge(i+1));
+        li.append(texte,haut,bas);liste.append(li);
+      });
+    };
+    dessine();zone.append(liste,verifier);
+    verifier.addEventListener("click",()=>{
+      const reponse=cartes.join(" | ");
+      if(cartes.every((x,i)=>x===Q.cartes[i])){verifier.disabled=true;liste.querySelectorAll("button").forEach(b=>b.disabled=true);reussi(reponse);}
+      else rate("Quel élément faut-il formuler AVANT de tester ? La conclusion vient après l’indice observé.",reponse);
+    });
+    return;
+  }
   if(Q.type==="rapport"){
     // Déclaration d’avancement uniquement : aucun document ni fichier n’est lu par le site.
     const f=el("form","bilan"), label=el("label"), cb=el("input");
@@ -307,7 +359,7 @@ function basculeAide(){
   const a = document.getElementById("aide"), b = document.getElementById("aide-btn");
   a.classList.toggle("active", enAide);
   document.getElementById("aide-texte").textContent = enAide
-    ? "✋ Ton professeur sait que tu attends au bloc "+(ici+1)+". Pose ton chevalet sur l'écran, et en attendant relis « Ça coince ? »."
+    ? "✋ Ton professeur sait que tu attends "+(groupeCourant() ? "dans « "+groupeCourant().titre+" »" : "au bloc "+(ici+1))+". Pose ton chevalet sur l’écran, et en attendant relis « Ça coince ? »."
     : "Je suis bloqué malgré « Ça coince ? » et mon voisin :";
   b.textContent = enAide ? "Je me suis débloqué" : "J'attends de l'aide";
   envoie({ etape:Math.min(ici,BLOCS.length-1)+1, type: enAide ? "aide" : "aide-fin" });

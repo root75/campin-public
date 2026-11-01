@@ -519,7 +519,7 @@
   },
   "labo-07": {
     "titre": "Labo 07 — Dans les coulisses du PC",
-    "objectif": "Enquêter sur son PC Windows : hypothèse, manipulation personnelle, preuve courte et conclusion justifiée. Parcours par contenu, à reprendre selon les besoins. Un rapport Docs personnel rassemble les preuves et conclusions ; sa mise en page et sa remise font partie du travail.",
+    "objectif": "Trois missions et un défi final : enquêter sur son PC Windows avec hypothèses, manipulations personnelles et preuves mixtes. Le rapport reste court : tableau et capture, localisation, un seul incident rédigé, décision finale. Les autres incidents sont vérifiés oralement. Méthodes variées : prédire, voter, manipuler, choisir une réponse, remettre une démarche en ordre et justifier oralement.",
     "competences": [
       "S3M4.1 « Différencier système d’exploitation et machine »",
       "S3M4.4 « Utiliser l’interface du système d’exploitation et les périphériques »",
@@ -529,11 +529,13 @@
       "Préparer un seul devoir Classroom « Labo 07 — Dans les coulisses du PC », /10, avec remise d’un document personnel à la fin du parcours. La préparation ne crée ni ne publie ce devoir. Ne pas distribuer de copie déjà mise en page.",
       "L’élève crée un rapport Google Docs à partir de la trame en texte brut avant les premières mesures. Il garde ce même document pendant tout le travail et ne le remet qu’une fois terminé.",
       "Prévoir un fichier déjà enregistré dans le dossier OneDrive scolaire de l’Explorateur, par exemple celui du Labo 06 ; un fichier de démonstration sans donnée privée si nécessaire. La mission ne dépend pas d’une autre séquence obligatoirement réalisée juste avant.",
-      "Correction : hypothèses initiales aux blocs 1, 4 et 12 du Journal privé ; observations et conclusions dans le rapport joint à Classroom. Les autres blocs enregistrent uniquement « rapport:… », une déclaration d’avancement, sans lecture du document ni contrôle de remise.",
+      "Correction : hypothèses initiales aux étapes internes 1, 3 et 6 du Journal privé ; preuves écrites courtes dans le rapport joint à Classroom, manipulations et autres incidents vérifiés à l’oral. Les autres blocs enregistrent uniquement « rapport:… », une déclaration d’avancement, sans lecture du document ni contrôle de remise.",
       "Grille : enquête /7, document et remise /3. Identification et nom ; styles de titres et vrai tableau ; capture ciblée et légendée, bon document joint et remise confirmée. Aucun calcul automatique de note.",
       "Compte scolaire : Mes cours ▸ classes et cours ouverts ▸ cocher labo-07 uniquement pour la classe concernée. Nouvelle séance au premier lancement ; conserver la séance pour les continuations.",
       "Vérifier sur un PC élève : Gestionnaire des tâches et ses totaux, Calculatrice, Bloc-notes, fenêtres, chemin et Statut du fichier OneDrive. Aucun arrêt de processus, suppression ou changement de réglage.",
-      "Projection : utiliser uniquement Lancer la séquence. Ne jamais projeter tableau nominatif, Journal, humeur, avis ou copies. Les moments de ce conducteur ne recueillent ni mots ni votes."
+      "Projection : utiliser uniquement Lancer la séquence. Ne jamais projeter tableau nominatif, Journal, humeur, avis ou copies. Un vote initial recueille des choix ; seuls les effectifs agrégés sont projetés. Aucun texte libre d’élève n’est affiché.",
+      "Dépannage : quatre essais individuels, mais un seul incident écrit en quatre lignes. Pour les trois autres, chaque élève formule oralement une hypothèse et choisit son test avant de manipuler, puis explique observation et solution au professeur. Noter les trois passages sur une liste privée : le site ne collecte pas cette validation.",
+      "Varier les méthodes : prédiction écrite, vote collectif, manipulation sur le poste, QCM après les ressources, chemin et statut à observer, quatre incidents puis ordre de la démarche, explication orale, transfert final individuel. Les exercices du site ne demandent pas de texte supplémentaire dans le rapport."
     ],
     "moments": [
       {
@@ -550,6 +552,26 @@
           "Que faut-il observer avant de conclure ?"
         ],
         "repere": "Le fichier du Labo 06 peut servir si disponible ; sinon utiliser un autre fichier connu ou une démo. Utiliser des exemples fictifs, sans copie d’élève projetée."
+      },
+      {
+        "type": "vote",
+        "titre": "Je prends position — Fenêtre invisible, logiciel arrêté ?",
+        "min": 2,
+        "methode": "Prédiction individuelle, vote anonyme au projecteur, puis échange oral",
+        "question": "La fenêtre de la Calculatrice n’est plus visible. Cela prouve-t-il qu’elle est arrêtée ?",
+        "choix": [
+          "Pas assez d’indices",
+          "Oui, forcément",
+          "Windows est forcément arrêté",
+          "Le fichier est forcément supprimé"
+        ],
+        "situations": [
+          {
+            "texte": "La fenêtre a disparu de l’écran ; le reste du bureau est visible.",
+            "bonne": 0
+          }
+        ],
+        "repere": "Chaque élève choisit seul. Clore pour afficher uniquement les effectifs ; demander quel geste permettrait de vérifier, puis révéler la correction. Les noms et les choix individuels ne sont jamais projetés."
       },
       {
         "type": "ecran",
@@ -574,13 +596,12 @@
         "methode": "Individuel puis mise en commun",
         "lignes": [
           "Formule ton hypothèse avant d’ouvrir l’application.",
-          "Compare les mêmes totaux avant et après.",
-          "Aucune fin de tâche, aucun réglage.",
-          "Saisis les relevés dans le tableau du rapport, puis insère une capture ciblée et légendée."
+          "Complète le tableau et une seule capture légendée dans le rapport, puis deux phrases de conclusion.",
+          "Aucune fin de tâche, aucun réglage."
         ],
         "blocs": [
           1,
-          3
+          2
         ]
       },
       {
@@ -596,7 +617,7 @@
           "Qu’avez-vous vraiment observé ?",
           "Quelle autre cause reste possible ?"
         ],
-        "repere": "Faire ouvrir la synthèse du bloc 3 après la discussion. Observation des ressources = prolongement, sans rattachement artificiel à une compétence de 3e."
+        "repere": "Ouvrir la synthèse de la mission 1 après la discussion. Observation des ressources = prolongement, sans compétence de 3e artificiellement attribuée."
       },
       {
         "type": "atelier",
@@ -604,13 +625,12 @@
         "min": 30,
         "methode": "Individuel puis mise en commun",
         "lignes": [
-          "Retrouve le fichier choisi dans le dossier OneDrive scolaire de l’Explorateur.",
-          "Relève chemin et statut avant de conclure.",
-          "N’ouvre pas le fichier ; ne modifie pas sa synchronisation."
+          "Retrouve ton fichier OneDrive sans l’ouvrir.",
+          "Note fichier, chemin et statut ; justifie en une phrase la disponibilité sans réseau."
         ],
         "blocs": [
-          4,
-          6
+          3,
+          4
         ],
         "repere": "Le chemin à relever est celui du fichier dans OneDrive sur ce poste. Le rapport Docs est un document en ligne distinct ; Google Drive n’est pas un lecteur installé sur les PC de l’école."
       },
@@ -627,7 +647,7 @@
           "Local et synchronisé s’excluent-ils ?",
           "Quel indice manque si le statut n’est pas affiché ?"
         ],
-        "repere": "Ouvrir ensuite la synthèse du bloc 6. Aucun changement des réglages OneDrive."
+        "repere": "Ouvrir la synthèse de la mission 2. Aucun changement des réglages OneDrive."
       },
       {
         "type": "atelier",
@@ -635,14 +655,12 @@
         "min": 50,
         "methode": "Individuel puis mise en commun",
         "lignes": [
-          "Quatre incidents réversibles, chacun sur son poste.",
-          "Avant chaque test : une hypothèse et un test choisi.",
-          "Fenêtre masquée · fenêtre active · fichier et application · écran éteint.",
-          "Hypothèse et test écrits dans le rapport avant chaque manipulation ; observation et solution après."
+          "Quatre incidents à manipuler personnellement : fenêtre masquée, fenêtre active, fichier/application, écran éteint.",
+          "Un seul incident rédigé en quatre lignes. Pour les trois autres : hypothèse et test avant d’agir, observation et conclusion à expliquer oralement au professeur."
         ],
         "blocs": [
-          7,
-          11
+          5,
+          5
         ],
         "repere": "Écran externe : identifier son bouton avant tout essai. Portable ou tout-en-un : cas simulé. Chacun manipule personnellement."
       },
@@ -659,7 +677,7 @@
           "Pourquoi ne fallait-il pas arrêter le PC ?",
           "Quel indice montre que le fichier existe encore ?"
         ],
-        "repere": "Faire ouvrir la synthèse du bloc 11 après les explications. Reformuler oralement sur cas fictifs, sans afficher les réponses du journal."
+        "repere": "Ouvrir la synthèse de la mission 3. Faire justifier un test à l’oral sur cas fictif. Ne pas demander un deuxième incident rédigé."
       },
       {
         "type": "atelier",
@@ -667,15 +685,15 @@
         "min": 28,
         "methode": "Individuel puis mise en commun",
         "lignes": [
-          "Situation nouvelle, travail individuel.",
-          "Enregistre ton hypothèse et ton test avant de manipuler.",
-          "Montre ensuite au professeur le geste et l’indice."
+          "Défi final individuel : hypothèse et test initial sur le site.",
+          "Une ligne de preuve et deux phrases de décision dans le rapport.",
+          "Montre ta manipulation et explique la distinction machine / Windows / application / fichier à l’oral."
         ],
         "blocs": [
-          12,
-          14
+          6,
+          7
         ],
-        "repere": "Travail quotidien /10 : enquête /7 et document/remise /3. Hypothèse et test initiaux sur le site (bloc 12), preuve et conclusion dans le rapport (13–14). Correction manuelle et passage individuel. Une déclaration d’avancement n’est pas une preuve."
+        "repere": "Travail quotidien /10 : enquête /7, document/remise /3. Hypothèse et test sur le site (étape interne 6), preuve et décision courtes dans le rapport. Observer le geste et faire justifier oralement ; aucune validation orale collectée par le site."
       },
       {
         "type": "ecran",

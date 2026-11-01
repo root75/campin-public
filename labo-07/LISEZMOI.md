@@ -1,6 +1,6 @@
 # Labo 07 — version testable
 
-Contenu : `pas-a-pas/fiche.js` (14 blocs par contenu, sur plusieurs périodes).
+Contenu : `pas-a-pas/fiche.js` (trois missions et un défi final ; sept étapes internes pour le suivi, à reprendre selon les besoins).
 Moteur : `../pas-a-pas/blocs.js`, partagé avec Python 1 et Python 2.
 Conducteur professeur : clé `labo-07` dans `../pas-a-pas/sequences.json` ; accessible au tableau.
 Préparation, corrigé et activation : dépôt privé `campin-pedagogique/cours/3ttr-labo/sequences/07-coulisses-pc/PROF.md`.
@@ -14,12 +14,16 @@ reste sur ce navigateur. En classe, passer par Mes cours, avec le compte de l’
 Rapport : `pas-a-pas/trame-rapport.txt` donne un plan sans mise en forme, copiable depuis
 « Mon rapport et ma remise ». La grille critériée complète /10 (descripteurs et points) est
 accessible dans ce même dialogue et copiée en fin de rapport avec la trame. L’élève crée un seul document Google Docs, le met en page et y saisit
-observations, conclusions et une capture ciblée. À la fin seulement, il joint ce document dans le
+des preuves courtes : tableau et capture légendée, une phrase de disponibilité, un seul incident
+en quatre lignes et une décision finale en deux phrases. Les trois autres incidents sont
+manipulés et expliqués à l’oral au professeur, sans autre compte rendu. À la fin seulement, il joint ce document dans le
 nouveau devoir Classroom que le professeur devra préparer et publier lui-même.
 
-Collecte du site : API `noter()` et Journal existants. Les blocs **1, 4, 12** conservent les hypothèses
-initiales (et le test final) en texte court, ≤ 200 caractères. Les autres blocs enregistrent uniquement
-une déclaration `rapport:…` ; ils ne collectent pas les preuves du document. Le site ne lit ni Docs,
+Collecte du site : API `noter()` et Journal existants. Les étapes internes **1, 3, 6** conservent les hypothèses
+initiales (et le test final) en texte court, ≤ 200 caractères. Les quatre autres étapes enregistrent une déclaration `rapport:…`. Deux exercices préalables
+non cotés varient les méthodes : QCM de conclusion et cartes de gestes à remettre dans l’ordre.
+Leurs essais utilisent les événements existants (`faux`, `ouvert` préfixé `activité:`) sans faire
+avancer seuls la mission. Ils ne collectent pas les preuves du document. Le site ne lit ni Docs,
 ni les pièces jointes, ni le statut Classroom. Un bloc vert ne vaut ni réussite, ni remise, ni note.
 Les preuves ne sont pas recopiées sur le site. Aucun nouveau Forms ni collecte de fichier ajouté.
 
@@ -38,3 +42,14 @@ continuent ainsi à démarrer pendant la transition.
 Le parcours élève et le conducteur ne fixent pas de calendrier. La mission fichiers utilise
 OneDrive dans l’Explorateur scolaire ; le rapport Docs est joint via le sélecteur en ligne de
 Classroom. Aucun lecteur Google Drive installé n’est supposé.
+
+La progression élève montre quatre entrées. Les sept étapes internes distinguent hypothèse
+avant manipulation et déclaration de mission terminée. Aucun recueil de validation orale ajouté :
+le professeur note les passages sur une liste privée. Si une ancienne séance de test à 14 étapes
+avait été utilisée, démarrer une nouvelle séance de test ; ne pas interpréter ses numéros comme
+ceux du nouveau parcours. Les brouillons locaux utilisent une clé de version distincte.
+
+Mode séquence : tableau professeur ▸ Labo 07 ▸ Lancer la séquence. Alternance de prédiction,
+vote à effectifs agrégés, essais sur les postes, mises en commun et défi individuel. La fiche
+affiche aussi une citation finale de Descartes, sourcée dans la préparation ; elle apparaît à tous
+sans condition de réussite, et n’est pas annoncée avant la fin.
