@@ -34,3 +34,7 @@ Migration du moteur : les index Python chargent le contenu avec une URL versionn
 un ancien JavaScript en cache. Si Apps Script sert encore un ancien index sans `blocs.js`, le
 contenu Python charge le moteur au DOM prêt seulement s’il manque. Les pages déjà en cache
 continuent ainsi à démarrer pendant la transition.
+
+Le parcours élève et le conducteur ne fixent pas de calendrier. La mission fichiers utilise
+OneDrive dans l’Explorateur scolaire ; le rapport Docs est joint via le sélecteur en ligne de
+Classroom. Aucun lecteur Google Drive installé n’est supposé.

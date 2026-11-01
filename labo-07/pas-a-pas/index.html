@@ -180,7 +180,7 @@ dialog{max-height:90vh;overflow-y:auto}#rapport{display:none;width:min(95vw,48re
     <h1>Dans les coulisses du PC <em>une enquête</em></h1>
     <p class="qui" id="qui"></p>
     <div class="actions"><button class="btn vide" type="button" id="rapport-btn">📄 Mon rapport et ma remise</button></div>
-    <p class="note">Un seul rapport personnel dans Google Docs, à compléter sur plusieurs cours puis à joindre dans Classroom. Le site garde les hypothèses initiales et l’avancement ; les preuves restent dans le rapport.</p>
+    <p class="note">Un seul rapport personnel dans Google Docs, à compléter au fil de ton travail puis à joindre dans Classroom. Le site garde les hypothèses initiales et l’avancement ; les preuves restent dans le rapport.</p>
   </header>
 
   <section class="humeur" id="humeur" hidden aria-label="Humeur du jour"></section>
@@ -210,14 +210,15 @@ dialog{max-height:90vh;overflow-y:auto}#rapport{display:none;width:min(95vw,48re
 
 <dialog id="memo">
   <h3>🔎 Ma méthode d’enquête</h3>
-  <div class="encart" style="margin-top:10px"><p>Je formule une hypothèse → je choisis un test sans risque → je manipule moi-même → je relève une preuve → je conclus.</p><p>Je réponds seul avant de comparer à deux. Mon voisin explique sans toucher ma souris.</p><p>Observation seulement : aucun arrêt de processus, aucune suppression, aucun changement de configuration ou de synchronisation.</p><p>Enregistre les hypothèses initiales sur le site avant de manipuler. Écris les observations et conclusions uniquement dans ton rapport Docs. La capture va dans ce même document. Le site ne lit pas le rapport et ne vérifie pas la remise Classroom.</p><p>Proposition de travail quotidien /10 : enquête /7 (hypothèse 1, test 2, preuve 1, conclusion 2, distinction 1) ; document et remise /3 (identification et nom 1, titres et tableau 1, capture légendée et remise vérifiée 1). Bilan sommatif global en décembre, date à annoncer.</p></div>
+  <div class="encart" style="margin-top:10px"><p>Je formule une hypothèse → je choisis un test sans risque → je manipule moi-même → je relève une preuve → je conclus.</p><p>Je réponds seul avant de comparer à deux. Mon voisin explique sans toucher ma souris.</p><p>Observation seulement : aucun arrêt de processus, aucune suppression, aucun changement de configuration ou de synchronisation.</p><p>Enregistre les hypothèses initiales sur le site avant de manipuler. Écris les observations et conclusions uniquement dans ton rapport Docs. La capture va dans ce même document. Le site ne lit pas le rapport et ne vérifie pas la remise Classroom.</p><p>Proposition de travail quotidien /10 : enquête /7 (hypothèse 1, test 2, preuve 1, conclusion 2, distinction 1) ; document et remise /3 (identification et nom 1, titres et tableau 1, capture légendée et remise vérifiée 1).</p></div>
   <form method="dialog" class="actions" style="margin-top:14px"><button class="btn plein">Fermer</button></form>
 </dialog>
 
 <dialog id="rapport" aria-labelledby="rapport-titre">
   <h2 id="rapport-titre">Mon rapport et ma remise</h2>
-  <p>Je crée mon propre document. La trame donne le plan ; je réalise la mise en page. Je garde ce même document jusqu’à la fin des trois missions et de la situation finale.</p>
+  <p>Je crée mon propre document. La trame donne le plan ; je réalise la mise en page. Je garde ce même document pour les trois missions et la situation finale.</p>
   <h3>1. Préparer mon document — avant les premières mesures</h3>
+  <p class="note">La mission sur les fichiers utilise OneDrive dans l’Explorateur Windows. Ton rapport Google Docs se trouve en ligne, dans ton compte scolaire ; Classroom le propose via Ajouter ou créer ▸ Google Drive.</p>
   <ol class="etapes">
     <li>Ouvre <a href="https://docs.google.com/" target="_blank" rel="noopener">Google Docs</a> avec ton compte de l’école.</li>
     <li>Clique sur le bouton + Document vierge.</li>
@@ -239,7 +240,7 @@ dialog{max-height:90vh;overflow-y:auto}#rapport{display:none;width:min(95vw,48re
   <ul>
     <li><b>Identification et nom — /1 :</b> titre visible, prénom, nom, classe, date ; fichier correctement nommé.</li>
     <li><b>Titres et tableau — /1 :</b> même style pour les quatre titres de partie ; vrai tableau lisible de trois colonnes et quatre lignes pour les mesures, avec % dans les en-têtes.</li>
-    <li><b>Capture et remise — /1 :</b> capture ciblée, lisible, proportionnée et légendée ; le bon document est joint, accessible au professeur et sa remise est confirmée.</li>
+    <li><b>Capture et remise — /1 :</b> capture ciblée, lisible, proportionnée et légendée ; le bon document est joint, sa remise est confirmée.</li>
   </ul>
   <details id="grille-criteree">
     <summary>Grille critériée complète — travail quotidien /10</summary>
@@ -255,11 +256,11 @@ dialog{max-height:90vh;overflow-y:auto}#rapport{display:none;width:min(95vw,48re
       <tr><th scope="row">Machine / système / application / fichier</th><td>/1</td><td>1 : quatre rôles distingués dans le cas ; 0,5 : distinction partielle ; 0 : confusion persistante.</td></tr>
       <tr><th scope="row">Identification et nom du fichier</th><td>/1</td><td>0,5 : titre, prénom/nom, classe/date présents ; 0,5 : nom 07_CoulissesPC_Prenom_Nom respecté.</td></tr>
       <tr><th scope="row">Titres et tableau</th><td>/1</td><td>0,5 : même style de titre pour les quatre parties ; 0,5 : vrai tableau 3×4, lisible, lignes et unités identifiées.</td></tr>
-      <tr><th scope="row">Capture et remise</th><td>/1</td><td>0,5 : capture utile, lisible, proportionnée, avec légende explicative ; 0,5 : bon document joint, accessible au professeur, remise confirmée dans Classroom.</td></tr>
+      <tr><th scope="row">Capture et remise</th><td>/1</td><td>0,5 : capture utile, lisible, proportionnée, avec légende explicative ; 0,5 : bon document joint, remise confirmée dans Classroom.</td></tr>
       </tbody>
     </table></div>
     <p><b>Total /10.</b> Non observé faute de temps ou poste indisponible : à compléter, pas zéro. La vitesse et l’utilisation d’un indice ne sont pas pénalisées. La qualité de l’enquête est distinguée de celle du document.</p>
-    <p>Bilan sommatif global réservé à décembre, sans date fixée.</p>
+
   </details>
   <details><summary>Un geste à retrouver : titre, tableau ou image</summary>
     <ul>
@@ -270,7 +271,7 @@ dialog{max-height:90vh;overflow-y:auto}#rapport{display:none;width:min(95vw,48re
       <li>Image : redimensionne par un coin, sans étirer ; garde-la à l’intérieur de la page. Écris une légende juste dessous. N’affiche ni travail d’un voisin ni donnée personnelle inutile.</li>
     </ul>
   </details>
-  <h3>3. Avant de quitter une période</h3>
+  <h3>3. À la fin de l’heure de cours</h3>
   <p>Vérifie l’indication d’enregistrement dans Docs. Garde le nom du document et le bloc de reprise. <b>Ne remets pas le devoir à chaque cours</b> : complète le même rapport jusqu’à la fin.</p>
   <h3>4. Remettre une seule fois — quand le rapport est terminé</h3>
   <p>Le professeur doit d’abord avoir publié le devoir. Si tu ne le trouves pas, pose ton chevalet ; ne crée pas un deuxième document et ne poste pas ton travail dans le flux.</p>
@@ -278,15 +279,14 @@ dialog{max-height:90vh;overflow-y:auto}#rapport{display:none;width:min(95vw,48re
     <li><label><input type="checkbox">Relis le rapport : remplace les repères « à compléter » et supprime les indications entre crochets devenues inutiles.</label></li>
     <li><label><input type="checkbox">Vérifie les trois exigences de présentation ci-dessus.</label></li>
     <li><label><input type="checkbox">Ouvre <a href="https://classroom.google.com/" target="_blank" rel="noopener">Classroom</a> avec ton compte scolaire ▸ Informatique — 3F ▸ Travaux et devoirs ▸ Labo 07 — Dans les coulisses du PC ▸ Afficher les instructions.</label></li>
-    <li><label><input type="checkbox">Dans « Vos devoirs » (ou « Votre travail » selon l’interface), clique sur Ajouter ou créer ▸ Google Drive.</label></li>
+    <li><label><input type="checkbox">Dans « Vos devoirs » (ou « Votre travail » selon l’interface), clique sur Ajouter ou créer ▸ Google Drive pour choisir ton rapport Docs en ligne.</label></li>
     <li><label><input type="checkbox">Sélectionne <b>07_CoulissesPC_Prenom_Nom</b> ▸ Ajouter.</label></li>
     <li><label><input type="checkbox">Ouvre la pièce jointe pour vérifier que c’est ton rapport complet ; n’ajoute pas seulement un lien collé dans le texte.</label></li>
-    <li><label><input type="checkbox">Vérifie les droits scolaires du document ; demande au professeur de confirmer qu’il peut l’ouvrir si nécessaire. Ne rends pas le lien public.</label></li>
     <li><label><input type="checkbox">Reviens au devoir ▸ Rendre (ou Remettre) ▸ confirme.</label></li>
     <li><label><input type="checkbox">Vérifie le statut « Remis » ou « Rendu » dans Classroom.</label></li>
   </ol>
   <p class="note">Les cases sont une aide personnelle. Le site ne lit ni les fichiers joints ni le statut Classroom. Seule la vérification dans Classroom confirme la remise.</p>
-  <p><b>Proposition de travail quotidien /10 :</b> enquête /7 : hypothèse 1, test 2, preuve 1, conclusion 2, distinction 1 ; document et remise /3. Bilan sommatif global en décembre, sans date fixée.</p>
+  <p><b>Proposition de travail quotidien /10 :</b> enquête /7 : hypothèse 1, test 2, preuve 1, conclusion 2, distinction 1 ; document et remise /3.</p>
   <form method="dialog" class="actions"><button class="btn plein">Revenir à l’enquête</button></form>
 </dialog>
 

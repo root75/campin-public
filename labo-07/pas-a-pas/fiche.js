@@ -27,7 +27,7 @@ bloc('1 — Observer ce qui tourne','Défi : une application ouverte, qu’est-c
   'Commence par « Si j’ouvre la Calculatrice, je pense que… ». Indique ce que tu comparerais avant et après.'
   ],question('Avant toute manipulation : quelle est ta prévision ?',[
   champ('H','Mon hypothèse sur le processeur et la mémoire',125)
-  ]),regles+'<p>Durées indicatives : une mission peut continuer au prochain cours. Le retour sur le Labo 06 se fait avec le professeur avant de commencer.</p>'),
+  ]),regles),
 bloc('1 — Observer ce qui tourne','Je relève un avant et un après',20,
   'Comparer des mesures sans chercher à provoquer une grosse variation.',[
   'Fais un clic droit sur l’icône ⊞ Démarrer ▸ Gestionnaire des tâches (ou Ctrl + Maj + Échap).',
@@ -63,31 +63,31 @@ bloc('1 — Observer ce qui tourne','Ce que mes mesures prouvent… et leurs lim
   'Une hausse juste après l’ouverture ne suffit pas à prouver que cette application explique toute la hausse.',
   'D’autres tâches de Windows, une synchronisation ou le navigateur peuvent aussi travailler. « Je ne vois pas de différence nette » est une conclusion possible si tu cites tes mesures.'
   ],rapport("1 — Conclusion","Dans le rapport : une conclusion liée à tes valeurs et une autre cause possible. Pas de recopie sur le site."),'<details class="encart"><summary>Synthèse — à ouvrir après la mise en commun</summary><p>Windows est un logiciel système ; le PC est une machine. Plusieurs logiciels peuvent fonctionner en même temps. Le processeur effectue du travail ; la mémoire de travail garde des données utiles aux logiciels en cours. Des valeurs instantanées fluctuent : une comparaison courte donne un indice, pas une cause unique. Mémoire de travail et place des fichiers sur le disque sont différentes.</p></details><details class="encart"><summary>Prolongement — si j’ai terminé</summary><p>Sans rien fermer ni ouvrir, observe les mêmes totaux pendant 30 secondes. Varient-ils quand même ? Propose une manière de rendre la comparaison plus fiable. L’observation des ressources est un prolongement, sans nouvelle compétence de 3e attribuée.</p></details>'),
-bloc('2 — Retrouver ses données','Défi : mon fichier est-il vraiment sur ce PC ?',10,
-  'Retrouver un fichier du Labo 06 et prévoir sa disponibilité sans changer son état.',[
-  'Écris où tu penses retrouver ton fichier du Labo 06 et s’il serait lisible sans réseau.',
+bloc('2 — Retrouver ses données','Défi : mon fichier OneDrive est-il disponible sur ce PC ?',10,
+  'Retrouver un fichier dans le dossier OneDrive scolaire de l’Explorateur et prévoir sa disponibilité sans changer son état.',[
+  'Choisis un fichier que tu as déjà enregistré dans OneDrive, par exemple celui du Labo 06. Écris où tu penses le retrouver et s’il serait lisible sans réseau.',
   'Enregistre cette première réponse avant de chercher.'
   ],'Je sépare ma prévision de la preuve que je vais chercher.',[
   '« Dans Word » donne une application, pas un emplacement. Cherche le dossier dans lequel le fichier avait été rangé.',
-  'Le Labo 06 utilisait Documents ▸ Informatique et un fichier de type AAAA-MM-JJ_OneDrive. L’état peut varier selon le poste : ne le devine pas.'
+  'Sur ces PC Windows, les fichiers synchronisés se cherchent dans OneDrive, via le volet gauche de l’Explorateur. Ton ancien fichier peut être dans Documents ▸ Informatique. Observe le vrai chemin et le statut sur ton poste.'
   ],question('Avant de chercher, formule ton hypothèse.',[
   champ('H','Emplacement supposé et disponibilité sans réseau',150)
   ])),
 bloc('2 — Retrouver ses données','Je relève le chemin et le statut',20,
   'Produire une preuve sur mon propre fichier, sans le supprimer ni modifier la synchronisation.',[
   'Clique sur l’icône 📁 Explorateur dans la barre des tâches (ou Windows + E).',
-  'Clique sur Documents dans le volet de gauche.',
-  'Ouvre le dossier Informatique.',
-  'Sélectionne une fois ton fichier du Labo 06, sans l’ouvrir.',
+  'Dans le volet gauche, clique sur le nuage OneDrive scolaire, nommé avec ton compte ou le nom de l’école.',
+  'Ouvre le dossier où tu avais enregistré ton fichier, par exemple Documents ▸ Informatique.',
+  'Sélectionne une fois le fichier choisi, sans l’ouvrir.',
   'Clique dans la barre d’adresse pour lire le chemin complet (ou Ctrl + L).',
-  'Dans ton rapport, partie 2, relève le chemin et le nom du fichier ; tu peux remplacer ton nom personnel par [moi].',
+  'Dans ton rapport, partie 2, relève le chemin OneDrive et le nom du fichier ; tu peux remplacer ton nom personnel par [moi].',
   'Si nécessaire, clique sur Afficher ▸ Détails.',
   'Lis la colonne Statut ; si elle manque, clic droit sur un en-tête de colonne ▸ Statut, si proposé.',
   'Dans le rapport, relève le symbole ou le message exact ; si rien n’apparaît, écris « statut non affiché ».'
   ],'Mon relevé décrit ce poste : chemin, nom et statut. Une absence de statut reste une observation.',[
   'Le chemin permet de vérifier si le dossier se trouve dans OneDrive. Documents ne prouve pas à lui seul qu’il est synchronisé.',
   'Fichier introuvable : regarde le dossier scolaire OneDrive ▸ Documents ▸ Informatique. Après deux minutes, note ce que tu as essayé et pose ton chevalet. Le professeur fournit un fichier de démonstration à observer personnellement ; précise « démo ».'
-  ],rapport("2 — Chemin et statut","Dans le rapport : nom du fichier Labo 06, chemin et statut exact (ou recherche infructueuse explicitée).")),
+  ],rapport("2 — Chemin et statut","Dans le rapport : nom du fichier choisi dans OneDrive, chemin et statut exact (ou recherche infructueuse explicitée).")),
 bloc('2 — Retrouver ses données','Local, synchronisé, en ligne : ma conclusion',15,
   'Décider ce que mon relevé permet de dire sur la disponibilité du fichier.',[
   'Relis ton chemin et ton statut.',
@@ -126,11 +126,11 @@ bloc('3 — Dépanner','Incident 2 : je tape dans la mauvaise fenêtre',12,
   ],rapport("3 — Incident 2","Dans le rapport : hypothèse et test avant de tester, puis indice et solution justifiée.")),
 bloc('3 — Dépanner','Incident 3 : le fichier serait-il « dans » l’application ?',12,
   'Distinguer un fichier et le logiciel qui permet de l’ouvrir.',[
-  'Repère ton fichier du Labo 06 dans l’Explorateur, sans l’ouvrir.',
+  'Repère le fichier choisi dans la mission 2, dans le dossier OneDrive scolaire de l’Explorateur, sans l’ouvrir.',
   'Dans le rapport, incident 3, écris ton hypothèse : fermer une application ferait-il disparaître ce fichier ?',
   'Dans le rapport, écris le test que tu choisis avant de le réaliser.',
   'Ferme uniquement une fenêtre Bloc-notes d’essai par son bouton × Fermer ; si elle demande d’enregistrer le seul mot « test », choisis Ne pas enregistrer.',
-  'Retrouve le fichier du Labo 06 dans son dossier, sans le déplacer.',
+  'Retrouve ce même fichier dans son dossier OneDrive, sans le déplacer.',
   'Dans le rapport, note ce qui justifie ta conclusion.'
   ],'Je peux désigner séparément le fichier, son dossier et l’application.',[
   'L’icône d’une application n’est pas ton document. Cherche le nom du fichier et son emplacement.',
@@ -170,7 +170,7 @@ bloc('Final — Situation individuelle nouvelle','Le dossier de secours',8,
   'Tu peux revenir à l’Explorateur par son icône 📁 dans la barre des tâches ou Alt + Tab, puis lire le chemin et le statut sans ouvrir le fichier. Il n’est pas nécessaire d’arrêter Windows.'
   ],question('Situation finale, seul : hypothèse puis test choisi.',[
   champ('H','Mon hypothèse',75),champ('T','Le test que je choisis',105)
-  ]),'<p class="encart">Proposition de travail quotidien /10 : enquête /7 (hypothèse 1, test 2, preuve 1, conclusion 2, distinction 1) · document et remise /3 (identification et nom 1, styles et tableau 1, capture légendée et remise vérifiée 1). Les aides restent accessibles ; leur utilisation n’est pas une pénalité de vitesse. Le bilan sommatif global est réservé à décembre, sans date fixée.</p>'),
+  ]),'<p class="encart">Proposition de travail quotidien /10 : enquête /7 (hypothèse 1, test 2, preuve 1, conclusion 2, distinction 1) · document et remise /3 (identification et nom 1, styles et tableau 1, capture légendée et remise vérifiée 1). Les aides restent accessibles ; leur utilisation n’est pas une pénalité de vitesse.</p>'),
 bloc('Final — Situation individuelle nouvelle','Je réalise mon test et relève une preuve',10,
   'Appliquer personnellement mon test sans ouvrir le fichier ni modifier la synchronisation.',[
   'Réalise le test de fenêtre sur ton poste, avec l’Explorateur recouvert par une fenêtre d’essai.',
@@ -195,7 +195,7 @@ bloc('Final — Situation individuelle nouvelle','Je justifie ma décision',10,
 ];
 const FIN = {
  titre:'Mon enquête est terminée',
- texte:'Les étapes sont déclarées faites. Mon rapport et sa remise restent à vérifier avec la checklist « Mon rapport et ma remise ». Le professeur examine le document : l’avancement n’est pas une note. Bilan sommatif global en décembre, date à annoncer.',
+ texte:'Les étapes sont déclarées faites. Mon rapport et sa remise restent à vérifier avec la checklist « Mon rapport et ma remise ». Le professeur examine le document : l’avancement n’est pas une note.',
  plus:'Reprends une de tes hypothèses et explique à l’oral ce qui te ferait changer d’avis.',
  lien:'les trois synthèses de cette enquête'
 };

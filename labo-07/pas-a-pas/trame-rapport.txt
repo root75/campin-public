@@ -19,7 +19,7 @@ Une autre cause possible de variation ou une limite de la comparaison : [à comp
 
 2. Retrouver ses données
 Mon hypothèse initiale est dans Mes cours : je ne la recopie pas ici.
-Fichier du Labo 06 (préciser « démo » si nécessaire) : [à compléter]
+Fichier choisi dans OneDrive, par exemple celui du Labo 06 (préciser « démo » si nécessaire) : [à compléter]
 Chemin : [à compléter]
 Statut exact observé : [à compléter]
 Disponibilité sans réseau et indice qui la justifie (ou information manquante) : [à compléter]
@@ -84,7 +84,6 @@ Titres et tableau — /1
 0,5 : même style de titre pour les quatre parties ; 0,5 : vrai tableau 3×4, lisible, lignes et unités identifiées.
 
 Capture et remise — /1
-0,5 : capture utile, lisible, proportionnée, avec légende explicative ; 0,5 : bon document joint, accessible au professeur, remise confirmée dans Classroom.
+0,5 : capture utile, lisible, proportionnée, avec légende explicative ; 0,5 : bon document joint, remise confirmée dans Classroom.
 
 Total /10. Non observé faute de temps ou poste indisponible : à compléter, pas zéro. La vitesse et l’utilisation d’un indice ne sont pas pénalisées.
-Bilan sommatif global réservé à décembre, sans date fixée.
