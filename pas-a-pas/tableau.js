@@ -206,7 +206,7 @@ function dessineConducteur(){
   const duree = c.moments.reduce((n,m)=>n+(m.min||0),0);
   $("conducteur-objectif").textContent = (c.objectif || "") + " · Environ " + duree + " min, à adapter au groupe.";
   const prep = $("conducteur-preparation"); prep.replaceChildren();
-  if($("cours").value==="labo-07") prep.append(txt("p","astuce","Labo 07 : les blocs verts indiquent une réponse enregistrée, pas un raisonnement correct ni une cote. Preuves textuelles dans le Journal privé ; ne jamais le projeter."));
+  if($("cours").value==="labo-07") prep.append(txt("p","astuce","Labo 07 : les blocs verts indiquent une hypothèse enregistrée (1, 4, 12) ou une étape déclarée faite dans le rapport. Preuves et conclusions dans le document Classroom : le site ne le lit pas et ne vérifie pas sa remise. Ne jamais projeter le Journal ou les copies."));
   (c.preparation || []).forEach(t=>prep.append(txt("p",null,t)));
   (c.competences || []).forEach(t=>prep.append(txt("p","astuce",t)));
   const liste = $("conducteur-liste"); liste.replaceChildren();

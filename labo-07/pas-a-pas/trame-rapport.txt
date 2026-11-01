@@ -1,0 +1,65 @@
+Dans les coulisses du PC — Mon rapport d’enquête
+Prénom et nom : [à compléter]
+Classe : 3F
+Date de début : [à compléter]
+
+1. Observer ce qui tourne
+Mes hypothèses initiales sont dans Mes cours : je ne les recopie pas ici.
+Deux applications identifiées : [à compléter]
+
+[Insérer ici un vrai tableau de 3 colonnes et 4 lignes ; supprimer ce repère ensuite.]
+En-têtes : Moment ; Processeur (%) ; Mémoire (%)
+Lignes : Avant ; Après 10 s ; Après 20 s
+
+[Insérer ici une capture ciblée, après le dernier relevé.]
+Légende — Ce que montre cette capture et ce qu’elle ne suffit pas à prouver : [à compléter]
+
+Conclusion appuyée sur les relevés : [à compléter]
+Une autre cause possible de variation ou une limite de la comparaison : [à compléter]
+
+2. Retrouver ses données
+Mon hypothèse initiale est dans Mes cours : je ne la recopie pas ici.
+Fichier du Labo 06 (préciser « démo » si nécessaire) : [à compléter]
+Chemin : [à compléter]
+Statut exact observé : [à compléter]
+Disponibilité sans réseau et indice qui la justifie (ou information manquante) : [à compléter]
+
+3. Dépanner
+Incident 1 — Fenêtre masquée
+Hypothèse AVANT le test : [à compléter]
+Test choisi AVANT de le réaliser : [à compléter]
+Observation APRÈS le test : [à compléter]
+Solution justifiée : [à compléter]
+
+Incident 2 — Mauvaise fenêtre active
+Hypothèse AVANT le test : [à compléter]
+Test choisi AVANT de le réaliser : [à compléter]
+Observation APRÈS le test : [à compléter]
+Solution justifiée : [à compléter]
+
+Incident 3 — Fichier et application
+Hypothèse AVANT le test : [à compléter]
+Test choisi AVANT de le réaliser : [à compléter]
+Observation APRÈS le test : [à compléter]
+Solution justifiée : [à compléter]
+
+Incident 4 — Écran éteint
+Hypothèse AVANT le test : [à compléter]
+Test choisi AVANT de le réaliser : [à compléter]
+Observation APRÈS le test (indiquer si simulé) : [à compléter]
+Solution justifiée : [à compléter]
+
+Ma méthode — Un test qui départage deux explications, et pourquoi : [à compléter]
+
+4. Situation finale individuelle — Le dossier de secours
+Mon hypothèse et mon test initial sont dans Mes cours : je ne les recopie pas ici.
+Manipulation réalisée personnellement : [à compléter]
+Indice réellement observé : [à compléter]
+Différence éventuelle entre mon poste et le nuage donné dans le scénario : [à compléter]
+Décision pour le scénario et justification : [à compléter]
+Lien entre machine, Windows, application et fichier : [à compléter]
+
+Critères annoncés — Proposition de travail quotidien /10
+Enquête /7 : hypothèse initiale 1 ; choix et réalisation du test 2 ; preuve 1 ; conclusion justifiée 2 ; distinction machine / système / application / fichier 1.
+Document et remise /3 : titre, identification et nom de fichier 1 ; titres cohérents et vrai tableau lisible 1 ; capture ciblée et légendée, bon document joint et accessible au professeur, remise confirmée 1.
+Bilan sommatif global en décembre, sans date fixée.

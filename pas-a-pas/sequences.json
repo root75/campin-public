@@ -519,17 +519,21 @@
   },
   "labo-07": {
     "titre": "Labo 07 — Dans les coulisses du PC",
-    "objectif": "Enquêter sur son PC Windows : hypothèse, manipulation personnelle, preuve courte et conclusion justifiée. Parcours par contenu sur plusieurs périodes ; premier rendez-vous le vendredi 6 novembre 2026, 8h10–9h50, avec retour Labo 06.",
+    "objectif": "Enquêter sur son PC Windows : hypothèse, manipulation personnelle, preuve courte et conclusion justifiée. Parcours par contenu sur plusieurs périodes ; premier rendez-vous le vendredi 6 novembre 2026, 8h10–9h50, avec retour Labo 06. Un rapport Docs personnel rassemble les preuves et conclusions ; sa mise en page et sa remise font partie du travail.",
     "competences": [
       "S3M4.1 « Différencier système d’exploitation et machine »",
       "S3M4.4 « Utiliser l’interface du système d’exploitation et les périphériques »",
       "Observation des ressources : prolongement. OneDrive : réactivation du Labo 06."
     ],
     "preparation": [
+      "Préparer un seul devoir Classroom « Labo 07 — Dans les coulisses du PC » avec remise d’un document personnel à la fin du parcours, /10. Cette préparation ne publie rien : le professeur devra créer et publier le devoir au moment choisi. Ne pas distribuer de copie déjà mise en page.",
+      "Prévoir 10–15 min pour créer le rapport Google Docs et copier la trame en texte brut avant les premières mesures. Même document sur toutes les périodes ; pas de remise intermédiaire.",
+      "Correction : hypothèses initiales aux blocs 1, 4 et 12 du Journal privé ; observations et conclusions dans le rapport joint à Classroom. Les autres blocs enregistrent uniquement « rapport:… », une déclaration d’avancement, sans lecture du document ni contrôle de remise.",
+      "Grille proposée : enquête /7, document et remise /3. Trois exigences : identification et nom ; styles de titres et vrai tableau ; capture ciblée/légendée et remise vérifiée. Aucun calcul automatique de note.",
       "Réserver 15–25 min de retour sur le Labo 06. Prévoir le fichier AAAA-MM-JJ_OneDrive dans Documents / Informatique et une démo sans données privées si introuvable.",
       "Compte scolaire : Mes cours ▸ classes et cours ouverts ▸ cocher labo-07 uniquement pour 3F. Tableau ▸ labo-07 ▸ Nouvelle séance ▸ 3F pour le premier lancement. Conserver la séance pour les continuations.",
       "Vérifier sur un PC élève : Gestionnaire des tâches et ses totaux, Calculatrice, Bloc-notes, fenêtres, chemin et Statut OneDrive. Aucun arrêt de processus, suppression ou changement de réglage.",
-      "Collecte existante : réponses textuelles de 200 caractères au maximum dans Journal, évènement juste = étape enregistrée. Pas de dépôt de capture, pas de correction ou de note automatique. Lire les preuves dans la feuille privée ; observer les gestes pendant la circulation.",
+      "Collecte du site : hypothèses brèves (200 caractères maximum) et déclarations d’avancement. Capture insérée dans le rapport Docs. Observer les gestes en circulation ; lire les preuves dans le document individuel, jamais en projection.",
       "Projection : utiliser uniquement Lancer la séquence. Ne jamais projeter tableau nominatif, Journal, humeur ou avis. Les moments de ce conducteur ne recueillent ni mots ni votes."
     ],
     "moments": [
@@ -551,17 +555,18 @@
       {
         "type": "ecran",
         "titre": "Dans les coulisses du PC",
-        "min": 8,
+        "min": 18,
         "methode": "Collectif oral, sans réponse individuelle projetée",
         "lignes": [
           "Une fenêtre invisible signifie-t-elle que le logiciel ne tourne plus ?",
           "Hypothèse → test → preuve → conclusion.",
-          "Chacun manipule. Première réponse seul, comparaison à deux ensuite."
+          "Chacun manipule. Première réponse seul, comparaison à deux ensuite.",
+          "Crée ton rapport personnel : bouton « Mon rapport et ma remise ». Garde le même document jusqu’à la fin."
         ],
         "questions": [
           "Qu’est-ce qui ferait changer ton avis ?"
         ],
-        "repere": "4 périodes de labo et 3 de logique par semaine. Un débordement de logique peut réduire le temps de labo. Les moments sont organisés par contenu et peuvent être repris, sans correspondance avec une heure."
+        "repere": "4 périodes de labo et 3 de logique par semaine. Un débordement de logique peut réduire le temps de labo. Les moments sont organisés par contenu et peuvent être repris, sans correspondance avec une heure. Prévoir l’installation du rapport avant les mesures. La trame est non mise en forme : trois exigences de présentation sont à réaliser par les élèves."
       },
       {
         "type": "atelier",
@@ -571,7 +576,8 @@
         "lignes": [
           "Formule ton hypothèse avant d’ouvrir l’application.",
           "Compare les mêmes totaux avant et après.",
-          "Aucune fin de tâche, aucun réglage."
+          "Aucune fin de tâche, aucun réglage.",
+          "Saisis les relevés dans le tableau du rapport, puis insère une capture ciblée et légendée."
         ],
         "blocs": [
           1,
@@ -607,7 +613,7 @@
           4,
           6
         ],
-        "repere": "Premier rendez-vous : vers 9h18–9h40, commencer seulement cette mission si possible. Garder 9h40–9h50 pour enregistrer, noter le point de reprise et ranger. Sinon reprendre au cours suivant."
+        "repere": "Reporter cette mission si nécessaire : le rapport peut prendre plus de temps au premier rendez-vous. De 9h40 à 9h50, vérifier l’enregistrement Docs, l’hypothèse envoyée et le bloc de reprise. Ne pas remettre le devoir avant la fin."
       },
       {
         "type": "ecran",
@@ -632,7 +638,8 @@
         "lignes": [
           "Quatre incidents réversibles, chacun sur son poste.",
           "Avant chaque test : une hypothèse et un test choisi.",
-          "Fenêtre masquée · fenêtre active · fichier et application · écran éteint."
+          "Fenêtre masquée · fenêtre active · fichier et application · écran éteint.",
+          "Hypothèse et test écrits dans le rapport avant chaque manipulation ; observation et solution après."
         ],
         "blocs": [
           7,
@@ -669,7 +676,7 @@
           12,
           14
         ],
-        "repere": "Travail quotidien : proposition /10 affichée au bloc 12 et dans le mémo. Correction manuelle ; avancement ne vaut pas réussite. Bilan sommatif global réservé à décembre, sans date fixée."
+        "repere": "Travail quotidien /10 : enquête /7 et document/remise /3. Hypothèse et test initiaux sur le site (bloc 12), preuve et conclusion dans le rapport (13–14). Correction manuelle du document et passage individuel. Ne pas lire une déclaration d’avancement comme une preuve. Bilan sommatif global en décembre, sans date."
       },
       {
         "type": "ecran",
@@ -678,13 +685,13 @@
         "methode": "Collectif oral, sans réponse individuelle projetée",
         "lignes": [
           "Qu’est-ce qui t’a fait revoir une hypothèse ?",
-          "Je distingue la machine, Windows, les applications et mes fichiers.",
-          "J’enregistre ma dernière réponse avant de quitter."
+          "Je distingue machine, Windows, applications et fichiers.",
+          "Vérifie l’enregistrement Docs. Quand tout est terminé, utilise la checklist pour joindre le bon document, vérifier l’accès et confirmer la remise dans Classroom."
         ],
         "questions": [
           "Quelle preuve manque pour être plus sûr ?"
         ],
-        "repere": "Fin de la première séance : arrêter ici même si la mission est inachevée. Ne pas créer Nouvelle séance pour une simple continuation : cela réinitialise la reprise serveur."
+        "repere": "Rendu unique à la fin du parcours, pas en fin de chaque période. Le site ne peut ni joindre un document ni vérifier la remise Classroom. En continuation, garder le même document et la même séance Mes cours."
       },
       {
         "type": "fin",
@@ -692,8 +699,8 @@
         "min": 1,
         "methode": "Collectif oral, sans réponse individuelle projetée",
         "lignes": [
-          "La fiche reste disponible pour relire les synthèses ou achever une preuve.",
-          "Le professeur examine les démarches ; aucun point n’est calculé automatiquement."
+          "La fiche reste disponible pour relire les synthèses et la checklist de remise.",
+          "Le professeur examine le rapport individuel ; l’avancement déclaré sur le site ne vaut ni remise ni note."
         ]
       }
     ]

@@ -80,10 +80,10 @@ function affiche(){
 
   const pr = el("div","preuve");
   const fait = !APERCU && etat.atteint > ici;   // en aperçu, chaque version reste à essayer
-  if(!fait && B.q.type==="enquete"){
+  if(!fait && ["enquete","rapport"].includes(B.q.type)){
     preuve(pr,B);
   } else if(fait){
-    pr.append(txt("p","retour juste",B.q.type==="enquete" ? "✅ Réponse déjà enregistrée. Le professeur examine le raisonnement." : "✅ Bloc déjà validé."));
+    pr.append(txt("p","retour juste",["enquete","rapport"].includes(B.q.type) ? "✅ Étape déjà enregistrée. Les preuves du rapport restent à examiner par le professeur." : "✅ Bloc déjà validé."));
   } else if(B.cases){
     pr.append(txt("div","etiquette","✅ Les cinq points (mon message est noté sur 5)"));
     const ul = el("ul","cases");
@@ -115,16 +115,16 @@ function affiche(){
 function preuve(pr, B){
   const Q = B.q;
   const v = r => (B._n>1 ? "v"+B._v+":" : "") + (r==null ? "" : r);   // le Journal note la version
-  pr.append(txt("div","etiquette", ["code","ordre"].includes(Q.type) ? "Mon programme" : "Je prouve que j'ai fait le bloc"), txt("p","question",Q.q));
+  pr.append(txt("div","etiquette", ["code","ordre"].includes(Q.type) ? "Mon programme" : Q.type==="rapport" ? "Mon rapport individuel" : "Je prouve que j'ai fait le bloc"), txt("p","question",Q.q));
   const retour = el("div","retour"); retour.hidden = true;
   const zone = el("div"); pr.append(zone, retour);
   let essais = 0;
 
   const reussi = (reponse) => {
-    retour.className="retour juste"; retour.replaceChildren(txt("strong",null,Q.type==="enquete" ? (SUIVI && !APERCU ? "Réponse enregistrée." : "Réponse saisie pour cet essai.") : "Oui, c'est ça."));
+    retour.className="retour juste"; retour.replaceChildren(txt("strong",null,Q.type==="rapport" ? "Étape déclarée faite." : Q.type==="enquete" ? (SUIVI && !APERCU ? "Réponse enregistrée." : "Réponse saisie pour cet essai.") : "Oui, c'est ça."));
     if(Q.juste) retour.append(txt("p",null,Q.juste));
     retour.hidden=false;
-    if(Q.type!=="enquete") envoie({ etape:ici+1, type:"juste", essais:essais, reponse:v(reponse) });
+    if(!["enquete","rapport"].includes(Q.type)) envoie({ etape:ici+1, type:"juste", essais:essais, reponse:v(reponse) });
     etat.atteint = Math.max(etat.atteint, ici+1); ecrit(etat); barre();
     if(enAide) basculeAide();
     const s = txt("button","btn plein", ici+1<BLOCS.length ? "Bloc suivant →" : "J'ai fini ✓"); s.type="button";
@@ -140,6 +140,25 @@ function preuve(pr, B){
     retour.hidden=false;
   };
 
+  if(Q.type==="rapport"){
+    // Déclaration d’avancement uniquement : aucun document ni fichier n’est lu par le site.
+    const f=el("form","bilan"), label=el("label"), cb=el("input");
+    cb.type="checkbox";cb.required=true;
+    label.append(cb,txt("span",null,Q.confirmation));
+    const note=txt("p","note","Le site enregistre seulement cette déclaration. Il ne lit pas ton document et ne vérifie ni la pièce jointe ni la remise Classroom.");
+    const ok=txt("button","btn plein","Enregistrer cette étape");ok.type="submit";
+    f.append(label,note,ok);zone.append(f);
+    f.addEventListener("submit",e=>{
+      e.preventDefault();if(!cb.checked)return;ok.disabled=true;
+      const fini=()=>{note.textContent="";cb.disabled=true;reussi(Q.trace);};
+      if(!SUIVI || APERCU){fini();return;}
+      note.textContent="Enregistrement en cours…";
+      google.script.run.withSuccessHandler(fini).withFailureHandler(()=>{
+        ok.disabled=false;note.textContent="Étape non enregistrée. Ton rapport reste dans Docs. Réessaie, puis pose ton chevalet si nécessaire.";
+      }).noter(COURS,{etape:ici+1,type:"juste",reponse:Q.trace});
+    });
+    return;
+  }
   if(Q.type==="enquete"){
     // Réutilise noter() et le Journal (200 caractères). « juste » = étape faite, jamais une cote.
     const f=el("form","bilan"), champs=Q.champs.map(c=>{
