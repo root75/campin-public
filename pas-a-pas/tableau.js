@@ -2,7 +2,8 @@
 const FICHES = {
   "messagerie-1": "https://root75.github.io/campin-public/messagerie/pas-a-pas/",
   "python-1": "https://root75.github.io/campin-public/python-1/pas-a-pas/",
-  "python-2": "https://root75.github.io/campin-public/python-2/pas-a-pas/"
+  "python-2": "https://root75.github.io/campin-public/python-2/pas-a-pas/",
+  "labo-07": "https://root75.github.io/campin-public/labo-07/pas-a-pas/"
 };
 const lienBloc = (i, texte) => {
   const url = FICHES[$("cours").value];
@@ -13,7 +14,7 @@ const lienBloc = (i, texte) => {
 /* Mêmes listes que dans les fiches : l'humeur est enregistrée « emoji libellé ». */
 const HUMEURS = [["😄","Super"],["🙂","Bien"],["😐","Bof"],["🙁","Pas top"],["😣","Pas bien"]];
 const AVIS = [["plu","Ce qui m'a plu"],["progres","Ce qui m'a aidé à progresser"],["gene","Ce qui m'a gêné dans le cours en ligne"]];
-const NB_BLOCS = { "messagerie-1": 12, "python-1": 12, "python-2": 10 };
+const NB_BLOCS = { "messagerie-1": 12, "python-1": 12, "python-2": 10, "labo-07": 7 };
 const RAFRAICHIR = 15000;
 const INACTIF = 8 * 60000;
 const SUIVI = typeof google !== "undefined" && google.script && google.script.run;
@@ -206,6 +207,7 @@ function dessineConducteur(){
   const duree = c.moments.reduce((n,m)=>n+(m.min||0),0);
   $("conducteur-objectif").textContent = (c.objectif || "") + " · Environ " + duree + " min, à adapter au groupe.";
   const prep = $("conducteur-preparation"); prep.replaceChildren();
+  if($("cours").value==="labo-07") prep.append(txt("p","astuce","Labo 07 : les blocs verts indiquent une hypothèse enregistrée (étapes internes 1, 3, 6) ou une mission déclarée faite. Trois missions et un défi final sont affichés aux élèves. Un seul incident est rédigé ; les trois autres sont vérifiés à deux ; le professeur garde le contrôle individuel final et intervient sur les blocages persistants. Preuves et conclusions dans le document Classroom : le site ne le lit pas et ne vérifie pas sa remise. Ne jamais projeter le Journal ou les copies."));
   (c.preparation || []).forEach(t=>prep.append(txt("p",null,t)));
   (c.competences || []).forEach(t=>prep.append(txt("p","astuce",t)));
   const liste = $("conducteur-liste"); liste.replaceChildren();
@@ -419,7 +421,7 @@ $("conducteur-actualiser").addEventListener("click",()=>chargeSequence(true));
 /* ===== Mes cours : classes, cours ouverts, classe de chaque élève ===== */
 let CL = null;
 const DEMO_CL = {
-  d: { cours:[{cle:"messagerie-1",titre:"Mon premier message"},{cle:"python-1",titre:"Premiers pas en Python 1"},{cle:"python-2",titre:"Premiers pas en Python 2"}],
+  d: { cours:[{cle:"messagerie-1",titre:"Mon premier message"},{cle:"python-1",titre:"Premiers pas en Python 1"},{cle:"python-2",titre:"Premiers pas en Python 2"},{cle:"labo-07",titre:"Labo 07 — Dans les coulisses du PC"}],
        classes:{ "2B":["messagerie-1"], "2E":["messagerie-1"], "3F":["python-1"] },
        eleves:[{email:"lea.dupont@arcampin.be",classe:"2B"},{email:"noah.martin@arcampin.be",classe:"2E"},{email:"sami.benali@arcampin.be",classe:"2B"}] },
   classesEtCours(){ return this.d; },

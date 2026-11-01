@@ -1,0 +1,63 @@
+Dans les coulisses du PC — Mon rapport d’enquête
+Prénom et nom : [à compléter]
+Classe : 3F
+Date : [à compléter]
+
+1. Observer ce qui tourne
+Mes hypothèses initiales restent dans Mes cours : je ne les recopie pas.
+Deux applications identifiées : [à compléter]
+[Insérer un vrai tableau de 3 colonnes et 4 lignes.]
+En-têtes : Moment ; Processeur (%) ; Mémoire (%)
+Lignes : Avant ; Après 10 s ; Après 20 s
+[Insérer une seule capture ciblée après le dernier relevé.]
+Légende de la capture : [une phrase]
+Conclusion : [deux phrases : observation appuyée sur les relevés, puis autre cause possible ou limite]
+
+2. Retrouver ses données
+Fichier choisi dans OneDrive (préciser « démo » si nécessaire) : [à compléter]
+Chemin : [à compléter]
+Statut exact : [à compléter]
+Disponible sans réseau ? [une phrase avec l’indice qui le justifie, ou l’information manquante]
+
+3. Dépanner — Un seul incident rédigé
+Les quatre incidents sont manipulés personnellement. Les trois autres sont vérifiés à deux, en alternant acteur et observateur ; chacun corrige son propre geste. Aucun autre compte rendu. Le défi final reste individuel.
+Incident choisi : [fenêtre masquée / fenêtre active / fichier et application / écran éteint]
+Hypothèse AVANT le test : [une ligne]
+Test choisi AVANT de le réaliser : [une ligne]
+Observation APRÈS le test (indiquer si simulé) : [une ligne]
+Solution justifiée : [une ligne]
+
+4. Défi final individuel — Le dossier de secours
+Mon hypothèse et mon test initial restent dans Mes cours.
+Preuve observée sur mon poste (distinguer le nuage donné dans le scénario si nécessaire) : [une ligne]
+Ma décision justifiée pour le scénario : [deux phrases maximum]
+Je montre ma manipulation et distingue machine, Windows, application et fichier à l’oral au professeur, sans autre paragraphe à écrire.
+
+Grille critériée — Travail quotidien /10
+Enquête finale /7 ; document et remise /3.
+
+Hypothèse initiale (site, défi final) — /1
+1 : plausible et testable ; 0,5 : plausible mais imprécise ; 0 : absente ou hors sujet.
+
+Choix et réalisation du test — /2
+2 : pertinent, réversible, personnel ; 1 : pertinent mais incomplet ou encore guidé ; 0 : absent ou dangereux non corrigé.
+
+Preuve dans le rapport — /1
+1 : indice précis, réel et distingué du cas donné ; 0,5 : partiel ; 0 : inexploitable.
+
+Conclusion finale justifiée — /2
+2 : décision correcte liée à la preuve et au nuage donné, arrêt de Windows écarté avec raison ; 1 : décision pertinente mais justification partielle ; 0 : sans lien ou erronée.
+
+Machine / système / application / fichier — /1
+1 : quatre rôles distingués à l’oral dans le cas ; 0,5 : distinction partielle ; 0 : confusion persistante.
+
+Identification et nom du fichier — /1
+0,5 : titre, prénom/nom, classe/date présents ; 0,5 : nom 07_CoulissesPC_Prenom_Nom respecté.
+
+Titres et tableau — /1
+0,5 : même style de titre pour les quatre parties ; 0,5 : vrai tableau 3×4, lisible, lignes et unités identifiées.
+
+Capture et remise — /1
+0,5 : capture utile, lisible, proportionnée, avec légende explicative ; 0,5 : bon document joint, remise confirmée dans Classroom.
+
+Total /10. Non observé faute de temps ou poste indisponible : à compléter, pas zéro. La vitesse et l’utilisation d’un indice ne sont pas pénalisées.

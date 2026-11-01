@@ -4,7 +4,8 @@ const vm = require('node:vm');
 const assert = require('node:assert/strict');
 const { spawnSync } = require('node:child_process');
 function charge(cours) {
-  const s = fs.readFileSync(`${cours}/pas-a-pas/fiche.js`, 'utf8');
+  const contenu = fs.readFileSync(`${cours}/pas-a-pas/fiche.js`, 'utf8');
+  const s = contenu + fs.readFileSync('pas-a-pas/blocs.js', 'utf8');
   const ctx = vm.createContext({});
   vm.runInContext(s.slice(0, s.indexOf('const MOTEUR =')) + '\nconst APERCU = true;\n' +
     s.slice(s.indexOf('const apercuV ='), s.indexOf('\nfunction barre()')) +

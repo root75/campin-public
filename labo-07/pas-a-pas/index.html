@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<script>
+/* Une erreur JavaScript s'affiche en haut de la page : sur un téléphone ou un poste d'élève, pas de console. */
+addEventListener("error", e => {
+  if(e.target && e.target.tagName === "LINK") return;   // une police qui manque n'empêche rien
+  const p = document.createElement("p");
+  p.style.cssText = "background:#f8e3e0;color:#b23a2e;border-left:5px solid #b23a2e;padding:8px 12px;margin:8px 0;font:14px/1.4 Arial,sans-serif";
+  p.textContent = "⚠ Erreur dans la page : " + (e.message || (e.target && e.target.src ? "chargement de " + e.target.src : "inconnue")) + (e.lineno ? " (ligne " + e.lineno + ")" : "");
+  if(e.lineno){   // les lignes telles que la page les a reçues : ce que le serveur a pu y changer
+    const pre = document.createElement("pre");
+    pre.style.cssText = "white-space:pre-wrap;word-break:break-all;margin:6px 0 0;font:12px/1.35 monospace";
+    pre.textContent = document.documentElement.outerHTML.split("\n").slice(Math.max(0, e.lineno-4), e.lineno+2)
+      .map((l,i) => (Math.max(0, e.lineno-4)+i+1) + "│" + l).join("\n");
+    p.append(pre);
+  }
+  (document.body || document.documentElement).prepend(p);
+}, true);
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Labo 07 — Dans les coulisses du PC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,600;0,800;1,600&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
+<style>
+/* Fiche pas à pas : un bloc à l'écran, une question de preuve avant le bloc suivant.
+   Même palette que les pages « je révise ». */
+:root{
+  --papier:#f3f5f7; --carte:#ffffff; --encre:#1f2a33; --doux:#5b6873;
+  --trait:#d5dce2; --encre-bouton:#1d5a73; --fromage:#e3a922; --fromage-pale:#fbf0d4;
+  --juste:#1f7a4d; --juste-pale:#e2f3ea; --faux:#b23a2e; --faux-pale:#f8e3e0;
+  --display:"Alegreya", Georgia, "Times New Roman", serif;
+  --texte:"Atkinson Hyperlegible", "Segoe UI", Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --papier:#141a1f; --carte:#1d252c; --encre:#e8edf1; --doux:#a3b0ba;
+  --trait:#33404a; --encre-bouton:#7cc3de; --fromage:#e9b84a; --fromage-pale:#3a3120;
+  --juste:#6fd0a0; --juste-pale:#183427; --faux:#f08b7f; --faux-pale:#3d2120; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --papier:#141a1f; --carte:#1d252c; --encre:#e8edf1; --doux:#a3b0ba;
+  --trait:#33404a; --encre-bouton:#7cc3de; --fromage:#e9b84a; --fromage-pale:#3a3120;
+  --juste:#6fd0a0; --juste-pale:#183427; --faux:#f08b7f; --faux-pale:#3d2120; color-scheme:dark }
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--papier);color:var(--encre);font-family:var(--texte);font-size:1.125rem;line-height:1.55;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:0 48px}
+.page{max-width:44rem;margin:0 auto;display:grid;gap:18px}
+header{padding-top:24px;display:grid;gap:4px}
+.surtitre{font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;color:var(--doux);font-weight:700}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(1.9rem,6vw,2.6rem);line-height:1.05;margin:0;text-wrap:balance}
+h1 em{font-style:italic;font-weight:600;color:var(--doux)}
+.qui{font-size:.95rem;color:var(--doux)}
+.qui strong{color:var(--encre)}
+h2{font-family:var(--display);font-weight:800;font-size:1.55rem;margin:0;line-height:1.15;text-wrap:balance}
+h3{font-family:var(--display);font-weight:600;font-size:1.2rem;margin:0}
+p{margin:0}
+button{font:inherit}
+button:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid var(--fromage);outline-offset:2px}
+
+.progres{display:flex;gap:4px}
+.progres span{flex:1;height:8px;border-radius:4px;background:var(--trait)}
+.progres span.fait{background:var(--juste)}
+.progres span.ici{background:var(--encre-bouton)}
+
+.panneau{background:var(--carte);border:1px solid var(--trait);border-radius:14px;padding:22px clamp(16px,4vw,28px);display:grid;gap:16px;min-width:0}
+.numero{font-size:.85rem;font-weight:700;color:var(--doux);letter-spacing:.06em;text-transform:uppercase;display:flex;flex-wrap:wrap;gap:4px 14px;justify-content:space-between}
+.lignes{display:grid;gap:10px;margin:0}
+.ligne{display:grid;grid-template-columns:7.2rem 1fr;gap:10px;align-items:start}
+.ligne dt{font-weight:700;color:var(--doux);white-space:nowrap}
+.ligne dd{margin:0;min-width:0}
+.ligne.fais dd{font-weight:700}
+.chemin{display:inline;background:var(--papier);border:1px solid var(--trait);border-radius:6px;padding:1px 6px;font-weight:700;
+  box-decoration-break:clone;-webkit-box-decoration-break:clone;line-height:1.9}
+.stop{background:var(--faux-pale);border-left:5px solid var(--faux);border-radius:6px;padding:10px 14px;font-weight:700}
+.encart{border:1px solid var(--trait);border-radius:10px;padding:12px 14px;display:grid;gap:8px;background:var(--papier)}
+.encart table{border-collapse:collapse;width:100%;font-size:1rem}
+.encart th,.encart td{text-align:left;padding:4px 8px 4px 0;vertical-align:top;border-bottom:1px solid var(--trait)}
+.encart tr:last-child td{border-bottom:0}
+.citation{margin:0;padding:10px 14px;border-left:4px solid var(--fromage);background:var(--fromage-pale);border-radius:0 10px 10px 0;display:grid;gap:4px}
+.citation blockquote{margin:0;font-family:var(--display);font-size:1.15rem;font-style:italic;white-space:pre-line}
+.citation figcaption{color:var(--doux);font-size:.95rem}
+.citation p{margin:0;font-size:.95rem}
+.modele{font-family:var(--texte);white-space:pre-wrap;margin:0;font-size:1rem;line-height:1.6}
+.modele b{background:var(--fromage-pale);border-radius:4px;padding:0 3px;font-weight:700}
+.cases{margin:0;padding:0;list-style:none;display:grid;gap:8px}
+.cases label{display:grid;grid-template-columns:1.6rem 1fr;gap:8px;align-items:start;cursor:pointer}
+.cases input{width:1.3rem;height:1.3rem;margin:.15rem 0 0;accent-color:var(--juste)}
+
+.preuve{border-top:2px dashed var(--trait);padding-top:16px;display:grid;gap:12px}
+.preuve .etiquette{font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:var(--encre-bouton)}
+.question{font-size:1.15rem;font-weight:700}
+.choix{display:grid;gap:10px}
+.choix button{text-align:left;padding:12px 14px;border-radius:10px;border:2px solid var(--trait);
+  background:var(--carte);color:var(--encre);cursor:pointer;display:grid;grid-template-columns:1.8rem 1fr;gap:8px;align-items:start}
+.choix button:hover:not(:disabled){border-color:var(--encre-bouton)}
+.choix button .lettre{font-weight:700;color:var(--doux)}
+.choix button:disabled{cursor:default}
+.choix button.juste{border-color:var(--juste);background:var(--juste-pale)}
+.choix button.faux{border-color:var(--faux);background:var(--faux-pale)}
+.choix button.estompe{opacity:.5}
+.saisie{display:flex;flex-wrap:wrap;gap:10px}
+.saisie input{flex:1 1 16rem;min-width:0;font:inherit;padding:10px 12px;border-radius:10px;border:2px solid var(--trait);background:var(--carte);color:var(--encre)}
+.retour{border-radius:10px;padding:12px 14px;display:grid;gap:6px;font-size:1rem}
+.retour.juste{background:var(--juste-pale)} .retour.faux{background:var(--faux-pale)}
+
+.actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.btn{font-weight:700;font-size:1rem;padding:10px 18px;border-radius:10px;cursor:pointer;border:2px solid var(--encre-bouton)}
+.btn.plein{background:var(--encre-bouton);color:var(--carte)}
+.btn.vide{background:transparent;color:var(--encre-bouton)}
+.btn:disabled{opacity:.4;cursor:default}
+.espace{flex:1}
+
+details.coince{border:1px solid var(--trait);border-top:5px solid var(--encre-bouton);border-radius:12px;padding:12px 16px;background:var(--carte)}
+details.coince summary{cursor:pointer;font-family:var(--display);font-weight:800;font-size:1.2rem}
+details.coince ul{margin:10px 0 0;padding-left:1.2rem;display:grid;gap:8px}
+details.coince .protocole{margin-top:12px;font-size:1rem;color:var(--doux)}
+
+.aide{border:2px solid var(--trait);border-radius:12px;padding:12px 16px;display:grid;gap:8px;background:var(--carte)}
+.aide.active{border-color:var(--fromage);background:var(--fromage-pale)}
+.aide p{font-size:1rem}
+
+dialog{border:1px solid var(--trait);border-radius:14px;background:var(--carte);color:var(--encre);padding:20px;max-width:min(40rem,calc(100vw - 32px))}
+dialog::backdrop{background:rgb(0 0 0 / .45)}
+
+code,pre.code{font-family:ui-monospace,"Cascadia Mono",Consolas,"Courier New",monospace;font-size:.95em}
+figure.logigramme{margin:0 auto;max-width:15rem;display:grid;gap:4px;text-align:center}
+figure.logigramme svg{width:100%;height:auto;background:#fff;border:1px solid var(--trait);border-radius:10px;padding:8px}
+figure.logigramme figcaption{font-size:.85rem;color:var(--doux)}
+pre.code{margin:0;background:var(--papier);border:1px solid var(--trait);border-left:5px solid var(--encre-bouton);border-radius:8px;padding:12px 14px;line-height:1.5;overflow-x:auto;white-space:pre}
+.editeur{width:100%;font-family:ui-monospace,"Cascadia Mono",Consolas,"Courier New",monospace;font-size:1rem;line-height:1.5;padding:12px 14px;border:2px solid var(--trait);border-radius:10px;background:var(--carte);color:var(--encre);resize:vertical;tab-size:4}
+.editeur:focus-visible{outline:3px solid var(--fromage);outline-offset:2px}
+.console{margin:0;font-family:ui-monospace,"Cascadia Mono",Consolas,"Courier New",monospace;font-size:1rem;background:var(--papier);border:1px solid var(--trait);border-radius:8px;padding:10px 14px;min-height:2.6rem;white-space:pre-wrap;overflow-wrap:anywhere}
+.console .err{display:block;color:var(--faux);font-weight:700}
+.console .vide{display:block;color:var(--doux);font-style:italic}
+.credit{font-size:.8rem;color:var(--doux);margin:0}
+.ordre{list-style:none;margin:0;padding:0;display:grid;gap:6px;counter-reset:l}
+.ordre li{display:grid;grid-template-columns:1.6rem 1fr auto auto;gap:8px;align-items:center;background:var(--papier);border:1px solid var(--trait);border-radius:8px;padding:6px 8px;counter-increment:l}
+.ordre li::before{content:counter(l);font-weight:700;color:var(--doux);text-align:right}
+.ordre code{font-family:ui-monospace,"Cascadia Mono",Consolas,"Courier New",monospace;white-space:pre-wrap;overflow-wrap:anywhere;min-width:0}
+.fleche{font:inherit;width:2.4rem;height:2.2rem;border-radius:8px;border:2px solid var(--encre-bouton);background:var(--carte);color:var(--encre-bouton);cursor:pointer}
+.fleche:disabled{opacity:.3;cursor:default}
+.defile{overflow-x:auto}
+table.trace{border-collapse:collapse;font-size:1rem}
+table.trace th,table.trace td{border:1px solid var(--trait);padding:6px 10px;text-align:left}
+table.trace code{font-family:ui-monospace,"Cascadia Mono",Consolas,"Courier New",monospace;white-space:pre}
+table.trace input{width:4.5rem;font:inherit;padding:4px 6px;border-radius:6px;border:2px solid var(--trait);background:var(--carte);color:var(--encre)}
+table.trace input.faux{border-color:var(--faux);background:var(--faux-pale)} table.trace input.juste{border-color:var(--juste)}
+.lignes-code button{grid-template-columns:1.8rem 1fr}
+.lignes-code code{font-family:ui-monospace,"Cascadia Mono",Consolas,"Courier New",monospace;white-space:pre}
+.panneau>*{min-width:0} .ligne dd,.chemin{overflow-wrap:anywhere}
+
+.humeur{background:var(--carte);border:1px solid var(--trait);border-radius:14px;padding:14px clamp(16px,4vw,28px);display:grid;gap:10px}
+.humeur.faite{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:center;padding:8px clamp(16px,4vw,28px);font-size:1rem;color:var(--doux)}
+.smileys{display:flex;flex-wrap:wrap;gap:8px}
+.smileys button{flex:1 1 5.5rem;display:grid;justify-items:center;gap:2px;padding:8px 6px;border-radius:12px;border:2px solid var(--trait);
+  background:var(--carte);color:var(--encre);cursor:pointer;font-size:.95rem}
+.smileys button:hover{border-color:var(--encre-bouton)}
+.smileys button.choisi{border-color:var(--encre-bouton);background:var(--papier)}
+.smileys .emoji{font-size:2rem;line-height:1}
+.note{font-size:.95rem;color:var(--doux)}
+.lien{background:none;border:0;padding:0;color:var(--encre-bouton);text-decoration:underline;cursor:pointer;font-size:inherit}
+.bilan label{display:grid;gap:4px;font-weight:700}
+.bilan textarea{font:inherit;font-weight:400;padding:8px 10px;border-radius:10px;border:2px solid var(--trait);background:var(--carte);color:var(--encre);resize:vertical;min-width:0}
+.bilan textarea:focus-visible{outline:3px solid var(--fromage);outline-offset:2px}
+
+footer{font-size:.9rem;color:var(--doux);display:flex;flex-wrap:wrap;gap:4px 16px;justify-content:space-between}
+footer .auteur{margin-left:auto;font-weight:700}
+.etapes{padding-left:1.3rem}.etapes li{margin:0 0 .65rem}.etapes label{display:block}.etapes input{margin-right:.5rem}.bilan{display:grid;gap:12px}.bilan textarea{width:100%}
+dialog{max-height:90vh;overflow-y:auto}#rapport{display:none;width:min(95vw,48rem);max-width:48rem}#rapport[open]{display:grid;gap:16px}#rapport{overflow-wrap:anywhere}#rapport>*{min-width:0}#rapport textarea{min-width:0}#rapport textarea{box-sizing:border-box;width:100%;font:inherit}#rapport details{padding:12px;border:1px solid var(--trait);border-radius:8px}#rapport summary{cursor:pointer}#rapport ul{padding-left:1.3rem}
+.incident{padding:12px;border:1px solid var(--trait);border-radius:8px;margin-bottom:12px}.incident summary{cursor:pointer;font-weight:700}.incident details{padding:8px}.grille{width:100%;border-collapse:collapse;font-size:1rem}.grille th,.grille td{border:1px solid var(--trait);padding:8px;text-align:left;vertical-align:top}.grille th:nth-child(2),.grille td:nth-child(2){white-space:nowrap}.grille caption{font-weight:700;text-align:left;margin-bottom:8px}#grille-criteree .defile{max-width:100%;overflow-x:auto}
+</style>
+</head>
+<body>
+
+<div class="page">
+  <header>
+    <div class="surtitre">Informatique et laboratoire · 3F · Labo 07</div>
+    <h1>Dans les coulisses du PC <em>une enquête</em></h1>
+    <p class="qui" id="qui"></p>
+    <div class="actions"><button class="btn vide" type="button" id="rapport-btn">📄 Mon rapport et ma remise</button></div>
+    <p class="note">Un seul rapport personnel dans Google Docs, à compléter au fil de ton travail puis à joindre dans Classroom. Trois missions et un défi final. Le site garde les hypothèses initiales ; le rapport contient les preuves courtes. Un seul incident est rédigé, les trois autres sont vérifiés à deux, chacun sur son poste.</p>
+  </header>
+
+  <section class="humeur" id="humeur" hidden aria-label="Humeur du jour"></section>
+
+  <div class="progres" id="progres" aria-hidden="true"></div>
+
+  <main class="panneau" id="bloc" aria-live="polite"></main>
+
+  <details class="coince" id="coince">
+    <summary>Ça coince ?</summary>
+    <ul id="coince-liste"></ul>
+    <p class="protocole">Toujours bloqué ? Je relis le bloc → j’ouvre les deux indices → je demande à mon voisin (après ma première réponse ; il explique sans toucher ma souris) → je pose mon chevalet sur l'écran.</p>
+  </details>
+
+  <div class="aide" id="aide">
+    <p id="aide-texte">Je suis bloqué malgré « Ça coince ? » et mon voisin :</p>
+    <div class="actions"><button class="btn vide" type="button" id="aide-btn">J'attends de l'aide</button></div>
+  </div>
+
+  <div class="actions">
+    <button class="btn vide" type="button" id="memo-btn">🔎 Ma méthode d’enquête</button>
+  </div>
+
+  <footer><span id="pied"></span><span class="auteur">M. Louviaux</span></footer>
+  <p class="credit">S3M4.1 « Différencier système d’exploitation et machine » · S3M4.4 « Utiliser l’interface du système d’exploitation et les périphériques ». L’observation des ressources est un prolongement.</p>
+</div>
+
+<dialog id="memo">
+  <h3>🔎 Ma méthode d’enquête</h3>
+  <div class="encart" style="margin-top:10px"><p>Je formule une hypothèse → je choisis un test sans risque → je manipule moi-même → je relève une preuve → je conclus.</p><p>Je réponds seul avant de comparer à deux. Mon voisin explique sans toucher ma souris.</p><p>Observation seulement : aucun arrêt de processus, aucune suppression, aucun changement de configuration ou de synchronisation.</p><p>Enregistre les hypothèses initiales sur le site avant de manipuler. Écris les observations et conclusions uniquement dans ton rapport Docs. La capture va dans ce même document. Le site ne lit pas le rapport et ne vérifie pas la remise Classroom.</p><p>Proposition de travail quotidien /10 : enquête /7 (hypothèse 1, test 2, preuve 1, conclusion 2, distinction 1) ; document et remise /3 (identification et nom 1, titres et tableau 1, capture légendée et remise vérifiée 1).</p></div>
+  <form method="dialog" class="actions" style="margin-top:14px"><button class="btn plein">Fermer</button></form>
+</dialog>
+
+<dialog id="rapport" aria-labelledby="rapport-titre">
+  <h2 id="rapport-titre">Mon rapport et ma remise</h2>
+  <p>Je crée mon propre document. La trame donne le plan ; je réalise la mise en page. Je garde ce même document pour les trois missions et la situation finale.</p>
+  <h3>1. Préparer mon document — avant les premières mesures</h3>
+  <p class="note">La mission sur les fichiers utilise OneDrive dans l’Explorateur Windows. Ton rapport Google Docs se trouve en ligne, dans ton compte scolaire ; Classroom le propose via Ajouter ou créer ▸ Google Drive.</p>
+  <ol class="etapes">
+    <li>Ouvre <a href="https://docs.google.com/" target="_blank" rel="noopener">Google Docs</a> avec ton compte de l’école.</li>
+    <li>Clique sur le bouton + Document vierge.</li>
+    <li>Clique sur « Document sans titre », en haut à gauche.</li>
+    <li>Nomme le fichier <b>07_CoulissesPC_Prenom_Nom</b>, avec ton prénom et ton nom sans accents.</li>
+    <li>Copie la trame ci-dessous.</li>
+    <li>Dans le document, clique dans la page et utilise Édition ▸ Coller sans mise en forme (Ctrl + Maj + V).</li>
+    <li>Complète ton identification.</li>
+    <li>Garde le document ouvert avant de commencer les observations ; tu le retrouveras dans ton Drive scolaire.</li>
+  </ol>
+  <details><summary>Trame à copier, sans mise en forme</summary>
+    <label for="trame-rapport">Plan du rapport (les réponses restent à écrire)</label>
+    <textarea id="trame-rapport" rows="12" readonly></textarea>
+    <button class="btn plein" type="button" id="copier-trame" disabled>Copier la trame</button>
+    <p id="rapport-statut" class="note" role="status"></p>
+    <p><a href="https://root75.github.io/campin-public/labo-07/pas-a-pas/trame-rapport.txt" target="_blank" rel="noopener">Trame en texte brut</a> si la copie ne fonctionne pas.</p>
+  </details>
+  <h3>Un rapport court : ce que j’écris</h3>
+  <ul>
+    <li>Mission 1 : un tableau, une capture légendée et deux phrases de conclusion.</li>
+    <li>Mission 2 : fichier, chemin, statut et une phrase de justification.</li>
+    <li>Mission 3 : un seul incident en quatre lignes. Je manipule et explique les trois autres au binôme, puis nous inversons les rôles. Le professeur intervient en cas de blocage persistant.</li>
+    <li>Défi final : une ligne de preuve et deux phrases maximum ; je montre ma manipulation au professeur.</li>
+  </ul>
+  <h3>2. Trois exigences de présentation et de remise — /3</h3>
+  <ul>
+    <li><b>Identification et nom — /1 :</b> titre visible, prénom, nom, classe, date ; fichier correctement nommé.</li>
+    <li><b>Titres et tableau — /1 :</b> même style pour les quatre titres de partie ; vrai tableau lisible de trois colonnes et quatre lignes pour les mesures, avec % dans les en-têtes.</li>
+    <li><b>Capture et remise — /1 :</b> capture ciblée, lisible, proportionnée et légendée ; le bon document est joint, sa remise est confirmée.</li>
+  </ul>
+  <details id="grille-criteree">
+    <summary>Grille critériée complète — travail quotidien /10</summary>
+    <p>L’enquête finale compte pour 7 points ; le document et sa remise pour 3 points. Le professeur examine les preuves et les gestes. Les cases du site ne donnent pas de point.</p>
+    <div class="defile"><table class="grille">
+      <caption>Critères, points et descripteurs de réussite</caption>
+      <thead><tr><th scope="col">Critère</th><th scope="col">Points</th><th scope="col">Comment les points sont attribués</th></tr></thead>
+      <tbody>
+      <tr><th scope="row">Hypothèse initiale (site, défi final)</th><td>/1</td><td>1 : plausible et testable ; 0,5 : plausible mais imprécise ; 0 : absente ou hors sujet.</td></tr>
+      <tr><th scope="row">Choix et réalisation du test</th><td>/2</td><td>2 : pertinent, réversible, personnel ; 1 : pertinent mais incomplet ou encore guidé ; 0 : absent ou dangereux non corrigé.</td></tr>
+      <tr><th scope="row">Preuve dans le rapport</th><td>/1</td><td>1 : indice précis, réel et distingué du cas donné ; 0,5 : partiel ; 0 : inexploitable.</td></tr>
+      <tr><th scope="row">Conclusion finale justifiée</th><td>/2</td><td>2 : décision correcte liée à la preuve et au nuage donné, arrêt de Windows écarté avec raison ; 1 : décision pertinente mais justification partielle ; 0 : sans lien ou erronée.</td></tr>
+      <tr><th scope="row">Machine / système / application / fichier</th><td>/1</td><td>1 : quatre rôles distingués à l’oral dans le cas ; 0,5 : distinction partielle ; 0 : confusion persistante.</td></tr>
+      <tr><th scope="row">Identification et nom du fichier</th><td>/1</td><td>0,5 : titre, prénom/nom, classe/date présents ; 0,5 : nom 07_CoulissesPC_Prenom_Nom respecté.</td></tr>
+      <tr><th scope="row">Titres et tableau</th><td>/1</td><td>0,5 : même style de titre pour les quatre parties ; 0,5 : vrai tableau 3×4, lisible, lignes et unités identifiées.</td></tr>
+      <tr><th scope="row">Capture et remise</th><td>/1</td><td>0,5 : capture utile, lisible, proportionnée, avec légende explicative ; 0,5 : bon document joint, remise confirmée dans Classroom.</td></tr>
+      </tbody>
+    </table></div>
+    <p><b>Total /10.</b> Non observé faute de temps ou poste indisponible : à compléter, pas zéro. La vitesse et l’utilisation d’un indice ne sont pas pénalisées. La qualité de l’enquête est distinguée de celle du document.</p>
+
+  </details>
+  <details><summary>Un geste à retrouver : titre, tableau ou image</summary>
+    <ul>
+      <li>Titres : sélectionne une ligne de partie ▸ liste « Normal » de la barre d’outils ▸ Titre 1 ; applique le même style aux quatre parties.</li>
+      <li>Tableau : clique sous « Deux applications identifiées » ▸ Insertion ▸ Tableau ▸ 3 colonnes × 4 lignes ; complète les en-têtes et les trois relevés. Ne simule pas les colonnes avec des espaces.</li>
+      <li>Capture : après le dernier relevé, ⊞ Démarrer ▸ Outil Capture d’écran ▸ Nouveau (ou Windows + Maj + S), puis sélectionne la zone utile.</li>
+      <li>Dans le rapport, clique à l’emplacement de l’image ▸ Édition ▸ Coller (Ctrl + V). Si le presse-papiers échoue, enregistre la capture dans l’Outil Capture d’écran, puis Docs ▸ Insertion ▸ Image ▸ Importer depuis l’ordinateur.</li>
+      <li>Image : redimensionne par un coin, sans étirer ; garde-la à l’intérieur de la page. Écris une légende juste dessous. N’affiche ni travail d’un voisin ni donnée personnelle inutile.</li>
+    </ul>
+  </details>
+  <details id="relecture-pairs"><summary>Avant le défi final — relire à deux avec trois critères</summary>
+    <p>Commence par ta propre réponse et ta vérification personnelle. Montre ensuite seulement les parties déjà travaillées de ton rapport à ton binôme, sur ton poste. La partie 4 reste individuelle.</p>
+    <ul>
+      <li>Montre les titres et le vrai tableau : sont-ils cohérents et lisibles ?</li>
+      <li>Montre la capture et sa légende : quel détail utile permettent-elles de lire ?</li>
+      <li>Montre une conclusion d’entraînement : quel indice la justifie ?</li>
+    </ul>
+    <p>Le binôme donne un point réussi et une correction possible à l’oral. Tu réalises toi-même la correction, puis vous inversez les rôles. Pas de note donnée par le camarade, pas de texte supplémentaire à écrire.</p>
+    <p>Le site ne collecte pas cette relecture. Le défi final est réalisé seul, sans correction par le binôme avant sa remise ; le professeur garde la responsabilité de la note.</p>
+  </details>
+  <h3>3. À la fin de l’heure de cours</h3>
+  <p>Vérifie l’indication d’enregistrement dans Docs. Garde le nom du document et le bloc de reprise. <b>Ne remets pas le devoir à chaque cours</b> : complète le même rapport jusqu’à la fin.</p>
+  <h3>4. Remettre une seule fois — quand le rapport est terminé</h3>
+  <p>Le professeur doit d’abord avoir publié le devoir. Si tu ne le trouves pas, pose ton chevalet ; ne crée pas un deuxième document et ne poste pas ton travail dans le flux.</p>
+  <ol class="etapes">
+    <li><label><input type="checkbox">Relis le rapport : remplace les repères « à compléter » et supprime les indications entre crochets devenues inutiles.</label></li>
+    <li><label><input type="checkbox">Vérifie les trois exigences de présentation ci-dessus.</label></li>
+    <li><label><input type="checkbox">Ouvre <a href="https://classroom.google.com/" target="_blank" rel="noopener">Classroom</a> avec ton compte scolaire ▸ Informatique — 3F ▸ Travaux et devoirs ▸ Labo 07 — Dans les coulisses du PC ▸ Afficher les instructions.</label></li>
+    <li><label><input type="checkbox">Dans « Vos devoirs » (ou « Votre travail » selon l’interface), clique sur Ajouter ou créer ▸ Google Drive pour choisir ton rapport Docs en ligne.</label></li>
+    <li><label><input type="checkbox">Sélectionne <b>07_CoulissesPC_Prenom_Nom</b> ▸ Ajouter.</label></li>
+    <li><label><input type="checkbox">Ouvre la pièce jointe pour vérifier que c’est ton rapport complet ; n’ajoute pas seulement un lien collé dans le texte.</label></li>
+    <li><label><input type="checkbox">Reviens au devoir ▸ Rendre (ou Remettre) ▸ confirme.</label></li>
+    <li><label><input type="checkbox">Vérifie le statut « Remis » ou « Rendu » dans Classroom.</label></li>
+  </ol>
+  <p class="note">Les cases sont une aide personnelle. Le site ne lit ni les fichiers joints ni le statut Classroom. Seule la vérification dans Classroom confirme la remise.</p>
+  <p><b>Proposition de travail quotidien /10 :</b> enquête /7 : hypothèse 1, test 2, preuve 1, conclusion 2, distinction 1 ; document et remise /3.</p>
+  <form method="dialog" class="actions"><button class="btn plein">Revenir à l’enquête</button></form>
+</dialog>
+
+<!-- Mode séquence (vue prof) : la fiche affiche le moment que le professeur projette. -->
+<script defer src="https://root75.github.io/campin-public/pas-a-pas/sequence-eleve.js"></script>
+<script src="https://root75.github.io/campin-public/labo-07/pas-a-pas/fiche.js"></script>
+<script src="https://root75.github.io/campin-public/labo-07/pas-a-pas/rapport.js"></script>
+<script src="https://root75.github.io/campin-public/pas-a-pas/blocs.js"></script>
+
+</body>
+</html>
