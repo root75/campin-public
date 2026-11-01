@@ -41,7 +41,7 @@
     const mes = {};   // ce que l'élève a envoyé, par moment de cette séquence
 
     function recoit(m){
-      if(!m || m.type === "fin"){
+      if(!m || m.type === "fin" || m.type === "atelier"){
         if(cle){ cle = ""; zone.hidden = true; document.body.classList.remove("en-sequence"); scrollTo(0, 0); }
         return;
       }
