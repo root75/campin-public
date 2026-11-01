@@ -2,44 +2,519 @@
   "messagerie-1": {
     "titre": "Leçon 1 — Un e-mail, c'est une lettre",
     "moments": [
-      { "type": "ecran", "titre": "Accroche", "min": 2, "methode": "Question projetée, à l'oral",
-        "lignes": ["Pour prévenir un copain que tu arrives, tu utilises quoi ?", "Et pour écrire à ton professeur ?"] },
-      { "type": "mots", "titre": "Récolte des mots-clés", "min": 5, "methode": "Individuel, sur le poste",
-        "question": "Un e-mail, c'est…", "max": 3 },
-      { "type": "tri", "titre": "Mise en commun", "min": 5, "methode": "Collectif : chaque mot rangé est justifié",
-        "source": 1, "colonnes": ["Messagerie instantanée", "On hésite", "E-mail"] },
-      { "type": "ecran", "titre": "Notion clé : asynchrone", "min": 3, "methode": "Exposé bref",
-        "paires": [["synchrone", "Le coup de fil : l'autre doit être là, maintenant."],
-                   ["asynchrone", "La lettre : elle attend dans la boîte."]],
-        "exemple": "J'écris à Monsieur le soir. Il me répond le lendemain." },
-      { "type": "vote", "titre": "Vérification", "min": 3, "methode": "Vote sur le poste",
-        "question": "E-mail ou instantané ?", "choix": ["E-mail", "Instantané"],
+      {
+        "type": "ecran",
+        "titre": "Accroche",
+        "min": 2,
+        "methode": "Question projetée, à l'oral",
+        "lignes": [
+          "Pour prévenir un copain que tu arrives, tu utilises quoi ?",
+          "Et pour écrire à ton professeur ?"
+        ]
+      },
+      {
+        "type": "mots",
+        "titre": "Récolte des mots-clés",
+        "min": 5,
+        "methode": "Individuel, sur le poste",
+        "question": "Un e-mail, c'est…",
+        "max": 3
+      },
+      {
+        "type": "tri",
+        "titre": "Mise en commun",
+        "min": 5,
+        "methode": "Collectif : chaque mot rangé est justifié",
+        "source": 1,
+        "colonnes": [
+          "Messagerie instantanée",
+          "On hésite",
+          "E-mail"
+        ]
+      },
+      {
+        "type": "ecran",
+        "titre": "Notion clé : asynchrone",
+        "min": 3,
+        "methode": "Exposé bref",
+        "paires": [
+          [
+            "synchrone",
+            "Le coup de fil : l'autre doit être là, maintenant."
+          ],
+          [
+            "asynchrone",
+            "La lettre : elle attend dans la boîte."
+          ]
+        ],
+        "exemple": "J'écris à Monsieur le soir. Il me répond le lendemain."
+      },
+      {
+        "type": "vote",
+        "titre": "Vérification",
+        "min": 3,
+        "methode": "Vote sur le poste",
+        "question": "E-mail ou instantané ?",
+        "choix": [
+          "E-mail",
+          "Instantané"
+        ],
         "situations": [
-          { "texte": "Prévenir un professeur d'une absence", "bonne": 0 },
-          { "texte": "Envoyer un document au secrétariat", "bonne": 0 },
-          { "texte": "Dire à un ami que tu es en retard", "bonne": 1 }
-        ] },
-      { "type": "fin", "titre": "Bascule", "min": 2, "methode": "Travail autonome",
-        "lignes": ["Ouvre ton pas-à-pas", "Il s'affiche sur ton poste. Commence par ton humeur du jour."] }
+          {
+            "texte": "Prévenir un professeur d'une absence",
+            "bonne": 0
+          },
+          {
+            "texte": "Envoyer un document au secrétariat",
+            "bonne": 0
+          },
+          {
+            "texte": "Dire à un ami que tu es en retard",
+            "bonne": 1
+          }
+        ]
+      },
+      {
+        "type": "fin",
+        "titre": "Bascule",
+        "min": 2,
+        "methode": "Travail autonome",
+        "lignes": [
+          "Ouvre ton pas-à-pas",
+          "Il s'affiche sur ton poste. Commence par ton humeur du jour."
+        ]
+      }
     ]
-    },
+  },
   "python-1": {
     "titre": "Séance 1 — Du logigramme au code",
+    "objectif": "Traduire le logigramme « Les vies », prédire son résultat et enregistrer un programme Python.",
+    "competences": [
+      "S3M10.5 — Traduire un algorithme dans un langage informatique structuré.",
+      "S3M10.3 — Manipuler les variables et les affectations.",
+      "S3M10.4 — Utiliser la sortie print()."
+    ],
+    "preparation": [
+      "Tableau professeur → Cours : python-1. Pour une nouvelle séance : Nouvelle séance → 3F → Démarrer. Pour continuer, conserver la séance existante.",
+      "Panneau Mes cours — classes et cours ouverts : Python 1 coché pour 3F.",
+      "Vérifier sur un poste élève : ouverture de la fiche et exécution Python. Thonny disponible ; emplacement réel de Documents connu.",
+      "Lancer le déroulé. Les élèves ouvrent Mes cours → 3F → Premiers pas en Python 1. Aucun travail à rendre hors cours."
+    ],
     "moments": [
-      { "type": "ecran", "titre": "Accroche", "min": 1, "methode": "Question projetée, à l'oral",
-        "lignes": ["Le logigramme « Les vies », l'ordinateur sait-il le lire ?", "Non : il lui faut un langage. Aujourd'hui, Python."] },
-      { "type": "ecran", "titre": "Notion clé : traduire", "min": 2, "methode": "Exposé bref, logigramme à côté",
-        "paires": [["vies ← 3", "devient  vies = 3"],
-                   ["Afficher vies", "devient  print(vies)"]],
-        "exemple": "= n'est pas une égalité : à droite je calcule, à gauche je range." },
-      { "type": "vote", "titre": "Je prédis", "min": 3, "methode": "Vote sur le poste, puis correction en trace",
-        "question": "Qu'est-ce que Python affiche ?", "choix": ["2", "3", "vies"],
+      {
+        "type": "ecran",
+        "titre": "Accroche",
+        "min": 1,
+        "methode": "Collectif",
+        "lignes": [
+          "Le logigramme « Les vies », l'ordinateur sait-il le lire ?"
+        ],
+        "questions": [
+          "Que faut-il traduire pour que l'ordinateur exécute nos instructions ?"
+        ],
+        "exemple": "Aujourd'hui, nous allons écrire ces instructions en Python."
+      },
+      {
+        "type": "ecran",
+        "titre": "Du logigramme à Python",
+        "min": 2,
+        "methode": "Collectif",
+        "lignes": [
+          "Même algorithme, autre écriture."
+        ],
+        "questions": [
+          "Où se trouve la variable qui reçoit la valeur ?",
+          "Quelle instruction permet d'afficher ?"
+        ],
+        "code": "vies ← 3       →  vies = 3\nAfficher vies  →  print(vies)",
+        "exemple": "À droite je calcule ; à gauche je range."
+      },
+      {
+        "type": "vote",
+        "titre": "Vote 1 — Je prédis",
+        "min": 1,
+        "methode": "Prédire seul, voter, puis expliquer",
+        "question": "Qu'affiche ce programme ?",
+        "choix": [
+          "2",
+          "3",
+          "vies"
+        ],
         "situations": [
-          { "texte": "vies = 3   ·   vies = vies - 1   ·   print(vies)", "bonne": 0 },
-          { "texte": "vies = 3   ·   vies - 1   ·   print(vies)", "bonne": 1 }
-        ] },
-      { "type": "fin", "titre": "Bascule", "min": 1, "methode": "Travail autonome",
-        "lignes": ["Ouvre ta fiche pas à pas", "Elle s'affiche sur ton poste. Ton humeur du jour, puis le bloc 1 : tu vas vérifier tes prédictions."] }
+          {
+            "texte": "vies = 3\nvies = vies - 1\nprint(vies)",
+            "bonne": 0
+          }
+        ],
+        "repere": "Clore le vote pour afficher les résultats. Puis Suivant : faire expliquer avant de révéler la correction."
+      },
+      {
+        "type": "ecran",
+        "titre": "Mise en commun — Programme 1",
+        "min": 2,
+        "methode": "Collectif",
+        "lignes": [
+          "Explique ton raisonnement, sans exécuter."
+        ],
+        "questions": [
+          "Qui a choisi 2 ? Explique ce qui se passe à chaque ligne.",
+          "Qui a choisi 3 ? À quel moment gardes-tu la valeur de départ ?",
+          "Qui a choisi « vies » ? Quelle différence entre print(vies) et print(\"vies\") ?"
+        ],
+        "code": "vies = 3\nvies = vies - 1\nprint(vies)"
+      },
+      {
+        "type": "ecran",
+        "titre": "Trace — Programme 1",
+        "min": 1,
+        "methode": "Collectif",
+        "lignes": [
+          "La variable reçoit le résultat du calcul."
+        ],
+        "trace": [
+          [
+            "Instruction",
+            "Valeur de vies",
+            "Affichage"
+          ],
+          [
+            "vies = 3",
+            "3",
+            "—"
+          ],
+          [
+            "vies = vies - 1",
+            "2",
+            "—"
+          ],
+          [
+            "print(vies)",
+            "2",
+            "2"
+          ]
+        ],
+        "exemple": "Le résultat attendu est 2."
+      },
+      {
+        "type": "vote",
+        "titre": "Vote 2 — Une ligne a changé",
+        "min": 1,
+        "methode": "Prédire seul, voter, puis expliquer",
+        "question": "Qu'affiche ce programme ?",
+        "choix": [
+          "2",
+          "3",
+          "vies"
+        ],
+        "situations": [
+          {
+            "texte": "vies = 3\nvies - 1\nprint(vies)",
+            "bonne": 1
+          }
+        ],
+        "repere": "Clore le vote pour afficher les résultats. Puis Suivant : faire expliquer avant de révéler la correction."
+      },
+      {
+        "type": "ecran",
+        "titre": "Mise en commun — Programme 2",
+        "min": 2,
+        "methode": "Collectif",
+        "lignes": [
+          "Compare les deux programmes."
+        ],
+        "questions": [
+          "Qui a choisi 2 ? Où ranges-tu le résultat du calcul ?",
+          "Qui a choisi 3 ? Quelle ligne ne modifie plus la variable ?",
+          "Que faut-il ajouter pour que vies diminue ?"
+        ],
+        "code": "vies = 3\nvies - 1\nprint(vies)"
+      },
+      {
+        "type": "ecran",
+        "titre": "Trace — Programme 2",
+        "min": 1,
+        "methode": "Collectif",
+        "lignes": [
+          "Calculer ne change pas la variable."
+        ],
+        "trace": [
+          [
+            "Instruction",
+            "Valeur de vies",
+            "Affichage"
+          ],
+          [
+            "vies = 3",
+            "3",
+            "—"
+          ],
+          [
+            "vies - 1",
+            "3 (le calcul donne 2)",
+            "—"
+          ],
+          [
+            "print(vies)",
+            "3",
+            "3"
+          ]
+        ],
+        "exemple": "Il faut vies = vies - 1 pour ranger le résultat. Le programme affiche 3."
+      },
+      {
+        "type": "atelier",
+        "titre": "Je découvre et je prédis",
+        "min": 10,
+        "methode": "Travail autonome — fiches accessibles",
+        "lignes": [
+          "Ouvre ta fiche : humeur du jour, puis blocs 1 à 4.",
+          "Prédis avant de cliquer sur Exécuter."
+        ],
+        "blocs": [
+          1,
+          4
+        ],
+        "repere": "Circuler : faire lire la ligne rouge, vérifier les guillemets. Demander : « C'est un texte ou un nom de variable ? » Les variantes peuvent différer entre voisins."
+      },
+      {
+        "type": "ecran",
+        "titre": "Pause collective — La trace de x",
+        "min": 4,
+        "methode": "Collectif",
+        "lignes": [
+          "Après chaque ligne, que contient x ?"
+        ],
+        "questions": [
+          "Après la première ligne ?",
+          "Pour calculer x + x, quelle valeur de x utilises-tu ?",
+          "À la dernière ligne, repars-tu de 10 ou de 20 ?"
+        ],
+        "code": "x = 10\nx = x + x\nx = x - 5",
+        "exemple": "Faire proposer les trois valeurs, puis confirmer : 10 → 20 → 15. Les nombres du bloc 5 peuvent différer sur les postes."
+      },
+      {
+        "type": "atelier",
+        "titre": "Les variables en action",
+        "min": 8,
+        "methode": "Travail autonome — fiches accessibles",
+        "lignes": [
+          "Blocs 5 à 8 : trace, cartes, code mélangé et échange de valeurs.",
+          "Prédis, puis explique le résultat."
+        ],
+        "blocs": [
+          5,
+          8
+        ],
+        "repere": "Repérer le bloc où la classe bute. Relances : « Que vaut cette variable avant la ligne ? », « Cette variable existe-t-elle déjà ? ». Si le défi temp prend trop de temps, reprendre la même séance au prochain cours : ne pas supposer que le bloc suivant est déverrouillé."
+      },
+      {
+        "type": "ecran",
+        "titre": "Démonstration — De la fiche au fichier",
+        "min": 3,
+        "methode": "Collectif",
+        "lignes": [
+          "Un programme qui se garde s'écrit dans Thonny."
+        ],
+        "questions": [
+          "Où retrouveras-tu ton fichier à la prochaine séance ?",
+          "Quelle zone sert à écrire : l'éditeur du haut ou la console du bas ?"
+        ],
+        "exemple": "Documents → Python ; Thonny → Fichier → Enregistrer sous… → 01_Les-vies_Nom.py. Montrer une fois le débogage pas à pas et le panneau Variables."
+      },
+      {
+        "type": "atelier",
+        "titre": "Je traduis « Les vies » dans Thonny",
+        "min": 10,
+        "methode": "Travail autonome — fiches accessibles",
+        "lignes": [
+          "Blocs 9 à 12 : dossier, fichier, traduction et prédiction.",
+          "Enregistre, exécute, puis montre ton écran."
+        ],
+        "blocs": [
+          9,
+          12
+        ],
+        "repere": "Vérifier le fichier au nom de l'élève et la sortie correspondant à SA variante : 2, 3 ou 4. Demander : « Montre où la valeur change. » Si Thonny échoue : travail à deux sur un poste fonctionnel, puis reprise individuelle dès que possible."
+      },
+      {
+        "type": "fin",
+        "titre": "Bilan et prochaine séance",
+        "min": 3,
+        "methode": "Bilan oral et enregistrement",
+        "lignes": [
+          "Enregistre ton fichier : nous le reprendrons.",
+          "Explique : à quoi servent = et print() ?"
+        ],
+        "questions": [
+          "Comment distinguer un texte du nom d'une variable ?",
+          "Quel programme ou quelle ligne sais-tu maintenant expliquer ?"
+        ],
+        "repere": "Contrôler les fichiers avant la sortie ; séances 1 et 2 non cotées. Si tout n'est pas terminé, reprendre la même séance pour conserver l'avancement."
+      }
+    ]
+  },
+  "python-2": {
+    "titre": "Séance 2 — Lire, expliquer et réparer les erreurs",
+    "objectif": "Repérer une erreur, expliquer sa cause et réparer le programme « Les vies » dans Thonny.",
+    "competences": [
+      "S3M10.5 — Traduire et corriger un programme simple.",
+      "S3M10.3 — Suivre la valeur des variables.",
+      "S3M10.4 — Vérifier la sortie print()."
+    ],
+    "preparation": [
+      "Tableau professeur → Cours : python-2. Nouvelle séance → 3F → Démarrer seulement pour un nouveau départ.",
+      "Ouvrir Python 2 pour 3F. Vérifier le fichier 01_Les-vies_Nom.py et son emplacement réel.",
+      "Préparer l'annonce d'évaluation uniquement si le contenu et la date sont fixés : au moins une semaine de délai. Aucune date n'est présumée ici."
+    ],
+    "moments": [
+      {
+        "type": "ecran",
+        "titre": "Reprise après le congé",
+        "min": 2,
+        "methode": "Collectif",
+        "lignes": [
+          "Que doit contenir un programme pour modifier puis afficher vies ?"
+        ],
+        "questions": [
+          "Qui retrouve son fichier Les vies ?",
+          "Qui doit encore le créer ?"
+        ],
+        "exemple": "L'objectif du jour : lire l'erreur avant de modifier le code."
+      },
+      {
+        "type": "atelier",
+        "titre": "Quiz de rappel",
+        "min": 6,
+        "methode": "Travail autonome — fiches accessibles",
+        "lignes": [
+          "Bloc 1 : Python — je révise.",
+          "Note mentalement la question que tu veux qu'on reprenne."
+        ],
+        "blocs": [
+          1,
+          1
+        ],
+        "repere": "Le quiz externe n'alimente pas le tableau de suivi question par question. Demander oralement quelle question a posé problème ; ne pas présumer les résultats du groupe."
+      },
+      {
+        "type": "ecran",
+        "titre": "Mise en commun — Le raisonnement",
+        "min": 3,
+        "methode": "Collectif",
+        "lignes": [
+          "Explique une prédiction, puis vérifie-la ligne par ligne."
+        ],
+        "questions": [
+          "Qui propose sa réponse et son raisonnement ?",
+          "Quelqu'un a-t-il raisonné autrement ?",
+          "Quelle valeur utilise-t-on à droite avant de ranger à gauche ?"
+        ],
+        "code": "vies = 3\nvies = vies - 1\nprint(vies)",
+        "exemple": "Faire construire la trace : 3 → 2 ; affichage 2. Si nécessaire, comparer à vies - 1 sans affectation."
+      },
+      {
+        "type": "ecran",
+        "titre": "Notre méthode pour réparer",
+        "min": 2,
+        "methode": "Collectif",
+        "lignes": [
+          "J'exécute → je lis → j'explique → je corrige → je vérifie."
+        ],
+        "questions": [
+          "Quelle ligne le message indique-t-il ?",
+          "Quel est le nom de l'erreur ?",
+          "Quel résultat attendais-tu ?"
+        ],
+        "exemple": "Sans message rouge, le résultat peut malgré tout être faux : comparer avec l'attendu."
+      },
+      {
+        "type": "atelier",
+        "titre": "Je trouve la cause avant de réparer",
+        "min": 10,
+        "methode": "Travail autonome — fiches accessibles",
+        "lignes": [
+          "Blocs 2 à 5 : consigne, additionneur, Bonjour et ligne fautive.",
+          "Avant toute correction, explique la cause à ton voisin."
+        ],
+        "blocs": [
+          2,
+          5
+        ],
+        "repere": "Demander la ligne et la cause, pas seulement la bonne réponse. SyntaxError : écriture incorrecte ; NameError : nom inconnu ; logique : résultat différent de l'attendu."
+      },
+      {
+        "type": "ecran",
+        "titre": "Mise en commun — Trois erreurs",
+        "min": 3,
+        "methode": "Collectif",
+        "lignes": [
+          "Quelles erreurs produisent un message rouge ?"
+        ],
+        "questions": [
+          "print(1 + 2 +) : quel caractère pose problème ?",
+          "nom = Joe : Python cherche-t-il un texte ou une variable ?",
+          "score = 10 ; score = score - 5 : pourquoi ce calcul serait-il faux si on attend 15 ?"
+        ],
+        "exemple": "Faire nommer syntaxe, exécution, logique ; rappeler que le message indique où chercher, pas toujours toute la cause."
+      },
+      {
+        "type": "atelier",
+        "titre": "Erreur de logique — Les soldes",
+        "min": 3,
+        "methode": "Travail autonome — fiches accessibles",
+        "lignes": [
+          "Bloc 6 : compare le résultat à l’attendu avant de modifier le calcul."
+        ],
+        "blocs": [
+          6,
+          6
+        ],
+        "repere": "La fiche est linéaire : le bloc 6 précède l’ouverture du bloc 7. Si les pourcentages bloquent, reprendre le calcul ensemble ; si nécessaire, étaler sur la séance suivante plutôt que supposer le bloc passé."
+      },
+      {
+        "type": "ecran",
+        "titre": "Retour à Thonny — Prédire, casser, réparer",
+        "min": 3,
+        "methode": "Collectif",
+        "lignes": [
+          "Retrouve ton fichier et exécute-le une première fois."
+        ],
+        "questions": [
+          "Quelle sortie attends-tu avec TES nombres ?",
+          "Que pourrait provoquer une majuscule ou une parenthèse manquante ?"
+        ],
+        "exemple": "Dans chaque variante, effectuer la modification exactement demandée, prédire puis vérifier. Si le fichier manque : le recréer depuis le modèle du bloc 7."
+      },
+      {
+        "type": "atelier",
+        "titre": "Mon programme réparé et expliqué",
+        "min": 13,
+        "methode": "Travail autonome — fiches accessibles",
+        "lignes": [
+          "Blocs 7 à 10 : ouvrir, provoquer deux erreurs, réparer et commenter.",
+          "Enregistre puis montre ton programme au professeur."
+        ],
+        "blocs": [
+          7,
+          10
+        ],
+        "repere": "Contrôler réellement le fichier : le QCM ne prouve pas à lui seul la manipulation. Demander : « Montre la ligne changée ; pourquoi cette correction ? ». Commenter chaque ligne sert ici à verbaliser ; les commentaires n'apparaissent pas dans la sortie."
+      },
+      {
+        "type": "fin",
+        "titre": "Bilan et annonce éventuelle",
+        "min": 5,
+        "methode": "Vérification individuelle puis bilan",
+        "lignes": [
+          "Enregistre ton programme réparé et commenté.",
+          "Une erreur : comment la repérer et expliquer sa cause ?"
+        ],
+        "questions": [
+          "Quelle différence entre SyntaxError et NameError ?",
+          "Un programme sans message rouge est-il forcément juste ?"
+        ],
+        "repere": "Annoncer l'évaluation seulement si quoi et quand sont fixés, avec au moins une semaine de délai. Types, input et la date restent à décider ; ne rien inventer. Séance non cotée ; entraînements fait / non fait selon la décision de Vincent."
+      }
     ]
   }
 }
