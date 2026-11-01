@@ -96,9 +96,9 @@
     ],
     "preparation": [
       "Tableau professeur → Cours : python-1. Pour une nouvelle séance : Nouvelle séance → 3F → Démarrer. Pour continuer, conserver la séance existante.",
-      "Panneau Mes cours — classes et cours ouverts : Python 1 coché pour 3F.",
+      "Panneau Mes cours — classes et cours ouverts : Python 01 — Premiers pas coché pour 3F.",
       "Vérifier sur un poste élève : ouverture de la fiche et exécution Python. Thonny disponible ; emplacement réel de Documents connu.",
-      "Lancer le déroulé. Les élèves ouvrent Mes cours → 3F → Premiers pas en Python 1. Aucun travail à rendre hors cours."
+      "Lancer le déroulé. Les élèves ouvrent Mes cours → 3F → Python 01 — Premiers pas. Aucun travail à rendre hors cours."
     ],
     "moments": [
       {
@@ -363,7 +363,7 @@
     ],
     "preparation": [
       "Tableau professeur → Cours : python-2. Nouvelle séance → 3F → Démarrer seulement pour un nouveau départ.",
-      "Ouvrir Python 2 pour 3F. Vérifier le fichier 01_Les-vies_Nom.py et son emplacement réel.",
+      "Ouvrir Python 02 — Lire et corriger les erreurs pour 3F. Vérifier le fichier 01_Les-vies_Nom.py et son emplacement réel.",
       "Préparer l'annonce d'évaluation uniquement si le contenu et la date sont fixés : au moins une semaine de délai. Aucune date n'est présumée ici."
     ],
     "moments": [

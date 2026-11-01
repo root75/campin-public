@@ -3,20 +3,20 @@
   "cours": [
     {
       "id": "messagerie-1",
-      "titre": "Mon premier message",
+      "titre": "Messagerie 01 — Mon premier message",
       "chemin": "messagerie/pas-a-pas/",
       "etapes": 12,
       "preuves": "messagerie/pas-a-pas/preuves.json"
     },
     {
       "id": "python-1",
-      "titre": "Premiers pas en Python 1",
+      "titre": "Python 01 — Premiers pas",
       "chemin": "python-1/pas-a-pas/",
       "etapes": 12
     },
     {
       "id": "python-2",
-      "titre": "Premiers pas en Python 2",
+      "titre": "Python 02 — Lire et corriger les erreurs",
       "chemin": "python-2/pas-a-pas/",
       "etapes": 10
     },

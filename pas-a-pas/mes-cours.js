@@ -90,7 +90,9 @@ function affiche(d){
     }
     $("seance-en-cours").hidden = !d.seance;
   }
-  $("cours").replaceChildren(...d.cours.map(c=>{
+  // Trier une copie pour conserver les données du serveur ; ignorer casse et accents.
+  const cours = [...d.cours].sort((a,b)=>a.titre.localeCompare(b.titre, "fr", { sensitivity:"base", numeric:true }));
+  $("cours").replaceChildren(...cours.map(c=>{
     const a = txt("a", "btn cours", c.titre + " ▸"); a.href = c.url; a.target = "_top"; return a; }));
   $("aucun").hidden = d.cours.length > 0;
   $("mes-cours").hidden = false;

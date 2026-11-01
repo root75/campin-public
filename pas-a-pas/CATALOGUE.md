@@ -25,11 +25,16 @@ Sans cette installation, le tableau signale que le serveur utilise encore sa lis
    ```json
    {
      "id": "nouveau-cours",
-     "titre": "Le titre visible",
+     "titre": "Sujet 01 — Le titre visible",
      "chemin": "nouveau-cours/pas-a-pas/",
      "etapes": 8
    }
    ```
+
+   Nommer les cours avec le sujet en premier, puis un numéro sur deux chiffres et le titre :
+   **Python 01 — Premiers pas**, **Messagerie 01 — Mon premier message**. La vue élève
+   trie les titres par ordre alphabétique français, sans distinguer casse et accents, et
+   respecte l’ordre des numéros. Garder les identifiants et les chemins existants.
 
    `etapes` est le nombre d’étapes internes suivies, même si la navigation les regroupe en
    missions. Si le cours utilise les variantes corrigées côté serveur, ajouter par exemple
