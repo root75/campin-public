@@ -20,7 +20,7 @@ Statut exact : [à compléter]
 Disponible sans réseau ? [une phrase avec l’indice qui le justifie, ou l’information manquante]
 
 3. Dépanner — Un seul incident rédigé
-Les quatre incidents sont manipulés personnellement. Les trois autres sont expliqués oralement au professeur, sans autre compte rendu.
+Les quatre incidents sont manipulés personnellement. Les trois autres sont vérifiés à deux, en alternant acteur et observateur ; chacun corrige son propre geste. Aucun autre compte rendu. Le défi final reste individuel.
 Incident choisi : [fenêtre masquée / fenêtre active / fichier et application / écran éteint]
 Hypothèse AVANT le test : [une ligne]
 Test choisi AVANT de le réaliser : [une ligne]

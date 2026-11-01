@@ -16,7 +16,7 @@ Rapport : `pas-a-pas/trame-rapport.txt` donne un plan sans mise en forme, copiab
 accessible dans ce même dialogue et copiée en fin de rapport avec la trame. L’élève crée un seul document Google Docs, le met en page et y saisit
 des preuves courtes : tableau et capture légendée, une phrase de disponibilité, un seul incident
 en quatre lignes et une décision finale en deux phrases. Les trois autres incidents sont
-manipulés et expliqués à l’oral au professeur, sans autre compte rendu. À la fin seulement, il joint ce document dans le
+manipulés et vérifiés en binôme, avec échange des rôles et correction par l’auteur, sans autre compte rendu. Le professeur garde le contrôle individuel du défi final. À la fin seulement, il joint ce document dans le
 nouveau devoir Classroom que le professeur devra préparer et publier lui-même.
 
 Collecte du site : API `noter()` et Journal existants. Les étapes internes **1, 3, 6** conservent les hypothèses
@@ -45,7 +45,7 @@ Classroom. Aucun lecteur Google Drive installé n’est supposé.
 
 La progression élève montre quatre entrées. Les sept étapes internes distinguent hypothèse
 avant manipulation et déclaration de mission terminée. Aucun recueil de validation orale ajouté :
-le professeur note les passages sur une liste privée. Si une ancienne séance de test à 14 étapes
+le professeur note le contrôle individuel final sur une liste privée ; les vérifications d’entraînement sont réalisées en binôme. Si une ancienne séance de test à 14 étapes
 avait été utilisée, démarrer une nouvelle séance de test ; ne pas interpréter ses numéros comme
 ceux du nouveau parcours. Les brouillons locaux utilisent une clé de version distincte.
 
@@ -53,3 +53,9 @@ Mode séquence : tableau professeur ▸ Labo 07 ▸ Lancer la séquence. Alterna
 vote à effectifs agrégés, essais sur les postes, mises en commun et défi individuel. La fiche
 affiche aussi une citation finale de Descartes, sourcée dans la préparation ; elle apparaît à tous
 sans condition de réussite, et n’est pas annoncée avant la fin.
+
+Autonomie : aides contextualisées et indices, puis binôme qui explique ; chevalet pour un
+blocage persistant. Relecture réciproque avant le défi final sur trois critères, avec un point
+réussi et une correction possible à l’oral. Aucune fiche de relecture ou note de camarade ajoutée.
+Le mode séquence contient un atelier de relecture ; le défi final reste individuel et sous le
+contrôle du professeur. Le bouton du moniteur est présenté une fois au groupe, sinon cas simulé.
