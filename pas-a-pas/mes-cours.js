@@ -1,3 +1,4 @@
+(() => {
 /* Mes cours — le script de mes-cours.html. Dans un fichier à part, chargé par son adresse absolue :
    Apps Script abîme le script écrit dans la page (voir outils/pas-a-pas/LISEZMOI.md, « Ajouter un cours »). */
 const SUIVI = typeof google !== "undefined" && google.script && google.script.run;
@@ -17,7 +18,43 @@ function serveur(fn, ...args){
   return Promise.resolve(DEMO_FN[fn](...args));
 }
 
-let choisie = "";
+let choisie = "", consultation = false, rejoint = false;
+async function actualise(){
+  if(consultation || rejoint || !$("confirmer").hidden) return;
+  consultation = true;
+  try {
+    const d = await serveur("mesCours");
+    if(d.seance){
+      const html = await serveur("rejoindreSeance");
+      if(html){
+        rejoint = true;
+        clearInterval(minuterie);
+        await ouvreFiche(html);
+        return;
+      }
+    }
+    affiche(d);
+  } catch(e) { /* Une coupure passagère sera retentée sans masquer le choix de cours. */ }
+  finally { consultation = false; }
+}
+// Remplacer le contenu sans document.open : le pont Google conserve ses écouteurs sur window.
+async function ouvreFiche(html){
+  const page = new DOMParser().parseFromString(html, "text/html");
+  const scripts = [...page.querySelectorAll("script")];
+  scripts.forEach(s=>s.remove());
+  document.head.replaceChildren(...page.head.childNodes);
+  document.body.replaceChildren(...page.body.childNodes);
+  // Comme lors d'un chargement normal, la fiche précède les scripts différés de suivi.
+  for(const original of [...scripts.filter(s=>!s.defer), ...scripts.filter(s=>s.defer)]){
+    const s = document.createElement("script");
+    for(const a of original.attributes) s.setAttribute(a.name, a.value);
+    s.removeAttribute("defer"); s.async = false;
+    s.textContent = original.textContent;
+    if(s.src){
+      await new Promise((ok, ko)=>{ s.onload=ok; s.onerror=ko; document.body.append(s); });
+    } else document.body.append(s);
+  }
+}
 function affiche(d){
   // L’identité et la classe confirmée viennent du serveur.
   if(d.identite){
@@ -63,4 +100,9 @@ $("oui").addEventListener("click", ()=>{
 });
 
 if(!SUIVI) $("demo").hidden = false;
-serveur("mesCours").then(affiche, echec);
+let minuterie;
+serveur("mesCours").then(d=>{
+  affiche(d);
+  if(SUIVI) minuterie = setInterval(actualise, 5000);
+}, echec);
+})();

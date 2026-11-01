@@ -174,6 +174,7 @@ const DEMO_SEQ = {
     DEMO_ETAT = { lance: nouvelle || !DEMO_ETAT ? Date.now() : DEMO_ETAT.lance, i, phase: phase || (m.type==="vote" ? "ouvert" : "") };
     return DEMO_ETAT;
   },
+  reprendreSequence: () => DEMO_ETAT,
   arreterSequence: () => { DEMO_ETAT = null; return null; },
   reponses: (cours, i) => {
     const m = DEMO_CONTENU[cours].moments[i], t = Math.floor((Date.now() - DEMO_ETAT.lance) / 4000);
@@ -193,7 +194,7 @@ function dessineEtatSeq(){
   const b = (t, cls, f) => { const x = txt("button", "btn "+cls, t); x.type = "button"; x.addEventListener("click", f); z.append(x); };
   if(SEQ.etat){
     z.append(txt("span","maj","Séquence en cours · moment "+(SEQ.etat.i+1)+" / "+SEQ.contenu.moments.length));
-    b("Reprendre la séquence", "", ()=>ouvreProjection());
+    b("Reprendre la séquence", "", ()=>serveur("reprendreSequence", $("cours").value).then(e=>{ SEQ.etat = e; ouvreProjection(); }).catch(erreur));
     b("Arrêter", "vide", ()=>serveur("arreterSequence", $("cours").value).then(()=>{ SEQ.etat = null; dessineEtatSeq(); }).catch(erreur));
   } else b("Lancer la séquence", "", ()=>allerA(0, "", true));
 }
