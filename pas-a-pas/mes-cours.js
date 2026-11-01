@@ -19,6 +19,9 @@ function serveur(fn, ...args){
 
 let choisie = "";
 function affiche(d){
+  // L'identité et la classe confirmée viennent du serveur, jamais du choix local.
+  if(d.identite) document.querySelectorAll(".compte-connecte .compte-role")
+    .forEach(n => { n.textContent = d.identite.libelle; });
   ["attente","choisir","confirmer","mes-cours","erreur"].forEach(id => $(id).hidden = true);
   if(!d.email){ montreErreur("Ouvre ce lien avec ton compte de l'école (arcampin.be)."); return; }
   if(!d.classe){
