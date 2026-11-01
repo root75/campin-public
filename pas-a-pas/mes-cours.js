@@ -6,16 +6,21 @@ const $ = id => document.getElementById(id);
 const txt = (tag, cls, t) => { const n=document.createElement(tag); if(cls) n.className=cls; if(t!=null) n.textContent=t; return n; };
 
 /* Un seul chemin vers le serveur ; sans Apps Script, une imitation pour l'aperçu. */
-const DEMO = { classe:"", ouverts:{ "2B":["messagerie-1"], "2E":["messagerie-1"], "3F":["python-1","python-2","labo-07"] },
-  titres:{ "labo-07":"Labo 07 — Dans les coulisses du PC", "messagerie-1":"Mon premier message", "python-1":"Premiers pas en Python 1", "python-2":"Premiers pas en Python 2" } };
+const DEMO = { classe:"", ouverts:{ "2B":["messagerie-1"], "2E":["messagerie-1"], "3F":["python-1","python-2","labo-07"] }, cours:[] };
+function lecteurCatalogue(){
+  return globalThis.CatalogueCours ? Promise.resolve(globalThis.CatalogueCours)
+    : new Promise((ok,ko)=>{const s=document.createElement('script');s.src='https://root75.github.io/campin-public/pas-a-pas/catalogue.js';s.onload=()=>ok(globalThis.CatalogueCours);s.onerror=()=>ko(Error('Le lecteur du catalogue ne se charge pas.'));document.head.append(s);});
+}
+function cataloguePublic(frais=false){return lecteurCatalogue().then(c=>c.charger(frais));}
+const catalogueDemo=SUIVI ? Promise.resolve() : cataloguePublic().then(d=>{DEMO.cours=d.cours;});
 const DEMO_FN = {
   mesCours: () => ({ email:"eleve@arcampin.be", classe:DEMO.classe, classes:Object.keys(DEMO.ouverts),
-    cours:(DEMO.ouverts[DEMO.classe]||[]).map(c=>({ cle:c, titre:DEMO.titres[c], url:"#" })) }),
+    cours:DEMO.cours.filter(c=>(DEMO.ouverts[DEMO.classe]||[]).includes(c.id)).map(c=>({ cle:c.id, titre:c.titre, url:"https://root75.github.io/campin-public/"+c.chemin })) }),
   choisirClasse: c => { DEMO.classe = c; return DEMO_FN.mesCours(); }
 };
 function serveur(fn, ...args){
   if(SUIVI) return new Promise((ok, ko) => google.script.run.withSuccessHandler(ok).withFailureHandler(ko)[fn](...args));
-  return Promise.resolve(DEMO_FN[fn](...args));
+  return catalogueDemo.then(()=>DEMO_FN[fn](...args));
 }
 
 let choisie = "", consultation = false, rejoint = false;
