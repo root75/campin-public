@@ -516,5 +516,186 @@
         "repere": "Annoncer l'évaluation seulement si quoi et quand sont fixés, avec au moins une semaine de délai. Types, input et la date restent à décider ; ne rien inventer. Séance non cotée ; entraînements fait / non fait selon la décision de Vincent."
       }
     ]
+  },
+  "labo-07": {
+    "titre": "Labo 07 — Dans les coulisses du PC",
+    "objectif": "Enquêter sur son PC Windows : hypothèse, manipulation personnelle, preuve courte et conclusion justifiée. Parcours par contenu sur plusieurs périodes ; premier rendez-vous le vendredi 6 novembre 2026, 8h10–9h50, avec retour Labo 06.",
+    "competences": [
+      "S3M4.1 « Différencier système d’exploitation et machine »",
+      "S3M4.4 « Utiliser l’interface du système d’exploitation et les périphériques »",
+      "Observation des ressources : prolongement. OneDrive : réactivation du Labo 06."
+    ],
+    "preparation": [
+      "Réserver 15–25 min de retour sur le Labo 06. Prévoir le fichier AAAA-MM-JJ_OneDrive dans Documents / Informatique et une démo sans données privées si introuvable.",
+      "Compte scolaire : Mes cours ▸ classes et cours ouverts ▸ cocher labo-07 uniquement pour 3F. Tableau ▸ labo-07 ▸ Nouvelle séance ▸ 3F pour le premier lancement. Conserver la séance pour les continuations.",
+      "Vérifier sur un PC élève : Gestionnaire des tâches et ses totaux, Calculatrice, Bloc-notes, fenêtres, chemin et Statut OneDrive. Aucun arrêt de processus, suppression ou changement de réglage.",
+      "Collecte existante : réponses textuelles de 200 caractères au maximum dans Journal, évènement juste = étape enregistrée. Pas de dépôt de capture, pas de correction ou de note automatique. Lire les preuves dans la feuille privée ; observer les gestes pendant la circulation.",
+      "Projection : utiliser uniquement Lancer la séquence. Ne jamais projeter tableau nominatif, Journal, humeur ou avis. Les moments de ce conducteur ne recueillent ni mots ni votes."
+    ],
+    "moments": [
+      {
+        "type": "ecran",
+        "titre": "Retour sur le Labo 06",
+        "min": 15,
+        "methode": "Collectif oral, sans réponse individuelle projetée",
+        "lignes": [
+          "Retrouvons le fil avant de commencer l’enquête.",
+          "Où avions-nous enregistré notre fichier ?"
+        ],
+        "questions": [
+          "Quel indice donne son emplacement ?",
+          "Qu’est-ce qui reste à revoir ?"
+        ],
+        "repere": "Vendredi 6 novembre 2026, 8h10–8h25. Marge extensible à 25 min. Utiliser un exemple fictif préparé ; ne projeter ni le journal ni une copie d’élève."
+      },
+      {
+        "type": "ecran",
+        "titre": "Dans les coulisses du PC",
+        "min": 8,
+        "methode": "Collectif oral, sans réponse individuelle projetée",
+        "lignes": [
+          "Une fenêtre invisible signifie-t-elle que le logiciel ne tourne plus ?",
+          "Hypothèse → test → preuve → conclusion.",
+          "Chacun manipule. Première réponse seul, comparaison à deux ensuite."
+        ],
+        "questions": [
+          "Qu’est-ce qui ferait changer ton avis ?"
+        ],
+        "repere": "4 périodes de labo et 3 de logique par semaine. Un débordement de logique peut réduire le temps de labo. Les moments sont organisés par contenu et peuvent être repris, sans correspondance avec une heure."
+      },
+      {
+        "type": "atelier",
+        "titre": "Mission 1 — Observer ce qui tourne",
+        "min": 35,
+        "methode": "Individuel puis mise en commun",
+        "lignes": [
+          "Formule ton hypothèse avant d’ouvrir l’application.",
+          "Compare les mêmes totaux avant et après.",
+          "Aucune fin de tâche, aucun réglage."
+        ],
+        "blocs": [
+          1,
+          3
+        ]
+      },
+      {
+        "type": "ecran",
+        "titre": "Mise en commun 1 — Variation et cause",
+        "min": 10,
+        "methode": "Collectif oral, sans réponse individuelle projetée",
+        "lignes": [
+          "Compare deux relevés fictifs fournis par le professeur.",
+          "Une variation suffit-elle à prouver une cause unique ?"
+        ],
+        "questions": [
+          "Qu’avez-vous vraiment observé ?",
+          "Quelle autre cause reste possible ?"
+        ],
+        "repere": "Faire ouvrir la synthèse du bloc 3 après la discussion. Observation des ressources = prolongement, sans rattachement artificiel à une compétence de 3e."
+      },
+      {
+        "type": "atelier",
+        "titre": "Mission 2 — Retrouver ses données",
+        "min": 30,
+        "methode": "Individuel puis mise en commun",
+        "lignes": [
+          "Retrouve ton fichier du Labo 06.",
+          "Relève chemin et statut avant de conclure.",
+          "N’ouvre pas le fichier ; ne modifie pas sa synchronisation."
+        ],
+        "blocs": [
+          4,
+          6
+        ],
+        "repere": "Premier rendez-vous : vers 9h18–9h40, commencer seulement cette mission si possible. Garder 9h40–9h50 pour enregistrer, noter le point de reprise et ranger. Sinon reprendre au cours suivant."
+      },
+      {
+        "type": "ecran",
+        "titre": "Mise en commun 2 — Visible et disponible",
+        "min": 10,
+        "methode": "Collectif oral, sans réponse individuelle projetée",
+        "lignes": [
+          "Un fichier visible dans l’Explorateur est-il toujours lisible sans réseau ?",
+          "Compare les cas fictifs : nuage, coche verte, statut inconnu."
+        ],
+        "questions": [
+          "Local et synchronisé s’excluent-ils ?",
+          "Quel indice manque si le statut n’est pas affiché ?"
+        ],
+        "repere": "Ouvrir ensuite la synthèse du bloc 6. Aucun changement des réglages OneDrive."
+      },
+      {
+        "type": "atelier",
+        "titre": "Mission 3 — Dépanner",
+        "min": 50,
+        "methode": "Individuel puis mise en commun",
+        "lignes": [
+          "Quatre incidents réversibles, chacun sur son poste.",
+          "Avant chaque test : une hypothèse et un test choisi.",
+          "Fenêtre masquée · fenêtre active · fichier et application · écran éteint."
+        ],
+        "blocs": [
+          7,
+          11
+        ],
+        "repere": "Écran externe : identifier physiquement son bouton avant tout essai. Portable/tout-en-un : cas simulé. Micro-pause entre deux incidents ; suite possible au cours suivant."
+      },
+      {
+        "type": "ecran",
+        "titre": "Mise en commun 3 — Pourquoi ce test ?",
+        "min": 10,
+        "methode": "Collectif oral, sans réponse individuelle projetée",
+        "lignes": [
+          "Explique un test qui départage deux hypothèses.",
+          "Un test sans danger, puis une preuve pour conclure."
+        ],
+        "questions": [
+          "Pourquoi ne fallait-il pas arrêter le PC ?",
+          "Quel indice montre que le fichier existe encore ?"
+        ],
+        "repere": "Faire ouvrir la synthèse du bloc 11 après les explications. Reformuler oralement sur cas fictifs, sans afficher les réponses du journal."
+      },
+      {
+        "type": "atelier",
+        "titre": "Situation finale — Le dossier de secours",
+        "min": 28,
+        "methode": "Individuel puis mise en commun",
+        "lignes": [
+          "Situation nouvelle, travail individuel.",
+          "Enregistre ton hypothèse et ton test avant de manipuler.",
+          "Montre ensuite au professeur le geste et l’indice."
+        ],
+        "blocs": [
+          12,
+          14
+        ],
+        "repere": "Travail quotidien : proposition /10 affichée au bloc 12 et dans le mémo. Correction manuelle ; avancement ne vaut pas réussite. Bilan sommatif global réservé à décembre, sans date fixée."
+      },
+      {
+        "type": "ecran",
+        "titre": "Synthèse finale et reprise",
+        "min": 8,
+        "methode": "Collectif oral, sans réponse individuelle projetée",
+        "lignes": [
+          "Qu’est-ce qui t’a fait revoir une hypothèse ?",
+          "Je distingue la machine, Windows, les applications et mes fichiers.",
+          "J’enregistre ma dernière réponse avant de quitter."
+        ],
+        "questions": [
+          "Quelle preuve manque pour être plus sûr ?"
+        ],
+        "repere": "Fin de la première séance : arrêter ici même si la mission est inachevée. Ne pas créer Nouvelle séance pour une simple continuation : cela réinitialise la reprise serveur."
+      },
+      {
+        "type": "fin",
+        "titre": "Retour à l’enquête",
+        "min": 1,
+        "methode": "Collectif oral, sans réponse individuelle projetée",
+        "lignes": [
+          "La fiche reste disponible pour relire les synthèses ou achever une preuve.",
+          "Le professeur examine les démarches ; aucun point n’est calculé automatiquement."
+        ]
+      }
+    ]
   }
 }
