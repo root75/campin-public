@@ -190,7 +190,7 @@ const BLOCS = [
     veux:"Un fichier à mon nom, enregistré AVANT d'écrire, pour ne rien perdre.",
     fais:`<span class="chemin">touche Windows ▸ je tape Thonny ▸ Entrée</span>. Puis <span class="chemin">menu Fichier ▸ Enregistrer sous… (Ctrl+Maj+S) ▸ Documents ▸ Python ▸ Nom du fichier</span> : <b>01_Les-vies_Nom.py</b> (avec MON nom) ▸ bouton <span class="chemin">Enregistrer</span>.`,
     vois:"L'onglet du haut, dans Thonny, affiche le nom de mon fichier.",
-    coince:["Thonny ne se lance pas : je reviens au bloc 9 (bouton ← Bloc précédent) et je tape le défi dans le cadre « Mon programme ». Rien n'y est enregistré : je montre mon écran au professeur.",
+    coince:["Thonny ne se lance pas : nouvel onglet (Ctrl+T) ▸ barre d’adresse ▸ https://cscircles.cemc.uwaterloo.ca/dev/console-fr/ ▸ Entrée. Je montre mon écran au professeur : il organise la sauvegarde avant que je continue le défi dans cette console de secours. Je ne recopie pas un nom de fichier fictif pour valider ce bloc.",
             "Sans .py à la fin, Thonny n'exécute pas comme attendu : Fichier ▸ Enregistrer sous… et je corrige le nom.",
             "Deux signes différents : le tiret - entre Les et vies, le trait de soulignement _ partout ailleurs."],
     q:{ type:"saisie", q:"Recopie le nom de ton fichier, tel que Thonny l'affiche.",
