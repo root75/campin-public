@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Je retiens — Labo 07 · Dans les coulisses du PC</title>
+<style>
+:root{color-scheme:light dark;--fond:#f3f5f7;--carte:#fff;--encre:#1f2a33;--doux:#5b6873;--trait:#d5dce2;--accent:#1d5a73;--pale:#e2f3ea}
+@media(prefers-color-scheme:dark){:root{--fond:#141a1f;--carte:#1d252c;--encre:#e8edf1;--doux:#a3b0ba;--trait:#33404a;--accent:#7cc3de;--pale:#183427}}
+*{box-sizing:border-box}body{margin:0;background:var(--fond);color:var(--encre);font:1.125rem/1.6 'Segoe UI',Arial,sans-serif}main{max-width:48rem;margin:auto;padding:24px 16px 48px;display:grid;gap:20px}h1,h2,h3,p{margin:0}h1,h2,h3{line-height:1.25}h1{font-size:2rem}h2{font-size:1.5rem}h3{font-size:1.15rem}header,section,details{display:grid;gap:12px}section,details{background:var(--carte);border:1px solid var(--trait);padding:18px;border-radius:12px}section details{padding:12px}summary{cursor:pointer;font-weight:700}details:not([open]){display:block}details[open]>summary{margin-bottom:12px}ul,ol{margin:0;padding-left:1.4rem}li+li{margin-top:8px}a{color:var(--accent)}a:focus-visible,summary:focus-visible{outline:3px solid #e3a922;outline-offset:4px}.doux{color:var(--doux);font-size:1rem}.methode{background:var(--pale);padding:12px;border-radius:8px}.tableau{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:1rem}th,td{text-align:left;vertical-align:top;border:1px solid var(--trait);padding:10px}caption{text-align:left;font-weight:700;margin-bottom:8px}.repere{border-left:4px solid var(--accent);padding-left:12px}footer{display:grid;gap:12px}
+@media print{body{background:#fff;color:#000}main{max-width:none;padding:0}section,details{break-inside:avoid}a{color:inherit}}
+</style>
+</head>
+<body>
+<main>
+<header>
+  <p class="doux">Labo 07 · Dans les coulisses du PC</p>
+  <h1>Je retiens</h1>
+  <p>Pour préparer le bilan : je sais reconnaître ces notions dans une situation et justifier un geste.</p>
+  <p>En classe, ferme cet onglet pour retrouver ton enquête dans Mes cours. <a href="https://root75.github.io/campin-public/labo-07/pas-a-pas/">Ouvrir l’aperçu de l’enquête</a>.</p>
+</header>
+<section aria-labelledby="essais">
+  <h2 id="essais">D’abord, trois situations sans aide</h2>
+  <p>Réponds mentalement ou à voix basse <b>avant</b> d’ouvrir chaque correction. Ensuite, compare avec un voisin et explique ton choix. Rien à recopier dans le rapport ; aucune réponse n’est envoyée.</p>
+  <h3>1. Qui fait quoi ?</h3>
+  <p>Tu utilises le clavier pour écrire « test » dans Bloc-notes sous Windows. Le texte apparaît sur l’écran. Identifie le matériel, le système d’exploitation, l’application et le rôle des deux périphériques.</p>
+  <details id="correction-1"><summary>Comparer avec la correction 1</summary><p>Le PC, le clavier et l’écran sont du matériel. <b>Windows</b> est le système d’exploitation ; <b>Bloc-notes</b> est l’application. Le clavier transmet une saisie (entrée) ; l’écran affiche le résultat (sortie). Un texte enregistré devient un fichier que l’on peut retrouver par son nom et son emplacement.</p></details>
+  <h3>2. Un nom visible, un contenu disponible ?</h3>
+  <p>Dans le dossier OneDrive scolaire, <b>Plan.txt</b> porte un nuage bleu ; <b>Notes.txt</b> porte une coche verte sur fond blanc. Lequel est déjà disponible sans Internet sur ce PC ? Quel indice justifie ta réponse ?</p>
+  <details id="correction-2"><summary>Comparer avec la correction 2</summary><p><b>Notes.txt</b> est disponible localement : sa coche indique qu’il a été téléchargé. Le contenu de <b>Plan.txt</b> est uniquement en ligne : le voir dans l’Explorateur ne prouve pas qu’il est téléchargé. Ici, on lit les statuts sans ouvrir les fichiers ni changer la synchronisation.</p></details>
+  <h3>3. Le clavier semble ne plus répondre</h3>
+  <p>Bloc-notes reste visible, mais la Calculatrice est passée devant. Tu tapes et rien ne s’ajoute au texte. Quelle hypothèse proposes-tu ? Quel test simple permet de la vérifier ?</p>
+  <details id="correction-3"><summary>Comparer avec la correction 3</summary><p><b>Hypothèse :</b> Bloc-notes n’est plus la fenêtre active. <b>Test :</b> clique dans sa zone de texte, puis saisis « test » dans ce document d’essai. Si le mot apparaît, ce résultat appuie l’hypothèse. Si le problème persiste, il faut chercher une autre cause. Ne modifie pas un travail important pour tester.</p></details>
+</section>
+<details id="synthese">
+  <summary>Puis j’ouvre le « Je retiens »</summary>
+  <section aria-labelledby="machine">
+    <h2 id="machine">1. Machine, système et application</h2>
+    <ul>
+      <li><b>La machine</b> est le matériel physique du PC et ses périphériques : écran, clavier, souris…</li>
+      <li><b>Le système d’exploitation</b> gère les ressources et permet d’utiliser la machine, ses périphériques et ses applications. Sur notre PC scolaire, c’est Windows.</li>
+      <li><b>Une application</b> est un logiciel utilisé pour une tâche : Bloc-notes pour écrire, Calculatrice pour calculer.</li>
+      <li><b>Un fichier</b> contient des données enregistrées. Il a un nom et un emplacement. Fermer une application ne supprime pas ses fichiers enregistrés ; les changements non enregistrés peuvent être perdus.</li>
+    </ul>
+  </section>
+  <section aria-labelledby="interface">
+    <h2 id="interface">2. Utiliser l’interface et les périphériques</h2>
+    <p>Une <b>fenêtre</b> présente une application ou un document à l’écran. La <b>fenêtre active</b> reçoit les actions du clavier ; pour saisir du texte, je clique aussi dans la bonne zone de saisie.</p>
+    <p><b>Réduire</b> une fenêtre la masque sans la fermer. Je la retrouve par son icône dans la barre des tâches ou avec <b>Alt + Tab</b>.</p>
+    <p>Le clavier et la souris transmettent mes actions ; l’écran affiche le résultat. Un écran noir ne prouve pas que le PC est arrêté : le moniteur peut être éteint alors que la machine fonctionne encore.</p>
+  </section>
+  <section aria-labelledby="donnees">
+    <h2 id="donnees">3. Retrouver un fichier et lire son statut</h2>
+    <p>Dans l’<b>Explorateur de fichiers</b>, je relève le nom et le chemin du fichier. Le chemin indique son emplacement.</p>
+    <p><b>Local</b> signifie que le contenu est présent sur ce PC. <b>Synchronisé avec OneDrive</b> signifie que les modifications sont reportées entre le dossier du PC et l’espace en ligne quand la synchronisation fonctionne. Un fichier peut être à la fois local et synchronisé.</p>
+    <div class="tableau"><table>
+      <caption>Statuts OneDrive à reconnaître</caption>
+      <thead><tr><th scope="col">Indice</th><th scope="col">Ce que je peux en conclure sur ce PC</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Nuage bleu</th><td>Contenu uniquement en ligne ; une connexion est nécessaire pour le télécharger.</td></tr>
+        <tr><th scope="row">Coche verte sur fond blanc</th><td>Contenu téléchargé et disponible localement, y compris sans Internet.</td></tr>
+        <tr><th scope="row">Coche blanche dans un cercle vert plein</th><td>Fichier conservé sur cet appareil pour rester disponible hors connexion.</td></tr>
+      </tbody>
+    </table></div>
+    <p>Des flèches circulaires indiquent une synchronisation en cours ; une croix rouge signale un problème. Je relève l’indice et demande de l’aide si nécessaire.</p>
+    <p class="doux">Source : <a href="https://support.microsoft.com/fr-fr/onedrive/what-do-the-onedrive-icons-mean" target="_blank" rel="noopener">Microsoft — signification des icônes OneDrive</a>. Dans ce labo, j’observe les statuts sans les modifier.</p>
+  </section>
+  <section aria-labelledby="depanner">
+    <h2 id="depanner">4. Dépanner en raisonnant</h2>
+    <p class="methode"><b>Observer → formuler une hypothèse → choisir un test réversible → manipuler et relever une preuve → expliquer la conclusion.</b></p>
+    <p>Ma conclusion s’appuie sur un indice précis. Si le test ne confirme pas mon idée, je peux changer d’hypothèse. Je protège les fichiers et les réglages ; je ne termine aucun processus.</p>
+  </section>
+  <section aria-labelledby="ressources">
+    <h2 id="ressources">Pour aller plus loin — observer les ressources</h2>
+    <p>Le Gestionnaire des tâches montre les applications et l’utilisation du <b>processeur</b> (exécution des instructions) et de la <b>mémoire vive</b> (données utilisées pendant le fonctionnement). Cette mémoire de travail se distingue du stockage des fichiers.</p>
+    <p>Je compare avant et après une action, puis plusieurs relevés. Une hausse du total ne prouve pas qu’une seule application en est la cause : d’autres activités peuvent intervenir.</p>
+    <p class="doux">Cette observation est un prolongement du labo.</p>
+  </section>
+  <section aria-labelledby="revision">
+    <h2 id="revision">Pour vérifier que j’ai compris</h2>
+    <p>Referme cette synthèse. Reprends les trois situations avec d’autres noms de fichiers ou d’applications. Peux-tu expliquer chaque réponse avec un exemple, un geste ou un indice ?</p>
+  </section>
+</details>
+<footer>
+  <p class="repere"><i>Comprendre, c’est parfois apprendre à mieux regarder ce qu’on croyait déjà connaître.</i></p>
+  <p><a href="https://root75.github.io/campin-public/cours/">Ouvrir Mes cours avec mon compte scolaire</a></p>
+</footer>
+</main>
+</body>
+</html>

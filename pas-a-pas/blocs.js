@@ -287,6 +287,11 @@ function citation(c){
 
 function fin(z){
   z.append(txt("h2",null,FIN.titre), txt("p",null,FIN.texte));
+  if(FIN.revision){
+    const revision=el("div","encart"),lien=txt("a","btn vide",FIN.revision.titre);
+    lien.href=FIN.revision.url;lien.target="_blank";lien.rel="noopener";
+    revision.append(txt("p",null,FIN.revision.texte),lien);z.append(revision);
+  }
   if(FIN.citation) z.append(citation(FIN.citation));
   const plus = el("div","encart");
   plus.append(txt("h3",null,"⚡ J'ai fini avant les autres"), txt("p",null,FIN.plus),
