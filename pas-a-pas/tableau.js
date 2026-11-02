@@ -35,7 +35,7 @@ async function chargeRessourcesProf(){
     const liens = await new Promise((ok,ko)=>google.script.run.withSuccessHandler(ok).withFailureHandler(ko).ressourcesProf(cours));
     if(demande !== demandeRessources || cours !== $("cours").value) return;
     zone.replaceChildren();
-    for(const [cle, libelle] of [["preparation","Préparation de la leçon"],["dossier","Dossier Drive"]]){
+    for(const [cle, libelle] of [["preparation","Fiche professeur — préparation et corrigé"],["dossier","Dossier Drive"]]){
       if(!liens || !liens[cle]) continue;
       const url = new URL(liens[cle]);
       if(url.protocol !== "https:" || !["docs.google.com","drive.google.com"].includes(url.hostname)) continue;
@@ -218,16 +218,16 @@ function dessineEtatSeq(){
   z.hidden = false;
   const b = (t, cls, f) => { const x = txt("button", "btn "+cls, t); x.type = "button"; x.addEventListener("click", f); z.append(x); };
   if(SEQ.etat){
-    z.append(txt("span","maj","Séquence en cours · moment "+(SEQ.etat.i+1)+" / "+SEQ.contenu.moments.length));
-    b("Reprendre la séquence", "", ()=>serveur("reprendreSequence", $("cours").value).then(e=>{ SEQ.etat = e; ouvreProjection(); }).catch(erreur));
+    z.append(txt("span","maj","Cours collectif en cours · moment "+(SEQ.etat.i+1)+" / "+SEQ.contenu.moments.length));
+    b("Reprendre le cours collectif", "", ()=>serveur("reprendreSequence", $("cours").value).then(e=>{ SEQ.etat = e; ouvreProjection(); }).catch(erreur));
     b("Arrêter", "vide", ()=>serveur("arreterSequence", $("cours").value).then(()=>{ SEQ.etat = null; dessineEtatSeq(); }).catch(erreur));
-  } else b("Lancer la séquence", "", ()=>allerA(0, "", true));
+  } else b("Lancer le cours collectif", "", ()=>allerA(0, "", true));
 }
 function dessineConducteur(){
   const c = SEQ.contenu, panneau = $("conducteur");
   panneau.hidden = !c;
   if(!c) return;
-  $("conducteur-titre").textContent = c.titre;
+  $("conducteur-titre").textContent = "Cours collectif — " + c.titre;
   const duree = c.moments.reduce((n,m)=>n+(m.min||0),0);
   $("conducteur-objectif").textContent = (c.objectif || "") + " · Environ " + duree + " min, à adapter au groupe.";
   const prep = $("conducteur-preparation"); prep.replaceChildren();
