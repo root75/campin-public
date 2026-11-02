@@ -34,7 +34,10 @@ function dessine(){
   if(i===1){z.append(txt('p','note','Les sept repères servent à retrouver ma place pendant la copie ; je sépare les strophes à l’étape 3.'));}
   const ul=txt('ul','cases');b.actions.forEach((t,j)=>{
     const cle=etat.position+'.'+(j+1),li=txt('li'),lab=txt('label'),cb=txt('input');cb.type='checkbox';cb.dataset.cle=cle;cb.checked=!!etat.cases[cle];
-    cb.addEventListener('change',()=>sauve({type:'case',etape:i+1,cle,fait:cb.checked}));lab.append(cb,txt('span',null,t));li.append(lab);ul.append(li);
+    cb.addEventListener('change',()=>sauve({type:'case',etape:i+1,cle,fait:cb.checked}));lab.append(cb,txt('span',null,t));li.append(lab);
+    const aide=b.aides && b.aides[j];
+    if(aide){const d=txt('details');d.append(txt('summary',null,aide.titre),txt('p',null,aide.explication),txt('blockquote',null,aide.exemple),txt('p','note',aide.rappel));li.append(d);}
+    ul.append(li);
   });z.append(ul);
   if(i===6)z.append(txt('p','note','1re et 2e : Garamond 14 · 3e et 4e : Arial 12 · 5e : Calibri 10 · 6e et 7e : Arial Black 8.'));
   if(i===1||i===8){const lien=txt('a','btn vide',i===1?'Voir le texte à recopier':'Voir la grille et remplir « Moi »');lien.href=i===1?'#texte':'#grille';lien.addEventListener('click',()=>{$(i===1?'texte':'grille').open=true;});z.append(lien);}
