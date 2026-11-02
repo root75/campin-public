@@ -1,0 +1,5 @@
+/* Navigation commune aux modules, y compris dans les cadres Apps Script. */
+.campin-navigation{display:flex;flex-wrap:wrap;gap:8px;max-width:70rem;margin:0 auto;padding:12px 0;position:relative;z-index:1}
+.campin-navigation a{display:inline-flex;align-items:center;gap:8px;min-height:44px;box-sizing:border-box;padding:8px 16px;border:2px solid var(--encre-bouton,#1d5a73);border-radius:10px;background:var(--carte,#fff);color:var(--encre-bouton,#1d5a73);font:700 1rem/1.5 "Segoe UI",Arial,sans-serif;text-decoration:none}
+.campin-navigation a:hover{text-decoration:underline}
+.campin-navigation a:focus-visible{outline:3px solid var(--fromage,#e3a922);outline-offset:3px}

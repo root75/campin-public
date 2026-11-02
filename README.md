@@ -19,3 +19,5 @@ Le [catalogue commun](pas-a-pas/cours.json) centralise titres, liens et nombres 
 [Ajouter un cours et installer la lecture dynamique](pas-a-pas/CATALOGUE.md) : une dernière
 mise à jour de Code.gs est nécessaire ; ensuite, le tableau propose **Actualiser le catalogue**.
 Les autorisations par classe restent privées.
+
+Les modules et activités proposent un bouton **Accueil** vers la page publique. Le lien absolu et `target="_top"` permettent aussi le retour depuis les cours intégrés dans Apps Script. Le style commun se trouve dans `assets/navigation.css`.
