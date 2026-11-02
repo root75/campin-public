@@ -6,7 +6,9 @@ Navigation libre, sept repères pendant la copie, grille complète et colonne «
 Le signal « Je bloque » reste attaché à l'étape signalée jusqu'au déblocage explicite.
 
 Les fiches papier et la révision `/rat-de-ville/` sont conservées. Le texte à recopier
-reste l'image du papier, avec transcription accessible. Le menu des majuscules suit
+reste uniquement l’image du papier, cliquable pour l’ouvrir en grand dans un nouvel
+onglet et zoomer. Aucune transcription en texte brut ni restriction globale du
+copier-coller n’est ajoutée. Le menu des majuscules suit
 la vérification de Vincent du 19 octobre : Minuscules/majuscules.
 
 La page publique est un aperçu sans sauvegarde. La sauvegarde scolaire utilise le
@@ -19,7 +21,7 @@ catalogue existants sont réutilisés. Aucun droit d'accès ne vient du catalogu
 
 Source consultée le 2 novembre 2026 : dossier Drive fourni, fiche formative DOCX
 (modifiée le 13 octobre), PDF de la même fiche et générateur privé `construire_rat.js`.
-La grille et la fable sont transcrites sans modification des exigences.
+La grille est transcrite et la fable reste en image, sans modification des exigences.
 
 Installation du serveur et vérifications scolaires restantes :
 `campin-pedagogique/outils/pas-a-pas/LIVRAISON-RAT.md`.
