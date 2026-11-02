@@ -719,6 +719,7 @@
         "min": 8,
         "methode": "Collectif oral, sans réponse individuelle projetée",
         "lignes": [
+          "Ouvre « Je retiens » : réponds aux trois situations avant de consulter les corrections, puis relis la synthèse.",
           "Qu’est-ce qui t’a fait revoir une hypothèse ?",
           "Je distingue machine, Windows, applications et fichiers.",
           "Vérifie l’enregistrement Docs. Quand tout est terminé, utilise la checklist pour joindre le bon document, confirmer la remise dans Classroom."
@@ -726,7 +727,7 @@
         "questions": [
           "Quelle preuve manque pour être plus sûr ?"
         ],
-        "repere": "Rendu unique quand le travail est terminé. Le site ne peut ni joindre un document ni vérifier la remise Classroom. Pour continuer un travail inachevé, garder le même document et la même séance Mes cours."
+        "repere": "Rendu unique quand le travail est terminé. Le site ne peut ni joindre un document ni vérifier la remise Classroom. Pour continuer un travail inachevé, garder le même document et la même séance Mes cours. Le « Je retiens » est accessible en tête de fiche et à la fin : situations orales ou mentales, aucune rédaction ni collecte supplémentaire. Corriger sur exemples fictifs ; ne projeter aucune réponse individuelle. Les ressources restent un prolongement."
       },
       {
         "type": "fin",

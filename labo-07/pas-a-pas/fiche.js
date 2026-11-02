@@ -219,8 +219,9 @@ const BLOCS = [
 ];
 const FIN = {
  titre:'Mon enquête est terminée',
+ revision:{titre:'Je retiens — préparer le bilan',texte:'Trois situations à résoudre sans aide, puis une synthèse pour te corriger. Rien à ajouter au rapport.',url:'https://root75.github.io/campin-public/labo-07/je-retiens.html'},
  citation:{texte:'Car ce n’est pas assez d’avoir l’esprit bon, mais le principal est de l’appliquer bien.',auteur:'René Descartes',source:'Discours de la méthode, première partie (1637)',lien:'Mon hypothèse m’a donné une piste ; c’est mon test et ma preuve qui m’ont permis de la discuter.'},
  texte:'Le rapport contient les preuves utiles. Les incidents non rédigés sont vérifiés à deux ; le défi final reste à expliquer individuellement au professeur. Les déclarations du site ne valident ni les gestes ni la remise du document.',
  plus:'Reprends une de tes hypothèses et explique à l’oral ce qui te ferait changer d’avis.',
- lien:'les trois synthèses de cette enquête'
+ lien:'le « Je retiens » et les synthèses de cette enquête'
 };
