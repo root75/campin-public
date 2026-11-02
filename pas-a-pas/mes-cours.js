@@ -23,13 +23,14 @@ function serveur(fn, ...args){
   return catalogueDemo.then(()=>DEMO_FN[fn](...args));
 }
 
+const choixExplicite = document.body?.dataset?.choixCours === "true";
 let choisie = "", consultation = false, rejoint = false;
 async function actualise(){
   if(consultation || rejoint || !$("confirmer").hidden) return;
   consultation = true;
   try {
     const d = await serveur("mesCours");
-    if(d.seance){
+    if(d.seance && !choixExplicite){
       const html = await serveur("rejoindreSeance");
       if(html){
         rejoint = true;
