@@ -3,7 +3,7 @@
 Pages et jeux destinés aux élèves, servis par GitHub Pages. Rien de nominatif ici : ce dépôt
 est public. Les sources pédagogiques (fiches, mémoire) restent dans `campin-pedagogique`, privé.
 
-- `index.html` — ouvre automatiquement `cours/` pour rejoindre la séance de la classe connectée ; liens de secours et révisions disponibles.
+- `index.html` — accueil public sans connexion ni redirection automatique, logo et valeurs WBE ; accès libre aux révisions et bouton vers la séance avec le compte scolaire.
 - `cours/` — redirection scolaire existante vers Mes cours.
 - `revisions/` — révisions et entraînements regroupés par niveau (1re, 2e, 3e).
 - `prof/` — raccourci vers le tableau professeur du même déploiement (`?vue=prof`).
