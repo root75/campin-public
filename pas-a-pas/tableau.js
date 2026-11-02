@@ -22,6 +22,32 @@ let SEANCES = [];
 const heure = t => new Date(t).toLocaleString("fr-BE",{weekday:"short",day:"numeric",month:"numeric",hour:"2-digit",minute:"2-digit"});
 const choisie = () => SEANCES[Number($("seance").value)] || { classe:"", debut:0, fin:null };
 
+/* Ressources privées du cours sélectionné : aucune URL Drive dans le site public. */
+let demandeRessources = 0;
+async function chargeRessourcesProf(){
+  const zone = $("ressources-prof");
+  if(!zone) return; // compatible avec l'ancien HTML encore en cache
+  const demande = ++demandeRessources, cours = $("cours").value;
+  zone.replaceChildren();
+  if(!SUIVI){ zone.textContent = "Les liens Drive sont disponibles dans le tableau scolaire."; return; }
+  zone.textContent = "Chargement de la préparation…";
+  try {
+    const liens = await new Promise((ok,ko)=>google.script.run.withSuccessHandler(ok).withFailureHandler(ko).ressourcesProf(cours));
+    if(demande !== demandeRessources || cours !== $("cours").value) return;
+    zone.replaceChildren();
+    for(const [cle, libelle] of [["preparation","Préparation de la leçon"],["dossier","Dossier Drive"]]){
+      if(!liens || !liens[cle]) continue;
+      const url = new URL(liens[cle]);
+      if(url.protocol !== "https:" || !["docs.google.com","drive.google.com"].includes(url.hostname)) continue;
+      const a = txt("a","btn vide",libelle); a.href = url.href; a.target = "_blank"; a.rel = "noopener noreferrer";
+      a.title = libelle + " — nouvel onglet"; zone.append(a);
+    }
+    if(!zone.children.length) zone.textContent = "Préparation non renseignée pour ce cours.";
+  } catch(e) {
+    if(demande === demandeRessources) zone.textContent = "Préparation indisponible. Recharge le tableau ; si cela persiste, vérifie la version Apps Script.";
+  }
+}
+
 /* La liste des séances : la plus récente d'abord, sélectionnée par défaut. */
 function remplitSeances(liste){
   SEANCES = liste;
@@ -483,12 +509,12 @@ function demarre(cours){
   const meme=cours.includes(avant);
   if(meme) $("cours").value=avant;
   if(!tableauDemarre){
-    $("cours").addEventListener("change",()=>{chargeSeances();chargeSequence();});
+    $("cours").addEventListener("change",()=>{chargeRessourcesProf();chargeSeances();chargeSequence();});
     $("seance").addEventListener("change",charge);
     setInterval(charge,RAFRAICHIR);tableauDemarre=true;
   }
   if(!meme || !$("seance").options.length) chargeSeances(); else charge();
-  chargeSequence();chargeClasses();
+  chargeRessourcesProf();chargeSequence();chargeClasses();
 }
 function appliqueCatalogue(data){
   for(const obj of [FICHES,NB_BLOCS,TITRES_COURS]) Object.keys(obj).forEach(k=>delete obj[k]);
