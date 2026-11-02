@@ -3,6 +3,9 @@
 Entrée du catalogue : `rat-de-ville-formatif`, 9 étapes sur deux périodes.
 Les 35 petites cases déclarent les actions terminées ; elles ne corrigent pas la copie.
 Navigation libre, sept repères pendant la copie, grille complète et colonne « Moi ».
+À l’étape 8, chaque partie du bloc-notes dispose d’une explication à déplier :
+un élément du festin en exemple, un geste détaillé en exemple et un début de phrase
+à compléter. Les productions sont écrites dans Docs ; au moins six gestes restent attendus.
 Le signal « Je bloque » reste attaché à l'étape signalée jusqu'au déblocage explicite.
 
 Les fiches papier et la révision `/rat-de-ville/` sont conservées. Le texte à recopier

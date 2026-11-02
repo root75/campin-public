@@ -83,7 +83,27 @@ const ETAPES_RAT = [
       "Trois choses que l’on trouve au festin du rat de ville, en liste à puces.",
       "J’écris : Mes gestes. Puis, en liste numérotée : chaque geste de mise en forme, dans l’ordre, avec le bouton, le menu ou le raccourci utilisé. Au moins six gestes.",
       "J’écris une phrase qui répond à : Comment je change la police d’une seule strophe sans toucher aux autres ?"
-    ]
+    ],
+    "aides": {
+      "1": {
+        "titre": "Qu’écrire dans la liste à puces ?",
+        "explication": "Choisis trois choses présentes au festin dans la fable. Dans ton document Docs, écris une chose par ligne, sélectionne ces trois lignes, puis clique sur le bouton Liste à puces (Ctrl + Maj + 8).",
+        "exemple": "Exemple d’un élément possible : le tapis.",
+        "rappel": "À toi de trouver les autres éléments dans la fable. Trois éléments sont attendus au total."
+      },
+      "2": {
+        "titre": "Que signifie « Mes gestes » ?",
+        "explication": "Raconte comment tu as mis ton document en forme. Pour chaque geste, précise ce que tu as sélectionné et le bouton, le menu ou le raccourci utilisé. Sous « Mes gestes », écris un geste par ligne, sélectionne les lignes, puis clique sur Liste numérotée (Ctrl + Maj + 7).",
+        "exemple": "Exemple d’un geste : « J’ai sélectionné le titre, puis cliqué sur le bouton Centrer (Ctrl + Maj + E). »",
+        "rappel": "Écris au moins six gestes que tu as réellement faits, dans l’ordre où tu les as faits. Ta liste doit correspondre à ton document."
+      },
+      "3": {
+        "titre": "Qu’expliquer dans ma phrase ?",
+        "explication": "Réponds avec tes mots à la question : « Comment je change la police d’une seule strophe sans toucher aux autres ? » Explique ce que tu sélectionnes et ce que tu modifies. Utilise les mots sélectionner, police et taille.",
+        "exemple": "Début possible à compléter : « Pour changer une seule strophe, je… »",
+        "rappel": "Écris ta phrase dans le document Docs, sous la liste de tes gestes."
+      }
+    }
   },
   {
     "titre": "Je m’évalue et je remets",
