@@ -148,6 +148,12 @@ tr.fini td{color:var(--doux)}
 .repere-prof{max-width:70rem;text-align:left;font-size:clamp(1rem,1.6vw,1.4rem);color:var(--doux);line-height:1.4}
 .repere-prof summary{cursor:pointer;font-weight:700}
 .atelier-note{font-weight:700;color:var(--juste);font-size:1.2rem}
+#repere-rappel{font:inherit;padding:8px;border:1px solid var(--trait);border-radius:8px;width:min(100%,48rem)}
+#formatif-prof label{display:block;margin:8px 0}
+#repere-projection .scene{align-content:center;gap:4vh}
+#repere-titre{font-size:clamp(2rem,5vw,5rem);line-height:1.15}
+#repere-message{font-size:clamp(1.5rem,3.5vw,3.5rem);line-height:1.4;max-width:60rem;overflow-wrap:anywhere}
+#repere-periode{font-size:clamp(1.2rem,2.5vw,2rem)}
 </style>
 </head>
 <body>
@@ -172,6 +178,16 @@ tr.fini td{color:var(--doux)}
     <details><summary>Avant le cours et compétences</summary><div id="conducteur-preparation"></div></details>
     <details id="conducteur-details"><summary>Toutes les étapes, questions et repères professeur</summary><ol class="conducteur-liste" id="conducteur-liste"></ol></details>
     <p class="astuce">Chaque bouton ouvre le moment choisi et pilote les postes. Les moments de travail autonome libèrent les fiches ; les moments collectifs les mettent en attente. Cela ne crée aucune nouvelle séance et ne remet pas les blocs à zéro.</p>
+  </section>
+  <section class="panneau" id="formatif-prof" hidden>
+    <h2>Le rat de ville — repère de rythme</h2>
+    <p>Les cases sont des déclarations. La qualité et la remise du document restent à vérifier. La progression est conservée entre les périodes.</p>
+    <label>Classe du repère <select id="repere-classe" aria-label="Classe du repère"></select></label>
+    <label>Étape visée <select id="repere-etape" aria-label="Étape visée"></select></label>
+    <label>Rappel collectif <input id="repere-rappel" maxlength="240" aria-label="Rappel collectif"></label>
+    <div class="reglages"><button class="btn" id="repere-enregistrer" type="button">Enregistrer le repère</button><button class="btn vide" id="repere-projeter" type="button">Projeter le repère</button></div>
+    <p class="astuce" id="repere-statut" role="status"></p>
+    <p>Ce repère ne pilote pas les postes : chacun garde son étape personnelle. Aucune nouvelle séance n’est nécessaire pour reprendre.</p>
   </section>
   <div class="chiffres" id="chiffres"></div>
 
@@ -227,10 +243,14 @@ tr.fini td{color:var(--doux)}
   </div>
 </section>
 
+<section class="projection" id="repere-projection" hidden aria-label="Repère collectif sans noms">
+  <div class="scene"><p id="repere-periode"></p><h1 id="repere-titre"></h1><p id="repere-message"></p><p>Chacun avance à son rythme et garde sa place.</p></div>
+  <div class="commande"><button class="btn vide" id="repere-plein" type="button">Plein écran</button><button class="btn" id="repere-fermer" type="button">Retour au tableau</button></div>
+</section>
 <dialog id="dlg">
   <form method="dialog" id="dlg-form">
     <h2>Nouvelle séance</h2>
-    <p>Le tableau repart à zéro pour cette classe. Les séances passées restent dans la liste et dans la feuille.</p>
+    <p>Le tableau affiche la nouvelle séance. Pour Le rat de ville, les cases des périodes précédentes restent conservées. Les séances passées restent dans la liste et dans la feuille.</p>
     <label>Classe <input id="dlg-classe" list="classes" required maxlength="20" autocomplete="off" placeholder="1C"></label>
     <datalist id="classes"></datalist>
     <div class="reglages"><button class="btn" value="ok">Démarrer</button><button class="btn vide" value="annuler" formnovalidate>Annuler</button></div>
@@ -239,5 +259,7 @@ tr.fini td{color:var(--doux)}
 
 <script defer src="https://root75.github.io/campin-public/pas-a-pas/tableau.js"></script>
 <script defer src="https://root75.github.io/campin-public/pas-a-pas/python-couleurs.js"></script>
+<script defer src="https://root75.github.io/campin-public/rat-de-ville/pas-a-pas/contenu.js"></script>
+<script defer src="https://root75.github.io/campin-public/pas-a-pas/formatif-prof.js"></script>
 </body>
 </html>

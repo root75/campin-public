@@ -25,6 +25,12 @@
       "titre": "Labo 07 — Dans les coulisses du PC",
       "chemin": "labo-07/pas-a-pas/",
       "etapes": 7
+    },
+    {
+      "id": "rat-de-ville-formatif",
+      "titre": "Mise en forme 03 — Le rat de ville (formatif)",
+      "chemin": "rat-de-ville/pas-a-pas/",
+      "etapes": 9
     }
   ]
 }

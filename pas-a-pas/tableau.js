@@ -65,6 +65,10 @@ function chargeSeances(){
 const erreur = err => { $("maj").textContent = "Erreur : " + err.message; };
 
 function dessine(d){
+  if(globalThis.FormatifProf) {
+    FormatifProf.presentation($("cours").value === 'rat-de-ville-formatif');
+    if($("cours").value === 'rat-de-ville-formatif') { FormatifProf.dessine(d); return; }
+  }
   const n = NB_BLOCS[$("cours").value] || Math.max(1, ...d.eleves.map(e=>e.atteint+1));
   const el = d.eleves.slice().sort((a,b)=>
     (!!b.aide - !!a.aide) || (a.aide && b.aide ? a.aide.depuis - b.aide.depuis : 0) ||
@@ -509,12 +513,13 @@ function demarre(cours){
   const meme=cours.includes(avant);
   if(meme) $("cours").value=avant;
   if(!tableauDemarre){
-    $("cours").addEventListener("change",()=>{chargeRessourcesProf();chargeSeances();chargeSequence();});
+    $("cours").addEventListener("change",()=>{chargeRessourcesProf();chargeSeances();chargeSequence();if(globalThis.FormatifProf)FormatifProf.charge();});
     $("seance").addEventListener("change",charge);
     setInterval(charge,RAFRAICHIR);tableauDemarre=true;
   }
   if(!meme || !$("seance").options.length) chargeSeances(); else charge();
   chargeRessourcesProf();chargeSequence();chargeClasses();
+  if(globalThis.FormatifProf) FormatifProf.charge();
 }
 function appliqueCatalogue(data){
   for(const obj of [FICHES,NB_BLOCS,TITRES_COURS]) Object.keys(obj).forEach(k=>delete obj[k]);
