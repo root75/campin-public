@@ -3,3 +3,12 @@
 .campin-navigation a{display:inline-flex;align-items:center;gap:8px;min-height:44px;box-sizing:border-box;padding:8px 16px;border:2px solid var(--encre-bouton,#1d5a73);border-radius:10px;background:var(--carte,#fff);color:var(--encre-bouton,#1d5a73);font:700 1rem/1.5 "Segoe UI",Arial,sans-serif;text-decoration:none}
 .campin-navigation a:hover{text-decoration:underline}
 .campin-navigation a:focus-visible{outline:3px solid var(--fromage,#e3a922);outline-offset:3px}
+
+/* Le collectif garde un seul écran ; le menu revient avec la fiche autonome. */
+.en-sequence .campin-navigation{display:none!important}
+.campin-menu{position:relative}
+.campin-menu summary{display:flex;align-items:center;gap:8px;min-height:44px;box-sizing:border-box;padding:8px 16px;border:2px solid var(--encre-bouton,#1d5a73);border-radius:10px;background:var(--carte,#fff);color:var(--encre-bouton,#1d5a73);font:700 1rem/1.5 "Segoe UI",Arial,sans-serif;cursor:pointer;list-style:none}
+.campin-menu summary::-webkit-details-marker{display:none}
+.campin-menu summary:focus-visible{outline:3px solid var(--fromage,#e3a922);outline-offset:3px}
+.campin-menu[open] summary{border-bottom-left-radius:0;border-bottom-right-radius:0}
+.campin-menu-liens{display:grid;gap:8px;padding:8px;background:var(--carte,#fff);border:1px solid var(--trait,#d5dce2);border-radius:0 10px 10px;max-width:calc(100vw - 40px)}

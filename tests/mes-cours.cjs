@@ -9,24 +9,27 @@ function noeud(){
     append(enfant){ this.children.push(enfant); }
   };
 }
-async function affiche(cours){
+async function affiche(cours, {choix=false, seance=null}={}){
   const elements = new Map();
   const element = id => {
     if(!elements.has(id)) elements.set(id, noeud());
     return elements.get(id);
   };
-  let reponse;
+  let reponse, poll, rejoints=0;
   const pont = {
     withSuccessHandler(fn){ reponse = fn; return this; },
     withFailureHandler(){ return this; },
-    mesCours(){ reponse({ email:'eleve@example.test', classe:'3F', cours }); }
+    mesCours(){ reponse({ email:'eleve@example.test', classe:'3F', cours, seance }); },
+    rejoindreSeance(){ rejoints++; reponse(null); }
   };
   vm.runInNewContext(script, {
-    document:{ getElementById:element, createElement:noeud, querySelectorAll:()=>[] },
-    google:{ script:{ run:pont } }, setInterval:()=>0
+    document:{ body:{dataset:{choixCours:choix ? "true" : undefined}}, getElementById:element, createElement:noeud, querySelectorAll:()=>[] },
+    google:{ script:{ run:pont } }, setInterval:fn=>{poll=fn;return 0;}
   });
   // La réponse Apps Script est rendue dans la continuation de la promesse.
   await new Promise(resolve=>setImmediate(resolve));
+  element.actualise = async ()=>{element("confirmer").hidden=true;await poll();};
+  element.rejoints = ()=>rejoints;
   return element;
 }
 (async()=>{
@@ -55,5 +58,16 @@ async function affiche(cours){
   const vide = await affiche([]);
   assert.equal(vide('cours').children.length, 0);
   assert.equal(vide('aucun').hidden, false);
+  const seance = {titre:'Python 01',url:'/python-1'};
+  const choix = await affiche(cours,{choix:true,seance});
+  await choix.actualise();
+  await choix.actualise();
+  assert.equal(choix.rejoints(),0,'Le choix explicite ne rejoint jamais automatiquement la séance');
+  assert.equal(choix('mes-cours').hidden,false);
+  assert.equal(choix('cours').children.length,6);
+  assert.equal(choix('seance').children[0].href,'/python-1');
+  const automatique = await affiche(cours,{seance});
+  await automatique.actualise();
+  assert.equal(automatique.rejoints(),1,'L’entrée normale conserve la reprise automatique');
   console.log('Vue élève : tri français, casse, accents, numéros, liens et liste vide vérifiés.');
 })().catch(err=>{ console.error(err); process.exitCode=1; });
