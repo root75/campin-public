@@ -15,7 +15,7 @@
       {
         "type": "mots",
         "titre": "Récolte des mots-clés",
-        "min": 5,
+        "min": 4,
         "methode": "Individuel, sur le poste",
         "question": "Un e-mail, c'est…",
         "max": 3
@@ -23,7 +23,7 @@
       {
         "type": "tri",
         "titre": "Mise en commun",
-        "min": 5,
+        "min": 4,
         "methode": "Collectif : chaque mot rangé est justifié",
         "source": 1,
         "colonnes": [
@@ -35,7 +35,7 @@
       {
         "type": "ecran",
         "titre": "Notion clé : asynchrone",
-        "min": 3,
+        "min": 2,
         "methode": "Exposé bref",
         "paires": [
           [
@@ -57,7 +57,8 @@
           "Envoyer un travail à un professeur : quel outil et pourquoi ?",
           "Prévenir un ami que tu arrives dans cinq minutes : quel outil et pourquoi ?",
           "Un email peut être lu plus tard ; le choix dépend aussi du destinataire et des usages."
-        ]
+        ],
+        "min": 3
       },
       {
         "type": "ecran",
@@ -67,7 +68,8 @@
           "camille.martin | @ | example.org",
           "Partie locale : identifie la boîte dans ce domaine. @ : sépare les deux parties. Domaine : après @.",
           "Quel est le domaine de ton adresse scolaire ?"
-        ]
+        ],
+        "min": 4
       },
       {
         "type": "ecran",
@@ -77,7 +79,8 @@
           "Adresse attendue : camille.martin@example.org",
           "camille.martinexample.org — camille. martin@example.org — camille.martin@example.net",
           "Explique l’erreur. Le domaine .net n’est pas faux en soi : c’est une adresse différente de celle attendue."
-        ]
+        ],
+        "min": 4
       },
       {
         "type": "ecran",
@@ -88,7 +91,8 @@
           "Objet : Une question sur tes loisirs",
           "Bonjour Camille,\nQuel sport ou quel loisir pratiques-tu ?\nBonne journée,\nLina Dupont, 2B",
           "Que gardes-tu dans Objet ? Quelles parties composent le corps du message ?"
-        ]
+        ],
+        "min": 5
       },
       {
         "type": "fin",
@@ -101,7 +105,8 @@
           "Le bouton Je suis bloqué reste disponible en haut."
         ]
       }
-    ]
+    ],
+    "objectif": "Comprendre une adresse et la forme du mail avant de s’entraîner. Durées du collectif indicatives ; prévoir ensuite 25–35 min de simulation et 20–30 min d’échange Outlook, répartissables sur plusieurs séances."
   },
   "python-1": {
     "titre": "Séance 1 — Du logigramme au code",
