@@ -138,6 +138,7 @@
       const ouvert = m.phase === "ouvert";
       zone.append(el("p", "sq-note", ouvert ? "Un clic par situation. Tu peux changer d'avis tant que le vote est ouvert."
         : m.phase === "clos" ? "Le vote est clos. Regarde le tableau." : "Regarde le tableau : on corrige ensemble."));
+      if(moi.enCours||moi.erreur)zone.append(el("p","sq-note",moi.enCours?"Enregistrement du choix…":moi.erreur));
       m.situations.forEach((s, k) => {
         const d = el("div", "sq-sit"), c = el("div", "sq-choix");
         if(o.cours.startsWith("python-")){
@@ -145,8 +146,14 @@
           d.append(el("p", null, "Programme " + (k+1)), pre, c);
         } else d.append(el("p", null, (k+1) + ". " + s), c);
         m.choix.forEach((t, j) => {
-          const b = el("button", "sq-btn vide" + (moi[k] === j ? " pris" : ""), t); b.type = "button"; b.disabled = !ouvert;
-          b.addEventListener("click", () => { moi[k] = j; o.envoie({ etape: m.n, type: "vote", reponse: k + ":" + j }); dessine(m); });
+          const b = el("button", "sq-btn vide" + (moi[k] === j ? " pris" : ""), t); b.type = "button"; b.disabled = !ouvert || !!moi.enCours;
+          b.addEventListener("click", async () => {
+            if(moi.enCours||moi[k]===j)return;
+            moi.enCours=true;dessine(m);
+            try{await o.envoie({etape:m.n,type:"vote",reponse:k+":"+j});moi[k]=j;moi.erreur="";}
+            catch(_){moi.erreur="Choix non confirmé. Réessaie avant de continuer.";}
+            finally{moi.enCours=false;dessine(m);}
+          });
           c.append(b);
         });
         if(m.bonnes){
