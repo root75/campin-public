@@ -177,10 +177,14 @@ function dessine(d){
   $("maj").textContent = "Mis à jour à " + new Date(d.maintenant).toLocaleTimeString("fr-BE",{hour:"2-digit",minute:"2-digit",second:"2-digit"});
 }
 
+let numeroChargement=0;
 function charge(){
   if(!SUIVI){ dessine(demo()); return; }
   const s = choisie();
-  google.script.run.withSuccessHandler(dessine).withFailureHandler(erreur).donnees($("cours").value, s.debut, s.fin);
+  const cours=$("cours").value,demande=++numeroChargement;
+  $("lignes").replaceChildren();
+  if($("python-plafond"))$("python-plafond").hidden=true;
+  google.script.run.withSuccessHandler(d=>{if(demande===numeroChargement&&$("cours").value===cours&&choisie().debut===s.debut)dessine(d);}).withFailureHandler(err=>{if(demande===numeroChargement)erreur(err);}).donnees(cours, s.debut, s.fin);
 }
 
 /* Données fictives : l'aperçu hors Apps Script. */
