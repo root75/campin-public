@@ -42,12 +42,13 @@
     const page = document.querySelector(".page"), tete = page.querySelector("header");
     tete ? tete.after(zone) : page.prepend(zone);
 
-    let cle = "";
+    let cle = "", courant = null;
     let contenus=null;
     fetch("https://root75.github.io/campin-public/pas-a-pas/sequences.json?v=interactif-20261103").then(r=>{if(!r.ok)throw Error();return r.json();}).then(data=>{contenus=data[o.cours];cle="";}).catch(()=>{});
     const mes = {};   // ce que l'élève a envoyé, par moment de cette séquence
 
     function recoit(m){
+      courant=m;
       if(!m || m.type === "fin" || m.type === "atelier"){
         document.getElementById('collectif').hidden=true;document.getElementById('individuel').hidden=false;document.getElementById('revoir-collectif').hidden=false;
         if(cle){ cle = ""; zone.hidden = true; document.body.classList.remove("en-sequence"); scrollTo(0, 0); }
@@ -56,10 +57,11 @@
       const k = m.lance + ":" + m.n + ":" + m.phase;
       if(k === cle) return;            // rien n'a changé : on ne touche pas à ce qu'il tape
       cle = k; zone.hidden = false; document.body.classList.add("en-sequence");
-      dessine(m);
+      dessine(courant || m);
     }
 
     function dessine(m){
+      if(!m||m.type==="fin"||m.type==="atelier")return;
       const id = m.lance + ":" + m.n, moi = mes[id] || (mes[id] = {});
       zone.replaceChildren(el("p", "sq-sur", m.titre));
       if(m.type === "mots") return mots(m, moi);
@@ -80,7 +82,7 @@
       if(moi.mots && !moi.modifier){
         zone.append(el("p", "sq-res juste", "✓ Envoyé : " + moi.mots.join(" · ")), el("p", "sq-note", "Regarde le tableau."));
         const b = el("button", "sq-btn vide", "Modifier mes mots"); b.type = "button";
-        b.addEventListener("click", () => { moi.modifier = true; dessine(m); });
+        b.addEventListener("click", () => { moi.modifier = true; dessine(courant || m); });
         return zone.append(b);
       }
       const f = el("form", "sq-champs");
@@ -123,11 +125,11 @@
       const b=el('button','sq-btn',moi.soumis?'Modifier mes choix':'Envoyer mes choix');b.type='submit';form.append(b);
       form.addEventListener('submit',async e=>{
         e.preventDefault();if(b.disabled)return;
-        if(moi.soumis){moi.soumis=false;dessine(m);return;}
+        if(moi.soumis){moi.soumis=false;dessine(courant || m);return;}
         b.disabled=true;cases.forEach(c=>c.disabled=true);statut.textContent='Enregistrement…';
         const choix=cases.map(c=>c.checked?1:0);
-        if(moi.derniersChoix===choix.join(':')){moi.soumis=true;dessine(m);return;}
-        try{await Promise.all(choix.map((j,k)=>o.envoie({etape:m.n,type:'vote',reponse:k+':'+j})));choix.forEach((j,k)=>moi[k]=j);moi.derniersChoix=choix.join(':');moi.soumis=true;dessine(m);}
+        if(moi.derniersChoix===choix.join(':')){moi.soumis=true;dessine(courant || m);return;}
+        try{await Promise.all(choix.map((j,k)=>o.envoie({etape:m.n,type:'vote',reponse:k+':'+j})));choix.forEach((j,k)=>moi[k]=j);moi.derniersChoix=choix.join(':');moi.soumis=true;dessine(courant || m);}
         catch(_){b.disabled=false;cases.forEach(c=>c.disabled=false);statut.textContent='Envoi non confirmé. Garde tes choix et réessaie.';}
       });
     }
@@ -149,10 +151,10 @@
           const b = el("button", "sq-btn vide" + (moi[k] === j ? " pris" : ""), t); b.type = "button"; b.disabled = !ouvert || !!moi.enCours;
           b.addEventListener("click", async () => {
             if(moi.enCours||moi[k]===j)return;
-            moi.enCours=true;dessine(m);
+            moi.enCours=true;dessine(courant || m);
             try{await o.envoie({etape:m.n,type:"vote",reponse:k+":"+j});moi[k]=j;moi.erreur="";}
             catch(_){moi.erreur="Choix non confirmé. Réessaie avant de continuer.";}
-            finally{moi.enCours=false;dessine(m);}
+            finally{moi.enCours=false;dessine(courant || m);}
           });
           c.append(b);
         });
