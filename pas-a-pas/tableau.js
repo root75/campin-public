@@ -65,7 +65,7 @@ function remplitSeances(liste){
   sel.replaceChildren(...(liste.length ? liste : [{classe:"", debut:0}]).map((s,i)=>{
     const o = txt("option", null, s.debut ? (i===0 && !s.fin ? "En cours · " : "") + s.classe + " · " + heure(s.debut) : "Toutes (aucune séance démarrée)");
     o.value = i; return o; }));
-  $("classes").replaceChildren(...[...new Set(liste.map(s=>s.classe))].map(c=>{ const o=txt("option"); o.value=c; return o; }));
+
   charge();
 }
 function chargeSeances(){
@@ -215,7 +215,17 @@ function demoSeances(){
 }
 
 /* Nouvelle séance : demande la classe, la démarre côté serveur, recharge la liste. */
-$("nouvelle").addEventListener("click", ()=>{ $("dlg-classe").value = ""; $("dlg").showModal(); });
+$("nouvelle").addEventListener("click", async()=>{
+  const bouton=$("nouvelle");bouton.disabled=true;
+  try{
+    if(!CL)await chargeClasses();
+    const noms=Object.keys(CL?.classes||{}).sort((a,b)=>a.localeCompare(b,'fr',{numeric:true}));
+    if(!noms.length){erreur(Error('La liste des classes est vide ou indisponible. Vérifie le panneau Classes et cours.'));return;}
+    const choix=$("dlg-classe");
+    choix.replaceChildren(...[["","Choisir une classe"],...noms.map(n=>[n,n])].map(([valeur,texte])=>{const o=txt('option',null,texte);o.value=valeur;return o;}));
+    choix.value='';$("dlg").showModal();choix.focus();
+  }finally{bouton.disabled=false;}
+});
 $("dlg").addEventListener("close", ()=>{
   const classe = $("dlg-classe").value.trim();
   if($("dlg").returnValue !== "ok" || !classe) return;
@@ -543,6 +553,7 @@ function dessineClasses(d){
   filtre.value = [...filtre.options].some(o=>o.value===avant) ? avant : "";
   dessineEleves();
   $("panneau-classes").hidden = false;
+  $("eleves-statut").textContent="Liste à jour. Les changements de classe sont enregistrés après confirmation du serveur.";
 }
 function dessineEleves(){
   const noms = Object.keys(CL.classes).sort(), f = $("el-filtre").value;
@@ -561,7 +572,9 @@ function dessineEleves(){
 $("el-filtre").addEventListener("change", dessineEleves);
 $("cl-ajout").addEventListener("submit", ev=>{ ev.preventDefault(); const n = $("cl-nom").value.trim(); if(n){ $("cl-nom").value = ""; appelCl("ajouterClasse", n); } });
 /* Un déploiement antérieur ne connaît pas classesEtCours : le panneau reste caché, sans erreur. */
-const chargeClasses = () => serveurCl("classesEtCours").then(dessineClasses, ()=>{});
+const chargeClasses = () => serveurCl("classesEtCours").then(dessineClasses, ()=>{
+  $("eleves-statut").textContent="La liste ne se charge pas. Recharge cette page avec le compte professeur.";
+});
 
 function lecteurCatalogue(){
   return globalThis.CatalogueCours ? Promise.resolve(globalThis.CatalogueCours)
@@ -633,7 +646,20 @@ async function chargeCatalogue(frais=false){
 }
 actualiser.addEventListener("click",()=>chargeCatalogue(true));
 if(!SUIVI){document.title="APERÇU FICTIF — tableau professeur";$("demo").hidden=false;}
-chargeCatalogue();
+const ADRESSE_TABLEAU='https://script.google.com/a/macros/arcampin.be/s/AKfycbyOPTaq-L1PuittB1rkkiL9OOtShFc2WpiD8H_pH_INaw9ePWenCzhlIPlHu4zBOgLk/exec?vue=prof';
+function ouvreVueProf(parametres){
+  const eleves=parametres.onglet==='eleves';
+  $("gestion-eleves-lien").href=SUIVI?ADRESSE_TABLEAU+'&onglet=eleves':location.pathname+'?onglet=eleves';
+  if(!eleves){chargeCatalogue();return;}
+  document.body.classList.add('vue-eleves');document.title='Gestion des élèves — Mes cours';
+  document.querySelector('header h1').textContent='Gestion des élèves';
+  const navigation=txt('nav','navigation-eleves'),retour=txt('a','btn vide','← Retour au tableau');
+  retour.href=SUIVI?ADRESSE_TABLEAU:location.pathname;retour.target='_top';navigation.append(retour);document.querySelector('header').append(navigation);
+  $("gestion-eleves").hidden=false;chargeClasses();
+}
+// L'URL extérieure est obtenue par le pont Apps Script, sans modifier les droits professeur.
+if(SUIVI&&google.script.url?.getLocation)google.script.url.getLocation(l=>ouvreVueProf(l.parameter||{}));
+else ouvreVueProf(Object.fromEntries(new URLSearchParams(location.search)));
 
 
 

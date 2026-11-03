@@ -4,7 +4,7 @@ const state={...INITIAL};
 const CELEBREES=new Set();
 const ENCOURAGEMENTS=[
  ['Bien repéré !','Tu distingues la partie locale et le domaine.'],
- ['Bien joué !','Tu as repéré les problèmes et recopié l’adresse attendue.'],
+ ['Bien joué !','Tu as écrit l’adresse exacte du destinataire.'],
  ['Un titre qui donne le sujet !','Ton objet annonce les loisirs sans contenir tout le message.'],
  ['Bien choisi !','Une seule salutation pour commencer le message.'],
  ['Ta demande prend forme !','Relis ta phrase : Camille comprend-elle ce que tu demandes ?'],
@@ -41,6 +41,7 @@ function animeReussite(zone,etape){
 const DEST='camille.martin@example.org';
 const TITRES=['Observer un email','Choisir le destinataire','Donner un objet','Saluer','Rédiger la demande','Terminer et signer','Relire le mail complet','Répondre au message reçu','Ouvrir et lire dans Outlook','Rédiger dans le corps du message','Envoyer et retrouver son mail','Répondre à son camarade'];
 const norm=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[’]/g,"'").replace(/\s+/g,' ').trim();
+const classeSignature=d=>d.classe.trim()||(/(?:^|[\s,:])([12]\s*[a-z](?:\d)?)(?=$|[\s,.;])/i.exec(d.signature.trim())?.[1]||'');
 const escapeHtml=s=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function verifie(k,d=state){
  const v=norm(d[k]);
@@ -49,7 +50,7 @@ function verifie(k,d=state){
  if(k==='erreur3')return /domaine|example.net|\.net/.test(v)&&/different|autre|attendu|example.org|\.org|remplac|mauvais/.test(v)?'':'Cette adresse a une structure plausible, mais compare son domaine à example.org, celui de Camille.';
  if(k==='locale')return v==='camille.martin'?'':'La partie locale est ce qui se trouve avant @ : elle identifie la boîte dans ce domaine.';
  if(k==='domaine')return v==='example.org'?'':'Le domaine est ce qui se trouve après @. Ici, recopie example.org.';
- if(k==='reponse'){if(v.length<35||!/bonjour|salut|bonsoir/.test(v)||!/loisir|sport|activite|pratique|aime|joue|lecture|lire|musique|dessin|danse|anime/.test(v)||!/bonne journee|a bientot|merci|cordialement|bonne soiree/.test(v))return 'Rédige une réponse complète : une salutation, une phrase sur ton propre loisir, une formule de fin et ta signature.';const mots=norm(d.nom).split(/[^a-z0-9'-]+/).filter(Boolean);if(!mots.length||!mots.every(m=>v.split(/[^a-z0-9'-]+/).includes(m))||!v.replace(/\s/g,'').includes(norm(d.classe).replace(/\s/g,'')))return 'Ajoute ta signature : prénom, nom et classe.';return ''; }
+ if(k==='reponse'){if(v.length<35||!/bonjour|salut|bonsoir/.test(v)||!/loisir|sport|activite|pratique|aime|joue|lecture|lire|musique|dessin|danse|anime/.test(v)||!/bonne journee|a bientot|merci|cordialement|bonne soiree/.test(v))return 'Rédige une réponse complète : une salutation, une phrase sur ton propre loisir, une formule de fin et ta signature.';const mots=norm(d.nom).split(/[^a-z0-9'-]+/).filter(Boolean);if(!mots.length||!mots.every(m=>v.split(/[^a-z0-9'-]+/).includes(m))||!classeSignature(d)||!v.replace(/\s/g,'').includes(norm(classeSignature(d)).replace(/\s/g,'')))return 'Ajoute ta signature : prénom, nom et classe.';return ''; }
  if(k==='a')return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.a.trim())&&d.a.trim().toLowerCase()===DEST ? '' : 'Écris l’adresse de Camille indiquée dans la mission. Vérifie chaque lettre : un @ et une adresse plausible ne suffisent pas.';
  if(k==='objet'){
   if(!v)return 'Ajoute un titre qui annonce le sujet.';
@@ -71,11 +72,11 @@ function verifie(k,d=state){
  if(k==='fin')return /^(bonne journee|bonne soiree|a bientot|merci|merci d'avance|cordialement|bien a toi|bien a vous|bon week.end)[\s!,.]*$/.test(v)?'':'Ajoute une formule de fin adaptée, par exemple Bonne journée, ou À bientôt,.';
  if(k==='signature'){
   if(!d.nom.trim()||d.nom.trim().split(/\s+/).length<2)return 'Renseigne ton prénom et ton nom au-dessus de la signature.';
-  if(!/^[12]\s*[a-z](?:\d)?$/i.test(d.classe.trim()))return 'Renseigne ta classe, par exemple 1E, 2B ou 2E.';
+  if(!/^[12]\s*[a-z](?:\d)?$/i.test(classeSignature(d)))return 'Ajoute ta classe dans ta signature, après ton prénom et ton nom.';
   if(/\[|\]|\b(prenom|classe|signature)\b/.test(v))return 'Écris tes informations dans la signature, sans conserver les indications du modèle.';
   const mots=norm(d.nom).split(/[^a-z0-9'-]+/).filter(Boolean);
   const sigTokens=v.split(/[^a-z0-9'-]+/).filter(Boolean);
-  return mots.every(m=>sigTokens.includes(m))&&v.replace(/\s/g,'').includes(norm(d.classe).replace(/\s/g,''))?'':'La signature doit contenir le prénom, le nom et la classe que tu as renseignés.';
+  return mots.every(m=>sigTokens.includes(m))&&v.replace(/\s/g,'').includes(norm(classeSignature(d)).replace(/\s/g,''))?'':'La signature doit contenir ton prénom, ton nom et ta classe.';
  }
  return '';
 }
@@ -93,11 +94,11 @@ function render(){
  let h=`<div class="mode-action"><b>À TOI D’AGIR</b> · Lis la consigne, réalise l’action, puis clique sur Vérifier.</div><h2>${TITRES[e]}</h2>`;
  if(e===0)h+=`<p>Avant de toucher Outlook, observe les parties de ce mail. Clique sur chaque repère pour comprendre son rôle.</p><div class="email exemple"><details><summary>À : camille.martin@example.org</summary><p><b>Le destinataire</b> : la personne qui doit recevoir le mail. Une lettre différente peut changer son adresse.</p></details><details><summary>Objet : Une question sur tes loisirs</summary><p><b>L’objet</b> : un titre court. Il annonce le sujet et aide à retrouver le mail dans la liste.</p></details><details><summary>Bonjour Camille,</summary><p><b>La salutation</b> : elle s’adapte à la personne. Pour un professeur : Bonjour Monsieur, ou Bonjour Madame,. On en choisit une seule.</p></details><details><summary>Quel sport ou quel loisir pratiques-tu ?</summary><p><b>Le message</b> : il dit pourquoi tu écris et ce que tu demandes. Le destinataire doit pouvoir répondre.</p></details><details><summary>Bonne journée,</summary><p><b>La formule de fin</b> : elle termine le message poliment.</p></details><details><summary>Lina Dupont, 2B</summary><p><b>La signature</b> : elle permet d’identifier l’élève et sa classe.</p></details></div><p class="note">Le corps du mail réunit la salutation, le message, la formule de fin et la signature.</p>`;
  if(e===0)h+=`<h3>Comprendre une adresse email</h3><div class="email"><div class="ligne-mail"><b>camille.martin</b><b>@</b><b>example.org</b></div></div><ul><li><b>Partie locale :</b> avant @, elle identifie une boîte dans le domaine. Ce peut être une personne ou un service, comme secretariat.</li><li><b>@, l’arobase :</b> sépare les deux parties ; on peut le lire « chez ».</li><li><b>Domaine :</b> après @, il indique le domaine auquel appartient la boîte. Il n’est pas nécessairement le nom du serveur technique.</li></ul><p>Dans ton adresse scolaire, le domaine est <b>arcampin.be</b>. Recopie l’adresse fournie exactement, sans ajouter d’espace. Une adresse bien écrite ne prouve pas que la boîte existe ni que son propriétaire est fiable.</p><p class="note">example.org est utilisé ici pour les personnages fictifs. On ne lui envoie aucun message réel.</p>`+champ('locale','Repère la partie locale','Dans camille.martin@example.org, écris seulement ce qui précède @.')+champ('domaine','Repère le domaine','Écris seulement ce qui suit @.');
- if(e===1)h+=mission+`<h3>Quelle adresse pose problème, et pourquoi ?</h3><p>L’adresse attendue est <b>camille.martin@example.org</b>. Explique chaque problème avec tes mots.</p>`+champ('erreur1','1. camille.martinexample.org','Quel élément manque ?')+champ('erreur2','2. camille. martin@example.org','Quel caractère faut-il retirer ?')+champ('erreur3','3. camille.martin@example.net','La structure est plausible. Pourquoi ne faut-il pas utiliser cette adresse pour Camille ?')+`<p class="note">Une adresse bien formée peut désigner une autre boîte ou ne pas exister. Le domaine .net n’est pas faux en soi.</p><h3>Maintenant, écris la bonne adresse</h3>`+`<p>Écris uniquement l’adresse dans le champ À.</p>`+champ('a','À','Tu peux lire l’adresse dans la mission. N’écris ni un prénom seul, ni le texte du mail.');
+ if(e===1)h+=mission+`<p><b>À qui écris-tu ?</b> Écris l’adresse complète de Camille dans le champ À.</p>`+champ('a','À — adresse du destinataire','Recopie l’adresse de la mission. Le message viendra dans le corps du mail.')+`<p class="note">Les adresses qui posent problème sont travaillées ensemble dans le support collectif.</p>`;
  if(e===2)h+=mission+`<p>Donne un titre à ton email. Le texte de la demande viendra après.</p>`+champ('objet','Objet','Le titre doit parler des loisirs. Tu peux trouver ta propre formulation.');
- if(e===3)h+=mission+`<p>Commence le corps du message en saluant Camille. Choisis une seule formulation.</p>`+champ('salutation','Salutation','Exemple : Bonjour Camille, — n’écris pas « ou Bonjour Madame » ensuite.');
+ if(e===3)h+=mission+`<p>Commence le corps du message en saluant Camille. Choisis une seule formulation.</p>`+champ('salutation','Salutation','Commence ton message en saluant Camille.');
  if(e===4)h+=mission+`<p>Rédige ta demande en une ou deux phrases. Camille doit comprendre <b>ce que tu lui demandes</b> et pouvoir te répondre.</p><ol><li>Demande quel sport ou quel loisir Camille pratique.</li><li>Tu peux lui demander ce qui lui plaît dans cette activité.</li><li>Relis : une majuscule au début et une ponctuation à la fin.</li></ol>`+champ('message','Ton message','Écris ta propre phrase. La salutation et la signature sont déjà préparées aux autres étapes.',true)+`<p class="note">Le contrôle repère les éléments de la mission. Il ne remplace pas la lecture du professeur : des mots-clés présents ne prouvent pas, à eux seuls, qu’une phrase est claire.</p>`;
- if(e===5)h+=`<p>Termine ton message, puis signe avec tes informations d’élève.</p>`+champ('fin','Formule de fin','Exemples : Bonne journée, ou À bientôt,')+`<div class="deux">`+champ('nom','Ton prénom et ton nom','Utilisés pour vérifier ta signature.')+champ('classe','Ta classe','Par exemple 1E, 2B ou 2E.')+`</div>`+champ('signature','Signature','Écris ton prénom, ton nom et ta classe.');
+ if(e===5)h+=`<p>Termine ton message, puis signe avec tes informations d’élève.</p>`+champ('fin','Formule de fin','Exemples : Bonne journée, ou À bientôt,')+champ('nom','Ton prénom et ton nom','Utilisés pour vérifier ta signature.')+(classeScolaire?`<p class="note">Ta classe : <b>${escapeHtml(classeScolaire)}</b>. Elle est déjà connue dans cette séance.</p>`:'')+champ('signature','Signature','Signe avec ton prénom, ton nom et ta classe.');
  if(e===6)h+=`<p>Voici ton mail complet. Vérifie le destinataire, le titre et chacune des parties du corps.</p>`+apercu()+`<ul class="controle"><li>Le destinataire est bien Camille.</li><li>L’objet annonce le sujet des loisirs.</li><li>Je la salue une seule fois.</li><li>Je lui demande son sport ou son loisir.</li><li>Je termine et je signe.</li></ul><p class="note">« Vérifier » contrôle cet entraînement. Aucun email ne sera envoyé.</p>`;
  if(e===7)h+=`<p>Dans cette simulation, Camille a reçu ta question et t’a répondu. Lis son message.</p><div class="email"><div class="ligne-mail"><b>De</b><span>Camille Martin &lt;camille.martin@example.org&gt;</span></div><div class="ligne-mail"><b>Objet</b><span>RE : ${escapeHtml(state.objet)}</span></div><div class="corps"><p>Bonjour,
 
@@ -119,7 +120,7 @@ Camille</p></div></div><p><b>Utilise Répondre :</b> le destinataire et l’obje
  document.getElementById('revoir')?.addEventListener('click',()=>{state.etape=6;render();});
  document.getElementById('suivant')?.addEventListener('click',async()=>{
   if(document.getElementById('suivant').disabled)return;
-  const champs={0:['locale','domaine'],1:['erreur1','erreur2','erreur3','a'],2:['objet'],3:['salutation'],4:['message'],5:['fin','signature'],7:['reponse']}[e]||[];
+  const champs={0:['locale','domaine'],1:['a'],2:['objet'],3:['salutation'],4:['message'],5:['fin','signature'],7:['reponse']}[e]||[];
   const err=e===6?erreurs(state):champs.map(k=>({champ:k,texte:verifie(k)})).filter(x=>x.texte);
   const feedback=document.getElementById('retour');
   if(err.length){feedback.className='retour faux';feedback.innerHTML='<b>À corriger</b><ul>'+err.map(x=>`<li>${escapeHtml(x.texte)}</li>`).join('')+'</ul>';feedback.focus();return;}
@@ -151,7 +152,7 @@ const COURS='messagerie-1';
 const APERCU=typeof location!=='undefined'&&/^#bloc=\d+$/.test(location.hash);
 const SUIVI=!APERCU&&typeof google!=='undefined'&&!!google.script?.run;
 const CLE='messagerie-01-v20261103';let repriseServeur=0;
-let identite='',preuves=null;const dejaValide=new Map(),dejaFaux=new Map();
+let identite='',classeScolaire='',preuves=null;const dejaValide=new Map(),dejaFaux=new Map();
 function sauve(){if(APERCU)return;try{sessionStorage.setItem(CLE+identite,JSON.stringify(state));}catch(_){}}
 function rpc(n,...args){return new Promise((resolve,reject)=>{google.script.run.withSuccessHandler(resolve).withFailureHandler(()=>reject(new Error('Le suivi ne répond pas. Ta saisie reste ici ; réessaie avant de continuer.')))[n](...args);});}
 function envoie(evt){return SUIVI?rpc('noter',COURS,evt):Promise.resolve();}
@@ -171,9 +172,10 @@ async function demarre(){
  const status=document.getElementById('suivi-status');
  try{
   const r=await fetch('https://root75.github.io/campin-public/messagerie/pas-a-pas/preuves.json?v=20261103');if(!r.ok)throw Error();preuves=await r.json();
-  if(SUIVI){const etat=await rpc('etat',COURS);identite=':'+etat.email;repriseServeur=Number(etat.reprise)||0;status.textContent='Suivi professeur connecté. Les preuves courtes et demandes d’aide sont enregistrées.';await envoie({etape:0,type:'ouvert'});}
+  if(SUIVI){const etat=await rpc('etat',COURS);identite=':'+etat.email;classeScolaire=String(etat.classe||'').trim();repriseServeur=Number(etat.reprise)||0;status.textContent='Suivi professeur connecté. Les preuves courtes et demandes d’aide sont enregistrées.';await envoie({etape:0,type:'ouvert'});}
   else status.innerHTML='Entraînement libre : aucun résultat ni appel à l’aide transmis au professeur. Pour la séance suivie, <a href="https://script.google.com/a/macros/arcampin.be/s/AKfycbyOPTaq-L1PuittB1rkkiL9OOtShFc2WpiD8H_pH_INaw9ePWenCzhlIPlHu4zBOgLk/exec">ouvre ta séance scolaire</a>.';
   try{const saved=JSON.parse(sessionStorage.getItem(CLE+identite)||'null');if(saved&&Number.isInteger(saved.etape)&&saved.etape>=0&&saved.etape<12&&(!SUIVI||Number(saved.reprise||0)===repriseServeur))Object.assign(state,saved);state.reprise=repriseServeur;}catch(_){}
+  if(SUIVI&&classeScolaire)state.classe=classeScolaire;
   if(APERCU){Object.assign(state,INITIAL);state.atteint=12;state.etape=Math.min(11,Math.max(0,Number(location.hash.slice(6))-1));document.getElementById('collectif').hidden=true;document.getElementById('individuel').hidden=false;document.getElementById('revoir-collectif').hidden=false;status.textContent='Aperçu du professeur : navigation libre, aucun résultat enregistré.';}
   init();
  }catch(e){status.textContent='Impossible de charger les contrôles ou le suivi. Recharge la page ; aucun résultat n’est annoncé comme enregistré.';init();}
