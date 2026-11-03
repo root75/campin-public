@@ -1,6 +1,6 @@
 {
   "messagerie-1": {
-    "titre": "Leçon 1 — Un e-mail, c'est une lettre",
+    "titre": "Messagerie 01 — Comprendre, écrire et répondre",
     "moments": [
       {
         "type": "ecran",
@@ -50,28 +50,44 @@
         "exemple": "J'écris à Monsieur le soir. Il me répond le lendemain."
       },
       {
-        "type": "vote",
-        "titre": "Vérification",
-        "min": 3,
-        "methode": "Vote sur le poste",
-        "question": "E-mail ou instantané ?",
-        "choix": [
-          "E-mail",
-          "Instantané"
-        ],
-        "situations": [
-          {
-            "texte": "Prévenir un professeur d'une absence",
-            "bonne": 0
-          },
-          {
-            "texte": "Envoyer un document au secrétariat",
-            "bonne": 0
-          },
-          {
-            "texte": "Dire à un ami que tu es en retard",
-            "bonne": 1
-          }
+        "type": "ecran",
+        "titre": "Choisir l’outil : explique ton choix",
+        "lignes": [
+          "OBSERVE ET RÉPONDS AU PROFESSEUR — rien à saisir pour le moment.",
+          "Envoyer un travail à un professeur : quel outil et pourquoi ?",
+          "Prévenir un ami que tu arrives dans cinq minutes : quel outil et pourquoi ?",
+          "Un email peut être lu plus tard ; le choix dépend aussi du destinataire et des usages."
+        ]
+      },
+      {
+        "type": "ecran",
+        "titre": "Une adresse en trois parties",
+        "lignes": [
+          "OBSERVE ET RÉPONDS AU PROFESSEUR",
+          "camille.martin | @ | example.org",
+          "Partie locale : identifie la boîte dans ce domaine. @ : sépare les deux parties. Domaine : après @.",
+          "Quel est le domaine de ton adresse scolaire ?"
+        ]
+      },
+      {
+        "type": "ecran",
+        "titre": "Quelle adresse pose problème ?",
+        "lignes": [
+          "OBSERVE ET RÉPONDS AU PROFESSEUR",
+          "Adresse attendue : camille.martin@example.org",
+          "camille.martinexample.org — camille. martin@example.org — camille.martin@example.net",
+          "Explique l’erreur. Le domaine .net n’est pas faux en soi : c’est une adresse différente de celle attendue."
+        ]
+      },
+      {
+        "type": "ecran",
+        "titre": "Avant d’écrire : observe le mail",
+        "lignes": [
+          "OBSERVE ET RÉPONDS AU PROFESSEUR",
+          "À : camille.martin@example.org",
+          "Objet : Une question sur tes loisirs",
+          "Bonjour Camille,\nQuel sport ou quel loisir pratiques-tu ?\nBonne journée,\nLina Dupont, 2B",
+          "Que gardes-tu dans Objet ? Quelles parties composent le corps du message ?"
         ]
       },
       {
@@ -80,8 +96,9 @@
         "min": 2,
         "methode": "Travail autonome",
         "lignes": [
-          "Ouvre ton pas-à-pas",
-          "Il s'affiche sur ton poste. Commence par ton humeur du jour."
+          "À TOI D’AGIR — commence le simulateur sur ton écran.",
+          "Construis le mail pas à pas, puis passe dans Outlook.",
+          "Le bouton Je suis bloqué reste disponible en haut."
         ]
       }
     ]
