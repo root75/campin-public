@@ -9,6 +9,7 @@
 (function(){
   const RYTHME = 5000;
   const css = `
+#seq .sq-case{display:flex;gap:12px;align-items:center;cursor:pointer;text-align:left}#seq .sq-case input{width:22px;height:22px;flex-shrink:0;accent-color:#006f98}#seq .sq-case code{overflow-wrap:anywhere;font-size:1.1rem}#seq .sq-adresses{display:grid;gap:12px}
 .en-sequence .page > :not(header):not(#seq):not(.aide-fixe){display:none!important}
 #seq{background:var(--carte);border:1px solid var(--trait);border-radius:14px;padding:28px clamp(16px,4vw,32px);display:grid;gap:18px;text-align:center}
 #seq .sq-sur{font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;color:var(--doux);font-weight:700;margin:0}
@@ -43,7 +44,7 @@
 
     let cle = "";
     let contenus=null;
-    fetch("https://root75.github.io/campin-public/pas-a-pas/sequences.json?v=20261103").then(r=>{if(!r.ok)throw Error();return r.json();}).then(data=>{contenus=data[o.cours];cle="";}).catch(()=>{});
+    fetch("https://root75.github.io/campin-public/pas-a-pas/sequences.json?v=interactif-20261103").then(r=>{if(!r.ok)throw Error();return r.json();}).then(data=>{contenus=data[o.cours];cle="";}).catch(()=>{});
     const mes = {};   // ce que l'élève a envoyé, par moment de cette séquence
 
     function recoit(m){
@@ -102,7 +103,37 @@
       champs[0].focus();
     }
 
+    function adresses(m,moi){
+      const ouvert=m.phase==='ouvert';
+      zone.append(el('h2','sq-grand',m.question),el('p','sq-note',ouvert?'À TOI DE TE POSITIONNER — coche toutes les adresses à écarter. La correction viendra avec le professeur.':m.phase==='clos'?'CHOIX FERMÉS — prépare ton explication orale.':'ENSEMBLE — lis la correction et explique le problème.'));
+      const form=el('form','sq-adresses'),cases=[];zone.append(form);
+      m.situations.forEach((adresse,k)=>{
+        const ligne=el('div','sq-sit'),label=el('label','sq-case'),c=el('input');c.type='checkbox';c.checked=moi[k]===1;c.disabled=!ouvert||!!moi.soumis;c.setAttribute('aria-label','Écarter '+adresse);
+        label.append(c,el('code',null,adresse));ligne.append(label);cases.push(c);
+        if(m.bonnes){
+          ligne.append(el('p','sq-res',m.bonnes[k]===1?'À écarter':'À utiliser'));
+          const explication=contenus?.moments?.find(x=>x.titre===m.titre)?.situations?.[k]?.explication;
+          if(explication)ligne.append(el('p','sq-note',explication));
+          if(moi.soumis)ligne.append(el('p','sq-note',moi[k]===m.bonnes[k]?'Ton choix correspond à la correction.':'Ton choix était différent : explique ce que tu corriges.'));
+        }
+        form.append(ligne);
+      });
+      const statut=el('p','sq-note',m.phase==='corrige'?'Correction collective affichée : prépare ton explication.':moi.soumis?'Choix enregistrés. Attends le signal du professeur.':'');statut.setAttribute('role','status');form.append(statut);
+      if(!ouvert)return;
+      const b=el('button','sq-btn',moi.soumis?'Modifier mes choix':'Envoyer mes choix');b.type='submit';form.append(b);
+      form.addEventListener('submit',async e=>{
+        e.preventDefault();if(b.disabled)return;
+        if(moi.soumis){moi.soumis=false;dessine(m);return;}
+        b.disabled=true;cases.forEach(c=>c.disabled=true);statut.textContent='Enregistrement…';
+        const choix=cases.map(c=>c.checked?1:0);
+        if(moi.derniersChoix===choix.join(':')){moi.soumis=true;dessine(m);return;}
+        try{await Promise.all(choix.map((j,k)=>o.envoie({etape:m.n,type:'vote',reponse:k+':'+j})));choix.forEach((j,k)=>moi[k]=j);moi.derniersChoix=choix.join(':');moi.soumis=true;dessine(m);}
+        catch(_){b.disabled=false;cases.forEach(c=>c.disabled=false);statut.textContent='Envoi non confirmé. Garde tes choix et réessaie.';}
+      });
+    }
+
     function vote(m, moi){
+      if(o.cours==='messagerie-1'&&m.titre==='Quelle adresse pose problème ?')return adresses(m,moi);
       zone.append(el("h2", "sq-grand", m.question));
       const ouvert = m.phase === "ouvert";
       zone.append(el("p", "sq-note", ouvert ? "Un clic par situation. Tu peux changer d'avis tant que le vote est ouvert."
@@ -124,6 +155,7 @@
             : moi[k] === bon ? el("p", "sq-res juste", "✓ Juste : " + m.choix[bon])
             : el("p", "sq-res faux", "✗ La bonne réponse : " + m.choix[bon]));
         }
+        if(m.bonnes){const explication=contenus?.moments?.find(x=>x.titre===m.titre)?.situations?.[k]?.explication;if(explication)d.append(el("p","sq-note",explication));}
         zone.append(d);
       });
     }
@@ -135,4 +167,5 @@
   window.PasAPasSequence = { suivre };
   if(window.PAS_A_PAS) suivre(window.PAS_A_PAS);
 })();
+
 

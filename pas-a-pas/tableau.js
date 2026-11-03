@@ -72,25 +72,28 @@ function chargeSeances(){
   if(!SUIVI){ remplitSeances(demoSeances()); return; }
   google.script.run.withSuccessHandler(remplitSeances).withFailureHandler(erreur).seances($("cours").value);
 }
-const erreur = err => { $("maj").textContent = "Erreur : " + err.message; };
+const erreur = err => {let note=$("erreur-tableau");if(!note){note=txt("p");note.id="erreur-tableau";note.setAttribute("role","alert");document.querySelector("header").after(note);}note.textContent="Échec de l’action : "+(err.message||String(err));};
 
 function dessine(d){
+  ["messagerie-recommencer","python-plafond","guide-messagerie"].forEach(id=>{if($(id))$(id).hidden=true;});
   if(!$("filtre-aide")){
-    const filtre=txt("button","btn vide","Afficher seulement les demandes d’aide");filtre.type="button";filtre.id="filtre-aide";filtre.setAttribute("aria-pressed","false");
-    filtre.addEventListener("click",()=>{seulementAide=!seulementAide;filtre.setAttribute("aria-pressed",String(seulementAide));filtre.textContent=seulementAide?"Afficher toute la classe":"Afficher seulement les demandes d’aide";charge();});
-    $("chiffres").after(filtre);
+    const label=txt("label","filtre-aide"),filtre=document.createElement("input");filtre.type="checkbox";filtre.id="filtre-aide";filtre.checked=seulementAide;
+    label.append(filtre,txt("span",null,"Besoin d’aide seulement"));
+    filtre.addEventListener("change",()=>{seulementAide=filtre.checked;charge();});
+    $("filtres-eleves").append(label);
   }
 
   if(globalThis.FormatifProf) {
     FormatifProf.presentation($("cours").value === 'rat-de-ville-formatif');
     if($("cours").value === 'rat-de-ville-formatif') { FormatifProf.dessine(d); return; }
   }
-  if(!$("guide-messagerie")){const lien=txt("a","btn vide","Repères professeur — Messagerie 01");lien.id="guide-messagerie";lien.href='https://script.google.com/a/macros/arcampin.be/s/AKfycbyOPTaq-L1PuittB1rkkiL9OOtShFc2WpiD8H_pH_INaw9ePWenCzhlIPlHu4zBOgLk/exec?vue=guide-prof';lien.target='_blank';lien.rel='noopener';$("chiffres").after(lien);}
-  if(!$("messagerie-recommencer")){const b=txt("button","btn vide","Recommencer Messagerie 01 pour tous");b.type='button';b.id='messagerie-recommencer';b.addEventListener('click',()=>{if(!confirm('Remettre tous les participants de Messagerie 01 au début ? L’historique est conservé.'))return;b.disabled=true;google.script.run.withSuccessHandler(r=>{b.disabled=false;$("maj").textContent=r.repris+' participants remis au début.';charge();}).withFailureHandler(err=>{b.disabled=false;erreur(err);}).noter('messagerie-1',{type:'prof-recommencer'});});$("chiffres").after(b);}
+  if(!$("guide-messagerie")){const lien=txt("a","btn vide","Repères professeur — Messagerie 01");lien.id="guide-messagerie";lien.href='https://script.google.com/a/macros/arcampin.be/s/AKfycbyOPTaq-L1PuittB1rkkiL9OOtShFc2WpiD8H_pH_INaw9ePWenCzhlIPlHu4zBOgLk/exec?vue=guide-prof';lien.target='_blank';lien.rel='noopener';$("guide-actions").append(lien);}
+  if(!$("messagerie-recommencer")){const b=txt("button","btn vide","Recommencer Messagerie 01 pour tous");b.type='button';b.id='messagerie-recommencer';b.addEventListener('click',()=>{if(!confirm('Remettre tous les participants de Messagerie 01 au début ? L’historique est conservé.'))return;b.disabled=true;google.script.run.withSuccessHandler(r=>{b.disabled=false;$("maj").textContent=r.repris+' participants remis au début.';charge();}).withFailureHandler(err=>{b.disabled=false;erreur(err);}).noter('messagerie-1',{type:'prof-recommencer'});});$("gestion-actions").append(b);}
   $("messagerie-recommencer").hidden=!(SUIVI&&d.reprisesParSuivi&&$("cours").value==='messagerie-1');
   $("guide-messagerie").hidden=$("cours").value!=='messagerie-1';
-  if(!$("python-plafond")){const b=txt("button","btn vide","Ramener les élèves au maximum à l’étape 8");b.type='button';b.id='python-plafond';b.addEventListener('click',()=>{const s=choisie();if(!confirm('Les élèves ayant dépassé l’étape 8 devront la refaire. Continuer ?'))return;b.disabled=true;google.script.run.withSuccessHandler(r=>{$("maj").textContent=r.repris+' élèves remis à l’étape 8. Ils doivent recharger leur fiche.';b.disabled=false;charge();}).withFailureHandler(err=>{b.disabled=false;erreur(err);}).noter('python-1',{type:'prof-plafond',debut:s.debut});});$("chiffres").after(b);}
+  if(!$("python-plafond")){const b=txt("button","btn vide","Ramener les élèves au maximum à l’étape 8");b.type='button';b.id='python-plafond';b.addEventListener('click',()=>{const s=choisie();if(!confirm('Les élèves ayant dépassé l’étape 8 devront la refaire. Continuer ?'))return;b.disabled=true;google.script.run.withSuccessHandler(r=>{$("maj").textContent=r.repris+' élèves remis à l’étape 8. Ils doivent recharger leur fiche.';b.disabled=false;charge();}).withFailureHandler(err=>{b.disabled=false;erreur(err);}).noter('python-1',{type:'prof-plafond',debut:s.debut});});$("gestion-actions").append(b);}
   $("python-plafond").hidden=!(SUIVI&&d.reprisesParSuivi&&d.peutReprendre&&$("cours").value==='python-1'&&/^3/.test(choisie().classe));
+  $("gestion-attente").hidden=!SUIVI||!!d.reprisesParSuivi;
   const n = NB_BLOCS[$("cours").value] || Math.max(1, ...d.eleves.map(e=>e.atteint+1));
   const el = d.eleves.slice().sort((a,b)=>
     (!!b.aide - !!a.aide) || (a.aide && b.aide ? a.aide.depuis - b.aide.depuis : 0) ||
@@ -179,14 +182,14 @@ function dessine(d){
   $("maj").textContent = "Mis à jour à " + new Date(d.maintenant).toLocaleTimeString("fr-BE",{hour:"2-digit",minute:"2-digit",second:"2-digit"});
 }
 
-let numeroChargement=0;
+let numeroChargement=0,contexteAffiche="";
 function charge(){
   if(!SUIVI){ dessine(demo()); return; }
   const s = choisie();
   const cours=$("cours").value,demande=++numeroChargement;
-  $("lignes").replaceChildren();
-  if($("python-plafond"))$("python-plafond").hidden=true;
-  google.script.run.withSuccessHandler(d=>{if(demande===numeroChargement&&$("cours").value===cours&&choisie().debut===s.debut)dessine(d);}).withFailureHandler(err=>{if(demande===numeroChargement)erreur(err);}).donnees(cours, s.debut, s.fin);
+  const contexte=cours+":"+s.debut;
+  if(contexte!==contexteAffiche){$("lignes").replaceChildren();if($("python-plafond"))$("python-plafond").hidden=true;}
+  google.script.run.withSuccessHandler(d=>{if(demande===numeroChargement&&$("cours").value===cours&&choisie().debut===s.debut){contexteAffiche=contexte;dessine(d);}}).withFailureHandler(err=>{if(demande===numeroChargement)erreur(err);}).donnees(cours, s.debut, s.fin);
 }
 
 /* Données fictives : l'aperçu hors Apps Script. */
@@ -468,7 +471,7 @@ function vote(m, r, phase){
       l.append(txt("span",null,(bon ? "✓ " : "")+ch), w, txt("span","num", v+(tot ? " · "+Math.round(v/tot*100)+" %" : "")));
       b.append(l);
     });
-    d.append(b); z.append(d);
+    d.append(b);if(phase === "corrige" && s.explication)d.append(txt("p","moyen",s.explication));z.append(d);
   });
   return z;
 }
@@ -571,10 +574,22 @@ function appliqueCatalogue(data){
   data.cours.forEach(c=>{FICHES[c.id]=CatalogueCours.BASE+c.chemin;NB_BLOCS[c.id]=c.etapes;TITRES_COURS[c.id]=c.titre;});
   DEMO_CL.d.cours=data.cours.map(c=>({cle:c.id,titre:c.titre}));
 }
+// Compatibilité avec le HTML gardé temporairement en cache par Apps Script.
+function prepareOutils(){
+ const header=document.querySelector("header");
+ for(const [id,titre] of [["gestion","Gestion des parcours"],["ressources","Ressources professeur"]]){
+  if(!$(id+"-menu")){const d=txt("details"),corps=txt("div","contenu-menu");d.id=id+"-menu";d.append(txt("summary",null,titre),corps);header.append(d);}
+ }
+ if(!$("gestion-actions")){const d=txt("div");d.id="gestion-actions";$("gestion-menu").querySelector(".contenu-menu").append(d);}
+ if(!$("gestion-attente")){const d=txt("p","astuce","Les commandes de reprise attendent la confirmation du serveur.");d.id="gestion-attente";d.hidden=true;$("gestion-menu").querySelector(".contenu-menu").append(d);}
+ if(!$("guide-actions")){const d=txt("div");d.id="guide-actions";$("ressources-menu").querySelector(".contenu-menu").append(d);}
+ if(!$("filtres-eleves")){const d=txt("div");d.id="filtres-eleves";$("lignes").closest("section").prepend(d);}
+}
+prepareOutils();
 const actualiser=txt("button","btn vide","Actualiser le catalogue");actualiser.type="button";actualiser.id="catalogue-actualiser";
-document.querySelector("header .reglages").append(actualiser);
+$("gestion-actions").append(actualiser);
 const catalogueEtat=txt("p","astuce");catalogueEtat.id="catalogue-etat";catalogueEtat.setAttribute("role","status");
-document.querySelector("header").append(catalogueEtat);
+$("gestion-menu").querySelector(".contenu-menu").append(catalogueEtat);
 async function chargeCatalogue(frais=false){
   actualiser.disabled=true;catalogueEtat.textContent="Chargement du catalogue…";
   try{
@@ -604,5 +619,6 @@ async function chargeCatalogue(frais=false){
 actualiser.addEventListener("click",()=>chargeCatalogue(true));
 if(!SUIVI){document.title="APERÇU FICTIF — tableau professeur";$("demo").hidden=false;}
 chargeCatalogue();
+
 
 

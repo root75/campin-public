@@ -72,15 +72,41 @@
         "min": 4
       },
       {
-        "type": "ecran",
+        "type": "vote",
         "titre": "Quelle adresse pose problème ?",
-        "lignes": [
-          "OBSERVE ET RÉPONDS AU PROFESSEUR",
-          "Adresse attendue : camille.martin@example.org",
-          "camille.martinexample.org — camille. martin@example.org — camille.martin@example.net",
-          "Explique l’erreur. Le domaine .net n’est pas faux en soi : c’est une adresse différente de celle attendue."
+        "min": 4,
+        "methode": "Choix individuels, justification orale et correction collective",
+        "question": "Camille utilise camille.martin@example.org. Coche les adresses à écarter pour lui écrire, puis envoie tes choix.",
+        "choix": [
+          "À utiliser",
+          "À écarter"
         ],
-        "min": 4
+        "situations": [
+          {
+            "texte": "camille.martin@example.org",
+            "bonne": 0,
+            "explication": "C’est exactement l’adresse attendue : partie locale et domaine correspondent."
+          },
+          {
+            "texte": "camille.martinexample.org",
+            "bonne": 1,
+            "explication": "L’arobase @ manque : elle doit séparer la partie locale du domaine."
+          },
+          {
+            "texte": "camille. martin@example.org",
+            "bonne": 1,
+            "explication": "Un espace a été ajouté après le point. Il faut recopier l’adresse scolaire exactement."
+          },
+          {
+            "texte": "camille.martin@example.net",
+            "bonne": 1,
+            "explication": "La structure est plausible, mais le domaine diffère de l’adresse de Camille. .net n’est pas faux en soi."
+          }
+        ],
+        "questions": [
+          "Pourquoi écarter cette adresse ? Est-ce un problème de structure ou une adresse différente ?"
+        ],
+        "repere": "Ouvrir le vote, laisser chacun se positionner, fermer, demander des justifications, puis montrer la correction. Le vote ne valide aucune étape du simulateur."
       },
       {
         "type": "ecran",
@@ -93,6 +119,41 @@
           "Que gardes-tu dans Objet ? Quelles parties composent le corps du message ?"
         ],
         "min": 5
+      },
+      {
+        "type": "vote",
+        "titre": "À, objet ou corps ?",
+        "min": 4,
+        "methode": "Choix individuels puis correction et justification au tableau",
+        "question": "Dans quel champ faut-il écrire chaque élément ?",
+        "choix": [
+          "À",
+          "Objet",
+          "Corps du message"
+        ],
+        "situations": [
+          {
+            "texte": "L’adresse scolaire du camarade destinataire",
+            "bonne": 0,
+            "explication": "À contient l’adresse du destinataire."
+          },
+          {
+            "texte": "Une question sur tes loisirs",
+            "bonne": 1,
+            "explication": "L’objet annonce brièvement le sujet du mail."
+          },
+          {
+            "texte": "Bonjour Camille, quel sport pratiques-tu ?",
+            "bonne": 2,
+            "explication": "La salutation et la demande sont dans le corps du message."
+          },
+          {
+            "texte": "Bonne journée, Lina Dupont, 2B",
+            "bonne": 2,
+            "explication": "La formule de fin et la signature terminent le corps du message."
+          }
+        ],
+        "repere": "Faire expliquer le choix avant de montrer la correction. Un objet ne contient pas tout le mail."
       },
       {
         "type": "fin",

@@ -154,6 +154,18 @@ tr.fini td{color:var(--doux)}
 #repere-titre{font-size:clamp(2rem,5vw,5rem);line-height:1.15}
 #repere-message{font-size:clamp(1.5rem,3.5vw,3.5rem);line-height:1.4;max-width:60rem;overflow-wrap:anywhere}
 #repere-periode{font-size:clamp(1.2rem,2.5vw,2rem)}
+
+.outils-secondaires{display:flex;flex-wrap:wrap;gap:10px 28px;width:100%;padding:2px 0 4px}
+.outils-secondaires>details{flex:1;min-width:220px;font-size:.94rem}
+.outils-secondaires summary{cursor:pointer;color:var(--encre-bouton);font-weight:650;padding:5px 0}
+.contenu-menu{display:grid;gap:12px;padding:14px;margin-top:6px;border:1px solid var(--trait);border-radius:10px;background:var(--carte)}
+.contenu-menu p{margin:0}.contenu-menu .reglages,#gestion-actions{display:flex;gap:8px;flex-wrap:wrap}
+.entete-panneau{display:flex;gap:12px;justify-content:space-between;align-items:center;flex-wrap:wrap}
+.btn.discret{padding:4px 8px;font-size:.85rem;background:transparent;color:var(--doux);border:1px solid var(--trait);justify-self:end;white-space:nowrap}
+.filtre-aide{display:inline-flex;gap:8px;align-items:center;font-size:.9rem;cursor:pointer}
+.filtre-aide input{accent-color:var(--encre-bouton);width:17px;height:17px}
+#erreur-tableau{color:var(--faux);font-weight:600}
+@media(max-width:640px){.outils-secondaires>details{min-width:100%}.entete-panneau h2{font-size:1.15rem}}
 </style>
 </head>
 <body>
@@ -167,14 +179,16 @@ tr.fini td{color:var(--doux)}
       <span class="seq-etat" id="seq-etat" hidden></span>
       <span class="maj" id="maj"></span>
     </div>
-    <nav id="ressources-prof" class="reglages" aria-label="Documents du professeur" aria-live="polite"></nav>
+    <div class="outils-secondaires">
+      <details id="ressources-menu"><summary>Ressources professeur</summary><div class="contenu-menu"><nav id="ressources-prof" class="reglages" aria-label="Documents du professeur" aria-live="polite"></nav><div id="guide-actions"></div></div></details>
+      <details id="gestion-menu"><summary>Gestion des parcours</summary><div class="contenu-menu"><p class="astuce">Les reprises conservent les anciennes tentatives.</p><div id="gestion-actions"></div><p class="astuce" id="gestion-attente" hidden>Les commandes de reprise attendent la confirmation du serveur.</p></div></details>
+    </div>
   </header>
   <p class="demo" id="demo" hidden>APERÇU FICTIF — aucune donnée réelle, aucune commande enregistrée. Le vrai tableau s'ouvre par l'adresse Apps Script, suivie de <b>?vue=prof</b>.</p>
 
   <section class="panneau" id="conducteur" hidden>
-    <h2 id="conducteur-titre">Cours collectif — déroulé à projeter</h2>
+    <div class="entete-panneau"><h2 id="conducteur-titre">Cours collectif — déroulé à projeter</h2><button class="btn discret" type="button" id="conducteur-actualiser" title="Recharger les consignes et les temps, sans réinitialiser les élèves">Actualiser le déroulé</button></div>
     <p id="conducteur-objectif"></p>
-    <button class="btn vide" type="button" id="conducteur-actualiser">Actualiser le déroulé</button>
     <details><summary>Avant le cours et compétences</summary><div id="conducteur-preparation"></div></details>
     <details id="conducteur-details"><summary>Toutes les étapes, questions et repères professeur</summary><ol class="conducteur-liste" id="conducteur-liste"></ol></details>
     <p class="astuce">Chaque bouton ouvre le moment choisi et pilote les postes. Les moments de travail autonome libèrent les fiches ; les moments collectifs les mettent en attente. Cela ne crée aucune nouvelle séance et ne remet pas les blocs à zéro.</p>
@@ -192,7 +206,7 @@ tr.fini td{color:var(--doux)}
   <div class="chiffres" id="chiffres"></div>
 
   <section class="panneau">
-    <h2>Les élèves</h2>
+    <div class="entete-panneau"><h2>Les élèves</h2><div id="filtres-eleves"></div></div>
     <div class="defile"><table>
       <thead><tr><th>Élève</th><th title="Humeur du jour">Humeur</th><th>Avancement</th><th class="num">Bloc</th><th class="num">Erreurs ici</th><th class="num">Erreurs</th><th>État</th><th class="num">Dernière action</th></tr></thead>
       <tbody id="lignes"></tbody>
@@ -257,10 +271,11 @@ tr.fini td{color:var(--doux)}
   </form>
 </dialog>
 
-<script defer src="https://root75.github.io/campin-public/pas-a-pas/tableau.js?v=reprise-verifiee-20261103"></script>
+<script defer src="https://root75.github.io/campin-public/pas-a-pas/tableau.js?v=tableau-sobre-20261103"></script>
 <script defer src="https://root75.github.io/campin-public/pas-a-pas/python-couleurs.js"></script>
 <script defer src="https://root75.github.io/campin-public/rat-de-ville/pas-a-pas/contenu.js"></script>
 <script defer src="https://root75.github.io/campin-public/pas-a-pas/formatif-prof.js"></script>
 </body>
 </html>
+
 
