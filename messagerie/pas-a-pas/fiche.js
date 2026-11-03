@@ -1,6 +1,43 @@
 'use strict';
 const INITIAL={etape:0,a:'',objet:'',salutation:'',message:'',fin:'',signature:'',nom:'',classe:'',locale:'',domaine:'',reponse:'',erreur1:'',erreur2:'',erreur3:'',preuve:'',atteint:0};
 const state={...INITIAL};
+const CELEBREES=new Set();
+const ENCOURAGEMENTS=[
+ ['Bien repéré !','Tu distingues la partie locale et le domaine.'],
+ ['Bien joué !','Tu as repéré les problèmes et recopié l’adresse attendue.'],
+ ['Un titre qui donne le sujet !','Ton objet annonce les loisirs sans contenir tout le message.'],
+ ['Bien choisi !','Une seule salutation pour commencer le message.'],
+ ['Ta demande prend forme !','Relis ta phrase : Camille comprend-elle ce que tu demandes ?'],
+ ['Bien présenté !','La formule de fin et la signature sont en place.'],
+ ['Ton mail est construit !','L’adresse, l’objet et les parties du corps sont en place. Relis ta demande avant la suite.'],
+ ['Ta réponse est préparée !','Tu as préparé les parties de ta réponse. Explique au professeur comment tu réponds à la question de Camille.'],
+ ['Bon repère !','Tu sais nommer l’expéditeur. Montre maintenant son nom dans Outlook.'],
+ ['Tu as trouvé la bonne zone !','Le texte s’écrit dans le corps du message. Vérifie ton écran Outlook.'],
+ ['Tu sais où vérifier !','Retrouve réellement ton email dans Éléments envoyés avant de continuer.'],
+ ['Bravo pour ce parcours !','Montre les messages envoyés et reçus au professeur pour la vérification réelle.']
+];
+function animeReussite(zone,etape){
+ if(CELEBREES.has(etape))return;
+ CELEBREES.add(etape);
+ if(typeof matchMedia==='function'&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+ if(!document.getElementById('style-reussites')){
+  const css=document.createElement('style');css.id='style-reussites';css.textContent=`
+.retour.juste{position:relative;isolation:isolate}
+.reussite-animee{animation:reussite-entree .28s ease-out}
+.confettis-reussite{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:-1;border-radius:inherit}
+.confettis-reussite i{position:absolute;top:-12px;left:var(--x);width:7px;height:11px;background:var(--couleur);border-radius:2px;opacity:0;animation:confetti-leger 1.1s var(--delai) ease-out forwards}
+@keyframes reussite-entree{from{transform:translateY(5px);opacity:.5}to{transform:translateY(0);opacity:1}}
+@keyframes confetti-leger{10%{opacity:.8}to{transform:translate(12px,150px) rotate(180deg);opacity:0}}
+@media(prefers-reduced-motion:reduce){.reussite-animee,.confettis-reussite i{animation:none!important}.confettis-reussite{display:none}}
+`;document.head.append(css);
+ }
+ zone.classList.add('reussite-animee');
+ if(![6,11].includes(etape))return;
+ const confettis=document.createElement('span');confettis.className='confettis-reussite';confettis.setAttribute('aria-hidden','true');
+ const couleurs=['#197a70','#cd8a16','#4766a9'];
+ for(let i=0;i<15;i++){const c=document.createElement('i');c.style.setProperty('--x',(5+(i*31)%91)+'%');c.style.setProperty('--couleur',couleurs[i%3]);c.style.setProperty('--delai',(i%5)*.07+'s');confettis.append(c);}
+ zone.append(confettis);setTimeout(()=>confettis.remove(),1600);
+}
 const DEST='camille.martin@example.org';
 const TITRES=['Observer un email','Choisir le destinataire','Donner un objet','Saluer','Rédiger la demande','Terminer et signer','Relire le mail complet','Répondre au message reçu','Ouvrir et lire dans Outlook','Rédiger dans le corps du message','Envoyer et retrouver son mail','Répondre à son camarade'];
 const norm=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[’]/g,"'").replace(/\s+/g,' ').trim();
@@ -93,8 +130,11 @@ Camille</p></div></div><p><b>Utilise Répondre :</b> le destinataire et l’obje
   bouton.disabled=false;
   if(empreinte!==JSON.stringify(state)){feedback.textContent='La réponse a changé pendant la vérification. Vérifie à nouveau.';return;}
   state.atteint=Math.max(state.atteint,e+1);sauve();
-  if(e===11){feedback.className='retour juste';feedback.textContent='Parcours terminé. Montre les messages envoyés et reçus au professeur pour la vérification réelle.';if(SUIVI)envoie({etape:12,type:'fini'}).catch(()=>{feedback.textContent+=' La fin n’a pas pu être enregistrée : recharge avant de quitter.';});return;}
-  feedback.className='retour juste';feedback.innerHTML='<b>'+ (e===6?'Les contrôles de cet entraînement sont satisfaits. Relis encore le sens de ta phrase.':'Le contrôle de cette étape est satisfait.')+'</b><p>'+ (e===6?'Tu peux maintenant lire la réponse fictive de Camille et lui répondre.':(e>=8?'Continue après avoir effectué la manipulation dans Outlook.':'Continue pour voir le mail se construire.'))+'</p>';
+  const encouragement=ENCOURAGEMENTS[e];
+  feedback.className='retour juste';feedback.innerHTML='<b>✓ '+escapeHtml(encouragement[0])+'</b><p>'+escapeHtml(encouragement[1])+'</p>';
+  animeReussite(feedback,e);
+  if(e===11){if(SUIVI)envoie({etape:12,type:'fini'}).catch(()=>{feedback.append(document.createTextNode(' La fin n’a pas pu être enregistrée : recharge avant de quitter.'));});feedback.focus();return;}
+  const suite=document.createElement('p');suite.textContent=e===6?'Tu peux maintenant lire la réponse fictive de Camille et lui répondre.':(e>=8?'Continue après avoir effectué la manipulation dans Outlook.':'Continue pour voir le mail se construire.');feedback.append(suite);
   const b=document.createElement('button');b.type='button';b.textContent=e===6?'Lire la réponse de Camille →':'Continuer →';b.addEventListener('click',()=>{if(JSON.stringify({...state,atteint:0})!==JSON.stringify({...JSON.parse(empreinte),atteint:0}))return;if((e===6?erreurs(state):champs.map(k=>({texte:verifie(k)})).filter(x=>x.texte)).length)return;state.etape++;state.preuve='';sauve();render();});feedback.append(b);b.focus();
  });
  document.getElementById('aperçu-courant').innerHTML=apercu();
