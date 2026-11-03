@@ -16,7 +16,16 @@ const SUIVI = typeof google !== "undefined" && google.script && google.script.ru
 const $ = id => document.getElementById(id);
 const txt = (tag, cls, t) => { const n=document.createElement(tag); if(cls) n.className=cls; if(t!=null) n.textContent=t; return n; };
 const nom = email => email.split("@")[0].split(/[._]/).filter(Boolean).map(m=>m[0].toUpperCase()+m.slice(1)).join(" ");
-const ilya = ms => ms < 60000 ? "à l'instant" : "il y a " + Math.round(ms/60000) + " min";
+const ilya = ms => {
+  const m=Math.max(0,Math.floor(ms/60000));
+  if(m<1)return "à l'instant";
+  if(m<60)return "il y a "+m+" min";
+  if(m<1440)return "il y a "+Math.floor(m/60)+" h"+(m%60?" "+m%60+" min":"");
+  return "il y a "+Math.floor(m/1440)+" j";
+};
+const derniereAction = (t,terminee,maintenant) => !t ? "—" : terminee
+  ? new Date(t).toLocaleString("fr-BE",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"})
+  : ilya(maintenant-t);
 
 let SEANCES = [];
 let seulementAide=false;
@@ -122,7 +131,8 @@ function dessine(d){
     }
     else if(e.fini) etat.append(txt("span","pastille fini","✓ fini"));
     else if(e.erreursIci>=3) etat.append(txt("span","pastille bute","bute"));
-    const der = td("num", ilya(d.maintenant - e.derniere));
+    const der = td("num", derniereAction(e.derniere, !!choisie().fin || e.fini, d.maintenant));
+    der.title=e.derniere?new Date(e.derniere).toLocaleString("fr-BE"):"Aucune action";
     if(!e.fini && d.maintenant - e.derniere > INACTIF) der.classList.add("inactif");
     tb.append(tr);
   });
