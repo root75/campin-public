@@ -242,6 +242,7 @@ function preuve(pr, B, apres){
     });
     return;
   }
+  if(typeof Q.guide==="function"){Q.guide(zone,Q,reussi,rate,()=>{retour.hidden=true;});return;}
   if(Q.type==="code"){ editeur(zone, Q, reussi, rate); return; }
   if(Q.type==="ordre"){ ordre(zone, Q, reussi, rate); return; }
   if(Q.type==="trace"){ trace(zone, Q, reussi, rate); return; }
@@ -420,3 +421,4 @@ if(SUIVI && !APERCU){
     }).withFailureHandler(()=>{}).etatAide(COURS);
   },15000);
 }
+

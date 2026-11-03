@@ -84,15 +84,17 @@ const tickets = (prix, nombre) => ({
                : SORTIE(r)===String(prix*nombre) ? true : "Python affiche « "+SORTIE(r)+" » : on veut "+(prix*nombre)+". Vérifie l'ordre.",
       juste:"Python lit de haut en bas : chaque variable est créée avant d'être utilisée." } });
 const echange = (a, b) => ({
-  fais:`J'ajoute des lignes pour que <b>a</b> contienne ${b} et <b>b</b> contienne ${a}, sans taper ces nombres. J'ai droit à une troisième boîte, <b>temp</b> ▸ <span class="chemin">▶ Exécuter (Ctrl+Entrée)</span>.`,
-  vois:`Le programme affiche ${b} ${a}.`,
-  coince:[`a = b tout seul écrase le ${a} : il est perdu. Je le mets d'abord à l'abri : temp = a.`,
-          "Trois lignes, comme pour échanger deux verres de jus : un troisième verre vide sert d'abri."],
-  q:{ type:"code", q:"Échange a et b.", depart:`a = ${a}\nb = ${b}\n\nprint(a, b)`,
-      test: r => r.erreur ? "Lis la ligne rouge : quelle ligne, quel nom ?"
-               : new RegExp("^\\s*[ab]\\s*=\\s*("+a+"|"+b+")\\s*$","m").test(r.code.split("\n").slice(2).join("\n")) ? "Tu as tapé "+a+" ou "+b+" : le programme doit marcher quels que soient les nombres. Utilise temp."
-               : (r.vars.a===b && r.vars.b===a) || "Python affiche « "+SORTIE(r)+" ». Fais la trace : après a = b, que reste-t-il du "+a+" ?",
-      juste:"temp = a, a = b, b = temp : sans la troisième boîte, une des deux valeurs est perdue." } });
+  fais:"Suis les quatre parties : prévoir, expliquer la valeur perdue, construire l’échange, puis vérifier avec d’autres valeurs. Explique ton idée avant de montrer ton programme au voisin.",
+  vois:"Je peux expliquer ce qu’une affectation remplace et pourquoi une valeur doit être conservée.",
+  indices:true,
+  coince:["Une affectation copie la valeur de droite dans la boîte de gauche. La valeur précédente de cette boîte est remplacée.","Représente trois boîtes sur une feuille. Mets une valeur à l’abri avant de remplacer le contenu d’une boîte."],
+  q:{type:"code",q:"Échanger deux variables : comprendre avant de valider.",initialA:a,initialB:b,guide:echangeGuide,
+     depart:`a = ${a}\nb = ${b}\n\nprint(a, b)`,
+     test:r=>r.erreur ? "Lis l’erreur Python et repère la ligne concernée."
+       : !echangeGeneral(r.code,a,b) ? "Conserve les deux lignes de départ et print(a, b). Entre les deux, utilise uniquement des copies entre a, b et temp : la méthode doit fonctionner avec d’autres nombres."
+       : (r.vars.a===b && r.vars.b===a) || "Les valeurs finales ne sont pas encore échangées. Suis le contenu des trois boîtes ligne par ligne.",
+     juste:"Prédiction, échange et transfert vérifiés. Je sais expliquer le rôle de la valeur conservée."}
+});
 /* Le nom du fichier doit porter le nom de l'élève : le prénom ou le nom de son adresse. */
 const nomsEleve = () => EMAIL ? EMAIL.split("@")[0].split(".").map(m=>norm(m).replace(/[^a-z]/g,"")).filter(m=>m.length>1) : [];
 const portemonNom = f => { const n = nomsEleve(); return !n.length || n.some(m => norm(f).replace(/[^a-z]/g,"").includes(m)); };
@@ -163,9 +165,9 @@ const BLOCS = [
     ...tickets(4, 3),
     variantes:[tickets(5, 2), tickets(6, 3)] },
 
-  { partie:"B — Les variables", titre:"J'échange deux boîtes", min:7,
+  { partie:"B — Les variables", titre:"J'échange deux boîtes", min:12,
     veux:"Échanger le contenu de deux variables, sans rien perdre.",
-    extra:`<div class="encart"><h3>⚡ Fini avant la minute 40 ?</h3><p>Je prédis : avec a = b puis b = a, sans temp, que vaut b ? Je le teste dans le cadre, puis ↺ Code de départ pour revenir. Au signal du professeur, je passe au bloc suivant, même si ce n'est pas fini.</p></div>`,
+    extra:`<div class="encart"><p><b>À ton rythme :</b> la validation vient après les quatre parties. Si la séance s’arrête, tu pourras reprendre ce bloc. Après réussite, explique ton raisonnement à ton voisin sans lui dicter le code.</p></div>`,
     ...echange(4, 7),
     variantes:[echange(3, 9), echange(5, 8)] },
 
@@ -447,3 +449,46 @@ addEventListener("DOMContentLoaded",()=>{
   document.head.append(script);
 });
 
+
+
+/* Une réussite n’est enregistrée qu’après prédiction, construction et transfert. */
+function echangeGeneral(code,a,b){
+ const lignes=code.split('\n').map(l=>l.replace(/#.*/,'').trim()).filter(Boolean);
+ if(lignes[0]!==`a = ${a}`||lignes[1]!==`b = ${b}`||!/^print\(\s*a\s*,\s*b\s*\)$/.test(lignes.at(-1)))return false;
+ const gestes=lignes.slice(2,-1).map(l=>/^(a|b|temp)\s*=\s*(a|b|temp)$/.exec(l));
+ if(!gestes.length||gestes.some(x=>!x)||!gestes.some(x=>x[1]==='temp'))return false;
+ return [[a,b],[13,-6],[-2,11]].every(([x,y])=>{const v={a:x,b:y};for(const g of gestes){if(!(g[2] in v))return false;v[g[1]]=v[g[2]];}return v.a===y&&v.b===x;});
+}
+function raisonEchange(rep){
+ const n=norm(rep);
+ return !/(pas besoin|inutile|sert a rien|ne sert pas|ne conserve pas|ne garde pas)/.test(n)&&/(valeur|contenu|nombre)/.test(n)&&(/(conserv|gard|sauvegard|sauv|abri|preserv)/.test(n)&&/(ecras|perd|remplac|avant)/.test(n)||/(pour|afin de) ne pas (perdre|ecraser)/.test(n));
+}
+function echangeGuide(zone,Q,reussi,rate,effaceRetour=()=>{}){
+ const a=Q.initialA,b=Q.initialB,x=a+11,y=b+3;let codeValide='';const preuves=[];
+ const titre=t=>zone.append(txt('h3',null,t));
+ const texte=t=>zone.append(txt('p',null,t));
+ const programme=t=>{const pre=el('pre');pre.textContent=t;zone.append(pre);};
+ const champs=(definitions,verifie,suite)=>{
+  const f=el('form','bilan');const inputs=definitions.map(([label,numerique])=>{const lab=el('label'),inp=el('input');inp.type='text';inp.required=true;inp.maxLength=numerique?12:180;inp.setAttribute('aria-label',label);if(numerique)inp.inputMode='numeric';lab.append(txt('span',null,label),inp);f.append(lab);return inp;});
+  const btn=txt('button','btn plein','Vérifier mon raisonnement');btn.type='submit';f.append(btn);zone.append(f);
+  f.addEventListener('submit',e=>{e.preventDefault();if(btn.disabled)return;const r=inputs.map(x=>x.value.trim());if(r.some(x=>!x))return;const erreur=verifie(r);if(erreur){rate(erreur,r.join(' | '));return;}btn.disabled=true;inputs.forEach(x=>x.disabled=true);preuves.push(r.join('/'));zone.replaceChildren();effaceRetour();suite();});inputs[0].focus();
+ };
+ const transfert=()=>{
+  titre('4. Vérifie avec d’autres valeurs');texte(`Sans exécuter : a vaut ${x} et b vaut ${y} au départ. On ne fait que les deux instructions suivantes.`);programme('temp = a\na = b');
+  champs([['Valeur de a après ces deux lignes',true],['Valeur de b après ces deux lignes',true],['Valeur conservée dans temp',true]],r=>r[0]===String(y)&&r[1]===String(y)&&r[2]===String(x)?'':'Relis les affectations : copier dans a ne modifie pas b. Quelle boîte garde encore la valeur de départ de a ?',()=>{
+   titre('Échange construit et raisonnement vérifié');programme(codeValide);texte('Explique à ton voisin pourquoi temp est nécessaire, sans lui dicter les trois lignes. Le professeur peut te demander cette explication.');
+   reussi('prediction:'+preuves[0]+' | pourquoi:'+preuves[1].slice(0,100)+' | echange OK | transfert:'+preuves.at(-1));
+  });
+ };
+ const construire=()=>{
+  titre('3. Construis un échange qui marche avec tous les nombres');texte('Ajoute des affectations entre les deux lignes de départ et print. Utilise temp pour conserver une valeur. Ne recopie aucun nombre dans tes instructions.');
+  editeur(zone,Q,code=>{codeValide=code;zone.replaceChildren();effaceRetour();transfert();},rate);
+ };
+ const expliquer=()=>{
+  titre('2. Où est passée la première valeur ?');texte(`Après a = b puis b = a, les deux boîtes contiennent ${b}.`);
+  texte('Explique le rôle de la troisième boîte avec tes mots. Ta phrase doit relier la conservation de la valeur au risque de l’écraser. Le contrôle repère ces idées ; le professeur vérifie aussi le sens.');
+  champs([['Quelle valeur de départ a été perdue ?',true],['Pourquoi utiliser une boîte temporaire ?',false]],r=>r[0]!==String(a)?'Repère la valeur de a avant la première affectation.':!raisonEchange(r[1])?'Explique ce que l’on conserve avant qu’une affectation écrase ou remplace une valeur.':'',construire);
+ };
+ titre('1. Prévois avant de programmer');texte(`Au départ, a vaut ${a} et b vaut ${b}. Ne lance pas Python : suis ces deux instructions dans l’ordre.`);programme('a = b\nb = a');
+ champs([['Valeur finale de a',true],['Valeur finale de b',true]],r=>r[0]===String(b)&&r[1]===String(b)?'':'À la première ligne, a reçoit le contenu de b. À la deuxième, on lit la nouvelle valeur de a : on ne retrouve pas automatiquement l’ancienne.',expliquer);
+}
