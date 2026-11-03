@@ -85,4 +85,9 @@
     legende.append(notice,el('p','mv-prompt','À l’oral : que garder dans Objet ? Où écrire la salutation et la signature ?'),capture());root.append(fenetre,legende);return root;
   }
   window.MessagerieVisuels={adresse,email};
+  document.querySelectorAll('[data-messagerie-visuel]').forEach(cible=>{
+    const type=cible.dataset.messagerieVisuel;
+    if(type==='adresse')cible.replaceChildren(adresse());
+    if(type==='email')cible.replaceChildren(email());
+  });
 })();
