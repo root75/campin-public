@@ -85,6 +85,10 @@ function dessine(d){
     FormatifProf.presentation($("cours").value === 'rat-de-ville-formatif');
     if($("cours").value === 'rat-de-ville-formatif') { FormatifProf.dessine(d); return; }
   }
+  if(!$("guide-messagerie")){const lien=txt("a","btn vide","Repères professeur — Messagerie 01");lien.id="guide-messagerie";lien.href='https://script.google.com/a/macros/arcampin.be/s/AKfycbyOPTaq-L1PuittB1rkkiL9OOtShFc2WpiD8H_pH_INaw9ePWenCzhlIPlHu4zBOgLk/exec?vue=guide-prof';lien.target='_blank';lien.rel='noopener';$("chiffres").after(lien);}
+  $("guide-messagerie").hidden=$("cours").value!=='messagerie-1';
+  if(!$("python-plafond")){const b=txt("button","btn vide","Ramener les élèves au maximum à l’étape 8");b.type='button';b.id='python-plafond';b.addEventListener('click',()=>{const s=choisie();if(!confirm('Les élèves ayant dépassé l’étape 8 devront la refaire. Continuer ?'))return;b.disabled=true;google.script.run.withSuccessHandler(r=>{$("maj").textContent=r.repris+' élèves remis à l’étape 8. Ils doivent recharger leur fiche.';b.disabled=false;charge();}).withFailureHandler(err=>{b.disabled=false;erreur(err);}).plafonnerPython8(s.debut);});$("chiffres").after(b);}
+  $("python-plafond").hidden=!(SUIVI&&d.peutReprendre&&$("cours").value==='python-1'&&/^3/.test(choisie().classe));
   const n = NB_BLOCS[$("cours").value] || Math.max(1, ...d.eleves.map(e=>e.atteint+1));
   const el = d.eleves.slice().sort((a,b)=>
     (!!b.aide - !!a.aide) || (a.aide && b.aide ? a.aide.depuis - b.aide.depuis : 0) ||
@@ -105,6 +109,7 @@ function dessine(d){
     const tr = txt("tr", e.aide ? "aide" : e.fini ? "fini" : "");
     const td = (cls,t) => { const c=txt("td",cls,t); tr.append(c); return c; };
     const n1 = td("nom", nom(e.email)); n1.title = e.email;
+    if(SUIVI&&d.peutReprendre){const cours=$("cours").value,seance=choisie();const r=txt("button","btn vide","Recommencer");r.type="button";r.setAttribute("aria-label","Faire recommencer "+nom(e.email));r.addEventListener("click",()=>{if(!confirm("Faire recommencer ce cours à "+nom(e.email)+" ? L’historique est conservé."))return;r.disabled=true;google.script.run.withSuccessHandler(()=>{charge();}).withFailureHandler(err=>{r.disabled=false;erreur(err);}).reprendreEleve(cours,e.email,seance.debut);});n1.append(r);}
     const h = td("hum", e.humeur ? e.humeur.split(" ")[0] : ""); if(e.humeur) h.title = e.humeur;
     const b = txt("div","barre");
     for(let i=0;i<n;i++){ const s=txt("span"); s.className = i<e.atteint ? "fait" : (i===e.atteint && !e.fini ? "ici" : ""); b.append(s); }
@@ -591,4 +596,5 @@ async function chargeCatalogue(frais=false){
 actualiser.addEventListener("click",()=>chargeCatalogue(true));
 if(!SUIVI){document.title="APERÇU FICTIF — tableau professeur";$("demo").hidden=false;}
 chargeCatalogue();
+
 

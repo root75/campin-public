@@ -110,7 +110,7 @@ if(typeof module!=='undefined')module.exports={verifie,erreurs,corps,DEST};
 const COURS='messagerie-1';
 const APERCU=typeof location!=='undefined'&&/^#bloc=\d+$/.test(location.hash);
 const SUIVI=!APERCU&&typeof google!=='undefined'&&!!google.script?.run;
-const CLE='messagerie-01-v20261103';
+const CLE='messagerie-01-v20261103';let repriseServeur=0;
 let identite='',preuves=null;const dejaValide=new Map(),dejaFaux=new Map();
 function sauve(){if(APERCU)return;try{sessionStorage.setItem(CLE+identite,JSON.stringify(state));}catch(_){}}
 function rpc(n,...args){return new Promise((resolve,reject)=>{google.script.run.withSuccessHandler(resolve).withFailureHandler(()=>reject(new Error('Le suivi ne répond pas. Ta saisie reste ici ; réessaie avant de continuer.')))[n](...args);});}
@@ -131,9 +131,9 @@ async function demarre(){
  const status=document.getElementById('suivi-status');
  try{
   const r=await fetch('https://root75.github.io/campin-public/messagerie/pas-a-pas/preuves.json?v=20261103');if(!r.ok)throw Error();preuves=await r.json();
-  if(SUIVI){const etat=await rpc('etat',COURS);identite=':'+etat.email;status.textContent='Suivi professeur connecté. Les preuves courtes et demandes d’aide sont enregistrées.';await envoie({etape:0,type:'ouvert'});}
+  if(SUIVI){const etat=await rpc('etat',COURS);identite=':'+etat.email;repriseServeur=Number(etat.reprise)||0;status.textContent='Suivi professeur connecté. Les preuves courtes et demandes d’aide sont enregistrées.';await envoie({etape:0,type:'ouvert'});}
   else status.innerHTML='Entraînement libre : aucun résultat ni appel à l’aide transmis au professeur. Pour la séance suivie, <a href="https://script.google.com/a/macros/arcampin.be/s/AKfycbyOPTaq-L1PuittB1rkkiL9OOtShFc2WpiD8H_pH_INaw9ePWenCzhlIPlHu4zBOgLk/exec">ouvre ta séance scolaire</a>.';
-  try{const saved=JSON.parse(sessionStorage.getItem(CLE+identite)||'null');if(saved&&Number.isInteger(saved.etape)&&saved.etape>=0&&saved.etape<12)Object.assign(state,saved);}catch(_){}
+  try{const saved=JSON.parse(sessionStorage.getItem(CLE+identite)||'null');if(saved&&Number.isInteger(saved.etape)&&saved.etape>=0&&saved.etape<12&&(!SUIVI||Number(saved.reprise||0)===repriseServeur))Object.assign(state,saved);state.reprise=repriseServeur;}catch(_){}
   if(APERCU){Object.assign(state,INITIAL);state.atteint=12;state.etape=Math.min(11,Math.max(0,Number(location.hash.slice(6))-1));document.getElementById('collectif').hidden=true;document.getElementById('individuel').hidden=false;document.getElementById('revoir-collectif').hidden=false;status.textContent='Aperçu du professeur : navigation libre, aucun résultat enregistré.';}
   init();
  }catch(e){status.textContent='Impossible de charger les contrôles ou le suivi. Recharge la page ; aucun résultat n’est annoncé comme enregistré.';init();}
@@ -146,4 +146,5 @@ async function demarre(){
 }
 if(typeof document!=='undefined')demarre();
 if(typeof module!=='undefined')Object.assign(module.exports,{regle,reponseCourte});
+
 
