@@ -369,11 +369,14 @@ function action(){
 function scene(){
   const m = momentCourant(), n = SEQ.contenu.moments.length, r = SEQ.rep;
   const box = txt("div");
+  if($("cours").value === "messagerie-1")box.classList.add("messagerie-scene");
   box.append(txt("p","sur", m.titre));
   $("seq-ou").replaceChildren(txt("b",null,(SEQ.etat.i+1)+" / "+n+" · "+m.titre), " — "+(m.methode||""));
   $("seq-prec").disabled = SEQ.etat.i === 0;
   $("seq-suiv").disabled = SEQ.etat.i === n-1;
-  if(m.type === "ecran" || m.type === "fin" || m.type === "atelier"){
+  const mailVisuel = $("cours").value === "messagerie-1" && m.titre === "Avant d’écrire : observe le mail" && window.MessagerieVisuels;
+  if(mailVisuel)box.append(txt('h2','grand','Comment est construit cet email ?'),txt('p','moyen','ENSEMBLE — explore les parties, puis explique leur rôle.'),MessagerieVisuels.email());
+  if(!mailVisuel && (m.type === "ecran" || m.type === "fin" || m.type === "atelier")){
     (m.lignes||[]).forEach((l,k)=>box.append(txt(k ? "p" : "h2", k ? "moyen" : "grand", l)));
     if(m.paires){ const g = txt("div","paires"); m.paires.forEach(([a,b])=>{ const c = txt("div","paire"); c.append(txt("b",null,a), txt("span",null,b)); g.append(c); }); box.append(g); }
     if(m.exemple) box.append(txt("p","exemple", m.exemple));
@@ -394,9 +397,10 @@ function scene(){
   if(m.type === "mots"){
     box.append(txt("h2","grand", m.question));
     if(m.saisie === 'domaine'){
-      (m.lignes||[]).forEach(l=>box.append(txt('p','moyen',l)));
+      if(window.MessagerieVisuels)box.append(MessagerieVisuels.adresse({corrige:SEQ.etat.phase==='corrige'}));
+      else (m.lignes||[]).forEach(l=>box.append(txt('p','moyen',l)));
       box.append(txt('p','moyen',SEQ.etat.phase==='corrige'?'ENSEMBLE — vérifiez et expliquez.':SEQ.etat.phase==='clos'?'RÉPONSES FERMÉES — explique ton raisonnement.':'À TOI D’ÉCRIRE — réponds sur ton écran.'));
-      if(SEQ.etat.phase==='corrige')(m.correction||[]).forEach(l=>box.append(txt('p','moyen',l)));
+      if(SEQ.etat.phase==='corrige'&&!window.MessagerieVisuels)(m.correction||[]).forEach(l=>box.append(txt('p','moyen',l)));
     }
     const masques = litSeq("masques", []);
     const mots = r ? r.mots.filter(x=>!masques.includes(x.cle)) : [];

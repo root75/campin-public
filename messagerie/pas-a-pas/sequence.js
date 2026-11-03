@@ -38,7 +38,7 @@
     if(deja)return;deja=true;
     if(typeof google === "undefined" || !google.script || !google.script.run) return;
     const style = el("style"); style.textContent = css; document.head.append(style);
-    const zone = el("section"); zone.id = "seq"; zone.hidden = true; zone.setAttribute("aria-live", "polite");
+    const zone = el("section"); zone.id = "seq"; if(o.cours === "messagerie-1") zone.classList.add("messagerie-scene"); zone.hidden = true; zone.setAttribute("aria-live", "polite");
     const page = document.querySelector(".page"), tete = page.querySelector("header");
     tete ? tete.after(zone) : page.prepend(zone);
 
@@ -67,6 +67,9 @@
       if(m.type === "mots") return mots(m, moi);
       if(m.type === "vote") return vote(m, moi);
       const support=contenus?.moments?.find(x=>x.titre===m.titre);
+      if(support && o.cours === 'messagerie-1' && m.titre === 'Avant d’écrire : observe le mail' && window.MessagerieVisuels){
+        zone.append(el('h2','sq-grand','Comment est construit cet email ?'),el('p','sq-note','ENSEMBLE — explore les parties, puis réponds au professeur.'),MessagerieVisuels.email());return;
+      }
       if(support){zone.append(el("h2","sq-grand",m.titre),el("p","sq-note","ENSEMBLE — OBSERVE ET RÉPONDS AU PROFESSEUR"));
       for(const ligne of support.lignes||[])zone.append(el("p",null,ligne));
       for(const paire of support.paires||[])zone.append(el("p",null,Array.isArray(paire)?paire.join(" — "):JSON.stringify(paire)));
@@ -80,9 +83,10 @@
     function domaine(m, moi, support){
       const ferme = m.phase === 'clos' || m.phase === 'corrige';
       zone.append(el('h2','sq-grand',m.question),el('p','sq-note',m.phase === 'corrige' ? 'ENSEMBLE — compare ta réponse à la correction et explique.' : ferme ? 'ENSEMBLE — prépare ton explication et attends la correction.' : 'À TOI D’ÉCRIRE — propose ta réponse. Nous vérifierons ensemble.'));
-      for(const ligne of support.lignes || []) zone.append(el('p',null,ligne));
+      if(window.MessagerieVisuels)zone.append(MessagerieVisuels.adresse({corrige:m.phase==='corrige'}));
+      else for(const ligne of support.lignes || []) zone.append(el('p',null,ligne));
       if(m.phase === 'corrige'){
-        for(const ligne of support.correction || []) zone.append(el('p',null,ligne));
+        if(!window.MessagerieVisuels)for(const ligne of support.correction || []) zone.append(el('p',null,ligne));
         if(moi.reponse){
           const juste = moi.reponse.trim().toLowerCase() === 'arcampin.be';
           zone.append(el('p','sq-res', 'Ta réponse : ' + moi.reponse),el('p',juste?'sq-res juste':'sq-res faux',juste?'Ta réponse correspond au domaine complet.':'À corriger : le domaine complet est arcampin.be. Explique la différence.'));
