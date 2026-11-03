@@ -44,7 +44,7 @@
 
     let cle = "", courant = null;
     let contenus=null;
-    fetch("https://root75.github.io/campin-public/pas-a-pas/sequences.json?v=interactif-20261103").then(r=>{if(!r.ok)throw Error();return r.json();}).then(data=>{contenus=data[o.cours];cle="";}).catch(()=>{});
+    fetch("https://root75.github.io/campin-public/pas-a-pas/sequences.json?v=domaine-20261103").then(r=>{if(!r.ok)throw Error();return r.json();}).then(data=>{contenus=data[o.cours];cle="";}).catch(()=>{});
     const mes = {};   // ce que l'élève a envoyé, par moment de cette séquence
 
     function recoit(m){
@@ -77,7 +77,36 @@
         el("p", "sq-note", m.type === "tri" ? "On range vos mots ensemble. Prépare-toi à dire pourquoi." : "Rien à taper pour le moment."));
     }
 
+    function domaine(m, moi, support){
+      const ferme = m.phase === 'clos' || m.phase === 'corrige';
+      zone.append(el('h2','sq-grand',m.question),el('p','sq-note',m.phase === 'corrige' ? 'ENSEMBLE — compare ta réponse à la correction et explique.' : ferme ? 'ENSEMBLE — prépare ton explication et attends la correction.' : 'À TOI D’ÉCRIRE — propose ta réponse. Nous vérifierons ensemble.'));
+      for(const ligne of support.lignes || []) zone.append(el('p',null,ligne));
+      if(m.phase === 'corrige'){
+        for(const ligne of support.correction || []) zone.append(el('p',null,ligne));
+        if(moi.reponse){
+          const juste = moi.reponse.trim().toLowerCase() === 'arcampin.be';
+          zone.append(el('p','sq-res', 'Ta réponse : ' + moi.reponse),el('p',juste?'sq-res juste':'sq-res faux',juste?'Ta réponse correspond au domaine complet.':'À corriger : le domaine complet est arcampin.be. Explique la différence.'));
+        }
+        return;
+      }
+      if(ferme){if(moi.reponse)zone.append(el('p','sq-res','Ta réponse envoyée : '+moi.reponse));return;}
+      const f=el('form','sq-champs'),label=el('label',null,'Le domaine de mon adresse scolaire'),c=el('input'),b=el('button','sq-btn',moi.reponse?'Modifier ma réponse':'Envoyer ma réponse'),statut=el('p','sq-note',moi.reponse?'Réponse enregistrée. Elle sera vérifiée avec le professeur.':'');
+      c.type='text';c.maxLength=30;c.autocomplete='off';c.spellcheck=false;c.id='sq-domaine';label.htmlFor=c.id;c.value=moi.brouillon ?? moi.reponse ?? '';c.addEventListener('input',()=>moi.brouillon=c.value);statut.setAttribute('role','status');b.type='submit';
+      f.append(label,c,b,statut);zone.append(f);
+      f.addEventListener('submit',async e=>{
+        e.preventDefault();if(b.disabled)return;
+        const reponse=c.value.trim();if(!reponse){c.focus();return;}
+        if(reponse===moi.reponse)return;
+        b.disabled=true;c.disabled=true;statut.textContent='Enregistrement…';
+        try{await o.envoie({etape:m.n,type:'motcle',reponse});moi.reponse=reponse;dessine(courant || m);}
+        catch(_){b.disabled=false;c.disabled=false;statut.textContent='Envoi non confirmé. Garde ta réponse et réessaie.';}
+      });
+    }
+
     function mots(m, moi){
+      const support=contenus?.moments?.find(x=>x.titre===m.titre);
+      if(o.cours==='messagerie-1' && m.titre==='Une adresse en trois parties' && !support){zone.append(el('p','sq-note','Chargement de la question…'));return;}
+      if(support?.saisie==='domaine')return domaine(m,moi,support);
       zone.append(el("h2", "sq-grand", m.question));
       if(moi.mots && !moi.modifier){
         zone.append(el("p", "sq-res juste", "✓ Envoyé : " + moi.mots.join(" · ")), el("p", "sq-note", "Regarde le tableau."));

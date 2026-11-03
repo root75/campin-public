@@ -357,6 +357,12 @@ function action(){
   if(m.type === "mots" && !SEQ.montre){ t = "Montrer les mots"; f = ()=>{ SEQ.montre = true; scene(); }; }
   if(m.type === "vote" && ph === "ouvert"){ t = "Clore le vote"; f = ()=>allerA(SEQ.etat.i, "clos"); }
   if(m.type === "vote" && ph === "clos"){ t = "Montrer la bonne réponse"; f = ()=>allerA(SEQ.etat.i, "corrige"); }
+  if(m.saisie === 'domaine'){
+    if(ph === 'corrige'){ t=''; f=null; }
+    else if(ph === 'clos'){ t='Corriger ensemble'; f=()=>allerA(SEQ.etat.i,'corrige'); }
+    else if(SEQ.montre){ t='Clore les réponses'; f=()=>allerA(SEQ.etat.i,'clos'); }
+    else { t='Afficher les réponses'; f=()=>{ SEQ.montre=true; scene(); }; }
+  }
   a.hidden = !f; a.textContent = t; a.onclick = f;
 }
 
@@ -387,10 +393,15 @@ function scene(){
   }
   if(m.type === "mots"){
     box.append(txt("h2","grand", m.question));
+    if(m.saisie === 'domaine'){
+      (m.lignes||[]).forEach(l=>box.append(txt('p','moyen',l)));
+      box.append(txt('p','moyen',SEQ.etat.phase==='corrige'?'ENSEMBLE — vérifiez et expliquez.':SEQ.etat.phase==='clos'?'RÉPONSES FERMÉES — explique ton raisonnement.':'À TOI D’ÉCRIRE — réponds sur ton écran.'));
+      if(SEQ.etat.phase==='corrige')(m.correction||[]).forEach(l=>box.append(txt('p','moyen',l)));
+    }
     const masques = litSeq("masques", []);
     const mots = r ? r.mots.filter(x=>!masques.includes(x.cle)) : [];
     if(!SEQ.montre){
-      box.append(txt("div","compteur", r ? r.repondants : "…"), txt("p","moyen", (r && r.repondants === 1 ? "élève a" : "élèves ont") + " répondu. Tape tes mots sur ton poste."));
+      box.append(txt("div","compteur", r ? r.repondants : "…"), txt("p","moyen", (r && r.repondants === 1 ? "élève a" : "élèves ont") + (m.saisie === "domaine" ? " répondu. Écris le domaine sur ton poste." : " répondu. Tape tes mots sur ton poste.")));
     } else {
       const max = Math.max(1, ...mots.map(x=>x.n)), nu = txt("div","nuage");
       if(!mots.length) nu.append(txt("p","moyen","Pas encore de mot."));

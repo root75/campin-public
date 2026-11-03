@@ -61,15 +61,23 @@
         "min": 3
       },
       {
-        "type": "ecran",
+        "type": "mots",
         "titre": "Une adresse en trois parties",
         "lignes": [
-          "OBSERVE ET RÉPONDS AU PROFESSEUR",
           "camille.martin | @ | example.org",
-          "Partie locale : identifie la boîte dans ce domaine. @ : sépare les deux parties. Domaine : après @.",
-          "Quel est le domaine de ton adresse scolaire ?"
+          "Avant @ : la partie locale. @ : le séparateur. Après @ : le domaine."
         ],
-        "min": 4
+        "min": 5,
+        "saisie": "domaine",
+        "question": "Quel est le domaine de ton adresse scolaire ?",
+        "max": 1,
+        "methode": "Réponse écrite individuelle, comparaison anonyme, puis correction collective",
+        "correction": [
+          "Dans ton adresse scolaire, le domaine complet est arcampin.be : toute la partie après @, sans l’arobase.",
+          ".be est l’extension : on l’appelle domaine de premier niveau, ou TLD (Top-Level Domain). Elle est associée à la Belgique.",
+          "Dans arcampin.be, arcampin est le nom choisi et be est le domaine de premier niveau. .be seul n’est donc pas le domaine complet de ton adresse."
+        ],
+        "repere": "Laisser chacun écrire sans donner la réponse. Montrer les réponses anonymes, demander de justifier, puis clore les réponses et afficher la correction. Faire distinguer arcampin.be, @arcampin.be et .be. Cette activité collective ne valide aucune étape du simulateur."
       },
       {
         "type": "vote",
