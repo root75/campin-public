@@ -309,18 +309,18 @@ function editeur(zone, Q, reussi, rate){
 
   async function go(){
     if(lance.disabled) return;
-    lance.disabled = true; ecran.hidden = false; ecran.className = "console";
+    lance.disabled = true; ta.readOnly=true; depart.disabled=true; ecran.hidden = false; ecran.className = "console";
     ecran.textContent = "⏳ Python se prépare… (la première fois seulement, quelques secondes)";
     let r;
     try { r = await executePython(ta.value); }
     catch(e){
       ecran.textContent = "Le moteur Python ne se charge pas. Je réessaie dans un instant ; sinon, je pose mon chevalet.";
-      lance.disabled = false; return;
+      lance.disabled = false;ta.readOnly=false;depart.disabled=false; return;
     }
     montre(ecran, r);
     const verdict = Q.test(r);
     if(verdict === true){ ta.readOnly = true; depart.disabled = true; reussi(ta.value); }
-    else { lance.disabled = false; rate(verdict, ta.value); }
+    else { lance.disabled = false;ta.readOnly=false;depart.disabled=false; rate(verdict, ta.value); }
   }
 }
 
@@ -328,6 +328,7 @@ function editeur(zone, Q, reussi, rate){
    et applique test(r) comme pour un programme écrit : tous les ordres qui marchent sont justes. */
 function ordre(zone, Q, reussi, rate){
   let lignes = melange(Q.lignes);
+  let execution=false;
   while(lignes.join("\n") === Q.lignes.join("\n")) lignes = melange(Q.lignes);
   const ol = el("ol","ordre");
   const ecran = el("pre","console"); ecran.hidden = true;
@@ -338,8 +339,8 @@ function ordre(zone, Q, reussi, rate){
       const li = el("li"); const c = txt("code", null, l);
       const haut = txt("button","fleche","▲"); haut.type="button"; haut.disabled = i===0; haut.setAttribute("aria-label","Monter la ligne « "+l+" »");
       const bas = txt("button","fleche","▼"); bas.type="button"; bas.disabled = i===lignes.length-1; bas.setAttribute("aria-label","Descendre la ligne « "+l+" »");
-      haut.addEventListener("click",()=>{ [lignes[i-1],lignes[i]]=[lignes[i],lignes[i-1]]; dessine(); ol.children[i-1].querySelector(".fleche").focus(); });
-      bas.addEventListener("click",()=>{ [lignes[i+1],lignes[i]]=[lignes[i],lignes[i+1]]; dessine(); ol.children[i+1].querySelectorAll(".fleche")[1].focus(); });
+      haut.addEventListener("click",()=>{ if(execution)return; [lignes[i-1],lignes[i]]=[lignes[i],lignes[i-1]]; dessine(); ol.children[i-1].querySelector(".fleche").focus(); });
+      bas.addEventListener("click",()=>{ if(execution)return; [lignes[i+1],lignes[i]]=[lignes[i],lignes[i+1]]; dessine(); ol.children[i+1].querySelectorAll(".fleche")[1].focus(); });
       li.append(c, haut, bas); ol.append(li);
     });
   };
@@ -347,14 +348,15 @@ function ordre(zone, Q, reussi, rate){
   zone.append(ol, el("div","actions"), ecran); zone.children[1].append(ok);
   chargePython().catch(() => {});
   ok.addEventListener("click", async () => {
+    if(ok.disabled)return;execution=true;
     ok.disabled = true; ecran.hidden = false; ecran.textContent = "⏳ Python se prépare… (la première fois seulement, quelques secondes)";
     let r;
     try { r = await executePython(lignes.join("\n")); }
-    catch(e){ ecran.textContent = "Le moteur Python ne se charge pas. Je réessaie dans un instant ; sinon, je pose mon chevalet."; ok.disabled = false; return; }
+    catch(e){ ecran.textContent = "Le moteur Python ne se charge pas. Je réessaie dans un instant ; sinon, je pose mon chevalet."; ok.disabled = false; execution=false; return; }
     montre(ecran, r);
     const verdict = Q.test(r);
     if(verdict === true){ ol.querySelectorAll("button").forEach(b=>b.disabled=true); reussi(lignes.join(" / ")); }
-    else { ok.disabled = false; rate(verdict, lignes.join(" / ")); }
+    else { execution=false;ok.disabled = false; rate(verdict, lignes.join(" / ")); }
   });
 }
 
@@ -419,3 +421,4 @@ addEventListener("DOMContentLoaded",()=>{
   script.src="https://root75.github.io/campin-public/pas-a-pas/blocs.js";
   document.head.append(script);
 });
+

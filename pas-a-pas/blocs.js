@@ -135,9 +135,10 @@ function preuve(pr, B, apres){
   pr.append(txt("p","question",Q.q));
   const retour = el("div","retour"); retour.hidden = true;
   const zone = el("div"); pr.append(zone, retour);
-  let essais = 0;
+  let essais = 0, derniereErreur = null, termine = false;
 
   const reussi = (reponse) => {
+    if(termine)return;termine=true;
     retour.className="retour juste"; retour.replaceChildren(txt("strong",null,Q.type==="rapport" ? "Étape déclarée faite." : Q.type==="enquete" ? (SUIVI && !APERCU ? "Réponse enregistrée." : "Réponse saisie pour cet essai.") : "Oui, c'est ça."));
     if(Q.juste) retour.append(txt("p",null,Q.juste));
     retour.hidden=false;
@@ -153,6 +154,10 @@ function preuve(pr, B, apres){
     pr.append(s); s.focus();
   };
   const rate = (explication, reponse) => {
+    if(termine)return;
+    const empreinte=String(reponse ?? "");
+    if(empreinte===derniereErreur){retour.hidden=false;if(!retour.querySelector(".sans-doublon"))retour.append(txt("p","sans-doublon","Modifie ta réponse avant de vérifier à nouveau. Cette tentative identique ne compte pas une erreur de plus."));return;}
+    derniereErreur=empreinte;
     essais++; etat.erreurs++; ecrit(etat);
     envoie({ etape:ici+1, type:"faux", essais:essais, reponse:v(reponse) });
     retour.className="retour faux"; retour.replaceChildren(txt("strong",null,"Pas encore."), txt("p",null,explication));
@@ -399,4 +404,19 @@ if(APERCU){
   pied.textContent = "Ton avancement reste sur cet ordinateur. Aucune donnée n'est envoyée.";
   humeur();
   affiche();
+}
+
+
+/* Le serveur renvoie un petit état mis en cache, sans relire le journal à chaque poste. */
+if(SUIVI && !APERCU){
+  setInterval(()=>{
+    if(!enAide)return;
+    google.script.run.withSuccessHandler(r=>{
+      if(!r || r.active!==false || !enAide)return;
+      enAide=false;
+      document.getElementById("aide").classList.remove("active");
+      document.getElementById("aide-btn").textContent="J’attends de l’aide";
+      document.getElementById("aide-texte").textContent="Demande traitée. Tu peux demander de l’aide à nouveau.";
+    }).withFailureHandler(()=>{}).etatAide(COURS);
+  },15000);
 }

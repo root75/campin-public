@@ -141,7 +141,9 @@ async function demarre(){
  document.getElementById('revoir-collectif').onclick=()=>{document.getElementById('collectif').hidden=false;document.getElementById('individuel').hidden=true;};
  let aide=false;
  document.getElementById('bloque').onclick=async function(){const zone=document.getElementById('aide-bloque');zone.hidden=false;this.disabled=true;try{if(SUIVI){await envoie({etape:state.etape+1,type:aide?'aide-fin':'aide'});aide=!aide;zone.textContent=aide?'Demande enregistrée pour le professeur. Garde cette étape ouverte.':'Difficulté signalée comme résolue.';this.textContent=aide?'✓ Je suis débloqué':'✋ Je suis bloqué';}else zone.textContent='Appelle le professeur et garde cette étape ouverte. En entraînement libre, aucune alerte n’est transmise.';}catch(e){zone.textContent='Demande non confirmée. Appelle le professeur ou réessaie.';}finally{this.disabled=false;this.setAttribute('aria-expanded','true');}};
+ if(SUIVI)setInterval(()=>{if(!aide)return;google.script.run.withSuccessHandler(r=>{if(r?.active===false){aide=false;document.getElementById('bloque').textContent='✋ Je suis bloqué';document.getElementById('aide-bloque').textContent='Demande traitée par le professeur. Tu peux demander de l’aide à nouveau.';}}).withFailureHandler(()=>{}).etatAide(COURS);},15000);
  if(SUIVI){window.PAS_A_PAS={cours:COURS,envoie};window.PasAPasSequence?.suivre(window.PAS_A_PAS);}
 }
 if(typeof document!=='undefined')demarre();
 if(typeof module!=='undefined')Object.assign(module.exports,{regle,reponseCourte});
+

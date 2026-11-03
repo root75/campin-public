@@ -19,6 +19,7 @@ const nom = email => email.split("@")[0].split(/[._]/).filter(Boolean).map(m=>m[
 const ilya = ms => ms < 60000 ? "à l'instant" : "il y a " + Math.round(ms/60000) + " min";
 
 let SEANCES = [];
+let seulementAide=false;
 const heure = t => new Date(t).toLocaleString("fr-BE",{weekday:"short",day:"numeric",month:"numeric",hour:"2-digit",minute:"2-digit"});
 const choisie = () => SEANCES[Number($("seance").value)] || { classe:"", debut:0, fin:null };
 
@@ -65,6 +66,12 @@ function chargeSeances(){
 const erreur = err => { $("maj").textContent = "Erreur : " + err.message; };
 
 function dessine(d){
+  if(!$("filtre-aide")){
+    const filtre=txt("button","btn vide","Afficher seulement les demandes d’aide");filtre.type="button";filtre.id="filtre-aide";filtre.setAttribute("aria-pressed","false");
+    filtre.addEventListener("click",()=>{seulementAide=!seulementAide;filtre.setAttribute("aria-pressed",String(seulementAide));filtre.textContent=seulementAide?"Afficher toute la classe":"Afficher seulement les demandes d’aide";charge();});
+    $("chiffres").after(filtre);
+  }
+
   if(globalThis.FormatifProf) {
     FormatifProf.presentation($("cours").value === 'rat-de-ville-formatif');
     if($("cours").value === 'rat-de-ville-formatif') { FormatifProf.dessine(d); return; }
@@ -85,7 +92,7 @@ function dessine(d){
 
   const tb = $("lignes"); tb.replaceChildren();
   if(!el.length){ const tr=txt("tr"); const td=txt("td","vide","Personne n'a encore ouvert la fiche sur cette période."); td.colSpan=8; tr.append(td); tb.append(tr); }
-  el.forEach(e=>{
+  el.filter(e=>!seulementAide||e.aide).forEach(e=>{
     const tr = txt("tr", e.aide ? "aide" : e.fini ? "fini" : "");
     const td = (cls,t) => { const c=txt("td",cls,t); tr.append(c); return c; };
     const n1 = td("nom", nom(e.email)); n1.title = e.email;
@@ -97,7 +104,22 @@ function dessine(d){
     td("num", e.fini ? "" : e.erreursIci || "");
     td("num", e.erreurs || "");
     const etat = td();
-    if(e.aide) etat.append(txt("span","pastille aide","✋ aide · bloc "+e.aide.bloc+" · "+ilya(d.maintenant-e.aide.depuis).replace("il y a ","")));
+    if(e.aide){
+      etat.append(txt("span","pastille aide","✋ aide · bloc "+e.aide.bloc+" · "+ilya(d.maintenant-e.aide.depuis).replace("il y a ","")));
+      if(SUIVI && d.peutCloreAide){
+        const cours=$("cours").value,seance=choisie(),depuis=e.aide.depuis;
+        const b=txt("button","btn vide","Aide traitée");b.type="button";
+        b.setAttribute("aria-label","Aide traitée pour "+nom(e.email));
+        b.addEventListener("click",()=>{
+          if(b.disabled)return;b.disabled=true;b.textContent="Enregistrement…";
+          google.script.run.withSuccessHandler(r=>{
+            if(!r?.traitee){b.disabled=false;b.textContent="Réessayer";return;}
+            b.textContent="✓ Aide traitée";charge();
+          }).withFailureHandler(err=>{b.disabled=false;b.textContent="Réessayer : aide traitée";erreur(err);}).cloreAide(cours,e.email,seance.debut,depuis);
+        });
+        etat.append(b);
+      }
+    }
     else if(e.fini) etat.append(txt("span","pastille fini","✓ fini"));
     else if(e.erreursIci>=3) etat.append(txt("span","pastille bute","bute"));
     const der = td("num", ilya(d.maintenant - e.derniere));
@@ -559,3 +581,4 @@ async function chargeCatalogue(frais=false){
 actualiser.addEventListener("click",()=>chargeCatalogue(true));
 if(!SUIVI){document.title="APERÇU FICTIF — tableau professeur";$("demo").hidden=false;}
 chargeCatalogue();
+
