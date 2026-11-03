@@ -1,425 +1,147 @@
-/* Le moteur et le contenu de la fiche « Mon premier message ». Hors de index.html : servie par
-   Apps Script, la page voyait son script modifié au passage (SyntaxError, alors que la même page
-   sur GitHub Pages marche). Un fichier externe arrive au navigateur tel quel. */
-/* ===== Contenu de la leçon =====
-   Repris mot pour mot de « Eleve - J'ecris mon premier message - Lecon 1.docx ».
-   Chaque bloc : veux / fais / vois, stop, minutes, coince (les pièges de CE bloc).
-   Sa question de preuve, en trois variantes, est dans preuves.json (même ordre que BLOCS). */
-const COURS = "messagerie-1";
-/* Les questions de preuve et leurs réponses : dans preuves.json, pas ici. Servie par Apps Script,
-   la fiche reçoit du serveur la variante de l'élève, sans la réponse, et le serveur corrige.
-   Hors Apps Script (GitHub Pages, aperçu professeur), elle lit le fichier et corrige elle-même. */
-const PREUVES = "https://root75.github.io/campin-public/messagerie/pas-a-pas/preuves.json";
-
-const PROF_TABLE = `<div class="encart"><table>
-  <tr><th>Ma classe</th><th>Mon professeur</th><th>Son adresse</th></tr>
-  <tr><td>2B · 2F</td><td>M. Louviaux</td><td>vlouviaux@arcampin.be</td></tr>
-  <tr><td>2E</td><td>Mme Michiels</td><td>alexia.michiels@arcampin.be</td></tr></table></div>`;
-
-/* Les numéros restent stables pour reprendre les séances existantes. */
-function repere(zone){
-  const champs = [["a", "À", "Adresse du destinataire"], ["copie", "Cc / Cci", "Copies visibles / adresses masquées aux autres destinataires"], ["objet", "Objet", "Un titre court : Mon premier message — Lina"], ["texte", "Message", "Bonjour Monsieur, … Bonne journée, Lina Dupont, 2B"]];
-  return `<figure class="repere"><figcaption>Repère simplifié — ce schéma n'est pas une capture Outlook.</figcaption>${champs.map(([id,nom,ex])=>`<div class="champ ${zone===id?'cible':''}"><b>${nom}</b><span>${ex}</span></div>`).join('')}</figure>`;
+'use strict';
+const INITIAL={etape:0,a:'',objet:'',salutation:'',message:'',fin:'',signature:'',nom:'',classe:'',locale:'',domaine:'',reponse:'',erreur1:'',erreur2:'',erreur3:'',preuve:'',atteint:0};
+const state={...INITIAL};
+const DEST='camille.martin@example.org';
+const TITRES=['Observer un email','Choisir le destinataire','Donner un objet','Saluer','Rédiger la demande','Terminer et signer','Relire le mail complet','Répondre au message reçu','Ouvrir et lire dans Outlook','Rédiger dans le corps du message','Envoyer et retrouver son mail','Répondre à son camarade'];
+const norm=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[’]/g,"'").replace(/\s+/g,' ').trim();
+const escapeHtml=s=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function verifie(k,d=state){
+ const v=norm(d[k]);
+ if(k==='erreur1')return /arobase|@/.test(v)&&/manqu|absen|ajout|oubli/.test(v)?'':'Explique quel séparateur manque entre camille.martin et example.org.';
+ if(k==='erreur2')return /espace/.test(v)&&/retir|supprim|enlev|interdit|pas|trop/.test(v)?'':'Repère le caractère ajouté au milieu de l’adresse et indique ce qu’il faut en faire.';
+ if(k==='erreur3')return /domaine|example.net|\.net/.test(v)&&/different|autre|attendu|example.org|\.org|remplac|mauvais/.test(v)?'':'Cette adresse a une structure plausible, mais compare son domaine à example.org, celui de Camille.';
+ if(k==='locale')return v==='camille.martin'?'':'La partie locale est ce qui se trouve avant @ : elle identifie la boîte dans ce domaine.';
+ if(k==='domaine')return v==='example.org'?'':'Le domaine est ce qui se trouve après @. Ici, recopie example.org.';
+ if(k==='reponse'){if(v.length<35||!/bonjour|salut|bonsoir/.test(v)||!/loisir|sport|activite|pratique|aime|joue|lecture|lire|musique|dessin|danse|anime/.test(v)||!/bonne journee|a bientot|merci|cordialement|bonne soiree/.test(v))return 'Rédige une réponse complète : une salutation, une phrase sur ton propre loisir, une formule de fin et ta signature.';const mots=norm(d.nom).split(/[^a-z0-9'-]+/).filter(Boolean);if(!mots.length||!mots.every(m=>v.split(/[^a-z0-9'-]+/).includes(m))||!v.replace(/\s/g,'').includes(norm(d.classe).replace(/\s/g,'')))return 'Ajoute ta signature : prénom, nom et classe.';return ''; }
+ if(k==='a')return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.a.trim())&&d.a.trim().toLowerCase()===DEST ? '' : 'Écris l’adresse de Camille indiquée dans la mission. Vérifie chaque lettre : un @ et une adresse plausible ne suffisent pas.';
+ if(k==='objet'){
+  if(!v)return 'Ajoute un titre qui annonce le sujet.';
+  if(/[\r\n]/.test(d.objet)||d.objet.length>80||/bonjour|merci|cordialement|\?/.test(v))return 'Garde un titre court dans Objet. La salutation et la demande vont dans le message.';
+  return /\b(loisir|loisirs|sport|sports|activite|activites|passion|passions)\b/.test(v) ? '' : 'L’objet doit annoncer les loisirs. Un prénom seul, « Bonjour » ou « Mon message » ne suffit pas.';
+ }
+ if(k==='salutation')return /^(bonjour|salut|bonsoir)( camille)?[!,.:]?$/i.test(v) ? '' : 'Adresse-toi une seule fois à Camille, par exemple Bonjour Camille,. Retire les variantes et les consignes entre parenthèses.';
+ if(k==='message'){
+  if(/\[|\]|\b(ma reponse|ta reponse|ton texte|votre texte)\b/.test(v))return 'Remplace les indications du modèle par ta propre demande.';
+  if(d.message.length>190)return 'Garde une demande courte : une ou deux phrases, jusqu’à 190 caractères.';
+  if(v.length<25)return 'Écris une demande complète : demande quel loisir Camille pratique.';
+  if(!/\b(loisir|loisirs|sport|sports|activite|activites|passion|passions)\b/.test(v))return 'Ta demande doit parler du sport ou des loisirs de Camille.';
+  
+  if(!/\?|\b(peux|pourrais|quelle|quel|dis|proposes|proposer|voudrais|souhaites|aimerais)\b/.test(v))return 'Formule une demande adressée à Camille, plutôt qu’une simple affirmation.';
+  if(!/[.!?…]$/.test(d.message.trim()))return 'Termine ta phrase par une ponctuation.';
+  if(!/^[A-ZÀ-ÖØ-Þ]/.test(d.message.trim()))return 'Commence ta phrase par une majuscule.';
+  return '';
+ }
+ if(k==='fin')return /^(bonne journee|bonne soiree|a bientot|merci|merci d'avance|cordialement|bien a toi|bien a vous|bon week.end)[\s!,.]*$/.test(v)?'':'Ajoute une formule de fin adaptée, par exemple Bonne journée, ou À bientôt,.';
+ if(k==='signature'){
+  if(!d.nom.trim()||d.nom.trim().split(/\s+/).length<2)return 'Renseigne ton prénom et ton nom au-dessus de la signature.';
+  if(!/^[12]\s*[a-z](?:\d)?$/i.test(d.classe.trim()))return 'Renseigne ta classe, par exemple 1E, 2B ou 2E.';
+  if(/\[|\]|\b(prenom|classe|signature)\b/.test(v))return 'Écris tes informations dans la signature, sans conserver les indications du modèle.';
+  const mots=norm(d.nom).split(/[^a-z0-9'-]+/).filter(Boolean);
+  const sigTokens=v.split(/[^a-z0-9'-]+/).filter(Boolean);
+  return mots.every(m=>sigTokens.includes(m))&&v.replace(/\s/g,'').includes(norm(d.classe).replace(/\s/g,''))?'':'La signature doit contenir le prénom, le nom et la classe que tu as renseignés.';
+ }
+ return '';
 }
-const BLOCS = [
-  {partie:"A — Je me repère", titre:"J'ouvre ma boîte de l'école", min:5,
-   veux:"Ouvrir Outlook dans un deuxième onglet.",
-   fais:`Dans les favoris scolaires de Chrome, ouvre <span class="chemin">Microsoft 365 ▸ Courrier</span>. Garde cette fiche dans son onglet.`,
-   vois:"Ma boîte de l'école est ouverte dans Outlook.",
-   coince:["Si une connexion est demandée, utilise ton compte de l'école.","Les favoris scolaires ne sont pas visibles ? Demande de l'aide pour vérifier le profil Chrome."]},
-  {partie:"A — Je me repère", titre:"Je retrouve les dossiers", min:3,
-   veux:"Distinguer reçu, en cours d'écriture et envoyé.",
-   fais:"Dans la colonne de gauche, repère Boîte de réception, Brouillons et Éléments envoyés. Montre-les à ton voisin.",
-   vois:"Je sais retrouver les trois dossiers.",
-   extra:`<div class="encart"><p><b>Boîte de réception</b> : messages reçus.</p><p><b>Brouillons</b> : messages conservés avant envoi.</p><p><b>Éléments envoyés</b> : messages envoyés.</p></div>`,
-   coince:["Colonne masquée ? Cherche le bouton ☰ en haut à gauche."]},
-  {partie:"A — Je me repère", titre:"Je retrouve la liste des messages", min:3,
-   veux:"Voir les messages reçus.", fais:"Clique sur Boîte de réception. Repère la liste des messages. Si Prioritaire et Autres sont affichés, regarde les deux onglets.",
-   vois:"Chaque ligne de la liste correspond à un message.", coince:["L'expéditeur indique qui a écrit. L'objet donne le titre du message."]},
-  {partie:"A — Je me repère", titre:"J'ouvre et je lis un message", min:3,
-   veux:"Afficher le contenu d'un message.", fais:"Clique sur une ligne de la liste. Repère le titre, l'expéditeur et le texte du message ouvert.",
-   vois:"Je peux lire le texte du message, à droite ou en dessous de la liste.",
-   coince:["Le volet peut être à droite ou en bas : les deux conviennent. Demande de l'aide si tu ne peux pas lire le message."]},
-  {partie:"B — Je lis la demande", titre:"Je retrouve le message du professeur", min:5,
-   veux:"Trouver le message à utiliser pour cet exercice.", fais:"Dans Boîte de réception, ouvre le message de ton professeur. S'il manque, regarde Autres ou utilise la recherche avec son nom.",
-   vois:"Le message de bienvenue du professeur est ouvert.", extra:PROF_TABLE,
-   coince:["Toujours introuvable ? Demande de l'aide avant de continuer."]},
-  {partie:"B — Je lis la demande", titre:"Je distingue le titre et la demande", min:5,
-   veux:"Comprendre la différence entre l'objet et le texte.", fais:"Lis le message. Montre le titre à ton voisin, puis montre la question dans le texte. Prépare ta réponse oralement.",
-   vois:"Je distingue le titre du message et la question posée dans son texte.",
-   extra:`<div class="encart"><p><b>Objet :</b> Bienvenue dans ta boîte de l'école</p><p><b>Dans le texte :</b> une question à laquelle tu répondras.</p><p>Ton voisin peut avoir reçu une autre question.</p></div>`,
-   coince:["L'objet est un titre. La question est dans le corps du message : ne recopie pas l'un à la place de l'autre."]},
-  {partie:"C — J'écris mon message", titre:"J'ouvre un nouveau message", min:3,
-   veux:"Préparer mon premier email.", fais:`Clique sur <span class="chemin">Nouveau message</span>. Repère À, Objet et la grande zone de texte. N'envoie rien pour le moment.`,
-   vois:"Une fenêtre de rédaction est ouverte.", extra:repere("texte"),
-   coince:["Cc reçoit une copie visible. Cci masque les adresses de ses destinataires aux autres destinataires. Nous les pratiquerons dans un prochain module.","Si tu avais déjà commencé le message, reprends-le dans Brouillons."]},
-  {partie:"C — J'écris mon message", titre:"Je choisis le destinataire", min:5,
-   veux:"Écrire à mon professeur.", fais:"Clique dans À. Tape le nom de ton professeur, choisis le contact, puis vérifie son adresse avec le tableau.",
-   vois:"Une seule adresse, celle de mon professeur, est dans À. Cc et Cci restent vides pour cet exercice.", extra:PROF_TABLE+repere("a"),
-   coince:["Pas de contact proposé ? Recopie l'adresse complète du tableau, sans espace."]},
-  {partie:"C — J'écris mon message", titre:"Je donne un titre à mon email", min:5,
-   veux:"Annoncer le sujet du mail pour que le professeur puisse le reconnaître et le retrouver.",
-   fais:"Dans Objet, écris Mon premier message suivi de ton prénom. Un espace, un tiret ou deux-points peuvent séparer le titre et le prénom. Ensuite, clique dans la grande zone de texte.",
-   vois:"L'objet est un titre court. Il ne contient ni Bonjour, ni mon message complet.", extra:repere("objet"),
-   coince:["Exemples : Mon premier message Lina ; Mon premier message - Lina ; Mon premier message : Lina.","Tu as tout écrit dans l'objet ? Garde le titre ici et déplace le reste dans la grande zone de texte."]},
-  {partie:"C — J'écris mon message", titre:"Je rédige dans le corps du message", min:15,
-   veux:"Saluer, répondre à la question et signer.", fais:"Clique dans la grande zone sous l'objet. Écris une salutation, une phrase qui répond à la question de TON professeur, une formule de fin et ta signature.",
-   vois:"Mon texte est sous l'objet. Il répond à la question reçue et se termine par mon prénom, mon nom et ma classe.",
-   extra:repere("texte")+`<div class="encart"><p><b>Exemple de structure :</b> Bonjour Monsieur, / ma réponse en une phrase / Bonne journée, / mon prénom, mon nom et ma classe.</p><p>Écris ta propre réponse : ne recopie pas les mots « ma réponse en une phrase ».</p></div>`,
-   coince:["Ne recopie pas le titre du mail comme réponse à la question.","Tu peux revenir au message reçu pour relire la question ; ton message en cours se conserve dans Brouillons."]},
-  {partie:"D — Je vérifie et j'envoie", titre:"Je relis avant d'envoyer", min:5,
-   veux:"Vérifier mon message avant qu'il parte.", fais:"Contrôle les cinq points ci-dessous dans Outlook, puis clique sur Envoyer.",
-   vois:"Outlook indique que le message est envoyé ou ferme la fenêtre de rédaction.",
-   cases:["À contient seulement l'adresse de mon professeur.","L'objet est un titre court : Mon premier message et mon prénom.","La salutation et ma réponse sont dans le corps du message, sous l'objet.","Ma phrase répond à la question reçue, avec une majuscule et une ponctuation finale.","Ma signature indique mon prénom, mon nom et ma classe."],
-   coince:["Un envoi peut être difficile ou impossible à annuler : vérifie avant de cliquer. Une erreur après envoi ? Préviens ton professeur."]},
-  {partie:"D — Je vérifie et j'envoie", titre:"Je retrouve le message envoyé", min:5,
-   veux:"Vérifier l'envoi dans Outlook.", fais:"Ouvre Éléments envoyés. Retrouve ton message par son objet et ouvre-le. Vérifie son destinataire et son texte.",
-   vois:"Je retrouve mon message dans Éléments envoyés.",
-   coince:["Absent d'Éléments envoyés ? Vérifie Brouillons : ouvre le message et termine l'envoi. S'il n'est dans aucun des deux dossiers, demande de l'aide.","Le professeur vérifiera le mail reçu : terminer cette fiche ne suffit pas à certifier sa qualité."]}
-];
+const corps=d=>[d.salutation,d.message,d.fin,d.signature].join('\n\n');
+const erreurs=d=>['a','objet','salutation','message','fin','signature'].map(k=>({champ:k,texte:verifie(k,d)})).filter(x=>x.texte);
+function champ(k,label,help,area=false){return `<label for="${k}">${label}</label>${help?`<p class="aide-champ" id="aide-${k}">${help}</p>`:''}<${area?'textarea':'input'} id="${k}" name="${k}" ${area?'rows="4"':'type="text"'} maxlength="${['message','reponse'].includes(k)?700:120}" ${help?`aria-describedby="aide-${k}"`:''}>${area?escapeHtml(state[k]):''}${area?'</textarea>':''}`;}
+function apercu(d=state){return `<div class="email"><div class="ligne-mail"><b>À</b><span>${escapeHtml(d.a)||'…'}</span></div><div class="ligne-mail"><b>Objet</b><span>${escapeHtml(d.objet)||'…'}</span></div><div class="corps"><span class="tag">Corps du message</span><p>${escapeHtml(corps(d))||'…'}</p></div></div>`;}
+function render(){
+ const e=state.etape;
+ document.getElementById('compteur').textContent=`${e+1} / ${TITRES.length} — ${TITRES[e]}`;
+ document.getElementById('barre').value=e+1;
+ document.getElementById('choix-etape').value=e;for(const o of document.getElementById('choix-etape').options)o.disabled=Number(o.value)>state.atteint;
+ const z=document.getElementById('contenu');
+ const mission='<aside class="mission"><b>Ta mission d’entraînement</b><p>Écris à Camille pour lui demander quel sport ou quel loisir elle pratique.</p><p>Camille est fictive. Son adresse : <b>camille.martin@example.org</b>.</p></aside>';
+ let h=`<div class="mode-action"><b>À TOI D’AGIR</b> · Lis la consigne, réalise l’action, puis clique sur Vérifier.</div><h2>${TITRES[e]}</h2>`;
+ if(e===0)h+=`<p>Avant de toucher Outlook, observe les parties de ce mail. Clique sur chaque repère pour comprendre son rôle.</p><div class="email exemple"><details><summary>À : camille.martin@example.org</summary><p><b>Le destinataire</b> : la personne qui doit recevoir le mail. Une lettre différente peut changer son adresse.</p></details><details><summary>Objet : Une question sur tes loisirs</summary><p><b>L’objet</b> : un titre court. Il annonce le sujet et aide à retrouver le mail dans la liste.</p></details><details><summary>Bonjour Camille,</summary><p><b>La salutation</b> : elle s’adapte à la personne. Pour un professeur : Bonjour Monsieur, ou Bonjour Madame,. On en choisit une seule.</p></details><details><summary>Quel sport ou quel loisir pratiques-tu ?</summary><p><b>Le message</b> : il dit pourquoi tu écris et ce que tu demandes. Le destinataire doit pouvoir répondre.</p></details><details><summary>Bonne journée,</summary><p><b>La formule de fin</b> : elle termine le message poliment.</p></details><details><summary>Lina Dupont, 2B</summary><p><b>La signature</b> : elle permet d’identifier l’élève et sa classe.</p></details></div><p class="note">Le corps du mail réunit la salutation, le message, la formule de fin et la signature.</p>`;
+ if(e===0)h+=`<h3>Comprendre une adresse email</h3><div class="email"><div class="ligne-mail"><b>camille.martin</b><b>@</b><b>example.org</b></div></div><ul><li><b>Partie locale :</b> avant @, elle identifie une boîte dans le domaine. Ce peut être une personne ou un service, comme secretariat.</li><li><b>@, l’arobase :</b> sépare les deux parties ; on peut le lire « chez ».</li><li><b>Domaine :</b> après @, il indique le domaine auquel appartient la boîte. Il n’est pas nécessairement le nom du serveur technique.</li></ul><p>Dans ton adresse scolaire, le domaine est <b>arcampin.be</b>. Recopie l’adresse fournie exactement, sans ajouter d’espace. Une adresse bien écrite ne prouve pas que la boîte existe ni que son propriétaire est fiable.</p><p class="note">example.org est utilisé ici pour les personnages fictifs. On ne lui envoie aucun message réel.</p>`+champ('locale','Repère la partie locale','Dans camille.martin@example.org, écris seulement ce qui précède @.')+champ('domaine','Repère le domaine','Écris seulement ce qui suit @.');
+ if(e===1)h+=mission+`<h3>Quelle adresse pose problème, et pourquoi ?</h3><p>L’adresse attendue est <b>camille.martin@example.org</b>. Explique chaque problème avec tes mots.</p>`+champ('erreur1','1. camille.martinexample.org','Quel élément manque ?')+champ('erreur2','2. camille. martin@example.org','Quel caractère faut-il retirer ?')+champ('erreur3','3. camille.martin@example.net','La structure est plausible. Pourquoi ne faut-il pas utiliser cette adresse pour Camille ?')+`<p class="note">Une adresse bien formée peut désigner une autre boîte ou ne pas exister. Le domaine .net n’est pas faux en soi.</p><h3>Maintenant, écris la bonne adresse</h3>`+`<p>Écris uniquement l’adresse dans le champ À.</p>`+champ('a','À','Tu peux lire l’adresse dans la mission. N’écris ni un prénom seul, ni le texte du mail.');
+ if(e===2)h+=mission+`<p>Donne un titre à ton email. Le texte de la demande viendra après.</p>`+champ('objet','Objet','Le titre doit parler des loisirs. Tu peux trouver ta propre formulation.');
+ if(e===3)h+=mission+`<p>Commence le corps du message en saluant Camille. Choisis une seule formulation.</p>`+champ('salutation','Salutation','Exemple : Bonjour Camille, — n’écris pas « ou Bonjour Madame » ensuite.');
+ if(e===4)h+=mission+`<p>Rédige ta demande en une ou deux phrases. Camille doit comprendre <b>ce que tu lui demandes</b> et pouvoir te répondre.</p><ol><li>Demande quel sport ou quel loisir Camille pratique.</li><li>Tu peux lui demander ce qui lui plaît dans cette activité.</li><li>Relis : une majuscule au début et une ponctuation à la fin.</li></ol>`+champ('message','Ton message','Écris ta propre phrase. La salutation et la signature sont déjà préparées aux autres étapes.',true)+`<p class="note">Le contrôle repère les éléments de la mission. Il ne remplace pas la lecture du professeur : des mots-clés présents ne prouvent pas, à eux seuls, qu’une phrase est claire.</p>`;
+ if(e===5)h+=`<p>Termine ton message, puis signe avec tes informations d’élève.</p>`+champ('fin','Formule de fin','Exemples : Bonne journée, ou À bientôt,')+`<div class="deux">`+champ('nom','Ton prénom et ton nom','Utilisés pour vérifier ta signature.')+champ('classe','Ta classe','Par exemple 1E, 2B ou 2E.')+`</div>`+champ('signature','Signature','Écris ton prénom, ton nom et ta classe.');
+ if(e===6)h+=`<p>Voici ton mail complet. Vérifie le destinataire, le titre et chacune des parties du corps.</p>`+apercu()+`<ul class="controle"><li>Le destinataire est bien Camille.</li><li>L’objet annonce le sujet des loisirs.</li><li>Je la salue une seule fois.</li><li>Je lui demande son sport ou son loisir.</li><li>Je termine et je signe.</li></ul><p class="note">« Vérifier » contrôle cet entraînement. Aucun email ne sera envoyé.</p>`;
+ if(e===7)h+=`<p>Dans cette simulation, Camille a reçu ta question et t’a répondu. Lis son message.</p><div class="email"><div class="ligne-mail"><b>De</b><span>Camille Martin &lt;camille.martin@example.org&gt;</span></div><div class="ligne-mail"><b>Objet</b><span>RE : ${escapeHtml(state.objet)}</span></div><div class="corps"><p>Bonjour,
 
-/* ===== Moteur ===== */
-const LETTRES = "ABCD";
-const norm = s => (s||"").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase()
-  .replace(/[’']/g,"'").replace(/[«»"“”.]/g,"").replace(/\s+/g," ").trim();
-const melange = a => { const b=a.slice(); for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];} return b; };
-const el = (tag, cls, html) => { const n=document.createElement(tag); if(cls) n.className=cls; if(html!=null) n.innerHTML=html; return n; };
-const txt = (tag, cls, t) => { const n=document.createElement(tag); if(cls) n.className=cls; n.textContent=t; return n; };
+Je pratique la boxe thaï. Et toi, quel sport ou quel loisir pratiques-tu ?
 
-/* Suivi : servie par Apps Script (outils/pas-a-pas), la page envoie chaque événement
-   au tableau de bord du professeur. Ouverte depuis GitHub Pages, rien ne part. */
-const SUIVI = typeof google !== "undefined" && google.script && google.script.run;
-/* Aperçu professeur : l'adresse finit par #bloc=7. La fiche s'ouvre à ce bloc, la navigation est
-   libre et rien n'est enregistré, ni dans le journal ni sur l'ordinateur. Lien depuis le tableau de bord. */
-const APERCU = /^#bloc=\d+$/.test(location.hash);
-addEventListener("hashchange", () => location.reload());
-function envoie(evt){
-  if(!SUIVI || APERCU) return;
-  google.script.run.withFailureHandler(()=>{}).noter(COURS, evt);
+Bonne journée,
+Camille</p></div></div><p><b>Utilise Répondre :</b> le destinataire et l’objet de la conversation sont conservés. Écris seulement ta réponse au-dessus du message précédent.</p><button type="button" id="ouvrir-reponse">↶ Répondre à Camille</button><div id="zone-reponse" hidden><div class="ligne-mail"><b>À</b><span>camille.martin@example.org</span></div><div class="ligne-mail"><b>Objet</b><span>RE : ${escapeHtml(state.objet)}</span></div>`+champ('reponse','Corps de ta réponse','Salue Camille, réponds à sa question par une phrase complète, puis termine et signe. Tu peux inventer un loisir si tu préfères.',true)+`</div><p class="note">Les contrôles vérifient des éléments de forme. Le professeur vérifie aussi que la réponse a du sens et répond bien à la question.</p>`;
+ if(e===8)h+=`<p>Ouvre Outlook avec ton compte scolaire, puis lis le message de ton professeur.</p><p><a class="bouton" href="https://outlook.office.com/" target="_blank" rel="noopener">Ouvrir Outlook ↗</a></p><ol><li>Ouvre <b>Boîte de réception</b>.</li><li>Si nécessaire, regarde <b>Autres</b> ou utilise <b>Rechercher</b> avec le nom du professeur.</li><li>Repère son nom, son adresse, l’objet et la question posée. Explique la demande à ton voisin.</li></ol><p><b>Repères :</b> les messages reçus sont dans Boîte de réception ; les messages commencés restent dans Brouillons ; les envois sont dans Éléments envoyés.</p>`+champ('preuve','Comment appelle-t-on la personne qui envoie le mail ?','Écris le terme, puis montre son nom dans Outlook.');
+ if(e===9)h+=`<p>Écris maintenant à un camarade désigné par le professeur.</p><ol><li>Vérifie avec lui son adresse scolaire exacte. <b>N’utilise pas l’adresse fictive de Camille.</b></li><li>Choisis <b>Accueil → Nouveau message</b>.</li><li>Dans <b>À</b>, écris son adresse ; laisse Cc et Cci vides.</li><li>Dans <b>Objet</b>, écris un titre court sur les loisirs.</li><li><b>Clique dans la grande zone sous l’objet.</b> Salue ton camarade, puis passe à la ligne.</li><li>Écris une ou deux phrases pour demander son sport ou son loisir. Passe à la ligne.</li><li>Ajoute une formule de fin, puis ton prénom, ton nom et ta classe.</li></ol><details><summary>Voir les champs dans Outlook</summary><img src="${CAPTURE}" alt="Vue adaptée d’Outlook : À, Cc, Objet et corps du message."><p>Vue adaptée à partir de la capture fournie.</p></details>`+champ('preuve','Comment s’appelle la grande zone où tu écris ton texte ?','Ne recopie pas ton email ici : nomme cette partie.');
+ if(e===10)h+=`<p>Avant l’envoi, relis ton mail dans Outlook.</p><ul><li>L’adresse est bien celle du camarade.</li><li>L’objet annonce le sujet.</li><li>Le corps contient une salutation, une demande compréhensible, une formule de fin et ta signature.</li><li>Tu as relu l’orthographe et retiré les indications du modèle.</li></ul><p>Clique sur <b>Envoyer</b>, puis retrouve et ouvre le mail dans <b>Éléments envoyés</b>. S’il est encore dans Brouillons, il n’est pas envoyé.</p>`+champ('preuve','Dans quel dossier retrouves-tu ton email envoyé ?','Vérifie aussi sa présence réelle dans Outlook.');
+ if(e===11)h+=`<p>Ouvre le mail reçu de ton camarade, puis clique sur <b>Répondre</b>.</p><ol><li>Lis sa question en entier.</li><li>Vérifie le destinataire et garde l’objet de la conversation.</li><li>Dans le corps, salue-le puis réponds à sa question par une phrase complète. Tu peux inventer un loisir si tu préfères.</li><li>Ajoute une formule de fin et ta signature.</li><li>Relis, envoie et vérifie l’envoi. Vérifie aussi que tu as reçu sa réponse à ton premier mail.</li></ol><p class="note">Le professeur observe les messages réels. La page n’a pas accès à Outlook : les réponses ici ne prouvent pas qu’un email est parti.</p>`+champ('preuve','Quel bouton réutilise le destinataire et le sujet du mail reçu ?','Écris son nom.');
+ if(e===7)h+=champ('preuve','Quel bouton utilises-tu pour répondre dans la conversation ?','Repère le bouton que tu viens d’utiliser.');
+ h+='<div id="retour" role="status" aria-live="polite" tabindex="-1"></div>';
+ h+='<div class="actions">'+(e>0?'<button type="button" class="secondaire" id="precedent">← Revenir</button>':'')+(e<=11?`<button type="button" id="suivant">${e===0?'Vérifier les deux parties de l’adresse':e===6?'Vérifier mon mail d’entraînement':'Vérifier cette étape'}</button>`:'<button type="button" id="revoir">Revoir mon entraînement</button>')+'</div>';
+ z.innerHTML=h;
+ for(const el of z.querySelectorAll('input,textarea')){el.value=state[el.id]||'';el.addEventListener('input',()=>{state[el.id]=el.value;sauve();document.getElementById('aperçu-courant').innerHTML=apercu();document.getElementById('retour').innerHTML='';document.getElementById('retour').className='';});}
+ document.getElementById('ouvrir-reponse')?.addEventListener('click',()=>{document.getElementById('zone-reponse').hidden=false;document.getElementById('reponse').focus();});
+ document.getElementById('precedent')?.addEventListener('click',()=>{state.etape--;state.preuve='';render();});
+ document.getElementById('revoir')?.addEventListener('click',()=>{state.etape=6;render();});
+ document.getElementById('suivant')?.addEventListener('click',async()=>{
+  if(document.getElementById('suivant').disabled)return;
+  const champs={0:['locale','domaine'],1:['erreur1','erreur2','erreur3','a'],2:['objet'],3:['salutation'],4:['message'],5:['fin','signature'],7:['reponse']}[e]||[];
+  const err=e===6?erreurs(state):champs.map(k=>({champ:k,texte:verifie(k)})).filter(x=>x.texte);
+  const feedback=document.getElementById('retour');
+  if(err.length){feedback.className='retour faux';feedback.innerHTML='<b>À corriger</b><ul>'+err.map(x=>`<li>${escapeHtml(x.texte)}</li>`).join('')+'</ul>';feedback.focus();return;}
+  const bouton=document.getElementById('suivant');bouton.disabled=true;
+  const empreinte=JSON.stringify(state);
+  try {await valideServeur(e);}
+  catch(error){feedback.className='retour faux';feedback.textContent=error.message;feedback.focus();bouton.disabled=false;return;}
+  bouton.disabled=false;
+  if(empreinte!==JSON.stringify(state)){feedback.textContent='La réponse a changé pendant la vérification. Vérifie à nouveau.';return;}
+  state.atteint=Math.max(state.atteint,e+1);sauve();
+  if(e===11){feedback.className='retour juste';feedback.textContent='Parcours terminé. Montre les messages envoyés et reçus au professeur pour la vérification réelle.';if(SUIVI)envoie({etape:12,type:'fini'}).catch(()=>{feedback.textContent+=' La fin n’a pas pu être enregistrée : recharge avant de quitter.';});return;}
+  feedback.className='retour juste';feedback.innerHTML='<b>'+ (e===6?'Les contrôles de cet entraînement sont satisfaits. Relis encore le sens de ta phrase.':'Le contrôle de cette étape est satisfait.')+'</b><p>'+ (e===6?'Tu peux maintenant lire la réponse fictive de Camille et lui répondre.':(e>=8?'Continue après avoir effectué la manipulation dans Outlook.':'Continue pour voir le mail se construire.'))+'</p>';
+  const b=document.createElement('button');b.type='button';b.textContent=e===6?'Lire la réponse de Camille →':'Continuer →';b.addEventListener('click',()=>{if(JSON.stringify({...state,atteint:0})!==JSON.stringify({...JSON.parse(empreinte),atteint:0}))return;if((e===6?erreurs(state):champs.map(k=>({texte:verifie(k)})).filter(x=>x.texte)).length)return;state.etape++;state.preuve='';sauve();render();});feedback.append(b);b.focus();
+ });
+ document.getElementById('aperçu-courant').innerHTML=apercu();
 }
-/* Avancement local, seulement sans suivi : avec le suivi, il vient du serveur et de la séance,
-   pour qu'un poste partagé n'hérite pas de l'élève de l'heure précédente. */
-const CLE = "pas-a-pas:"+COURS;
-const lit = () => { if(SUIVI || APERCU) return {}; try { return JSON.parse(localStorage.getItem(CLE)) || {}; } catch(e){ return {}; } };
-const ecrit = o => { if(SUIVI || APERCU) return; try { localStorage.setItem(CLE, JSON.stringify(o)); } catch(e){} };
-
-let etat = Object.assign({ atteint:0, erreurs:0 }, lit());   // atteint = premier bloc non validé
-let ici = Math.min(etat.atteint, BLOCS.length);
-let enAide = false;
-
-function barre(){
-  const b = document.getElementById("progres"); b.replaceChildren();
-  BLOCS.forEach((_,i)=>{ const s=el("span"); s.className = i<etat.atteint ? "fait" : (i===ici ? "ici" : ""); b.append(s); });
+function init(){
+ const sel=document.getElementById('choix-etape');TITRES.forEach((t,i)=>{const o=document.createElement('option');o.value=i;o.textContent=(i+1)+' — '+t;sel.append(o);});
+ sel.addEventListener('change',()=>{if(Number(sel.value)>state.atteint)return;state.etape=Number(sel.value);state.preuve='';render();});
+ document.getElementById('reset').addEventListener('click',()=>{if(!confirm('Effacer le brouillon dans cet onglet ? Le journal professeur sera conservé.'))return;Object.assign(state,INITIAL);sauve();render();});
+ render();
 }
 
-function affiche(){
-  barre();
-  const z = document.getElementById("bloc"); z.replaceChildren();
-  const liste = document.getElementById("coince-liste"); liste.replaceChildren();
-  document.getElementById("coince").open = false;
-  if(ici >= BLOCS.length){ fin(z); return; }
-  const B = BLOCS[ici];
-
-  const num = el("div","numero");
-  num.append(txt("span",null,"Étape "+(ici+1)+" sur "+BLOCS.length+" · Partie "+B.partie.split(" — ")[0]), txt("span",null,"À ton rythme · reprise possible au prochain cours"));
-  z.append(num, txt("h2",null,(ici+1)+". "+B.titre));
-
-  const dl = el("dl","lignes");
-  [["🎯 Je veux","veux",B.veux],["👉 Je fais","fais",B.fais],["👀 Je vois","vois",B.vois]].forEach(([t,c,h])=>{
-    const d = el("div","ligne "+c); d.append(txt("dt",null,t), el("dd",null,h)); dl.append(d);
-  });
-  z.append(dl);
-  if(B.extra) z.append(el("div",null,B.extra));
-  if(B.stop) z.append(txt("p","stop","🛑 STOP — je ne continue pas tant que je ne vois pas ça."));
-
-  B.coince.forEach(c=>liste.append(txt("li",null,c)));
-
-  const pr = el("div","preuve");
-  const fait = etat.atteint > ici;
-  if(fait){
-    pr.append(txt("p","retour juste","✅ Bloc déjà validé."));
-  } else if(B.cases){
-    pr.append(txt("div","etiquette","Je vérifie ces cinq points dans mon message"));
-    const ul = el("ul","cases");
-    B.cases.forEach(c=>{ const li=el("li"); const lab=el("label"); const cb=el("input"); cb.type="checkbox";
-      lab.append(cb, txt("span",null,c)); li.append(lab); ul.append(li); });
-    const go = txt("button","btn plein","Les cinq points sont bons, j'ai cliqué sur Envoyer"); go.type="button"; go.disabled=true;
-    ul.addEventListener("change",()=>{ go.disabled = [...ul.querySelectorAll("input")].some(x=>!x.checked); });
-    go.addEventListener("click",()=>{ ul.remove(); go.remove(); preuve(pr,B); });
-    pr.append(ul, go);
-  } else {
-    const go = txt("button","btn plein","J’ai fait cette action dans Outlook : je vérifie"); go.type="button";
-    go.addEventListener("click",()=>{ go.remove(); preuve(pr,B); });
-    pr.append(go);
-  }
-  z.append(pr);
-
-  const nav = el("div","actions");
-  const avant = txt("button","btn vide","← Bloc précédent"); avant.type="button"; avant.disabled = ici===0;
-  avant.addEventListener("click",()=>{ ici--; affiche(); });
-  nav.append(avant, el("span","espace"));
-  if(fait || (APERCU && ici+1<BLOCS.length)){ const s=txt("button","btn plein","Bloc suivant →"); s.type="button"; s.addEventListener("click",()=>{ici++;affiche();}); nav.append(s); }
-  z.append(nav);
+if(typeof module!=='undefined')module.exports={verifie,erreurs,corps,DEST};
+const COURS='messagerie-1';
+const APERCU=typeof location!=='undefined'&&/^#bloc=\d+$/.test(location.hash);
+const SUIVI=!APERCU&&typeof google!=='undefined'&&!!google.script?.run;
+const CLE='messagerie-01-v20261103';
+let identite='',preuves=null;const dejaValide=new Map(),dejaFaux=new Map();
+function sauve(){if(APERCU)return;try{sessionStorage.setItem(CLE+identite,JSON.stringify(state));}catch(_){}}
+function rpc(n,...args){return new Promise((resolve,reject)=>{google.script.run.withSuccessHandler(resolve).withFailureHandler(()=>reject(new Error('Le suivi ne répond pas. Ta saisie reste ici ; réessaie avant de continuer.')))[n](...args);});}
+function envoie(evt){return SUIVI?rpc('noter',COURS,evt):Promise.resolve();}
+function regle(r,rep){const n=String(rep||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[’']/g,"'").replace(/[«»"“”.]/g,'').replace(/\s+/g,' ').trim();return !!n&&(!r.egal||r.egal.some(x=>regleNorm(x)===n))&&(!r.exact||r.exact.includes(rep.trim().toLowerCase()))&&(!r.motif||new RegExp(r.motif).test(n))&&(!r.sauf||!new RegExp(r.sauf).test(n));}
+function regleNorm(s){return String(s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[’']/g,"'").replace(/[«»"“”.]/g,'').replace(/\s+/g,' ').trim();}
+function reponseCourte(e){return [state.locale+'@'+state.domaine,state.a,state.objet,state.salutation,state.message,state.fin+' | '+state.signature,state.objet,state.preuve,state.preuve,state.preuve,state.preuve,state.preuve][e];}
+async function valideServeur(e){
+ const reponse=reponseCourte(e);
+ if(!preuves)throw new Error('Les contrôles ne sont pas encore chargés. Recharge la page.');
+ const q=preuves.blocs[e][0];
+ if(!regle(q.regle,reponse))throw new Error(q.faux);
+ if(dejaValide.get(e)===reponse)return;
+ if(dejaFaux.get(e)===reponse)throw new Error('Modifie ta réponse avant de la vérifier à nouveau.');
+ if(SUIVI){const actuel=await rpc('preuve',COURS,e+1);if(actuel?.q!==q.q)throw new Error('Le serveur utilise encore les anciens contrôles. Attends quelques minutes puis recharge ; ta réponse est conservée.');const r=await rpc('verifier',COURS,e+1,reponse,1);if(!r?.juste){dejaFaux.set(e,reponse);throw new Error(r?.texte||'La réponse n’a pas été validée.');}dejaValide.set(e,reponse);}
 }
-
-/* Hors Apps Script : les preuves sont lues dans preuves.json, une fois. */
-let preuvesLocales = null;
-const chargePreuves = () => preuvesLocales || (preuvesLocales = fetch(PREUVES).then(r=>{ if(!r.ok) throw new Error(r.status); return r.json(); }));
-
-/* Le test d'une saisie : mêmes règles que regle_() dans Code.gs. */
-function regle(r, rep){
-  const n = norm(rep);
-  if(!n) return false;
-  if(r.sauf && new RegExp(r.sauf).test(n)) return false;
-  if(r.egal && !r.egal.some(x=>norm(x)===n)) return false;
-  if(r.exact && !r.exact.includes(rep.trim().toLowerCase())) return false;
-  if(r.contient && !r.contient.some(x=>n.includes(norm(x)))) return false;
-  if(r.motif && !new RegExp(r.motif).test(n)) return false;
-  return true;   // r.prenom : vérifié seulement par le serveur, qui connaît l'adresse
+async function demarre(){
+ const status=document.getElementById('suivi-status');
+ try{
+  const r=await fetch('https://root75.github.io/campin-public/messagerie/pas-a-pas/preuves.json?v=20261103');if(!r.ok)throw Error();preuves=await r.json();
+  if(SUIVI){const etat=await rpc('etat',COURS);identite=':'+etat.email;status.textContent='Suivi professeur connecté. Les preuves courtes et demandes d’aide sont enregistrées.';await envoie({etape:0,type:'ouvert'});}
+  else status.innerHTML='Entraînement libre : aucun résultat ni appel à l’aide transmis au professeur. Pour la séance suivie, <a href="https://script.google.com/a/macros/arcampin.be/s/AKfycbyOPTaq-L1PuittB1rkkiL9OOtShFc2WpiD8H_pH_INaw9ePWenCzhlIPlHu4zBOgLk/exec">ouvre ta séance scolaire</a>.';
+  try{const saved=JSON.parse(sessionStorage.getItem(CLE+identite)||'null');if(saved&&Number.isInteger(saved.etape)&&saved.etape>=0&&saved.etape<12)Object.assign(state,saved);}catch(_){}
+  if(APERCU){Object.assign(state,INITIAL);state.atteint=12;state.etape=Math.min(11,Math.max(0,Number(location.hash.slice(6))-1));document.getElementById('collectif').hidden=true;document.getElementById('individuel').hidden=false;document.getElementById('revoir-collectif').hidden=false;status.textContent='Aperçu du professeur : navigation libre, aucun résultat enregistré.';}
+  init();
+ }catch(e){status.textContent='Impossible de charger les contrôles ou le suivi. Recharge la page ; aucun résultat n’est annoncé comme enregistré.';init();}
+ document.getElementById('demarrer-individuel').onclick=()=>{document.getElementById('collectif').hidden=true;document.getElementById('individuel').hidden=false;document.getElementById('revoir-collectif').hidden=false;};
+ document.getElementById('revoir-collectif').onclick=()=>{document.getElementById('collectif').hidden=false;document.getElementById('individuel').hidden=true;};
+ let aide=false;
+ document.getElementById('bloque').onclick=async function(){const zone=document.getElementById('aide-bloque');zone.hidden=false;this.disabled=true;try{if(SUIVI){await envoie({etape:state.etape+1,type:aide?'aide-fin':'aide'});aide=!aide;zone.textContent=aide?'Demande enregistrée pour le professeur. Garde cette étape ouverte.':'Difficulté signalée comme résolue.';this.textContent=aide?'✓ Je suis débloqué':'✋ Je suis bloqué';}else zone.textContent='Appelle le professeur et garde cette étape ouverte. En entraînement libre, aucune alerte n’est transmise.';}catch(e){zone.textContent='Demande non confirmée. Appelle le professeur ou réessaie.';}finally{this.disabled=false;this.setAttribute('aria-expanded','true');}};
+ if(SUIVI){window.PAS_A_PAS={cours:COURS,envoie};window.PasAPasSequence?.suivre(window.PAS_A_PAS);}
 }
-/* Une variante corrigée ici : bonne réponse en premier dans le fichier, mélangée par question(). */
-const locale = V => ({ type:V.type, q:V.q, c: V.type==="qcm" ? V.c : null,
-  corrige: (rep, essais, fin) => {
-    if(V.type==="qcm"){ const k = V.c.indexOf(rep); fin({ juste:k===0, texte: k===0 ? "" : V.p[k] }); }
-    else { const j = regle(V.regle, rep); fin({ juste:j, texte: j ? (V.juste||"") : V.faux }); }
-  } });
-
-/* La question de preuve. Servie par Apps Script : la variante de l'élève vient du serveur, qui
-   corrige et écrit le journal. Aperçu professeur : les trois variantes du bloc. */
-function preuve(pr, B){
-  pr.append(txt("div","etiquette","Je vérifie ce que j’ai compris"));
-  const attente = txt("p","note","Chargement de la question…"); pr.append(attente);
-  const bloc = ici+1;
-  const panne = () => { attente.textContent = "La vérification est indisponible. Ton étape n’est pas validée. Vérifie ta connexion ou demande de l’aide."; };
-  const surPlace = () => chargePreuves().then(P=>{
-    const V = P.blocs[bloc-1] || [];
-    if(!V.length){ panne(); return; }
-    attente.remove();
-    if(!APERCU){
-      /* La variante 1, corrigée ici. Servie par un Code.gs d'avant les variantes, la page note
-         elle-même juste / faux, comme avant ; sans suivi, envoie() ne fait rien. */
-      const Q = locale(V[0]), corrige = Q.corrige;
-      Q.corrige = (rep, essais, fin) => corrige(rep, essais, r=>{ envoie({ etape:bloc, type: r.juste ? "juste" : "faux", essais, reponse:rep }); fin(r); });
-      question(pr, Q, true); return;
-    }
-    V.forEach((v,k)=>{
-      const d = el("div","variante"); d.append(txt("div","etiquette","Variante "+(k+1)+" sur "+V.length));
-      pr.append(d); question(d, locale(v), false);
-    });
-  }).catch(panne);
-  if(SUIVI && !APERCU){
-    google.script.run.withSuccessHandler(Q=>{
-      if(!Q){ panne(); return; }
-      attente.remove();
-      Q.corrige = (rep, essais, fin) => google.script.run
-        .withSuccessHandler(fin).withFailureHandler(()=>fin({ panne:true })).verifier(COURS, bloc, rep, essais);
-      question(pr, Q, true);
-      if(Q.total>1) pr.append(txt("p","note","Ton voisin a peut-être une autre question que toi : c'est normal, chacun a la sienne."));
-    }).withFailureHandler(panne).preuve(COURS, bloc);   // un serveur sans preuve() : comme avant
-    return;
-  }
-  surPlace();
-}
-
-/* Une question : la poser, corriger, expliquer. Faux : on compte, et on recommence.
-   avance = false en aperçu : trois variantes à l'écran, pas trois boutons « Bloc suivant ». */
-function question(pr, Q, avance){
-  pr.append(txt("p","question",Q.q));
-  const retour = el("div","retour"); retour.hidden = true;
-  const zone = el("div"); pr.append(zone, retour);
-  let essais = 0;
-
-  const reussi = () => {
-    retour.className="retour juste"; retour.replaceChildren(txt("strong",null,"Oui, c'est ça."));
-    if(Q.juste) retour.append(txt("p",null,Q.juste));
-    retour.hidden=false;
-    if(!avance) return;
-    etat.atteint = Math.max(etat.atteint, ici+1); ecrit(etat); barre();
-    if(enAide) basculeAide();
-    const s = txt("button","btn plein", ici+1<BLOCS.length ? "Bloc suivant →" : "J'ai fini ✓"); s.type="button";
-    s.addEventListener("click",()=>{ ici++; affiche(); });
-    pr.append(s); s.focus();
-  };
-  const rate = (explication) => {
-    essais++; etat.erreurs++; ecrit(etat);
-    retour.className="retour faux"; retour.replaceChildren(txt("strong",null,"Pas encore."), txt("p",null,explication));
-    if(essais>=2){ retour.append(txt("p",null,"Ouvre « Ça coince ? » juste en dessous.")); document.getElementById("coince").open = true; }
-    if(essais>=3) retour.append(txt("p",null,"Toujours bloqué : demande à ton voisin, puis pose ton chevalet sur l'écran."));
-    retour.hidden=false;
-  };
-  const panne = () => {
-    retour.className="retour faux"; retour.replaceChildren(txt("strong",null,"La réponse n'est pas arrivée."), txt("p",null,"Vérifie la connexion, puis réessaie."));
-    retour.hidden=false;
-  };
-  /* Le verdict : du serveur ou de la fiche. Q.juste sert au message de réussite d'une saisie. */
-  const corrige = (rep, fin) => Q.corrige(rep, essais+1, r=>{
-    if(r.panne){ panne(); fin(null); return; }
-    if(r.juste){ Q.juste = r.texte; reussi(); } else rate(r.texte);
-    fin(r.juste);
-  });
-
-  if(Q.type==="qcm"){
-    const tour = () => {
-      zone.replaceChildren();
-      const liste = el("div","choix"); const boutons=[];
-      melange(Q.c).forEach((c,pos)=>{
-        const b = el("button"); b.type="button";
-        b.append(txt("span","lettre",LETTRES[pos]), txt("span",null,c));
-        b.addEventListener("click",()=>{
-          boutons.forEach(x=>x.disabled=true);
-          corrige(c, juste=>{
-            if(juste===null){ boutons.forEach(x=>x.disabled=false); return; }
-            if(juste){ b.classList.add("juste"); boutons.forEach(x=>{ if(x!==b) x.classList.add("estompe"); }); return; }
-            b.classList.add("faux");
-            const r = txt("button","btn vide","Réessayer"); r.type="button";
-            r.addEventListener("click",()=>{ r.remove(); retour.hidden=true; tour(); });
-            zone.append(r);
-          });
-        });
-        boutons.push(b); liste.append(b);
-      });
-      zone.append(liste);
-    };
-    tour();
-  } else {
-    const f = el("form","saisie"); const inp = el("input"); inp.type="text"; inp.autocomplete="off"; inp.spellcheck=false;
-    inp.setAttribute("aria-label", Q.q);
-    const ok = txt("button","btn plein","Vérifier"); ok.type="submit";
-    f.append(inp, ok);
-    f.addEventListener("submit", e=>{
-      e.preventDefault(); const r = inp.value.trim(); if(!r || ok.disabled) return;
-      ok.disabled = true;
-      corrige(r, juste=>{ if(juste){ inp.disabled=true; } else { ok.disabled=false; inp.select(); } });
-    });
-    zone.append(f); if(avance) inp.focus();
-  }
-}
-
-const CITATION = {
-  texte:"Ce que l'on conçoit bien s'énonce clairement,\nEt les mots pour le dire arrivent aisément.",
-  auteur:"Nicolas Boileau", source:"L'Art poétique (1674)",
-  lien:"Avant d'écrire, je sais ce que je veux dire : mon message s'écrit plus vite."
-};
-
-/* La phrase de la fin : une citation réelle, avec son auteur, et une ligne qui la relie au cours.
-   Une surprise, pas une récompense : elle s'affiche pour tous, quel que soit le nombre d'erreurs. */
-function citation(c){
-  const f = el("figure","citation");
-  f.append(txt("blockquote",null,"« "+c.texte+" »"), txt("figcaption",null,"— "+c.auteur+", "+c.source));
-  if(c.lien) f.append(txt("p",null,c.lien));
-  return f;
-}
-
-function fin(z){
-  z.append(txt("h2",null,"🎉 J'ai fini la leçon 1"),
-    txt("p",null,"J’ai terminé les étapes de la fiche. Mon professeur vérifiera le message reçu ; la fiche ne peut pas lire ma boîte Outlook."),
-    citation(CITATION));
-  const plus = el("div","encart");
-  plus.append(txt("h3",null,"⚡ J'ai fini avant les autres"),
-    txt("p",null,"J'écris un second message à mon voisin (je tape son nom dans À et je le choisis dans la liste). Objet : Question - prénom. Je lui pose une question sur le cours, avec les quatre parties d'un message bien écrit."));
-  const lien = el("p",null,'Puis je révise : <a href="https://root75.github.io/campin-public/messagerie/" target="_blank" rel="noopener">Mon premier message — je révise</a>.');
-  plus.append(lien);
-  const nav = el("div","actions");
-  const avant = txt("button","btn vide","← Revoir les blocs"); avant.type="button";
-  avant.addEventListener("click",()=>{ ici=0; affiche(); });
-  nav.append(avant);
-  if(!SUIVI){
-    const zero = txt("button","btn vide","Recommencer à zéro"); zero.type="button";
-    zero.addEventListener("click",()=>{ etat = { atteint:0, erreurs:0 }; ecrit(etat); ici=0; humeur(); affiche(); });
-    nav.append(zero);
-  }
-  z.append(bilan(), plus, nav);
-  if(!etat.fini){ etat.fini = true; ecrit(etat); envoie({ etape:BLOCS.length, type:"fini" }); }
-}
-
-/* Humeur du jour : un clic, au-dessus du bloc 1. Ce n'est pas un bloc : rien n'est compté,
-   rien n'est bloqué. Même liste dans pas-a-pas/tableau.html. */
-const HUMEURS = [["😄","Super"],["🙂","Bien"],["😐","Bof"],["🙁","Pas top"],["😣","Pas bien"]];
-function humeur(changer){
-  const h = document.getElementById("humeur"); h.replaceChildren(); h.hidden = false;
-  if(etat.humeur && !changer){
-    h.className = "humeur faite";
-    h.append(txt("span",null,"Mon humeur du jour : "+etat.humeur));
-    const c = txt("button","lien","changer"); c.type="button";
-    c.addEventListener("click",()=>humeur(true));
-    h.append(c); return;
-  }
-  h.className = "humeur";
-  h.append(txt("p","question","Comment je me sens aujourd'hui ?"));
-  const l = el("div","smileys");
-  HUMEURS.forEach(([e,t])=>{
-    const b = el("button", etat.humeur===e+" "+t ? "choisi" : ""); b.type="button";
-    b.append(txt("span","emoji",e), txt("span",null,t));
-    b.addEventListener("click",()=>{ etat.humeur = e+" "+t; ecrit(etat); envoie({ etape:0, type:"humeur", reponse:etat.humeur }); humeur(); });
-    l.append(b);
-  });
-  h.append(l, txt("p","note", SUIVI && !APERCU ? "Un clic, puis je commence. Mon professeur voit l'humeur de la classe." : "Un clic, puis je commence."));
-}
-
-/* Mon avis, à la fin : trois questions ouvertes, une ligne du journal chacune.
-   Même liste dans pas-a-pas/tableau.html. */
-const AVIS = [["plu","Ce qui m'a plu"],["progres","Ce qui m'a aidé à progresser"],["gene","Ce qui m'a gêné dans le cours en ligne"]];
-function bilan(){
-  const f = el("form","encart bilan");
-  f.append(txt("h3",null,"💬 Mon avis sur ce cours"), txt("p","note","Quelques mots suffisent. Je peux laisser une case vide."));
-  const champs = AVIS.map(([k,t])=>{
-    const lab = el("label"), ta = el("textarea"); ta.rows = 2; ta.maxLength = 200; ta.value = (etat.avis||{})[k] || "";
-    lab.append(txt("span",null,t), ta); f.append(lab); return ta;
-  });
-  const ok = txt("button","btn plein", etat.avis ? "Modifier mon avis" : "Envoyer mon avis"); ok.type="submit";
-  const merci = txt("p","note", etat.avis ? "✅ Avis envoyé. Merci !" : "");
-  const act = el("div","actions"); act.append(ok, merci); f.append(act);
-  f.addEventListener("submit", e=>{
-    e.preventDefault();
-    const a = {}; AVIS.forEach(([k],i)=>{ a[k] = champs[i].value.trim(); });
-    if(!Object.values(a).some(Boolean)){ merci.textContent = "J'écris au moins quelques mots dans une des cases."; return; }
-    etat.avis = a; ecrit(etat);
-    AVIS.forEach(([k])=>envoie({ etape:BLOCS.length, type:"avis-"+k, reponse:a[k] }));
-    ok.textContent = "Modifier mon avis";
-    merci.textContent = SUIVI && !APERCU ? "✅ Avis envoyé à mon professeur. Merci !" : "✅ Merci ! (Rien n'est envoyé : la fiche n'est pas suivie.)";
-  });
-  return f;
-}
-
-/* « J'attends de l'aide » : l'équivalent de la case entourée. Le chevalet reste le signal. */
-function basculeAide(){
-  enAide = !enAide;
-  const a = document.getElementById("aide"), b = document.getElementById("aide-btn");
-  a.classList.toggle("active", enAide);
-  document.getElementById("aide-texte").textContent = enAide
-    ? "✋ Ton professeur sait que tu attends au bloc "+(ici+1)+". Pose ton chevalet sur l'écran, et en attendant relis « Ça coince ? »."
-    : "Je suis bloqué malgré « Ça coince ? » et mon voisin :";
-  b.textContent = enAide ? "Je me suis débloqué" : "J'attends de l'aide";
-  envoie({ etape:Math.min(ici,BLOCS.length-1)+1, type: enAide ? "aide" : "aide-fin" });
-}
-document.getElementById("aide-btn").addEventListener("click", basculeAide);
-document.getElementById("memo-btn").addEventListener("click",()=>document.getElementById("memo").showModal());
-
-/* Démarrage. Avec le suivi : on reprend où le serveur s'est arrêté (autre poste, onglet fermé). */
-const qui = document.getElementById("qui"), pied = document.getElementById("pied");
-if(APERCU){
-  ici = Math.max(0, Math.min(BLOCS.length-1, parseInt(location.hash.slice(6),10)-1));
-  qui.textContent = "👁 Aperçu professeur : navigation libre, rien n'est enregistré.";
-  pied.textContent = "Aperçu : les réponses ne sont ni envoyées ni gardées.";
-  document.getElementById("aide").hidden = true;
-  humeur();
-  affiche();
-} else if(SUIVI){
-  pied.textContent = "Ton avancement est visible par ton professeur.";
-  google.script.run.withSuccessHandler(s=>{
-    if(s && s.email){ qui.textContent = "Connecté : "; qui.append(txt("strong",null,s.email)); if(s.classe) qui.append(" · "+s.classe); }
-    if(s && s.humeur) etat.humeur = s.humeur;
-    if(s && s.avis) etat.avis = s.avis;
-    humeur();
-    if(s && s.atteint){ etat.atteint = s.atteint; etat.fini = s.atteint >= BLOCS.length; ici = Math.min(s.atteint, BLOCS.length); }
-    affiche();
-    envoie({ etape:Math.min(ici,BLOCS.length-1)+1, type:"ouvert" });
-  }).withFailureHandler(()=>{ humeur(); affiche(); }).etat(COURS);
-  window.PAS_A_PAS = { cours: COURS, envoie };   // lu par sequence-eleve.js (chargé en différé : il ne bloque jamais la fiche)
-} else {
-  qui.textContent = "Garde deux onglets : celui-ci pour la fiche, un autre pour Courrier.";
-  pied.textContent = "Ton avancement reste sur cet ordinateur. Aucune donnée n'est envoyée.";
-  humeur();
-  affiche();
-}
-
+if(typeof document!=='undefined')demarre();
+if(typeof module!=='undefined')Object.assign(module.exports,{regle,reponseCourte});

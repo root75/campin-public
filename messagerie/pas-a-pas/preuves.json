@@ -1,205 +1,156 @@
 {
-  "_lisezmoi": "Révision pédagogique du 03/11/2026. Douze étapes conservées pour la reprise. Une saisie courte par étape, sans QCM. Les règles sont compatibles avec regle_() du serveur existant ; aucune lecture de la boîte Outlook. Les anciens événements du Journal restent historiques : les anciennes variantes ne décrivent pas ces nouvelles questions.",
+  "_lisezmoi": "Version 2026-11-03 : nouvelle séance nécessaire. 12 étapes réorganisées, historiques conservés. Contrôles locaux du brouillon + preuves courtes côté serveur ; les emails réels restent à vérifier par le professeur.",
   "blocs": [
     [
       {
         "type": "saisie",
-        "q": "Quel est le nom du logiciel de messagerie ouvert dans le deuxième onglet ?",
-        "regle": {
-          "egal": [
-            "Outlook",
-            "Microsoft Outlook",
-            "Courrier",
-            "Courrier Outlook"
-          ]
-        },
-        "faux": "Ouvre Microsoft 365 puis Courrier. Le logiciel de messagerie est Outlook ; Chrome est le navigateur.",
-        "juste": "Outlook est ouvert. Cette réponse vérifie le nom du logiciel ; vérifie aussi ta boîte à l'écran."
-      }
-    ],
-    [
-      {
-        "type": "saisie",
-        "q": "Tu fermes un message commencé sans l'envoyer. Dans quel dossier peux-tu le reprendre ?",
-        "regle": {
-          "egal": [
-            "Brouillons",
-            "Brouillon",
-            "Dans Brouillons",
-            "Dans les brouillons",
-            "Le dossier Brouillons"
-          ]
-        },
-        "faux": "Cherche Brouillons dans la colonne de gauche : il conserve les messages commencés avant l'envoi.",
-        "juste": "Brouillons permet de reprendre un message avant son envoi."
-      }
-    ],
-    [
-      {
-        "type": "saisie",
-        "q": "Quel dossier dois-tu ouvrir pour voir les messages que tu reçois ?",
-        "regle": {
-          "egal": [
-            "Boîte de réception",
-            "La boîte de réception",
-            "Dans la boîte de réception",
-            "Réception"
-          ]
-        },
-        "faux": "Ouvre Boîte de réception. Éléments envoyés contient tes envois ; Brouillons contient les messages en préparation.",
-        "juste": "La boîte de réception contient les messages reçus ; regarde aussi Autres si cet onglet est affiché."
-      }
-    ],
-    [
-      {
-        "type": "saisie",
-        "q": "Comment appelle-t-on la personne qui a envoyé le message que tu lis ?",
-        "regle": {
-          "egal": [
-            "Expéditeur",
-            "L'expéditeur",
-            "Un expéditeur",
-            "Une expéditrice",
-            "Expéditrice"
-          ]
-        },
-        "faux": "L'expéditeur est celui qui envoie ; le destinataire est celui qui reçoit.",
-        "juste": "Repère le nom de l'expéditeur au-dessus du texte du message."
-      }
-    ],
-    [
-      {
-        "type": "saisie",
-        "q": "Le message du professeur n'apparaît pas. Quel outil d'Outlook permet de le retrouver en tapant son nom ?",
-        "regle": {
-          "egal": [
-            "Rechercher",
-            "Recherche",
-            "La recherche",
-            "Barre de recherche",
-            "La barre de recherche",
-            "Rechercher dans le courrier"
-          ]
-        },
-        "faux": "Utilise Rechercher, en haut d'Outlook, et saisis le nom du professeur.",
-        "juste": "La recherche aide à retrouver le message. Ouvre-le avant de passer à l'étape suivante."
-      }
-    ],
-    [
-      {
-        "type": "saisie",
-        "q": "Dans l'exemple « Bienvenue dans ta boîte de l'école », comment appelle-t-on ce titre du mail ?",
-        "regle": {
-          "egal": [
-            "Objet",
-            "L'objet",
-            "Un objet",
-            "Objet du message",
-            "L'objet du message",
-            "Objet du mail"
-          ]
-        },
-        "faux": "Ce titre est l'objet. La question à laquelle tu dois répondre se trouve dans le corps du message.",
-        "juste": "L'objet annonce le sujet ; le corps contient le message et la question."
-      }
-    ],
-    [
-      {
-        "type": "saisie",
-        "q": "Quel champ contient l'adresse de la personne à qui tu écris directement ?",
-        "regle": {
-          "egal": [
-            "À",
-            "A",
-            "Champ À",
-            "Le champ À",
-            "Destinataire",
-            "Le destinataire"
-          ]
-        },
-        "faux": "C'est le champ À. Objet contient un titre ; le corps contient ton texte.",
-        "juste": "Dans cet exercice, le destinataire direct est ton professeur."
-      }
-    ],
-    [
-      {
-        "type": "saisie",
-        "q": "Recopie l'adresse complète de ton professeur indiquée dans le tableau.",
+        "q": "Repère la partie locale et le domaine.",
         "regle": {
           "exact": [
-            "vlouviaux@arcampin.be",
-            "alexia.michiels@arcampin.be"
+            "camille.martin@example.org"
           ]
         },
-        "faux": "Vérifie le tableau : une adresse complète contient @arcampin.be, sans espace. Mets la bonne adresse pour TA classe dans Outlook.",
-        "juste": "Adresse reconnue dans le tableau. Vérifie qu'elle correspond à ton professeur et qu'elle est seule dans À."
+        "faux": "Repère les deux parties de l’adresse de Camille."
       }
     ],
     [
       {
         "type": "saisie",
-        "q": "Recopie l'objet complet de TON message : Mon premier message suivi de ton prénom.",
+        "q": "Écris l’adresse du destinataire fictif.",
         "regle": {
-          "motif": "^mon premier message(?:\\s*[-–—:]\\s*|\\s+)[a-z][a-z -]{1,45}$",
-          "sauf": "(bonjour|merci|bonne journee|[\\r\\n]|\\bprenom\\b|\\bnom\\b)"
+          "exact": [
+            "camille.martin@example.org"
+          ]
         },
-        "faux": "Garde seulement le titre Mon premier message et ton prénom. Exemple : Mon premier message Lina. Le tiret est facultatif. Mets Bonjour et ta réponse dans la grande zone de texte.",
-        "juste": "Le titre respecte la forme demandée. Vérifie que le prénom est bien le tien ; le professeur vérifiera aussi le sujet du mail reçu."
+        "faux": "Vérifie chaque caractère de l’adresse de Camille."
       }
     ],
     [
       {
         "type": "saisie",
-        "q": "Comment s'appelle la partie du mail où tu écris Bonjour, ta réponse et ta signature ?",
+        "q": "Donne un objet sur les loisirs.",
+        "regle": {
+          "motif": "^(?=.{1,80}$).*(loisir|sport|activite|passion)",
+          "sauf": "bonjour|merci|cordialement|\\?"
+        },
+        "faux": "Écris un titre court sur les loisirs, sans le message entier."
+      }
+    ],
+    [
+      {
+        "type": "saisie",
+        "q": "Salue Camille.",
+        "regle": {
+          "motif": "^(bonjour|salut|bonsoir)( camille)?[!,:]?$"
+        },
+        "faux": "Choisis une seule salutation pour Camille."
+      }
+    ],
+    [
+      {
+        "type": "saisie",
+        "q": "Demande le sport ou le loisir de Camille.",
+        "regle": {
+          "motif": "(?=.*(loisir|sport|activite|passion))(?=.*(\\?|peux|pourrais|quel|dis|voudrais|souhaites|aimerais)).{25,}",
+          "sauf": "\\[|\\]"
+        },
+        "faux": "Rédige une demande complète sur le sport ou les loisirs."
+      }
+    ],
+    [
+      {
+        "type": "saisie",
+        "q": "Termine et signe.",
+        "regle": {
+          "motif": "^(bonne journee|bonne soiree|a bientot|merci|cordialement|bien a|bon week).+\\|.+[12]\\s*[a-z]"
+        },
+        "faux": "Ajoute une formule de fin et une signature avec ta classe."
+      }
+    ],
+    [
+      {
+        "type": "saisie",
+        "q": "Relis l’objet du mail complet.",
+        "regle": {
+          "motif": "^(?=.{1,80}$).*(loisir|sport|activite|passion)",
+          "sauf": "bonjour|merci|cordialement|\\?"
+        },
+        "faux": "Relis le destinataire, le titre et le corps du message."
+      }
+    ],
+    [
+      {
+        "type": "saisie",
+        "q": "Quel bouton conserve la conversation ?",
         "regle": {
           "egal": [
-            "Corps",
-            "Le corps",
-            "Corps du message",
-            "Le corps du message",
-            "Corps du mail",
-            "Le corps du mail",
-            "Texte",
-            "Le texte",
-            "Zone de texte",
-            "La zone de texte"
+            "Répondre",
+            "Le bouton Répondre",
+            "Répondre à Camille"
           ]
         },
-        "faux": "Écris dans le corps du message : la grande zone sous l'objet. L'objet reste un titre court.",
-        "juste": "Ta réponse et ta signature vont dans le corps du message. Relis ta phrase dans Outlook."
+        "faux": "Utilise Répondre pour continuer cette conversation."
       }
     ],
     [
       {
         "type": "saisie",
-        "q": "Quel bouton d'Outlook utilises-tu une fois ton message relu pour le faire partir ?",
+        "q": "Qui envoie un mail ?",
         "regle": {
           "egal": [
-            "Envoyer",
-            "Le bouton Envoyer",
-            "Bouton Envoyer"
+            "expéditeur",
+            "l’expéditeur",
+            "expéditrice",
+            "l’expéditrice"
           ]
         },
-        "faux": "Clique sur Envoyer après avoir vérifié le destinataire, l'objet, le texte et la signature.",
-        "juste": "Envoyer lance l'envoi ; une réponse à cette question ne prouve pas que tu as cliqué dans Outlook."
+        "faux": "L’expéditeur envoie ; le destinataire reçoit."
       }
     ],
     [
       {
         "type": "saisie",
-        "q": "Dans quel dossier retrouves-tu ton message après son envoi ?",
+        "q": "Où rédiges-tu le texte ?",
+        "regle": {
+          "egal": [
+            "corps",
+            "corps du message",
+            "le corps du message",
+            "corps du mail",
+            "le corps",
+            "le corps du mail"
+          ]
+        },
+        "faux": "Le corps du message est la grande zone sous l’objet."
+      }
+    ],
+    [
+      {
+        "type": "saisie",
+        "q": "Où retrouves-tu ton envoi ?",
         "regle": {
           "egal": [
             "Éléments envoyés",
-            "Dans Éléments envoyés",
-            "Les éléments envoyés",
-            "Messages envoyés",
-            "Envoyés",
-            "Courrier envoyé"
+            "les éléments envoyés",
+            "dans éléments envoyés",
+            "messages envoyés"
           ]
         },
-        "faux": "Cherche dans Éléments envoyés. Si le message est dans Brouillons, il n'est pas encore envoyé.",
-        "juste": "Ouvre ton message dans Éléments envoyés. Le professeur vérifiera séparément le mail reçu."
+        "faux": "Ouvre Éléments envoyés et vérifie que le mail y apparaît."
+      }
+    ],
+    [
+      {
+        "type": "saisie",
+        "q": "Quel bouton pour répondre au camarade ?",
+        "regle": {
+          "egal": [
+            "Répondre",
+            "Le bouton Répondre",
+            "Bouton Répondre"
+          ]
+        },
+        "faux": "Utilise Répondre, puis réponds à la question du camarade."
       }
     ]
   ]
