@@ -9,7 +9,7 @@
 (function(){
   const RYTHME = 5000;
   const css = `
-.en-sequence .page > :not(header):not(#seq){display:none!important}
+.en-sequence .page > :not(header):not(#seq):not(.aide-fixe){display:none!important}
 #seq{background:var(--carte);border:1px solid var(--trait);border-radius:14px;padding:28px clamp(16px,4vw,32px);display:grid;gap:18px;text-align:center}
 #seq .sq-sur{font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;color:var(--doux);font-weight:700;margin:0}
 #seq .sq-grand{font-family:var(--display);font-weight:800;font-size:clamp(2rem,6vw,2.8rem);line-height:1.1;margin:0}
