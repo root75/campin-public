@@ -16,102 +16,66 @@ const PROF_TABLE = `<div class="encart"><table>
   <tr><td>2B · 2F</td><td>M. Louviaux</td><td>vlouviaux@arcampin.be</td></tr>
   <tr><td>2E</td><td>Mme Michiels</td><td>alexia.michiels@arcampin.be</td></tr></table></div>`;
 
+/* Les numéros restent stables pour reprendre les séances existantes. */
+function repere(zone){
+  const champs = [["a", "À", "Adresse du destinataire"], ["copie", "Cc / Cci", "Copies visibles / adresses masquées aux autres destinataires"], ["objet", "Objet", "Un titre court : Mon premier message — Lina"], ["texte", "Message", "Bonjour Monsieur, … Bonne journée, Lina Dupont, 2B"]];
+  return `<figure class="repere"><figcaption>Repère simplifié — ce schéma n'est pas une capture Outlook.</figcaption>${champs.map(([id,nom,ex])=>`<div class="champ ${zone===id?'cible':''}"><b>${nom}</b><span>${ex}</span></div>`).join('')}</figure>`;
+}
 const BLOCS = [
-  { partie:"A — J'ouvre Courrier et je m'y repère", titre:"J'ouvre Courrier", min:5, stop:true,
-    veux:"Être dans ma boîte de l'école. Elle s'appelle Courrier ; le programme s'appelle Outlook.",
-    fais:`Dans Chrome : <span class="chemin">barre de favoris ▸ Favoris du domaine arcampin.com ▸ Microsoft 365 ▸ Courrier</span>`,
-    vois:"L'onglet de Chrome affiche « Courrier - mon nom - Outlook ».",
-    coince:["Je ne vois pas « Favoris du domaine arcampin.com » : je ne suis pas dans Chrome avec mon compte de l'école. En haut à droite de Chrome, le rond du profil ▸ je choisis mon compte de l'école.",
-            "Outlook me demande de me connecter : mon adresse de l'école, puis mon mot de passe.",
-            "Je garde deux onglets : celui-ci pour la fiche, un autre pour Courrier."] },
-
-  { partie:"A — J'ouvre Courrier et je m'y repère", titre:"Je trouve mes dossiers", min:3,
-    veux:"Savoir où sont rangés mes messages.",
-    fais:"Je regarde la colonne de gauche et je montre chaque dossier à mon voisin.",
-    vois:"Boîte de réception, Brouillons, Éléments envoyés, Éléments supprimés, Courrier indésirable.",
-    coince:["Je ne vois pas la colonne de gauche : en haut à gauche, je clique sur les trois traits ☰."] },
-
-  { partie:"A — J'ouvre Courrier et je m'y repère", titre:"Je trouve la liste des messages", min:3,
-    veux:"Savoir où s'affichent les messages du dossier choisi.",
-    fais:`Au milieu de l'écran, je clique sur l'onglet <span class="chemin">Autres</span>, puis de nouveau sur <span class="chemin">Prioritaire</span>.`,
-    vois:"La liste change, puis revient. Le message le plus récent est en haut.",
-    coince:["Un message que je cherche n'est pas dans Prioritaire ? Il est peut-être dans Autres."] },
-
-  { partie:"A — J'ouvre Courrier et je m'y repère", titre:"Je place le message en dessous de la liste", min:4,
-    veux:"Une liste large, où les objets des messages se lisent en entier.",
-    fais:`<span class="chemin">Onglet Afficher ▸ Disposition ▸ Volet de lecture ▸ Afficher en bas</span>`,
-    vois:"La liste prend toute la largeur. Quand je clique sur un message, il s'ouvre en dessous. Le réglage reste pour les prochaines fois.",
-    coince:["Je ne vois pas l'onglet Afficher : tout en haut à gauche, à côté de Fichier et Accueil."] },
-
-  { partie:"B — Je lis le message de mon professeur", titre:"J'ouvre le message de mon professeur", min:5, stop:true,
-    veux:"Lire le message que mon professeur m'a envoyé avant le cours.",
-    fais:`<span class="chemin">Volet des dossiers ▸ Boîte de réception ▸ un clic sur son message</span>. Pas dans Prioritaire ? Je regarde dans Autres. Toujours pas ? Je tape son nom dans Rechercher, tout en haut.`,
-    vois:"Le message s'ouvre sous la liste.",
-    coince:["Pas dans Prioritaire ? Onglet Autres.","Toujours pas ? Je tape le nom de mon professeur dans Rechercher, tout en haut."] },
-
-  { partie:"B — Je lis le message de mon professeur", titre:"Je repère trois informations", min:5,
-    veux:"Savoir ce que je devrai écrire au bloc 10.",
-    fais:"Je lis le message en entier, sans répondre. Je garde l'onglet ouvert.",
-    vois:"Je peux montrer à mon voisin : l'objet du message (son titre), la date et l'heure d'envoi, et la question qu'il me pose.",
-    coince:["L'objet, c'est le titre du message : la ligne en gras, tout en haut du message ouvert.","La date et l'heure sont à droite, au-dessus du texte.",
-            "Mon voisin n'a pas la même question que moi : c'est normal. Je réponds à MA question, pas à la sienne."] },
-
-  { partie:"C — J'écris et j'envoie mon premier message", titre:"J'ouvre un nouveau message", min:3,
-    veux:"Une page blanche pour écrire.",
-    fais:`<span class="chemin">Onglet Accueil ▸ bouton bleu Nouveau message</span>`,
-    vois:"En haut, le bouton Envoyer ; dessous, la ligne À, la ligne Cc, et Cci au bout de la ligne À ; puis Ajouter un objet.",
-    extra:`<div class="encart"><h3>📝 Ce message est coté sur 5 par mon professeur</h3>
-  <p>Il reçoit mon message et compte un point pour chaque critère :</p>
-  <table>
-  <tr><td><b>1</b></td><td>L'adresse est celle de mon professeur.</td></tr>
-  <tr><td><b>2</b></td><td>L'objet est « Mon premier message - » suivi de mon prénom.</td></tr>
-  <tr><td><b>3</b></td><td>Le texte commence par « Bonjour Monsieur, » ou « Bonjour Madame, ».</td></tr>
-  <tr><td><b>4</b></td><td>Tous les crochets sont remplacés (l'objet, la date, l'heure, MA réponse), avec une majuscule et un point à chaque phrase.</td></tr>
-  <tr><td><b>5</b></td><td>Le message finit par mon prénom, mon nom et ma classe.</td></tr></table>
-  <p>Je relis ces cinq points au bloc 11, avant d'envoyer.</p></div>`,
-    coince:["J'ai fermé mon message sans l'envoyer : il est dans Brouillons, je clique dessus pour continuer."] },
-
-  { partie:"C — J'écris et j'envoie mon premier message", titre:"Je mets l'adresse de mon professeur", min:5,
-    veux:"Que mon message arrive chez mon professeur, et chez personne d'autre.",
-    fais:"Je clique dans la ligne À, je tape le début de son nom, puis je clique sur son nom dans la liste qui s'ouvre.",
-    vois:"Son nom est dans la ligne À. Je vérifie l'adresse dans le tableau « Mon professeur ».",
-    extra: PROF_TABLE,
-    coince:["Le nom de mon professeur ne s'affiche pas dans la liste : je tape son adresse en entier, sans espace."] },
-
-  { partie:"C — J'écris et j'envoie mon premier message", titre:"Je mets l'objet", min:4,
-    veux:"Que mon professeur sache de quoi parle mon message avant de l'ouvrir.",
-    fais:`Je clique dans <span class="chemin">Ajouter un objet</span> et je tape : <b>Mon premier message - prénom</b> (avec MON prénom).`,
-    vois:"L'objet est écrit, sans faute.",
-    coince:["Le tiret est la touche 6 du clavier, sans Maj : « - »."] },
-
-  { partie:"C — J'écris et j'envoie mon premier message", titre:"J'écris le texte", min:20,
-    veux:"Un message complet : saluer, dire, finir, signer.",
-    fais:"Je clique dans la grande zone blanche et je tape le modèle ci-dessous, en remplaçant tout ce qui est entre crochets.",
-    vois:"Plus aucun crochet [ ] dans mon texte.",
-    extra:`<div class="encart"><p class="modele">Bonjour Monsieur,  <span style="color:var(--doux)">(ou : Bonjour Madame,)</span>
-J'ai bien reçu votre message. Son objet était « <b>[l'objet du message]</b> » et il a été envoyé le <b>[date]</b> à <b>[heure]</b>.
-<b>[Ma réponse à la question du message, en une phrase.]</b>
-Un message que je reçois arrive dans le dossier <b>[nom du dossier]</b>. Un message que j'envoie se range dans le dossier <b>[nom du dossier]</b>.
-Bonne journée,
-<b>[Prénom Nom]</b>, <b>[classe]</b></p></div>`,
-    coince:["Je ne retrouve plus la date, l'heure ou la question : je retourne dans Boîte de réception, le message de mon professeur est toujours là.","Les deux dossiers à écrire : regarde le bouton ✉️ « Un e-mail, c'est une lettre » en bas de la page."] },
-
-  { partie:"C — J'écris et j'envoie mon premier message", titre:"Je relis, puis j'envoie", min:8,
-    veux:"Un message sans erreur : il ne se reprend pas.",
-    fais:`Je contrôle les cinq points ci-dessous, puis bouton <span class="chemin">Envoyer</span>.`,
-    vois:"La fenêtre du message se ferme.",
-    cases:["L'adresse est celle de mon professeur.",
-           "L'objet est « Mon premier message - » suivi de mon prénom.",
-           "Le texte commence par « Bonjour Monsieur, » ou « Bonjour Madame, ».",
-           "Tous les crochets sont remplacés, avec une majuscule et un point à chaque phrase.",
-           "Le message finit par mon prénom, mon nom et ma classe."],
-    coince:["Je me suis trompé d'adresse après l'envoi : j'écris un nouveau message, avec la bonne adresse."] },
-
-  { partie:"C — J'écris et j'envoie mon premier message", titre:"Je vérifie que mon message est parti", min:5, stop:true,
-    veux:"Être sûr que mon professeur va le recevoir.",
-    fais:`<span class="chemin">Volet des dossiers ▸ Éléments envoyés</span>`,
-    vois:"Mon message est en haut de la liste. Je l'ouvre : les cinq points sont bons. S'il en manque un, j'envoie un nouveau message corrigé.",
-    coince:["Mon message n'est pas dans Éléments envoyés : je regarde dans Brouillons. Il n'est pas parti, je l'ouvre et je clique sur Envoyer."] }
+  {partie:"A — Je me repère", titre:"J'ouvre ma boîte de l'école", min:5,
+   veux:"Ouvrir Outlook dans un deuxième onglet.",
+   fais:`Dans les favoris scolaires de Chrome, ouvre <span class="chemin">Microsoft 365 ▸ Courrier</span>. Garde cette fiche dans son onglet.`,
+   vois:"Ma boîte de l'école est ouverte dans Outlook.",
+   coince:["Si une connexion est demandée, utilise ton compte de l'école.","Les favoris scolaires ne sont pas visibles ? Demande de l'aide pour vérifier le profil Chrome."]},
+  {partie:"A — Je me repère", titre:"Je retrouve les dossiers", min:3,
+   veux:"Distinguer reçu, en cours d'écriture et envoyé.",
+   fais:"Dans la colonne de gauche, repère Boîte de réception, Brouillons et Éléments envoyés. Montre-les à ton voisin.",
+   vois:"Je sais retrouver les trois dossiers.",
+   extra:`<div class="encart"><p><b>Boîte de réception</b> : messages reçus.</p><p><b>Brouillons</b> : messages conservés avant envoi.</p><p><b>Éléments envoyés</b> : messages envoyés.</p></div>`,
+   coince:["Colonne masquée ? Cherche le bouton ☰ en haut à gauche."]},
+  {partie:"A — Je me repère", titre:"Je retrouve la liste des messages", min:3,
+   veux:"Voir les messages reçus.", fais:"Clique sur Boîte de réception. Repère la liste des messages. Si Prioritaire et Autres sont affichés, regarde les deux onglets.",
+   vois:"Chaque ligne de la liste correspond à un message.", coince:["L'expéditeur indique qui a écrit. L'objet donne le titre du message."]},
+  {partie:"A — Je me repère", titre:"J'ouvre et je lis un message", min:3,
+   veux:"Afficher le contenu d'un message.", fais:"Clique sur une ligne de la liste. Repère le titre, l'expéditeur et le texte du message ouvert.",
+   vois:"Je peux lire le texte du message, à droite ou en dessous de la liste.",
+   coince:["Le volet peut être à droite ou en bas : les deux conviennent. Demande de l'aide si tu ne peux pas lire le message."]},
+  {partie:"B — Je lis la demande", titre:"Je retrouve le message du professeur", min:5,
+   veux:"Trouver le message à utiliser pour cet exercice.", fais:"Dans Boîte de réception, ouvre le message de ton professeur. S'il manque, regarde Autres ou utilise la recherche avec son nom.",
+   vois:"Le message de bienvenue du professeur est ouvert.", extra:PROF_TABLE,
+   coince:["Toujours introuvable ? Demande de l'aide avant de continuer."]},
+  {partie:"B — Je lis la demande", titre:"Je distingue le titre et la demande", min:5,
+   veux:"Comprendre la différence entre l'objet et le texte.", fais:"Lis le message. Montre le titre à ton voisin, puis montre la question dans le texte. Prépare ta réponse oralement.",
+   vois:"Je distingue le titre du message et la question posée dans son texte.",
+   extra:`<div class="encart"><p><b>Objet :</b> Bienvenue dans ta boîte de l'école</p><p><b>Dans le texte :</b> une question à laquelle tu répondras.</p><p>Ton voisin peut avoir reçu une autre question.</p></div>`,
+   coince:["L'objet est un titre. La question est dans le corps du message : ne recopie pas l'un à la place de l'autre."]},
+  {partie:"C — J'écris mon message", titre:"J'ouvre un nouveau message", min:3,
+   veux:"Préparer mon premier email.", fais:`Clique sur <span class="chemin">Nouveau message</span>. Repère À, Objet et la grande zone de texte. N'envoie rien pour le moment.`,
+   vois:"Une fenêtre de rédaction est ouverte.", extra:repere("texte"),
+   coince:["Cc reçoit une copie visible. Cci masque les adresses de ses destinataires aux autres destinataires. Nous les pratiquerons dans un prochain module.","Si tu avais déjà commencé le message, reprends-le dans Brouillons."]},
+  {partie:"C — J'écris mon message", titre:"Je choisis le destinataire", min:5,
+   veux:"Écrire à mon professeur.", fais:"Clique dans À. Tape le nom de ton professeur, choisis le contact, puis vérifie son adresse avec le tableau.",
+   vois:"Une seule adresse, celle de mon professeur, est dans À. Cc et Cci restent vides pour cet exercice.", extra:PROF_TABLE+repere("a"),
+   coince:["Pas de contact proposé ? Recopie l'adresse complète du tableau, sans espace."]},
+  {partie:"C — J'écris mon message", titre:"Je donne un titre à mon email", min:5,
+   veux:"Annoncer le sujet du mail pour que le professeur puisse le reconnaître et le retrouver.",
+   fais:"Dans Objet, écris Mon premier message suivi de ton prénom. Un espace, un tiret ou deux-points peuvent séparer le titre et le prénom. Ensuite, clique dans la grande zone de texte.",
+   vois:"L'objet est un titre court. Il ne contient ni Bonjour, ni mon message complet.", extra:repere("objet"),
+   coince:["Exemples : Mon premier message Lina ; Mon premier message - Lina ; Mon premier message : Lina.","Tu as tout écrit dans l'objet ? Garde le titre ici et déplace le reste dans la grande zone de texte."]},
+  {partie:"C — J'écris mon message", titre:"Je rédige dans le corps du message", min:15,
+   veux:"Saluer, répondre à la question et signer.", fais:"Clique dans la grande zone sous l'objet. Écris une salutation, une phrase qui répond à la question de TON professeur, une formule de fin et ta signature.",
+   vois:"Mon texte est sous l'objet. Il répond à la question reçue et se termine par mon prénom, mon nom et ma classe.",
+   extra:repere("texte")+`<div class="encart"><p><b>Exemple de structure :</b> Bonjour Monsieur, / ma réponse en une phrase / Bonne journée, / mon prénom, mon nom et ma classe.</p><p>Écris ta propre réponse : ne recopie pas les mots « ma réponse en une phrase ».</p></div>`,
+   coince:["Ne recopie pas le titre du mail comme réponse à la question.","Tu peux revenir au message reçu pour relire la question ; ton message en cours se conserve dans Brouillons."]},
+  {partie:"D — Je vérifie et j'envoie", titre:"Je relis avant d'envoyer", min:5,
+   veux:"Vérifier mon message avant qu'il parte.", fais:"Contrôle les cinq points ci-dessous dans Outlook, puis clique sur Envoyer.",
+   vois:"Outlook indique que le message est envoyé ou ferme la fenêtre de rédaction.",
+   cases:["À contient seulement l'adresse de mon professeur.","L'objet est un titre court : Mon premier message et mon prénom.","La salutation et ma réponse sont dans le corps du message, sous l'objet.","Ma phrase répond à la question reçue, avec une majuscule et une ponctuation finale.","Ma signature indique mon prénom, mon nom et ma classe."],
+   coince:["Un envoi peut être difficile ou impossible à annuler : vérifie avant de cliquer. Une erreur après envoi ? Préviens ton professeur."]},
+  {partie:"D — Je vérifie et j'envoie", titre:"Je retrouve le message envoyé", min:5,
+   veux:"Vérifier l'envoi dans Outlook.", fais:"Ouvre Éléments envoyés. Retrouve ton message par son objet et ouvre-le. Vérifie son destinataire et son texte.",
+   vois:"Je retrouve mon message dans Éléments envoyés.",
+   coince:["Absent d'Éléments envoyés ? Vérifie Brouillons : ouvre le message et termine l'envoi. S'il n'est dans aucun des deux dossiers, demande de l'aide.","Le professeur vérifiera le mail reçu : terminer cette fiche ne suffit pas à certifier sa qualité."]}
 ];
 
 /* ===== Moteur ===== */
@@ -157,7 +121,7 @@ function affiche(){
   const B = BLOCS[ici];
 
   const num = el("div","numero");
-  num.append(txt("span",null,"Bloc "+(ici+1)+" sur "+BLOCS.length+" · Partie "+B.partie.split(" — ")[0]), txt("span",null,"⏱ "+B.min+" min"));
+  num.append(txt("span",null,"Étape "+(ici+1)+" sur "+BLOCS.length+" · Partie "+B.partie.split(" — ")[0]), txt("span",null,"À ton rythme · reprise possible au prochain cours"));
   z.append(num, txt("h2",null,(ici+1)+". "+B.titre));
 
   const dl = el("dl","lignes");
@@ -175,7 +139,7 @@ function affiche(){
   if(fait){
     pr.append(txt("p","retour juste","✅ Bloc déjà validé."));
   } else if(B.cases){
-    pr.append(txt("div","etiquette","✅ Les cinq points (mon message est coté sur 5)"));
+    pr.append(txt("div","etiquette","Je vérifie ces cinq points dans mon message"));
     const ul = el("ul","cases");
     B.cases.forEach(c=>{ const li=el("li"); const lab=el("label"); const cb=el("input"); cb.type="checkbox";
       lab.append(cb, txt("span",null,c)); li.append(lab); ul.append(li); });
@@ -184,7 +148,7 @@ function affiche(){
     go.addEventListener("click",()=>{ ul.remove(); go.remove(); preuve(pr,B); });
     pr.append(ul, go);
   } else {
-    const go = txt("button","btn plein","👀 Je vois ça"); go.type="button";
+    const go = txt("button","btn plein","J’ai fait cette action dans Outlook : je vérifie"); go.type="button";
     go.addEventListener("click",()=>{ go.remove(); preuve(pr,B); });
     pr.append(go);
   }
@@ -223,10 +187,10 @@ const locale = V => ({ type:V.type, q:V.q, c: V.type==="qcm" ? V.c : null,
 /* La question de preuve. Servie par Apps Script : la variante de l'élève vient du serveur, qui
    corrige et écrit le journal. Aperçu professeur : les trois variantes du bloc. */
 function preuve(pr, B){
-  pr.append(txt("div","etiquette","Je prouve que j'ai fait le bloc"));
+  pr.append(txt("div","etiquette","Je vérifie ce que j’ai compris"));
   const attente = txt("p","note","Chargement de la question…"); pr.append(attente);
   const bloc = ici+1;
-  const panne = () => { attente.textContent = "La question n'a pas pu se charger. Recharge la page (F5)."; };
+  const panne = () => { attente.textContent = "La vérification est indisponible. Ton étape n’est pas validée. Vérifie ta connexion ou demande de l’aide."; };
   const surPlace = () => chargePreuves().then(P=>{
     const V = P.blocs[bloc-1] || [];
     if(!V.length){ panne(); return; }
@@ -251,7 +215,7 @@ function preuve(pr, B){
         .withSuccessHandler(fin).withFailureHandler(()=>fin({ panne:true })).verifier(COURS, bloc, rep, essais);
       question(pr, Q, true);
       if(Q.total>1) pr.append(txt("p","note","Ton voisin a peut-être une autre question que toi : c'est normal, chacun a la sienne."));
-    }).withFailureHandler(surPlace).preuve(COURS, bloc);   // un serveur sans preuve() : comme avant
+    }).withFailureHandler(panne).preuve(COURS, bloc);   // un serveur sans preuve() : comme avant
     return;
   }
   surPlace();
@@ -348,7 +312,7 @@ function citation(c){
 
 function fin(z){
   z.append(txt("h2",null,"🎉 J'ai fini la leçon 1"),
-    txt("p",null,"Mon message est parti. Mon professeur va le coter sur 5. Je coche le dernier bloc sur ma feuille de route."),
+    txt("p",null,"J’ai terminé les étapes de la fiche. Mon professeur vérifiera le message reçu ; la fiche ne peut pas lire ma boîte Outlook."),
     citation(CITATION));
   const plus = el("div","encart");
   plus.append(txt("h3",null,"⚡ J'ai fini avant les autres"),
@@ -458,3 +422,4 @@ if(APERCU){
   humeur();
   affiche();
 }
+

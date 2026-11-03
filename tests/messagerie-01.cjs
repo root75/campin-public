@@ -1,0 +1,30 @@
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const vm = require('node:vm');
+const path = require('node:path');
+const root = path.resolve(__dirname, '..');
+const script = fs.readFileSync(path.join(root, 'messagerie/pas-a-pas/fiche.js'), 'utf8');
+const html = fs.readFileSync(path.join(root, 'messagerie/pas-a-pas/index.html'), 'utf8');
+const proofs = JSON.parse(fs.readFileSync(path.join(root, 'messagerie/pas-a-pas/preuves.json'), 'utf8'));
+const context = vm.createContext({location:{hash:''}, addEventListener(){}, localStorage:{getItem(){return null;}}});
+vm.runInContext(script.slice(0, script.indexOf('\ndocument.getElementById("aide-btn")')), context);
+assert.equal(vm.runInContext('BLOCS.length', context), 12);
+assert.equal(proofs.blocs.length, 12);
+assert.ok(proofs.blocs.every(v => v.length === 1 && v[0].type === 'saisie'));
+const positive = ['Outlook','Brouillons','Boîte de réception',"l’expéditeur",'Rechercher','Objet','À','vlouviaux@arcampin.be','Mon premier message Lina','Corps du message','Envoyer','Éléments envoyés'];
+const negative = ['Chrome','Éléments envoyés','Brouillons','Destinataire','Envoyer','Corps','Objet','vlouviaux@arcampin.com','Bonjour Monsieur, voici mon message','Objet','Fermer','Brouillons'];
+function accepts(index, answer){
+  context.rule = proofs.blocs[index][0].regle;
+  context.answer = answer;
+  return vm.runInContext('regle(rule, answer)', context);
+}
+positive.forEach((a,i) => assert.equal(accepts(i,a),true,`Étape ${i+1}: ${a}`));
+negative.forEach((a,i) => assert.equal(accepts(i,a),false,`Étape ${i+1}: ${a}`));
+for(const answer of ['Mon premier message - Lina','Mon premier message-Lina','Mon premier message : Lina','Mon premier message — Lina','Mon premier message Marie-Ève','Mon premier message Vincent']) assert.equal(accepts(8,answer),true,answer);
+for(const answer of ['-','Mon premier message','Mon premier message prénom','Mon premier message Lina bonjour monsieur','Mon premier message Lina\nBonjour','Mon premier message 123']) assert.equal(accepts(8,answer),false,answer);
+assert.equal(accepts(7,'vlouviaux @arcampin.be'),false);
+assert.equal(accepts(7,'VLOUVIAUX@ARCAMPIN.BE'),true);
+assert.ok(!script.includes('withFailureHandler(surPlace).preuve'));
+assert.ok(script.includes('fiche ne peut pas lire ma boîte Outlook'));
+assert.ok(html.includes('ce que j\'écris au dos') === false);
+console.log('Messagerie 01 : 12 étapes, 12 contrôles positifs/négatifs, variantes d’objet et limites du suivi vérifiés.');

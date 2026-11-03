@@ -141,6 +141,11 @@ dialog::backdrop{background:rgb(0 0 0 / .45)}
 
 footer{font-size:.9rem;color:var(--doux);display:flex;flex-wrap:wrap;gap:4px 16px;justify-content:space-between}
 footer .auteur{margin-left:auto;font-weight:700}
+.repere{margin:0;border:1px solid var(--trait);border-radius:10px;padding:12px;display:grid;gap:8px}
+.repere figcaption{font-size:.9rem;color:var(--doux)}
+.champ{display:grid;grid-template-columns:5rem 1fr;gap:10px;padding:10px;border:1px solid var(--trait);border-radius:6px;font-size:1rem;overflow-wrap:anywhere}
+.champ.cible{border:3px solid var(--encre-bouton);background:var(--papier)}
+@media(max-width:480px){.ligne{grid-template-columns:1fr;gap:2px}.champ{grid-template-columns:1fr}.saisie{display:grid}}
 </style>
 <link rel="stylesheet" href="https://root75.github.io/campin-public/assets/navigation.css">
 </head>
@@ -194,18 +199,18 @@ footer .auteur{margin-left:auto;font-weight:700}
     <table>
       <tr><th>À l'écran</th><th>Pour une lettre</th></tr>
       <tr><td><b>À</b></td><td>l'adresse sur l'enveloppe</td></tr>
-      <tr><td><b>Ajouter un objet</b></td><td>ce que j'écris au dos : de quoi ça parle</td></tr>
+      <tr><td><b>Ajouter un objet</b></td><td>un titre court qui annonce le sujet</td></tr>
       <tr><td><b>Le texte</b></td><td>la lettre : Bonjour…, mon texte, au revoir</td></tr>
       <tr><td><b>La signature</b></td><td>mon nom en bas de la lettre</td></tr>
       <tr><td><b>Cc</b></td><td>une photocopie pour quelqu'un d'autre</td></tr>
-      <tr><td><b>Cci</b></td><td>une photocopie envoyée en cachette</td></tr>
+      <tr><td><b>Cci</b></td><td>une copie dont les adresses sont masquées aux autres destinataires</td></tr>
       <tr><td><b>Boîte de réception</b></td><td>📬 ma boîte aux lettres</td></tr>
       <tr><td><b>Brouillons</b></td><td>la lettre pas encore postée</td></tr>
       <tr><td><b>Éléments envoyés</b></td><td>le double que je garde</td></tr>
       <tr><td><b>Éléments supprimés</b></td><td>🗑️ la poubelle</td></tr>
     </table>
   </div>
-  <p style="margin-top:12px"><b>⭐ Un message envoyé ne se reprend pas.</b> Je relis tout AVANT de cliquer sur Envoyer.</p>
+  <p style="margin-top:12px"><b>⭐ Je vérifie avant l'envoi.</b> Je relis tout AVANT de cliquer sur Envoyer.</p>
   <form method="dialog" class="actions" style="margin-top:14px"><button class="btn plein">Fermer</button></form>
 </dialog>
 
@@ -214,3 +219,4 @@ footer .auteur{margin-left:auto;font-weight:700}
 <script src="https://root75.github.io/campin-public/messagerie/pas-a-pas/fiche.js"></script>
 </body>
 </html>
+
