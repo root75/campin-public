@@ -54,7 +54,7 @@ vote à effectifs agrégés, essais sur les postes, mises en commun et défi ind
 affiche aussi une citation finale de Descartes, sourcée dans la préparation ; elle apparaît à tous
 sans condition de réussite, et n’est pas annoncée avant la fin.
 
-Autonomie : aides contextualisées et indices, puis binôme qui explique ; chevalet pour un
+Autonomie : aides contextualisées et indices, puis binôme qui explique ; « J’attends de l’aide » pour un
 blocage persistant. Relecture réciproque avant le défi final sur trois critères, avec un point
 réussi et une correction possible à l’oral. Aucune fiche de relecture ou note de camarade ajoutée.
 Le mode séquence contient un atelier de relecture ; le défi final reste individuel et sous le

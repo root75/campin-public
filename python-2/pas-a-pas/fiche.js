@@ -314,7 +314,7 @@ function editeur(zone, Q, reussi, rate){
     let r;
     try { r = await executePython(ta.value); }
     catch(e){
-      ecran.textContent = "Le moteur Python ne se charge pas. Je réessaie dans un instant ; sinon, je pose mon chevalet.";
+      ecran.textContent = "Le moteur Python ne se charge pas. Je réessaie dans un instant ; sinon, je clique sur « J'attends de l'aide ».";
       lance.disabled = false;ta.readOnly=false;depart.disabled=false; return;
     }
     montre(ecran, r);
@@ -352,7 +352,7 @@ function ordre(zone, Q, reussi, rate){
     ok.disabled = true; ecran.hidden = false; ecran.textContent = "⏳ Python se prépare… (la première fois seulement, quelques secondes)";
     let r;
     try { r = await executePython(lignes.join("\n")); }
-    catch(e){ ecran.textContent = "Le moteur Python ne se charge pas. Je réessaie dans un instant ; sinon, je pose mon chevalet."; ok.disabled = false; execution=false; return; }
+    catch(e){ ecran.textContent = "Le moteur Python ne se charge pas. Je réessaie dans un instant ; sinon, je clique sur « J'attends de l'aide »."; ok.disabled = false; execution=false; return; }
     montre(ecran, r);
     const verdict = Q.test(r);
     if(verdict === true){ ol.querySelectorAll("button").forEach(b=>b.disabled=true); reussi(lignes.join(" / ")); }
