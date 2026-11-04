@@ -140,7 +140,7 @@ Camille</p></div></div><p><b>Utilise Répondre :</b> le destinataire et l’obje
   const encouragement=ENCOURAGEMENTS[e];
   feedback.className='retour juste';feedback.innerHTML='<b>✓ '+escapeHtml(encouragement[0])+'</b><p>'+escapeHtml(encouragement[1])+'</p>';
   animeReussite(feedback,e);
-  if(e===11){if(SUIVI)envoie({etape:12,type:'fini'}).catch(()=>{feedback.append(document.createTextNode(' La fin n’a pas pu être enregistrée : recharge avant de quitter.'));});feedback.focus();return;}
+  if(e===11){if(SUIVI)envoie({etape:12,type:'fini'}).catch(()=>{feedback.append(document.createTextNode(' La fin n’a pas pu être enregistrée : recharge avant de quitter.'));});avisFin();feedback.focus();return;}
   const suite=document.createElement('p');suite.textContent=e===6?'Tu peux maintenant lire la réponse fictive de Camille et lui répondre.':(e>=8?'Continue après avoir effectué la manipulation dans Outlook.':'Continue pour voir le mail se construire.');feedback.append(suite);
   const b=document.createElement('button');b.type='button';b.textContent=e===6?'Lire la réponse de Camille →':'Continuer →';b.addEventListener('click',()=>{if(JSON.stringify({...state,atteint:0})!==JSON.stringify({...JSON.parse(empreinte),atteint:0}))return;if((e===6?erreurs(state):champs.map(k=>({texte:verifie(k)})).filter(x=>x.texte)).length)return;state.etape++;state.preuve='';sauve();render();});feedback.append(b);b.focus();
  });
@@ -162,6 +162,10 @@ let identite='',classeScolaire='',preuves=null;const dejaValide=new Map(),dejaFa
 function sauve(){if(APERCU)return;try{sessionStorage.setItem(CLE+identite,JSON.stringify(state));}catch(_){}}
 function rpc(n,...args){return new Promise((resolve,reject)=>{google.script.run.withSuccessHandler(resolve).withFailureHandler(()=>reject(new Error('Le suivi ne répond pas. Ta saisie reste ici ; réessaie avant de continuer.')))[n](...args);});}
 function envoie(evt){return SUIVI?rpc('noter',COURS,evt):Promise.resolve();}
+let humeurServeur='',avisServeur=null;
+function zoneHA(id,debut){let z=document.getElementById(id);if(!z){z=document.createElement('div');z.id=id;z.hidden=true;const ind=document.getElementById('individuel');debut?ind.prepend(z):ind.append(z);}return z;}
+function humeurDuJour(){if(APERCU||typeof HumeurAvis==='undefined')return;HumeurAvis.humeur(zoneHA('humeur',true),{valeur:humeurServeur,suivi:!!SUIVI,envoie:v=>envoie({etape:0,type:'humeur',reponse:v}).then(()=>{humeurServeur=v;})});}
+function avisFin(){if(APERCU||typeof HumeurAvis==='undefined')return;HumeurAvis.avis(zoneHA('avis-fin',false),{valeur:avisServeur,suivi:!!SUIVI,envoie:a=>Promise.all(HumeurAvis.AVIS.map(([k])=>envoie({etape:12,type:'avis-'+k,reponse:a[k]}))).then(()=>{avisServeur=a;})});}
 function regle(r,rep){const n=String(rep||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[’']/g,"'").replace(/[«»"“”.]/g,'').replace(/\s+/g,' ').trim();return !!n&&(!r.egal||r.egal.some(x=>regleNorm(x)===n))&&(!r.exact||r.exact.includes(rep.trim().toLowerCase()))&&(!r.motif||new RegExp(r.motif).test(n))&&(!r.sauf||!new RegExp(r.sauf).test(n));}
 function regleNorm(s){return String(s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[’']/g,"'").replace(/[«»"“”.]/g,'').replace(/\s+/g,' ').trim();}
 function reponseCourte(e){return [state.locale+'@'+state.domaine,state.a,state.objet,state.salutation,state.message,state.fin+' | '+state.signature,state.objet,state.preuve,state.preuve,state.preuve,state.preuve,state.preuve][e];}
@@ -178,12 +182,12 @@ async function demarre(){
  const status=document.getElementById('suivi-status');
  try{
   const r=await fetch('https://root75.github.io/campin-public/messagerie/pas-a-pas/preuves.json?v=20261103');if(!r.ok)throw Error();preuves=await r.json();
-  if(SUIVI){const etat=await rpc('etat',COURS);identite=':'+etat.email;classeScolaire=String(etat.classe||'').trim();repriseServeur=Number(etat.reprise)||0;status.textContent='Suivi professeur connecté. Les preuves courtes et demandes d’aide sont enregistrées.';await envoie({etape:0,type:'ouvert'});}
+  if(SUIVI){const etat=await rpc('etat',COURS);identite=':'+etat.email;classeScolaire=String(etat.classe||'').trim();repriseServeur=Number(etat.reprise)||0;humeurServeur=etat.humeur||'';avisServeur=etat.avis||null;status.textContent='Suivi professeur connecté. Les preuves courtes et demandes d’aide sont enregistrées.';await envoie({etape:0,type:'ouvert'});}
   else status.innerHTML='Entraînement libre : aucun résultat ni appel à l’aide transmis au professeur. Pour la séance suivie, <a href="https://script.google.com/a/macros/arcampin.be/s/AKfycbyOPTaq-L1PuittB1rkkiL9OOtShFc2WpiD8H_pH_INaw9ePWenCzhlIPlHu4zBOgLk/exec">ouvre ta séance scolaire</a>.';
   try{const saved=JSON.parse(sessionStorage.getItem(CLE+identite)||'null');if(saved&&Number.isInteger(saved.etape)&&saved.etape>=0&&saved.etape<12&&(!SUIVI||Number(saved.reprise||0)===repriseServeur))Object.assign(state,saved);state.reprise=repriseServeur;}catch(_){}
   if(SUIVI&&classeScolaire)state.classe=classeScolaire;
   if(APERCU){Object.assign(state,INITIAL);state.atteint=12;state.etape=Math.min(11,Math.max(0,Number(location.hash.slice(6))-1));document.getElementById('collectif').hidden=true;document.getElementById('individuel').hidden=false;document.getElementById('revoir-collectif').hidden=false;status.textContent='Aperçu du professeur : navigation libre, aucun résultat enregistré.';}
-  init();
+  init();humeurDuJour();if(state.atteint>=12||avisServeur)avisFin();
  }catch(e){status.textContent='Impossible de charger les contrôles ou le suivi. Recharge la page ; aucun résultat n’est annoncé comme enregistré.';init();}
  document.getElementById('demarrer-individuel').onclick=()=>{document.getElementById('collectif').hidden=true;document.getElementById('individuel').hidden=false;document.getElementById('revoir-collectif').hidden=false;};
  document.getElementById('revoir-collectif').onclick=()=>{document.getElementById('collectif').hidden=false;document.getElementById('individuel').hidden=true;};

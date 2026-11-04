@@ -85,7 +85,7 @@ function dessine(d){
 
   if(globalThis.FormatifProf) {
     FormatifProf.presentation($("cours").value === 'rat-de-ville-formatif');
-    if($("cours").value === 'rat-de-ville-formatif') { FormatifProf.dessine(d); return; }
+    if($("cours").value === 'rat-de-ville-formatif') { FormatifProf.dessine(d); syntheses(d, d.declaratif ? d.eleves : [], 9); return; }
   }
   if(!$("guide-messagerie")){const lien=txt("a","btn vide","Repères professeur — Messagerie 01");lien.id="guide-messagerie";lien.href='https://script.google.com/a/macros/arcampin.be/s/AKfycbyOPTaq-L1PuittB1rkkiL9OOtShFc2WpiD8H_pH_INaw9ePWenCzhlIPlHu4zBOgLk/exec?vue=guide-prof';lien.target='_blank';lien.rel='noopener';$("guide-actions").append(lien);}
   if(!$("messagerie-recommencer")){const b=txt("button","btn vide","Recommencer Messagerie 01 pour tous");b.type='button';b.id='messagerie-recommencer';b.addEventListener('click',()=>{if(!confirm('Remettre tous les participants de Messagerie 01 au début ? L’historique est conservé.'))return;b.disabled=true;google.script.run.withSuccessHandler(r=>{b.disabled=false;$("maj").textContent=r.repris+' participants remis au début.';charge();}).withFailureHandler(err=>{b.disabled=false;erreur(err);}).noter('messagerie-1',{type:'prof-recommencer'});});$("gestion-actions").append(b);}
@@ -147,13 +147,25 @@ function dessine(d){
     tb.append(tr);
   });
 
+  syntheses(d, el, n);
+  const s = choisie(); $("titre-classe").textContent = s.classe ? s.classe + " · " : "";
+  $("maj").textContent = "Mis à jour à " + new Date(d.maintenant).toLocaleTimeString("fr-BE",{hour:"2-digit",minute:"2-digit",second:"2-digit"});
+}
+
+/* Les trois encadrés communs à tous les cours : où le groupe bute, son humeur, ses avis.
+   Cours déclaratif (formatif) : « où ça bute » compte les élèves qui ont sonné la cloche à chaque étape. */
+function syntheses(d, el, n){
+  $("blocs-titre").textContent = d.declaratif ? "Où le groupe bute — cloches par étape" : "Où le groupe bute — erreurs par bloc";
+  $("blocs-astuce").textContent = d.declaratif
+    ? "Nombre d’élèves qui ont sonné la cloche 🔔 à chaque étape sur la période choisie. Clic sur « Étape N » : la fiche s’ouvre à cette étape, en aperçu."
+    : "Clic sur « Bloc N » (ici ou dans la colonne Bloc) : la fiche s’ouvre à ce bloc, en aperçu, pour la projeter. Rien n’y est enregistré. Chaque élève a sa variante de la question : survoler la jauge donne les erreurs par variante.";
   const zb = $("blocs"); zb.replaceChildren();
   const max = Math.max(1, ...Object.values(d.parBloc));
   for(let i=1;i<=n;i++){
     const v = d.parBloc[i] || 0;
     const r = txt("div","bl"); const j = txt("div","jauge"); j.style.width = (v/max*100)+"%"; if(!v) j.style.opacity=".15";
     const w = txt("div"); w.append(j);
-    r.append(lienBloc(i, "Bloc "+i), w, txt("span","num",v)); zb.append(r);
+    r.append(lienBloc(i, (d.declaratif ? "Étape " : "Bloc ")+i), w, txt("span","num",v)); zb.append(r);
     /* Cours à variantes : le détail au survol. Une variante qui fait bien plus d'erreurs que les autres est mal écrite. */
     const dv = d.variantes && d.variantes[i];
     if(dv){ r.classList.add("detail"); w.title = r.lastChild.title = dv.map(x=>"Variante "+x.v+" : "+x.erreurs+" erreur"+(x.erreurs>1?"s":"")+", "+x.eleves+" élève"+(x.eleves>1?"s":"")).join(" · "); }
@@ -178,10 +190,7 @@ function dessine(d){
     za.append(col);
   });
 
-  const s = choisie(); $("titre-classe").textContent = s.classe ? s.classe + " · " : "";
-  $("maj").textContent = "Mis à jour à " + new Date(d.maintenant).toLocaleTimeString("fr-BE",{hour:"2-digit",minute:"2-digit",second:"2-digit"});
 }
-
 let numeroChargement=0,contexteAffiche="";
 function charge(){
   if(!SUIVI){ dessine(demo()); return; }

@@ -9,6 +9,8 @@ let etat = {position:1,cases:{},moi:{},aide:null,etapes:[]}, pret=false, occupe=
 /* La grille est l'étape finale, sans case : elle se range hors de la page tant qu'on ne l'affiche pas. */
 const GRILLE=$('grille');GRILLE.remove();GRILLE.hidden=false;
 function appel(evt){return new Promise((ok,ko)=>google.script.run.withSuccessHandler(ok).withFailureHandler(ko).suiviFormatif(COURS,evt));}
+async function envoieHumeurAvis(evt){const r=SUIVI?await appel(evt):demo(evt);if(!occupe)etat=r;return r;}
+function humeurDuJour(){if(typeof HumeurAvis==='undefined')return;HumeurAvis.humeur($('humeur'),{valeur:etat.humeur,suivi:!!SUIVI,envoie:v=>envoieHumeurAvis({type:'humeur',reponse:v})});}
 function commandes(){document.querySelectorAll('#etapes button,#travail input,#travail button,#travail select,#aide-btn').forEach(n=>n.disabled=!pret||occupe);}
 function calcule(){etat.etapes=ETAPES_RAT.map((e,i)=>e.actions.every((_,j)=>etat.cases[(i+1)+'.'+(j+1)]));}
 function demo(evt){
@@ -17,6 +19,8 @@ function demo(evt){
   if(evt.type==='moi')etat.moi[evt.critere]=evt.lettre;
   if(evt.type==='aide')etat.aide={bloc:evt.etape};
   if(evt.type==='aide-fin')etat.aide=null;
+  if(evt.type==='humeur')etat.humeur=evt.reponse;
+  if(evt.type==='avis')etat.avis=evt.avis;
   calcule();return etat;
 }
 async function sauve(evt){
@@ -89,6 +93,7 @@ function cloche(){
 function dessineGrille(z){
   z.replaceChildren(txt('p','numero','Étape finale · après mes 9 étapes'),txt('h2',null,'Ma grille d’évaluation'),txt('p','agir','Pour chaque critère, je lis les colonnes A à D. Je choisis ma lettre dans « Moi ».'),GRILLE);
   GRILLE.querySelectorAll('[data-critere]').forEach(n=>{n.value=etat.moi[n.dataset.critere]||'';});
+  if(typeof HumeurAvis!=='undefined'){const av=txt('div');HumeurAvis.avis(av,{valeur:etat.avis,suivi:!!SUIVI,classeBouton:'btn',envoie:a=>envoieHumeurAvis({type:'avis',avis:a})});z.append(av);}
   const nav=txt('div','actions'),n=txt('button','btn vide','← Étape 9');n.type='button';n.addEventListener('click',()=>sauve({type:'position',etape:9}));nav.append(n);z.append(nav);
   cloche();coince();progression();commandes();
 }
@@ -125,7 +130,7 @@ async function demarre(){
   try{
     if(SUIVI){etat=await appel(null);etat=await appel({type:'position',etape:etat.position});$('qui').textContent='Connecté : '+etat.email+' · '+etat.classe;$('sauvegarde').textContent='Progression retrouvée. Mes cases et ma place sont conservées entre les périodes.';}
     else{const m=/#bloc=(\d+)/.exec(location.hash);if(m)etat.position=Math.max(1,Math.min(9,Number(m[1])));$('qui').textContent='Aperçu libre — ouvrir Mes cours avec le compte scolaire pour retrouver sa progression.';$('sauvegarde').textContent='Aperçu : rien n’est enregistré.';}
-    pret=true;dessine();
+    pret=true;humeurDuJour();dessine();
   }catch(e){$('qui').textContent='Suivi indisponible.';$('sauvegarde').textContent='Progression non chargée : '+e.message;const b=txt('button','btn vide','Réessayer le chargement');b.addEventListener('click',()=>{b.remove();demarre();});$('travail').replaceChildren(b);commandes();b.disabled=false;}
 }
 demarre();
