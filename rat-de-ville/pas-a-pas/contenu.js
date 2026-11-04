@@ -132,7 +132,7 @@ const ETAPES_RAT = [
       "Je vérifie l’auteur : à droite, en italique, souligné.",
       "Je vérifie que chaque strophe a sa police et sa taille.",
       "Je vérifie mon bloc-notes : une vraie liste à puces, une vraie liste numérotée d’au moins six gestes, ma phrase.",
-      "Je remplis la colonne « Moi » de la grille : A, B, C ou D pour chaque critère.",
+      "J’ouvre ma grille (bouton 📋, après l’étape 9) et je remplis la colonne « Moi » : A, B, C ou D pour chaque critère.",
       "Je montre mon document à mon voisin. Il le compare aux cases 2 à 10 et me montre un écart, sans toucher la souris. Je corrige.",
       "Classroom ▸ le devoir ▸ Votre travail ▸ Ajouter ou créer ▸ Google Drive ▸ mon document ▸ Insérer ▸ Remettre."
     ],
