@@ -1,7 +1,7 @@
 # Suivi du formatif « Le rat de ville »
 
 Entrée du catalogue : `rat-de-ville-formatif`, 9 étapes sur deux périodes.
-Les 35 petites cases déclarent les actions terminées ; elles ne corrigent pas la copie.
+Les 46 petites cases (une action ou une vérification par case) déclarent les actions terminées ; elles ne corrigent pas la copie.
 Navigation libre, sept repères pendant la copie, grille complète et colonne « Moi ».
 À l’étape 8, chaque partie du bloc-notes dispose d’une explication à déplier :
 un élément du festin en exemple, un geste détaillé en exemple et un début de phrase
@@ -35,7 +35,7 @@ Chaque étape propose un repère d’observation, le travail dans Docs et une v�
 concrète, avec encouragement lié à la méthode. Modèle visuel des trois zones à
 l’étape 6, tableau police/taille à l’étape 7, raccourci d’aide visible et animation
 discrète respectant la préférence de mouvement réduit. Aucun nouveau champ élève.
-Les 35 identifiants de cases, les neuf étapes, les durées, la grille et les exigences
+Les neuf étapes, la grille et les exigences
 restent identiques. Aucun contrôle ne prétend lire ou corriger le document Docs.
 
 Vérification : essai-rat.js réussi dans Chromium avec services Google simulés ;
@@ -45,3 +45,8 @@ l’ouverture, manuelle et toutes les 30 secondes si le panneau est ouvert et
 l’onglet visible. La place personnelle ne change pas. Cette fonction nécessite
 la nouvelle version de Code.gs ; un serveur antérieur affiche une indisponibilité
 locale au panneau, sans bloquer la fiche.
+
+## Une case par action (4 novembre 2026)
+
+Étape 6 : 7 cases ; étape 9 : 13 cases (10 min), voisin après la colonne « Moi ». 46 cases au lieu de 35 :
+`CASES_RAT` de `Code.gs` doit suivre `contenu.js`.

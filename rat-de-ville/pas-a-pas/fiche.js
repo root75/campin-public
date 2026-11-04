@@ -1,6 +1,7 @@
 /* Suivi déclaratif : seule une réponse positive du serveur confirme une sauvegarde.
    Hors Apps Script, aperçu libre sans stockage de compte sur le poste partagé. */
 const COURS = 'rat-de-ville-formatif';
+const ICONES = 'https://root75.github.io/campin-public/rat-de-ville/pas-a-pas/icones/';
 const SUIVI = typeof google !== 'undefined' && google.script && google.script.run;
 const $ = id => document.getElementById(id);
 const txt = (tag, cls, t) => {const n=document.createElement(tag);if(cls)n.className=cls;if(t!=null)n.textContent=t;return n;};
@@ -42,16 +43,16 @@ function dessine(){
   }
   if(i===6){const tableau=txt('table','repere-polices');const legende=txt('caption',null,'Police et taille attendues');tableau.append(legende);
     [['Strophes','Police','Taille'],['1 et 2','Garamond','14'],['3 et 4','Arial','12'],['5','Calibri','10'],['6 et 7','Arial Black','8']].forEach((ligne,k)=>{const tr=txt('tr');ligne.forEach(v=>tr.append(txt(k?'td':'th',null,v)));tableau.append(tr);});observation.append(tableau);}
-  z.append(observation,txt('p','repere agir','À toi dans Docs — réalise les actions ci-dessous, puis coche celles que tu as terminées.'));
-  if(i===1){z.append(txt('p','note','Les sept repères servent à retrouver ma place pendant la copie ; je sépare les strophes à l’étape 3.'));}
+  z.append(observation,txt('p','repere agir','À moi dans Docs — je réalise les actions ci-dessous, puis je coche celles que j’ai terminées.'));
+  if(b.consigne)z.append(txt('p','note',b.consigne));
   const ul=txt('ul','cases');b.actions.forEach((t,j)=>{
     const cle=etat.position+'.'+(j+1),li=txt('li'),lab=txt('label'),cb=txt('input');cb.type='checkbox';cb.dataset.cle=cle;cb.checked=!!etat.cases[cle];
-    cb.addEventListener('change',()=>sauve({type:'case',etape:i+1,cle,fait:cb.checked}));lab.append(cb,txt('span',null,t));li.append(lab);
+    cb.addEventListener('change',()=>sauve({type:'case',etape:i+1,cle,fait:cb.checked}));const sp=txt('span');((b.icones&&b.icones[j])||[]).forEach(ico=>{const im=txt('img','ico');im.src=ICONES+ico+'.png';im.alt='';sp.append(im);});sp.append(t);lab.append(cb,sp);li.append(lab);
     const aide=b.aides && b.aides[j];
     if(aide){const d=txt('details');d.append(txt('summary',null,aide.titre),txt('p',null,aide.explication),txt('blockquote',null,aide.exemple),txt('p','note',aide.rappel));li.append(d);}
     ul.append(li);
   });z.append(ul);
-  const controle=txt('aside','repere verification');controle.append(txt('h3',null,'À vérifier dans ton document'),txt('p',null,repere.verifie),txt('p','note',repere.encouragement));z.append(controle);
+  const controle=txt('aside','repere verification');controle.append(txt('h3',null,'À vérifier dans mon document'),txt('p',null,repere.verifie),txt('p','note',repere.encouragement));z.append(controle);
   if(i===1||i===8){const lien=txt('a','btn vide',i===1?'Voir le texte à recopier':'Voir la grille et remplir « Moi »');lien.href=i===1?'#texte':'#grille';lien.addEventListener('click',()=>{$(i===1?'texte':'grille').open=true;});z.append(lien);}
   const nav=txt('div','actions');for(const [delta,label] of [[-1,'← Étape précédente'],[1,'Étape suivante →']]){
     if(i+delta<0||i+delta>8)continue;const n=txt('button','btn vide',label);n.type='button';n.addEventListener('click',()=>sauve({type:'position',etape:i+delta+1}));nav.append(n);
@@ -64,7 +65,7 @@ function dessine(){
 $('aide-btn').addEventListener('click',()=>sauve({type:etat.aide?'aide-fin':'aide',etape:etat.aide?etat.aide.bloc:etat.position}));
 $('compact').addEventListener('click',()=>{const actif=document.body.classList.toggle('compact');$('compact').setAttribute('aria-pressed',String(actif));});
 const boutons=[['centrer','Centrer','Ctrl + Maj + E','Bouton « Aligner » ▾ de la barre d’outils'],['droite','Aligner à droite','Ctrl + Maj + R','Même bouton « Aligner » ▾'],['gras','Gras','Ctrl + B','Barre d’outils, après la taille'],['italique','Italique','Ctrl + I','Juste à côté du gras'],['souligne','Souligner','Ctrl + U','Juste à côté de l’italique'],['','MAJUSCULES','—','Format ▸ Texte ▸ Minuscules/majuscules ▸ MAJUSCULES'],['police','Changer la police','—','Le menu qui affiche le nom de la police'],['taille','Changer la taille','—','La case du nombre, avec – et +'],['puces','Liste à puces','Ctrl + Maj + 8','Barre d’outils, à droite'],['numeros','Liste numérotée','Ctrl + Maj + 7','Juste à côté des puces'],['orthographe','Vérifier l’orthographe','Ctrl + Alt + X','Barre d’outils, à gauche, à côté de l’imprimante']];
-boutons.forEach(([ico,nom,racc,ou])=>{const tr=txt('tr'),td=txt('td');if(ico){const img=txt('img');img.src='https://root75.github.io/campin-public/rat-de-ville/pas-a-pas/icones/'+ico+'.png';img.alt='';td.append(img);}td.append(nom);tr.append(td,txt('td',null,racc),txt('td',null,ou));$('mes-boutons').append(tr);});
+boutons.forEach(([ico,nom,racc,ou])=>{const tr=txt('tr'),td=txt('td');if(ico){const img=txt('img');img.src=ICONES+ico+'.png';img.alt='';td.append(img);}td.append(nom);tr.append(td,txt('td',null,racc),txt('td',null,ou));$('mes-boutons').append(tr);});
 GRILLE_RAT.forEach((c,i)=>{
   const tr=txt('tr'),th=txt('th'),td=txt('td'),sel=txt('select');th.scope='row';th.append(txt('b',null,c.n+(c.inc?' ★':'')),txt('p',null,c.regarde));sel.dataset.critere=i+1;sel.setAttribute('aria-label','Moi — critère '+(i+1));['','A','B','C','D'].forEach(v=>{const o=txt('option',null,v||'À choisir');o.value=v;sel.append(o);});sel.addEventListener('change',()=>sauve({type:'moi',etape:etat.position,critere:i+1,lettre:sel.value}));td.append(sel);tr.append(th,td,...['A','B','C','D'].map(k=>txt('td',null,c[k])));$('criteres').append(tr);
 });
@@ -81,16 +82,16 @@ demarre();
 let lectureCollectif=false;
 async function actualiseCollectif(){
   if(lectureCollectif||!$('collectif').open||document.hidden)return;
-  if(!SUIVI){$('collectif-statut').textContent='Le repère de ta classe est disponible avec ton compte scolaire.';return;}
+  if(!SUIVI){$('collectif-statut').textContent='Le repère de ma classe est disponible avec mon compte scolaire.';return;}
   lectureCollectif=true;
   try{
     const r=await new Promise((ok,ko)=>google.script.run.withSuccessHandler(ok).withFailureHandler(ko).repereEleveFormatif(COURS));
     const support=$('collectif-support');support.replaceChildren();
-    if(!r){$('collectif-statut').textContent='Aucun repère collectif enregistré pour ta classe.';return;}
+    if(!r){$('collectif-statut').textContent='Aucun repère collectif enregistré pour ma classe.';return;}
     const e=ETAPES_RAT[r.etape-1];if(!e)throw new Error('Repère invalide');
     support.append(txt('h3',null,r.etape+'. '+e.titre),txt('p',null,r.rappel),txt('p','repere observation',REPERES_RAT[r.etape-1].observe));
-    $('collectif-statut').textContent='Repère du professeur · période '+e.periode+' · ta place personnelle ne change pas.';
-  }catch(e){$('collectif-support').replaceChildren();$('collectif-statut').textContent='Repère indisponible. Réessaie avec Actualiser le repère. Tu peux poursuivre ton travail.';}
+    $('collectif-statut').textContent='Repère du professeur · période '+e.periode+' · ma place personnelle ne change pas.';
+  }catch(e){$('collectif-support').replaceChildren();$('collectif-statut').textContent='Repère indisponible. Je réessaie avec Actualiser le repère. Je peux poursuivre mon travail.';}
   finally{lectureCollectif=false;}
 }
 $('collectif').addEventListener('toggle',actualiseCollectif);
