@@ -170,6 +170,58 @@ footer .auteur{margin-left:auto;font-weight:700}
 .etapes{padding-left:1.3rem}.etapes li{margin:0 0 .65rem}.etapes label{display:block}.etapes input{margin-right:.5rem}.bilan{display:grid;gap:12px}.bilan textarea{width:100%}
 dialog{max-height:90vh;overflow-y:auto}#rapport{display:none;width:min(95vw,48rem);max-width:48rem}#rapport[open]{display:grid;gap:16px}#rapport{overflow-wrap:anywhere}#rapport>*{min-width:0}#rapport textarea{min-width:0}#rapport textarea{box-sizing:border-box;width:100%;font:inherit}#rapport details{padding:12px;border:1px solid var(--trait);border-radius:8px}#rapport summary{cursor:pointer}#rapport ul{padding-left:1.3rem}
 .incident{padding:12px;border:1px solid var(--trait);border-radius:8px;margin-bottom:12px}.incident summary{cursor:pointer;font-weight:700}.incident details{padding:8px}.grille{width:100%;border-collapse:collapse;font-size:1rem}.grille th,.grille td{border:1px solid var(--trait);padding:8px;text-align:left;vertical-align:top}.grille th:nth-child(2),.grille td:nth-child(2){white-space:nowrap}.grille caption{font-weight:700;text-align:left;margin-bottom:8px}#grille-criteree .defile{max-width:100%;overflow-x:auto}
+/* ===== Style « missions », repris du Rat de ville (4/11) ===== */
+:root{--vert:#2fa36b;--soleil:#ffcf3f;--ciel:#e8f4fb}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--ciel:#17303d}}
+:root[data-theme="dark"]{--ciel:#17303d}
+body{background:radial-gradient(circle at 10% 0,var(--fromage-pale),transparent 40%),var(--papier)}
+.entete{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:center;padding-top:8px}
+.mascotte{width:92px;height:92px;flex-shrink:0;transform-origin:50% 90%}
+.mascotte.saute{animation:saute .7s ease}
+@keyframes saute{0%,100%{transform:none}30%{transform:translateY(-14px) rotate(-6deg)}60%{transform:translateY(0) rotate(4deg)}}
+.bulle{position:relative;background:var(--carte);border:2px solid var(--fromage);border-radius:18px;padding:10px 14px;font-weight:700;margin-top:6px}
+.bulle::before{content:"";position:absolute;left:-11px;top:18px;border:10px solid transparent;border-right-color:var(--fromage);border-left:0}
+.progression{background:var(--carte);border-radius:16px;padding:12px 16px;display:grid;gap:10px;box-shadow:0 2px 0 var(--trait)}
+.progression .note{margin:0}
+.progres{gap:8px;flex-wrap:wrap}
+.progres span{height:auto;min-height:34px;flex:1 1 6rem;display:grid;place-items:center;border-radius:17px;font-weight:800;font-size:.95rem;color:var(--doux);background:var(--papier);border:3px solid var(--trait)}
+.progres span.ici{background:var(--fromage-pale);border-color:var(--fromage);color:var(--encre);background:var(--fromage-pale)}
+.progres span.fait{background:var(--vert);border-color:var(--vert);color:#fff}
+#bloc{border-radius:20px;border:none;box-shadow:0 3px 0 var(--trait)}
+#bloc h2{font-size:1.7rem;animation:apparition .25s ease-out}
+@keyframes apparition{from{opacity:.4;transform:translateY(4px)}to{opacity:1;transform:none}}
+.numero{color:var(--encre-bouton);font-weight:800}
+.but{font-size:1.15rem;font-weight:700}
+.repere{border-left:5px solid var(--encre-bouton);background:var(--papier);padding:10px 14px;border-radius:10px;margin:0}
+.repere h3{font-size:1rem;margin-bottom:2px}.repere p{margin:4px 0}
+.repere.verification{border-color:var(--vert)}
+ol.etapes{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+ol.etapes li{margin:0;background:var(--papier);border-radius:14px;padding:12px 14px;border:2px solid transparent;transition:background .3s,border-color .3s}
+ol.etapes li:has(:checked){background:var(--juste-pale);border-color:var(--vert)}
+ol.etapes label{display:flex;gap:12px;align-items:flex-start;cursor:pointer}
+ol.etapes input[type=checkbox]{appearance:none;width:30px;height:30px;flex-shrink:0;border:3px solid var(--encre-bouton);border-radius:9px;background:var(--carte);margin:0;display:grid;place-items:center;cursor:pointer}
+ol.etapes input[type=checkbox]:checked{background:var(--vert);border-color:var(--vert);animation:coche .35s ease}
+ol.etapes input[type=checkbox]:checked::after{content:"✓";color:#fff;font-weight:900;font-size:1.2rem}
+@keyframes coche{50%{transform:scale(1.3)}}
+#rapport ol.etapes li:not(:has(input)){background:none;padding:2px 0;list-style:decimal;margin-left:1.3rem}
+#rapport ol.etapes:not(:has(input)){list-style:decimal;padding-left:0}
+/* La cloche d'aide, toujours en haut à droite */
+#aide{position:fixed;top:10px;right:max(12px,env(safe-area-inset-right,0px));z-index:20;display:flex;flex-direction:column;align-items:flex-end;gap:6px;border:0;padding:0;background:none}
+#aide-btn{width:58px;height:58px;border-radius:50%;border:3px solid var(--fromage);background:var(--carte);font-size:1.7rem;line-height:1;cursor:pointer;box-shadow:0 3px 10px #0002;padding:0}
+#aide-btn .mot{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+#aide.active #aide-btn{background:var(--soleil);animation:sonne 1s ease 2}
+@keyframes sonne{0%,100%{transform:rotate(0)}20%{transform:rotate(18deg)}40%{transform:rotate(-16deg)}60%{transform:rotate(10deg)}80%{transform:rotate(-6deg)}}
+#aide-texte{background:var(--carte);border:2px solid var(--fromage);border-radius:12px;padding:6px 10px;font-size:.85rem;font-weight:700;max-width:15rem;margin:0}
+#aide:not(.active) #aide-texte{display:none}
+#aide:not(.active):hover #aide-texte,#aide:not(.active):focus-within #aide-texte{display:block}
+/* Bravo ! */
+#bravo{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(140%);background:var(--vert);color:#fff;font-weight:800;padding:12px 22px;border-radius:30px;box-shadow:0 6px 20px #0003;z-index:30;transition:transform .35s cubic-bezier(.3,1.4,.5,1);text-align:center;max-width:90vw}
+#bravo:not(.vu){visibility:hidden}
+#bravo.vu{transform:translateX(-50%) translateY(0)}
+#bravo.grand{font-size:1.25rem;background:linear-gradient(90deg,var(--fromage),#e8742a)}
+details.coince{border-radius:16px}
+@media (max-width:600px){#aide-btn{width:48px;height:48px;font-size:1.4rem}.mascotte{width:70px;height:70px}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 <link rel="stylesheet" href="https://root75.github.io/campin-public/assets/navigation.css">
 </head>
@@ -187,34 +239,32 @@ dialog{max-height:90vh;overflow-y:auto}#rapport{display:none;width:min(95vw,48re
 
 
 <div class="page">
-  <header>
+  <header class="entete"><svg class="mascotte" id="mascotte" viewBox="0 0 120 120" aria-hidden="true"><ellipse cx="60" cy="108" rx="34" ry="7" fill="#0001"/><rect x="14" y="16" width="92" height="66" rx="10" fill="#1d5a73"/><rect x="22" y="24" width="76" height="50" rx="5" fill="#e8f4fb"/><circle cx="47" cy="45" r="6" fill="#1f2a33"/><circle cx="73" cy="45" r="6" fill="#1f2a33"/><circle cx="49" cy="43" r="2" fill="#fff"/><circle cx="75" cy="43" r="2" fill="#fff"/><path d="M50 58q10 8 20 0" fill="none" stroke="#1f2a33" stroke-width="3" stroke-linecap="round"/><circle cx="38" cy="56" r="4" fill="#f2a7b5"/><circle cx="82" cy="56" r="4" fill="#f2a7b5"/><rect x="52" y="82" width="16" height="12" fill="#5b6873"/><rect x="34" y="94" width="52" height="8" rx="4" fill="#5b6873"/><circle cx="96" cy="88" r="13" fill="none" stroke="#e3a922" stroke-width="5"/><path d="M105 97l10 10" stroke="#e3a922" stroke-width="6" stroke-linecap="round"/></svg><div>
     <div class="surtitre">Informatique et laboratoire · 3F · Labo 07</div>
     <h1>Dans les coulisses du PC <em>une enquête</em></h1>
-    <p class="qui" id="qui"></p>
-    <div class="actions"><button class="btn vide" type="button" id="rapport-btn">📄 Mon rapport et ma remise</button><a class="btn vide" href="https://root75.github.io/campin-public/labo-07/je-retiens.html" target="_blank" rel="noopener">Je retiens</a></div>
-    <p class="note">Un seul rapport personnel dans Google Docs, à compléter au fil de ton travail puis à joindre dans Classroom. Trois missions et un défi final. Le site garde les hypothèses initiales ; le rapport contient les preuves courtes. Un seul incident est rédigé, les trois autres sont vérifiés à deux, chacun sur son poste.</p>
-  </header>
+    <p class="bulle" id="bulle">Salut ! On mène l’enquête, mission par mission.</p>
+  </div></header>
+  <p class="qui" id="qui"></p>
+  <section class="progression" aria-label="Mes missions">
+    <div class="progres" id="progres"></div>
+    <p class="note">Trois missions et un défi final. Un seul rapport Google Docs, complété au fil des missions puis joint dans Classroom.</p>
+    <details><summary>Comment ça marche ?</summary><p class="note">Le site garde tes hypothèses de départ ; ton rapport contient les preuves courtes. Un seul incident est rédigé, les trois autres sont vérifiés à deux, chacun sur son poste. Une case cochée = action faite ; elle ne corrige rien et ne donne pas de point.</p></details>
+    <div class="actions"><button class="btn vide" type="button" id="rapport-btn">📄 Mon rapport et ma remise</button><a class="btn vide" href="https://root75.github.io/campin-public/labo-07/je-retiens.html" target="_blank" rel="noopener">Je retiens</a><button class="btn vide" type="button" id="memo-btn">🔎 Ma méthode d’enquête</button></div>
+  </section>
 
   <section class="humeur" id="humeur" hidden aria-label="Humeur du jour"></section>
 
-  <div class="progres" id="progres" aria-hidden="true"></div>
 
   <main class="panneau" id="bloc" aria-live="polite"></main>
 
   <details class="coince" id="coince">
     <summary>Ça coince ?</summary>
     <ul id="coince-liste"></ul>
-    <p class="protocole">Toujours bloqué ? Je relis le bloc → j’ouvre les deux indices → je demande à mon voisin (après ma première réponse ; il explique sans toucher ma souris) → je pose mon chevalet sur l'écran.</p>
+    <p class="protocole">Toujours bloqué ? Relis l’étape → ouvre les deux indices → demande au voisin (après ta première réponse ; il explique sans toucher ta souris) → pose ton chevalet sur l’écran et sonne la cloche 🔔, en haut à droite.</p>
   </details>
 
-  <div class="aide" id="aide">
-    <p id="aide-texte">Je suis bloqué malgré « Ça coince ? » et mon voisin :</p>
-    <div class="actions"><button class="btn vide" type="button" id="aide-btn">J'attends de l'aide</button></div>
-  </div>
-
-  <div class="actions">
-    <button class="btn vide" type="button" id="memo-btn">🔎 Ma méthode d’enquête</button>
-  </div>
+  <section id="aide" aria-label="Demander de l’aide"><button id="aide-btn" type="button" aria-label="J'attends de l'aide" title="Tu as relu « Ça coince ? », demandé au voisin et posé ton chevalet ? Sonne.">🔔<span class="mot">J'attends de l'aide</span></button><p id="aide-texte">Tu as relu « Ça coince ? », demandé au voisin et posé ton chevalet ? Sonne.</p></section>
+  <div id="bravo" role="status" aria-live="polite"></div>
 
   <footer><span id="pied"></span><span class="auteur">M. Louviaux</span></footer>
   <p class="credit">S3M4.1 « Différencier système d’exploitation et machine » · S3M4.4 « Utiliser l’interface du système d’exploitation et les périphériques ». L’observation des ressources est un prolongement.</p>
@@ -222,13 +272,13 @@ dialog{max-height:90vh;overflow-y:auto}#rapport{display:none;width:min(95vw,48re
 
 <dialog id="memo">
   <h3>🔎 Ma méthode d’enquête</h3>
-  <div class="encart" style="margin-top:10px"><p>Je formule une hypothèse → je choisis un test sans risque → je manipule moi-même → je relève une preuve → je conclus.</p><p>Je réponds seul avant de comparer à deux. Mon voisin explique sans toucher ma souris.</p><p>Observation seulement : aucun arrêt de processus, aucune suppression, aucun changement de configuration ou de synchronisation.</p><p>Enregistre les hypothèses initiales sur le site avant de manipuler. Écris les observations et conclusions uniquement dans ton rapport Docs. La capture va dans ce même document. Le site ne lit pas le rapport et ne vérifie pas la remise Classroom.</p><p>Proposition de travail quotidien /10 : enquête /7 (hypothèse 1, test 2, preuve 1, conclusion 2, distinction 1) ; document et remise /3 (identification et nom 1, titres et tableau 1, capture légendée et remise vérifiée 1).</p></div>
+  <div class="encart" style="margin-top:10px"><p>Hypothèse → test sans risque → manipulation personnelle → preuve relevée → conclusion.</p><p>Réponds seul avant de comparer à deux. Ton voisin explique sans toucher ta souris.</p><p>Observation seulement : aucun arrêt de processus, aucune suppression, aucun changement de configuration ou de synchronisation.</p><p>Enregistre les hypothèses initiales sur le site avant de manipuler. Écris les observations et conclusions uniquement dans ton rapport Docs. La capture va dans ce même document. Le site ne lit pas le rapport et ne vérifie pas la remise Classroom.</p><p>Proposition de travail quotidien /10 : enquête /7 (hypothèse 1, test 2, preuve 1, conclusion 2, distinction 1) ; document et remise /3 (identification et nom 1, titres et tableau 1, capture légendée et remise vérifiée 1).</p></div>
   <form method="dialog" class="actions" style="margin-top:14px"><button class="btn plein">Fermer</button></form>
 </dialog>
 
 <dialog id="rapport" aria-labelledby="rapport-titre">
   <h2 id="rapport-titre">Mon rapport et ma remise</h2>
-  <p>Je crée mon propre document. La trame donne le plan ; je réalise la mise en page. Je garde ce même document pour les trois missions et la situation finale.</p>
+  <p>Un document personnel, le même pour les trois missions et le défi final. La trame donne le plan ; la mise en page est à faire.</p>
   <h3>1. Préparer mon document — avant les premières mesures</h3>
   <p class="note">La mission sur les fichiers utilise OneDrive dans l’Explorateur Windows. Ton rapport Google Docs se trouve en ligne, dans ton compte scolaire ; Classroom le propose via Ajouter ou créer ▸ Google Drive.</p>
   <ol class="etapes">
@@ -248,12 +298,12 @@ dialog{max-height:90vh;overflow-y:auto}#rapport{display:none;width:min(95vw,48re
     <p id="rapport-statut" class="note" role="status"></p>
     <p><a href="https://root75.github.io/campin-public/labo-07/pas-a-pas/trame-rapport.txt" target="_blank" rel="noopener">Trame en texte brut</a> si la copie ne fonctionne pas.</p>
   </details>
-  <h3>Un rapport court : ce que j’écris</h3>
+  <h3>Un rapport court : ce qu’il contient</h3>
   <ul>
     <li>Mission 1 : un tableau, une capture légendée et deux phrases de conclusion.</li>
     <li>Mission 2 : fichier, chemin, statut et une phrase de justification.</li>
-    <li>Mission 3 : un seul incident en quatre lignes. Je manipule et explique les trois autres au binôme, puis nous inversons les rôles. Le professeur intervient en cas de blocage persistant.</li>
-    <li>Défi final : une ligne de preuve et deux phrases maximum ; je montre ma manipulation au professeur.</li>
+    <li>Mission 3 : un seul incident en quatre lignes. Les trois autres : manipulés et expliqués au binôme, puis rôles inversés. Le professeur intervient en cas de blocage persistant.</li>
+    <li>Défi final : une ligne de preuve et deux phrases maximum ; manipulation montrée au professeur.</li>
   </ul>
   <h3>2. Trois exigences de présentation et de remise — /3</h3>
   <ul>
@@ -321,9 +371,9 @@ dialog{max-height:90vh;overflow-y:auto}#rapport{display:none;width:min(95vw,48re
 
 <!-- Mode séquence (vue prof) : la fiche affiche le moment que le professeur projette. -->
 <script defer src="https://root75.github.io/campin-public/pas-a-pas/sequence-eleve.js"></script>
-<script src="https://root75.github.io/campin-public/labo-07/pas-a-pas/fiche.js"></script>
+<script src="https://root75.github.io/campin-public/labo-07/pas-a-pas/fiche.js?v=missions-20261104"></script>
 <script src="https://root75.github.io/campin-public/labo-07/pas-a-pas/rapport.js"></script>
-<script src="https://root75.github.io/campin-public/pas-a-pas/blocs.js"></script>
+<script src="https://root75.github.io/campin-public/pas-a-pas/blocs.js?v=missions-20261104"></script>
 
 </body>
 </html>
