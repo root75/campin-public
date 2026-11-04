@@ -3,7 +3,7 @@
   const dialog=document.getElementById('rapport'),trame=document.getElementById('trame-rapport');
   const copier=document.getElementById('copier-trame'),statut=document.getElementById('rapport-statut');
   document.getElementById('rapport-btn').addEventListener('click',()=>dialog.showModal());
-  fetch('https://root75.github.io/campin-public/labo-07/pas-a-pas/trame-rapport.txt')
+  fetch('https://root75.github.io/campin-public/labo-07/pas-a-pas/trame-rapport.txt?v=gimp-20261104')
     .then(r=>{if(!r.ok)throw Error('chargement');return r.text();})
     .then(t=>{trame.value=t;copier.disabled=false;})
     .catch(()=>{statut.textContent='La trame ne se charge pas. Ouvre le lien « Trame en texte brut » ci-dessous pour la sélectionner et la copier.';});
