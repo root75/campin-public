@@ -8,7 +8,7 @@ Mes hypothèses initiales restent dans Mes cours : je ne les recopie pas.
 Deux applications identifiées : [à compléter]
 [Insérer un vrai tableau de 3 colonnes et 4 lignes.]
 En-têtes : Moment ; Processeur (%) ; Mémoire (%)
-Lignes : Avant ; Après 10 s ; Après 20 s
+Lignes : Avant ; Après 10 s ; Après 1 min
 [Insérer une seule capture ciblée après le dernier relevé.]
 Légende de la capture : [une phrase]
 Conclusion : [deux phrases : observation appuyée sur les relevés, puis autre cause possible ou limite]
