@@ -27,6 +27,8 @@ const ecrit = o => { if(SUIVI || APERCU) return; try { localStorage.setItem(CLE,
 let etat = Object.assign({ atteint:0, erreurs:0 }, lit());   // atteint = premier bloc non validé
 let ici = Math.min(etat.atteint, BLOCS.length);
 let enAide = false;
+/* Opt-in de la fiche : const PRESENTATION = "missions" (cloche, bulle, bravo). Les fiches Python n'en ont pas. */
+const MISSIONS = typeof PRESENTATION!=="undefined" && PRESENTATION==="missions";
 
 /* Le bloc tel que CET élève le voit : sa version, et les nombres de « Les vies ». */
 const apercuV = {};
@@ -49,15 +51,28 @@ function suite(){
   const avant=groupeCourant(), apres=groupeCourant(ici+1);
   return avant===apres ? "Continuer →" : apres===PARCOURS[PARCOURS.length-1] ? "Défi final →" : "Mission suivante →";
 }
+function bulle(){
+  const b = document.getElementById("bulle"), g = groupeCourant();
+  if(b) b.textContent = ici>=BLOCS.length ? (FIN.bulle || FIN.titre) : (g && g.bulle) || b.textContent;
+}
+let minuterieBravo;
+function bravo(t, grand){
+  const b = document.getElementById("bravo"); if(!b) return;
+  b.textContent = t; b.classList.toggle("grand", !!grand); b.classList.add("vu");
+  clearTimeout(minuterieBravo); minuterieBravo = setTimeout(()=>b.classList.remove("vu"), grand ? 3200 : 1800);
+  const m = document.getElementById("mascotte"); if(m){ m.classList.remove("saute"); void m.offsetWidth; m.classList.add("saute"); }
+}
 function barre(){
   const b = document.getElementById("progres"); b.replaceChildren();
   if(typeof PARCOURS!=="undefined"){
-    PARCOURS.forEach(g=>{const s=el("span");s.className=etat.atteint>=g.fin ? "fait" : (ici>=g.debut && ici<g.fin ? "ici" : "");s.title=g.titre;b.append(s);});
+    PARCOURS.forEach((g,k)=>{const s=el("span");s.className=etat.atteint>=g.fin ? "fait" : (ici>=g.debut && ici<g.fin ? "ici" : "");s.title=g.titre;
+      if(MISSIONS) s.textContent = (etat.atteint>=g.fin ? "✓ " : "") + (g.court || String(k+1));
+      b.append(s);});
   }else BLOCS.forEach((_,i)=>{ const s=el("span"); s.className = i<etat.atteint ? "fait" : (i===ici ? "ici" : ""); b.append(s); });
 }
 
 function affiche(){
-  barre();
+  barre(); if(MISSIONS) bulle();
   const z = document.getElementById("bloc"); z.replaceChildren();
   const liste = document.getElementById("coince-liste"); liste.replaceChildren();
   document.getElementById("coince").open = false;
@@ -79,11 +94,18 @@ function affiche(){
     z.append(sel);
   }
 
-  const dl = el("dl","lignes");
-  [["🎯 Je veux","veux",B.veux],["👉 Je fais","fais",B.fais],["👀 Je vois","vois",B.vois]].forEach(([t,c,h])=>{
-    const d = el("div","ligne "+c); d.append(txt("dt",null,t), el("dd",null,h)); dl.append(d);
-  });
-  z.append(dl);
+  if(MISSIONS){
+    /* Présentation « missions » (Labo 07) : le but en une phrase, les cases, puis ce qu'on vérifie.
+       Pas d'étiquettes répétées à chaque bloc. */
+    z.append(el("p","but",B.veux), el("div","faire",B.fais));
+    const v = el("aside","repere verification"); v.append(txt("h3",null,"✅ À vérifier"), el("p",null,B.vois)); z.append(v);
+  } else {
+    const dl = el("dl","lignes");
+    [["🎯 Je veux","veux",B.veux],["👉 Je fais","fais",B.fais],["👀 Je vois","vois",B.vois]].forEach(([t,c,h])=>{
+      const d = el("div","ligne "+c); d.append(txt("dt",null,t), el("dd",null,h)); dl.append(d);
+    });
+    z.append(dl);
+  }
   if(B.extra) z.append(el("div",null,B.extra));
   if(B.stop) z.append(txt("p","stop","🛑 STOP — je ne continue pas tant que je ne vois pas ça."));
 
@@ -147,7 +169,12 @@ function preuve(pr, B, apres){
       apres();return; // L’exercice prépare la mission ; sa réussite ne valide pas le rapport.
     }
     if(!["enquete","rapport"].includes(Q.type)) envoie({ etape:ici+1, type:"juste", essais:essais, reponse:v(reponse) });
+    const g0 = groupeCourant(), avant = etat.atteint;
     etat.atteint = Math.max(etat.atteint, ici+1); ecrit(etat); barre();
+    if(MISSIONS && etat.atteint>avant){
+      if(g0 && etat.atteint===g0.fin) bravo("⭐ "+g0.titre+" : terminé !", true);
+      else bravo(["Bien joué !","C’est enregistré, continue !","Une étape de plus !"][ici%3], false);
+    }
     if(enAide) basculeAide();
     const s = txt("button","btn plein",typeof PARCOURS!=="undefined" ? suite() : (ici+1<BLOCS.length ? "Bloc suivant →" : "J'ai fini ✓")); s.type="button";
     s.addEventListener("click",()=>{ ici++; affiche(); });
@@ -370,10 +397,17 @@ function basculeAide(){
   const a = document.getElementById("aide"), b = document.getElementById("aide-btn");
   a.classList.toggle("active", enAide);
   document.getElementById("aide-texte").textContent = enAide
-    ? "✋ Ton professeur sait que tu attends "+(groupeCourant() ? "dans « "+groupeCourant().titre+" »" : "au bloc "+(ici+1))+". Je continue ailleurs, et en attendant je relis « Ça coince ? »."
-    : "Je suis bloqué malgré « Ça coince ? » et mon voisin :";
-  b.textContent = enAide ? "Je me suis débloqué" : "J'attends de l'aide";
+    ? (MISSIONS ? "🔔 Le professeur sait que tu attends" : "✋ Ton professeur sait que tu attends")+" "+(groupeCourant() ? "dans « "+groupeCourant().titre+" »" : "au bloc "+(ici+1))+". "+(MISSIONS ? "Continue ce qui reste possible et relis « Ça coince ? »." : "Je continue ailleurs, et en attendant je relis « Ça coince ? ».")
+    : (MISSIONS ? AIDE_REPOS : "Je suis bloqué malgré « Ça coince ? » et mon voisin :");
+  libelleAide(enAide ? "Je me suis débloqué" : "J'attends de l'aide");
   envoie({ etape:Math.min(ici,BLOCS.length-1)+1, type: enAide ? "aide" : "aide-fin" });
+}
+/* En mode missions, le bouton est une cloche : l'icône reste, le mot passe dans l'étiquette accessible. */
+const AIDE_REPOS = MISSIONS ? document.getElementById("aide-texte").textContent : "";
+function libelleAide(mot){
+  const b = document.getElementById("aide-btn");
+  if(!MISSIONS){ b.textContent = mot; return; }
+  b.replaceChildren("🔔", txt("span","mot",mot)); b.setAttribute("aria-label",mot); b.title = enAide ? mot : AIDE_REPOS;
 }
 document.getElementById("aide-btn").addEventListener("click", basculeAide);
 document.getElementById("memo-btn").addEventListener("click",()=>document.getElementById("memo").showModal());
@@ -416,8 +450,8 @@ if(SUIVI && !APERCU){
       if(!r || r.active!==false || !enAide)return;
       enAide=false;
       document.getElementById("aide").classList.remove("active");
-      document.getElementById("aide-btn").textContent="J’attends de l’aide";
-      document.getElementById("aide-texte").textContent="Demande traitée. Tu peux demander de l’aide à nouveau.";
+      libelleAide("J’attends de l’aide");
+      document.getElementById("aide-texte").textContent="Demande traitée. Tu peux sonner à nouveau si besoin.";
     }).withFailureHandler(()=>{}).etatAide(COURS);
   },15000);
 }
