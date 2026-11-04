@@ -21,17 +21,21 @@ async function sauve(evt){
   if(!pret||occupe)return;
   occupe=true;commandes();$('sauvegarde').textContent=SUIVI?'Enregistrement…':'Aperçu : essai sans sauvegarde scolaire.';
   try{
+    const avant=(etat.etapes||[]).slice();
     etat=SUIVI?await appel(evt):demo(evt);
     $('sauvegarde').textContent=SUIVI?'Enregistré avec mon compte scolaire.':'Aperçu : rien n’est enregistré.';
+    if(evt.type==='case'&&evt.fait){const j=evt.etape-1;if(etat.etapes[j]&&!avant[j])fete(j);else bravo(BRAVOS[Math.floor(Math.random()*BRAVOS.length)],false);}
   }catch(e){$('sauvegarde').textContent='Non enregistré. Réessaie la case ou le déplacement. '+(e.message||'Connexion indisponible.');}
   finally{occupe=false;dessine();}
 }
 function dessine(){
   const i=etat.position-1,b=ETAPES_RAT[i];
   $('etapes').replaceChildren(...ETAPES_RAT.map((e,j)=>{
-    const n=txt('button','btn '+(i===j?'plein':'vide'),(j+1)+(etat.etapes[j]?' ✓':''));n.type='button';n.title=(j+1)+'. '+e.titre;n.setAttribute('aria-label',n.title+(etat.etapes[j]?' — déclaré terminé':''));if(j===i)n.setAttribute('aria-current','step');n.addEventListener('click',()=>sauve({type:'position',etape:j+1}));return n;
+    const faites=e.actions.filter((_,k)=>etat.cases[(j+1)+'.'+(k+1)]).length;
+    const n=txt('button',etat.etapes[j]?'fini':'',etat.etapes[j]?'✓':String(j+1));n.style.setProperty('--p',Math.round(100*faites/e.actions.length));n.type='button';n.title=(j+1)+'. '+e.titre;n.setAttribute('aria-label',n.title+(etat.etapes[j]?' — déclaré terminé':''));if(j===i)n.setAttribute('aria-current','step');n.addEventListener('click',()=>sauve({type:'position',etape:j+1}));return n;
   }));
   const z=$('travail');z.replaceChildren(txt('p','numero','Période '+b.periode+' — '+(b.periode===1?'le texte':'la mise en forme')+' · '+b.min+' min'),txt('h2',null,etat.position+'. '+b.titre));
+  const dm=demoPour(i);if(dm){const w=txt('section','demo-bloc');w.append(txt('p','demo-titre','👀 Regarde comment faire'),dm);z.append(w);}
   const repere=REPERES_RAT[i];
   const observation=txt('aside','repere observation');
   observation.append(txt('h3',null,'À observer'),txt('p',null,repere.observe));
@@ -43,7 +47,7 @@ function dessine(){
   }
   if(i===6){const tableau=txt('table','repere-polices');const legende=txt('caption',null,'Police et taille attendues');tableau.append(legende);
     [['Strophes','Police','Taille'],['1 et 2','Garamond','14'],['3 et 4','Arial','12'],['5','Calibri','10'],['6 et 7','Arial Black','8']].forEach((ligne,k)=>{const tr=txt('tr');ligne.forEach(v=>tr.append(txt(k?'td':'th',null,v)));tableau.append(tr);});observation.append(tableau);}
-  z.append(observation,txt('p','repere agir','À moi dans Docs — je réalise les actions ci-dessous, puis je coche celles que j’ai terminées.'));
+  z.append(observation,txt('p','agir','✋ À moi dans Docs ! Je fais, puis je coche.'));
   if(b.consigne)z.append(txt('p','note',b.consigne));
   const ul=txt('ul','cases');b.actions.forEach((t,j)=>{
     const cle=etat.position+'.'+(j+1),li=txt('li'),lab=txt('label'),cb=txt('input');cb.type='checkbox';cb.dataset.cle=cle;cb.checked=!!etat.cases[cle];
@@ -58,10 +62,34 @@ function dessine(){
     if(i+delta<0||i+delta>8)continue;const n=txt('button','btn vide',label);n.type='button';n.addEventListener('click',()=>sauve({type:'position',etape:i+delta+1}));nav.append(n);
   }z.append(nav,txt('p','note','Je peux continuer même si une case reste vide. Je coche quand j’ai terminé ; le professeur examine mon document.'));
   $('aide').classList.toggle('active',!!etat.aide);
-  $('aide-texte').textContent=etat.aide?'Blocage signalé à l’étape '+etat.aide.bloc+'. Je peux continuer ailleurs.':'Toujours bloqué après la relecture et le voisin ?';
-  $('aide-btn').textContent=etat.aide?'Je me suis débloqué':'Je bloque à l’étape '+etat.position;
+  $('aide-texte').textContent=etat.aide?'J’attends de l’aide (étape '+etat.aide.bloc+'). Je continue ailleurs. Débloqué ? Je re-clique.':'Relu ? Demandé au voisin ? Feuille posée ? Alors je sonne.';
+  const mot=etat.aide?'Je me suis débloqué':'Je bloque à l’étape '+etat.position;
+  $('aide-btn').replaceChildren('🔔',txt('span','mot',mot));$('aide-btn').setAttribute('aria-label',mot);
+  progression();
   document.querySelectorAll('[data-critere]').forEach(n=>{n.value=etat.moi[n.dataset.critere]||'';});commandes();
 }
+/* Encouragements : chaque mission cochée, chaque étape terminée. */
+const BRAVOS=['Bravo !','Super, une mission de plus !','Bien joué !','Continue comme ça !','Yes ! 🧀','Ça avance !','Top !'];
+const BULLES=['Salut ! On va mettre une fable en forme, mission par mission.','Bon début ! Regarde bien les démos.','Tu es lancé(e) !','Déjà la moitié ! Le rat est fier de toi.','Presque fini, courage !','Tout est coché : bravo ! Il reste à remettre dans Classroom.'];
+let minuterieBravo=null;
+function bravo(t,grand){const b=$('bravo');b.textContent=t;b.classList.toggle('grand',!!grand);b.classList.add('vu');clearTimeout(minuterieBravo);minuterieBravo=setTimeout(()=>b.classList.remove('vu'),grand?3200:1600);
+  const m=$('mascotte');if(m){m.classList.remove('saute');void m.offsetWidth;m.classList.add('saute');}}
+function fete(j){bravo('⭐ Étape '+(j+1)+' réussie : « '+ETAPES_RAT[j].titre+' » !',true);
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  const couleurs=['#ffcf3f','#2fa36b','#e3a922','#7cc3de','#f2a7b5','#e8742a'];
+  for(let k=0;k<40;k++){const c=document.createElement('span');c.className='confetti';c.style.left=Math.random()*100+'vw';c.style.background=couleurs[k%couleurs.length];c.style.animationDelay=(Math.random()*.5)+'s';c.style.animationDuration=(1.2+Math.random())+'s';document.body.append(c);setTimeout(()=>c.remove(),2800);}}
+function progression(){
+  const total=ETAPES_RAT.reduce((n,e)=>n+e.actions.length,0);
+  const faites=ETAPES_RAT.reduce((n,e,j)=>n+e.actions.filter((_,k)=>etat.cases[(j+1)+'.'+(k+1)]).length,0);
+  const etapes=(etat.etapes||[]).filter(Boolean).length;
+  $('jauge').style.width=Math.round(100*faites/total)+'%';
+  $('progres-texte').textContent='🧀 '+faites+' / '+total+' missions';
+  $('progres-etapes').textContent=etapes+' / 9 étapes';
+  const r=faites/total;$('bulle').textContent=BULLES[r===1?5:r>=.8?4:r>=.5?3:r>=.2?2:r>0?1:0];
+}
+/* Une démo par étape, gardée d'un affichage à l'autre : cocher ne la relance pas. */
+const demos={};let demoVue=null;
+function demoPour(i){if(typeof Demo==='undefined')return null;if(demoVue!==null&&demoVue!==i&&demos[demoVue])demos[demoVue].stop();demoVue=i;return demos[i]||(demos[i]=Demo.cree(i));}
 $('aide-btn').addEventListener('click',()=>sauve({type:etat.aide?'aide-fin':'aide',etape:etat.aide?etat.aide.bloc:etat.position}));
 $('compact').addEventListener('click',()=>{const actif=document.body.classList.toggle('compact');$('compact').setAttribute('aria-pressed',String(actif));});
 const boutons=[['centrer','Centrer','Ctrl + Maj + E','Bouton « Aligner » ▾ de la barre d’outils'],['droite','Aligner à droite','Ctrl + Maj + R','Même bouton « Aligner » ▾'],['gras','Gras','Ctrl + B','Barre d’outils, après la taille'],['italique','Italique','Ctrl + I','Juste à côté du gras'],['souligne','Souligner','Ctrl + U','Juste à côté de l’italique'],['','MAJUSCULES','—','Format ▸ Texte ▸ Minuscules/majuscules ▸ MAJUSCULES'],['police','Changer la police','—','Le menu qui affiche le nom de la police'],['taille','Changer la taille','—','La case du nombre, avec – et +'],['puces','Liste à puces','Ctrl + Maj + 8','Barre d’outils, à droite'],['numeros','Liste numérotée','Ctrl + Maj + 7','Juste à côté des puces'],['orthographe','Vérifier l’orthographe','Ctrl + Alt + X','Barre d’outils, à gauche, à côté de l’imprimante']];
