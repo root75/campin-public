@@ -137,3 +137,16 @@ const GRILLE_RAT = [
     A: "Démarche juste et précise : je sélectionne seulement la strophe, puis je choisis la police et la taille.", B: "Démarche juste, dite simplement.",
     C: "Réponse vague : « je change la police », « je clique dessus ».", D: "Pas de phrase, ou une démarche fausse." }
 ];
+
+/* Repères pédagogiques du 4 novembre : aucune nouvelle case ni donnée élève. */
+const REPERES_RAT = [
+  {observe: "Repère le nom du document en haut à gauche dans Docs.", verifie: "Le nom contient la date d’aujourd’hui, Le rat de ville, ton prénom et ton nom.", encouragement: "Un nom précis te permettra de retrouver ton travail à la prochaine période."},
+  {observe: "Ouvre l’image de la fiche. Repère le titre, les vers et l’auteur avant de recopier.", verifie: "Compare ta dernière ligne à l’image avant de passer au groupe suivant. Tu dois retrouver 28 vers.", encouragement: "Les petits groupes de quatre vers t’aident à garder ta place."},
+  {observe: "Une strophe regroupe quatre vers. Une ligne vide sépare deux strophes.", verifie: "Compte sept groupes de quatre vers et regarde la première lettre de chaque vers.", encouragement: "Les strophes sont maintenant plus faciles à repérer."},
+  {observe: "Vérifie dans Docs que l’enregistrement est terminé avant de fermer l’onglet.", verifie: "Tu fermes le document ; tu ne cliques pas encore sur Remettre dans Classroom.", encouragement: "Tu reprendras le même document à la période suivante."},
+  {observe: "Dans Drive, utilise le nom et la date pour reconnaître ton document.", verifie: "Ouvre-le : retrouves-tu ta fable et les sept strophes ? Sinon, retourne dans Récents avant de continuer.", encouragement: "Retrouver ton travail fait aussi partie de la démarche."},
+  {observe: "Compare les trois zones du modèle : le titre, les strophes et l’auteur.", verifie: "Le titre est centré, gras et en majuscules ; le texte est centré ; l’auteur est à droite, italique et souligné. Utilise les boutons d’alignement, sans taper d’espaces.", encouragement: "Sélectionner la bonne zone te permet de modifier seulement ce que tu veux."},
+  {observe: "Repère le numéro de la strophe avant de choisir sa police et sa taille.", verifie: "Clique dans chaque strophe et lis la police et la taille dans la barre d’outils. Si les autres strophes ont changé aussi : Ctrl + Z, puis sélectionne uniquement la strophe voulue.", encouragement: "Changer une strophe sans toucher aux autres montre que tu maîtrises la sélection."},
+  {observe: "Des puces pour les choses du festin ; des numéros pour raconter tes gestes dans l’ordre.", verifie: "Dans Docs : trois éléments du festin, au moins six gestes réellement faits et une phrase avec sélectionner, police et taille.", encouragement: "Nommer le bouton utilisé permet à quelqu’un d’autre de comprendre ta méthode."},
+  {observe: "Ouvre la grille : les critères avec une étoile sont incontournables.", verifie: "Compare ton fichier aux critères avant de choisir tes lettres Moi. Après la remise, vérifie dans Classroom que le devoir est bien indiqué comme remis.", encouragement: "Repérer et corriger un écart fait partie du travail : tu peux encore améliorer ton document avant de le remettre."}
+];
