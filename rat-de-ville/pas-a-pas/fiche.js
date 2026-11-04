@@ -43,7 +43,7 @@ function dessine(){
   }
   if(i===6){const tableau=txt('table','repere-polices');const legende=txt('caption',null,'Police et taille attendues');tableau.append(legende);
     [['Strophes','Police','Taille'],['1 et 2','Garamond','14'],['3 et 4','Arial','12'],['5','Calibri','10'],['6 et 7','Arial Black','8']].forEach((ligne,k)=>{const tr=txt('tr');ligne.forEach(v=>tr.append(txt(k?'td':'th',null,v)));tableau.append(tr);});observation.append(tableau);}
-  z.append(observation,txt('p','repere agir','À toi dans Docs — réalise les actions ci-dessous, puis coche celles que tu as terminées.'));
+  z.append(observation,txt('p','repere agir','À moi dans Docs — je réalise les actions ci-dessous, puis je coche celles que j’ai terminées.'));
   if(b.consigne)z.append(txt('p','note',b.consigne));
   const ul=txt('ul','cases');b.actions.forEach((t,j)=>{
     const cle=etat.position+'.'+(j+1),li=txt('li'),lab=txt('label'),cb=txt('input');cb.type='checkbox';cb.dataset.cle=cle;cb.checked=!!etat.cases[cle];
@@ -52,7 +52,7 @@ function dessine(){
     if(aide){const d=txt('details');d.append(txt('summary',null,aide.titre),txt('p',null,aide.explication),txt('blockquote',null,aide.exemple),txt('p','note',aide.rappel));li.append(d);}
     ul.append(li);
   });z.append(ul);
-  const controle=txt('aside','repere verification');controle.append(txt('h3',null,'À vérifier dans ton document'),txt('p',null,repere.verifie),txt('p','note',repere.encouragement));z.append(controle);
+  const controle=txt('aside','repere verification');controle.append(txt('h3',null,'À vérifier dans mon document'),txt('p',null,repere.verifie),txt('p','note',repere.encouragement));z.append(controle);
   if(i===1||i===8){const lien=txt('a','btn vide',i===1?'Voir le texte à recopier':'Voir la grille et remplir « Moi »');lien.href=i===1?'#texte':'#grille';lien.addEventListener('click',()=>{$(i===1?'texte':'grille').open=true;});z.append(lien);}
   const nav=txt('div','actions');for(const [delta,label] of [[-1,'← Étape précédente'],[1,'Étape suivante →']]){
     if(i+delta<0||i+delta>8)continue;const n=txt('button','btn vide',label);n.type='button';n.addEventListener('click',()=>sauve({type:'position',etape:i+delta+1}));nav.append(n);
@@ -82,16 +82,16 @@ demarre();
 let lectureCollectif=false;
 async function actualiseCollectif(){
   if(lectureCollectif||!$('collectif').open||document.hidden)return;
-  if(!SUIVI){$('collectif-statut').textContent='Le repère de ta classe est disponible avec ton compte scolaire.';return;}
+  if(!SUIVI){$('collectif-statut').textContent='Le repère de ma classe est disponible avec mon compte scolaire.';return;}
   lectureCollectif=true;
   try{
     const r=await new Promise((ok,ko)=>google.script.run.withSuccessHandler(ok).withFailureHandler(ko).repereEleveFormatif(COURS));
     const support=$('collectif-support');support.replaceChildren();
-    if(!r){$('collectif-statut').textContent='Aucun repère collectif enregistré pour ta classe.';return;}
+    if(!r){$('collectif-statut').textContent='Aucun repère collectif enregistré pour ma classe.';return;}
     const e=ETAPES_RAT[r.etape-1];if(!e)throw new Error('Repère invalide');
     support.append(txt('h3',null,r.etape+'. '+e.titre),txt('p',null,r.rappel),txt('p','repere observation',REPERES_RAT[r.etape-1].observe));
-    $('collectif-statut').textContent='Repère du professeur · période '+e.periode+' · ta place personnelle ne change pas.';
-  }catch(e){$('collectif-support').replaceChildren();$('collectif-statut').textContent='Repère indisponible. Réessaie avec Actualiser le repère. Tu peux poursuivre ton travail.';}
+    $('collectif-statut').textContent='Repère du professeur · période '+e.periode+' · ma place personnelle ne change pas.';
+  }catch(e){$('collectif-support').replaceChildren();$('collectif-statut').textContent='Repère indisponible. Je réessaie avec Actualiser le repère. Je peux poursuivre mon travail.';}
   finally{lectureCollectif=false;}
 }
 $('collectif').addEventListener('toggle',actualiseCollectif);
