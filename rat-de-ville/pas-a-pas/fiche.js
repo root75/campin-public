@@ -86,7 +86,7 @@ function coince(){
 $('coince-tout').addEventListener('click',()=>{coinceTout=!coinceTout;coince();});
 function cloche(){
   $('aide').classList.toggle('active',!!etat.aide);
-  $('aide-texte').textContent=etat.aide?'J’attends de l’aide (étape '+etat.aide.bloc+'). Je continue ailleurs. Débloqué ? Je re-clique.':'Relu ? Demandé au voisin ? Feuille posée ? Alors je sonne.';
+  $('aide-texte').textContent=etat.aide?'J’attends de l’aide (étape '+etat.aide.bloc+'). Je continue ailleurs. Débloqué ? Je re-clique.':'Relu ? Demandé au voisin ? Alors je sonne.';
   const mot=etat.aide?'Je me suis débloqué':'Je bloque à l’étape '+etat.position;
   $('aide-btn').replaceChildren('🔔',txt('span','mot',mot));$('aide-btn').setAttribute('aria-label',mot);
 }

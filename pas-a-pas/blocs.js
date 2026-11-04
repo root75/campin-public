@@ -162,7 +162,7 @@ function preuve(pr, B, apres){
     envoie({ etape:ici+1, type:"faux", essais:essais, reponse:v(reponse) });
     retour.className="retour faux"; retour.replaceChildren(txt("strong",null,"Pas encore."), txt("p",null,explication));
     if(essais>=2){ retour.append(txt("p",null,"Ouvre « Ça coince ? » juste en dessous.")); document.getElementById("coince").open = true; }
-    if(essais>=3) retour.append(txt("p",null,"Toujours bloqué : demande à ton voisin, puis pose ton chevalet sur l'écran."));
+    if(essais>=3) retour.append(txt("p",null,"Toujours bloqué : demande à ton voisin, puis clique sur « J'attends de l'aide »."));
     retour.hidden=false;
   };
 
@@ -211,7 +211,7 @@ function preuve(pr, B, apres){
       if(!SUIVI || APERCU){fini();return;}
       note.textContent="Enregistrement en cours…";
       google.script.run.withSuccessHandler(fini).withFailureHandler(()=>{
-        ok.disabled=false;note.textContent="Étape non enregistrée. Ton rapport reste dans Docs. Réessaie, puis pose ton chevalet si nécessaire.";
+        ok.disabled=false;note.textContent="Étape non enregistrée. Ton rapport reste dans Docs. Réessaie, puis clique sur « J'attends de l'aide » si nécessaire.";
       }).noter(COURS,{etape:ici+1,type:"juste",reponse:Q.trace});
     });
     return;
@@ -237,7 +237,7 @@ function preuve(pr, B, apres){
       if(!SUIVI || APERCU){fini();return;}
       statut.textContent="Enregistrement en cours…";
       google.script.run.withSuccessHandler(fini).withFailureHandler(()=>{
-        ok.disabled=false;statut.textContent="Réponse non enregistrée. Garde cette page ouverte et réessaie, puis pose ton chevalet si nécessaire.";
+        ok.disabled=false;statut.textContent="Réponse non enregistrée. Garde cette page ouverte et réessaie, puis clique sur « J'attends de l'aide » si nécessaire.";
       }).noter(COURS,{etape:ici+1,type:"juste",reponse:r});
     });
     return;
@@ -364,13 +364,13 @@ function bilan(){
   return f;
 }
 
-/* « J'attends de l'aide » : l'équivalent de la case entourée. Le chevalet reste le signal. */
+/* « J'attends de l'aide » : l'équivalent de la case entourée, et le signal pour le professeur. */
 function basculeAide(){
   enAide = !enAide;
   const a = document.getElementById("aide"), b = document.getElementById("aide-btn");
   a.classList.toggle("active", enAide);
   document.getElementById("aide-texte").textContent = enAide
-    ? "✋ Ton professeur sait que tu attends "+(groupeCourant() ? "dans « "+groupeCourant().titre+" »" : "au bloc "+(ici+1))+". Pose ton chevalet sur l’écran, et en attendant relis « Ça coince ? »."
+    ? "✋ Ton professeur sait que tu attends "+(groupeCourant() ? "dans « "+groupeCourant().titre+" »" : "au bloc "+(ici+1))+". Je continue ailleurs, et en attendant je relis « Ça coince ? »."
     : "Je suis bloqué malgré « Ça coince ? » et mon voisin :";
   b.textContent = enAide ? "Je me suis débloqué" : "J'attends de l'aide";
   envoie({ etape:Math.min(ici,BLOCS.length-1)+1, type: enAide ? "aide" : "aide-fin" });

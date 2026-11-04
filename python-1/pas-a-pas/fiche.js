@@ -105,7 +105,7 @@ const BLOCS = [
     fais:`Sous « Mon programme », bouton <span class="chemin">▶ Exécuter (Ctrl+Entrée)</span>. La première fois, Python met quelques secondes à se préparer.`,
     vois:"Dans le cadre du dessous, le texte écrit par le programme : Bonjour !",
     coince:["Rien ne s'affiche après une minute : je recharge la page (touche F5 de Chrome) et je clique de nouveau sur Exécuter.",
-            "« Le moteur Python ne se charge pas » : je pose mon chevalet. En attendant, je passe à Thonny avec le professeur."],
+            "« Le moteur Python ne se charge pas » : je clique sur « J'attends de l'aide ». En attendant, je passe à Thonny avec le professeur."],
     q:{ type:"code", q:"Exécute le programme.", depart:'print("Bonjour !")',
         test: r => SORTIE(r)==="Bonjour !" || "Le programme a changé : clique sur ↺ Code de départ, puis sur Exécuter.",
         juste:"print affiche ce qu'il y a entre les parenthèses. Le texte est entre guillemets." } },
@@ -341,7 +341,7 @@ function editeur(zone, Q, reussi, rate){
     let r;
     try { r = await executePython(ta.value); }
     catch(e){
-      ecran.textContent = "Le moteur Python ne se charge pas. Je réessaie dans un instant ; sinon, je pose mon chevalet.";
+      ecran.textContent = "Le moteur Python ne se charge pas. Je réessaie dans un instant ; sinon, je clique sur « J'attends de l'aide ».";
       lance.disabled = false;ta.readOnly=false;depart.disabled=false; return;
     }
     montre(ecran, r);
@@ -379,7 +379,7 @@ function ordre(zone, Q, reussi, rate){
     ok.disabled = true; ecran.hidden = false; ecran.textContent = "⏳ Python se prépare… (la première fois seulement, quelques secondes)";
     let r;
     try { r = await executePython(lignes.join("\n")); }
-    catch(e){ ecran.textContent = "Le moteur Python ne se charge pas. Je réessaie dans un instant ; sinon, je pose mon chevalet."; ok.disabled = false; execution=false; return; }
+    catch(e){ ecran.textContent = "Le moteur Python ne se charge pas. Je réessaie dans un instant ; sinon, je clique sur « J'attends de l'aide »."; ok.disabled = false; execution=false; return; }
     montre(ecran, r);
     const verdict = Q.test(r);
     if(verdict === true){ ol.querySelectorAll("button").forEach(b=>b.disabled=true); reussi(lignes.join(" / ")); }
