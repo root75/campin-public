@@ -5,9 +5,11 @@ const ICONES = 'https://root75.github.io/campin-public/rat-de-ville/pas-a-pas/ic
 const SUIVI = typeof google !== 'undefined' && google.script && google.script.run;
 const $ = id => document.getElementById(id);
 const txt = (tag, cls, t) => {const n=document.createElement(tag);if(cls)n.className=cls;if(t!=null)n.textContent=t;return n;};
-let etat = {position:1,cases:{},moi:{},aide:null,etapes:[]}, pret=false, occupe=false;
+let etat = {position:1,cases:{},moi:{},aide:null,etapes:[]}, pret=false, occupe=false, vueGrille=false;
+/* La grille est l'étape finale, sans case : elle se range hors de la page tant qu'on ne l'affiche pas. */
+const GRILLE=$('grille');GRILLE.remove();GRILLE.hidden=false;
 function appel(evt){return new Promise((ok,ko)=>google.script.run.withSuccessHandler(ok).withFailureHandler(ko).suiviFormatif(COURS,evt));}
-function commandes(){document.querySelectorAll('#etapes button,#travail input,#travail button,#aide-btn,#criteres select').forEach(n=>n.disabled=!pret||occupe);}
+function commandes(){document.querySelectorAll('#etapes button,#travail input,#travail button,#travail select,#aide-btn').forEach(n=>n.disabled=!pret||occupe);}
 function calcule(){etat.etapes=ETAPES_RAT.map((e,i)=>e.actions.every((_,j)=>etat.cases[(i+1)+'.'+(j+1)]));}
 function demo(evt){
   if(evt.type==='position')etat.position=evt.etape;
@@ -19,6 +21,7 @@ function demo(evt){
 }
 async function sauve(evt){
   if(!pret||occupe)return;
+  if(evt.type==='position')vueGrille=false;
   occupe=true;commandes();$('sauvegarde').textContent=SUIVI?'Enregistrement…':'Aperçu : essai sans sauvegarde scolaire.';
   try{
     const avant=(etat.etapes||[]).slice();
@@ -32,9 +35,11 @@ function dessine(){
   const i=etat.position-1,b=ETAPES_RAT[i];
   $('etapes').replaceChildren(...ETAPES_RAT.map((e,j)=>{
     const faites=e.actions.filter((_,k)=>etat.cases[(j+1)+'.'+(k+1)]).length;
-    const n=txt('button',etat.etapes[j]?'fini':'',etat.etapes[j]?'✓':String(j+1));n.style.setProperty('--p',Math.round(100*faites/e.actions.length));n.type='button';n.title=(j+1)+'. '+e.titre;n.setAttribute('aria-label',n.title+(etat.etapes[j]?' — déclaré terminé':''));if(j===i)n.setAttribute('aria-current','step');n.addEventListener('click',()=>sauve({type:'position',etape:j+1}));return n;
+    const n=txt('button',etat.etapes[j]?'fini':'',etat.etapes[j]?'✓':String(j+1));n.style.setProperty('--p',Math.round(100*faites/e.actions.length));n.type='button';n.title=(j+1)+'. '+e.titre;n.setAttribute('aria-label',n.title+(etat.etapes[j]?' — déclaré terminé':''));if(j===i&&!vueGrille)n.setAttribute('aria-current','step');n.addEventListener('click',()=>sauve({type:'position',etape:j+1}));return n;
   }));
-  const z=$('travail');z.replaceChildren(txt('p','numero','Période '+b.periode+' — '+(b.periode===1?'le texte':'la mise en forme')+' · '+b.min+' min'),txt('h2',null,etat.position+'. '+b.titre));
+  const g=txt('button','grille-etape','📋');g.type='button';g.title='Ma grille d’évaluation';g.setAttribute('aria-label',g.title);if(vueGrille)g.setAttribute('aria-current','step');g.addEventListener('click',()=>{vueGrille=true;dessine();});$('etapes').append(g);
+  const z=$('travail');
+  if(vueGrille){dessineGrille(z);return;}z.replaceChildren(txt('p','numero','Période '+b.periode+' — '+(b.periode===1?'le texte':'la mise en forme')+' · '+b.min+' min'),txt('h2',null,etat.position+'. '+b.titre));
   const dm=demoPour(i);if(dm){const w=txt('section','demo-bloc');w.append(txt('p','demo-titre','👀 Regarde comment faire'),dm);z.append(w);}
   const repere=REPERES_RAT[i];
   const observation=txt('aside','repere observation');
@@ -57,16 +62,25 @@ function dessine(){
     ul.append(li);
   });z.append(ul);
   const controle=txt('aside','repere verification');controle.append(txt('h3',null,'À vérifier dans mon document'),txt('p',null,repere.verifie),txt('p','note',repere.encouragement));z.append(controle);
-  if(i===1||i===8){const lien=txt('a','btn vide',i===1?'Voir le texte à recopier':'Voir la grille et remplir « Moi »');lien.href=i===1?'#texte':'#grille';lien.addEventListener('click',()=>{$(i===1?'texte':'grille').open=true;});z.append(lien);}
+  if(i===1){const lien=txt('a','btn vide','Voir le texte à recopier');lien.href='#texte';lien.addEventListener('click',()=>{$('texte').open=true;});z.append(lien);}
   const nav=txt('div','actions');for(const [delta,label] of [[-1,'← Étape précédente'],[1,'Étape suivante →']]){
-    if(i+delta<0||i+delta>8)continue;const n=txt('button','btn vide',label);n.type='button';n.addEventListener('click',()=>sauve({type:'position',etape:i+delta+1}));nav.append(n);
+    if(i+delta<0)continue;
+    if(i+delta>8){const n=txt('button','btn vide','Ma grille d’évaluation →');n.type='button';n.addEventListener('click',()=>{vueGrille=true;dessine();scrollTo(0,0);});nav.append(n);continue;}
+    const n=txt('button','btn vide',label);n.type='button';n.addEventListener('click',()=>sauve({type:'position',etape:i+delta+1}));nav.append(n);
   }z.append(nav,txt('p','note','Je peux continuer même si une case reste vide. Je coche quand j’ai terminé ; le professeur examine mon document.'));
+  cloche();progression();commandes();
+}
+function cloche(){
   $('aide').classList.toggle('active',!!etat.aide);
   $('aide-texte').textContent=etat.aide?'J’attends de l’aide (étape '+etat.aide.bloc+'). Je continue ailleurs. Débloqué ? Je re-clique.':'Relu ? Demandé au voisin ? Feuille posée ? Alors je sonne.';
   const mot=etat.aide?'Je me suis débloqué':'Je bloque à l’étape '+etat.position;
   $('aide-btn').replaceChildren('🔔',txt('span','mot',mot));$('aide-btn').setAttribute('aria-label',mot);
-  progression();
-  document.querySelectorAll('[data-critere]').forEach(n=>{n.value=etat.moi[n.dataset.critere]||'';});commandes();
+}
+function dessineGrille(z){
+  z.replaceChildren(txt('p','numero','Étape finale · après mes 9 étapes'),txt('h2',null,'Ma grille d’évaluation'),txt('p','agir','Pour chaque critère, je lis les colonnes A à D. Je choisis ma lettre dans « Moi ».'),GRILLE);
+  GRILLE.querySelectorAll('[data-critere]').forEach(n=>{n.value=etat.moi[n.dataset.critere]||'';});
+  const nav=txt('div','actions'),n=txt('button','btn vide','← Étape 9');n.type='button';n.addEventListener('click',()=>sauve({type:'position',etape:9}));nav.append(n);z.append(nav);
+  cloche();progression();commandes();
 }
 /* Encouragements : chaque mission cochée, chaque étape terminée. */
 const BRAVOS=['Bravo !','Super, une mission de plus !','Bien joué !','Continue comme ça !','Yes ! 🧀','Ça avance !','Top !'];
@@ -95,7 +109,7 @@ $('compact').addEventListener('click',()=>{const actif=document.body.classList.t
 const boutons=[['centrer','Centrer','Ctrl + Maj + E','Bouton « Aligner » ▾ de la barre d’outils'],['droite','Aligner à droite','Ctrl + Maj + R','Même bouton « Aligner » ▾'],['gras','Gras','Ctrl + B','Barre d’outils, après la taille'],['italique','Italique','Ctrl + I','Juste à côté du gras'],['souligne','Souligner','Ctrl + U','Juste à côté de l’italique'],['','MAJUSCULES','—','Format ▸ Texte ▸ Minuscules/majuscules ▸ MAJUSCULES'],['police','Changer la police','—','Le menu qui affiche le nom de la police'],['taille','Changer la taille','—','La case du nombre, avec – et +'],['puces','Liste à puces','Ctrl + Maj + 8','Barre d’outils, à droite'],['numeros','Liste numérotée','Ctrl + Maj + 7','Juste à côté des puces'],['orthographe','Vérifier l’orthographe','Ctrl + Alt + X','Barre d’outils, à gauche, à côté de l’imprimante']];
 boutons.forEach(([ico,nom,racc,ou])=>{const tr=txt('tr'),td=txt('td');if(ico){const img=txt('img');img.src=ICONES+ico+'.png';img.alt='';td.append(img);}td.append(nom);tr.append(td,txt('td',null,racc),txt('td',null,ou));$('mes-boutons').append(tr);});
 GRILLE_RAT.forEach((c,i)=>{
-  const tr=txt('tr'),th=txt('th'),td=txt('td'),sel=txt('select');th.scope='row';th.append(txt('b',null,c.n+(c.inc?' ★':'')),txt('p',null,c.regarde));sel.dataset.critere=i+1;sel.setAttribute('aria-label','Moi — critère '+(i+1));['','A','B','C','D'].forEach(v=>{const o=txt('option',null,v||'À choisir');o.value=v;sel.append(o);});sel.addEventListener('change',()=>sauve({type:'moi',etape:etat.position,critere:i+1,lettre:sel.value}));td.append(sel);tr.append(th,td,...['A','B','C','D'].map(k=>txt('td',null,c[k])));$('criteres').append(tr);
+  const tr=txt('tr'),th=txt('th'),td=txt('td'),sel=txt('select');th.scope='row';th.append(txt('b',null,c.n+(c.inc?' ★':'')),txt('p',null,c.regarde));sel.dataset.critere=i+1;sel.setAttribute('aria-label','Moi — critère '+(i+1));['','A','B','C','D'].forEach(v=>{const o=txt('option',null,v||'À choisir');o.value=v;sel.append(o);});sel.addEventListener('change',()=>sauve({type:'moi',etape:etat.position,critere:i+1,lettre:sel.value}));td.append(sel);tr.append(th,td,...['A','B','C','D'].map(k=>txt('td',null,c[k])));GRILLE.querySelector('#criteres').append(tr);
 });
 async function demarre(){
   try{
@@ -106,23 +120,10 @@ async function demarre(){
 }
 demarre();
 
-// Le repère collectif ne déplace jamais la progression individuelle.
-let lectureCollectif=false;
-async function actualiseCollectif(){
-  if(lectureCollectif||!$('collectif').open||document.hidden)return;
-  if(!SUIVI){$('collectif-statut').textContent='Le repère de ma classe est disponible avec mon compte scolaire.';return;}
-  lectureCollectif=true;
-  try{
-    const r=await new Promise((ok,ko)=>google.script.run.withSuccessHandler(ok).withFailureHandler(ko).repereEleveFormatif(COURS));
-    const support=$('collectif-support');support.replaceChildren();
-    if(!r){$('collectif-statut').textContent='Aucun repère collectif enregistré pour ma classe.';return;}
-    const e=ETAPES_RAT[r.etape-1];if(!e)throw new Error('Repère invalide');
-    support.append(txt('h3',null,r.etape+'. '+e.titre),txt('p',null,r.rappel),txt('p','repere observation',REPERES_RAT[r.etape-1].observe));
-    $('collectif-statut').textContent='Repère du professeur · période '+e.periode+' · ma place personnelle ne change pas.';
-  }catch(e){$('collectif-support').replaceChildren();$('collectif-statut').textContent='Repère indisponible. Je réessaie avec Actualiser le repère. Je peux poursuivre mon travail.';}
-  finally{lectureCollectif=false;}
+/* La cloche peut être remise à zéro par le professeur : tant qu'elle sonne, je relis mon état. */
+async function relitCloche(){
+  if(!SUIVI||!pret||occupe||document.hidden||!etat.aide)return;
+  try{const r=await appel(null);if(!occupe&&!r.aide){etat=r;dessine();$('sauvegarde').textContent='Le professeur a réinitialisé ma cloche.';}}catch(e){}
 }
-$('collectif').addEventListener('toggle',actualiseCollectif);
-$('collectif-actualiser').addEventListener('click',actualiseCollectif);
-document.addEventListener('visibilitychange',actualiseCollectif);
-setInterval(actualiseCollectif,30000);
+setInterval(relitCloche,20000);
+document.addEventListener('visibilitychange',relitCloche);
