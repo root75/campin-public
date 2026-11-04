@@ -16,27 +16,21 @@ const ENCOURAGEMENTS=[
  ['Tu sais où vérifier !','Retrouve réellement ton email dans Éléments envoyés avant de continuer.'],
  ['Bravo pour ce parcours !','Montre les messages envoyés et reçus au professeur pour la vérification réelle.']
 ];
-function animeReussite(zone,etape){
- if(CELEBREES.has(etape))return;
- CELEBREES.add(etape);
+/* Effets de réussite, comme le Rat de ville : bandeau « Bravo » en bas et confettis plein écran,
+   une seule fois par étape ; grande fête au mail complet (7) et à la fin (12). */
+let minuterieBravo=null;
+function bravo(t,grand){const b=document.getElementById('bravo');if(!b)return;b.textContent=t;b.classList.toggle('grand',!!grand);b.classList.add('vu');clearTimeout(minuterieBravo);minuterieBravo=setTimeout(()=>b.classList.remove('vu'),grand?3200:1800);}
+function confettis(n){
  if(typeof matchMedia==='function'&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;
- if(!document.getElementById('style-reussites')){
-  const css=document.createElement('style');css.id='style-reussites';css.textContent=`
-.retour.juste{position:relative;isolation:isolate}
-.reussite-animee{animation:reussite-entree .28s ease-out}
-.confettis-reussite{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:-1;border-radius:inherit}
-.confettis-reussite i{position:absolute;top:-12px;left:var(--x);width:7px;height:11px;background:var(--couleur);border-radius:2px;opacity:0;animation:confetti-leger 1.1s var(--delai) ease-out forwards}
-@keyframes reussite-entree{from{transform:translateY(5px);opacity:.5}to{transform:translateY(0);opacity:1}}
-@keyframes confetti-leger{10%{opacity:.8}to{transform:translate(12px,150px) rotate(180deg);opacity:0}}
-@media(prefers-reduced-motion:reduce){.reussite-animee,.confettis-reussite i{animation:none!important}.confettis-reussite{display:none}}
-`;document.head.append(css);
- }
- zone.classList.add('reussite-animee');
- if(![6,11].includes(etape))return;
- const confettis=document.createElement('span');confettis.className='confettis-reussite';confettis.setAttribute('aria-hidden','true');
- const couleurs=['#197a70','#cd8a16','#4766a9'];
- for(let i=0;i<15;i++){const c=document.createElement('i');c.style.setProperty('--x',(5+(i*31)%91)+'%');c.style.setProperty('--couleur',couleurs[i%3]);c.style.setProperty('--delai',(i%5)*.07+'s');confettis.append(c);}
- zone.append(confettis);setTimeout(()=>confettis.remove(),1600);
+ const couleurs=['#ffcf3f','#287544','#d89b28','#7cc3de','#0086ad','#e8742a'];
+ for(let k=0;k<n;k++){const c=document.createElement('span');c.className='confetti';c.setAttribute('aria-hidden','true');c.style.left=Math.random()*100+'vw';c.style.background=couleurs[k%couleurs.length];c.style.animationDelay=(Math.random()*.5)+'s';c.style.animationDuration=(1.2+Math.random())+'s';document.body.append(c);setTimeout(()=>c.remove(),2800);}
+}
+function animeReussite(zone,etape){
+ const grand=[6,11].includes(etape);
+ if(CELEBREES.has(etape)){bravo('✓ '+ENCOURAGEMENTS[etape][0],false);return;}
+ CELEBREES.add(etape);
+ bravo((grand?'⭐ ':'✉️ ')+'Étape '+(etape+1)+' réussie : « '+TITRES[etape]+' » !',grand);
+ confettis(grand?60:30);
 }
 const DEST='camille.martin@example.org';
 const TITRES=['Observer un email','Choisir le destinataire','Donner un objet','Saluer','Rédiger la demande','Terminer et signer','Relire le mail complet','Répondre au message reçu','Ouvrir et lire dans Outlook','Rédiger dans le corps du message','Envoyer et retrouver son mail','Répondre à son camarade'];
@@ -140,11 +134,13 @@ Camille</p></div></div><p><b>Utilise Répondre :</b> le destinataire et l’obje
   const encouragement=ENCOURAGEMENTS[e];
   feedback.className='retour juste';feedback.innerHTML='<b>✓ '+escapeHtml(encouragement[0])+'</b><p>'+escapeHtml(encouragement[1])+'</p>';
   animeReussite(feedback,e);
+  if(SUIVI)window.eteintCloche?.('Étape validée : ma cloche est éteinte.');
   if(e===11){if(SUIVI)envoie({etape:12,type:'fini'}).catch(()=>{feedback.append(document.createTextNode(' La fin n’a pas pu être enregistrée : recharge avant de quitter.'));});avisFin();feedback.focus();return;}
   const suite=document.createElement('p');suite.textContent=e===6?'Tu peux maintenant lire la réponse fictive de Camille et lui répondre.':(e>=8?'Continue après avoir effectué la manipulation dans Outlook.':'Continue pour voir le mail se construire.');feedback.append(suite);
   const b=document.createElement('button');b.type='button';b.textContent=e===6?'Lire la réponse de Camille →':'Continuer →';b.addEventListener('click',()=>{if(JSON.stringify({...state,atteint:0})!==JSON.stringify({...JSON.parse(empreinte),atteint:0}))return;if((e===6?erreurs(state):champs.map(k=>({texte:verifie(k)})).filter(x=>x.texte)).length)return;state.etape++;state.preuve='';sauve();render();});feedback.append(b);b.focus();
  });
  document.getElementById('aperçu-courant').innerHTML=apercu();
+ window.majCloche?.();
 }
 function init(){
  const sel=document.getElementById('choix-etape');TITRES.forEach((t,i)=>{const o=document.createElement('option');o.value=i;o.textContent=(i+1)+' — '+t;sel.append(o);});
@@ -191,9 +187,34 @@ async function demarre(){
  }catch(e){status.textContent='Impossible de charger les contrôles ou le suivi. Recharge la page ; aucun résultat n’est annoncé comme enregistré.';init();}
  document.getElementById('demarrer-individuel').onclick=()=>{document.getElementById('collectif').hidden=true;document.getElementById('individuel').hidden=false;document.getElementById('revoir-collectif').hidden=false;};
  document.getElementById('revoir-collectif').onclick=()=>{document.getElementById('collectif').hidden=false;document.getElementById('individuel').hidden=true;};
- let aide=false;
- document.getElementById('bloque').onclick=async function(){const zone=document.getElementById('aide-bloque');zone.hidden=false;this.disabled=true;try{if(SUIVI){await envoie({etape:state.etape+1,type:aide?'aide-fin':'aide'});aide=!aide;zone.textContent=aide?'Demande enregistrée pour le professeur. Garde cette étape ouverte.':'Difficulté signalée comme résolue.';this.textContent=aide?'✓ Je suis débloqué':'✋ Je suis bloqué';}else zone.textContent='Appelle le professeur et garde cette étape ouverte. En entraînement libre, aucune alerte n’est transmise.';}catch(e){zone.textContent='Demande non confirmée. Appelle le professeur ou réessaie.';}finally{this.disabled=false;this.setAttribute('aria-expanded','true');}};
- if(SUIVI)setInterval(()=>{if(!aide)return;google.script.run.withSuccessHandler(r=>{if(r?.active===false){aide=false;document.getElementById('bloque').textContent='✋ Je suis bloqué';document.getElementById('aide-bloque').textContent='Demande traitée par le professeur. Tu peux demander de l’aide à nouveau.';}}).withFailureHandler(()=>{}).etatAide(COURS);},15000);
+ /* La cloche 🔔 : protocole d'aide (relire, voisin), puis je sonne et je continue.
+    Le professeur la voit au tableau ; quand il la réinitialise, elle s'éteint ici. */
+ let aide=false,aideEtape=0;
+ const zoneAide=document.getElementById('aide'),btnAide=document.getElementById('bloque'),texteAide=document.getElementById('aide-bloque');
+ let minuterieInfo=null;
+ function cloche(info){
+  clearTimeout(minuterieInfo);if(info)minuterieInfo=setTimeout(()=>cloche(),6000);
+  zoneAide.classList.toggle('active',aide);zoneAide.classList.toggle('info',!!info&&!aide);
+  texteAide.textContent=info||(aide?'J’attends de l’aide (étape '+aideEtape+'). Je continue ailleurs. Débloqué ? Je re-clique.':'Relu ? Demandé au voisin ? Alors je sonne.');
+  const mot=aide?'Je me suis débloqué':'Je bloque à l’étape '+(state.etape+1);
+  btnAide.replaceChildren('🔔',Object.assign(document.createElement('span'),{className:'mot',textContent:mot}));btnAide.setAttribute('aria-label',mot);btnAide.title=aide?mot:'J’ai relu, demandé au voisin ? Je sonne.';
+ }
+ window.majCloche=()=>{if(!zoneAide.classList.contains('info'))cloche();};
+ window.eteintCloche=info=>{if(!aide)return;aide=false;cloche(info);};
+ btnAide.onclick=async function(){
+  this.disabled=true;
+  try{
+   if(SUIVI){const etape=aide?aideEtape:state.etape+1;await envoie({etape,type:aide?'aide-fin':'aide'});aide=!aide;aideEtape=etape;cloche();}
+   else cloche('Entraînement libre : la cloche n’est pas transmise. Appelle le professeur.');
+  }catch(e){cloche('Cloche non transmise. Réessaie ou appelle le professeur.');}
+  finally{this.disabled=false;}
+ };
+ cloche();
+ if(SUIVI){
+  const relit=()=>{if(!aide||document.hidden)return;google.script.run.withSuccessHandler(r=>{if(r?.active===false)window.eteintCloche('Le professeur a réinitialisé ma cloche. Je peux sonner à nouveau.');}).withFailureHandler(()=>{}).etatAide(COURS);};
+  google.script.run.withSuccessHandler(r=>{if(r?.active===true){aide=true;aideEtape=state.etape+1;cloche();}}).withFailureHandler(()=>{}).etatAide(COURS);
+  setInterval(relit,15000);document.addEventListener('visibilitychange',relit);
+ }
  if(SUIVI){window.PAS_A_PAS={cours:COURS,envoie};window.PasAPasSequence?.suivre(window.PAS_A_PAS);}
 }
 if(typeof document!=='undefined')demarre();
