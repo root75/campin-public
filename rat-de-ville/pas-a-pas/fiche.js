@@ -32,6 +32,18 @@ function dessine(){
     const n=txt('button','btn '+(i===j?'plein':'vide'),(j+1)+(etat.etapes[j]?' ✓':''));n.type='button';n.title=(j+1)+'. '+e.titre;n.setAttribute('aria-label',n.title+(etat.etapes[j]?' — déclaré terminé':''));if(j===i)n.setAttribute('aria-current','step');n.addEventListener('click',()=>sauve({type:'position',etape:j+1}));return n;
   }));
   const z=$('travail');z.replaceChildren(txt('p','numero','Période '+b.periode+' — '+(b.periode===1?'le texte':'la mise en forme')+' · '+b.min+' min'),txt('h2',null,etat.position+'. '+b.titre));
+  const repere=REPERES_RAT[i];
+  const observation=txt('aside','repere observation');
+  observation.append(txt('h3',null,'À observer'),txt('p',null,repere.observe));
+  if(i===5){
+    const modele=txt('div','apercu-document');modele.setAttribute('aria-label','Modèle de présentation des trois zones');
+    const titre=txt('p','exemple-titre','TITRE DE LA FABLE');
+    const corps=txt('p','exemple-strophe','Les strophes sont centrées.');
+    const auteur=txt('p','exemple-auteur','Jean de La Fontaine');modele.append(titre,corps,auteur);observation.append(modele);
+  }
+  if(i===6){const tableau=txt('table','repere-polices');const legende=txt('caption',null,'Police et taille attendues');tableau.append(legende);
+    [['Strophes','Police','Taille'],['1 et 2','Garamond','14'],['3 et 4','Arial','12'],['5','Calibri','10'],['6 et 7','Arial Black','8']].forEach((ligne,k)=>{const tr=txt('tr');ligne.forEach(v=>tr.append(txt(k?'td':'th',null,v)));tableau.append(tr);});observation.append(tableau);}
+  z.append(observation,txt('p','repere agir','À toi dans Docs — réalise les actions ci-dessous, puis coche celles que tu as terminées.'));
   if(b.consigne)z.append(txt('p','note',b.consigne));
   const ul=txt('ul','cases');b.actions.forEach((t,j)=>{
     const cle=etat.position+'.'+(j+1),li=txt('li'),lab=txt('label'),cb=txt('input');cb.type='checkbox';cb.dataset.cle=cle;cb.checked=!!etat.cases[cle];
@@ -40,7 +52,7 @@ function dessine(){
     if(aide){const d=txt('details');d.append(txt('summary',null,aide.titre),txt('p',null,aide.explication),txt('blockquote',null,aide.exemple),txt('p','note',aide.rappel));li.append(d);}
     ul.append(li);
   });z.append(ul);
-  if(i===6)z.append(txt('p','note','1re et 2e : Garamond 14 · 3e et 4e : Arial 12 · 5e : Calibri 10 · 6e et 7e : Arial Black 8.'));
+  const controle=txt('aside','repere verification');controle.append(txt('h3',null,'À vérifier dans ton document'),txt('p',null,repere.verifie),txt('p','note',repere.encouragement));z.append(controle);
   if(i===1||i===8){const lien=txt('a','btn vide',i===1?'Voir le texte à recopier':'Voir la grille et remplir « Moi »');lien.href=i===1?'#texte':'#grille';lien.addEventListener('click',()=>{$(i===1?'texte':'grille').open=true;});z.append(lien);}
   const nav=txt('div','actions');for(const [delta,label] of [[-1,'← Étape précédente'],[1,'Étape suivante →']]){
     if(i+delta<0||i+delta>8)continue;const n=txt('button','btn vide',label);n.type='button';n.addEventListener('click',()=>sauve({type:'position',etape:i+delta+1}));nav.append(n);
@@ -65,3 +77,24 @@ async function demarre(){
   }catch(e){$('qui').textContent='Suivi indisponible.';$('sauvegarde').textContent='Progression non chargée : '+e.message;const b=txt('button','btn vide','Réessayer le chargement');b.addEventListener('click',()=>{b.remove();demarre();});$('travail').replaceChildren(b);commandes();b.disabled=false;}
 }
 demarre();
+
+// Le repère collectif ne déplace jamais la progression individuelle.
+let lectureCollectif=false;
+async function actualiseCollectif(){
+  if(lectureCollectif||!$('collectif').open||document.hidden)return;
+  if(!SUIVI){$('collectif-statut').textContent='Le repère de ta classe est disponible avec ton compte scolaire.';return;}
+  lectureCollectif=true;
+  try{
+    const r=await new Promise((ok,ko)=>google.script.run.withSuccessHandler(ok).withFailureHandler(ko).repereEleveFormatif(COURS));
+    const support=$('collectif-support');support.replaceChildren();
+    if(!r){$('collectif-statut').textContent='Aucun repère collectif enregistré pour ta classe.';return;}
+    const e=ETAPES_RAT[r.etape-1];if(!e)throw new Error('Repère invalide');
+    support.append(txt('h3',null,r.etape+'. '+e.titre),txt('p',null,r.rappel),txt('p','repere observation',REPERES_RAT[r.etape-1].observe));
+    $('collectif-statut').textContent='Repère du professeur · période '+e.periode+' · ta place personnelle ne change pas.';
+  }catch(e){$('collectif-support').replaceChildren();$('collectif-statut').textContent='Repère indisponible. Réessaie avec Actualiser le repère. Tu peux poursuivre ton travail.';}
+  finally{lectureCollectif=false;}
+}
+$('collectif').addEventListener('toggle',actualiseCollectif);
+$('collectif-actualiser').addEventListener('click',actualiseCollectif);
+document.addEventListener('visibilitychange',actualiseCollectif);
+setInterval(actualiseCollectif,30000);

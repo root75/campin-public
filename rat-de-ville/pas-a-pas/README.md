@@ -28,3 +28,25 @@ La grille est transcrite et la fable reste en image, sans modification des exige
 
 Installation du serveur et vérifications scolaires restantes :
 `campin-pedagogique/outils/pas-a-pas/LIVRAISON-RAT.md`.
+
+## Adaptation du 4 novembre 2026
+
+Chaque étape propose un repère d’observation, le travail dans Docs et une vérification
+concrète, avec encouragement lié à la méthode. Modèle visuel des trois zones à
+l’étape 6, tableau police/taille à l’étape 7, raccourci d’aide visible et animation
+discrète respectant la préférence de mouvement réduit. Aucun nouveau champ élève.
+Les neuf étapes, la grille et les exigences
+restent identiques. Aucun contrôle ne prétend lire ou corriger le document Docs.
+
+Vérification : essai-rat.js réussi dans Chromium avec services Google simulés ;
+affichage mobile examiné. Non publié dans cette session. Le panneau « Le repère de la classe » affiche le titre, le rappel collectif et le
+repère d’observation de l’étape choisie par le professeur. Actualisation à
+l’ouverture, manuelle et toutes les 30 secondes si le panneau est ouvert et
+l’onglet visible. La place personnelle ne change pas. Cette fonction nécessite
+la nouvelle version de Code.gs ; un serveur antérieur affiche une indisponibilité
+locale au panneau, sans bloquer la fiche.
+
+## Une case par action (4 novembre 2026)
+
+Étape 6 : 7 cases ; étape 9 : 13 cases (10 min), voisin après la colonne « Moi ». 46 cases au lieu de 35 :
+`CASES_RAT` de `Code.gs` doit suivre `contenu.js`.
