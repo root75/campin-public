@@ -1,0 +1,174 @@
+/* Démos animées « Regarde comment faire » : une mini-maquette de Docs (ou de Drive,
+   Classroom) rejoue chaque geste de l'étape. Aucune donnée élève ; rien n'est enregistré.
+   Une image = un état de l'écran + l'élément que la souris va cliquer + une légende. */
+const Demo = (() => {
+  const ICO = 'https://root75.github.io/campin-public/rat-de-ville/pas-a-pas/icones/';
+  const FABLE = ['autrefois le rat de ville', 'invita le rat des champs,', 'd’une façon fort civile,', 'à des reliefs d’ortolans.'];
+  const FABLE_MAJ = FABLE.map(v => v[0].toUpperCase() + v.slice(1));
+  const S2 = ['Sur un tapis de Turquie', 'Le couvert se trouva mis.'];
+  const TITRE = 'Le rat de ville et le rat des champs';
+  const NOM = '20261104 Le rat de ville – Prénom Nom';
+  const L = (t, c = '') => ({ t, c });
+  const doc = (lignes, o = {}) => Object.assign({ ecran: 'docs', nom: NOM, lignes }, o);
+
+  // Le document de départ de la période 2 : titre, une strophe, l'auteur.
+  const base = (t = '', s = '', a = '') => [L(TITRE, t), L(''), ...FABLE_MAJ.map(v => L(v, s)), L(''), L('Jean de La Fontaine', a)];
+
+  const DEMOS = [
+    [ // 1. Je crée et je nomme
+      { ecran: 'gaufre', cible: 'gaufre', legende: 'Je clique sur la gaufre, en haut à droite.' },
+      { ecran: 'gaufre', menu: 1, cible: 'app-docs', legende: 'Je choisis Docs.' },
+      { ecran: 'accueil', cible: 'vierge', legende: 'Je clique sur « Document vierge ».' },
+      doc([L('')], { nom: 'Document sans titre', cible: 'nom', legende: 'Je clique sur « Document sans titre ».' }),
+      doc([L('')], { nom: NOM, cible: 'nom', ok: 1, legende: 'Je tape la date à l’envers, le titre, mon prénom et mon nom.' })
+    ],
+    [ // 2. Je recopie la fable
+      doc([L(TITRE.toLowerCase())], { cible: 'page', legende: 'Je tape le titre, puis Entrée.' }),
+      doc([L(TITRE.toLowerCase()), L(FABLE[0])], { cible: 'page', legende: 'Un vers = une ligne.' }),
+      doc([L(TITRE.toLowerCase()), L(FABLE[0]), L(FABLE[1])], { cible: 'page', legende: 'Entrée au bout de chaque vers.' }),
+      doc([L(TITRE.toLowerCase()), ...FABLE.map(v => L(v))], { cible: 'page', ok: 1, legende: 'Quatre vers : un repère. Je continue jusqu’au vers 28.' })
+    ],
+    [ // 3. Je structure
+      doc([L(TITRE.toLowerCase()), ...FABLE.map(v => L(v)), L(S2[0].toLowerCase())], { cible: 'L1', legende: 'Les vers commencent par une minuscule…' }),
+      doc([L(TITRE), ...FABLE_MAJ.map(v => L(v, 'maj')), L(S2[0].toLowerCase())], { cible: 'L1', legende: '… je mets une majuscule au début de chaque vers.' }),
+      doc([L(TITRE), ...FABLE_MAJ.map(v => L(v)), L(''), L(S2[0])], { cible: 'L5', ok: 1, legende: 'Après 4 vers, Entrée : une ligne vide sépare les strophes.' })
+    ],
+    [ // 4. Je ferme sans remettre
+      doc(base(), { cible: 'enregistre', legende: 'Je regarde : « Enregistré ». Docs garde tout seul.' }),
+      doc(base(), { cible: 'onglet', ok: 1, legende: 'Je ferme l’onglet. Je ne remets PAS encore.' })
+    ],
+    [ // 5. Je retrouve mon document
+      { ecran: 'gaufre', menu: 1, cible: 'app-drive', legende: 'Gaufre ▸ Drive.' },
+      { ecran: 'drive', cible: 'recents', legende: 'Je clique sur « Récents », à gauche.' },
+      { ecran: 'drive', cible: 'fichier', ok: 1, legende: 'Double-clic sur mon document : il s’ouvre.' }
+    ],
+    [ // 6. Titre, texte, auteur
+      doc(base('sel'), { cible: 'L0', legende: 'Je sélectionne le titre.' }),
+      doc(base('sel centre'), { cible: 'centrer', legende: 'Centrer (Ctrl + Maj + E).' }),
+      doc(base('sel centre gras'), { cible: 'gras', legende: 'Gras (Ctrl + B).' }),
+      doc(base('sel centre gras'), { cible: 'm-format', menu: ['Texte ▸', 'Minuscules/majuscules ▸', 'MAJUSCULES'], legende: 'Format ▸ Texte ▸ Minuscules/majuscules ▸ MAJUSCULES.' }),
+      doc(base('centre gras capitales', 'sel'), { cible: 'L2', legende: 'Je sélectionne les strophes.' }),
+      doc(base('centre gras capitales', 'sel centre'), { cible: 'centrer', legende: 'Centrer (Ctrl + Maj + E).' }),
+      doc(base('centre gras capitales', 'centre', 'sel droite'), { cible: 'droite', legende: 'L’auteur : Aligner à droite (Ctrl + Maj + R).' }),
+      doc(base('centre gras capitales', 'centre', 'sel droite italique'), { cible: 'italique', legende: 'Italique (Ctrl + I).' }),
+      doc(base('centre gras capitales', 'centre', 'droite italique souligne'), { cible: 'souligne', ok: 1, legende: 'Souligner (Ctrl + U). Trois zones, trois mises en forme !' })
+    ],
+    [ // 7. Une police par strophe
+      doc(base('centre gras capitales', 'sel centre', 'droite italique souligne'), { cible: 'L2', legende: 'Je sélectionne SEULEMENT la strophe 1.' }),
+      doc(base('centre gras capitales', 'sel centre', 'droite italique souligne'), { cible: 'item-Garamond', menu: { sous: 'police', items: ['Arial', 'Calibri', 'Garamond', 'Arial Black'], hi: 'Garamond' }, legende: 'Menu des polices ▸ Garamond.' }),
+      doc(base('centre gras capitales', 'sel centre garamond', 'droite italique souligne'), { police: 'Garamond', cible: 'taille', legende: 'Je clique dans la case du nombre, je tape 14, Entrée.' }),
+      doc(base('centre gras capitales', 'centre garamond grand', 'droite italique souligne'), { police: 'Garamond', taille: '14', cible: 'L2', ok: 1, legende: 'Seule la strophe 1 a changé. À la suivante !' })
+    ],
+    [ // 8. Mon bloc-notes
+      doc([L('Mon bloc-notes', 'gras'), L('le tapis', 'sel'), L('…', 'sel'), L('…', 'sel')], { cible: 'puces', legende: 'Je sélectionne mes 3 lignes ▸ Liste à puces (Ctrl + Maj + 8).' }),
+      doc([L('Mon bloc-notes', 'gras'), L('le tapis', 'puce'), L('…', 'puce'), L('…', 'puce'), L('Mes gestes', 'gras'), L('J’ai sélectionné le titre, puis Centrer.', 'sel'), L('…', 'sel')], { cible: 'numeros', legende: 'Mes gestes ▸ Liste numérotée (Ctrl + Maj + 7).' }),
+      doc([L('Mon bloc-notes', 'gras'), L('le tapis', 'puce'), L('…', 'puce'), L('…', 'puce'), L('Mes gestes', 'gras'), L('J’ai sélectionné le titre, puis Centrer.', 'num'), L('…', 'num'), L('Pour changer une seule strophe, je…')], { cible: 'L7', ok: 1, legende: 'Et ma phrase pour finir.' })
+    ],
+    [ // 9. Je m'évalue et je remets
+      doc(base('centre gras capitales', 'centre garamond', 'droite italique souligne'), { cible: 'orthographe', legende: 'Vérifier l’orthographe (Ctrl + Alt + X).' }),
+      { ecran: 'classroom', cible: 'ajouter', legende: 'Classroom ▸ le devoir ▸ Ajouter ou créer ▸ Google Drive.' },
+      { ecran: 'classroom', joint: 1, cible: 'remettre', ok: 1, legende: 'Mon document est joint : Remettre. Bravo !' }
+    ]
+  ];
+
+  const el = (tag, cls, t) => { const n = document.createElement(tag); if (cls) n.className = cls; if (t != null) n.textContent = t; return n; };
+  const c = (n, id) => { n.dataset.c = id; return n; };
+  const ico = (nom, id) => { const b = c(el('span', 'md-btn'), id); const i = el('img'); i.src = ICO + nom + '.png'; i.alt = ''; b.append(i); return b; };
+
+  function ecranDocs(f) {
+    const e = el('div', 'md md-docs');
+    const haut = el('div', 'md-haut');
+    const onglet = c(el('span', 'md-onglet', f.nom.slice(0, 18) + '…  ✕'), 'onglet');
+    haut.append(el('span', 'md-logo'), c(el('span', 'md-nom', f.nom), 'nom'), c(el('span', 'md-enreg', '☁ Enregistré'), 'enregistre'));
+    const menus = el('div', 'md-menus');
+    ['Fichier', 'Édition', 'Affichage', 'Insertion', 'Format', 'Outils'].forEach(m => menus.append(c(el('span', null, m), 'm-' + m.toLowerCase())));
+    const barre = el('div', 'md-barre');
+    barre.append(ico('orthographe', 'orthographe'), c(el('span', 'md-champ md-police', (f.police || 'Arial') + ' ▾'), 'police'), c(el('span', 'md-champ', f.taille || '11'), 'taille'),
+      c(el('span', 'md-btn md-g', 'G'), 'gras'), c(el('span', 'md-btn md-i', 'I'), 'italique'), c(el('span', 'md-btn md-s', 'S'), 'souligne'),
+      ico('centrer', 'centrer'), ico('droite', 'droite'), ico('puces', 'puces'), ico('numeros', 'numeros'));
+    const page = c(el('div', 'md-page'), 'page');
+    let n = 0;
+    f.lignes.forEach((l, k) => {
+      const p = c(el('p', 'md-l ' + l.c, l.t || ' '), 'L' + k);
+      if (/num/.test(l.c)) p.dataset.n = ++n + '.';
+      page.append(p);
+    });
+    e.append(onglet, haut, menus, barre, page);
+    if (f.menu) e.append(menu(f.menu));
+    return e;
+  }
+  function menu(m) {
+    const box = el('div', 'md-menu' + (Array.isArray(m) ? ' md-menu-format' : ''));
+    const items = Array.isArray(m) ? m : m.items;
+    items.forEach((t, k) => { const li = c(el('div', 'md-item', t), 'item-' + t); if (Array.isArray(m) ? k === items.length - 1 : t === m.hi) li.classList.add('hi'); box.append(li); });
+    return box;
+  }
+  function ecranAutre(f) {
+    const e = el('div', 'md md-' + f.ecran);
+    if (f.ecran === 'gaufre') {
+      e.append(el('div', 'md-google', 'Google'), c(el('span', 'md-gaufre', '⋮⋮⋮'), 'gaufre'));
+      if (f.menu) { const g = el('div', 'md-apps'); [['Drive', 'app-drive'], ['Docs', 'app-docs'], ['Classroom', 'app-classroom'], ['Gmail', 'app-gmail']].forEach(([t, id]) => g.append(c(el('span', 'md-app md-app-' + t.toLowerCase(), t), id))); e.append(g); }
+    }
+    if (f.ecran === 'accueil') e.append(el('div', 'md-titre', 'Docs — Créer un document'), c(el('div', 'md-vierge', '+ Document vierge'), 'vierge'));
+    if (f.ecran === 'drive') {
+      const g = el('div', 'md-col'); ['Mon Drive', 'Récents', 'Corbeille'].forEach(t => g.append(c(el('span', null, t), t === 'Récents' ? 'recents' : '')));
+      const d = el('div', 'md-liste'); d.append(c(el('div', 'md-fichier', '📄 ' + NOM), 'fichier'), el('div', 'md-fichier autre', '📄 Mon portrait chinois'));
+      e.append(g, d);
+    }
+    if (f.ecran === 'classroom') {
+      e.append(el('div', 'md-titre', 'Le rat de ville'), el('p', 'md-texte', 'Votre travail'));
+      if (f.joint) e.append(el('div', 'md-fichier', '📄 ' + NOM));
+      else e.append(c(el('span', 'md-bouton', '+ Ajouter ou créer'), 'ajouter'));
+      e.append(c(el('span', 'md-bouton md-plein', 'Remettre'), 'remettre'));
+    }
+    return e;
+  }
+
+  function cree(i) {
+    const frames = DEMOS[i]; if (!frames) return null;
+    const box = el('div', 'demo'); box.setAttribute('role', 'img');
+    const scene = el('div', 'demo-scene'), curseur = el('div', 'demo-curseur'), legende = el('p', 'demo-legende');
+    curseur.innerHTML = '<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M4 2l16 11-7 1.5L9.5 21z" fill="#111" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg>';
+    const ctrl = el('div', 'demo-ctrl'), prec = el('button', 'demo-b', '◀'), jouer = el('button', 'demo-b demo-jouer', '▶ Revoir'), suiv = el('button', 'demo-b', '▶');
+    [prec, jouer, suiv].forEach(b => { b.type = 'button'; });
+    prec.setAttribute('aria-label', 'Image précédente'); suiv.setAttribute('aria-label', 'Image suivante');
+    const points = el('span', 'demo-points');
+    ctrl.append(prec, points, suiv, jouer);
+    scene.append(curseur);
+    box.append(scene, legende, ctrl);
+    let k = 0, minuteur = null;
+    const calme = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function montre(n) {
+      k = (n + frames.length) % frames.length; const f = frames[k];
+      scene.querySelectorAll('.md').forEach(x => x.remove());
+      const e = f.ecran === 'docs' ? ecranDocs(f) : ecranAutre(f); scene.prepend(e);
+      legende.textContent = (k + 1) + '. ' + f.legende; box.setAttribute('aria-label', 'Démonstration : ' + frames.map(x => x.legende).join(' '));
+      points.replaceChildren(...frames.map((_, j) => el('span', j === k ? 'on' : '')));
+      box.classList.toggle('demo-ok', !!f.ok);
+      const cible = e.querySelector('[data-c="' + f.cible + '"]');
+      requestAnimationFrame(() => {
+        const m = e.querySelector('.md-menu'), ancre = m && e.querySelector('[data-c="' + (f.menu.sous || 'm-format') + '"]');
+        if (ancre) { const a = e.getBoundingClientRect(), r = ancre.getBoundingClientRect(); m.style.left = Math.min(r.left - a.left, a.width - 170) + 'px'; m.style.top = (r.bottom - a.top + 4) + 'px'; }
+        if (!cible) return;
+        const a = scene.getBoundingClientRect(), b = cible.getBoundingClientRect();
+        curseur.style.transform = 'translate(' + (b.left - a.left + Math.min(b.width / 2, 40)) + 'px,' + (b.top - a.top + b.height / 2) + 'px)';
+        cible.classList.add('md-vise');
+        setTimeout(() => cible.classList.add('md-clic'), calme ? 0 : 700);
+      });
+    }
+    function stop() { clearTimeout(minuteur); minuteur = null; jouer.textContent = '▶ Revoir'; }
+    function joue(depuis = 0) {
+      stop(); jouer.textContent = '⏸ Pause'; montre(depuis);
+      const suite = () => { if (k >= frames.length - 1) { stop(); return; } minuteur = setTimeout(() => { montre(k + 1); suite(); }, 2600); };
+      suite();
+    }
+    prec.addEventListener('click', () => { stop(); montre(k - 1); });
+    suiv.addEventListener('click', () => { stop(); montre(k + 1); });
+    jouer.addEventListener('click', () => { minuteur ? stop() : joue(k >= frames.length - 1 ? 0 : k); });
+    // Lancée seulement une fois visible ; immobile si l'élève a demandé moins d'animations.
+    setTimeout(() => { montre(0); if (!calme) joue(0); }, 60);
+    box.stop = stop;
+    return box;
+  }
+  return { cree, nombre: DEMOS.length };
+})();
