@@ -15,16 +15,16 @@ const ETAPES_RAT = [
     "titre": "Je recopie la fable",
     "min": 30,
     "periode": 1,
-    "consigne": "Un vers = une ligne : touche Entrée au bout de chaque vers. Les sept repères servent à retrouver ma place pendant la copie ; je sépare les strophes à l’étape 3.",
+    "consigne": "Un vers = une ligne : touche Entrée au bout de chaque vers. Je ne laisse PAS de ligne vide : les 28 vers se suivent. Je séparerai les strophes à l’étape 3.",
     "actions": [
       "Je tape le titre.",
-      "Je recopie les vers 1 à 4 (repère de strophe 1).",
-      "Je recopie les vers 5 à 8 (repère de strophe 2).",
-      "Je recopie les vers 9 à 12 (repère de strophe 3).",
-      "Je recopie les vers 13 à 16 (repère de strophe 4).",
-      "Je recopie les vers 17 à 20 (repère de strophe 5).",
-      "Je recopie les vers 21 à 24 (repère de strophe 6).",
-      "Je recopie les vers 25 à 28 (repère de strophe 7).",
+      "Je recopie les vers 1 à 4.",
+      "Je recopie les vers 5 à 8.",
+      "Je recopie les vers 9 à 12.",
+      "Je recopie les vers 13 à 16.",
+      "Je recopie les vers 17 à 20.",
+      "Je recopie les vers 21 à 24.",
+      "Je recopie les vers 25 à 28.",
       "Je tape l’auteur : Jean de La Fontaine."
     ]
   },
@@ -34,7 +34,7 @@ const ETAPES_RAT = [
     "periode": 1,
     "actions": [
       "Je mets une majuscule à la première lettre de chaque vers.",
-      "Je laisse une ligne vide tous les 4 vers : j’obtiens 7 strophes."
+      "Je clique à la fin du vers 4 et j’appuie sur Entrée : une ligne vide apparaît. Je fais pareil après les vers 8, 12, 16, 20 et 24 : j’obtiens 7 strophes."
     ]
   },
   {
