@@ -4,7 +4,6 @@
   const entetes=[...$('lignes').closest('table').querySelectorAll('thead th')], titres=entetes.map(n=>n.textContent);
   function presentation(actif){
     $('formatif-prof').hidden=!actif;
-    for(const id of ['humeurs','blocs','avis'])$(id).closest('section').hidden=actif;
     const labels=actif?['Élève','Classe','Actions déclarées','Ma place','Étapes terminées','Moi (C1–C4)','Blocage','Dernière action']:titres;
     entetes.forEach((n,i)=>n.textContent=labels[i]);
   }
