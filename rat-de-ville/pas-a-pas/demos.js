@@ -66,8 +66,14 @@ const Demo = (() => {
     ],
     [ // 9. Je m'évalue et je remets
       doc(base('centre gras capitales', 'centre garamond', 'droite italique souligne'), { cible: 'orthographe', legende: 'Vérifier l’orthographe (Ctrl + Alt + X).' }),
-      { ecran: 'classroom', cible: 'ajouter', legende: 'Classroom ▸ le devoir ▸ Ajouter ou créer ▸ Google Drive.' },
-      { ecran: 'classroom', joint: 1, cible: 'remettre', ok: 1, legende: 'Mon document est joint : Remettre. Bravo !' }
+      { ecran: 'classroom', cible: 'instructions', legende: 'Classroom ▸ ma classe ▸ Travaux et devoirs ▸ le devoir ▸ Afficher les instructions. Je relis ma grille.' },
+      { ecran: 'classroom', cible: 'ajouter', legende: 'À droite, dans « Vos devoirs » : + Ajouter ou créer.' },
+      { ecran: 'classroom', menu: 1, cible: 'gdrive', legende: 'Je choisis Google Drive.' },
+      { ecran: 'classroom', picker: 1, cible: 'fichier', legende: 'Je clique sur mon document : ' + NOM + '.' },
+      { ecran: 'classroom', picker: 2, cible: 'inserer', legende: 'Il est sélectionné : Ajouter.' },
+      { ecran: 'classroom', joint: 1, cible: 'remettre', legende: 'Mon document apparaît sous « Vos devoirs ». Joindre ne suffit pas : Remettre.' },
+      { ecran: 'classroom', joint: 1, confirme: 1, cible: 'confirmer', legende: 'Je confirme : Remettre une deuxième fois.' },
+      { ecran: 'classroom', joint: 1, remis: 1, cible: 'statut', ok: 1, legende: '« Vos devoirs » affiche Remis : c’est rendu. Bravo !' }
     ]
   ];
 
@@ -116,10 +122,38 @@ const Demo = (() => {
       e.append(g, d);
     }
     if (f.ecran === 'classroom') {
-      e.append(el('div', 'md-titre', 'Le rat de ville'), el('p', 'md-texte', 'Votre travail'));
-      if (f.joint) e.append(el('div', 'md-fichier', '📄 ' + NOM));
-      else e.append(c(el('span', 'md-bouton', '+ Ajouter ou créer'), 'ajouter'));
-      e.append(c(el('span', 'md-bouton md-plein', 'Remettre'), 'remettre'));
+      // Page d'un devoir : le sujet à gauche, la carte « Vos devoirs » à droite (comme dans Classroom).
+      const sujet = el('div', 'md-cr-sujet');
+      sujet.append(el('div', 'md-cr-icone', '📋'), el('div', 'md-cr-titre', '20261104 Le rat de ville'),
+        el('div', 'md-cr-meta', 'M. Louviaux · 4 nov.'), el('div', 'md-cr-meta', 'Date limite : 6 nov.'),
+        c(el('span', 'md-cr-lien', 'Afficher les instructions'), 'instructions'));
+      const carte = el('div', 'md-cr-carte'), tete = el('div', 'md-cr-tete');
+      tete.append(el('b', null, 'Vos devoirs'), c(el('span', 'md-cr-statut' + (f.remis ? ' remis' : ''), f.remis ? 'Remis' : 'Attribué'), 'statut'));
+      carte.append(tete);
+      if (f.joint) carte.append(el('div', 'md-cr-piece', '📄 ' + NOM));
+      if (!f.joint) carte.append(c(el('span', 'md-cr-ajouter', '+ Ajouter ou créer'), 'ajouter'));
+      if (f.menu) {
+        const m = el('div', 'md-cr-menu');
+        [['🟢 Google Drive', 'gdrive'], ['🔗 Lien', ''], ['📎 Fichier', '']].forEach(([t, id]) => m.append(c(el('div', 'md-item' + (id ? ' hi' : ''), t), id)));
+        m.append(el('div', 'md-cr-sep', 'Créer'), el('div', 'md-item', 'Docs'));
+        carte.append(m);
+      }
+      carte.append(f.remis ? el('span', 'md-cr-btn', 'Annuler l’envoi') : c(el('span', 'md-cr-btn md-cr-plein', f.joint ? 'Remettre' : 'Marquer comme terminé'), 'remettre'));
+      e.append(sujet, carte);
+      if (f.picker) {
+        const p = el('div', 'md-cr-picker'), liste = el('div', 'md-cr-fichiers');
+        p.append(el('div', 'md-cr-ptitre', 'Insérer des fichiers à l’aide de Google Drive'), el('div', 'md-cr-onglets', 'Récents   Mon Drive'));
+        const mien = c(el('div', 'md-cr-f' + (f.picker === 2 ? ' choisi' : ''), '📄 ' + NOM), 'fichier');
+        liste.append(mien, el('div', 'md-cr-f autre', '📄 Mon portrait chinois'));
+        const pied = el('div', 'md-cr-ppied'); pied.append(el('span', 'md-cr-btn', 'Annuler'), c(el('span', 'md-cr-btn md-cr-plein' + (f.picker === 2 ? '' : ' eteint'), 'Ajouter'), 'inserer'));
+        p.append(liste, pied); e.append(p);
+      }
+      if (f.confirme) {
+        const dlg = el('div', 'md-cr-dialogue');
+        dlg.append(el('b', null, 'Remettre votre devoir ?'), el('p', null, '1 pièce jointe sera envoyée pour « 20261104 Le rat de ville ».'), el('div', 'md-cr-piece', '📄 ' + NOM));
+        const pied = el('div', 'md-cr-ppied'); pied.append(el('span', 'md-cr-btn', 'Annuler'), c(el('span', 'md-cr-btn md-cr-plein', 'Remettre'), 'confirmer'));
+        dlg.append(pied); e.append(dlg);
+      }
     }
     return e;
   }
