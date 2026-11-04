@@ -26,7 +26,28 @@ const ETAPES_RAT = [
       "Je recopie les vers 21 à 24.",
       "Je recopie les vers 25 à 28.",
       "Je tape l’auteur : Jean de La Fontaine."
-    ]
+    ],
+    "images": { "0": "fable/titre.png", "1": "fable/strophe-1.png", "2": "fable/strophe-2.png", "3": "fable/strophe-3.png", "4": "fable/strophe-4.png", "5": "fable/strophe-5.png", "6": "fable/strophe-6.png", "7": "fable/strophe-7.png", "8": "fable/auteur.png" },
+    "aides": {
+      "1": {
+        "titre": "Comment taper ç et à ?",
+        "explication": "Sur le clavier belge : ç est sur la touche 9, à sur la touche 0. Je tape la touche seule, sans Maj.",
+        "exemple": "façon · à des reliefs",
+        "rappel": "Avec Maj, ces touches donnent 9 et 0. Je me suis trompé ? ↶ Annuler (Ctrl + Z)."
+      },
+      "3": {
+        "titre": "Comment taper ê (accent circonflexe) ?",
+        "explication": "Je tape d’abord la touche ^, à droite du P : rien ne s’affiche, c’est normal. Puis je tape e : ê apparaît.",
+        "exemple": "honnête · fête",
+        "rappel": "^ puis la voyelle : ^ + o donne ô, ^ + a donne â."
+      },
+      "5": {
+        "titre": "Comment taper ô et les guillemets « » ?",
+        "explication": "ô : je tape la touche ^, à droite du P (rien ne s’affiche, c’est normal), puis o. Guillemets : j’utilise les guillemets américains \" : la touche 3, sans Maj, avant et après les mots.",
+        "exemple": "aussitôt · rôt · \"achevons tout notre rôt.\"",
+        "rappel": "Le ^ apparaît seul ? Je l’efface et je recommence : ^, puis o, sans espace. Les guillemets « » de l’image ne sont pas sur le clavier : \" les remplace."
+      }
+    }
   },
   {
     "titre": "Je structure",
@@ -35,7 +56,16 @@ const ETAPES_RAT = [
     "actions": [
       "Je mets une majuscule à la première lettre de chaque vers.",
       "Je clique à la fin du vers 4 et j’appuie sur Entrée : une ligne vide apparaît. Je fais pareil après les vers 8, 12, 16, 20 et 24 : j’obtiens 7 strophes."
-    ]
+    ],
+    "aides": {
+      "0": {
+        "titre": "Comment mettre à en majuscule (À) ?",
+        "explication": "Je double-clique sur le à pour le sélectionner, seul. Puis Format ▸ Texte ▸ Minuscules/majuscules ▸ MAJUSCULES.",
+        "exemple": "à la porte de la salle → À la porte de la salle",
+        "rappel": "Deux vers commencent par à : le vers 4 et le vers 13. Pour les autres lettres, j’efface la minuscule et je tape la majuscule avec Maj.",
+        "image": "capture-majuscules.png"
+      }
+    }
   },
   {
     "titre": "Je ferme sans remettre",
