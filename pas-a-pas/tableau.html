@@ -158,8 +158,9 @@ tr.fini td{color:var(--doux)}
 .filtre-aide input{accent-color:var(--encre-bouton);width:17px;height:17px}
 #erreur-tableau{color:var(--faux);font-weight:600}
 @media(max-width:640px){.outils-secondaires>details{min-width:100%}.entete-panneau h2{font-size:1.15rem}}
-.vue-eleves .page> :not(header):not(#gestion-eleves):not(#demo){display:none!important}
-.vue-eleves .page>header>:not(h1):not(.navigation-eleves){display:none!important}
+.vue-onglet .page> :not(header):not(.onglet-actif):not(#demo){display:none!important}
+.vue-onglet .page>header>:not(h1):not(.navigation-eleves){display:none!important}
+body:not(.vue-onglet) #panneau-classes{display:none!important}
 .navigation-eleves{display:flex;gap:12px;margin:12px 0}
 #gestion-eleves-lien{cursor:pointer}
 </style>
@@ -176,7 +177,7 @@ tr.fini td{color:var(--doux)}
       <span class="seq-etat" id="seq-etat" hidden></span>
       <span class="maj" id="maj"></span>
     </div>
-    <div class="outils-secondaires"><a class="btn vide" id="gestion-eleves-lien" target="_blank" rel="noopener">Gérer les élèves ↗</a>
+    <div class="outils-secondaires"><a class="btn vide" id="gestion-eleves-lien" target="_blank" rel="noopener">Gérer les élèves ↗</a><a class="btn vide" id="gestion-classes-lien" target="_blank" rel="noopener">Cours et classes ↗</a>
       <details id="ressources-menu"><summary>Ressources professeur</summary><div class="contenu-menu"><nav id="ressources-prof" class="reglages" aria-label="Documents du professeur" aria-live="polite"></nav><div id="guide-actions"></div></div></details>
       <details id="gestion-menu"><summary>Gestion des parcours</summary><div class="contenu-menu"><p class="astuce">Les reprises conservent les anciennes tentatives.</p><div id="gestion-actions"></div><p class="astuce" id="gestion-attente" hidden>Les commandes de reprise attendent la confirmation du serveur.</p></div></details>
     </div>
@@ -261,7 +262,7 @@ tr.fini td{color:var(--doux)}
   </form>
 </dialog>
 
-<script defer src="https://root75.github.io/campin-public/messagerie/pas-a-pas/visuels.js?v=20261103"></script><script defer src="https://root75.github.io/campin-public/pas-a-pas/tableau.js?v=syntheses-20261104"></script>
+<script defer src="https://root75.github.io/campin-public/messagerie/pas-a-pas/visuels.js?v=20261103"></script><script defer src="https://root75.github.io/campin-public/pas-a-pas/tableau.js?v=onglets-20261104"></script>
 <script defer src="https://root75.github.io/campin-public/pas-a-pas/python-couleurs.js"></script>
 <script defer src="https://root75.github.io/campin-public/rat-de-ville/pas-a-pas/contenu.js"></script>
 <script defer src="https://root75.github.io/campin-public/pas-a-pas/formatif-prof.js?v=syntheses-20261104"></script>

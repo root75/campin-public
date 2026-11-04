@@ -669,15 +669,21 @@ async function chargeCatalogue(frais=false){
 actualiser.addEventListener("click",()=>chargeCatalogue(true));
 if(!SUIVI){document.title="APERÇU FICTIF — tableau professeur";$("demo").hidden=false;}
 const ADRESSE_TABLEAU='https://script.google.com/a/macros/arcampin.be/s/AKfycbyOPTaq-L1PuittB1rkkiL9OOtShFc2WpiD8H_pH_INaw9ePWenCzhlIPlHu4zBOgLk/exec?vue=prof';
+/* Trois pages : le tableau du cours ; ?onglet=eleves (la classe de chaque élève) ;
+   ?onglet=classes (les cours ouverts à chaque classe). Même script, mêmes droits professeur. */
+const ONGLETS={eleves:{id:'gestion-eleves',titre:'Gestion des élèves',autre:'classes',autreTitre:'Cours et classes'},
+  classes:{id:'panneau-classes',titre:'Cours et classes',autre:'eleves',autreTitre:'Gestion des élèves'}};
 function ouvreVueProf(parametres){
-  const eleves=parametres.onglet==='eleves';
-  $("gestion-eleves-lien").href=SUIVI?ADRESSE_TABLEAU+'&onglet=eleves':location.pathname+'?onglet=eleves';
-  if(!eleves){chargeCatalogue();return;}
-  document.body.classList.add('vue-eleves');document.title='Gestion des élèves — Mes cours';
-  document.querySelector('header h1').textContent='Gestion des élèves';
-  const navigation=txt('nav','navigation-eleves'),retour=txt('a','btn vide','← Retour au tableau');
-  retour.href=SUIVI?ADRESSE_TABLEAU:location.pathname;retour.target='_top';navigation.append(retour);document.querySelector('header').append(navigation);
-  $("gestion-eleves").hidden=false;chargeClasses();
+  const lien=o=>SUIVI?ADRESSE_TABLEAU+'&onglet='+o:location.pathname+'?onglet='+o;
+  $("gestion-eleves-lien").href=lien('eleves');$("gestion-classes-lien").href=lien('classes');
+  const o=ONGLETS[parametres.onglet];
+  if(!o){chargeCatalogue();return;}
+  document.body.classList.add('vue-onglet');$(o.id).classList.add('onglet-actif');document.title=o.titre+' — Mes cours';
+  document.querySelector('header h1').textContent=o.titre;
+  const navigation=txt('nav','navigation-eleves'),retour=txt('a','btn vide','← Retour au tableau'),autre=txt('a','btn vide',o.autreTitre+' →');
+  retour.href=SUIVI?ADRESSE_TABLEAU:location.pathname;retour.target='_top';autre.href=lien(o.autre);autre.target='_top';
+  navigation.append(retour,autre);document.querySelector('header').append(navigation);
+  $(o.id).hidden=false;chargeClasses();
 }
 // L'URL extérieure est obtenue par le pont Apps Script, sans modifier les droits professeur.
 if(SUIVI&&google.script.url?.getLocation)google.script.url.getLocation(l=>ouvreVueProf(l.parameter||{}));
