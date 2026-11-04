@@ -2,7 +2,7 @@
 
 Entrée du catalogue : `rat-de-ville-formatif`, 9 étapes sur deux périodes.
 Les 46 petites cases (une action ou une vérification par case) déclarent les actions terminées ; elles ne corrigent pas la copie.
-Navigation libre, sept repères pendant la copie ; grille complète et colonne « Moi » en étape finale (bouton 📋). Plus de repère collectif depuis le 4/11 (voir LIVRAISON-RAT.md).
+Navigation libre, copie par groupes de quatre vers (strophes séparées à l’étape 3) ; grille complète et colonne « Moi » en étape finale (bouton 📋). Plus de repère collectif depuis le 4/11 (voir LIVRAISON-RAT.md).
 À l’étape 8, chaque partie du bloc-notes dispose d’une explication à déplier :
 un élément du festin en exemple, un geste détaillé en exemple et un début de phrase
 à compléter. Les productions sont écrites dans Docs ; au moins six gestes restent attendus.
