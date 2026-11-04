@@ -91,6 +91,24 @@ body{background:radial-gradient(circle at 10% 0,var(--fromage-pale),transparent 
 .md-gaufre{position:absolute;right:16px;top:16px;font-size:18px;letter-spacing:-3px;padding:4px 8px}
 .md-apps{position:absolute;right:14px;top:52px;display:grid;grid-template-columns:repeat(2,80px);gap:8px;background:#fff;border:1px solid #c9d3db;border-radius:12px;padding:10px;box-shadow:0 4px 14px #0003}
 .md-app{text-align:center;padding:10px 4px;border-radius:8px;background:#f1f3f4;font-weight:700;font-size:12px}
+.md-classroom{display:grid;grid-template-columns:1fr minmax(170px,210px);gap:14px;padding:14px;align-items:start;align-content:start;min-height:320px;box-sizing:border-box}
+.md-cr-sujet{display:grid;gap:4px;align-content:start}.md-cr-icone{width:34px;height:34px;border-radius:50%;background:#1e8e3e;display:grid;place-items:center;font-size:16px}
+.md-cr-titre{font-size:17px;color:#137333;font-weight:400}.md-cr-meta{color:#5f6368;font-size:12px}
+.md-cr-lien{color:#1a73e8;font-weight:700;margin-top:6px;width:max-content}
+.md-cr-carte{border:1px solid #dadce0;border-radius:8px;padding:12px;display:grid;gap:8px;box-shadow:0 1px 3px #0002;position:relative}
+.md-cr-tete{display:flex;justify-content:space-between;align-items:center;gap:6px}.md-cr-statut{color:#137333;font-size:12px}.md-cr-statut.remis{font-weight:700}
+.md-cr-ajouter{border:1px solid #dadce0;border-radius:4px;padding:6px;text-align:center;color:#1a73e8;font-weight:700}
+.md-cr-btn{border:1px solid #dadce0;border-radius:4px;padding:6px 10px;text-align:center;color:#1a73e8;font-weight:700}
+.md-cr-plein{background:#1a73e8;border-color:#1a73e8;color:#fff}.md-cr-plein.eteint{background:#c5d6f2;border-color:#c5d6f2}
+.md-cr-piece{border:1px solid #dadce0;border-radius:4px;padding:6px;font-size:12px;overflow-wrap:anywhere}
+.md-cr-menu{position:absolute;left:12px;right:12px;top:72px;background:#fff;border:1px solid #c9d3db;border-radius:8px;box-shadow:0 4px 14px #0003;padding:4px 0;z-index:3}
+.md-cr-sep{padding:6px 14px 2px;font-size:11px;color:#5f6368;border-top:1px solid #e3e8ec;margin-top:4px}
+.md-cr-picker,.md-cr-dialogue{position:absolute;inset:18px 6%;background:#fff;border-radius:8px;box-shadow:0 6px 24px #0005;padding:12px;display:grid;gap:8px;align-content:start;z-index:4}
+.md-cr-dialogue{inset:40px 14%}.md-cr-dialogue p{margin:0;color:#5f6368}
+.md-cr-ptitre{font-weight:700}.md-cr-onglets{color:#1a73e8;font-size:12px;border-bottom:1px solid #e3e8ec;padding-bottom:6px;white-space:pre}
+.md-cr-fichiers{display:grid;gap:4px}.md-cr-f{padding:6px 8px;border-radius:6px;overflow-wrap:anywhere}.md-cr-f.choisi{background:#e8f0fe;outline:2px solid #1a73e8}.md-cr-f.autre{opacity:.6}
+.md-cr-ppied{display:flex;justify-content:flex-end;gap:8px}
+@media(max-width:560px){.md-classroom{grid-template-columns:1fr;min-height:430px}.md-cr-picker,.md-cr-dialogue{inset:10px 3%}}
 .md-app-docs{color:#1a73e8}.md-app-drive{color:#188038}.md-app-classroom{color:#137333}
 .md-titre{font-size:16px;font-weight:700;padding:16px}
 .md-vierge{margin:0 16px;width:120px;height:140px;border:1px solid #c9d3db;border-radius:6px;display:grid;place-items:center;text-align:center;font-weight:700;color:#1a73e8}
@@ -148,7 +166,7 @@ table{border-collapse:collapse;width:100%}th,td{border:1px solid var(--trait);pa
 <footer class="note">FMTTN S1 — M. Louviaux — Formatif — Le rat de ville · <a href="https://root75.github.io/campin-public/rat-de-ville/" target="_blank" rel="noopener">Je révise</a></footer>
 </div>
 <script defer src="https://root75.github.io/campin-public/rat-de-ville/pas-a-pas/contenu.js?v=coince-20261104"></script>
-<script defer src="https://root75.github.io/campin-public/rat-de-ville/pas-a-pas/demos.js?v=coince-20261104"></script>
+<script defer src="https://root75.github.io/campin-public/rat-de-ville/pas-a-pas/demos.js?v=classroom-20261104"></script>
 <script defer src="https://root75.github.io/campin-public/pas-a-pas/humeur-avis.js?v=20261104"></script>
 <script defer src="https://root75.github.io/campin-public/rat-de-ville/pas-a-pas/fiche.js?v=humeur-20261104"></script>
 </body></html>
