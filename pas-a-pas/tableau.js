@@ -63,9 +63,9 @@ function remplitSeances(liste){
   SEANCES = liste;
   const sel = $("seance");
   sel.replaceChildren(...(liste.length ? liste : [{classe:"", debut:0}]).map((s,i)=>{
-    const o = txt("option", null, s.debut ? (i===0 && !s.fin ? "En cours · " : "") + s.classe + " · " + heure(s.debut) : "Toutes (aucune séance démarrée)");
+    const o = txt("option", null, s.debut ? (i===0 && !s.fin && s.active!==false ? "En cours · " : "") + s.classe + " · " + heure(s.debut) : "Toutes (aucune séance démarrée)");
     o.value = i; return o; }));
-
+  etatTerminer();
   charge();
 }
 function chargeSeances(){
@@ -225,6 +225,19 @@ $("nouvelle").addEventListener("click", async()=>{
     choix.replaceChildren(...[["","Choisir une classe"],...noms.map(n=>[n,n])].map(([valeur,texte])=>{const o=txt('option',null,texte);o.value=valeur;return o;}));
     choix.value='';$("dlg").showModal();choix.focus();
   }finally{bouton.disabled=false;}
+});
+/* Terminer : la séance en cours s'arrête, les élèves ne sont plus envoyés sur ce cours. Rien n'est effacé. */
+function etatTerminer(){
+  const s=SEANCES[Number($("seance").value)]||{},b=$("terminer");
+  b.hidden=!(s.debut && Number($("seance").value)===0 && !s.fin && s.active!==false);
+}
+$("seance").addEventListener("change", etatTerminer);
+$("terminer").addEventListener("click", ()=>{
+  const s=SEANCES[0];if(!s||!s.debut)return;
+  if(!confirm("Terminer la séance "+s.classe+" ? Les élèves ne seront plus envoyés sur ce cours. Rien n'est effacé."))return;
+  if(!SUIVI){ remplitSeances(SEANCES.map((x,i)=>i?x:Object.assign({},x,{active:false}))); return; }
+  const b=$("terminer");b.disabled=true;
+  google.script.run.withSuccessHandler(l=>{b.disabled=false;remplitSeances(l);}).withFailureHandler(e=>{b.disabled=false;erreur(e);}).terminerSeance($("cours").value, s.debut);
 });
 $("dlg").addEventListener("close", ()=>{
   const classe = $("dlg-classe").value.trim();

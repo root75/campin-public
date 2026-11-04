@@ -69,8 +69,17 @@ function dessine(){
     if(i+delta>8){const n=txt('button','btn vide','Ma grille d’évaluation →');n.type='button';n.addEventListener('click',()=>{vueGrille=true;dessine();scrollTo(0,0);});nav.append(n);continue;}
     const n=txt('button','btn vide',label);n.type='button';n.addEventListener('click',()=>sauve({type:'position',etape:i+delta+1}));nav.append(n);
   }z.append(nav,txt('p','note','Je peux continuer même si une case reste vide. Je coche quand j’ai terminé ; le professeur examine mon document.'));
-  cloche();progression();commandes();
+  cloche();coince();progression();commandes();
 }
+/* « Ça coince ? » : seulement les aides de l'étape affichée (et « Je me trompe »), sauf si l'élève demande tout. */
+let coinceTout=false;
+function coince(){
+  const n=vueGrille?0:etat.position;
+  document.querySelectorAll('.coince section[data-etapes]').forEach(g=>{const e=g.dataset.etapes.split(' ');g.hidden=!(coinceTout||!n||e.includes('tout')||e.includes(String(n)));});
+  $('coince-etape').textContent=coinceTout||!n?'Toutes les aides.':'Les aides de l’étape '+n+'.';
+  $('coince-tout').textContent=coinceTout?'Seulement mon étape':'Voir toutes les aides';
+}
+$('coince-tout').addEventListener('click',()=>{coinceTout=!coinceTout;coince();});
 function cloche(){
   $('aide').classList.toggle('active',!!etat.aide);
   $('aide-texte').textContent=etat.aide?'J’attends de l’aide (étape '+etat.aide.bloc+'). Je continue ailleurs. Débloqué ? Je re-clique.':'Relu ? Demandé au voisin ? Feuille posée ? Alors je sonne.';
@@ -81,7 +90,7 @@ function dessineGrille(z){
   z.replaceChildren(txt('p','numero','Étape finale · après mes 9 étapes'),txt('h2',null,'Ma grille d’évaluation'),txt('p','agir','Pour chaque critère, je lis les colonnes A à D. Je choisis ma lettre dans « Moi ».'),GRILLE);
   GRILLE.querySelectorAll('[data-critere]').forEach(n=>{n.value=etat.moi[n.dataset.critere]||'';});
   const nav=txt('div','actions'),n=txt('button','btn vide','← Étape 9');n.type='button';n.addEventListener('click',()=>sauve({type:'position',etape:9}));nav.append(n);z.append(nav);
-  cloche();progression();commandes();
+  cloche();coince();progression();commandes();
 }
 /* Encouragements : chaque mission cochée, chaque étape terminée. */
 const BRAVOS=['Bravo !','Super, une mission de plus !','Bien joué !','Continue comme ça !','Yes ! 🧀','Ça avance !','Top !'];
