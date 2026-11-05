@@ -50,3 +50,9 @@ locale au panneau, sans bloquer la fiche.
 
 Étape 6 : 7 cases ; étape 9 : 13 cases (10 min), voisin après la colonne « Moi ». 46 cases au lieu de 35 :
 `CASES_RAT` de `Code.gs` doit suivre `contenu.js`.
+
+## Document à côté du cours (5 novembre 2026)
+
+Étapes 1 et 5, sous les cases : courte consigne (champ `apres` de `contenu.js`) pour sortir
+l'onglet Docs en fenêtre et le placer à droite (⊞ Windows + →), le cours à gauche (⊞ Windows + ←).
+Pas de case : `CASES_RAT` ne change pas. Geste à vérifier sur un poste de l'école.
