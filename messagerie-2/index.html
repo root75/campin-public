@@ -137,7 +137,7 @@ footer{font-size:.9rem;color:var(--doux);text-align:center}
       <li><span><strong>Transférer</strong> = faire suivre le message, avec sa pièce jointe (objet « TR: »).</span></li>
       <li><span>Joindre un fichier : onglet <strong>Message</strong> ▸ le trombone <span class="touche">📎</span> <strong>Joindre un fichier</strong>.</span></li>
     </ol>
-    <p class="note">Ensuite : le quiz (5 questions), puis les cartes pour réviser.</p>
+    <p class="note">Ensuite : le quiz (5 questions, tirées parmi 15 : il change à chaque fois), puis les 15 cartes pour réviser.</p>
     <div class="actions"><button class="btn plein" type="button" data-aller="quiz">Commencer le quiz</button></div>
   </section>
 
@@ -235,6 +235,66 @@ const QUIZ = [
     h:"Le trombone, comme celui qui attache une feuille à une lettre.",
     e:"Joindre un fichier ▸ OneDrive ▸ ta fiche ▸ Joindre : sa carte apparaît sous l'objet." }
 ];
+/* Règle du 05/11/2026 : trois variantes du même type par question, réponses distinctes.
+   QUIZ[i] est la variante 1 ; VARIANTES[i] les deux autres. Le quiz en tire une au hasard à chaque passage. */
+const VARIANTES = [
+  [ { q:"Un message de « support-ecole@secure-login.ru » me demande mon mot de passe pour « vérifier mon compte ». Que fais-je ?",
+      c:["Je ne réponds pas, je ne clique sur rien, et je le montre à mon professeur.", "Je réponds avec mon mot de passe pour garder mon compte.", "Je clique sur le lien pour voir la page.", "Je le transfère à toute ma classe pour les prévenir."],
+      p:[null, "Personne de sérieux ne demande ton mot de passe par message : c'est un piège pour voler ton compte.", "Le lien mène souvent à une fausse page qui vole ce que tu tapes.", "Tu enverrais le piège à toute ta classe."],
+      h:"L'adresse vient-elle de l'école ? Qui demande un mot de passe par message ?",
+      e:"Un mot de passe ne se donne jamais par message. Adresse inconnue + demande urgente = piège." },
+    { q:"Un ami m'envoie un message sans texte, avec seulement « facture.exe » en pièce jointe. Que fais-je ?",
+      c:["Je ne l'ouvre pas, et je demande à mon ami, autrement, s'il me l'a vraiment envoyé.", "Je l'ouvre : c'est mon ami.", "Je l'ouvre puis je lui réponds « c'est quoi ? ».", "Je le transfère à un autre ami pour avoir son avis."],
+      p:[null, "Un compte d'ami peut être piraté. Un .exe est un programme : il peut contenir un virus.", "Ouvrir d'abord, c'est déjà trop tard si c'est un virus.", "Tu enverrais le danger à un autre ami."],
+      h:"Un message vide, un fichier inattendu en .exe…",
+      e:"Même si l'expéditeur est connu : fichier inattendu (.exe, .zip) = je n'ouvre pas, je vérifie autrement." } ],
+  [ { q:"Je veux garder sur mon OneDrive la fiche reçue, sans la modifier tout de suite. Que fais-je ?",
+      c:["Flèche ▾ de la carte du fichier ▸ Enregistrer dans OneDrive.", "Je clique sur Transférer.", "Je clique sur Répondre à tous.", "Je supprime le message."],
+      p:[null, "Transférer envoie le message à quelqu'un d'autre : rien n'est rangé chez toi.", "Répondre à tous écrit à tout le monde, ça ne range pas la fiche.", "Tu perdrais la fiche avec le message."],
+      h:"La petite flèche est à droite de la carte du fichier.",
+      e:"Flèche ▾ ▸ Enregistrer dans OneDrive : la fiche est rangée chez moi, je la retrouve plus tard. (Libellé à vérifier sur un poste de l'école.)" },
+    { q:"Je veux seulement regarder la fiche reçue, sans la modifier. Que fais-je ?",
+      c:["Je clique sur la carte du fichier : un aperçu s'ouvre.", "Je clique sur Transférer.", "Je clique sur Nouveau message.", "Je clique sur Répondre."],
+      p:[null, "Transférer envoie le message à quelqu'un d'autre.", "Un nouveau message est vide : la fiche n'y est pas.", "Répondre ouvre une réponse, pas la fiche."],
+      h:"La carte du fichier est sous l'objet du message.",
+      e:"Un clic sur la carte ouvre un aperçu pour lire. Pour compléter : flèche ▾ ▸ Modifier dans le navigateur." } ],
+  [ { q:"Mon professeur écrit à toute la classe et demande que chacun réponde à tout le monde. Quel bouton ?",
+      c:["Répondre à tous", "Répondre", "Transférer", "Nouveau message, avec mon professeur seul dans À"],
+      p:[null, "Seul ton professeur recevrait ta réponse, pas la classe.", "Transférer, c'est faire suivre le message à quelqu'un d'autre.", "Seul ton professeur le recevrait."],
+      h:"Tous ceux qui ont reçu le message doivent lire ma réponse.",
+      e:"Répondre à tous : ta réponse part à l'expéditeur et à tous les destinataires. À utiliser seulement quand c'est demandé." },
+    { q:"Je veux écrire à mon professeur à propos d'un tout autre sujet. Quel bouton ?",
+      c:["Nouveau message", "Répondre, sur son dernier message", "Répondre à tous", "Transférer"],
+      p:[null, "Ton message serait rangé dans une conversation qui parle d'autre chose.", "Toute la classe recevrait ton message.", "Transférer fait suivre un ancien message à quelqu'un d'autre."],
+      h:"Nouveau sujet, nouveau…",
+      e:"Un nouveau sujet = un nouveau message, avec son propre objet. Répondre garde l'ancien sujet." } ],
+  [ { q:"Je transfère un message. Par quoi commence son objet ?",
+      c:["« TR: »", "« RE: »", "« Cc: »", "« À: »"],
+      p:[null, "« RE: », c'est quand on répond.", "Cc, c'est la ligne des copies, pas l'objet.", "À, c'est la ligne de l'adresse, pas l'objet."],
+      h:"TR comme…",
+      e:"Transférer : l'objet commence par « TR: » et la pièce jointe part avec le message." },
+    { q:"Je réponds à un message. Par quoi commence son objet ?",
+      c:["« RE: »", "« TR: »", "« Cci: »", "Rien : l'objet est vide."],
+      p:[null, "« TR: », c'est quand on transfère.", "Cci, c'est la ligne des copies cachées, pas l'objet.", "Outlook garde l'objet du message et ajoute deux lettres devant."],
+      h:"RE comme « réponse ».",
+      e:"Répondre : l'objet est gardé, avec « RE: » devant. Le destinataire voit que c'est la suite de la conversation." } ],
+  [ { q:"Je veux écrire un nouveau message. Où est le bouton ?",
+      c:["Onglet Accueil ▸ Nouveau message.", "Onglet Message ▸ le trombone Joindre un fichier.", "Onglet Afficher ▸ Disposition.", "Le bouton Envoyer."],
+      p:[null, "Le trombone joint un fichier à un message déjà ouvert.", "Afficher change la vue, il n'ouvre pas de message.", "Envoyer fait partir un message déjà écrit."],
+      h:"C'est l'onglet de départ, ouvert d'office.",
+      e:"Onglet Accueil ▸ Nouveau message, tout à gauche : une fenêtre vide s'ouvre." },
+    { q:"Je veux que le message s'ouvre en dessous de la liste, pas à droite. Où est le réglage ?",
+      c:["Onglet Afficher ▸ Disposition.", "Onglet Accueil ▸ Nouveau message.", "Onglet Message ▸ le trombone Joindre un fichier.", "Le bouton Envoyer."],
+      p:[null, "Ça ouvre un nouveau message vide.", "Le trombone joint un fichier, il ne change pas la vue.", "Envoyer fait partir un message."],
+      h:"Je veux changer ce que j'affiche…",
+      e:"Onglet Afficher ▸ Disposition ▸ Volet de lecture : le réglage reste pour les prochaines fois." } ]
+];
+const TOUTES = QUIZ.map((q,i)=>[q, ...VARIANTES[i]]);
+const CARTES = TOUTES.flat();
+let tirage = [];
+const tire = () => { tirage = TOUTES.map(v => v[Math.floor(Math.random()*v.length)]); };
+tire();
+
 const CONSOLIDATION = { q:"Où Outlook range-t-il la fiche que j'ouvre avec « Modifier dans le navigateur » ?",
   c:["Dans OneDrive, dossier Pièces jointes.", "Dans Brouillons.", "Dans Éléments envoyés.", "Nulle part : elle disparaît quand je ferme l'onglet."],
   p:[null, "Brouillons garde les messages pas envoyés, pas les fichiers.", "Éléments envoyés garde les messages envoyés.", "Word enregistre tout seul : elle reste dans ton OneDrive."],
@@ -297,13 +357,13 @@ function afficheQuiz(){
                    s>=3 ? "Bien. Relis les cartes des questions ratées, puis recommence." :
                           "Relis « L'essentiel », regarde « Ça coince ? », puis recommence."));
     const act = el("div","actions");
-    const r = el("button","btn plein","Recommencer"); r.type="button"; r.addEventListener("click",()=>{n=0;resultats=[];afficheQuiz();});
+    const r = el("button","btn plein","Recommencer"); r.type="button"; r.addEventListener("click",()=>{n=0;resultats=[];tire();afficheQuiz();});
     const c = el("button","btn vide","Réviser avec les cartes"); c.type="button"; c.addEventListener("click",()=>montre("cartes"));
     act.append(r,c); wrap.append(act); return;
   }
   wrap.append(barre(), el("div","numero","Question "+(n+1)+" sur "+QUIZ.length));
   const zq = el("div"); zq.style.display="grid"; zq.style.gap="14px"; wrap.append(zq);
-  const act = question(zq, QUIZ[n], juste=>{
+  const act = question(zq, tirage[n], juste=>{
     resultats.push(juste);
     const suiv = el("button","btn plein", n+1<QUIZ.length?"Question suivante":"Voir mon score"); suiv.type="button";
     suiv.addEventListener("click",()=>{ n++; afficheQuiz(); });
@@ -321,23 +381,23 @@ function seule(id, Q){
 seule("consolidation", CONSOLIDATION);
 seule("depassement", DEPASSEMENT);
 
-/* Cartes mémoire : les mêmes questions que le quiz */
+/* Cartes mémoire : toutes les variantes du quiz */
 let ic=0; const carte=document.getElementById("carte");
 function afficheCarte(){
   carte.classList.remove("verso");
-  const Q=QUIZ[ic];
+  const Q=CARTES[ic];
   document.getElementById("carte-q").textContent=Q.q;
   document.getElementById("carte-r").textContent=Q.c[0];
   document.getElementById("carte-e").textContent=Q.e;
-  document.getElementById("carte-n").textContent=(ic+1)+" / "+QUIZ.length;
+  document.getElementById("carte-n").textContent=(ic+1)+" / "+CARTES.length;
   document.getElementById("carte-avant").disabled = ic===0;
-  document.getElementById("carte-apres").disabled = ic===QUIZ.length-1;
+  document.getElementById("carte-apres").disabled = ic===CARTES.length-1;
 }
 const retourne=()=>carte.classList.toggle("verso");
 carte.addEventListener("click",retourne);
 document.getElementById("carte-retourne").addEventListener("click",retourne);
 document.getElementById("carte-avant").addEventListener("click",()=>{ if(ic>0){ic--;afficheCarte();} });
-document.getElementById("carte-apres").addEventListener("click",()=>{ if(ic<QUIZ.length-1){ic++;afficheCarte();} });
+document.getElementById("carte-apres").addEventListener("click",()=>{ if(ic<CARTES.length-1){ic++;afficheCarte();} });
 afficheCarte();
 
 /* Onglets */
