@@ -47,6 +47,10 @@ Sans cette installation, le tableau signale que le serveur utilise encore sa lis
    toujours la même pour lui : la réponse du voisin ne valide pas la sienne. Seules les étapes
    de production guidée (brouillon, saisie du travail) gardent une règle unique.
 3. Si un mode séquence est prévu, ajouter aussi son conducteur dans `sequences.json`.
+   Option `"ecransSurPostes": true` au niveau du cours (activée pour `labo-07` le 05/11/2026) :
+   pendant un moment `ecran`, les postes élèves affichent aussi ses `lignes`, `questions`,
+   `paires` et `exemple` sous « Regarde le tableau » ; le `repere` reste réservé au professeur.
+   Sans l'option, le poste n'affiche que « Regarde le tableau ».
 4. Publier les fichiers, attendre la fin du déploiement GitHub Pages, puis cliquer sur
    **Actualiser le catalogue** dans le tableau professeur. La sélection et la séance en cours
    sont conservées si le cours existe toujours. Ce bouton ne lance aucune séance et ne change

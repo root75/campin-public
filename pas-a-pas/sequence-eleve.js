@@ -28,7 +28,11 @@
 #seq .sq-choix button{flex:1;min-width:8rem}
 #seq .sq-choix button.pris{background:var(--fromage-pale);border-color:var(--fromage);color:var(--encre)}
 #seq .sq-res{font-weight:700;margin:0}
-#seq .sq-res.juste{color:var(--juste)} #seq .sq-res.faux{color:var(--faux)}`;
+#seq .sq-res.juste{color:var(--juste)} #seq .sq-res.faux{color:var(--faux)}
+#seq .sq-copie{display:grid;gap:8px;text-align:left;border-top:1px solid var(--trait);padding-top:14px;font-size:1.1rem}
+#seq .sq-copie h3{margin:0;font-size:1.3rem}#seq .sq-copie p{margin:0}
+#seq .sq-sous{font-weight:700;color:var(--doux)}#seq .sq-questions{margin:0;padding-left:1.2em;display:grid;gap:4px}
+#seq .sq-paires{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;margin:0}#seq .sq-paires dt{font-weight:700}#seq .sq-paires dd{margin:0}`;
 
   const el = (tag, cls, t) => { const n = document.createElement(tag); if(cls) n.className = cls; if(t != null) n.textContent = t; return n; };
 
@@ -60,6 +64,15 @@
       if(m.type === "vote") return vote(m, moi);
       zone.append(el("p", "sq-oeil", "👀"), el("h2", "sq-grand", "Regarde le tableau"),
         el("p", "sq-note", m.type === "tri" ? "On range vos mots ensemble. Prépare-toi à dire pourquoi." : "Rien à taper pour le moment."));
+      // Écran collectif recopié sur le poste (cours avec « ecransSurPostes ») : à relire de près.
+      if(m.lignes || m.questions){
+        const copie = el("div", "sq-copie");
+        (m.lignes || []).forEach((l, k) => copie.append(el(k ? "p" : "h3", null, l)));
+        if(m.paires){ const g = el("dl", "sq-paires"); m.paires.forEach(([a, b]) => g.append(el("dt", null, a), el("dd", null, b))); copie.append(g); }
+        if(m.exemple) copie.append(el("p", "sq-note", m.exemple));
+        if(m.questions && m.questions.length){ const q = el("ul", "sq-questions"); m.questions.forEach(t => q.append(el("li", null, t))); copie.append(el("p", "sq-sous", "On en parle ensemble :"), q); }
+        zone.append(copie);
+      }
     }
 
     function mots(m, moi){
