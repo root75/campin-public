@@ -119,6 +119,13 @@ function progression(){
 }
 /* Une démo par étape, gardée d'un affichage à l'autre : cocher ne la relance pas. */
 const demos={};let demoVue=null,demoCote=null;
+/* Volet « Toutes les animations » : retrouver n'importe quel tuto sans changer d'étape. */
+(function(){const liste=$('tutos-liste'),vue=$('tutos-vue');if(!liste||typeof Demo==='undefined')return;let enCours=null;
+  const tutos=ETAPES_RAT.map((e,i)=>[i,(i+1)+'. '+e.titre]).concat([['cote','Le cours et mon document côte à côte']]);
+  tutos.forEach(([cle,titre])=>{const b=txt('button','btn vide',titre);b.type='button';b.setAttribute('aria-pressed','false');
+    b.addEventListener('click',()=>{if(enCours)enCours.stop();liste.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));
+      enCours=Demo.cree(cle,false);const t=txt('p','demo-titre','👀 '+titre);vue.replaceChildren(t,enCours);setTimeout(()=>enCours.joue(),80);});liste.append(b);});
+  $('tutos').addEventListener('toggle',()=>{if(!$('tutos').open&&enCours)enCours.stop();});})();
 function demoPour(i){if(typeof Demo==='undefined')return null;if(demoVue!==null&&demoVue!==i&&demos[demoVue])demos[demoVue].stop();demoVue=i;return demos[i]||(demos[i]=Demo.cree(i));}
 $('aide-btn').addEventListener('click',()=>sauve({type:etat.aide?'aide-fin':'aide',etape:etat.aide?etat.aide.bloc:etat.position}));
 $('compact').addEventListener('click',()=>{const actif=document.body.classList.toggle('compact');$('compact').setAttribute('aria-pressed',String(actif));});
