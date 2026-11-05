@@ -11,8 +11,8 @@ const ENCOURAGEMENTS=[
  ['Bien présenté !','La formule de fin et la signature sont en place.'],
  ['Ton mail est construit !','L’adresse, l’objet et les parties du corps sont en place. Relis ta demande avant la suite.'],
  ['Ta réponse est préparée !','Tu as préparé les parties de ta réponse. Explique au professeur comment tu réponds à la question de Camille.'],
- ['Bon repère !','Tu sais nommer l’expéditeur. Montre maintenant son nom dans Outlook.'],
- ['Tu as trouvé la bonne zone !','Le texte s’écrit dans le corps du message. Vérifie ton écran Outlook.'],
+ ['Bon repère !','Tu sais le nommer. Montre-le maintenant dans Outlook.'],
+ ['Tu connais les parties du mail !','Vérifie maintenant ton écran Outlook avant d’envoyer.'],
  ['Tu sais où vérifier !','Retrouve réellement ton email dans Éléments envoyés avant de continuer.'],
  ['Bravo pour ce parcours !','Montre les messages envoyés et reçus au professeur pour la vérification réelle.']
 ];
@@ -106,11 +106,11 @@ Je pratique la boxe thaï. Et toi, quel sport ou quel loisir pratiques-tu ?
 
 Bonne journée,
 Camille</p></div></div><p><b>Utilise Répondre :</b> le destinataire et l’objet de la conversation sont conservés. Écris seulement ta réponse au-dessus du message précédent.</p><button type="button" id="ouvrir-reponse">↶ Répondre à Camille</button><div id="zone-reponse" hidden><div class="ligne-mail"><b>À</b><span>camille.martin@example.org</span></div><div class="ligne-mail"><b>Objet</b><span>RE : ${escapeHtml(state.objet)}</span></div>`+champ('reponse','Corps de ta réponse','Salue Camille, réponds à sa question par une phrase complète, puis termine et signe. Tu peux inventer un loisir si tu préfères.'+(state.nom&&classeSignature(state)?'<br><b>Signature à reprendre :</b> '+escapeHtml(state.nom)+', '+escapeHtml(classeSignature(state))+'.':''),true)+`</div><p class="note">Les contrôles vérifient des éléments de forme. Le professeur vérifie aussi que la réponse a du sens et répond bien à la question.</p>`;
- if(e===8)h+=`<p>Ouvre Outlook avec ton compte scolaire, puis lis le message de ton professeur.</p><p><a class="bouton" href="https://outlook.office.com/" target="_blank" rel="noopener">Ouvrir Outlook ↗</a></p><ol><li>Ouvre <b>Boîte de réception</b>.</li><li>Si nécessaire, regarde <b>Autres</b> ou utilise <b>Rechercher</b> avec le nom du professeur.</li><li>Repère son nom, son adresse, l’objet et la question posée. Explique la demande à ton voisin.</li></ol><p><b>Repères :</b> les messages reçus sont dans Boîte de réception ; les messages commencés restent dans Brouillons ; les envois sont dans Éléments envoyés.</p>`+champ('preuve','Comment appelle-t-on la personne qui envoie le mail ?','Écris le terme, puis montre son nom dans Outlook.');
- if(e===9)h+=`<p>Écris maintenant à un camarade désigné par le professeur.</p><ol><li>Vérifie avec lui son adresse scolaire exacte. <b>N’utilise pas l’adresse fictive de Camille.</b></li><li>Choisis <b>Accueil → Nouveau message</b>.</li><li>Dans <b>À</b>, écris son adresse ; laisse Cc et Cci vides.</li><li>Dans <b>Objet</b>, écris un titre court sur les loisirs.</li><li><b>Clique dans la grande zone sous l’objet.</b> Salue ton camarade, puis passe à la ligne.</li><li>Écris une ou deux phrases pour demander son sport ou son loisir. Passe à la ligne.</li><li>Ajoute une formule de fin, puis ton prénom, ton nom et ta classe.</li></ol><details><summary>Voir les champs dans Outlook</summary><img src="${CAPTURE}" alt="Vue adaptée d’Outlook : À, Cc, Objet et corps du message."><p>Vue adaptée à partir de la capture fournie.</p></details>`+champ('preuve','Comment s’appelle la grande zone où tu écris ton texte ?','Ne recopie pas ton email ici : nomme cette partie.');
- if(e===10)h+=`<p>Avant l’envoi, relis ton mail dans Outlook.</p><ul><li>L’adresse est bien celle du camarade.</li><li>L’objet annonce le sujet.</li><li>Le corps contient une salutation, une demande compréhensible, une formule de fin et ta signature.</li><li>Tu as relu l’orthographe et retiré les indications du modèle.</li></ul><p>Clique sur <b>Envoyer</b>, puis retrouve et ouvre le mail dans <b>Éléments envoyés</b>. S’il est encore dans Brouillons, il n’est pas envoyé.</p>`+champ('preuve','Dans quel dossier retrouves-tu ton email envoyé ?','Vérifie aussi sa présence réelle dans Outlook.');
- if(e===11)h+=`<p>Ouvre le mail reçu de ton camarade, puis clique sur <b>Répondre</b>.</p><ol><li>Lis sa question en entier.</li><li>Vérifie le destinataire et garde l’objet de la conversation.</li><li>Dans le corps, salue-le puis réponds à sa question par une phrase complète. Tu peux inventer un loisir si tu préfères.</li><li>Ajoute une formule de fin et ta signature.</li><li>Relis, envoie et vérifie l’envoi. Vérifie aussi que tu as reçu sa réponse à ton premier mail.</li></ol><p class="note">Le professeur observe les messages réels. La page n’a pas accès à Outlook : les réponses ici ne prouvent pas qu’un email est parti.</p>`+champ('preuve','Quel bouton réutilise le destinataire et le sujet du mail reçu ?','Écris son nom.');
- if(e===7)h+=champ('preuve','Quel bouton utilises-tu pour répondre dans la conversation ?','Repère le bouton que tu viens d’utiliser.');
+ if(e===8)h+=`<p>Ouvre Outlook avec ton compte scolaire, puis lis le message de ton professeur.</p><p><a class="bouton" href="https://outlook.office.com/" target="_blank" rel="noopener">Ouvrir Outlook ↗</a></p><ol><li>Ouvre <b>Boîte de réception</b>.</li><li>Si nécessaire, regarde <b>Autres</b> ou utilise <b>Rechercher</b> avec le nom du professeur.</li><li>Repère son nom, son adresse, l’objet et la question posée. Explique la demande à ton voisin.</li></ol><p><b>Repères :</b> les messages reçus sont dans Boîte de réception ; les messages commencés restent dans Brouillons ; les envois sont dans Éléments envoyés.</p>`+champPreuve(8);
+ if(e===9)h+=`<p>Écris maintenant à un camarade désigné par le professeur.</p><ol><li>Vérifie avec lui son adresse scolaire exacte. <b>N’utilise pas l’adresse fictive de Camille.</b></li><li>Choisis <b>Accueil → Nouveau message</b>.</li><li>Dans <b>À</b>, écris son adresse ; laisse Cc et Cci vides.</li><li>Dans <b>Objet</b>, écris un titre court sur les loisirs.</li><li><b>Clique dans la grande zone sous l’objet.</b> Salue ton camarade, puis passe à la ligne.</li><li>Écris une ou deux phrases pour demander son sport ou son loisir. Passe à la ligne.</li><li>Ajoute une formule de fin, puis ton prénom, ton nom et ta classe.</li></ol><details><summary>Voir les champs dans Outlook</summary><img src="${CAPTURE}" alt="Vue adaptée d’Outlook : À, Cc, Objet et corps du message."><p>Vue adaptée à partir de la capture fournie.</p></details>`+champPreuve(9);
+ if(e===10)h+=`<p>Avant l’envoi, relis ton mail dans Outlook.</p><ul><li>L’adresse est bien celle du camarade.</li><li>L’objet annonce le sujet.</li><li>Le corps contient une salutation, une demande compréhensible, une formule de fin et ta signature.</li><li>Tu as relu l’orthographe et retiré les indications du modèle.</li></ul><p>Clique sur <b>Envoyer</b>, puis retrouve et ouvre le mail dans <b>Éléments envoyés</b>. S’il est encore dans Brouillons, il n’est pas envoyé.</p>`+champPreuve(10);
+ if(e===11)h+=`<p>Ouvre le mail reçu de ton camarade, puis clique sur <b>Répondre</b>.</p><ol><li>Lis sa question en entier.</li><li>Vérifie le destinataire et garde l’objet de la conversation.</li><li>Dans le corps, salue-le puis réponds à sa question par une phrase complète. Tu peux inventer un loisir si tu préfères.</li><li>Ajoute une formule de fin et ta signature.</li><li>Relis, envoie et vérifie l’envoi. Vérifie aussi que tu as reçu sa réponse à ton premier mail.</li></ol><p class="note">Le professeur observe les messages réels. La page n’a pas accès à Outlook : les réponses ici ne prouvent pas qu’un email est parti.</p>`+champPreuve(11);
+ if(e===7)h+=champPreuve(7);
  h+='<div id="retour" role="status" aria-live="polite" tabindex="-1"></div>';
  h+='<div class="actions">'+(e>0?'<button type="button" class="secondaire" id="precedent">← Revenir</button>':'')+(e<=11?`<button type="button" id="suivant">${e===0?'Vérifier les deux parties de l’adresse':e===6?'Vérifier mon mail d’entraînement':'Vérifier cette étape'}</button>`:'<button type="button" id="revoir">Revoir mon entraînement</button>')+'</div>';
  z.innerHTML=h;
@@ -154,7 +154,11 @@ const COURS='messagerie-1';
 const APERCU=typeof location!=='undefined'&&/^#bloc=\d+$/.test(location.hash);
 const SUIVI=!APERCU&&typeof google!=='undefined'&&!!google.script?.run;
 const CLE='messagerie-01-v20261103';let repriseServeur=0;
-let identite='',classeScolaire='',preuves=null;const dejaValide=new Map(),dejaFaux=new Map();
+let identite='',classeScolaire='',preuves=null;const questionsEleve={};
+/* Preuves 8 à 12 : trois variantes du même type ; le serveur donne à chaque élève la sienne (tirée de son adresse), pour éviter la recopie du voisin. Hors suivi : la variante 1. */
+function questionPreuve(e){return questionsEleve[e]||preuves?.blocs?.[e]?.[0]||{q:'Réponds à la question de cette étape.',aide:''};}
+function champPreuve(e){const q=questionPreuve(e);return champ('preuve',q.q,q.aide||'');}
+const dejaValide=new Map(),dejaFaux=new Map();
 function sauve(){if(APERCU)return;try{sessionStorage.setItem(CLE+identite,JSON.stringify(state));}catch(_){}}
 function rpc(n,...args){return new Promise((resolve,reject)=>{google.script.run.withSuccessHandler(resolve).withFailureHandler(()=>reject(new Error('Le suivi ne répond pas. Ta saisie reste ici ; réessaie avant de continuer.')))[n](...args);});}
 function envoie(evt){return SUIVI?rpc('noter',COURS,evt):Promise.resolve();}
@@ -168,7 +172,7 @@ function reponseCourte(e){return [state.locale+'@'+state.domaine,state.a,state.o
 async function valideServeur(e){
  const reponse=reponseCourte(e);
  if(!preuves)throw new Error('Les contrôles ne sont pas encore chargés. Recharge la page.');
- const q=preuves.blocs[e][0];
+ const q=e>=7?questionPreuve(e):preuves.blocs[e][0];
  if(!regle(q.regle,reponse))throw new Error(q.faux);
  if(dejaValide.get(e)===reponse)return;
  if(dejaFaux.get(e)===reponse)throw new Error('Modifie ta réponse avant de la vérifier à nouveau.');
@@ -177,8 +181,9 @@ async function valideServeur(e){
 async function demarre(){
  const status=document.getElementById('suivi-status');
  try{
-  const r=await fetch('https://root75.github.io/campin-public/messagerie/pas-a-pas/preuves.json?v=20261103');if(!r.ok)throw Error();preuves=await r.json();
-  if(SUIVI){const etat=await rpc('etat',COURS);identite=':'+etat.email;classeScolaire=String(etat.classe||'').trim();repriseServeur=Number(etat.reprise)||0;humeurServeur=etat.humeur||'';avisServeur=etat.avis||null;status.textContent='Suivi professeur connecté. Les preuves courtes et demandes d’aide sont enregistrées.';await envoie({etape:0,type:'ouvert'});}
+  const r=await fetch('https://root75.github.io/campin-public/messagerie/pas-a-pas/preuves.json?v=20261105');if(!r.ok)throw Error();preuves=await r.json();
+  if(SUIVI){const etat=await rpc('etat',COURS);identite=':'+etat.email;classeScolaire=String(etat.classe||'').trim();repriseServeur=Number(etat.reprise)||0;humeurServeur=etat.humeur||'';avisServeur=etat.avis||null;status.textContent='Suivi professeur connecté. Les preuves courtes et demandes d’aide sont enregistrées.';await envoie({etape:0,type:'ouvert'});
+   await Promise.all([7,8,9,10,11].map(async e=>{try{const a=await rpc('preuve',COURS,e+1);const v=preuves.blocs[e].find(x=>x.q===a?.q);if(v)questionsEleve[e]=v;}catch(_){}}));}
   else status.innerHTML='Entraînement libre : aucun résultat ni appel à l’aide transmis au professeur. Pour la séance suivie, <a href="https://script.google.com/a/macros/arcampin.be/s/AKfycbyOPTaq-L1PuittB1rkkiL9OOtShFc2WpiD8H_pH_INaw9ePWenCzhlIPlHu4zBOgLk/exec">ouvre ta séance scolaire</a>.';
   try{const saved=JSON.parse(sessionStorage.getItem(CLE+identite)||'null');if(saved&&Number.isInteger(saved.etape)&&saved.etape>=0&&saved.etape<12&&(!SUIVI||Number(saved.reprise||0)===repriseServeur))Object.assign(state,saved);state.reprise=repriseServeur;}catch(_){}
   if(SUIVI&&classeScolaire)state.classe=classeScolaire;
