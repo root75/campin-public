@@ -60,3 +60,9 @@ Libellé à vérifier sur un poste de l'école (Chrome en français, version ré
 Sous la consigne, une démo repliée « 👀 Regarde comment mettre le cours et mon document côte à
 côte » (`Demo.cree('cote', false)`, 4 images, écran Chrome maquetté) ; elle ne se lance qu'à
 l'ouverture du volet, pour ne pas tourner en même temps que la démo de l'étape.
+
+## Toutes les animations (5 novembre 2026)
+
+Volet « 👀 Toutes les animations « Regarde comment faire » », avant « Mes boutons » : un bouton
+par animation (les 9 étapes + le côte à côte) ; un clic l'affiche dans le volet, sans changer
+d'étape ni toucher à la progression. Une seule animation joue à la fois dans le volet.
