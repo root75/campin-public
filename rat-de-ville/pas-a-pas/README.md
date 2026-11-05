@@ -53,6 +53,7 @@ locale au panneau, sans bloquer la fiche.
 
 ## Document à côté du cours (5 novembre 2026)
 
-Étapes 1 et 5, sous les cases : courte consigne (champ `apres` de `contenu.js`) pour sortir
-l'onglet Docs en fenêtre et le placer à droite (⊞ Windows + →), le cours à gauche (⊞ Windows + ←).
-Pas de case : `CASES_RAT` ne change pas. Geste à vérifier sur un poste de l'école.
+Étapes 1 et 5, sous les cases : courte consigne (champ `apres` de `contenu.js`) pour afficher
+le cours et le document dans la vue fractionnée de Chrome (clic droit sur l'onglet du document ▸
+Ajouter l'onglet à une nouvelle vue fractionnée). Pas de case : `CASES_RAT` ne change pas.
+Libellé à vérifier sur un poste de l'école (Chrome en français, version récente requise).
