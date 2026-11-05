@@ -59,3 +59,12 @@ blocage persistant. Relecture réciproque avant le défi final sur trois critèr
 réussi et une correction possible à l’oral. Aucune fiche de relecture ou note de camarade ajoutée.
 Le mode séquence contient un atelier de relecture ; le défi final reste individuel et sous le
 contrôle du professeur. Le bouton du moniteur est présenté une fois au groupe, sinon cas simulé.
+
+## Animations et variantes (5 novembre 2026)
+
+`pas-a-pas/demos.js` + `demos.css` : animations « 👀 Regarde comment faire » (maquettes Windows, Docs,
+Chrome, Classroom ; valeurs fictives), placées sous le but de l’étape par `blocs.js` (`Demo.pourEtape`),
+et volet « Toutes les animations » en tête de fiche. Pas d’animation pour le défi final.
+QCM de l’étape 2 et ordre de l’étape 5 : trois variantes (`BLOCS[i].variantes`), tirées par l’adresse de
+l’élève (`tirage`, même hachage que `Code.gs`). Étape 1 : consigne « rapport à côté du cours » (vue
+fractionnée de Chrome), avec son animation. Essai : `essai-labo07.js` (143 contrôles).

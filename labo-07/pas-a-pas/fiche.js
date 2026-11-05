@@ -6,7 +6,16 @@ const PRESENTATION = 'missions';   // blocs.js : cloche en haut à droite, bulle
 const HORS_SUIVI = 'Essai local : aucune réponse envoyée. En classe, ouvre Mes cours avec ton compte scolaire.';
 let EMAIL = '';
 const VIES_V = [{}]; let LV = {};
-const tirage = () => 1;
+/* Trois variantes du même type pour chaque question de preuve (QCM de l'étape 2, ordre de l'étape 5) :
+   chaque élève a la sienne, tirée de son adresse, toujours la même pour lui ; hors Mes cours, la version 1.
+   Aperçu professeur (#bloc=2, #bloc=5) : un bouton par version. Hypothèses et déclarations : règle unique. */
+const hache = s => {   // FNV-1a brassé, comme hache_() dans Code.gs
+  let h = 2166136261;
+  for(let i=0;i<s.length;i++){ h ^= s.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; }
+  h ^= h >>> 16; h = Math.imul(h, 0x85ebca6b); h ^= h >>> 13; h = Math.imul(h, 0xc2b2ae35); h ^= h >>> 16;
+  return h >>> 0;
+};
+const tirage = (cle, n) => n<2 || !EMAIL ? 1 : 1 + hache(EMAIL.toLowerCase()+"|"+cle) % n;
 const PARCOURS = [
  {titre:'Mission 1 — Observer ce qui tourne', court:'Mission 1', debut:0, fin:2, bulle:'Première mission : que fait le PC quand une application s’ouvre ?'},
  {titre:'Mission 2 — Retrouver ses données', court:'Mission 2', debut:2, fin:4, bulle:'Bien joué ! Maintenant, où vit ton fichier ?'},
@@ -38,7 +47,7 @@ const BLOCS = [
       ],
       "juste": "Cette réponse marque une étape faite. Elle ne constitue pas une correction ni une note."
     },
-    "extra": "<p class=\"stop\">Chacun manipule son propre PC. Première réponse seul ; comparaison à deux ensuite. Aucune fin de tâche, aucune suppression, aucun réglage.</p>"
+    "extra": "<p class=\"note apres\">📄 + 🔎 Pour écrire sans perdre la consigne : clic droit sur l’onglet de ton rapport ▸ Ajouter l’onglet à une nouvelle vue fractionnée. Le cours à gauche, le rapport à droite (animation ci-dessous).</p><p class=\"stop\">Chacun manipule son propre PC. Première réponse seul ; comparaison à deux ensuite. Aucune fin de tâche, aucune suppression, aucun réglage.</p>"
   },
   {
     "partie": "1 — Observer ce qui tourne",
@@ -217,6 +226,67 @@ const BLOCS = [
     },
     "extra": "<details class=\"encart\"><summary>Prolongement après passage du professeur</summary><p>Dans le même scénario, remplace le nuage par une coche verte : quelle partie de ton raisonnement change ? Quelle conclusion sur une panne matérielle resterait impossible avec ces seuls indices ?</p></details>"
   }
+];
+
+/* Variantes : seule l'activité change ; la déclaration « rapport » reste la même. */
+const qAvec = (i, activite) => ({ q: Object.assign({}, BLOCS[i].q, { activite: Object.assign({}, BLOCS[i].q.activite, activite) }) });
+BLOCS[1].variantes = [
+  qAvec(1, {
+    q: "Cas fictif : un élève FERME GIMP. Le processeur passe de 8 % à 30 % quelques secondes, puis redescend à 6 % ; la mémoire passe de 61 % à 50 %. Que peut-on affirmer ?",
+    c: [
+      "La fermeture a fait travailler le processeur un court moment et a libéré de la mémoire de travail. Ces relevés ne disent rien des fichiers enregistrés.",
+      "Le fichier image enregistré a été effacé, puisque la mémoire a baissé.",
+      "Le PC est devenu plus lent, puisque la mémoire utilisée a baissé.",
+      "La baisse de mémoire prouve que Windows s’est arrêté."
+    ],
+    p: [
+      null,
+      "La mémoire de travail sert aux logiciels ouverts ; les fichiers enregistrés sont sur le disque ou dans OneDrive. Fermer un logiciel ne supprime pas un fichier enregistré.",
+      "Moins de mémoire occupée, c’est plutôt plus de place libre pour les autres logiciels. Une baisse n’est pas un ralentissement.",
+      "Si Windows était arrêté, tu ne pourrais plus lire le Gestionnaire des tâches. Que montre encore l’écran ?"
+    ],
+    juste: "Tu sépares la mémoire de travail des fichiers enregistrés. Explique à l’oral pourquoi le fichier existe toujours."
+  }),
+  qAvec(1, {
+    q: "Cas fictif : deux élèves ouvrent GIMP sur deux PC. Poste A : processeur 6 % → 60 % → 9 %. Poste B : 4 % → 25 % → 5 %. Sur les deux, la mémoire monte d’environ 6 % et y reste. Que peut-on affirmer ?",
+    c: [
+      "Sur les deux postes, l’ouverture fait travailler le processeur quelques secondes, puis GIMP occupe de la mémoire. Des valeurs différentes ne prouvent pas qu’un PC est en panne.",
+      "Le poste A est en panne, puisque son processeur est monté à 60 %.",
+      "Un des deux relevés est faux : deux PC devraient afficher les mêmes valeurs.",
+      "GIMP n’occupe plus de mémoire une fois ouvert, puisqu’il ne fait plus rien."
+    ],
+    p: [
+      null,
+      "Le processeur du poste A est redescendu à 9 % : un pic bref n’est pas une panne. Observe ce qui se passe après l’ouverture.",
+      "Deux PC n’ont pas forcément le même matériel ni les mêmes logiciels ouverts. Des valeurs différentes peuvent être justes toutes les deux.",
+      "Regarde la colonne Mémoire : elle reste plus haute tant que GIMP est ouvert, même sans action."
+    ],
+    juste: "Tu compares deux postes sans conclure trop vite. Explique à l’oral pourquoi tes valeurs peuvent différer de celles du voisin."
+  })
+];
+BLOCS[4].variantes = [
+  qAvec(4, {
+    q: "Incident : le mot tapé n’apparaît pas dans le Bloc-notes. Remets la démarche dans l’ordre.",
+    cartes: [
+      "Supposer qu’une autre fenêtre est active",
+      "Cliquer une fois dans la zone de texte du Bloc-notes",
+      "Taper un mot et regarder où il apparaît",
+      "Conclure : le texte arrive dans la fenêtre active"
+    ],
+    faux: "D’abord une hypothèse, ensuite le test (un clic dans la zone), puis l’indice observé (où le mot apparaît). La conclusion vient en dernier.",
+    juste: "Hypothèse, test, indice, conclusion : c’est la même démarche que pour les trois autres incidents."
+  }),
+  qAvec(4, {
+    q: "Incident : l’écran est noir, le PC semble éteint. Remets la démarche dans l’ordre.",
+    cartes: [
+      "Supposer que seul le moniteur est éteint",
+      "Appuyer sur le bouton du moniteur, sans toucher au PC",
+      "Regarder si les mêmes fenêtres réapparaissent",
+      "Conclure : le PC était resté allumé"
+    ],
+    faux: "D’abord une hypothèse, ensuite le test sans risque (le bouton du moniteur), puis l’indice observé (les fenêtres). La conclusion vient en dernier.",
+    juste: "Hypothèse, test, indice, conclusion : c’est la même démarche que pour les trois autres incidents."
+  })
 ];
 const FIN = {
  titre:'Mon enquête est terminée',

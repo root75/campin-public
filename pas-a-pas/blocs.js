@@ -76,7 +76,7 @@ function affiche(){
   const z = document.getElementById("bloc"); z.replaceChildren();
   const liste = document.getElementById("coince-liste"); liste.replaceChildren();
   document.getElementById("coince").open = false;
-  if(ici >= BLOCS.length){ fin(z); return; }
+  if(ici >= BLOCS.length){ if(typeof Demo!=="undefined" && Demo.stopTout) Demo.stopTout(); fin(z); return; }
   const B = blocVu(ici);
 
   const num = el("div","numero");
@@ -97,7 +97,10 @@ function affiche(){
   if(MISSIONS){
     /* Présentation « missions » (Labo 07) : le but en une phrase, les cases, puis ce qu'on vérifie.
        Pas d'étiquettes répétées à chaque bloc. */
-    z.append(el("p","but",B.veux), el("div","faire",B.fais));
+    z.append(el("p","but",B.veux));
+    /* Démos « Regarde comment faire » (labo-07/pas-a-pas/demos.js), si la fiche en charge : on regarde, puis on fait. */
+    if(typeof Demo!=="undefined" && Demo.pourEtape){ const d = Demo.pourEtape(ici); if(d) z.append(d); }
+    z.append(el("div","faire",B.fais));
     const v = el("aside","repere verification"); v.append(txt("h3",null,"✅ À vérifier"), el("p",null,B.vois)); z.append(v);
   } else {
     const dl = el("dl","lignes");
@@ -220,7 +223,7 @@ function preuve(pr, B, apres){
     verifier.addEventListener("click",()=>{
       const reponse=cartes.join(" | ");
       if(cartes.every((x,i)=>x===Q.cartes[i])){verifier.disabled=true;liste.querySelectorAll("button").forEach(b=>b.disabled=true);reussi(reponse);}
-      else rate("Quel élément faut-il formuler AVANT de tester ? La conclusion vient après l’indice observé.",reponse);
+      else rate(Q.faux || "Quel élément faut-il formuler AVANT de tester ? La conclusion vient après l’indice observé.",reponse);
     });
     return;
   }
