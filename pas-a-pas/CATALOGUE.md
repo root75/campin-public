@@ -40,6 +40,12 @@ Sans cette installation, le tableau signale que le serveur utilise encore sa lis
    missions. Si le cours utilise les variantes corrigées côté serveur, ajouter par exemple
    `"preuves": "nouveau-cours/pas-a-pas/preuves.json"`. Les cours corrigés par leur moteur
    n’ont pas besoin de ce champ. Les chemins sont relatifs à la racine de campin-public.
+
+   **Règle anti-recopie (5 novembre 2026)** : chaque question de preuve a **toujours trois
+   variantes du même type** (même forme de réponse, même difficulté, même contenu de l’étape),
+   chacune avec sa bonne réponse, distincte des deux autres. Le serveur en tire une par élève,
+   toujours la même pour lui : la réponse du voisin ne valide pas la sienne. Seules les étapes
+   de production guidée (brouillon, saisie du travail) gardent une règle unique.
 3. Si un mode séquence est prévu, ajouter aussi son conducteur dans `sequences.json`.
 4. Publier les fichiers, attendre la fin du déploiement GitHub Pages, puis cliquer sur
    **Actualiser le catalogue** dans le tableau professeur. La sélection et la séance en cours
