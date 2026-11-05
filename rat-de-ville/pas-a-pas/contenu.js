@@ -9,7 +9,8 @@ const ETAPES_RAT = [
     "actions": [
       "Menu Google (la gaufre) ▸ Docs ▸ Créer un document ▸ Vierge.",
       "Je clique sur « Document sans titre » et je tape : AAAAMMJJ Le rat de ville – Prénom Nom. AAAAMMJJ : année, mois, jour de la date d’aujourd’hui."
-    ]
+    ],
+    "apres": "Je place mon document à côté du cours : je clique sur l’onglet du cours, puis clic droit sur l’onglet de mon document ▸ Ajouter l’onglet à une nouvelle vue fractionnée. Le cours et mon document s’affichent côte à côte dans la même fenêtre."
   },
   {
     "titre": "Je recopie la fable",
@@ -81,7 +82,8 @@ const ETAPES_RAT = [
     "periode": 2,
     "actions": [
       "Menu Google (la gaufre) ▸ Drive ▸ Récents ▸ double-clic sur mon document."
-    ]
+    ],
+    "apres": "Je place mon document à côté du cours : je clique sur l’onglet du cours, puis clic droit sur l’onglet de mon document ▸ Ajouter l’onglet à une nouvelle vue fractionnée. Le cours et mon document s’affichent côte à côte dans la même fenêtre."
   },
   {
     "titre": "Titre, texte, auteur",

@@ -112,6 +112,19 @@ body{background:radial-gradient(circle at 10% 0,var(--fromage-pale),transparent 
 .md-app-docs{color:#1a73e8}.md-app-drive{color:#188038}.md-app-classroom{color:#137333}
 .md-titre{font-size:16px;font-weight:700;padding:16px}
 .md-vierge{margin:0 16px;width:120px;height:140px;border:1px solid #c9d3db;border-radius:6px;display:grid;place-items:center;text-align:center;font-weight:700;color:#1a73e8}
+.md-chrome{position:relative;min-height:250px;font-size:12px}
+.md-ch-onglets{display:flex;align-items:end;gap:4px;background:#dee3ea;padding:6px 8px 0;border-radius:10px 10px 0 0}
+.md-ch-onglet{background:#cfd6df;border-radius:8px 8px 0 0;padding:4px 10px;font-size:11px;max-width:40%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.md-ch-onglet.actif{background:#fff}
+.md-ch-duo{display:flex;gap:2px;max-width:85%;outline:2px solid #1a73e8;border-radius:8px 8px 0 0}.md-ch-duo .md-ch-onglet{max-width:50%}
+.md-ch-plus{padding:2px 8px;color:#5f6368}
+.md-ch-adresse{margin:6px 8px;background:#f1f3f4;border-radius:14px;padding:3px 12px;font-size:11px;color:#5f6368;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.md-ch-corps{display:grid;gap:6px;padding:8px;min-height:170px}.md-ch-corps.split{grid-template-columns:1fr 1fr}
+.md-ch-vol{border:1px solid #dadce0;border-radius:8px;padding:10px;display:grid;gap:6px;align-content:start;overflow:hidden}
+.md-ch-doc{background:#f8fafd}.md-ch-doc span{font-size:11px}
+.md-ch-barre{height:8px;background:#e3e8ec;border-radius:4px}.md-ch-barre.court{width:60%}
+.md-ch-menu{position:absolute;left:28%;top:34px;background:#fff;border:1px solid #c9d3db;border-radius:8px;box-shadow:0 4px 14px #0003;padding:4px 0;z-index:3;max-width:70%}
+.demo-cote{margin:6px 0 10px}.demo-cote summary{cursor:pointer;font-weight:700}.demo-cote .demo{margin-top:8px}
 .md-drive{display:grid;grid-template-columns:110px 1fr}
 .md-col{display:grid;align-content:start;gap:6px;padding:16px 10px;border-right:1px solid #e3e8ec}.md-col span{padding:4px 8px;border-radius:12px}
 .md-liste{padding:16px;display:grid;align-content:start;gap:6px}
@@ -165,8 +178,8 @@ table{border-collapse:collapse;width:100%}th,td{border:1px solid var(--trait);pa
 <section id="grille" hidden><p>Grille WBE « Création de contenus », la même que pour le Bilan. Attendu : « produire, éditer et enrichir un contenu numérique en choisissant un outil adapté à son intention, en mettant en forme un document […] ». ★ = critère incontournable. « Moi » = ma lettre avant la correction.</p><p>Coté en formatif : mes quatre lettres et ma couleur me disent quoi travailler avant le Bilan. Le suivi ne calcule aucune cote.</p><div class="defile"><table><thead><tr><th>Critère et attendu</th><th>Moi</th><th>A — dépasse</th><th>B — atteint</th><th>C — proche</th><th>D — loin</th></tr></thead><tbody id="criteres"></tbody></table></div><ul><li>Bleu — attendu dépassé : A au critère 2 ou 3, et au moins B partout ailleurs.</li><li>Vert — attendu atteint : B aux critères 2 et 3, et au moins C aux critères 1 et 4.</li><li>Jaune — presque atteint : un des critères ★ reste à C.</li><li>Orange — pas encore atteint : les critères ★ ne sont pas atteints.</li></ul></section>
 <footer class="note">FMTTN S1 — M. Louviaux — Formatif — Le rat de ville · <a href="https://root75.github.io/campin-public/rat-de-ville/" target="_blank" rel="noopener">Je révise</a></footer>
 </div>
-<script defer src="https://root75.github.io/campin-public/rat-de-ville/pas-a-pas/contenu.js?v=coince-20261104"></script>
-<script defer src="https://root75.github.io/campin-public/rat-de-ville/pas-a-pas/demos.js?v=classroom-20261104"></script>
+<script defer src="https://root75.github.io/campin-public/rat-de-ville/pas-a-pas/contenu.js?v=cote-demo-20261105"></script>
+<script defer src="https://root75.github.io/campin-public/rat-de-ville/pas-a-pas/demos.js?v=cote-demo-20261105"></script>
 <script defer src="https://root75.github.io/campin-public/pas-a-pas/humeur-avis.js?v=20261104"></script>
-<script defer src="https://root75.github.io/campin-public/rat-de-ville/pas-a-pas/fiche.js?v=aide-20261104"></script>
+<script defer src="https://root75.github.io/campin-public/rat-de-ville/pas-a-pas/fiche.js?v=cote-demo-20261105"></script>
 </body></html>

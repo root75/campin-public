@@ -50,3 +50,13 @@ locale au panneau, sans bloquer la fiche.
 
 Étape 6 : 7 cases ; étape 9 : 13 cases (10 min), voisin après la colonne « Moi ». 46 cases au lieu de 35 :
 `CASES_RAT` de `Code.gs` doit suivre `contenu.js`.
+
+## Document à côté du cours (5 novembre 2026)
+
+Étapes 1 et 5, sous les cases : courte consigne (champ `apres` de `contenu.js`) pour afficher
+le cours et le document dans la vue fractionnée de Chrome (clic droit sur l'onglet du document ▸
+Ajouter l'onglet à une nouvelle vue fractionnée). Pas de case : `CASES_RAT` ne change pas.
+Libellé à vérifier sur un poste de l'école (Chrome en français, version récente requise).
+Sous la consigne, une démo repliée « 👀 Regarde comment mettre le cours et mon document côte à
+côte » (`Demo.cree('cote', false)`, 4 images, écran Chrome maquetté) ; elle ne se lance qu'à
+l'ouverture du volet, pour ne pas tourner en même temps que la démo de l'étape.

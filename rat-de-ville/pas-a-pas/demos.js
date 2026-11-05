@@ -77,6 +77,16 @@ const Demo = (() => {
     ]
   ];
 
+  // Démos hors étape, appelées par leur nom (fiche.js : Demo.cree('cote', false)).
+  const AUTRES = {
+    cote: [ // Le cours et mon document côte à côte : vue fractionnée de Chrome
+      { ecran: 'chrome', cible: 'ch-cours', legende: 'Je clique sur l’onglet du cours.' },
+      { ecran: 'chrome', menu: 1, cible: 'ch-doc', legende: 'Clic droit sur l’onglet de mon document.' },
+      { ecran: 'chrome', menu: 1, cible: 'item-split', legende: 'Je choisis « Ajouter l’onglet à une nouvelle vue fractionnée ».' },
+      { ecran: 'chrome', split: 1, cible: 'vol-doc', ok: 1, legende: 'Le cours à gauche, mon document à droite. Je clique dans mon document pour écrire.' }
+    ]
+  };
+
   const el = (tag, cls, t) => { const n = document.createElement(tag); if (cls) n.className = cls; if (t != null) n.textContent = t; return n; };
   const c = (n, id) => { n.dataset.c = id; return n; };
   const ico = (nom, id) => { const b = c(el('span', 'md-btn'), id); const i = el('img'); i.src = ICO + nom + '.png'; i.alt = ''; b.append(i); return b; };
@@ -155,11 +165,24 @@ const Demo = (() => {
         dlg.append(pied); e.append(dlg);
       }
     }
+    if (f.ecran === 'chrome') {
+      const ong = el('div', 'md-ch-onglets');
+      const tc = c(el('span', 'md-ch-onglet actif', '🐭 Mes cours – Le rat de ville'), 'ch-cours');
+      const td = c(el('span', 'md-ch-onglet' + (f.split ? ' actif' : ''), '📄 ' + NOM), 'ch-doc');
+      if (f.split) { const duo = el('span', 'md-ch-duo'); duo.append(tc, td); ong.append(duo); } else ong.append(tc, td);
+      ong.append(el('span', 'md-ch-plus', '+'));
+      const cours = el('div', 'md-ch-vol md-ch-cours'); cours.append(el('b', null, '🐭 Le rat de ville'), el('span', 'md-ch-case', '☐ Menu Google ▸ Docs…'), el('span', 'md-ch-case', '☐ Je clique sur « Document sans titre »…'), el('span', 'md-ch-barre'), el('span', 'md-ch-barre court'));
+      const corps = el('div', 'md-ch-corps' + (f.split ? ' split' : ''));
+      corps.append(cours);
+      if (f.split) { const d = c(el('div', 'md-ch-vol md-ch-doc'), 'vol-doc'); d.append(el('b', null, '📄 ' + NOM)); FABLE_MAJ.slice(0, 3).forEach(v => d.append(el('span', null, v))); corps.append(d); }
+      e.append(ong, el('div', 'md-ch-adresse', f.split ? 'Vue fractionnée : deux onglets dans la même fenêtre' : 'root75.github.io/campin-public/…'), corps);
+      if (f.menu) { const m = el('div', 'md-ch-menu'); [['Nouvel onglet à droite', ''], ['Ajouter l’onglet à une nouvelle vue fractionnée', 'item-split'], ['Ajouter l’onglet au groupe', ''], ['Fermer', '']].forEach(([t, id]) => m.append(c(el('div', 'md-item' + (id ? ' hi' : ''), t), id))); e.append(m); }
+    }
     return e;
   }
 
-  function cree(i) {
-    const frames = DEMOS[i]; if (!frames) return null;
+  function cree(i, auto = true) {
+    const frames = typeof i === 'string' ? AUTRES[i] : DEMOS[i]; if (!frames) return null;
     const box = el('div', 'demo'); box.setAttribute('role', 'img');
     const scene = el('div', 'demo-scene'), curseur = el('div', 'demo-curseur'), legende = el('p', 'demo-legende');
     curseur.innerHTML = '<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M4 2l16 11-7 1.5L9.5 21z" fill="#111" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg>';
@@ -200,8 +223,8 @@ const Demo = (() => {
     suiv.addEventListener('click', () => { stop(); montre(k + 1); });
     jouer.addEventListener('click', () => { minuteur ? stop() : joue(k >= frames.length - 1 ? 0 : k); });
     // Lancée seulement une fois visible ; immobile si l'élève a demandé moins d'animations.
-    setTimeout(() => { montre(0); if (!calme) joue(0); }, 60);
-    box.stop = stop;
+    setTimeout(() => { montre(0); if (!calme && auto) joue(0); }, 60);
+    box.stop = stop; box.joue = () => { if (!calme) joue(0); else montre(0); };
     return box;
   }
   return { cree, nombre: DEMOS.length };

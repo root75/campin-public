@@ -66,6 +66,7 @@ function dessine(){
     if(aide){const d=txt('details');d.append(txt('summary',null,aide.titre),txt('p',null,aide.explication),txt('blockquote',null,aide.exemple),txt('p','note',aide.rappel));if(aide.image){const im=txt('img','capture');im.src=BASE+aide.image;im.alt='Menu Format ▸ Texte ▸ Minuscules/majuscules ▸ MAJUSCULES dans Docs';d.append(im);}li.append(d);}
     ul.append(li);
   });z.append(ul);
+  if(b.apres){z.append(txt('p','note apres',b.apres));if(typeof Demo!=='undefined'){if(demoCote)demoCote.stop();demoCote=Demo.cree('cote',false);const d=txt('details','demo-cote');d.append(txt('summary',null,'👀 Regarde comment mettre le cours et mon document côte à côte'),demoCote);d.addEventListener('toggle',()=>{if(d.open)demoCote.joue();else demoCote.stop();});z.append(d);}}
   const controle=txt('aside','repere verification');controle.append(txt('h3',null,'À vérifier dans mon document'),txt('p',null,repere.verifie),txt('p','note',repere.encouragement));z.append(controle);
   if(i===1){const lien=txt('a','btn vide','Voir le texte à recopier');lien.href='#texte';lien.addEventListener('click',()=>{$('texte').open=true;});z.append(lien);}
   const nav=txt('div','actions');for(const [delta,label] of [[-1,'← Étape précédente'],[1,'Étape suivante →']]){
@@ -117,7 +118,7 @@ function progression(){
   const r=faites/total;$('bulle').textContent=BULLES[r===1?5:r>=.8?4:r>=.5?3:r>=.2?2:r>0?1:0];
 }
 /* Une démo par étape, gardée d'un affichage à l'autre : cocher ne la relance pas. */
-const demos={};let demoVue=null;
+const demos={};let demoVue=null,demoCote=null;
 function demoPour(i){if(typeof Demo==='undefined')return null;if(demoVue!==null&&demoVue!==i&&demos[demoVue])demos[demoVue].stop();demoVue=i;return demos[i]||(demos[i]=Demo.cree(i));}
 $('aide-btn').addEventListener('click',()=>sauve({type:etat.aide?'aide-fin':'aide',etape:etat.aide?etat.aide.bloc:etat.position}));
 $('compact').addEventListener('click',()=>{const actif=document.body.classList.toggle('compact');$('compact').setAttribute('aria-pressed',String(actif));});
