@@ -137,7 +137,7 @@ footer{font-size:.9rem;color:var(--doux);text-align:center}
       <li><span><strong>Brouillons</strong> = ce que j'ai commencé sans l'envoyer.</span></li>
       <li><span>Un message envoyé ne se reprend pas : je relis <strong>avant</strong> <span class="touche">Envoyer</span>.</span></li>
     </ol>
-    <p class="note">Ensuite : le quiz (5 questions), puis les cartes pour réviser.</p>
+    <p class="note">Ensuite : le quiz (5 questions, tirées parmi 15 : il change à chaque fois), puis les 15 cartes pour réviser.</p>
     <div class="actions"><button class="btn plein" type="button" data-aller="quiz">Commencer le quiz</button></div>
   </section>
 
@@ -241,6 +241,66 @@ const QUIZ = [
     h:"Je veux changer ce que j'affiche…",
     e:"Onglet Afficher : tout ce qui change la vue. Le réglage reste pour les prochaines fois." }
 ];
+/* Règle du 05/11/2026 : trois variantes du même type par question, réponses distinctes.
+   QUIZ[i] est la variante 1 ; VARIANTES[i] les deux autres. Le quiz en tire une au hasard à chaque passage. */
+const VARIANTES = [
+  [ { q:"Je veux dire à mon professeur de quoi parle mon message, avant même qu'il l'ouvre. Où est-ce que je l'écris ?",
+      c:["Dans « Ajouter un objet ».", "Dans la ligne « À ».", "Dans la ligne « Cc ».", "Tout en bas, après ma signature."],
+      p:[null, "La ligne À, c'est l'adresse : à qui j'écris, pas de quoi je parle.", "Cc, c'est pour envoyer une copie à quelqu'un d'autre.", "Après la signature, il faut ouvrir le message pour le lire."],
+      h:"C'est ce qu'on lit dans la liste, avant d'ouvrir.",
+      e:"L'objet, c'est le titre du message : il dit en quelques mots de quoi il parle." },
+    { q:"J'écris « Bonjour Monsieur, » puis ma question. Où est-ce que je tape ce texte ?",
+      c:["Dans la grande zone blanche sous l'objet.", "Dans la ligne « À ».", "Dans « Ajouter un objet ».", "Dans la ligne « Cci »."],
+      p:[null, "La ligne À attend une adresse, pas un texte.", "L'objet est un titre court, pas tout le message.", "Cci, c'est une copie cachée : on y met une adresse."],
+      h:"La plus grande partie de la fenêtre.",
+      e:"Le corps du message, sous l'objet : salutation, texte, formule de fin et signature." } ],
+  [ { q:"Tom demande à son professeur la date du contrôle. Quel est le bon objet ?",
+      c:["Date du contrôle - Tom", "Bonjour Monsieur, quand est le contrôle ? Merci, Tom", "Rien : il laisse l'objet vide.", "???"],
+      p:[null, "C'est tout le message ! L'objet est un titre court.", "Sans objet, le professeur ne sait pas de quoi parle le message avant de l'ouvrir.", "Des points d'interrogation ne disent pas de quoi parle le message."],
+      h:"Quelques mots qui disent le sujet.",
+      e:"Un bon objet est court et dit le sujet : on le comprend sans ouvrir le message." },
+    { q:"Inès prévient sa professeure qu'elle sera absente vendredi. Quel est le bon objet ?",
+      c:["Absence vendredi - Inès", "Bonjour Madame", "Rien : elle laisse l'objet vide.", "important !!!"],
+      p:[null, "« Bonjour Madame », c'est le début du texte, pas l'objet.", "Sans objet, la professeure ne sait pas de quoi parle le message avant de l'ouvrir.", "« important !!! » ne dit pas de quoi parle le message."],
+      h:"De quoi parle son message ?",
+      e:"L'objet dit le sujet en quelques mots ; le prénom aide à savoir qui écrit." } ],
+  [ { q:"Mon professeur m'a écrit. Où est-ce que je trouve son message ?",
+      c:["Dans Boîte de réception.", "Dans Éléments envoyés.", "Dans Brouillons.", "Dans Courrier indésirable."],
+      p:[null, "Éléments envoyés, ce sont les messages que TU as envoyés.", "Brouillons, ce sont tes messages pas encore partis.", "Le courrier indésirable, c'est la publicité et les messages douteux."],
+      h:"Les lettres reçues arrivent dans la boîte aux lettres.",
+      e:"Boîte de réception = les messages que je reçois. Le plus récent est en haut." },
+    { q:"J'attends un message, mais il n'est pas dans ma boîte de réception. Où est-ce que je regarde aussi ?",
+      c:["Dans Courrier indésirable.", "Dans Éléments envoyés.", "Dans Brouillons.", "Nulle part : il n'existe pas."],
+      p:[null, "Éléments envoyés contient ce que TU envoies, pas ce que tu reçois.", "Brouillons contient tes messages pas encore partis.", "Il est peut-être arrivé, mais rangé ailleurs."],
+      h:"Outlook range parfois un message au mauvais endroit, avec la publicité.",
+      e:"Un message reçu peut être classé par erreur dans Courrier indésirable : je vérifie là." } ],
+  [ { q:"J'ai supprimé un message par erreur. Où est-ce que je le retrouve ?",
+      c:["Dans Éléments supprimés.", "Dans Brouillons.", "Dans Éléments envoyés.", "Nulle part : il est perdu."],
+      p:[null, "Brouillons, ce sont les messages commencés, pas ceux qu'on a jetés.", "Éléments envoyés, ce sont les messages partis.", "Outlook le garde un moment : il n'est pas perdu."],
+      h:"Comme une corbeille à papier.",
+      e:"Éléments supprimés = la corbeille. J'ouvre le message et je le remets dans Boîte de réception." },
+    { q:"Le message de mon professeur n'est pas dans « Prioritaire ». Où est-ce que je clique pour le voir ?",
+      c:["Sur l'onglet « Autres », au-dessus de la liste.", "Sur Brouillons.", "Sur Éléments envoyés.", "Sur Nouveau message."],
+      p:[null, "Brouillons contient tes messages pas encore partis.", "Éléments envoyés contient ce que TU as envoyé.", "Ça ouvre un message vide à écrire."],
+      h:"La boîte de réception a deux onglets.",
+      e:"Outlook trie la boîte de réception en deux onglets : Prioritaire et Autres. Je regarde les deux." } ],
+  [ { q:"Je veux écrire un nouveau message. Quel chemin ?",
+      c:["Accueil ▸ Nouveau message", "Afficher ▸ Disposition ▸ Nouveau message", "Fichier ▸ Volet de lecture ▸ Nouveau message", "Aide ▸ Nouveau message"],
+      p:[null, "Afficher change la vue, il n'ouvre pas de message.", "Ce chemin n'existe pas : Fichier ne sert pas à écrire.", "L'onglet Aide sert à chercher de l'aide."],
+      h:"C'est l'onglet de départ, ouvert d'office.",
+      e:"Onglet Accueil ▸ Nouveau message, tout à gauche : une fenêtre vide s'ouvre." },
+    { q:"Je veux cacher le volet de lecture : le message ne s'affiche plus à côté de la liste. Quel chemin ?",
+      c:["Afficher ▸ Disposition ▸ Volet de lecture ▸ Masquer", "Accueil ▸ Volet de lecture ▸ Masquer", "Fichier ▸ Volet de lecture ▸ Masquer", "Aide ▸ Disposition ▸ Masquer"],
+      p:[null, "Accueil sert à écrire et ranger les messages, pas à changer la vue.", "Les réglages de la vue sont dans l'onglet Afficher, pas Fichier.", "L'onglet Aide sert à chercher de l'aide."],
+      h:"Je veux changer ce que j'affiche…",
+      e:"Onglet Afficher : tout ce qui change la vue. Le réglage reste pour les prochaines fois." } ]
+];
+const TOUTES = QUIZ.map((q,i)=>[q, ...VARIANTES[i]]);
+const CARTES = TOUTES.flat();
+let tirage = [];
+const tire = () => { tirage = TOUTES.map(v => v[Math.floor(Math.random()*v.length)]); };
+tire();
+
 const CONSOLIDATION = { q:"Un message envoyé avec une faute…",
   c:["ne se reprend pas : c'est pour ça que je relis avant d'envoyer.", "se corrige tout seul.", "peut être corrigé par moi dans la boîte du professeur.", "s'efface tout seul après une heure."],
   p:[null, "Outlook ne corrige pas tes fautes après l'envoi.", "Tu n'as pas accès à la boîte de ton professeur.", "Il reste chez ton professeur."],
@@ -300,13 +360,13 @@ function afficheQuiz(){
                    s>=3 ? "Bien. Relis les cartes des questions ratées, puis recommence." :
                           "Relis « L'essentiel », regarde « Ça coince ? », puis recommence."));
     const act = el("div","actions");
-    const r = el("button","btn plein","Recommencer"); r.type="button"; r.addEventListener("click",()=>{n=0;resultats=[];afficheQuiz();});
+    const r = el("button","btn plein","Recommencer"); r.type="button"; r.addEventListener("click",()=>{n=0;resultats=[];tire();afficheQuiz();});
     const c = el("button","btn vide","Réviser avec les cartes"); c.type="button"; c.addEventListener("click",()=>montre("cartes"));
     act.append(r,c); wrap.append(act); return;
   }
   wrap.append(barre(), el("div","numero","Question "+(n+1)+" sur "+QUIZ.length));
   const zq = el("div"); zq.style.display="grid"; zq.style.gap="14px"; wrap.append(zq);
-  const act = question(zq, QUIZ[n], juste=>{
+  const act = question(zq, tirage[n], juste=>{
     resultats.push(juste);
     const suiv = el("button","btn plein", n+1<QUIZ.length?"Question suivante":"Voir mon score"); suiv.type="button";
     suiv.addEventListener("click",()=>{ n++; afficheQuiz(); });
@@ -324,23 +384,23 @@ function seule(id, Q){
 seule("consolidation", CONSOLIDATION);
 seule("depassement", DEPASSEMENT);
 
-/* Cartes mémoire : les mêmes questions que le quiz */
+/* Cartes mémoire : toutes les variantes du quiz */
 let ic=0; const carte=document.getElementById("carte");
 function afficheCarte(){
   carte.classList.remove("verso");
-  const Q=QUIZ[ic];
+  const Q=CARTES[ic];
   document.getElementById("carte-q").textContent=Q.q;
   document.getElementById("carte-r").textContent=Q.c[0];
   document.getElementById("carte-e").textContent=Q.e;
-  document.getElementById("carte-n").textContent=(ic+1)+" / "+QUIZ.length;
+  document.getElementById("carte-n").textContent=(ic+1)+" / "+CARTES.length;
   document.getElementById("carte-avant").disabled = ic===0;
-  document.getElementById("carte-apres").disabled = ic===QUIZ.length-1;
+  document.getElementById("carte-apres").disabled = ic===CARTES.length-1;
 }
 const retourne=()=>carte.classList.toggle("verso");
 carte.addEventListener("click",retourne);
 document.getElementById("carte-retourne").addEventListener("click",retourne);
 document.getElementById("carte-avant").addEventListener("click",()=>{ if(ic>0){ic--;afficheCarte();} });
-document.getElementById("carte-apres").addEventListener("click",()=>{ if(ic<QUIZ.length-1){ic++;afficheCarte();} });
+document.getElementById("carte-apres").addEventListener("click",()=>{ if(ic<CARTES.length-1){ic++;afficheCarte();} });
 afficheCarte();
 
 /* Onglets */
