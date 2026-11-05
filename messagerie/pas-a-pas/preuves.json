@@ -1,5 +1,5 @@
 {
-  "_lisezmoi": "Version 2026-11-05 : 3 variantes du même type pour les preuves 8 à 12 (le serveur en tire une par élève, toujours la même) ; blocs 1 à 7 = le brouillon guidé, une seule règle. Contrôles locaux du brouillon + preuves courtes côté serveur ; les emails réels restent à vérifier par le professeur.",
+  "_lisezmoi": "Version 2026-11-05b : preuve 9 sur le contenu du message du professeur (objet, adresse, question) ; preuve 10 v3 = ligne Cc (professeur en copie) ; preuve 12 v1 = Répondre à tous. Avant : 3 variantes du même type pour les preuves 8 à 12 (le serveur en tire une par élève, toujours la même) ; blocs 1 à 7 = le brouillon guidé, une seule règle. Contrôles locaux du brouillon + preuves courtes côté serveur ; les emails réels restent à vérifier par le professeur.",
   "blocs": [
     [
       {
@@ -125,45 +125,33 @@
     [
       {
         "type": "saisie",
-        "q": "Comment appelle-t-on la personne qui envoie le mail ?",
+        "q": "Recopie l’objet du message de ton professeur.",
         "regle": {
-          "egal": [
-            "expéditeur",
-            "l’expéditeur",
-            "expéditrice",
-            "l’expéditrice"
-          ]
+          "motif": "bienvenue.*boite.*ecole"
         },
-        "faux": "L’expéditeur envoie ; le destinataire reçoit.",
-        "aide": "Écris le terme, puis montre son nom dans Outlook."
+        "faux": "Ouvre le message de ton professeur et recopie la ligne Objet, le titre en haut du message.",
+        "aide": "L’objet est le titre en gras, au-dessus du nom du professeur."
       },
       {
         "type": "saisie",
-        "q": "Comment appelle-t-on la personne qui reçoit le mail ?",
+        "q": "Quelle est l’adresse de ton professeur, l’expéditeur du message ?",
         "regle": {
           "egal": [
-            "destinataire",
-            "le destinataire",
-            "la destinataire"
+            "vlouviaux@arcampin.be",
+            "alexia.michiels@arcampin.be"
           ]
         },
-        "faux": "Le destinataire reçoit ; l’expéditeur envoie.",
-        "aide": "Écris le terme, puis montre ton adresse dans le message du professeur."
+        "faux": "Ouvre le message de ton professeur : son adresse est à côté de son nom, en haut du message. Recopie-la en entier.",
+        "aide": "Clique sur le nom du professeur pour voir son adresse complète."
       },
       {
         "type": "saisie",
-        "q": "Dans quel dossier arrivent les mails que tu reçois ?",
+        "q": "Recopie la question que ton professeur te pose dans son message.",
         "regle": {
-          "egal": [
-            "Boîte de réception",
-            "la boîte de réception",
-            "dans la boîte de réception",
-            "dans boîte de réception",
-            "réception"
-          ]
+          "motif": "(?=.*\\?)(?=.*(site|matiere|sport|loisir|viens))"
         },
-        "faux": "Les mails reçus arrivent dans Boîte de réception.",
-        "aide": "Écris le nom du dossier, puis montre-le dans Outlook."
+        "faux": "Ouvre le message de ton professeur, lis-le jusqu’au bout et recopie sa question en entier, avec le point d’interrogation.",
+        "aide": "La question finit par un point d’interrogation « ? »."
       }
     ],
     [
@@ -200,17 +188,21 @@
       },
       {
         "type": "saisie",
-        "q": "Dans quelle ligne écris-tu l’adresse de ton camarade ?",
+        "q": "Dans quelle ligne écris-tu l’adresse de ton professeur ?",
         "regle": {
           "egal": [
-            "À",
-            "la ligne À",
-            "le champ À",
-            "dans la ligne À",
-            "dans À"
+            "Cc",
+            "la ligne Cc",
+            "le champ Cc",
+            "dans la ligne Cc",
+            "dans Cc",
+            "en Cc",
+            "copie",
+            "en copie",
+            "la copie"
           ]
         },
-        "faux": "L’adresse du destinataire va dans la ligne À ; Cc et Cci restent vides.",
+        "faux": "Ton professeur est en copie : son adresse va dans la ligne Cc, sous la ligne À.",
         "aide": "Ne recopie pas l’adresse ici : nomme la ligne."
       }
     ],
@@ -261,16 +253,16 @@
     [
       {
         "type": "saisie",
-        "q": "Quel bouton réutilise le destinataire et le sujet du mail reçu ?",
+        "q": "Quel bouton répond à ton camarade en gardant ton professeur en copie ?",
         "regle": {
           "egal": [
-            "Répondre",
-            "Le bouton Répondre",
-            "Bouton Répondre"
+            "Répondre à tous",
+            "le bouton Répondre à tous",
+            "bouton Répondre à tous"
           ]
         },
-        "faux": "Utilise Répondre, puis réponds à la question du camarade.",
-        "aide": "Écris son nom."
+        "faux": "Utilise Répondre à tous : ton camarade et ton professeur (en Cc) reçoivent ta réponse.",
+        "aide": "Ce n’est pas « Répondre » tout court."
       },
       {
         "type": "saisie",

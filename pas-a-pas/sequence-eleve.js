@@ -26,7 +26,7 @@
 #seq .sq-programme code{font:inherit;color:inherit;white-space:inherit}
 #seq .sq-choix{display:flex;flex-wrap:wrap;gap:10px}
 #seq .sq-choix button{flex:1;min-width:8rem}
-#seq .sq-choix button.pris{background:var(--fromage-pale);border-color:var(--fromage);color:var(--encre)}
+#seq .sq-choix button.pris{background:var(--fromage-pale,#ffd990);border-color:var(--fromage,#b7791f);color:var(--encre,#172b42);box-shadow:0 0 0 3px var(--fromage,#b7791f);transform:scale(1.03)}#seq .sq-choix button.pris::before{content:"✓ "}#seq .sq-case:has(input:checked){background:#ffe9a8;outline:3px solid #b7791f;border-radius:10px;padding:6px 10px}
 #seq .sq-res{font-weight:700;margin:0}
 #seq .sq-res.juste{color:var(--juste)} #seq .sq-res.faux{color:var(--faux)}
 #seq .sq-copie{display:grid;gap:8px;text-align:left;border-top:1px solid var(--trait);padding-top:14px;font-size:1.1rem}
