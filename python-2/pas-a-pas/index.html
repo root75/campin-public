@@ -57,7 +57,7 @@ h2{font-family:var(--display);font-weight:800;font-size:1.55rem;margin:0;line-he
 h3{font-family:var(--display);font-weight:600;font-size:1.2rem;margin:0}
 p{margin:0}
 button{font:inherit}
-button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--fromage);outline-offset:2px}
+button:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid var(--fromage);outline-offset:2px}
 
 .progres{display:flex;gap:4px}
 .progres span{flex:1;height:8px;border-radius:4px;background:var(--trait)}
@@ -125,6 +125,9 @@ dialog{border:1px solid var(--trait);border-radius:14px;background:var(--carte);
 dialog::backdrop{background:rgb(0 0 0 / .45)}
 
 code,pre.code{font-family:ui-monospace,"Cascadia Mono",Consolas,"Courier New",monospace;font-size:.95em}
+figure.logigramme{margin:0 auto;max-width:15rem;display:grid;gap:4px;text-align:center}
+figure.logigramme svg{width:100%;height:auto;background:#fff;border:1px solid var(--trait);border-radius:10px;padding:8px}
+figure.logigramme figcaption{font-size:.85rem;color:var(--doux)}
 pre.code{margin:0;background:var(--papier);border:1px solid var(--trait);border-left:5px solid var(--encre-bouton);border-radius:8px;padding:12px 14px;line-height:1.5;overflow-x:auto;white-space:pre}
 .editeur{width:100%;font-family:ui-monospace,"Cascadia Mono",Consolas,"Courier New",monospace;font-size:1rem;line-height:1.5;padding:12px 14px;border:2px solid var(--trait);border-radius:10px;background:var(--carte);color:var(--encre);resize:vertical;tab-size:4}
 .editeur:focus-visible{outline:3px solid var(--fromage);outline-offset:2px}
@@ -166,6 +169,7 @@ footer{font-size:.9rem;color:var(--doux);display:flex;flex-wrap:wrap;gap:4px 16p
 footer .auteur{margin-left:auto;font-weight:700}
 </style>
 <link rel="stylesheet" href="https://root75.github.io/campin-public/assets/navigation.css">
+<link rel="stylesheet" href="https://root75.github.io/campin-public/pas-a-pas/python-missions.css?v=missions-20261105">
 </head>
 <body>
 <nav class="campin-navigation" aria-label="Navigation du site">
@@ -181,11 +185,12 @@ footer .auteur{margin-left:auto;font-weight:700}
 
 
 <div class="page">
-  <header>
-    <div class="surtitre">Logique et programmation · 3e · LogProg 04 · séance 2</div>
-    <h1>Python 02 — Lire et corriger les erreurs <em>pas à pas</em></h1>
-    <p class="qui" id="qui"></p>
-  </header>
+  <header class="entete"><svg class="mascotte" id="mascotte" viewBox="0 0 120 120" aria-hidden="true"><ellipse cx="60" cy="108" rx="40" ry="7" fill="#0001"/><path d="M22 100c-6-14 8-22 26-22s34-6 32-20" fill="none" stroke="#3a77ab" stroke-width="16" stroke-linecap="round"/><path d="M22 100c-6-14 8-22 26-22s34-6 32-20" fill="none" stroke="#ffd43b" stroke-width="5" stroke-linecap="round" stroke-dasharray="2 12"/><circle cx="78" cy="42" r="24" fill="#3a77ab"/><circle cx="70" cy="38" r="6" fill="#fff"/><circle cx="88" cy="38" r="6" fill="#fff"/><circle cx="71" cy="39" r="3" fill="#1f2a33"/><circle cx="89" cy="39" r="3" fill="#1f2a33"/><path d="M70 52q9 7 18 0" fill="none" stroke="#1f2a33" stroke-width="3" stroke-linecap="round"/><circle cx="64" cy="49" r="3.5" fill="#f2a7b5"/><circle cx="94" cy="49" r="3.5" fill="#f2a7b5"/><path d="M79 64v8l-4 5M79 72l4 5" fill="none" stroke="#e0485a" stroke-width="2.4" stroke-linecap="round"/></svg><div>
+    <div class="surtitre">Logique et programmation · 3F · LogProg 04 · séance 2</div>
+    <h1>Python 02 — Lire et corriger les erreurs</h1>
+    <p class="bulle" id="bulle">Re-bonjour ! On se remet en route avec un petit quiz.</p>
+  </div></header>
+  <p class="qui" id="qui"></p>
 
   <section class="humeur" id="humeur" hidden aria-label="Humeur du jour"></section>
 
@@ -196,13 +201,18 @@ footer .auteur{margin-left:auto;font-weight:700}
   <details class="coince" id="coince">
     <summary>Ça coince ?</summary>
     <ul id="coince-liste"></ul>
-    <p class="protocole">Toujours bloqué ? Je relis le bloc → je demande à mon voisin (il explique, il ne touche pas ma souris) → je clique sur « J'attends de l'aide » et je continue.</p>
+    <p class="protocole">Toujours bloqué ? Relis le bloc et regarde l’animation → demande au voisin (il explique, il ne touche pas ta souris) → sonne la cloche 🔔, en haut à droite, et continue ce qui reste possible.</p>
   </details>
 
-  <div class="aide" id="aide">
-    <p id="aide-texte">Je suis bloqué malgré « Ça coince ? » et mon voisin :</p>
-    <div class="actions"><button class="btn vide" type="button" id="aide-btn">J'attends de l'aide</button></div>
-  </div>
+  <section id="aide" aria-label="Demander de l’aide"><button id="aide-btn" type="button" aria-label="J'attends de l'aide" title="Tu as relu « Ça coince ? » et demandé au voisin ? Sonne.">🔔<span class="mot">J'attends de l'aide</span></button><p id="aide-texte">Tu as relu « Ça coince ? » et demandé au voisin ? Sonne.</p></section>
+  <div id="bravo" role="status" aria-live="polite"></div>
+
+  <details class="coince" id="tutos">
+    <summary>👀 Toutes les animations « Regarde comment faire »</summary>
+    <p class="note">Choisis un geste : son animation s’affiche juste en dessous, sans changer de bloc.</p>
+    <div class="tutos-liste" id="tutos-liste"></div>
+    <div id="tutos-vue"></div>
+  </details>
 
   <div class="actions">
     <button class="btn vide" type="button" id="memo-btn">🐍 Du logigramme à Python</button>
@@ -220,18 +230,21 @@ footer .auteur{margin-left:auto;font-weight:700}
       <tr><td>la flèche <b>←</b> : vies ← 3</td><td><code>vies = 3</code></td></tr>
       <tr><td>le parallélogramme <b>Afficher</b></td><td><code>print(vies)</code></td></tr>
       <tr><td>un texte à afficher</td><td>entre guillemets : <code>print("Bonjour")</code></td></tr>
-      <tr><td>le tableau de trace</td><td>je prédis, ligne par ligne, AVANT d'exécuter</td></tr>
-      <tr><td>une note pour le lecteur</td><td>un commentaire : <code># je range 3</code></td></tr>
+      <tr><td>le tableau de trace</td><td>prédire, ligne par ligne, AVANT d'exécuter</td></tr>
+      <tr><td>une note pour le lecteur</td><td>un commentaire : <code># on range 3</code></td></tr>
     </table>
   </div>
-  <p style="margin-top:12px"><b>⭐ = n'est pas une égalité.</b> À droite je calcule, à gauche je range : la boîte est toujours à gauche.</p>
+  <p style="margin-top:12px"><b>⭐ = n'est pas une égalité.</b> À droite on calcule, à gauche on range : la boîte est toujours à gauche.</p>
   <p style="margin-top:6px">Python lit chaque lettre : <code>Vies</code> n'est pas <code>vies</code>.</p>
   <form method="dialog" class="actions" style="margin-top:14px"><button class="btn plein">Fermer</button></form>
 </dialog>
 
-<script src="https://root75.github.io/campin-public/python-2/pas-a-pas/fiche.js?v=aide-20261104"></script>
-<script src="https://root75.github.io/campin-public/pas-a-pas/blocs.js?v=aide-20261104"></script>
+<!-- Mode séquence (vue prof) : la fiche affiche le moment que le professeur projette. -->
 <script defer src="https://root75.github.io/campin-public/pas-a-pas/sequence-eleve.js"></script>
+<script src="https://root75.github.io/campin-public/python-2/pas-a-pas/fiche.js?v=missions-20261105"></script>
+<script src="https://root75.github.io/campin-public/pas-a-pas/demos-python.js?v=missions-20261105"></script>
+<script src="https://root75.github.io/campin-public/pas-a-pas/blocs.js?v=missions-20261105"></script>
 <script defer src="https://root75.github.io/campin-public/pas-a-pas/python-couleurs.js"></script>
 </body>
 </html>
+

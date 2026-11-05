@@ -53,7 +53,7 @@ function suite(){
 }
 function bulle(){
   const b = document.getElementById("bulle"), g = groupeCourant();
-  if(b) b.textContent = ici>=BLOCS.length ? (FIN.bulle || FIN.titre) : (g && g.bulle) || b.textContent;
+  if(b) b.textContent = ici>=BLOCS.length ? (FIN.bulle || FIN.titre) : (g && g.bulle) || (BLOCS[ici] && BLOCS[ici].bulle) || b.textContent;
 }
 let minuterieBravo;
 function bravo(t, grand){
@@ -98,8 +98,9 @@ function affiche(){
     /* Présentation « missions » (Labo 07) : le but en une phrase, les cases, puis ce qu'on vérifie.
        Pas d'étiquettes répétées à chaque bloc. */
     z.append(el("p","but",B.veux));
-    /* Démos « Regarde comment faire » (labo-07/pas-a-pas/demos.js), si la fiche en charge : on regarde, puis on fait. */
-    if(typeof Demo!=="undefined" && Demo.pourEtape){ const d = Demo.pourEtape(ici); if(d) z.append(d); }
+    /* Démo animée « Regarde comment faire », avant les cases : on regarde, puis on fait.
+       Python : pas-a-pas/demos-python.js (Demo.pour) ; Labo 07 : labo-07/pas-a-pas/demos.js (Demo.pourEtape). */
+    if(typeof Demo!=="undefined"){ const d = Demo.pour ? Demo.pour(ici) : Demo.pourEtape ? Demo.pourEtape(ici) : null; if(d) z.append(d); }
     z.append(el("div","faire",B.fais));
     const v = el("aside","repere verification"); v.append(txt("h3",null,"✅ À vérifier"), el("p",null,B.vois)); z.append(v);
   } else {
@@ -110,7 +111,7 @@ function affiche(){
     z.append(dl);
   }
   if(B.extra) z.append(el("div",null,B.extra));
-  if(B.stop) z.append(txt("p","stop","🛑 STOP — je ne continue pas tant que je ne vois pas ça."));
+  if(B.stop) z.append(txt("p","stop",MISSIONS ? "🛑 STOP — ne continue pas avant d’avoir vérifié." : "🛑 STOP — je ne continue pas tant que je ne vois pas ça."));
 
   B.coince.forEach((c,i)=>{
     if(!B.indices){ liste.append(txt("li",null,c)); return; }
@@ -137,7 +138,7 @@ function affiche(){
   } else if(["code","ordre","trace","ligne"].includes(B.q.type)){
     preuve(pr,B);
   } else {
-    const go = txt("button","btn plein","👀 Je vois ça"); go.type="button";
+    const go = txt("button","btn plein ouvre-preuve",MISSIONS ? "✅ C’est vérifié" : "👀 Je vois ça"); go.type="button";
     go.addEventListener("click",()=>{ go.remove(); preuve(pr,B); });
     pr.append(go);
   }
@@ -330,8 +331,8 @@ function fin(z){
   }
   if(FIN.citation) z.append(citation(FIN.citation));
   const plus = el("div","encart");
-  plus.append(txt("h3",null,"⚡ J'ai fini avant les autres"), txt("p",null,FIN.plus),
-    el("p",null,"Puis je révise : "+FIN.lien+"."));
+  plus.append(txt("h3",null,MISSIONS ? "⚡ Fini avant les autres ?" : "⚡ J'ai fini avant les autres"), txt("p",null,FIN.plus),
+    el("p",null,(MISSIONS ? "Puis révise : " : "Puis je révise : ")+FIN.lien+"."));
   const nav = el("div","actions");
   const avant = txt("button","btn vide","← Revoir les blocs"); avant.type="button";
   avant.addEventListener("click",()=>{ ici=0; affiche(); });

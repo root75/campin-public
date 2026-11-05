@@ -5,13 +5,14 @@
    Pas de fiche élève : blocs écrits depuis le déroulé de « LogProg04_PROF_Premiers-pas-en-Python ».
    Exercices inspirés de la leçon 1E de Cercles informatiques (CEMC, Université de Waterloo,
    CC BY-NC-SA 3.0), réécrits et exécutés dans la page. Thonny reste pour « Les vies ».
-   Chaque bloc : veux / fais / vois, stop, minutes, coince (les pièges de CE bloc), et une preuve :
+   Chaque bloc : veux (le but, une phrase) / fais (les cases, à l'impératif) / vois (« À vérifier »), bulle, stop, minutes, coince (les pièges de CE bloc), et une preuve :
    QCM (bonne réponse TOUJOURS en premier, mélangée à l'affichage, p = ce qu'on dit au piège),
    saisie (ok = test, faux = texte ou fonction de la réponse), code (depart = programme de départ,
    test(r) = true ou l'explication ; r = { sortie, erreur:{type,ligne,message}, vars, code }),
    ordre (lignes à remettre dans l'ordre, puis test(r) comme code), trace (code, vars, valeurs
    après chaque ligne, aide par ligne) ou ligne (code, bonne = la ligne fautive, p par ligne). */
 const COURS = "python-2";
+const PRESENTATION = "missions";   // blocs.js : cloche, mascotte, bulle, bravo, sans « Je veux / Je fais / Je vois » (05/11/2026)
 const CODE = s => `<pre class="code">${s}</pre>`;
 const SORTIE = r => r.sortie.replace(/\s+$/,"");
 
@@ -34,6 +35,10 @@ const hache = s => {   // FNV-1a brassé, comme hache_() dans Code.gs
 };
 const tirage = (cle, n) => n<2 || !EMAIL ? 1 : 1 + hache(EMAIL.toLowerCase()+"|"+cle) % n;
 const VIES = CODE("vies = {D}\nvies = vies - {K}\nprint(vies)");
+
+/* Une case par action, à l'impératif (style « missions » du Labo 07 et du Rat de ville). */
+const CASES = (...l) => `<ol class="etapes">${l.map(x => `<li><label><input type="checkbox"><span>${x}</span></label></li>`).join("")}</ol>`;
+const EXECUTER = `Clique sur <span class="chemin">▶ Exécuter</span> (ou <b>Ctrl + Entrée</b>).`;
 
 /* Les exercices à nombres variables : une fonction rend la partie du bloc qui change. */
 const additionneur = n => {
@@ -58,7 +63,8 @@ const fr = x => String(x).replace(".", ",");
 const soldes = (prix, pct) => {
   const faux = pct/100, garde = (100-pct)/100, reste = prix*(100-pct)/100;
   return {
-    fais:`Un pull à ${prix} € est soldé à −${pct} % : il doit coûter ${reste} €. <span class="chemin">▶ Exécuter (Ctrl+Entrée)</span> ▸ je compare avec ${reste} ▸ je trouve la ligne qui calcule faux ▸ je la corrige.`,
+    fais:CASES(`Lis : un pull à ${prix} €, soldé à −${pct} %, doit coûter ${reste} €.`, EXECUTER,
+               `Compare le résultat avec ${reste}.`, "Trouve la ligne qui calcule faux, puis corrige-la."),
     vois:`Le programme affiche ${reste}.0.`,
     extra:`<div class="encart"><h3>Pourquoi ${reste}.0 ?</h3><p>Dès qu'un calcul utilise un nombre à virgule (${garde}), Python donne un nombre à virgule : ${reste}.0. Une virgule s'écrit avec un POINT en Python.</p></div>`,
     coince:[`prix * ${faux}, c'est ${pct} % du prix : ${fr(prix*faux)} €. Ce qu'on garde, c'est ${100-pct} % du prix.`,
@@ -73,132 +79,173 @@ const soldes = (prix, pct) => {
 };
 
 const BLOCS = [
-  { partie:"A — Je me remets en route", titre:"Le quiz « Python — je révise »", min:8, stop:true,
-    veux:"Me rappeler print, les variables et = après le congé. Rien n'est coté.",
-    fais:`Je clique sur le lien <a href="https://root75.github.io/campin-public/python-je-revise/" target="_blank" rel="noopener">Python — je révise</a> : il s'ouvre dans un nouvel onglet ▸ <span class="chemin">onglet Quiz ▸ Commencer le quiz</span>. Puis je regarde le projecteur : le professeur reprend la question la plus ratée.`,
-    vois:"Mon score sur 5, et la trace au projecteur.",
-    coince:["Je garde deux onglets : celui-ci pour la fiche, l'autre pour le quiz. Pour revenir à la fiche : clic sur son onglet, en haut de Chrome.",
-            "Le lien ne s'ouvre pas : nouvel onglet (Ctrl+T) ▸ barre d'adresse ▸ root75.github.io/campin-public/python-je-revise/ ▸ Entrée.",
-            "Je ne sais plus : l'onglet « L'essentiel » de la même page redit tout en cinq lignes."],
+  { partie:"A — Se remettre en route", titre:"Le quiz « Python — je révise »", min:8, stop:true,
+    bulle:"Re-bonjour ! On se remet en route avec un petit quiz.",
+    veux:"Te rappeler print, les variables et = après le congé. Rien n'est coté.",
+    fais:CASES(`Clique sur le lien <a href="https://root75.github.io/campin-public/python-je-revise/" target="_blank" rel="noopener">Python — je révise</a> : il s'ouvre dans un nouvel onglet.`,
+               `Clique sur <span class="chemin">l'onglet Quiz ▸ Commencer le quiz</span>.`,
+               "Réponds aux cinq questions.",
+               "Reviens à cette fiche (son onglet, en haut de Chrome) et regarde le projecteur : le professeur reprend la question la plus ratée."),
+    vois:"Ton score sur 5, et la trace au projecteur.",
+    coince:["Garde deux onglets : celui-ci pour la fiche, l'autre pour le quiz. Pour revenir à la fiche : clic sur son onglet, en haut de Chrome.",
+            "Le lien ne s'ouvre pas : nouvel onglet (Ctrl + T) ▸ barre d'adresse ▸ root75.github.io/campin-public/python-je-revise/ ▸ Entrée.",
+            "Un trou de mémoire : l'onglet « L'essentiel » de la même page redit tout en cinq lignes."],
     q:{ type:"qcm", q:"Dans vies = vies - 1, que fait Python ?",
         c:["Il calcule à droite, puis il range à gauche.","Il vérifie que vies est égal à vies - 1.","Il range 1 dans vies.","Il affiche vies."],
-        p:[null,"= n'est pas une égalité : c'est la flèche ← du logigramme. À droite je calcule, à gauche je range.","1 fait partie du calcul : vies - 1 est calculé d'abord, puis rangé dans vies.","Rien ne s'affiche sans print."] },
+        p:[null,"= n'est pas une égalité : c'est la flèche ← du logigramme. À droite on calcule, à gauche on range.","1 fait partie du calcul : vies - 1 est calculé d'abord, puis rangé dans vies.","Rien ne s'affiche sans print."] },
     variantes:[
       { q:{ type:"qcm", q:"Après x = 5 puis x = x + 2, que vaut x ?",
             c:["7","5","2","x + 2"],
             p:[null,"5, c'était la valeur d'avant : la 2e ligne la remplace.","2, c'est ce qu'on ajoute, pas le résultat.","Python calcule x + 2 avant de ranger : la boîte contient un nombre."] } },
       { q:{ type:"qcm", q:"Que fait print(score) ?",
             c:["Il affiche la valeur rangée dans score.","Il affiche le mot score.","Il range une valeur dans score.","Il efface score."],
-            p:[null,"Pour afficher le mot, il faut des guillemets : print(\"score\").","Ranger, c'est le = : à droite je calcule, à gauche je range.","print n'efface rien : il montre."] } } ] },
+            p:[null,"Pour afficher le mot, il faut des guillemets : print(\"score\").","Ranger, c'est le = : à droite on calcule, à gauche on range.","print n'efface rien : il montre."] } } ] },
 
-  { partie:"B — Je lis les messages d'erreur", titre:"La consigne de toute la leçon", min:2,
+  { partie:"B — Lire les messages d'erreur", titre:"La règle de toute la leçon", min:2,
+    bulle:"Aujourd'hui, tu deviens réparateur de programmes.",
     veux:"Réparer un programme en lisant, pas en changeant au hasard.",
-    fais:"Je lis la consigne. Devant un programme cassé : j'exécute, je lis la ligne rouge, je dis à mon voisin quelle ligne est fautive, et SEULEMENT ensuite je touche au code.",
-    vois:"Trois sortes d'erreurs : <b>SyntaxError</b> (l'écriture est cassée), une erreur <b>pendant l'exécution</b> (NameError : un nom inconnu), et l'erreur <b>de logique</b> (pas de ligne rouge, mais le résultat est faux).",
-    coince:["Je me suis perdu dans un programme : bouton ↺ Code de départ, sous le cadre."],
+    fais:CASES("Lis l'encadré ci-dessous.",
+               "Devant un programme cassé : exécute, lis la ligne rouge, dis à ton voisin quelle ligne est fautive, et SEULEMENT ensuite touche au code."),
+    vois:"Tu sais nommer les trois sortes d'erreurs.",
+    extra:`<div class="encart"><p>Trois sortes d'erreurs : <b>SyntaxError</b> (l'écriture est cassée), une erreur <b>pendant l'exécution</b> (NameError : un nom inconnu), et l'erreur <b>de logique</b> (pas de ligne rouge, mais le résultat est faux).</p></div>`,
+    coince:["Perdu dans un programme : bouton ↺ Code de départ, sous le cadre."],
     q:{ type:"qcm", q:"Devant un programme qui ne marche pas, je commence par :",
         c:["Lire le message et trouver la ligne fautive.","Changer des caractères au hasard.","Tout effacer et recommencer.","Cliquer sur ↺ Code de départ."],
         p:[null,"Au hasard, ça finit parfois par marcher, mais tu ne sauras pas pourquoi. Le message dit où chercher.","Tu perdrais ce qui est juste : souvent, un seul caractère est faux.","↺ Code de départ, c'est quand tu t'es perdu : ça remet le programme cassé du départ."] } },
 
-  { partie:"B — Je lis les messages d'erreur", titre:"L'additionneur", min:5,
+  { partie:"B — Lire les messages d'erreur", titre:"L'additionneur", min:5,
+    bulle:"Une faute d'écriture : un seul caractère à trouver.",
     veux:"Réparer une faute d'écriture : un seul caractère.",
-    fais:`<span class="chemin">▶ Exécuter (Ctrl+Entrée)</span> tel quel ▸ je lis la ligne rouge ▸ je trouve le caractère fautif ▸ je le corrige ▸ Exécuter.`,
-    coince:["SyntaxError : l'écriture est cassée. Je regarde juste avant la parenthèse finale.",
+    fais:CASES(`Exécute le programme tel quel : <span class="chemin">▶ Exécuter</span> (ou <b>Ctrl + Entrée</b>).`,
+               "Lis la ligne rouge.", "Trouve le caractère fautif et corrige-le.", EXECUTER),
+    coince:["SyntaxError : l'écriture est cassée. Regarde juste avant la parenthèse finale.",
             "Un seul caractère à enlever, rien à ajouter."],
     ...additionneur(10),
     variantes:[additionneur(8), additionneur(12)] },
 
-  { partie:"B — Je lis les messages d'erreur", min:5,
+  { partie:"B — Lire les messages d'erreur", min:5,
+    bulle:"Cette fois, l'erreur arrive pendant l'exécution.",
     veux:"Réparer une erreur qui arrive pendant l'exécution. Deux caractères.",
-    fais:`<span class="chemin">▶ Exécuter (Ctrl+Entrée)</span> tel quel ▸ je lis le nom de l'erreur ▸ je dis à mon voisin quelle ligne est fautive ▸ je corrige ▸ Exécuter.`,
+    fais:CASES(`Exécute le programme tel quel : <span class="chemin">▶ Exécuter</span> (ou <b>Ctrl + Entrée</b>).`,
+               "Lis le nom de l'erreur.", "Dis à ton voisin quelle ligne est fautive.", "Corrige-la.", EXECUTER),
     ...bonjour("Joe"),
     variantes:[bonjour("Léa"), bonjour("Sam")] },
 
-  { partie:"B — Je lis les messages d'erreur", titre:"Quelle ligne cloche ?", min:3,
+  { partie:"B — Lire les messages d'erreur", titre:"Quelle ligne cloche ?", min:3,
+    bulle:"Pas de ligne rouge… et pourtant c'est faux !",
     veux:"Trouver une erreur de logique en lisant, sans exécuter.",
-    fais:"Je lis le programme ligne par ligne, comme une trace. Je clique sur la ligne fautive.",
+    fais:CASES("Lis le programme ligne par ligne, comme une trace.", "Clique sur la ligne fautive."),
     vois:"Le score doit valoir 15 : 10 points, plus un bonus de 5. Le programme affiche 5.",
     coince:["Aucune ligne rouge ici : le programme tourne, mais il calcule faux. C'est une erreur de logique.",
-            "Je fais la trace : que vaut score après chaque ligne ?"],
+            "Fais la trace : que vaut score après chaque ligne ?"],
     q:{ type:"ligne", q:"Clique sur la ligne fautive.", code:["score = 10","bonus = 5","score = score - bonus","print(score)"], bonne:3,
         p:["score = 10 : le score de départ est bien 10.","bonus = 5 : le bonus vaut bien 5.",null,"print(score) affiche bien le score. Le problème est dans le calcul, juste avant."],
         juste:"Le signe − enlève le bonus au lieu de l'ajouter : score = score + bonus." },
     variantes:[
       { vois:"Le total doit valoir 24 : 3 objets à 8 €. Le programme affiche 11.",
         coince:["Aucune ligne rouge ici : le programme tourne, mais il calcule faux. C'est une erreur de logique.",
-                "Je fais la trace : que vaut total après chaque ligne ?"],
+                "Fais la trace : que vaut total après chaque ligne ?"],
         q:{ type:"ligne", q:"Clique sur la ligne fautive.", code:["prix = 8","quantite = 3","total = prix + quantite","print(total)"], bonne:3,
             p:["prix = 8 : un objet coûte bien 8 €.","quantite = 3 : on en achète bien 3.",null,"print(total) affiche bien le total. Le problème est dans le calcul, juste avant."],
             juste:"Le + additionne le prix et la quantité au lieu de les multiplier : total = prix * quantite." } },
       { vois:"Le programme doit afficher la température après la baisse : 15. Il affiche 5.",
         coince:["Aucune ligne rouge ici : le programme tourne, mais il affiche faux. C'est une erreur de logique.",
-                "Je fais la trace : que vaut temperature après chaque ligne ? Et quelle boîte la dernière ligne affiche-t-elle ?"],
+                "Fais la trace : que vaut temperature après chaque ligne ? Et quelle boîte la dernière ligne affiche-t-elle ?"],
         q:{ type:"ligne", q:"Clique sur la ligne fautive.", code:["temperature = 20","baisse = 5","temperature = temperature - baisse","print(baisse)"], bonne:4,
             p:["temperature = 20 : la température de départ est bien 20.","baisse = 5 : la baisse vaut bien 5.","temperature - baisse = 15, rangé dans temperature : le calcul est juste.",null],
             juste:"Le calcul est juste, mais la dernière ligne affiche la mauvaise boîte : print(temperature)." } } ] },
 
-  { partie:"B — Je lis les messages d'erreur", titre:"Les soldes", min:6, stop:true,
+  { partie:"B — Lire les messages d'erreur", titre:"Les soldes", min:6, stop:true,
+    bulle:"Les soldes : le programme se trompe de prix.",
     veux:"Trouver une erreur de logique : pas de ligne rouge, mais un résultat faux.",
     ...soldes(20, 10),
     variantes:[soldes(30, 20), soldes(50, 10)] },
 
-  { partie:"C — « Les vies » cassé, réparé, commenté, dans Thonny", titre:"J'ouvre mon fichier", min:3, stop:true, cle:"vies", variantes:[{},{}],
+  { partie:"C — « Les vies » cassé, réparé, commenté, dans Thonny", titre:"Ouvrir mon fichier", min:3, stop:true, cle:"vies", variantes:[{},{}],
+    bulle:"Retour dans Thonny : retrouve ton programme de la séance 1.",
     veux:"Retrouver le programme de la séance 1.",
-    fais:`<span class="chemin">touche Windows ▸ je tape Thonny ▸ Entrée</span> ▸ <span class="chemin">menu Fichier ▸ Ouvrir… (Ctrl+O) ▸ Documents ▸ Python ▸ 01_Les-vies_Nom.py ▸ Ouvrir</span> ▸ <span class="chemin">icône ▶ verte « Exécuter le script courant » (F5)</span>.`,
-    vois:"Mes trois lignes, et {R} dans la console du bas.",
+    fais:CASES(`Appuie sur la touche <b>Windows</b> ⊞, tape <b>Thonny</b>, puis appuie sur <b>Entrée</b>.`,
+               `Dans Thonny : <span class="chemin">menu Fichier ▸ Ouvrir…</span> (ou <b>Ctrl + O</b>).`,
+               `<span class="chemin">Documents ▸ double-clic sur Python ▸ 01_Les-vies_Nom.py ▸ Ouvrir</span>.`,
+               `Exécute : <span class="chemin">icône ▶ verte « Exécuter le script courant »</span> (ou <b>F5</b>).`),
+    vois:"Tes trois lignes, comme le modèle ci-dessous, et {R} dans la console du bas.",
     extra: VIES,
-    coince:["Mon fichier n'est pas là : je le recrée. Documents ▸ bouton Nouveau ▸ Dossier ▸ Python ; puis dans Thonny, Fichier ▸ Enregistrer sous… (Ctrl+Maj+S) ▸ 01_Les-vies_Nom.py, et je tape les trois lignes du modèle.",
-            "Thonny ne se lance pas : nouvel onglet (Ctrl+T) ▸ barre d’adresse ▸ https://cscircles.cemc.uwaterloo.ca/dev/console-fr/ ▸ Entrée. Je tape les trois lignes du modèle dans la console de secours et j’exécute. Rien n’y est enregistré : je montre mon écran au professeur pour vérifier le résultat et organiser la sauvegarde, puis je reviens à cette fiche."],
+    coince:["Ton fichier n'est pas là : recrée-le. Documents ▸ bouton Nouveau ▸ Dossier ▸ Python ; puis dans Thonny, Fichier ▸ Enregistrer sous… (Ctrl + Maj + S) ▸ 01_Les-vies_Nom.py, et tape les trois lignes du modèle.",
+            "Thonny ne se lance pas : nouvel onglet (Ctrl + T) ▸ barre d’adresse ▸ https://cscircles.cemc.uwaterloo.ca/dev/console-fr/ ▸ Entrée. Tape les trois lignes du modèle dans la console de secours et exécute. Rien n’y est enregistré : sonne la cloche 🔔 ; le professeur vérifie le résultat et organise la sauvegarde. Puis reviens à cette fiche."],
     q:{ type:"qcm", q:"F5 : qu'affiche la console du bas ?",
         c:["{R}","{D}","vies","Un message d'erreur"],
         p:[null,"vies - {K} doit être rangé : vies = vies - {K}. Corrige, Ctrl+S, F5.","print(\"vies\") affiche le mot : enlève les guillemets, Ctrl+S, F5.","Lis le message, compare avec le modèle, corrige, Ctrl+S, F5."] } },
 
-  { partie:"C — « Les vies » cassé, réparé, commenté, dans Thonny", titre:"Je le casse : Vies", min:4,
+  { partie:"C — « Les vies » cassé, réparé, commenté, dans Thonny", titre:"Le casser : Vies", min:4,
+    bulle:"On casse exprès, pour apprendre à réparer.",
     veux:"Voir que Python lit chaque lettre : Vies n'est pas vies.",
-    fais:"À la 3e ligne, je remplace vies par <b>Vies</b> : print(Vies). Je réponds à la question AVANT de faire F5. Puis F5, je lis le message, et je répare (vies en minuscules), F5.",
+    fais:CASES("À la 3e ligne, remplace vies par <b>Vies</b> : print(Vies).",
+               "Réponds à la question ci-dessous AVANT de faire F5.",
+               "Puis F5 : lis le message d'erreur.",
+               "Répare (vies en minuscules), puis F5."),
     vois:"Un message d'erreur, puis de nouveau {R} après la réparation.",
-    coince:["Le message est long : je lis la dernière ligne, c'est elle qui donne le nom de l'erreur."],
+    coince:["Le message est long : lis la dernière ligne, c'est elle qui donne le nom de l'erreur."],
     q:{ type:"qcm", q:"Prédis : avec print(Vies), que va-t-il se passer ?",
         c:["Une erreur NameError : Python ne connaît pas Vies.","Il affiche {R}.","Il affiche Vies.","Une erreur SyntaxError."],
         p:[null,"La boîte s'appelle vies, en minuscules. Vies est un autre nom, que Python ne connaît pas.","Sans guillemets, Vies n'est pas un texte : c'est un nom de variable.","L'écriture est correcte : c'est le nom qui est inconnu. Ce n'est pas une faute de syntaxe."] },
     variantes:[
-      { titre:"Je le casse : vie", veux:"Voir que Python lit chaque lettre : vie n'est pas vies.",
-        fais:"À la 3e ligne, j'efface le s de vies : print(vie). Je réponds à la question AVANT de faire F5. Puis F5, je lis le message, et je répare (print(vies)), F5.",
+      { titre:"Le casser : vie", veux:"Voir que Python lit chaque lettre : vie n'est pas vies.",
+        fais:CASES("À la 3e ligne, efface le s de vies : print(vie).",
+                   "Réponds à la question ci-dessous AVANT de faire F5.",
+                   "Puis F5 : lis le message d'erreur.",
+                   "Répare (print(vies)), puis F5."),
         q:{ type:"qcm", q:"Prédis : avec print(vie), sans le s, que va-t-il se passer ?",
             c:["Une erreur NameError : Python ne connaît pas vie.","Il affiche {R}.","Il affiche vie.","Une erreur SyntaxError."],
             p:[null,"La boîte s'appelle vies, avec un s. vie est un autre nom, que Python ne connaît pas.","Sans guillemets, vie n'est pas un texte : c'est un nom de variable.","L'écriture est correcte : c'est le nom qui est inconnu. Ce n'est pas une faute de syntaxe."] } },
-      { titre:"Je le casse : prnt", veux:"Voir que Python lit chaque lettre : prnt n'est pas print.",
-        fais:"À la 3e ligne, j'efface le i de print : prnt(vies). Je réponds à la question AVANT de faire F5. Puis F5, je lis le message, et je répare (print(vies)), F5.",
+      { titre:"Le casser : prnt", veux:"Voir que Python lit chaque lettre : prnt n'est pas print.",
+        fais:CASES("À la 3e ligne, efface le i de print : prnt(vies).",
+                   "Réponds à la question ci-dessous AVANT de faire F5.",
+                   "Puis F5 : lis le message d'erreur.",
+                   "Répare (print(vies)), puis F5."),
         q:{ type:"qcm", q:"Prédis : avec prnt(vies), que va-t-il se passer ?",
             c:["Une erreur NameError : Python ne connaît pas prnt.","Il affiche {R}.","Il affiche vies.","Une erreur SyntaxError."],
             p:[null,"prnt n'est pas print : Python ne devine pas, il ne connaît pas ce nom.","Python ne connaît pas prnt : rien ne s'affiche.","L'écriture est correcte (un nom suivi de parenthèses) : c'est le nom qui est inconnu."] } } ] },
 
-  { partie:"C — « Les vies » cassé, réparé, commenté, dans Thonny", titre:"Je le casse : une parenthèse", min:4,
+  { partie:"C — « Les vies » cassé, réparé, commenté, dans Thonny", titre:"Le casser : une parenthèse", min:4,
+    bulle:"Une parenthèse de travers : quelle erreur ?",
     veux:"Reconnaître une faute d'écriture.",
-    fais:"À la 3e ligne, j'efface la dernière parenthèse : print(vies. Je réponds AVANT de faire F5. Puis F5, je lis le message, et je remets la parenthèse, F5.",
+    fais:CASES("À la 3e ligne, efface la dernière parenthèse : print(vies.",
+               "Réponds à la question ci-dessous AVANT de faire F5.",
+               "Puis F5 : lis le message d'erreur.",
+               "Remets la parenthèse, puis F5."),
     vois:"Un message d'erreur, puis de nouveau {R} après la réparation.",
     coince:["La parenthèse ) est la touche à droite du 0, sans Maj."],
     q:{ type:"qcm", q:"Prédis : avec print(vies sans la parenthèse finale, quelle erreur ?",
         c:["SyntaxError : une faute d'écriture.","NameError : un nom inconnu.","Aucune : il affiche {R}.","Il affiche vies."],
         p:[null,"Le nom vies est connu : c'est l'écriture qui est cassée.","Python ne devine pas la parenthèse manquante.","Rien ne s'affiche quand l'écriture est cassée."] },
     variantes:[
-      { fais:"À la 3e ligne, j'efface la parenthèse ouvrante et je laisse un espace : print vies). Je réponds AVANT de faire F5. Puis F5, je lis le message, et je répare (print(vies)), F5.",
+      { fais:CASES("À la 3e ligne, efface la parenthèse ouvrante et laisse un espace : print vies).",
+                   "Réponds à la question ci-dessous AVANT de faire F5.",
+                   "Puis F5 : lis le message d'erreur.",
+                   "Répare (print(vies)), puis F5."),
         coince:["La parenthèse ( est la touche 5, sans Maj."],
         q:{ type:"qcm", q:"Prédis : avec print vies), sans la parenthèse ouvrante, quelle erreur ?",
             c:["SyntaxError : une faute d'écriture.","NameError : un nom inconnu.","Aucune : il affiche {R}.","Il affiche vies."],
             p:[null,"Le nom vies est connu : c'est l'écriture qui est cassée.","Python ne devine pas la parenthèse manquante.","Rien ne s'affiche quand l'écriture est cassée."] } },
-      { fais:"À la 3e ligne, j'ajoute une parenthèse finale : print(vies)). Je réponds AVANT de faire F5. Puis F5, je lis le message, et j'enlève la parenthèse en trop (print(vies)), F5.",
+      { fais:CASES("À la 3e ligne, ajoute une parenthèse finale : print(vies)).",
+                   "Réponds à la question ci-dessous AVANT de faire F5.",
+                   "Puis F5 : lis le message d'erreur.",
+                   "Enlève la parenthèse en trop (print(vies)), puis F5."),
         q:{ type:"qcm", q:"Prédis : avec print(vies)), une parenthèse en trop, quelle erreur ?",
             c:["SyntaxError : une faute d'écriture.","NameError : un nom inconnu.","Aucune : il affiche {R}.","Il affiche vies."],
             p:[null,"Le nom vies est connu : c'est l'écriture qui est cassée.","Python ne devine pas qu'il faut ignorer la parenthèse en trop.","Rien ne s'affiche quand l'écriture est cassée."] } } ] },
 
-  { partie:"C — « Les vies » cassé, réparé, commenté, dans Thonny", titre:"Je commente chaque ligne", min:6, stop:true,
+  { partie:"C — « Les vies » cassé, réparé, commenté, dans Thonny", titre:"Commenter chaque ligne", min:6, stop:true,
+    bulle:"Dernière étape : un programme que tout le monde comprend.",
     veux:"Un programme que n'importe qui comprend en le lisant.",
-    fais:`Au-dessus de chaque ligne, j'ajoute une ligne qui commence par <b>#</b> et dit ce que fait la ligne ▸ <span class="chemin">icône disquette (Ctrl+S)</span> ▸ F5. Puis je montre mon écran au professeur.`,
+    fais:CASES("Au-dessus de chaque ligne, ajoute une ligne qui commence par <b>#</b> et dit ce que fait la ligne.",
+               `Enregistre : <span class="chemin">icône disquette « Enregistrer »</span> (ou <b>Ctrl + S</b>).`,
+               `Exécute : <span class="chemin">icône ▶ verte</span> (ou <b>F5</b>).`,
+               "Réponds ci-dessous. Ensuite, montre ton programme à ton voisin : il lit tes commentaires et te dit s'il comprend chaque ligne."),
     vois:"Six lignes : trois commentaires, trois instructions. La console affiche toujours {R}.",
-    extra: CODE("# je range {D} dans la boîte vies\nvies = {D}\n# …\nvies = vies - {K}\n# …\nprint(vies)"),
+    extra: CODE("# on range {D} dans la boîte vies\nvies = {D}\n# …\nvies = vies - {K}\n# …\nprint(vies)"),
     coince:["Le # est AltGr + 3.",
-            "Je ne sais pas quoi écrire : je dis ce que fait la ligne, comme dans le logigramme (je range, je calcule, j'affiche)."],
+            "Pas d'idée de commentaire : dis ce que fait la ligne, comme dans le logigramme (on range, on calcule, on affiche)."],
     q:{ type:"qcm", q:"Avec tes trois commentaires, qu'affiche le programme ?",
         c:["{R}, comme avant : Python ignore ce qui suit #.","Les commentaires, puis {R}.","Une erreur.","Rien."],
         p:[null,"Les commentaires sont pour les humains : Python ne les affiche pas.","Si tu as une erreur, un # manque au début d'une ligne de commentaire.","print(vies) est toujours là : il affiche {R}."] },
@@ -212,15 +259,55 @@ const BLOCS = [
 ];
 
 const FIN = {
-  titre:"🎉 J'ai fini la séance 2",
-  texte:"Mon programme est réparé, commenté et enregistré. J'écoute l'annonce de la première évaluation : quoi et quand.",
-  plus:"Changer DEUX touches de « Les vies » pour qu'il affiche 1, et corriger mon commentaire.",
+  titre:"🎉 Séance 2 terminée !",
+  bulle:"Bravo ! Ton programme est réparé, commenté et enregistré.",
+  texte:"Ton programme est réparé, commenté et enregistré. Écoute l'annonce de la première évaluation : quoi et quand.",
+  plus:"Change DEUX touches de « Les vies » pour qu'il affiche 1, puis corrige ton commentaire.",
   lien:'<a href="https://root75.github.io/campin-public/python-je-revise/" target="_blank" rel="noopener">Premiers pas en Python — je révise</a> (onglet Cartes)',
   citation:{
     texte:"Les programmes doivent être écrits pour que des gens les lisent, et seulement accessoirement pour que des machines les exécutent.",
     auteur:"Harold Abelson et Gerald Jay Sussman", source:"Structure and Interpretation of Computer Programs (1985), traduit de l'anglais",
-    lien:"Mon commentaire est pour le lecteur, et ce lecteur, ce sera peut-être moi dans un mois."
+    lien:"Un commentaire est pour le lecteur, et ce lecteur, ce sera peut-être toi dans un mois."
   }
+};
+
+/* ===== Démos animées « Regarde comment faire » (lues par pas-a-pas/demos-python.js) =====
+   Numéro de bloc (0 = bloc 1) ▸ titre, images. Jamais une réponse de preuve : les lignes modifiées
+   sont des barres grises et le nom de l'erreur est masqué. volet:false = absente du volet (doublon). */
+const FICHIER_VIES = "01_Les-vies_Nom.py";
+const CASSER = { titre:"Casser, lire le message, réparer", images:[
+  { ecran:"thonny", nom:FICHIER_VIES, code:[["","cache"],["","cache"],["print(vies)",""]], cible:"L2", legende:"Clique dans la 3e ligne." },
+  { ecran:"thonny", nom:FICHIER_VIES, modifie:1, code:[["","cache"],["","cache"],["","cache"]], cible:"L2", legende:"Modifie-la comme la fiche le demande. Puis réponds à la question AVANT d’exécuter." },
+  { ecran:"thonny", nom:FICHIER_VIES, modifie:1, code:[["","cache"],["","cache"],["","cache"]], cible:"th-executer", legende:"▶ verte (ou F5). Thonny propose d’enregistrer : Oui." },
+  { ecran:"thonny", nom:FICHIER_VIES, code:[["","cache"],["","cache"],["","cache"]], run:1, erreur:1, cible:"th-erreur", legende:"Lis la DERNIÈRE ligne rouge : elle donne le nom de l’erreur. Compare avec ta prédiction." },
+  { ecran:"thonny", nom:FICHIER_VIES, modifie:1, code:[["","cache"],["","cache"],["print(vies)","sel"]], cible:"L2", legende:"Répare la 3e ligne." },
+  { ecran:"thonny", nom:FICHIER_VIES, code:[["","cache"],["","cache"],["print(vies)",""]], run:1, cible:"th-console", ok:1, legende:"F5 : le programme remarche." } ] };
+const DEMOS_FICHE = {
+  0: { titre:"Ouvrir le quiz et revenir à la fiche", images:[
+    { ecran:"chrome", page:"fiche", cible:"ch-lien", legende:"Clique sur le lien « Python — je révise »." },
+    { ecran:"chrome", page:"revise", cible:"ch-quiz", legende:"Un nouvel onglet s’ouvre. Clique sur Quiz." },
+    { ecran:"chrome", page:"quiz", cible:"ch-commencer", legende:"Commencer le quiz, puis réponds aux cinq questions." },
+    { ecran:"chrome", page:"quiz", cible:"ch-fiche", ok:1, legende:"Pour revenir à la fiche : clique sur son onglet, en haut." } ] },
+  6: { titre:"Ouvrir mon fichier dans Thonny", images:[
+    { ecran:"bureau", cible:"demarrer", legende:"Appuie sur la touche Windows ⊞ (ou clique sur Démarrer)." },
+    { ecran:"bureau", demarrer:1, cible:"app-thonny", legende:"Tape Thonny, puis Entrée." },
+    { ecran:"thonny", nom:"<sans nom>", cible:"m-fichier", legende:"Clique sur le menu Fichier." },
+    { ecran:"thonny", nom:"<sans nom>", menu:"item-ouvrir", cible:"item-ouvrir", legende:"Ouvrir… (ou Ctrl + O)." },
+    { ecran:"thonny", nom:"<sans nom>", dialogue:1, ouvrir:1, cible:"dlg-documents", legende:"À gauche, clique sur Documents." },
+    { ecran:"thonny", nom:"<sans nom>", dialogue:1, ouvrir:1, cible:"dlg-python", legende:"Double-clic sur le dossier Python." },
+    { ecran:"thonny", nom:"<sans nom>", dialogue:2, ouvrir:1, cible:"dlg-fichier", legende:"Clique sur ton fichier 01_Les-vies_… ." },
+    { ecran:"thonny", nom:"<sans nom>", dialogue:2, ouvrir:1, choisi:1, cible:"dlg-ouvrir", legende:"Clique sur Ouvrir." },
+    { ecran:"thonny", nom:FICHIER_VIES, lignes:3, cible:"th-executer", legende:"Tes trois lignes sont là. ▶ verte (ou F5)." },
+    { ecran:"thonny", nom:FICHIER_VIES, lignes:3, run:1, cible:"th-console", ok:1, legende:"Lis le résultat dans la console du bas." } ] },
+  7: CASSER,
+  8: Object.assign({}, CASSER, { volet:false }),
+  9: { titre:"Ajouter un commentaire au-dessus d’une ligne", images:[
+    { ecran:"thonny", nom:FICHIER_VIES, lignes:3, cible:"L0", legende:"Clique au tout début de la ligne 1." },
+    { ecran:"thonny", nom:FICHIER_VIES, modifie:1, code:[["","sel"],["","cache"],["","cache"],["","cache"]], cible:"L0", legende:"Entrée : une ligne vide apparaît au-dessus. Remonte dessus (flèche ↑)." },
+    { ecran:"thonny", nom:FICHIER_VIES, modifie:1, code:[["# …","sel"],["","cache"],["","cache"],["","cache"]], cible:"L0", legende:"Tape # (AltGr + 3), puis ce que fait la ligne du dessous." },
+    { ecran:"thonny", nom:FICHIER_VIES, modifie:1, code:[["","com"],["","cache"],["","com"],["","cache"],["","com"],["","cache"]], cible:"th-editeur", legende:"Pareil au-dessus de chaque ligne : 3 commentaires, 3 instructions." },
+    { ecran:"thonny", nom:FICHIER_VIES, modifie:1, code:[["","com"],["","cache"],["","com"],["","cache"],["","com"],["","cache"]], cible:"th-enregistrer", legende:"Disquette « Enregistrer » (ou Ctrl + S)." },
+    { ecran:"thonny", nom:FICHIER_VIES, code:[["","com"],["","cache"],["","com"],["","cache"],["","com"],["","cache"]], run:1, cible:"th-console", ok:1, legende:"F5, puis lis la console : qu’affiche-t-elle ? Réponds ci-dessous." } ] }
 };
 
 /* ===== Python dans la page =====
@@ -264,7 +351,7 @@ const ERREURS = {
   NameError:"Python ne connaît pas ce nom : majuscules ? guillemets oubliés ? variable créée avant ?",
   TypeError:"on mélange des choses qui ne vont pas ensemble, par exemple un texte et un nombre.",
   ZeroDivisionError:"une division par zéro.",
-  TimeoutError:"le programme ne s'arrête jamais : je relis ma boucle."
+  TimeoutError:"le programme ne s'arrête jamais : relis ta boucle."
 };
 let python = null;
 function chargePython(){
@@ -314,7 +401,7 @@ function editeur(zone, Q, reussi, rate){
     let r;
     try { r = await executePython(ta.value); }
     catch(e){
-      ecran.textContent = "Le moteur Python ne se charge pas. Je réessaie dans un instant ; sinon, je clique sur « J'attends de l'aide ».";
+      ecran.textContent = "Le moteur Python ne se charge pas. Réessaie dans un instant ; sinon, sonne la cloche 🔔, en haut à droite.";
       lance.disabled = false;ta.readOnly=false;depart.disabled=false; return;
     }
     montre(ecran, r);
@@ -352,7 +439,7 @@ function ordre(zone, Q, reussi, rate){
     ok.disabled = true; ecran.hidden = false; ecran.textContent = "⏳ Python se prépare… (la première fois seulement, quelques secondes)";
     let r;
     try { r = await executePython(lignes.join("\n")); }
-    catch(e){ ecran.textContent = "Le moteur Python ne se charge pas. Je réessaie dans un instant ; sinon, je clique sur « J'attends de l'aide »."; ok.disabled = false; execution=false; return; }
+    catch(e){ ecran.textContent = "Le moteur Python ne se charge pas. Réessaie dans un instant ; sinon, sonne la cloche 🔔, en haut à droite."; ok.disabled = false; execution=false; return; }
     montre(ecran, r);
     const verdict = Q.test(r);
     if(verdict === true){ ol.querySelectorAll("button").forEach(b=>b.disabled=true); reussi(lignes.join(" / ")); }
@@ -384,7 +471,7 @@ function trace(zone, Q, reussi, rate){
       if(!juste && premiere<0) premiere = i;
     }));
     if(premiere < 0){ cases.flat().forEach(x=>x.disabled=true); ok.disabled=true; reussi(reponse); }
-    else rate((Q.aide && Q.aide[premiere]) || "Ligne "+(premiere+1)+" : refais le calcul. À droite je calcule avec la valeur d'avant, à gauche je range.", reponse);
+    else rate((Q.aide && Q.aide[premiere]) || "Ligne "+(premiere+1)+" : refais le calcul. À droite, on calcule avec la valeur d'avant ; à gauche, on range.", reponse);
   });
 }
 
