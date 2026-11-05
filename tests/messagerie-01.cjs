@@ -5,11 +5,11 @@ const x=vm.createContext({module:{exports:{}},Map,console});vm.runInContext(s,x)
 const good={locale:'camille.martin',domaine:'example.org',a:'camille.martin@example.org',objet:'Une question sur tes loisirs',salutation:'Bonjour Camille,',message:'Quel sport ou quel loisir pratiques-tu ?',fin:'Bonne journée,',nom:'Lina Dupont',classe:'2B',signature:'Lina Dupont, 2B',reponse:'Bonjour Camille, Je pratique le dessin. Bonne journée, Lina Dupont, 2B',erreur1:'Il manque un @',erreur2:'Il faut enlever un espace',erreur3:'Le domaine est différent : example.org est attendu.'};
 for(const k of Object.keys(good).filter(k=>!['nom','classe'].includes(k)))assert.equal(verifie(k,good),'',k);
 for(const [k,v] of Object.entries({a:'camille.martin@example.net',objet:'Bonjour Camille, quel sport pratiques-tu ?',salutation:'Bonjour Monsieur (ou Bonjour Madame)',message:'Le sport.',signature:'Lina, 2B',reponse:'football',erreur1:'rien',erreur2:'rien',erreur3:'net est interdit'}))assert.notEqual(verifie(k,{...good,[k]:v}),'',k);
-const positives=[good.a,good.a,good.objet,good.salutation,good.message,good.fin+' | '+good.signature,good.objet,'Répondre','Expéditeur','Corps du message','Éléments envoyés','Répondre'];
+const positives=[good.a,good.a,good.objet,good.salutation,good.message,good.fin+' | '+good.signature,good.objet,'Répondre','Bienvenue dans ta boîte de l’école','Corps du message','Éléments envoyés','Répondre à tous'];
 assert.equal(proofs.blocs.length,12);
 for(let i=0;i<12;i++){assert.ok(regle(proofs.blocs[i][0].regle,positives[i]),'preuve '+(i+1));assert.ok(!regle(proofs.blocs[i][0].regle,'n’importe quoi'),'preuve négative '+(i+1));}
 // Règle anti-recopie : les preuves 8 à 12 ont 3 variantes du même type, chacune avec sa bonne réponse ; la réponse d'une variante ne valide pas les deux autres.
-const variantes={7:['Répondre','RE :','À'],8:['Expéditeur','destinataire','Boîte de réception'],9:['Corps du message','objet','la ligne À'],10:['Éléments envoyés','Brouillons','Envoyer'],11:['Répondre','Boîte de réception','au-dessus']};
+const variantes={7:['Répondre','RE :','À'],8:['Bienvenue dans ta boîte de l’école','vlouviaux@arcampin.be','Quelle matière préfères-tu cette année, et pourquoi ?'],9:['Corps du message','objet','la ligne Cc'],10:['Éléments envoyés','Brouillons','Envoyer'],11:['Répondre à tous','Boîte de réception','au-dessus']};
 for(const [i,bons] of Object.entries(variantes)){const l=proofs.blocs[i];assert.equal(l.length,3,'3 variantes bloc '+(+i+1));assert.equal(new Set(l.map(v=>v.q)).size,3);
   l.forEach((v,k)=>{assert.ok(v.aide&&v.faux,'aide/faux '+i+'.'+k);bons.forEach((b,j)=>assert.equal(regle(v.regle,b),j===k,'bloc '+(+i+1)+' v'+(k+1)+' / '+b));});}
 // Match deployed server normalization and 190-character truncation.
@@ -18,4 +18,8 @@ vm.runInContext("function regle_(r, rep, email) {\n  const n = norm_(rep);\n  if
 for(let i=0;i<12;i++){x.rule=proofs.blocs[i][0].regle;x.answer=positives[i].slice(0,190);assert.equal(vm.runInContext('regle_(rule,answer,"")',x),true,'serveur '+i);}
 for(const [i,bons] of Object.entries(variantes))proofs.blocs[i].forEach((v,k)=>{x.rule=v.regle;x.answer=bons[k];assert.equal(vm.runInContext('regle_(rule,answer,"")',x),true,'serveur variante '+i+'.'+k);});
 // Simulate server responses: fail closed, duplicate suppression, changed-response retry.
+assert.match(verifie('reponse',{...good,reponse:'Coucou Camille, je pratique le dessin. Bonne journée, Lina Dupont, 2B'}),/salutation du modèle/);
+assert.match(verifie('reponse',{...good,reponse:'Bonjour Camille, je suis en vacances demain. Bonne journée, Lina Dupont, 2B'}),/question de Camille/);
+assert.match(verifie('reponse',{...good,reponse:'Bonjour Camille, je pratique le dessin le mercredi. Lina Dupont, 2B'}),/formule de fin/);
+assert.match(verifie('salutation',{...good,salutation:'Coucou Camille'}),/salutation du modèle/);
 (async()=>{vm.runInContext('preuves='+JSON.stringify(proofs)+';Object.assign(state,'+JSON.stringify(good)+');',x);await vm.runInContext('valideServeur(0)',x);assert.ok(s.includes('dejaValide.get(e)===reponse'));assert.ok(s.includes('document.getElementById(\'suivant\').disabled)return'));assert.ok(s.includes("actuel?.q!==q.q"));console.log('OK : validations des champs, 12 preuves locales/serveur, réponses incorrectes rejetées.');})().catch(e=>{console.error(e);process.exitCode=1});
