@@ -214,13 +214,15 @@ async function demarre(){
   if(SUIVI){const etat=await rpc('etat',COURS);identite=':'+etat.email;classeScolaire=String(etat.classe||'').trim();repriseServeur=Number(etat.reprise)||0;atteintServeur=Math.min(12,Number(etat.atteint)||0);humeurServeur=etat.humeur||'';avisServeur=etat.avis||null;status.textContent='Suivi professeur connecté. Les preuves courtes et demandes d’aide sont enregistrées.';await envoie({etape:0,type:'ouvert'});
    await Promise.all([7,8,9,10,11].map(async e=>{try{const a=await rpc('preuve',COURS,e+1);const v=preuves.blocs[e].find(x=>x.q===a?.q);if(v)questionsEleve[e]=v;}catch(_){}}));}
   else status.innerHTML='Entraînement libre : aucun résultat ni appel à l’aide transmis au professeur. Pour la séance suivie, <a href="https://script.google.com/a/macros/arcampin.be/s/AKfycbyOPTaq-L1PuittB1rkkiL9OOtShFc2WpiD8H_pH_INaw9ePWenCzhlIPlHu4zBOgLk/exec">ouvre ta séance scolaire</a>.';
-  try{const saved=JSON.parse(stockage()?.getItem(CLE+identite)||'null');if(saved&&Number.isInteger(saved.etape)&&saved.etape>=0&&saved.etape<12&&(!SUIVI||Number(saved.reprise||0)===repriseServeur))Object.assign(state,saved);state.reprise=repriseServeur;}catch(_){}
+  try{const saved=JSON.parse(stockage()?.getItem(CLE+identite)||'null');if(saved&&Number.isInteger(saved.etape)&&saved.etape>=0&&saved.etape<12){if(!SUIVI||Number(saved.reprise||0)===repriseServeur)Object.assign(state,saved);
+   /* Le professeur a ramené l'élève à une étape (ex. 8) : on garde son brouillon, l'étape vient du serveur. */
+   else if(atteintServeur>0)Object.assign(state,saved,{etape:0,atteint:0});}state.reprise=repriseServeur;}catch(_){}
   if(SUIVI&&classeScolaire)state.classe=classeScolaire;
   /* Autre poste, onglet fermé, travail à la maison : on reprend à l'étape validée sur le serveur. */
   if(SUIVI&&atteintServeur>state.atteint){state.atteint=atteintServeur;state.etape=Math.min(11,atteintServeur);}
   if(!APERCU&&state.atteint>0){document.getElementById('collectif').hidden=true;document.getElementById('individuel').hidden=false;document.getElementById('revoir-collectif').hidden=false;}
   if(APERCU){Object.assign(state,INITIAL);state.atteint=12;state.etape=Math.min(11,Math.max(0,Number(location.hash.slice(6))-1));document.getElementById('collectif').hidden=true;document.getElementById('individuel').hidden=false;document.getElementById('revoir-collectif').hidden=false;status.textContent='Aperçu du professeur : navigation libre, aucun résultat enregistré.';}
-  init();humeurDuJour();if(state.atteint>=12||avisServeur)avisFin();
+  init();humeurDuJour();if(state.atteint>=12||avisServeur)avisFin();document.body.dataset.pret='1';
  }catch(e){status.textContent='Impossible de charger les contrôles ou le suivi. Recharge la page ; aucun résultat n’est annoncé comme enregistré.';init();}
  document.getElementById('demarrer-individuel').onclick=()=>{document.getElementById('collectif').hidden=true;document.getElementById('individuel').hidden=false;document.getElementById('revoir-collectif').hidden=false;};
  document.getElementById('revoir-collectif').onclick=()=>{document.getElementById('collectif').hidden=false;document.getElementById('individuel').hidden=true;};
