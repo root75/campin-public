@@ -292,6 +292,49 @@ const FIN = {
   }
 };
 
+/* ===== Démos animées « Regarde comment faire » (lues par pas-a-pas/demos-python.js) =====
+   Numéro de bloc (0 = bloc 1) ▸ titre, replie (indice à ouvrir), images. Jamais une réponse de preuve. */
+const FICHIER_VIES = "01_Les-vies_Nom.py";
+const DEMOS_FICHE = {
+  7: { titre: 'Une image pour comprendre : les deux verres', replie: true, images: [
+    { ecran: 'verres', a: 'jus', b: 'lait', t: '', legende: 'Du jus dans le verre a, du lait dans le verre b. On veut les échanger.' },
+    { ecran: 'verres', a: 'jus', b: 'lait', t: '', barre: 'a', cible: 'v-a', legende: 'Verser tout de suite le lait dans a ? Le jus serait perdu.' },
+    { ecran: 'verres', a: '', b: 'lait', t: 'jus', cible: 'v-t', legende: 'Un troisième verre, temp : on y met d’abord le jus à l’abri.' },
+    { ecran: 'verres', a: '', b: 'lait', t: 'jus', cible: 'v-a', ok: 1, legende: 'Le verre a est libre. Quels deux gestes restent ? À toi de les écrire en Python.' }
+  ] },
+  8: { titre: 'Créer le dossier Python', images: [
+    { ecran: 'bureau', cible: 'dossier-jaune', legende: 'Clique sur le dossier jaune de la barre des tâches (ou Windows + E).' },
+    { ecran: 'explorateur', lieu: 'Accueil', cible: 'nav-documents', legende: 'Dans la colonne de gauche, clique sur Documents.' },
+    { ecran: 'explorateur', lieu: 'Documents', cible: 'nouveau', legende: 'En haut à gauche, clique sur ⊕ Nouveau.' },
+    { ecran: 'explorateur', lieu: 'Documents', menu: 1, cible: 'item-dossier', legende: 'Choisis Dossier (ou Ctrl + Maj + N).' },
+    { ecran: 'explorateur', lieu: 'Documents', neuf: 'Nouveau dossier', cible: 'neuf', legende: '« Nouveau dossier » est déjà sélectionné : tape directement Python.' },
+    { ecran: 'explorateur', lieu: 'Documents', neuf: 'Python', cible: 'neuf', legende: 'Appuie sur Entrée.' },
+    { ecran: 'explorateur', lieu: 'Documents', python: 1, cible: 'dossier-python', ok: 1, legende: 'Le dossier Python est dans Documents.' }
+  ] },
+  9: { titre: 'Ouvrir Thonny et enregistrer à mon nom', images: [
+    { ecran: 'bureau', cible: 'demarrer', legende: 'Appuie sur la touche Windows ⊞ (ou clique sur Démarrer).' },
+    { ecran: 'bureau', demarrer: 1, cible: 'app-thonny', legende: 'Tape Thonny, puis Entrée.' },
+    { ecran: 'thonny', nom: '<sans nom>', cible: 'm-fichier', legende: 'Thonny est ouvert. Clique sur le menu Fichier.' },
+    { ecran: 'thonny', nom: '<sans nom>', menu: 'item-sous', cible: 'item-sous', legende: 'Enregistrer sous… (ou Ctrl + Maj + S).' },
+    { ecran: 'thonny', nom: '<sans nom>', dialogue: 1, cible: 'dlg-documents', legende: 'À gauche, clique sur Documents.' },
+    { ecran: 'thonny', nom: '<sans nom>', dialogue: 1, cible: 'dlg-python', legende: 'Double-clic sur le dossier Python.' },
+    { ecran: 'thonny', nom: '<sans nom>', dialogue: 2, cible: 'dlg-nom', legende: 'Nom du fichier : 01_Les-vies_ puis TON nom, puis .py.' },
+    { ecran: 'thonny', nom: '<sans nom>', dialogue: 2, cible: 'dlg-enregistrer', legende: 'Clique sur Enregistrer.' },
+    { ecran: 'thonny', nom: FICHIER_VIES, cible: 'th-onglet', ok: 1, legende: 'L’onglet affiche le nom de ton fichier.' }
+  ] },
+  10: { titre: 'Écrire dans Thonny et enregistrer', images: [
+    { ecran: 'thonny', nom: FICHIER_VIES, cible: 'th-editeur', legende: 'Clique dans la grande zone du haut, pas dans la console du bas.' },
+    { ecran: 'thonny', nom: FICHIER_VIES, lignes: 1, modifie: 1, cible: 'th-editeur', legende: 'Une ligne par forme du logigramme…' },
+    { ecran: 'thonny', nom: FICHIER_VIES, lignes: 3, modifie: 1, cible: 'th-editeur', legende: '… trois lignes en tout. L’étoile * de l’onglet : pas encore enregistré.' },
+    { ecran: 'thonny', nom: FICHIER_VIES, lignes: 3, modifie: 1, cible: 'th-enregistrer', legende: 'Disquette « Enregistrer » (ou Ctrl + S).' },
+    { ecran: 'thonny', nom: FICHIER_VIES, lignes: 3, cible: 'th-onglet', ok: 1, legende: 'L’étoile a disparu : c’est enregistré. Prédis avant d’exécuter !' }
+  ] },
+  11: { titre: 'Exécuter dans Thonny', images: [
+    { ecran: 'thonny', nom: FICHIER_VIES, lignes: 3, cible: 'th-executer', legende: 'Icône ▶ verte « Exécuter le script courant » (ou F5).' },
+    { ecran: 'thonny', nom: FICHIER_VIES, lignes: 3, run: 1, cible: 'th-console', ok: 1, legende: 'Le résultat s’affiche dans la console du bas. Compare avec ta prédiction.' }
+  ] }
+};
+
 /* ===== Python dans la page =====
    Pyodide (le vrai Python, compilé pour le navigateur), servi par campin-public/python-moteur :
    même domaine que la fiche, rien d'autre à laisser passer par le filtre de l'école.
@@ -333,7 +376,7 @@ const ERREURS = {
   NameError:"Python ne connaît pas ce nom : majuscules ? guillemets oubliés ? variable créée avant ?",
   TypeError:"on mélange des choses qui ne vont pas ensemble, par exemple un texte et un nombre.",
   ZeroDivisionError:"une division par zéro.",
-  TimeoutError:"le programme ne s'arrête jamais : je relis ma boucle."
+  TimeoutError:"le programme ne s'arrête jamais : relis ta boucle."
 };
 let python = null;
 function chargePython(){
@@ -383,7 +426,7 @@ function editeur(zone, Q, reussi, rate){
     let r;
     try { r = await executePython(ta.value); }
     catch(e){
-      ecran.textContent = "Le moteur Python ne se charge pas. Je réessaie dans un instant ; sinon, je clique sur « J'attends de l'aide ».";
+      ecran.textContent = "Le moteur Python ne se charge pas. Réessaie dans un instant ; sinon, sonne la cloche 🔔, en haut à droite.";
       lance.disabled = false;ta.readOnly=false;depart.disabled=false; return;
     }
     montre(ecran, r);
@@ -421,7 +464,7 @@ function ordre(zone, Q, reussi, rate){
     ok.disabled = true; ecran.hidden = false; ecran.textContent = "⏳ Python se prépare… (la première fois seulement, quelques secondes)";
     let r;
     try { r = await executePython(lignes.join("\n")); }
-    catch(e){ ecran.textContent = "Le moteur Python ne se charge pas. Je réessaie dans un instant ; sinon, je clique sur « J'attends de l'aide »."; ok.disabled = false; execution=false; return; }
+    catch(e){ ecran.textContent = "Le moteur Python ne se charge pas. Réessaie dans un instant ; sinon, sonne la cloche 🔔, en haut à droite."; ok.disabled = false; execution=false; return; }
     montre(ecran, r);
     const verdict = Q.test(r);
     if(verdict === true){ ol.querySelectorAll("button").forEach(b=>b.disabled=true); reussi(lignes.join(" / ")); }
@@ -453,7 +496,7 @@ function trace(zone, Q, reussi, rate){
       if(!juste && premiere<0) premiere = i;
     }));
     if(premiere < 0){ cases.flat().forEach(x=>x.disabled=true); ok.disabled=true; reussi(reponse); }
-    else rate((Q.aide && Q.aide[premiere]) || "Ligne "+(premiere+1)+" : refais le calcul. À droite je calcule avec la valeur d'avant, à gauche je range.", reponse);
+    else rate((Q.aide && Q.aide[premiere]) || "Ligne "+(premiere+1)+" : refais le calcul. À droite, on calcule avec la valeur d'avant ; à gauche, on range.", reponse);
   });
 }
 

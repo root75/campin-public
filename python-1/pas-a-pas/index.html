@@ -167,124 +167,9 @@ table.trace input.faux{border-color:var(--faux);background:var(--faux-pale)} tab
 
 footer{font-size:.9rem;color:var(--doux);display:flex;flex-wrap:wrap;gap:4px 16px;justify-content:space-between}
 footer .auteur{margin-left:auto;font-weight:700}
-/* ===== Style « missions », repris du Labo 07 et du Rat de ville (05/11/2026) ===== */
-:root{--vert:#2fa36b;--soleil:#ffcf3f;--ciel:#e8f4fb}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--ciel:#17303d}}
-:root[data-theme="dark"]{--ciel:#17303d}
-body{background:radial-gradient(circle at 10% 0,var(--fromage-pale),transparent 40%),var(--papier)}
-.entete{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:center;padding-top:8px}
-.mascotte{width:92px;height:92px;flex-shrink:0;transform-origin:50% 90%}
-.mascotte.saute{animation:saute .7s ease}
-@keyframes saute{0%,100%{transform:none}30%{transform:translateY(-14px) rotate(-6deg)}60%{transform:translateY(0) rotate(4deg)}}
-.bulle{position:relative;background:var(--carte);border:2px solid var(--fromage);border-radius:18px;padding:10px 14px;font-weight:700;margin-top:6px}
-.bulle::before{content:"";position:absolute;left:-11px;top:18px;border:10px solid transparent;border-right-color:var(--fromage);border-left:0}
-.progres span.fait{background:var(--vert)}
-#bloc{border-radius:20px;border:none;box-shadow:0 3px 0 var(--trait)}
-#bloc h2{font-size:1.7rem;animation:apparition .25s ease-out}
-@keyframes apparition{from{opacity:.4;transform:translateY(4px)}to{opacity:1;transform:none}}
-.numero{color:var(--encre-bouton);font-weight:800}
-.but{font-size:1.15rem;font-weight:700}
-.repere{border-left:5px solid var(--encre-bouton);background:var(--papier);padding:10px 14px;border-radius:10px;margin:0}
-.repere h3{font-size:1rem;margin-bottom:2px}.repere p{margin:4px 0}
-.repere.verification{border-color:var(--vert)}
-ol.etapes{list-style:none;padding:0;margin:0;display:grid;gap:10px}
-ol.etapes li{margin:0;background:var(--papier);border-radius:14px;padding:12px 14px;border:2px solid transparent;transition:background .3s,border-color .3s}
-ol.etapes li:has(:checked){background:var(--juste-pale);border-color:var(--vert)}
-ol.etapes label{display:flex;gap:12px;align-items:flex-start;cursor:pointer}
-ol.etapes input[type=checkbox]{appearance:none;width:30px;height:30px;flex-shrink:0;border:3px solid var(--encre-bouton);border-radius:9px;background:var(--carte);margin:0;display:grid;place-items:center;cursor:pointer}
-ol.etapes input[type=checkbox]:checked{background:var(--vert);border-color:var(--vert);animation:coche .35s ease}
-ol.etapes input[type=checkbox]:checked::after{content:"✓";color:#fff;font-weight:900;font-size:1.2rem}
-ol.etapes span{min-width:0;overflow-wrap:anywhere}
-@keyframes coche{50%{transform:scale(1.3)}}
-/* La cloche d'aide, toujours en haut à droite */
-#aide{position:fixed;top:10px;right:max(12px,env(safe-area-inset-right,0px));z-index:20;display:flex;flex-direction:column;align-items:flex-end;gap:6px;border:0;padding:0;background:none}
-#aide-btn{width:58px;height:58px;border-radius:50%;border:3px solid var(--fromage);background:var(--carte);font-size:1.7rem;line-height:1;cursor:pointer;box-shadow:0 3px 10px #0002;padding:0}
-#aide-btn .mot{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
-#aide.active #aide-btn{background:var(--soleil);animation:sonne 1s ease 2}
-@keyframes sonne{0%,100%{transform:rotate(0)}20%{transform:rotate(18deg)}40%{transform:rotate(-16deg)}60%{transform:rotate(10deg)}80%{transform:rotate(-6deg)}}
-#aide-texte{background:var(--carte);border:2px solid var(--fromage);border-radius:12px;padding:6px 10px;font-size:.85rem;font-weight:700;max-width:15rem;margin:0}
-#aide:not(.active) #aide-texte{display:none}
-#aide:not(.active):hover #aide-texte,#aide:not(.active):focus-within #aide-texte{display:block}
-/* Bravo ! */
-#bravo{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(140%);background:var(--vert);color:#fff;font-weight:800;padding:12px 22px;border-radius:30px;box-shadow:0 6px 20px #0003;z-index:30;transition:transform .35s cubic-bezier(.3,1.4,.5,1);text-align:center;max-width:90vw}
-#bravo:not(.vu){visibility:hidden}
-#bravo.vu{transform:translateX(-50%) translateY(0)}
-#bravo.grand{font-size:1.25rem;background:linear-gradient(90deg,var(--fromage),#e8742a)}
-details.coince{border-radius:16px}
-/* Démo animée « Regarde comment faire » (demos.js) */
-.demo{background:var(--ciel);border-radius:16px;padding:12px;display:grid;gap:8px}
-.demo-bloc{display:grid;gap:6px}
-.demo-titre{font-weight:800;font-size:1.05rem;margin:0}
-.demo-scene{position:relative;min-height:260px;overflow:hidden;border-radius:12px}
-.demo-curseur{position:absolute;left:0;top:0;transform:translate(60px,60px);transition:transform .7s cubic-bezier(.3,.7,.3,1);z-index:5;pointer-events:none}
-.demo-legende{font-weight:700;margin:0;min-height:2.6em}
-.demo.demo-ok .demo-legende::after{content:"  ⭐";}
-.demo-ctrl{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.demo-b{border:2px solid var(--encre-bouton);background:var(--carte);color:var(--encre-bouton);border-radius:20px;padding:4px 12px;font-weight:700;cursor:pointer}
-.demo-jouer{margin-left:auto}
-.demo-points{display:flex;gap:5px}.demo-points span{width:9px;height:9px;border-radius:50%;background:#b9c9d4}.demo-points span.on{background:var(--encre-bouton)}
-.demo-cote{border:2px dashed var(--fromage);border-radius:14px;padding:8px 12px}.demo-cote summary{cursor:pointer;font-weight:700}.demo-cote .demo{margin-top:8px}
-.tutos-liste{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}.tutos-liste .btn[aria-pressed="true"]{background:var(--encre-bouton);color:var(--carte)}
-/* Mini-maquettes (toujours claires, comme le vrai Windows et le vrai Thonny) */
-.md{background:#fff;color:#1f1f1f;font-family:"Segoe UI",Arial,sans-serif;font-size:13px;border:1px solid #c9d3db;border-radius:10px;min-height:260px;position:relative;overflow:hidden}
-.md-vise{outline:3px solid var(--fromage);outline-offset:2px;border-radius:4px}
-.md-clic{animation:clic .5s ease}
-@keyframes clic{40%{transform:scale(.92);background:#ffe9a8}}
-.md-menu{position:absolute;background:#fff;border:1px solid #c9d3db;border-radius:8px;box-shadow:0 4px 14px #0003;padding:4px 0;z-index:3;min-width:150px}
-.md-item{padding:4px 14px;font-size:12px;display:flex;justify-content:space-between;gap:16px}.md-item.hi{background:#e8f0fe;font-weight:700}.md-item small{color:#5f6368}
-.md-bureau{background:linear-gradient(160deg,#3b7dd8,#9cc5f0)}
-.md-taches{position:absolute;left:0;right:0;bottom:0;height:40px;background:#eef2f6ee;display:flex;justify-content:center;align-items:center;gap:8px}
-.md-tache{min-width:30px;height:30px;display:grid;place-items:center;border-radius:6px;font-size:16px;padding:0 4px}
-.md-win{color:#0067c0;font-size:20px}.md-cherche{background:#fff;border-radius:15px;font-size:11px;color:#5f6368;padding:0 12px}
-.md-demarrer{position:absolute;left:50%;bottom:48px;transform:translateX(-50%);width:min(300px,86%);background:#f3f3f3f0;border-radius:10px;box-shadow:0 6px 20px #0004;padding:12px;display:grid;gap:8px}
-.md-dm-champ{background:#fff;border:1px solid #c9d3db;border-bottom:2px solid #0067c0;border-radius:6px;padding:5px 10px}
-.md-dm-titre{font-weight:700;font-size:12px}
-.md-dm-app{display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:10px;background:#fff;border-radius:8px;padding:8px}
-.md-dm-app .md-dm-ico{grid-row:span 2;width:30px;height:30px;border-radius:6px;background:#5a8f3c;color:#fff;font-weight:700;display:grid;place-items:center}
-.md-dm-app small{color:#5f6368}
-.md-ex-titre,.md-th-titre,.md-dlg-titre{background:#eef2f6;padding:5px 10px;font-size:12px;border-bottom:1px solid #dfe5ea;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.md-ex-cmd{display:flex;gap:12px;align-items:center;padding:6px 10px;border-bottom:1px solid #e3e8ec;flex-wrap:wrap}
-.md-ex-nouveau{background:#0067c0;color:#fff;border-radius:6px;padding:3px 10px;font-weight:700}
-.md-ex-adresse{margin:6px 10px;border:1px solid #dfe5ea;border-radius:6px;padding:3px 10px;font-size:12px;color:#444}
-.md-ex-corps,.md-dlg-corps{display:grid;grid-template-columns:minmax(110px,32%) 1fr}
-.md-ex-nav{display:grid;align-content:start;gap:3px;padding:6px;border-right:1px solid #e3e8ec}
-.md-ex-nav span{padding:3px 8px;border-radius:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.md-ex-nav span.actif{background:#e3eefa}
-.md-ex-liste{padding:6px 10px;display:grid;align-content:start;gap:3px}
-.md-ex-sec{font-size:11px;color:#5f6368;border-bottom:1px solid #e3e8ec;padding-bottom:2px}
-.md-ex-f{padding:3px 8px;border-radius:6px}
-.md-ex-neuf .sel{background:#0067c0;color:#fff;padding:0 3px}.md-ex-neuf .saisie{border:1px solid #0067c0;padding:0 3px}
-.md-ex-choisi{background:#e3eefa;font-weight:700}
-.md-ex-vide{color:#8a949c;font-style:italic;padding:6px}
-.md-ex-menu{left:10px;top:62px}
-.md-thonny{display:grid;align-content:start;padding-bottom:6px;min-height:310px}
-.md-th-menus{display:flex;gap:12px;padding:4px 10px;font-size:12px;flex-wrap:wrap}
-.md-th-outils{display:flex;gap:4px;padding:2px 8px 6px;border-bottom:1px solid #e3e8ec}
-.md-th-b{width:28px;height:26px;display:grid;place-items:center;border-radius:4px;font-size:15px}
-.md-th-run{color:#fff;background:#3c9a3c;border-radius:50%;width:26px;font-size:12px}.md-th-stop{color:#c62828}
-.md-th-onglet{justify-self:start;margin:6px 0 0 8px;background:#fff;border:1px solid #c9d3db;border-bottom:0;border-radius:6px 6px 0 0;padding:2px 10px;font-size:12px;max-width:85%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.md-th-editeur{margin:0 8px;border:1px solid #c9d3db;min-height:78px;padding:4px 0;font-family:Consolas,monospace}
-.md-th-l{display:flex;gap:10px;align-items:center;height:20px}.md-th-num{width:22px;text-align:right;color:#8a949c;font-size:11px}
-.md-th-code{height:9px;border-radius:5px;background:#c7cfd6}.md-th-code.w0{width:30%}.md-th-code.w1{width:46%}.md-th-code.w2{width:24%}
-.md-th-console{margin:6px 8px 0;border:1px solid #c9d3db;min-height:54px;padding:2px 8px 4px;font-family:Consolas,monospace;font-size:12px}
-.md-th-ctitre{font-family:"Segoe UI",Arial,sans-serif;font-size:11px;color:#5f6368;border-bottom:1px solid #e3e8ec;margin:0 -8px 2px;padding:0 8px}
-.md-th-run-l{color:#5f6368}.md-th-res{font-weight:700;color:#1d5a73}
-.md-th-menu{left:8px;top:48px;min-width:210px}
-.md-dlg{position:absolute;inset:8px 4% auto;background:#fff;border:1px solid #c9d3db;border-radius:8px;box-shadow:0 6px 24px #0005;display:grid;align-content:start;gap:4px;z-index:4;padding-bottom:8px}
-.md-dlg-ligne{display:grid;grid-template-columns:7.5em 1fr;gap:8px;align-items:center;padding:2px 10px}
-.md-dlg-champ{border:1px solid #9aa5ae;border-radius:4px;padding:2px 6px;min-height:1.6em;overflow-wrap:anywhere}.md-dlg-champ.eteint{color:#5f6368}
-.md-dlg-pied{display:flex;justify-content:flex-end;gap:8px;padding:4px 10px 0}
-.md-dlg-btn{border:1px solid #9aa5ae;border-radius:4px;padding:3px 14px}.md-dlg-plein{background:#0067c0;border-color:#0067c0;color:#fff;font-weight:700}
-.md-verres{display:flex;justify-content:space-around;align-items:end;padding:20px 10px 16px;background:#fdfcf7}
-.md-verre{display:grid;justify-items:center;gap:4px}
-.md-v{position:relative;width:62px;height:110px;border:3px solid #8aa0b2;border-top:0;border-radius:0 0 14px 14px;background:#f4f9fc;overflow:hidden}
-.md-v-liquide{position:absolute;left:0;right:0;bottom:0;height:0;transition:height .6s}
-.md-v.jus .md-v-liquide{height:75%;background:#f7a823}.md-v.lait .md-v-liquide{height:75%;background:#fffdf3;box-shadow:inset 0 0 0 1px #e8e1c8}
-.md-v-perdu{position:absolute;inset:0;display:grid;place-items:center;font-size:48px;color:#c62828;font-weight:900}
-.md-verre b{font-family:Consolas,monospace;font-size:15px}.md-verre small{color:#5f6368}
-@media (max-width:600px){#aide-btn{width:48px;height:48px;font-size:1.4rem}.mascotte{width:70px;height:70px}.demo-scene{min-height:300px}}
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 <link rel="stylesheet" href="https://root75.github.io/campin-public/assets/navigation.css">
+<link rel="stylesheet" href="https://root75.github.io/campin-public/pas-a-pas/python-missions.css?v=missions-20261105">
 </head>
 <body>
 <nav class="campin-navigation" aria-label="Navigation du site">
@@ -357,7 +242,7 @@ details.coince{border-radius:16px}
 <!-- Mode séquence (vue prof) : la fiche affiche le moment que le professeur projette. -->
 <script defer src="https://root75.github.io/campin-public/pas-a-pas/sequence-eleve.js"></script>
 <script src="https://root75.github.io/campin-public/python-1/pas-a-pas/fiche.js?v=missions-20261105"></script>
-<script src="https://root75.github.io/campin-public/python-1/pas-a-pas/demos.js?v=missions-20261105"></script>
+<script src="https://root75.github.io/campin-public/pas-a-pas/demos-python.js?v=missions-20261105"></script>
 <script src="https://root75.github.io/campin-public/pas-a-pas/blocs.js?v=missions-20261105"></script>
 <script defer src="https://root75.github.io/campin-public/pas-a-pas/python-couleurs.js"></script>
 </body>

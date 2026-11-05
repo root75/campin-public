@@ -1,61 +1,22 @@
-/* Démos animées « Regarde comment faire » de Python 01, sur le modèle du Rat de ville :
-   une mini-maquette (Explorateur de fichiers, Thonny, Bureau Windows) rejoue chaque geste du bloc.
-   Aucune donnée élève ; rien n'est enregistré. Une image = un état de l'écran + l'élément que la
-   souris va cliquer + une légende.
-   blocs.js appelle Demo.pour(i) en mode « missions » : la démo du bloc i (0 = bloc 1), ou null.
-   Les démos ne montrent jamais une réponse de preuve : le code de « Les vies » est remplacé par
-   des barres grises, et l'indice de l'échange s'arrête avant la solution.
-   Libellés Windows 11 et Thonny relevés de mémoire : à vérifier sur un poste de la B101. */
+/* Démos animées « Regarde comment faire » des fiches Python (python-1, python-2), sur le modèle du
+   Rat de ville : une mini-maquette (Bureau Windows, Explorateur, Thonny, Chrome) rejoue chaque geste
+   du bloc. Aucune donnée élève ; rien n'est enregistré.
+   Les démos sont déclarées dans le fiche.js de chaque cours : const DEMOS_FICHE = { numéro de bloc
+   (0 = bloc 1) : { titre, replie?, images:[…] } }. Une image = un écran + l'élément que la souris
+   va cliquer (cible) + une légende. Chargé après fiche.js, avant blocs.js : blocs.js appelle
+   Demo.pour(i) en mode « missions ».
+   Règle : une démo ne montre jamais la réponse d'une question de preuve (code caché par des barres
+   grises, nom d'erreur masqué, indice arrêté avant la solution).
+   Libellés Windows 11, Thonny et Chrome relevés de mémoire : à vérifier sur un poste de la B101. */
 const Demo = (() => {
+  const DEMOS = typeof DEMOS_FICHE !== 'undefined' ? DEMOS_FICHE : {};
   const FICHIER = '01_Les-vies_Nom.py';
   const el = (tag, cls, t) => { const n = document.createElement(tag); if (cls) n.className = cls; if (t != null) n.textContent = t; return n; };
   const c = (n, id) => { n.dataset.c = id; return n; };
 
-  /* Les démos, par numéro de bloc (0 = bloc 1). replie : dans un volet à ouvrir (un indice). */
-  const DEMOS = {
-    7: { titre: 'Une image pour comprendre : les deux verres', replie: true, images: [
-      { ecran: 'verres', a: 'jus', b: 'lait', t: '', legende: 'Du jus dans le verre a, du lait dans le verre b. On veut les échanger.' },
-      { ecran: 'verres', a: 'jus', b: 'lait', t: '', barre: 'a', cible: 'v-a', legende: 'Verser tout de suite le lait dans a ? Le jus serait perdu.' },
-      { ecran: 'verres', a: '', b: 'lait', t: 'jus', cible: 'v-t', legende: 'Un troisième verre, temp : on y met d’abord le jus à l’abri.' },
-      { ecran: 'verres', a: '', b: 'lait', t: 'jus', cible: 'v-a', ok: 1, legende: 'Le verre a est libre. Quels deux gestes restent ? À toi de les écrire en Python.' }
-    ] },
-    8: { titre: 'Créer le dossier Python', images: [
-      { ecran: 'bureau', cible: 'dossier-jaune', legende: 'Clique sur le dossier jaune de la barre des tâches (ou Windows + E).' },
-      { ecran: 'explorateur', lieu: 'Accueil', cible: 'nav-documents', legende: 'Dans la colonne de gauche, clique sur Documents.' },
-      { ecran: 'explorateur', lieu: 'Documents', cible: 'nouveau', legende: 'En haut à gauche, clique sur ⊕ Nouveau.' },
-      { ecran: 'explorateur', lieu: 'Documents', menu: 1, cible: 'item-dossier', legende: 'Choisis Dossier (ou Ctrl + Maj + N).' },
-      { ecran: 'explorateur', lieu: 'Documents', neuf: 'Nouveau dossier', cible: 'neuf', legende: '« Nouveau dossier » est déjà sélectionné : tape directement Python.' },
-      { ecran: 'explorateur', lieu: 'Documents', neuf: 'Python', cible: 'neuf', legende: 'Appuie sur Entrée.' },
-      { ecran: 'explorateur', lieu: 'Documents', python: 1, cible: 'dossier-python', ok: 1, legende: 'Le dossier Python est dans Documents.' }
-    ] },
-    9: { titre: 'Ouvrir Thonny et enregistrer à mon nom', images: [
-      { ecran: 'bureau', cible: 'demarrer', legende: 'Appuie sur la touche Windows ⊞ (ou clique sur Démarrer).' },
-      { ecran: 'bureau', demarrer: 1, cible: 'app-thonny', legende: 'Tape Thonny, puis Entrée.' },
-      { ecran: 'thonny', nom: '<sans nom>', cible: 'm-fichier', legende: 'Thonny est ouvert. Clique sur le menu Fichier.' },
-      { ecran: 'thonny', nom: '<sans nom>', menu: 1, cible: 'item-sous', legende: 'Enregistrer sous… (ou Ctrl + Maj + S).' },
-      { ecran: 'thonny', nom: '<sans nom>', dialogue: 1, cible: 'dlg-documents', legende: 'À gauche, clique sur Documents.' },
-      { ecran: 'thonny', nom: '<sans nom>', dialogue: 1, cible: 'dlg-python', legende: 'Double-clic sur le dossier Python.' },
-      { ecran: 'thonny', nom: '<sans nom>', dialogue: 2, cible: 'dlg-nom', legende: 'Nom du fichier : 01_Les-vies_ puis TON nom, puis .py.' },
-      { ecran: 'thonny', nom: '<sans nom>', dialogue: 2, cible: 'dlg-enregistrer', legende: 'Clique sur Enregistrer.' },
-      { ecran: 'thonny', nom: FICHIER, cible: 'th-onglet', ok: 1, legende: 'L’onglet affiche le nom de ton fichier.' }
-    ] },
-    10: { titre: 'Écrire dans Thonny et enregistrer', images: [
-      { ecran: 'thonny', nom: FICHIER, cible: 'th-editeur', legende: 'Clique dans la grande zone du haut, pas dans la console du bas.' },
-      { ecran: 'thonny', nom: FICHIER, lignes: 1, modifie: 1, cible: 'th-editeur', legende: 'Une ligne par forme du logigramme…' },
-      { ecran: 'thonny', nom: FICHIER, lignes: 3, modifie: 1, cible: 'th-editeur', legende: '… trois lignes en tout. L’étoile * de l’onglet : pas encore enregistré.' },
-      { ecran: 'thonny', nom: FICHIER, lignes: 3, modifie: 1, cible: 'th-enregistrer', legende: 'Disquette « Enregistrer » (ou Ctrl + S).' },
-      { ecran: 'thonny', nom: FICHIER, lignes: 3, cible: 'th-onglet', ok: 1, legende: 'L’étoile a disparu : c’est enregistré. Prédis avant d’exécuter !' }
-    ] },
-    11: { titre: 'Exécuter dans Thonny', images: [
-      { ecran: 'thonny', nom: FICHIER, lignes: 3, cible: 'th-executer', legende: 'Icône ▶ verte « Exécuter le script courant » (ou F5).' },
-      { ecran: 'thonny', nom: FICHIER, lignes: 3, run: 1, cible: 'th-console', ok: 1, legende: 'Le résultat s’affiche dans la console du bas. Compare avec ta prédiction.' }
-    ] }
-  };
-
   /* ===== Les écrans ===== */
   function ecranBureau(f) {
     const e = el('div', 'md md-bureau');
-    e.append(el('div', 'md-fond'));
     const barre = el('div', 'md-taches');
     barre.append(c(el('span', 'md-tache md-win', '⊞'), 'demarrer'), el('span', 'md-tache md-cherche', '🔍 Rechercher'),
       c(el('span', 'md-tache md-jaune', '📁'), 'dossier-jaune'), el('span', 'md-tache', '🌐'));
@@ -91,6 +52,8 @@ const Demo = (() => {
     }
     return e;
   }
+  /* Thonny. lignes : n lignes cachées (barres grises) ; code : [[texte, classe]] où classe vaut
+     'cache' (barre), 'com' (commentaire, barre verte), 'sel' (ligne en cours) ou ''. */
   function ecranThonny(f) {
     const e = el('div', 'md md-thonny');
     e.append(el('div', 'md-th-titre', 'Thonny  -  ' + (f.nom === '<sans nom>' ? f.nom : 'Documents\\Python\\' + f.nom) + '  @  1 : 1'));
@@ -101,36 +64,71 @@ const Demo = (() => {
       c(el('span', 'md-th-b md-th-run', '▶'), 'th-executer'), el('span', 'md-th-b', '🐞'), el('span', 'md-th-b md-th-stop', '■'));
     const onglet = c(el('span', 'md-th-onglet', f.nom + (f.modifie ? ' *' : '')), 'th-onglet');
     const ed = c(el('div', 'md-th-editeur'), 'th-editeur');
-    const n = Math.max(3, f.lignes || 0);
-    for (let k = 0; k < n; k++) {
-      const l = el('div', 'md-th-l'); l.append(el('span', 'md-th-num', String(k + 1)));
-      if (k < (f.lignes || 0)) l.append(el('span', 'md-th-code w' + (k % 3)));   // une ligne de TON code, cachée
+    const code = f.code || Array.from({ length: f.lignes || 0 }, () => ['', 'cache']);
+    for (let k = 0; k < Math.max(3, code.length); k++) {
+      const l = c(el('div', 'md-th-l'), 'L' + k); l.append(el('span', 'md-th-num', String(k + 1)));
+      const [t, cl] = code[k] || ['', 'vide'];
+      if (cl === 'cache' || cl === 'com') l.append(el('span', 'md-th-code w' + (k % 3) + (cl === 'com' ? ' com' : '')));   // une ligne de TON code, cachée
+      else if (cl !== 'vide') l.append(el('code', 'md-th-t ' + cl, t));
       ed.append(l);
     }
     const cons = c(el('div', 'md-th-console'), 'th-console');
     cons.append(el('div', 'md-th-ctitre', 'Console'));
-    if (f.run) { cons.append(el('div', 'md-th-run-l', '>>> %Run ' + f.nom), el('div', 'md-th-res', '…le nombre affiché par TON programme')); }
+    if (f.run) cons.append(el('div', 'md-th-run-l', '>>> %Run ' + f.nom));
+    if (f.run && !f.erreur) cons.append(el('div', 'md-th-res', '…le nombre affiché par TON programme'));
+    if (f.erreur) {
+      cons.append(el('div', 'md-th-err', 'Traceback (most recent call last):'), el('div', 'md-th-err', '  File "…\\' + f.nom + '", line 3'));
+      const d = c(el('div', 'md-th-err md-th-der'), 'th-erreur'); d.append(el('span', 'md-th-masque', '▢▢▢▢'), 'Error: …'); cons.append(d);
+    }
     cons.append(el('div', null, '>>> '));
     e.append(menus, outils, onglet, ed, cons);
     if (f.menu) {
       const m = el('div', 'md-menu md-th-menu');
-      [['Nouveau', 'Ctrl+N', ''], ['Ouvrir…', 'Ctrl+O', ''], ['Enregistrer', 'Ctrl+S', ''], ['Enregistrer sous…', 'Ctrl+Maj+S', 'item-sous'], ['Quitter', 'Alt+F4', '']]
-        .forEach(([t, r, id]) => { const i = c(el('div', 'md-item' + (id ? ' hi' : '')), id || 'x'); i.append(el('span', null, t), el('small', null, r)); m.append(i); });
+      [['Nouveau', 'Ctrl+N', ''], ['Ouvrir…', 'Ctrl+O', 'item-ouvrir'], ['Enregistrer', 'Ctrl+S', ''], ['Enregistrer sous…', 'Ctrl+Maj+S', 'item-sous'], ['Quitter', 'Alt+F4', '']]
+        .forEach(([t, r, id]) => { const i = c(el('div', 'md-item' + (id === f.menu ? ' hi' : '')), id || 'x'); i.append(el('span', null, t), el('small', null, r)); m.append(i); });
       e.append(m);
     }
-    if (f.dialogue) {
-      const d = el('div', 'md-dlg');
-      d.append(el('div', 'md-dlg-titre', 'Enregistrer sous'), el('div', 'md-ex-adresse', f.dialogue === 2 ? '› Documents › Python' : '› Documents'));
-      const corps = el('div', 'md-dlg-corps'), nav = el('div', 'md-ex-nav'), liste = el('div', 'md-ex-liste');
-      [['🖥 Bureau', ''], ['📄 Documents', 'dlg-documents'], ['⬇ Téléchargements', '']].forEach(([t, id]) => { const s = el('span', id ? 'actif' : '', t); if (id) c(s, id); nav.append(s); });
-      if (f.dialogue === 1) liste.append(el('div', 'md-ex-f', '📁 Labo'), c(el('div', 'md-ex-f', '📁 Python'), 'dlg-python'));
-      else liste.append(el('div', 'md-ex-vide', 'Aucun élément ne correspond.'));
-      corps.append(nav, liste);
-      const nom = el('div', 'md-dlg-ligne'); nom.append(el('span', null, 'Nom du fichier :'), c(el('span', 'md-dlg-champ', f.dialogue === 2 ? FICHIER : ''), 'dlg-nom'));
-      const type = el('div', 'md-dlg-ligne'); type.append(el('span', null, 'Type :'), el('span', 'md-dlg-champ eteint', 'Python files (*.py)'));
-      const pied = el('div', 'md-dlg-pied'); pied.append(c(el('span', 'md-dlg-btn md-dlg-plein', 'Enregistrer'), 'dlg-enregistrer'), el('span', 'md-dlg-btn', 'Annuler'));
-      d.append(corps, nom, type, pied); e.append(d);
+    if (f.dialogue) e.append(dialogue(f));
+    return e;
+  }
+  /* Fenêtre Windows « Enregistrer sous » ou « Ouvrir ». dialogue : 1 = dans Documents, 2 = dans Python. */
+  function dialogue(f) {
+    const ouvrir = f.ouvrir, d = el('div', 'md-dlg');
+    d.append(el('div', 'md-dlg-titre', ouvrir ? 'Ouvrir' : 'Enregistrer sous'), el('div', 'md-ex-adresse', f.dialogue === 2 ? '› Documents › Python' : '› Documents'));
+    const corps = el('div', 'md-dlg-corps'), nav = el('div', 'md-ex-nav'), liste = el('div', 'md-ex-liste');
+    [['🖥 Bureau', ''], ['📄 Documents', 'dlg-documents'], ['⬇ Téléchargements', '']].forEach(([t, id]) => { const s = el('span', id ? 'actif' : '', t); if (id) c(s, id); nav.append(s); });
+    if (f.dialogue === 1) liste.append(el('div', 'md-ex-f', '📁 Labo'), c(el('div', 'md-ex-f', '📁 Python'), 'dlg-python'));
+    else if (ouvrir) liste.append(c(el('div', 'md-ex-f' + (f.choisi ? ' md-ex-choisi' : ''), '🐍 ' + FICHIER), 'dlg-fichier'));
+    else liste.append(el('div', 'md-ex-vide', 'Aucun élément ne correspond.'));
+    corps.append(nav, liste);
+    const nom = el('div', 'md-dlg-ligne'); nom.append(el('span', null, 'Nom du fichier :'), c(el('span', 'md-dlg-champ', (f.dialogue === 2 && (!ouvrir || f.choisi)) ? FICHIER : ''), 'dlg-nom'));
+    const type = el('div', 'md-dlg-ligne'); type.append(el('span', null, 'Type :'), el('span', 'md-dlg-champ eteint', 'Python files (*.py)'));
+    const pied = el('div', 'md-dlg-pied'); pied.append(c(el('span', 'md-dlg-btn md-dlg-plein', ouvrir ? 'Ouvrir' : 'Enregistrer'), ouvrir ? 'dlg-ouvrir' : 'dlg-enregistrer'), el('span', 'md-dlg-btn', 'Annuler'));
+    d.append(corps, nom, type, pied);
+    return d;
+  }
+  /* Chrome : la fiche et la page « Python — je révise ». page : 'fiche', 'revise' ou 'quiz'. */
+  function ecranChrome(f) {
+    const e = el('div', 'md md-chrome');
+    const ong = el('div', 'md-ch-onglets');
+    ong.append(c(el('span', 'md-ch-onglet' + (f.page === 'fiche' ? ' actif' : ''), '🐍 ' + (f.fiche || 'Python 02 — pas à pas')), 'ch-fiche'));
+    if (f.page !== 'fiche' || f.deux) ong.append(c(el('span', 'md-ch-onglet' + (f.page !== 'fiche' ? ' actif' : ''), '🐍 Python — je révise'), 'ch-revise'));
+    ong.append(el('span', 'md-ch-plus', '+'));
+    e.append(ong, el('div', 'md-ch-adresse', f.page === 'fiche' ? 'script.google.com/…' : 'root75.github.io/campin-public/python-je-revise/'));
+    const corps = el('div', 'md-ch-page');
+    if (f.page === 'fiche') {
+      corps.append(el('b', null, '1. Le quiz « Python — je révise »'), el('span', 'md-ch-barre'));
+      const p = el('p', 'md-ch-texte'); p.append('Ouvre ', c(el('span', 'md-ch-lien', 'Python — je révise'), 'ch-lien'), ' : un nouvel onglet s’ouvre.'); corps.append(p);
+      corps.append(el('span', 'md-ch-barre court'));
+    } else {
+      corps.append(el('b', null, 'Premiers pas en Python — je révise'));
+      const o = el('div', 'md-ch-sous');
+      [['L’essentiel', ''], ['Quiz', 'ch-quiz'], ['Cartes', '']].forEach(([t, id]) => o.append(c(el('span', (f.page === 'quiz' && id) ? 'actif' : '', t), id || 'x')));
+      corps.append(o);
+      if (f.page === 'quiz') corps.append(el('p', 'md-ch-texte', '5 questions. Rien n’est coté.'), c(el('span', 'md-ch-bouton', 'Commencer le quiz'), 'ch-commencer'));
+      else corps.append(el('span', 'md-ch-barre'), el('span', 'md-ch-barre court'));
     }
+    e.append(corps);
     return e;
   }
   function ecranVerres(f) {
@@ -139,12 +137,12 @@ const Demo = (() => {
       const v = el('div', 'md-verre'), verre = c(el('div', 'md-v ' + (contenu || 'vide')), id);
       verre.append(el('span', 'md-v-liquide'));
       if (f.barre === nom) verre.append(el('span', 'md-v-perdu', '✗'));
-      v.append(verre, el('b', null, nom), el('small', null, contenu === 'jus' ? 'jus' : contenu === 'lait' ? 'lait' : 'vide'));
+      v.append(verre, el('b', null, nom), el('small', null, contenu || 'vide'));
       e.append(v);
     });
     return e;
   }
-  const ECRANS = { bureau: ecranBureau, explorateur: ecranExplorateur, thonny: ecranThonny, verres: ecranVerres };
+  const ECRANS = { bureau: ecranBureau, explorateur: ecranExplorateur, thonny: ecranThonny, chrome: ecranChrome, verres: ecranVerres };
 
   /* ===== Le lecteur (même fonctionnement que le Rat de ville) ===== */
   function cree(i, auto = true) {
@@ -197,7 +195,7 @@ const Demo = (() => {
   const vues = {}; let enCours = null;
   function pour(i) {
     const d = DEMOS[i]; if (!d) return null;
-    if (enCours && enCours !== i && vues[enCours]) vues[enCours].demo.stop();
+    if (enCours !== null && enCours !== i && vues[enCours]) vues[enCours].demo.stop();
     enCours = i;
     if (vues[i]) { if (!d.replie) setTimeout(() => vues[i].demo.joue(), 80); return vues[i].emballe; }
     const demo = cree(i, !d.replie);
@@ -214,8 +212,9 @@ const Demo = (() => {
   addEventListener('DOMContentLoaded', () => {
     const volet = document.getElementById('tutos'), liste = document.getElementById('tutos-liste'), vue = document.getElementById('tutos-vue');
     if (!volet || !liste) return;
+    if (!Object.keys(DEMOS).length) { volet.hidden = true; return; }
     let joue = null;
-    Object.keys(DEMOS).forEach(i => {
+    Object.keys(DEMOS).filter(i => DEMOS[i].volet !== false).forEach(i => {
       const titre = (+i + 1) + '. ' + DEMOS[i].titre;
       const b = el('button', 'btn vide', titre); b.type = 'button'; b.setAttribute('aria-pressed', 'false');
       b.addEventListener('click', () => {
