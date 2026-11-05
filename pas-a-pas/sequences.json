@@ -609,6 +609,7 @@
     ]
   },
   "labo-07": {
+    "ecransSurPostes": true,
     "titre": "Labo 07 — Dans les coulisses du PC",
     "objectif": "Trois missions et un défi final : enquêter sur son PC Windows avec hypothèses, manipulations personnelles et preuves mixtes. Le rapport reste court : tableau et capture, localisation, un seul incident rédigé, décision finale. Les trois autres incidents sont vérifiés à deux, sans passage professeur systématique ; le défi final reste individuel. Méthodes variées : prédire, voter, manipuler, choisir une réponse, remettre une démarche en ordre et justifier oralement.",
     "competences": [
