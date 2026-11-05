@@ -57,3 +57,6 @@ locale au panneau, sans bloquer la fiche.
 le cours et le document dans la vue fractionnée de Chrome (clic droit sur l'onglet du document ▸
 Ajouter l'onglet à une nouvelle vue fractionnée). Pas de case : `CASES_RAT` ne change pas.
 Libellé à vérifier sur un poste de l'école (Chrome en français, version récente requise).
+Sous la consigne, une démo repliée « 👀 Regarde comment mettre le cours et mon document côte à
+côte » (`Demo.cree('cote', false)`, 4 images, écran Chrome maquetté) ; elle ne se lance qu'à
+l'ouverture du volet, pour ne pas tourner en même temps que la démo de l'étape.
