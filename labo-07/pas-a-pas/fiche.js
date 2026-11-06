@@ -7,9 +7,7 @@ const PRESENTATION = 'missions';   // blocs.js : cloche en haut à droite, bulle
 const HORS_SUIVI = 'Essai local : aucune réponse envoyée. En classe, ouvre Mes cours avec ton compte scolaire.';
 let EMAIL = '';
 const VIES_V = [{}]; let LV = {};
-/* Trois variantes du même type pour chaque question de preuve (QCM de l'étape 3, ordre de l'étape 6) :
-   chaque élève a la sienne, tirée de son adresse, toujours la même pour lui ; hors Mes cours, la version 1.
-   Aperçu professeur (#bloc=3, #bloc=6) : un bouton par version. Hypothèses et déclarations : règle unique. */
+/* hache et tirage : utilisés par blocs.js (blocVu) ; sans variantes, chaque élève a la version 1. */
 const hache = s => {   // FNV-1a brassé, comme hache_() dans Code.gs
   let h = 2166136261;
   for(let i=0;i<s.length;i++){ h ^= s.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; }
@@ -52,7 +50,7 @@ const BLOCS = [
     "titre": "Défi : une application ouverte, qu’est-ce qui change ?",
     "min": 8,
     "veux": "Prévoir ce qui changera pour le processeur et la mémoire du PC quand j’ouvrirai GIMP, un logiciel de retouche d’images.",
-    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\">Vérifie que ton rapport est ouvert à côté du cours.</label></li><li><label><input type=\"checkbox\">Lis le défi, en haut de l’étape.</label></li><li><label><input type=\"checkbox\">Choisis ce que tu observeras : processeur et mémoire du PC.</label></li><li><label><input type=\"checkbox\">Écris ton hypothèse ci-dessous, avant d’ouvrir GIMP.</label></li></ol>",
+    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\">Vérifie que ton rapport est ouvert à droite du cours.</label></li><li><label><input type=\"checkbox\">Tu vas observer deux choses : le processeur (il calcule) et la mémoire (elle garde ce que les logiciels ouverts utilisent).</label></li><li><label><input type=\"checkbox\">À ton avis, quand GIMP s’ouvrira, que feront le processeur et la mémoire ? Ils montent, ils baissent, ils restent pareils ?</label></li><li><label><input type=\"checkbox\">Écris ta réponse dans « Mon hypothèse », sous les cases. GIMP reste fermé tant que ce n’est pas écrit.</label></li></ol>",
     "vois": "Mon hypothèse annonce un changement possible et ce qui me permettrait de le constater.",
     "coince": [
       "Une hypothèse est une idée à tester, pas une définition. Un résultat stable peut aussi être intéressant.",
@@ -61,7 +59,7 @@ const BLOCS = [
     "indices": true,
     "q": {
       "type": "enquete",
-      "q": "Avant toute manipulation : quelle est ta prévision ?",
+      "q": "GIMP encore fermé : écris ce que tu prévois.",
       "champs": [
         {
           "cle": "H",
@@ -255,7 +253,7 @@ const BLOCS = [
     "titre": "Remettre mon rapport dans Classroom",
     "min": 5,
     "veux": "Remettre une seule fois mon rapport terminé, puis vérifier qu’il est bien arrivé.",
-    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\">Relis ton rapport : remplace chaque « [à compléter] » et efface les indications entre crochets.</label></li><li><label><input type=\"checkbox\">Vérifie les trois exigences de présentation, juste en dessous des cases.</label></li><li><label><input type=\"checkbox\"><span>Ouvre <a href=\"https://classroom.google.com/\" target=\"_blank\" rel=\"noopener\">Classroom</a> avec ton compte scolaire ▸ Informatique — 3F ▸ Travaux et devoirs ▸ Labo 07 — Dans les coulisses du PC ▸ Afficher les instructions.</span></label></li><li><label><input type=\"checkbox\">Dans « Votre travail », clique sur Ajouter ou créer ▸ Google Drive.</label></li><li><label><input type=\"checkbox\"><span>Sélectionne <b>07_CoulissesPC_Prenom_Nom</b> ▸ Ajouter.</span></label></li><li><label><input type=\"checkbox\">Clique sur la pièce jointe pour vérifier que c’est ton rapport complet.</label></li><li><label><input type=\"checkbox\">Clique sur Remettre ▸ confirme Remettre.</label></li><li><label><input type=\"checkbox\">Vérifie que le devoir affiche « Remis ».</label></li></ol>",
+    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\">Relis ton rapport : remplace chaque « [à compléter] » et efface les indications entre crochets.</label></li><li><label><input type=\"checkbox\"><span>Vérifie l’identification : titre visible, prénom, nom, classe, date ; fichier nommé <b>07_CoulissesPC_Prenom_Nom</b>.</span></label></li><li><label><input type=\"checkbox\">Vérifie les titres et le tableau : même style pour les quatre titres de partie ; vrai tableau de trois colonnes et quatre lignes, avec % dans les en-têtes.</label></li><li><label><input type=\"checkbox\">Vérifie la capture : ciblée, lisible, pas étirée, avec sa légende juste dessous.</label></li><li><label><input type=\"checkbox\"><span>Ouvre <a href=\"https://classroom.google.com/\" target=\"_blank\" rel=\"noopener\">Classroom</a> avec ton compte scolaire ▸ Informatique — 3F ▸ Travaux et devoirs ▸ Labo 07 — Dans les coulisses du PC ▸ Afficher les instructions.</span></label></li><li><label><input type=\"checkbox\">Dans « Votre travail », clique sur Ajouter ou créer ▸ Google Drive.</label></li><li><label><input type=\"checkbox\"><span>Sélectionne <b>07_CoulissesPC_Prenom_Nom</b> ▸ Ajouter.</span></label></li><li><label><input type=\"checkbox\">Clique sur la pièce jointe pour vérifier que c’est ton rapport complet.</label></li><li><label><input type=\"checkbox\">Clique sur Remettre ▸ confirme Remettre.</label></li><li><label><input type=\"checkbox\">Vérifie que le devoir affiche « Remis ».</label></li></ol>",
     "vois": "Dans Classroom, le devoir affiche « Remis » et la pièce jointe est mon rapport complet.",
     "coince": [
       "Le devoir n’apparaît pas ? Le professeur ne l’a peut-être pas encore publié. Ne crée pas de deuxième document, ne poste rien dans le flux : sonne la cloche 🔔 et attends.",
@@ -269,70 +267,13 @@ const BLOCS = [
       "trace": "rapport:5 — Remettre mon rapport",
       "juste": "Cette case est un aide-mémoire. Le professeur vérifie la remise dans Classroom."
     },
-    "extra": "<div class=\"encart\"><p><b>Les trois exigences de présentation — /3</b></p><ul><li><b>Identification et nom — /1 :</b> titre visible, prénom, nom, classe, date ; fichier nommé 07_CoulissesPC_Prenom_Nom.</li><li><b>Titres et tableau — /1 :</b> même style pour les quatre titres de partie ; vrai tableau de trois colonnes et quatre lignes, avec % dans les en-têtes.</li><li><b>Capture et remise — /1 :</b> capture ciblée, lisible, proportionnée et légendée ; bon document joint, statut « Remis » vérifié.</li></ul></div>"
+    "extra": "<p class=\"note\">Ces trois vérifications valent 3 points sur 10 : identification et nom /1, titres et tableau /1, capture et remise /1.</p>"
   }
 ];
 
-/* Variantes : seule l'activité change ; la déclaration « rapport » reste la même. */
-const qAvec = (i, activite) => ({ q: Object.assign({}, BLOCS[i].q, { activite: Object.assign({}, BLOCS[i].q.activite, activite) }) });
-BLOCS[2].variantes = [
-  qAvec(2, {
-    q: "Cas fictif : un élève FERME GIMP. Le processeur passe de 8 % à 30 % quelques secondes, puis redescend à 6 % ; la mémoire passe de 61 % à 50 %. Que peut-on affirmer ?",
-    c: [
-      "La fermeture a fait travailler le processeur un court moment et a libéré de la mémoire de travail. Ces relevés ne disent rien des fichiers enregistrés.",
-      "Le fichier image enregistré a été effacé, puisque la mémoire a baissé.",
-      "Le PC est devenu plus lent, puisque la mémoire utilisée a baissé.",
-      "La baisse de mémoire prouve que Windows s’est arrêté."
-    ],
-    p: [
-      null,
-      "La mémoire de travail sert aux logiciels ouverts ; les fichiers enregistrés sont sur le disque ou dans OneDrive. Fermer un logiciel ne supprime pas un fichier enregistré.",
-      "Moins de mémoire occupée, c’est plutôt plus de place libre pour les autres logiciels. Une baisse n’est pas un ralentissement.",
-      "Si Windows était arrêté, tu ne pourrais plus lire le Gestionnaire des tâches. Que montre encore l’écran ?"
-    ],
-    juste: "Tu sépares la mémoire de travail des fichiers enregistrés. Explique à l’oral pourquoi le fichier existe toujours."
-  }),
-  qAvec(2, {
-    q: "Cas fictif : deux élèves ouvrent GIMP sur deux PC. Poste A : processeur 6 % → 60 % → 9 %. Poste B : 4 % → 25 % → 5 %. Sur les deux, la mémoire monte d’environ 6 % et y reste. Que peut-on affirmer ?",
-    c: [
-      "Sur les deux postes, l’ouverture fait travailler le processeur quelques secondes, puis GIMP occupe de la mémoire. Des valeurs différentes ne prouvent pas qu’un PC est en panne.",
-      "Le poste A est en panne, puisque son processeur est monté à 60 %.",
-      "Un des deux relevés est faux : deux PC devraient afficher les mêmes valeurs.",
-      "GIMP n’occupe plus de mémoire une fois ouvert, puisqu’il ne fait plus rien."
-    ],
-    p: [
-      null,
-      "Le processeur du poste A est redescendu à 9 % : un pic bref n’est pas une panne. Observe ce qui se passe après l’ouverture.",
-      "Deux PC n’ont pas forcément le même matériel ni les mêmes logiciels ouverts. Des valeurs différentes peuvent être justes toutes les deux.",
-      "Regarde la colonne Mémoire : elle reste plus haute tant que GIMP est ouvert, même sans action."
-    ],
-    juste: "Tu compares deux postes sans conclure trop vite. Explique à l’oral pourquoi tes valeurs peuvent différer de celles du voisin."
-  })
-];
-BLOCS[5].variantes = [
-  qAvec(5, {
-    q: "Incident : le mot tapé n’apparaît pas dans le Bloc-notes. Remets la démarche dans l’ordre.",
-    cartes: [
-      "Supposer qu’une autre fenêtre est active",
-      "Cliquer une fois dans la zone de texte du Bloc-notes",
-      "Taper un mot et regarder où il apparaît",
-      "Conclure : le texte arrive dans la fenêtre active"
-    ],
-    faux: "D’abord une hypothèse, ensuite le test (un clic dans la zone), puis l’indice observé (où le mot apparaît). La conclusion vient en dernier.",
-    juste: "Hypothèse, test, indice, conclusion : c’est la même démarche que pour les trois autres incidents."
-  }),
-  qAvec(5, {
-    q: "Incident : l’écran est noir, le PC semble éteint. Remets la démarche dans l’ordre.",
-    cartes: [
-      "Supposer que seul le moniteur est éteint",
-      "Appuyer sur le bouton du moniteur, sans toucher au PC",
-      "Regarder si les mêmes fenêtres réapparaissent",
-      "Conclure : le PC était resté allumé"
-    ],
-    faux: "D’abord une hypothèse, ensuite le test sans risque (le bouton du moniteur), puis l’indice observé (les fenêtres). La conclusion vient en dernier.",
-    juste: "Hypothèse, test, indice, conclusion : c’est la même démarche que pour les trois autres incidents."
-  })
-];
+/* Une seule version du QCM (étape 3) et de l'ordre (étape 6) depuis le 06/11/2026 : exercices non cotés,
+   les trois variantes étaient presque identiques. Exception voulue à la règle des trois variantes. */
+
 const FIN = {
  titre:'Mon enquête est terminée',
  bulle:'Enquête bouclée : bravo, détective !',
