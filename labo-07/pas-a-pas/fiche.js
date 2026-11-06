@@ -1,14 +1,15 @@
-/* Trois missions et un défi final. Sept étapes internes réutilisent le suivi existant.
+/* Préparer le rapport, trois missions, un défi final, remettre le rapport. Neuf étapes internes réutilisent le suivi existant.
  * Trois hypothèses sur le site ; tableau/capture et écrits courts dans le rapport ; entraide guidée et contrôle individuel final par le professeur. */
 const COURS = 'labo-07';
-const VERSION_PARCOURS = 'missions-2';
+const VERSION_PARCOURS = 'missions-3';   // 06/11/2026 : étapes « Préparer mon rapport » et « Remettre mon rapport » ajoutées
+const DEMOS_SOUS_CASES = true;   // blocs.js : les animations « Regarde comment faire » sous les cases, pas au-dessus
 const PRESENTATION = 'missions';   // blocs.js : cloche en haut à droite, bulle, bravo, sans « Je veux / Je fais / Je vois »
 const HORS_SUIVI = 'Essai local : aucune réponse envoyée. En classe, ouvre Mes cours avec ton compte scolaire.';
 let EMAIL = '';
 const VIES_V = [{}]; let LV = {};
-/* Trois variantes du même type pour chaque question de preuve (QCM de l'étape 2, ordre de l'étape 5) :
+/* Trois variantes du même type pour chaque question de preuve (QCM de l'étape 3, ordre de l'étape 6) :
    chaque élève a la sienne, tirée de son adresse, toujours la même pour lui ; hors Mes cours, la version 1.
-   Aperçu professeur (#bloc=2, #bloc=5) : un bouton par version. Hypothèses et déclarations : règle unique. */
+   Aperçu professeur (#bloc=3, #bloc=6) : un bouton par version. Hypothèses et déclarations : règle unique. */
 const hache = s => {   // FNV-1a brassé, comme hache_() dans Code.gs
   let h = 2166136261;
   for(let i=0;i<s.length;i++){ h ^= s.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; }
@@ -17,22 +18,45 @@ const hache = s => {   // FNV-1a brassé, comme hache_() dans Code.gs
 };
 const tirage = (cle, n) => n<2 || !EMAIL ? 1 : 1 + hache(EMAIL.toLowerCase()+"|"+cle) % n;
 const PARCOURS = [
- {titre:'Mission 1 — Observer ce qui tourne', court:'Mission 1', debut:0, fin:2, bulle:'Première mission : que fait le PC quand une application s’ouvre ?'},
- {titre:'Mission 2 — Retrouver ses données', court:'Mission 2', debut:2, fin:4, bulle:'Bien joué ! Maintenant, où vit ton fichier ?'},
- {titre:'Mission 3 — Dépanner', court:'Mission 3', debut:4, fin:5, bulle:'Quatre petites pannes à élucider, à deux.'},
- {titre:'Défi final individuel', court:'Défi', debut:5, fin:7, bulle:'Dernier défi, seul : montre ta méthode d’enquêteur.'}
+ {titre:'Préparer mon rapport', court:'Rapport', debut:0, fin:1, bulle:'Avant l’enquête : ton carnet d’enquêteur. Un seul document pour tout le labo.'},
+ {titre:'Mission 1 — Observer ce qui tourne', court:'Mission 1', debut:1, fin:3, bulle:'Première mission : que fait le PC quand une application s’ouvre ?'},
+ {titre:'Mission 2 — Retrouver ses données', court:'Mission 2', debut:3, fin:5, bulle:'Bien joué ! Maintenant, où vit ton fichier ?'},
+ {titre:'Mission 3 — Dépanner', court:'Mission 3', debut:5, fin:6, bulle:'Quatre petites pannes à élucider, à deux.'},
+ {titre:'Défi final individuel', court:'Défi', bouton:'Défi final →', debut:6, fin:8, bulle:'Dernier défi, seul : montre ta méthode d’enquêteur.'},
+ {titre:'Remettre mon rapport', court:'Remise', bouton:'Remettre mon rapport →', debut:8, fin:9, bulle:'Dernier geste : remettre ton rapport, une seule fois.'}
 ];
 const BLOCS = [
+  {
+    "partie": "Avant de commencer — Mon rapport",
+    "titre": "Créer mon rapport et le placer à côté du cours",
+    "min": 8,
+    "veux": "Préparer le document où j’écrirai mes preuves, avant toute mesure.",
+    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\"><span>Dans Chrome, clique sur la gaufre ⋮⋮⋮, en haut à droite ▸ Docs. Ou ouvre <a href=\"https://docs.google.com/\" target=\"_blank\" rel=\"noopener\">Google Docs</a>. Compte de l’école.</span></label></li><li><label><input type=\"checkbox\">Clique sur + Document vierge.</label></li><li><label><input type=\"checkbox\">Clique sur « Document sans titre », en haut à gauche.</label></li><li><label><input type=\"checkbox\"><span>Tape <b>07_CoulissesPC_Prenom_Nom</b>, avec ton prénom et ton nom sans accents, puis Entrée.</span></label></li><li><label><input type=\"checkbox\">Reviens sur l’onglet du cours. Clique sur le bouton 📋 Copier la trame, juste en dessous.</label></li></ol><p class=\"outil-trame\"><button class=\"btn plein\" type=\"button\" data-copier-trame>📋 Copier la trame</button> <span class=\"note trame-statut\" role=\"status\"></span><a class=\"note\" href=\"https://root75.github.io/campin-public/labo-07/pas-a-pas/trame-rapport.txt\" target=\"_blank\" rel=\"noopener\">Trame en texte brut</a></p><ol class=\"etapes\"><li><label><input type=\"checkbox\">Dans ton document, clique dans la page ▸ Édition ▸ Coller sans mise en forme (Ctrl + Maj + V).</label></li><li><label><input type=\"checkbox\">Complète ton prénom, ton nom et la date en haut du document.</label></li><li><label><input type=\"checkbox\">Clic droit sur l’onglet du rapport ▸ Ajouter l’onglet à une nouvelle vue fractionnée. Le cours à gauche, le rapport à droite.</label></li><li><label><input type=\"checkbox\">Vérifie en haut du document l’indication « Enregistré dans Drive ».</label></li></ol>",
+    "vois": "Mon document s’appelle 07_CoulissesPC_Prenom_Nom, contient la trame et mon identification, et s’affiche à côté du cours.",
+    "coince": [
+      "La copie ne marche pas ? Clique sur le lien « Trame en texte brut » ▸ Ctrl + A ▸ Ctrl + C. Puis, dans ton document : Ctrl + Maj + V.",
+      "Pas de « vue fractionnée » dans le menu ? Garde deux onglets et passe de l’un à l’autre en cliquant sur leur titre. Docs ouvre un autre compte ? Clique sur la photo ronde, en haut à droite ▸ choisis ton compte de l’école."
+    ],
+    "indices": true,
+    "q": {
+      "type": "rapport",
+      "q": "Ton document est créé, nommé, avec la trame et ton identification.",
+      "confirmation": "J’ai créé mon rapport 07_CoulissesPC_Prenom_Nom, collé la trame et complété mon identification.",
+      "trace": "rapport:0 — Préparer mon rapport",
+      "juste": "Ton rapport est prêt. Garde-le ouvert : tu y écriras à chaque mission."
+    },
+    "extra": "<p class=\"stop\">Un seul document pour tout le labo. Au cours suivant, ne crée pas de deuxième document : rouvre celui-ci depuis ton Drive scolaire.</p>"
+  },
   {
     "partie": "1 — Observer ce qui tourne",
     "titre": "Défi : une application ouverte, qu’est-ce qui change ?",
     "min": 8,
-    "veux": "Prévoir ce que le PC fera si j’ouvre GIMP, un logiciel de retouche d’images. Une fenêtre invisible veut-elle dire qu’aucun logiciel ne tourne ?",
-    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\">Ouvre « Mon rapport et ma remise », en haut de la fiche.</label></li><li><label><input type=\"checkbox\">Crée ton document personnel et prépare sa partie 1 avant les mesures.</label></li><li><label><input type=\"checkbox\">Lis le défi.</label></li><li><label><input type=\"checkbox\">Choisis ce que tu observeras : processeur et mémoire du PC.</label></li><li><label><input type=\"checkbox\">Écris ton hypothèse ci-dessous avant d’ouvrir GIMP.</label></li></ol>",
+    "veux": "Prévoir ce qui changera pour le processeur et la mémoire du PC quand j’ouvrirai GIMP, un logiciel de retouche d’images.",
+    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\">Vérifie que ton rapport est ouvert à côté du cours.</label></li><li><label><input type=\"checkbox\">Lis le défi, en haut de l’étape.</label></li><li><label><input type=\"checkbox\">Choisis ce que tu observeras : processeur et mémoire du PC.</label></li><li><label><input type=\"checkbox\">Écris ton hypothèse ci-dessous, avant d’ouvrir GIMP.</label></li></ol>",
     "vois": "Mon hypothèse annonce un changement possible et ce qui me permettrait de le constater.",
     "coince": [
       "Une hypothèse est une idée à tester, pas une définition. Un résultat stable peut aussi être intéressant.",
-      "Commence par « Si j’ouvre GIMP, je pense que… ». Indique ce que tu comparerais avant, pendant son ouverture et une fois ouvert."
+      "Commence par « Si j’ouvre GIMP, je pense que… ». Indique ce que tu comparerais avant, pendant son ouverture et une fois ouvert. Pas encore de rapport ? Clique sur ← Étape précédente."
     ],
     "indices": true,
     "q": {
@@ -47,7 +71,7 @@ const BLOCS = [
       ],
       "juste": "Cette réponse marque une étape faite. Elle ne constitue pas une correction ni une note."
     },
-    "extra": "<p class=\"note apres\">📄 + 🔎 Pour écrire sans perdre la consigne : clic droit sur l’onglet de ton rapport ▸ Ajouter l’onglet à une nouvelle vue fractionnée. Le cours à gauche, le rapport à droite (animation ci-dessous).</p><p class=\"stop\">Chacun manipule son propre PC. Première réponse seul ; comparaison à deux ensuite. Aucune fin de tâche, aucune suppression, aucun réglage.</p>"
+    "extra": "<p class=\"stop\">Chacun manipule son propre PC. Première réponse seul ; comparaison à deux ensuite. Aucune fin de tâche, aucune suppression, aucun réglage.</p>"
   },
   {
     "partie": "1 — Observer ce qui tourne",
@@ -210,7 +234,7 @@ const BLOCS = [
     "titre": "Montrer ma preuve et justifier ma décision",
     "min": 10,
     "veux": "Résoudre seul la nouvelle situation et justifier une décision en peu de mots.",
-    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\">Réalise le test de fenêtre sur ton poste, avec l’Explorateur recouvert par une fenêtre d’essai.</label></li><li><label><input type=\"checkbox\">Lis le chemin et le statut du fichier choisi, sans l’ouvrir.</label></li><li><label><input type=\"checkbox\">Dans le rapport, note en une ligne l’indice observé ; distingue ton poste réel du nuage donné dans le scénario.</label></li><li><label><input type=\"checkbox\">Dans le rapport, réponds au camarade en deux phrases maximum : ta décision et ce qui la justifie.</label></li><li><label><input type=\"checkbox\">Prépare ton geste et ton indice pour le contrôle individuel du professeur en circulation ; explique-lui machine, Windows, application et fichier. Tu peux relire et vérifier ta mise en page pendant l’attente.</label></li><li><label><input type=\"checkbox\">Participe à la synthèse finale, puis utilise « Mon rapport et ma remise » pour vérifier le document et le joindre dans Classroom.</label></li></ol>",
+    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\">Réalise le test de fenêtre sur ton poste, avec l’Explorateur recouvert par une fenêtre d’essai.</label></li><li><label><input type=\"checkbox\">Lis le chemin et le statut du fichier choisi, sans l’ouvrir.</label></li><li><label><input type=\"checkbox\">Dans le rapport, note en une ligne l’indice observé ; distingue ton poste réel du nuage donné dans le scénario.</label></li><li><label><input type=\"checkbox\">Dans le rapport, réponds au camarade en deux phrases maximum : ta décision et ce qui la justifie.</label></li><li><label><input type=\"checkbox\">Prépare ton geste et ton indice pour le contrôle individuel du professeur en circulation ; explique-lui machine, Windows, application et fichier. Tu peux relire et vérifier ta mise en page pendant l’attente.</label></li><li><label><input type=\"checkbox\">Participe à la synthèse finale. La remise du rapport est l’étape suivante.</label></li></ol>",
     "vois": "Une preuve en une ligne, une conclusion courte et une manipulation personnelle expliquée au professeur. La case du site ne remet pas le document.",
     "coince": [
       "Un nom de fichier visible ne suffit pas à prouver que son contenu est déjà téléchargé.",
@@ -225,13 +249,34 @@ const BLOCS = [
       "juste": "Le professeur examine les preuves et les gestes. Cette déclaration ne constitue ni une correction ni une remise."
     },
     "extra": "<details class=\"encart\"><summary>Prolongement après passage du professeur</summary><p>Dans le même scénario, remplace le nuage par une coche verte : quelle partie de ton raisonnement change ? Quelle conclusion sur une panne matérielle resterait impossible avec ces seuls indices ?</p></details>"
+  },
+  {
+    "partie": "Remise — Mon rapport",
+    "titre": "Remettre mon rapport dans Classroom",
+    "min": 5,
+    "veux": "Remettre une seule fois mon rapport terminé, puis vérifier qu’il est bien arrivé.",
+    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\">Relis ton rapport : remplace chaque « [à compléter] » et efface les indications entre crochets.</label></li><li><label><input type=\"checkbox\">Vérifie les trois exigences de présentation, juste en dessous des cases.</label></li><li><label><input type=\"checkbox\"><span>Ouvre <a href=\"https://classroom.google.com/\" target=\"_blank\" rel=\"noopener\">Classroom</a> avec ton compte scolaire ▸ Informatique — 3F ▸ Travaux et devoirs ▸ Labo 07 — Dans les coulisses du PC ▸ Afficher les instructions.</span></label></li><li><label><input type=\"checkbox\">Dans « Votre travail », clique sur Ajouter ou créer ▸ Google Drive.</label></li><li><label><input type=\"checkbox\"><span>Sélectionne <b>07_CoulissesPC_Prenom_Nom</b> ▸ Ajouter.</span></label></li><li><label><input type=\"checkbox\">Clique sur la pièce jointe pour vérifier que c’est ton rapport complet.</label></li><li><label><input type=\"checkbox\">Clique sur Remettre ▸ confirme Remettre.</label></li><li><label><input type=\"checkbox\">Vérifie que le devoir affiche « Remis ».</label></li></ol>",
+    "vois": "Dans Classroom, le devoir affiche « Remis » et la pièce jointe est mon rapport complet.",
+    "coince": [
+      "Le devoir n’apparaît pas ? Le professeur ne l’a peut-être pas encore publié. Ne crée pas de deuxième document, ne poste rien dans le flux : sonne la cloche 🔔 et attends.",
+      "Ton rapport n’est pas dans la liste Google Drive ? Tape 07_CoulissesPC dans la barre de recherche de la fenêtre. Mauvais fichier joint ? Clique sur la croix ✕ à droite de la pièce jointe, puis recommence Ajouter ou créer ▸ Google Drive."
+    ],
+    "indices": true,
+    "q": {
+      "type": "rapport",
+      "q": "Seul Classroom confirme la remise : ce site ne la voit pas.",
+      "confirmation": "J’ai remis mon rapport dans Classroom et j’y vois « Remis ».",
+      "trace": "rapport:5 — Remettre mon rapport",
+      "juste": "Cette case est un aide-mémoire. Le professeur vérifie la remise dans Classroom."
+    },
+    "extra": "<div class=\"encart\"><p><b>Les trois exigences de présentation — /3</b></p><ul><li><b>Identification et nom — /1 :</b> titre visible, prénom, nom, classe, date ; fichier nommé 07_CoulissesPC_Prenom_Nom.</li><li><b>Titres et tableau — /1 :</b> même style pour les quatre titres de partie ; vrai tableau de trois colonnes et quatre lignes, avec % dans les en-têtes.</li><li><b>Capture et remise — /1 :</b> capture ciblée, lisible, proportionnée et légendée ; bon document joint, statut « Remis » vérifié.</li></ul></div>"
   }
 ];
 
 /* Variantes : seule l'activité change ; la déclaration « rapport » reste la même. */
 const qAvec = (i, activite) => ({ q: Object.assign({}, BLOCS[i].q, { activite: Object.assign({}, BLOCS[i].q.activite, activite) }) });
-BLOCS[1].variantes = [
-  qAvec(1, {
+BLOCS[2].variantes = [
+  qAvec(2, {
     q: "Cas fictif : un élève FERME GIMP. Le processeur passe de 8 % à 30 % quelques secondes, puis redescend à 6 % ; la mémoire passe de 61 % à 50 %. Que peut-on affirmer ?",
     c: [
       "La fermeture a fait travailler le processeur un court moment et a libéré de la mémoire de travail. Ces relevés ne disent rien des fichiers enregistrés.",
@@ -247,7 +292,7 @@ BLOCS[1].variantes = [
     ],
     juste: "Tu sépares la mémoire de travail des fichiers enregistrés. Explique à l’oral pourquoi le fichier existe toujours."
   }),
-  qAvec(1, {
+  qAvec(2, {
     q: "Cas fictif : deux élèves ouvrent GIMP sur deux PC. Poste A : processeur 6 % → 60 % → 9 %. Poste B : 4 % → 25 % → 5 %. Sur les deux, la mémoire monte d’environ 6 % et y reste. Que peut-on affirmer ?",
     c: [
       "Sur les deux postes, l’ouverture fait travailler le processeur quelques secondes, puis GIMP occupe de la mémoire. Des valeurs différentes ne prouvent pas qu’un PC est en panne.",
@@ -264,8 +309,8 @@ BLOCS[1].variantes = [
     juste: "Tu compares deux postes sans conclure trop vite. Explique à l’oral pourquoi tes valeurs peuvent différer de celles du voisin."
   })
 ];
-BLOCS[4].variantes = [
-  qAvec(4, {
+BLOCS[5].variantes = [
+  qAvec(5, {
     q: "Incident : le mot tapé n’apparaît pas dans le Bloc-notes. Remets la démarche dans l’ordre.",
     cartes: [
       "Supposer qu’une autre fenêtre est active",
@@ -276,7 +321,7 @@ BLOCS[4].variantes = [
     faux: "D’abord une hypothèse, ensuite le test (un clic dans la zone), puis l’indice observé (où le mot apparaît). La conclusion vient en dernier.",
     juste: "Hypothèse, test, indice, conclusion : c’est la même démarche que pour les trois autres incidents."
   }),
-  qAvec(4, {
+  qAvec(5, {
     q: "Incident : l’écran est noir, le PC semble éteint. Remets la démarche dans l’ordre.",
     cartes: [
       "Supposer que seul le moniteur est éteint",
