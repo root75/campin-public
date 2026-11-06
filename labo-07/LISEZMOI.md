@@ -63,7 +63,8 @@ contrôle du professeur. Le bouton du moniteur est présenté une fois au groupe
 ## Animations et variantes (5 novembre 2026)
 
 `pas-a-pas/demos.js` + `demos.css` : animations « 👀 Regarde comment faire » (maquettes Windows, Docs,
-Chrome, Classroom ; valeurs fictives), placées sous le but de l’étape par `blocs.js` (`Demo.pourEtape`),
+Chrome, Classroom ; valeurs fictives), placées **sous chaque case** par le moteur commun `blocs.js` (champ `demos`
+des blocs, depuis le 06/11/2026),
 et volet « Toutes les animations » en tête de fiche. Pas d’animation pour le défi final.
 QCM de l’étape 2 et ordre de l’étape 5 : trois variantes (`BLOCS[i].variantes`), tirées par l’adresse de
 l’élève (`tirage`, même hachage que `Code.gs`). Étape 1 : consigne « rapport à côté du cours » (vue
@@ -72,4 +73,6 @@ fractionnée de Chrome), avec son animation. Essai : `essai-labo07.js` (143 cont
 **06/11/2026** : une seule version du QCM (étape 3) et de l’ordre (étape 6) — les trois variantes
 étaient presque identiques et ces exercices ne sont pas cotés ; exception voulue à la règle des trois
 variantes. Mission 1, étape 1 : la consigne est dans les cases (« À ton avis… », « Mon hypothèse »),
-sans « Lis le défi ». Remise : les trois exigences sont trois cases. Essai : 162 contrôles.
+sans « Lis le défi ». Remise : les trois exigences sont trois cases. Synthèses des missions 1 à 3 :
+retirées de la fiche, affichées par le professeur en mode séquence (écrans « Synthèse 1 / 2 / 3 »,
+juste après chaque mise en commun). Essai : 166 contrôles.

@@ -77,6 +77,7 @@ function affiche(){
   const z = document.getElementById("bloc"); z.replaceChildren();
   const liste = document.getElementById("coince-liste"); liste.replaceChildren();
   document.getElementById("coince").open = false;
+  if(demoCase) demoCase.stop(), demoCase = null;
   if(ici >= BLOCS.length){ if(typeof Demo!=="undefined" && Demo.stopTout) Demo.stopTout(); fin(z); return; }
   const B = blocVu(ici);
 
@@ -99,14 +100,12 @@ function affiche(){
     /* Présentation « missions » (Labo 07) : le but en une phrase, les cases, puis ce qu'on vérifie.
        Pas d'étiquettes répétées à chaque bloc. */
     z.append(el("p","but",B.veux));
-    /* Démo animée « Regarde comment faire », avant les cases : on regarde, puis on fait.
-       Python : pas-a-pas/demos-python.js (Demo.pour) ; Labo 07 : labo-07/pas-a-pas/demos.js (Demo.pourEtape). */
-    // Option de la fiche : const DEMOS_SOUS_CASES = true (Labo 07) — d'abord les cases, puis les aides en dessous.
-    const demo = typeof Demo!=="undefined" ? (Demo.pour ? Demo.pour(ici) : Demo.pourEtape ? Demo.pourEtape(ici) : null) : null;
-    const sous = typeof DEMOS_SOUS_CASES!=="undefined" && DEMOS_SOUS_CASES;
-    if(demo && !sous) z.append(demo);
+    /* Démo animée « Regarde comment faire ». Deux façons, au choix de la fiche :
+       - un bloc porte `demos` (Labo 07) : une animation sous chaque case qu'elle montre (voir demosSousCases) ;
+       - sinon, une démo par étape avant les cases : Demo.pour (Python, pas-a-pas/demos-python.js). */
+    const demo = !B.demos && typeof Demo!=="undefined" && Demo.pour ? Demo.pour(ici) : null;
+    if(demo) z.append(demo);
     z.append(el("div","faire",B.fais));
-    if(demo && sous) z.append(demo);
     const v = el("aside","repere verification"); v.append(txt("h3",null,"✅ À vérifier"), el("p",null,B.vois)); z.append(v);
   } else {
     const dl = el("dl","lignes");
@@ -116,6 +115,7 @@ function affiche(){
     z.append(dl);
   }
   if(B.extra) z.append(el("div",null,B.extra));
+  demosSousCases(z, B);
   if(B.stop) z.append(txt("p","stop",MISSIONS ? "🛑 STOP — ne continue pas avant d’avoir vérifié." : "🛑 STOP — je ne continue pas tant que je ne vois pas ça."));
 
   B.coince.forEach((c,i)=>{
@@ -156,6 +156,46 @@ function affiche(){
   nav.append(avant, el("span","espace"));
   if(fait || (APERCU && ici+1<BLOCS.length)){ const s=txt("button","btn plein",suite()); s.type="button"; s.addEventListener("click",()=>{ici++;affiche();}); nav.append(s); }
   z.append(nav);
+}
+
+/* « Regarde comment faire » sous chaque case — commun à tous les cours sur ce moteur.
+   La fiche décrit seulement les données, dans le bloc :
+     demos: { "3": ["gestionnaire", [4]], "incident 2.4": ["fenetres", [3]] }
+   Clé "N" = N-ième case de la consigne (à partir de 1) ; clé "classe K.N" = N-ième case du K-ième
+   élément .classe du bloc (cartes, encarts). Valeur = [clé de l'animation, numéros des images].
+   Il suffit que Demo.cree(cle, auto, images) existe (le lecteur du cours).
+   Une seule animation ouverte : celle de la première case à l'arrivée ; cocher une case ouvre celle
+   de la case suivante qui en a une, dans la même liste. */
+let demoCase = null;
+function demosSousCases(z, B){
+  if(!B.demos || typeof Demo==="undefined" || !Demo.cree) return;
+  const cases = (racine) => [...racine.querySelectorAll(":scope ol.etapes > li")];
+  const volets = [];
+  Object.entries(B.demos).forEach(([ref, [cle, images]])=>{
+    const m = ref.match(/^(?:([\w-]+) (\d+)\.)?(\d+)$/); if(!m) return;
+    const racine = m[1] ? z.querySelectorAll("."+m[1])[m[2]-1] : z.querySelector(".faire");
+    const li = racine && cases(racine)[m[3]-1]; if(!li) return;
+    const d = el("details","demo-case"); d.dataset.demo = cle; let box = null;
+    d.append(txt("summary",null,"👀 Regarde comment faire"));
+    d.addEventListener("toggle",()=>{
+      if(d.open){
+        volets.forEach(x=>{ if(x!==d && x.open) x.open = false; });
+        if(!box){ box = Demo.cree(cle, true, images); if(box) d.append(box); } else box.joue();
+        demoCase = box;
+      } else if(box){ box.stop(); if(demoCase===box) demoCase = null; }
+    });
+    li.append(d); volets.push(d);
+    const cb = li.querySelector(":scope > label input[type=checkbox]");
+    if(cb) cb.addEventListener("change",()=>{
+      if(!cb.checked) return;
+      d.open = false;
+      const liste = li.parentElement, suivant = volets.find(x=>x.closest("ol")===liste && !x.closest("li").querySelector(":scope > label input").checked
+        && (li.compareDocumentPosition(x) & Node.DOCUMENT_POSITION_FOLLOWING));
+      if(suivant) suivant.open = true;
+    });
+  });
+  const premier = volets.find(x=>z.querySelector(".faire") && z.querySelector(".faire").contains(x)) || null;
+  if(premier) premier.open = true;
 }
 
 /* La question de preuve. Faux : on explique, on compte, et on recommence. */

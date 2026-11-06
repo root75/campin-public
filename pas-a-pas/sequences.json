@@ -711,7 +711,22 @@
           "Qu’avez-vous vraiment observé ?",
           "Quelle autre cause reste possible ?"
         ],
-        "repere": "Ouvrir la synthèse de la mission 1 après la discussion. Observation des ressources = prolongement, sans compétence de 3e artificiellement attribuée."
+        "repere": "Après la discussion : écran suivant, la synthèse. Observation des ressources = prolongement, sans compétence de 3e artificiellement attribuée."
+      },
+      {
+        "type": "ecran",
+        "titre": "Synthèse 1 — Ce qui tourne dans le PC",
+        "min": 3,
+        "methode": "Le professeur affiche la synthèse, au tableau et sur les postes",
+        "lignes": [
+          "Ce qu’on retient de la mission 1",
+          "Le PC est une machine ; Windows est un logiciel système. Plusieurs logiciels fonctionnent en même temps.",
+          "Le processeur effectue le travail ; la mémoire de travail garde les données des logiciels ouverts.",
+          "À l’ouverture, GIMP fait surtout travailler le processeur, quelques secondes ; une fois ouvert, il occupe la mémoire.",
+          "Des valeurs instantanées bougent : une comparaison courte donne un indice, pas une cause unique.",
+          "Mémoire de travail et place des fichiers sur le disque sont deux choses différentes."
+        ],
+        "repere": "Afficher après la discussion seulement. Les élèves ne la recopient pas : elle reste dans le « Je retiens »."
       },
       {
         "type": "atelier",
@@ -741,7 +756,22 @@
           "Local et synchronisé s’excluent-ils ?",
           "Quel indice manque si le statut n’est pas affiché ?"
         ],
-        "repere": "Ouvrir la synthèse de la mission 2. Aucun changement des réglages OneDrive."
+        "repere": "Après la discussion : écran suivant, la synthèse. Aucun changement des réglages OneDrive."
+      },
+      {
+        "type": "ecran",
+        "titre": "Synthèse 2 — Visible et disponible",
+        "min": 3,
+        "methode": "Le professeur affiche la synthèse, au tableau et sur les postes",
+        "lignes": [
+          "Ce qu’on retient de la mission 2",
+          "Un fichier local est présent sur ce PC : cela ne prouve pas qu’une copie existe ailleurs.",
+          "Un fichier synchronisé appartient à OneDrive : ses changements partent en ligne quand la synchronisation fonctionne. Il peut avoir une copie locale ou être seulement en ligne.",
+          "Nuage bleu : en ligne seulement, réseau nécessaire. Cercle blanc à bord vert avec coche : disponible ici. Disque vert plein avec coche blanche : toujours conservé sur cet appareil.",
+          "Deux flèches : synchronisation en cours ; croix rouge : problème. Ces deux états ne prouvent pas que la copie en ligne est à jour.",
+          "Sans indication exploitable, on ne tranche pas."
+        ],
+        "repere": "Afficher après la discussion. Aucun changement des réglages OneDrive."
       },
       {
         "type": "atelier",
@@ -772,6 +802,21 @@
           "Quel indice montre que le fichier existe encore ?"
         ],
         "repere": "Ouvrir la synthèse de la mission 3. Faire justifier un test à l’oral sur cas fictif. Ne pas demander un deuxième incident rédigé."
+      },
+      {
+        "type": "ecran",
+        "titre": "Synthèse 3 — La méthode du dépanneur",
+        "min": 3,
+        "methode": "Le professeur affiche la synthèse, au tableau et sur les postes",
+        "lignes": [
+          "Ce qu’on retient de la mission 3",
+          "Partir du symptôme, proposer une hypothèse, choisir un test simple et réversible, observer, puis justifier — ou changer d’hypothèse.",
+          "Une fenêtre peut être masquée, une autre active.",
+          "Fermer une application ne supprime pas un fichier enregistré.",
+          "Éteindre l’écran n’arrête pas nécessairement le PC.",
+          "Windows reste le système qui permet d’utiliser la machine et ses applications."
+        ],
+        "repere": "Afficher après la discussion, avant la relecture en binôme."
       },
       {
         "type": "atelier",
