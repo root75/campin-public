@@ -8,9 +8,9 @@ const ETAPES_RAT = [
     "periode": 1,
     "actions": [
       "Menu Google (la gaufre) ▸ Docs ▸ Créer un document ▸ Vierge.",
-      "Je clique sur « Document sans titre » et je tape : AAAAMMJJ Le rat de ville – Prénom Nom. AAAAMMJJ : année, mois, jour de la date d’aujourd’hui."
-    ],
-    "apres": "Je place mon document à côté du cours : je clique sur l’onglet du cours, puis clic droit sur l’onglet de mon document ▸ Ajouter l’onglet à une nouvelle vue fractionnée. Le cours et mon document s’affichent côte à côte dans la même fenêtre."
+      "Je clique sur « Document sans titre » et je tape : AAAAMMJJ Le rat de ville – Prénom Nom. AAAAMMJJ : année, mois, jour de la date d’aujourd’hui.",
+      "Je place mon document à côté du cours : je clique sur l’onglet du cours, puis clic droit sur l’onglet de mon document ▸ Ajouter l’onglet à une nouvelle vue fractionnée. Le cours et mon document s’affichent côte à côte dans la même fenêtre."
+    ]
   },
   {
     "titre": "Je recopie la fable",
@@ -69,21 +69,23 @@ const ETAPES_RAT = [
     }
   },
   {
-    "titre": "Je ferme sans remettre",
+    "titre": "À la sonnerie : je ferme sans remettre",
     "min": 2,
     "periode": 1,
+    "consigne": "Je fais cette étape 2 minutes avant la sonnerie, où que j’en sois : même si je n’ai pas fini l’étape 2 ou 3, même si je suis déjà plus loin. Je reprendrai à la période 2.",
     "actions": [
       "Je ferme l’onglet du document. Je ne remets PAS encore : mon document est enregistré tout seul."
     ]
   },
   {
-    "titre": "Je retrouve mon document",
+    "titre": "Période 2 : je retrouve mon document",
     "min": 3,
     "periode": 2,
+    "consigne": "Je fais cette étape au début de la période 2. Puis je reprends ma première étape pas encore finie (bouton en bas de l’étape).",
     "actions": [
-      "Menu Google (la gaufre) ▸ Drive ▸ Récents ▸ double-clic sur mon document."
-    ],
-    "apres": "Je place mon document à côté du cours : je clique sur l’onglet du cours, puis clic droit sur l’onglet de mon document ▸ Ajouter l’onglet à une nouvelle vue fractionnée. Le cours et mon document s’affichent côte à côte dans la même fenêtre."
+      "Menu Google (la gaufre) ▸ Drive ▸ Récents ▸ double-clic sur mon document.",
+      "Je place mon document à côté du cours : je clique sur l’onglet du cours, puis clic droit sur l’onglet de mon document ▸ Ajouter l’onglet à une nouvelle vue fractionnée. Le cours et mon document s’affichent côte à côte dans la même fenêtre."
+    ]
   },
   {
     "titre": "Titre, texte, auteur",

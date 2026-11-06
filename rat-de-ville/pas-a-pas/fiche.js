@@ -44,7 +44,7 @@ function dessine(){
   const g=txt('button','grille-etape','📋');g.type='button';g.title='Ma grille d’évaluation';g.setAttribute('aria-label',g.title);if(vueGrille)g.setAttribute('aria-current','step');g.addEventListener('click',()=>{vueGrille=true;dessine();});$('etapes').append(g);
   const z=$('travail');
   if(vueGrille){dessineGrille(z);return;}z.replaceChildren(txt('p','numero','Période '+b.periode+' — '+(b.periode===1?'le texte':'la mise en forme')+' · '+b.min+' min'),txt('h2',null,etat.position+'. '+b.titre));
-  const dm=demoPour(i);if(dm){const w=txt('section','demo-bloc');w.append(txt('p','demo-titre','👀 Regarde comment faire'),dm);z.append(w);}
+  entreEtape(i,b);
   const repere=REPERES_RAT[i];
   const observation=txt('aside','repere observation');
   observation.append(txt('h3',null,'À observer'),txt('p',null,repere.observe));
@@ -57,16 +57,18 @@ function dessine(){
   if(i===6){const tableau=txt('table','repere-polices');const legende=txt('caption',null,'Police et taille attendues');tableau.append(legende);
     [['Strophes','Police','Taille'],['1 et 2','Garamond','14'],['3 et 4','Arial','12'],['5','Calibri','10'],['6 et 7','Arial Black','8']].forEach((ligne,k)=>{const tr=txt('tr');ligne.forEach(v=>tr.append(txt(k?'td':'th',null,v)));tableau.append(tr);});observation.append(tableau);}
   z.append(observation,txt('p','agir','✋ À moi dans Docs ! Je fais, puis je coche.'),txt('p','note annuler','Je me suis trompé ? Tout de suite : ↶ Annuler (Ctrl + Z), la flèche tout à gauche de la barre d’outils.'));
+  if(i!==3&&i!==4)z.append(sonnerie());
   if(b.consigne)z.append(txt('p','note',b.consigne));
   const ul=txt('ul','cases');b.actions.forEach((t,j)=>{
     const cle=etat.position+'.'+(j+1),li=txt('li'),lab=txt('label'),cb=txt('input');cb.type='checkbox';cb.dataset.cle=cle;cb.checked=!!etat.cases[cle];
     cb.addEventListener('change',()=>sauve({type:'case',etape:i+1,cle,fait:cb.checked}));const sp=txt('span');((b.icones&&b.icones[j])||[]).forEach(ico=>{const im=txt('img','ico');im.src=ICONES+ico+'.png';im.alt='';sp.append(im);});sp.append(t);lab.append(cb,sp);li.append(lab);
+    const dc=demoCase(i,j);if(dc)li.append(dc);
     const image=b.images&&b.images[j];if(image){const im=txt('img','extrait');im.src=BASE+image;im.alt='Extrait de la fable à recopier';li.append(im);}
     const aide=b.aides && b.aides[j];
     if(aide){const d=txt('details');d.append(txt('summary',null,aide.titre),txt('p',null,aide.explication),txt('blockquote',null,aide.exemple),txt('p','note',aide.rappel));if(aide.image){const im=txt('img','capture');im.src=BASE+aide.image;im.alt='Menu Format ▸ Texte ▸ Minuscules/majuscules ▸ MAJUSCULES dans Docs';d.append(im);}li.append(d);}
     ul.append(li);
   });z.append(ul);
-  if(b.apres){z.append(txt('p','note apres',b.apres));if(typeof Demo!=='undefined'){if(demoCote)demoCote.stop();demoCote=Demo.cree('cote',false);const d=txt('details','demo-cote');d.append(txt('summary',null,'👀 Regarde comment mettre le cours et mon document côte à côte'),demoCote);d.addEventListener('toggle',()=>{if(d.open)demoCote.joue();else demoCote.stop();});z.append(d);}}
+  if(i===4){const k=aReprendre(),r=txt('button','btn','▶ Je reprends à l’étape '+(k+1)+' : '+ETAPES_RAT[k].titre);r.type='button';r.addEventListener('click',()=>{sauve({type:'position',etape:k+1});scrollTo(0,0);});z.append(r);}
   const controle=txt('aside','repere verification');controle.append(txt('h3',null,'À vérifier dans mon document'),txt('p',null,repere.verifie),txt('p','note',repere.encouragement));z.append(controle);
   if(i===1){const lien=txt('a','btn vide','Voir le texte à recopier');lien.href='#texte';lien.addEventListener('click',()=>{$('texte').open=true;});z.append(lien);}
   const nav=txt('div','actions');for(const [delta,label] of [[-1,'← Étape précédente'],[1,'Étape suivante →']]){
@@ -117,8 +119,36 @@ function progression(){
   $('progres-etapes').textContent=etapes+' / 9 étapes';
   const r=faites/total;$('bulle').textContent=BULLES[r===1?5:r>=.8?4:r>=.5?3:r>=.2?2:r>0?1:0];
 }
-/* Une démo par étape, gardée d'un affichage à l'autre : cocher ne la relance pas. */
-const demos={};let demoVue=null,demoCote=null;
+/* « Regarde comment faire » sous chaque case : une démo par case, gardée d'un affichage à l'autre
+   (cocher ne la relance pas). Une seule ouverte à la fois ; en arrivant sur une étape, celle de la
+   première case pas encore cochée s'ouvre et joue. */
+const demos={},ouverts=new Set();let etapeVue=null;
+function entreEtape(i,b){
+  if(etapeVue===i)return;etapeVue=i;
+  ouverts.forEach(c=>demos[c]&&demos[c].stop());ouverts.clear();
+  if(typeof Demo==='undefined')return;
+  const j=b.actions.findIndex((_,k)=>!etat.cases[(i+1)+'.'+(k+1)]&&Demo.aCase(i,k));
+  if(j>=0)ouverts.add(i+'.'+j);
+}
+function demoCase(i,j){
+  if(typeof Demo==='undefined'||!Demo.aCase(i,j))return null;
+  const cle=i+'.'+j,d=txt('details','demo-case');d.dataset.demo=cle;
+  if(!demos[cle])demos[cle]=Demo.pourCase(i,j,ouverts.has(cle));
+  d.open=ouverts.has(cle);d.append(txt('summary',null,'👀 Regarde comment faire'),demos[cle]);
+  d.addEventListener('toggle',()=>{
+    if(d.open&&!ouverts.has(cle)){ouverts.forEach(c=>{demos[c].stop();const x=document.querySelector('details.demo-case[data-demo="'+c+'"]');if(x)x.open=false;});ouverts.clear();ouverts.add(cle);demos[cle].joue();}
+    else if(!d.open&&ouverts.has(cle)){ouverts.delete(cle);demos[cle].stop();}
+  });
+  return d;
+}
+/* Étapes 4 et 5 : liées à la sonnerie, pas à l'avancement. Rappel sur toutes les autres étapes. */
+function sonnerie(){
+  const p=txt('p','note sonnerie','Où que j’en sois : ');
+  [[4,'🔔 Fin de période ? Étape 4'],[5,'▶ Début de période 2 ? Étape 5']].forEach(([n,t],k)=>{const a=txt('button','lien',t);a.type='button';a.addEventListener('click',()=>{sauve({type:'position',etape:n});scrollTo(0,0);});if(k)p.append(' · ');p.append(a);});
+  return p;
+}
+/* Après l'étape 5 : la première étape pas finie (hors 4 et 5), sinon l'étape 6. */
+function aReprendre(){const k=ETAPES_RAT.findIndex((_,j)=>j!==3&&j!==4&&!etat.etapes[j]);return k<0?5:k;}
 /* Volet « Toutes les animations » : retrouver n'importe quel tuto sans changer d'étape. */
 (function(){const liste=$('tutos-liste'),vue=$('tutos-vue');if(!liste||typeof Demo==='undefined')return;let enCours=null;
   const tutos=ETAPES_RAT.map((e,i)=>[i,(i+1)+'. '+e.titre]).concat([['cote','Le cours et mon document côte à côte']]);
@@ -126,7 +156,6 @@ const demos={};let demoVue=null,demoCote=null;
     b.addEventListener('click',()=>{if(enCours)enCours.stop();liste.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));
       enCours=Demo.cree(cle,false);const t=txt('p','demo-titre','👀 '+titre);vue.replaceChildren(t,enCours);setTimeout(()=>enCours.joue(),80);});liste.append(b);});
   $('tutos').addEventListener('toggle',()=>{if(!$('tutos').open&&enCours)enCours.stop();});})();
-function demoPour(i){if(typeof Demo==='undefined')return null;if(demoVue!==null&&demoVue!==i&&demos[demoVue])demos[demoVue].stop();demoVue=i;return demos[i]||(demos[i]=Demo.cree(i));}
 $('aide-btn').addEventListener('click',()=>sauve({type:etat.aide?'aide-fin':'aide',etape:etat.aide?etat.aide.bloc:etat.position}));
 $('compact').addEventListener('click',()=>{const actif=document.body.classList.toggle('compact');$('compact').setAttribute('aria-pressed',String(actif));});
 const boutons=[['','↶ Annuler (dès que je me trompe)','Ctrl + Z','Barre d’outils, tout à gauche : la flèche ↶'],['centrer','Centrer','Ctrl + Maj + E','Bouton « Aligner » ▾ de la barre d’outils'],['droite','Aligner à droite','Ctrl + Maj + R','Même bouton « Aligner » ▾'],['gras','Gras','Ctrl + B','Barre d’outils, après la taille'],['italique','Italique','Ctrl + I','Juste à côté du gras'],['souligne','Souligner','Ctrl + U','Juste à côté de l’italique'],['','MAJUSCULES','—','Format ▸ Texte ▸ Minuscules/majuscules ▸ MAJUSCULES'],['police','Changer la police','—','Le menu qui affiche le nom de la police'],['taille','Changer la taille','—','La case du nombre, avec – et +'],['puces','Liste à puces','Ctrl + Maj + 8','Barre d’outils, à droite'],['numeros','Liste numérotée','Ctrl + Maj + 7','Juste à côté des puces'],['orthographe','Vérifier l’orthographe','Ctrl + Alt + X','Barre d’outils, à gauche, à côté de l’imprimante']];

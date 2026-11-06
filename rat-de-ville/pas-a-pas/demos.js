@@ -87,6 +87,29 @@ const Demo = (() => {
     ]
   };
 
+  /* Sous quelle case va chaque image : PAR_CASE[étape][image] = numéro de la case (à partir de 0),
+     null = image gardée seulement dans « Toutes les animations ». Les démos hors étape vont sous la
+     case nommée dans AUTRES_PAR_CASE ('étape.case', comptés à partir de 1 comme les clés des cases). */
+  const PAR_CASE = [
+    [0, 0, 0, 1, 1],                  // 1. créer (gaufre, Docs, vierge) · nommer
+    [0, 1, 1, 1],                     // 2. le titre · les vers 1 à 4
+    [0, 0, 1],                        // 3. majuscules · lignes vides
+    [0, 0],                           // 4. fermer
+    [0, 0, 0],                        // 5. retrouver dans Drive
+    [0, 0, 1, 2, 3, 3, 4, 5, 6],      // 6. une image par geste
+    [0, 0, 0, 0],                     // 7. la strophe 1 (les autres : même geste)
+    [1, 2, 3],                        // 8. puces · gestes numérotés · phrase
+    [0, 12, 12, 12, 12, 12, 12, 12, 12] // 9. orthographe · remettre dans Classroom
+  ];
+  const AUTRES_PAR_CASE = { '1.3': 'cote', '5.2': 'cote' };
+  // Une démo par case : les images de cette case seulement (ou la démo hors étape), sinon null.
+  function images(i, j) {
+    const autre = AUTRES_PAR_CASE[(i + 1) + '.' + (j + 1)];
+    if (autre) return AUTRES[autre];
+    const t = (DEMOS[i] || []).filter((_, k) => PAR_CASE[i] && PAR_CASE[i][k] === j);
+    return t.length ? t : null;
+  }
+
   const el = (tag, cls, t) => { const n = document.createElement(tag); if (cls) n.className = cls; if (t != null) n.textContent = t; return n; };
   const c = (n, id) => { n.dataset.c = id; return n; };
   const ico = (nom, id) => { const b = c(el('span', 'md-btn'), id); const i = el('img'); i.src = ICO + nom + '.png'; i.alt = ''; b.append(i); return b; };
@@ -181,8 +204,8 @@ const Demo = (() => {
     return e;
   }
 
-  function cree(i, auto = true) {
-    const frames = typeof i === 'string' ? AUTRES[i] : DEMOS[i]; if (!frames) return null;
+  function cree(i, auto = true, j) {
+    const frames = j != null ? images(i, j) : typeof i === 'string' ? AUTRES[i] : DEMOS[i]; if (!frames) return null;
     const box = el('div', 'demo'); box.setAttribute('role', 'img');
     const scene = el('div', 'demo-scene'), curseur = el('div', 'demo-curseur'), legende = el('p', 'demo-legende');
     curseur.innerHTML = '<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M4 2l16 11-7 1.5L9.5 21z" fill="#111" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg>';
@@ -227,5 +250,5 @@ const Demo = (() => {
     box.stop = stop; box.joue = () => { if (!calme) joue(0); else montre(0); };
     return box;
   }
-  return { cree, nombre: DEMOS.length };
+  return { cree, pourCase: (i, j, auto) => cree(i, auto, j), aCase: (i, j) => !!images(i, j), nombre: DEMOS.length };
 })();
