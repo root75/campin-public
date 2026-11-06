@@ -239,6 +239,8 @@ $("nouvelle").addEventListener("click", async()=>{
 function etatTerminer(){
   const s=SEANCES[Number($("seance").value)]||{},b=$("terminer");
   b.hidden=!(s.debut && Number($("seance").value)===0 && !s.fin && s.active!==false);
+  /* Reprendre : la plus récente, expirée (3 h) ou terminée, redevient la séance des élèves, même suivi. */
+  $("reprendre-seance").hidden=!(s.debut && Number($("seance").value)===0 && !s.fin && s.active===false);
 }
 $("seance").addEventListener("change", etatTerminer);
 $("terminer").addEventListener("click", ()=>{
@@ -247,6 +249,13 @@ $("terminer").addEventListener("click", ()=>{
   if(!SUIVI){ remplitSeances(SEANCES.map((x,i)=>i?x:Object.assign({},x,{active:false}))); return; }
   const b=$("terminer");b.disabled=true;
   google.script.run.withSuccessHandler(l=>{b.disabled=false;remplitSeances(l);}).withFailureHandler(e=>{b.disabled=false;erreur(e);}).terminerSeance($("cours").value, s.debut);
+});
+$("reprendre-seance").addEventListener("click", ()=>{
+  const s=SEANCES[0];if(!s||!s.debut)return;
+  if(!confirm("Reprendre la séance "+s.classe+" du "+heure(s.debut)+" ? Les élèves y sont renvoyés pour 3 h ; leur progression et le suivi restent ceux de cette séance."))return;
+  if(!SUIVI){ remplitSeances(SEANCES.map((x,i)=>i?x:Object.assign({},x,{active:true}))); return; }
+  const b=$("reprendre-seance");b.disabled=true;
+  google.script.run.withSuccessHandler(l=>{b.disabled=false;remplitSeances(l);$("maj").textContent="Séance reprise.";}).withFailureHandler(e=>{b.disabled=false;erreur(e);}).reprendreSeance($("cours").value, s.debut);
 });
 $("dlg").addEventListener("close", ()=>{
   const classe = $("dlg-classe").value.trim();
