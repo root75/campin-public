@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Je m'occupe — contrôle des sites</title>
+<!-- Pour le professeur : ouvrir sur un poste élève de l'école. La page lit la liste de index.html
+     (même dossier) et tente de joindre chaque site. Un site bloqué par le DNS de l'école (NextDNS
+     répond 0.0.0.0) ou par Chrome échoue tout de suite ; un site joignable répond. -->
+<style>
+:root{--papier:#F4F6F9;--carte:#fff;--encre:#202020;--doux:#515966;--ok:#1b7a3d;--ko:#b3261e}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--papier:#141a1f;--carte:#1d252c;--encre:#e8edf1;--doux:#a3b0ba;--ok:#6fd08f;--ko:#ff8a80;color-scheme:dark}}
+:root[data-theme="dark"]{--papier:#141a1f;--carte:#1d252c;--encre:#e8edf1;--doux:#a3b0ba;--ok:#6fd08f;--ko:#ff8a80;color-scheme:dark}
+body{font-family:Calibri,"Segoe UI",system-ui,sans-serif;background:var(--papier);color:var(--encre);margin:0;padding:24px 16px;line-height:1.5}
+main{max-width:720px;margin:0 auto}
+h1{font-size:24px;margin:0 0 8px}
+.doux{color:var(--doux)}
+table{table-layout:fixed;width:100%;border-collapse:collapse;background:var(--carte);border-radius:12px;overflow:hidden;margin-top:16px}
+td,th{overflow-wrap:anywhere;padding:8px 12px;border-bottom:1px solid rgba(127,127,127,.25);text-align:left;vertical-align:top}
+td.etat{white-space:nowrap;font-weight:700}
+.ok{color:var(--ok)}.ko{color:var(--ko)}
+button{font:inherit;font-weight:700;padding:8px 16px;border-radius:10px;border:2px solid currentColor;background:transparent;color:inherit;cursor:pointer}
+</style>
+</head>
+<body>
+<main>
+<h1>Je m'occupe — contrôle des sites</h1>
+<p class="doux">Ouvre cette page sur un <b>poste élève de l'école</b>, avec un compte élève. Chaque site est testé. ✗ = bloqué ou injoignable : retire-le de la liste, ou demande son déblocage.</p>
+<p id="bilan">Test en cours…</p>
+<button type="button" id="relancer">Relancer le test</button>
+<table><thead><tr><th>Site</th><th>Adresse</th><th>État</th></tr></thead><tbody id="lignes"></tbody></table>
+</main>
+<script>
+(() => {
+const $ = id => document.getElementById(id);
+const DELAI = 8000;
+// Joignable = la requête aboutit (réponse opaque). Bloqué par le DNS ou Chrome = rejet immédiat.
+function teste(url){
+  const c = new AbortController(), t = setTimeout(()=>c.abort(), DELAI);
+  return fetch(url, { mode:"no-cors", cache:"no-store", signal:c.signal })
+    .then(()=>"ok", e=>e.name === "AbortError" ? "lent" : "ko")
+    .finally(()=>clearTimeout(t));
+}
+async function lance(){
+  $("relancer").disabled = true; $("bilan").textContent = "Test en cours…";
+  const page = new DOMParser().parseFromString(await (await fetch("./", {cache:"no-store"})).text(), "text/html");
+  const sites = [...page.querySelectorAll("a.carte")].map(a=>({ nom:a.querySelector("b").textContent, url:a.href }));
+  const tb = $("lignes"); tb.replaceChildren();
+  const res = await Promise.all(sites.map(async s=>{
+    const tr = document.createElement("tr");
+    const td = t => { const c = document.createElement("td"); c.textContent = t; tr.append(c); return c; };
+    td(s.nom); td(new URL(s.url).hostname); const e = td("…"); e.className = "etat"; tb.append(tr);
+    const r = await teste(s.url);
+    e.textContent = r === "ok" ? "✓ joignable" : r === "lent" ? "? trop lent" : "✗ bloqué";
+    e.classList.add(r === "ok" ? "ok" : "ko");
+    return r;
+  }));
+  const ko = res.filter(r=>r !== "ok").length;
+  $("bilan").textContent = sites.length + " sites testés : " + (sites.length - ko) + " joignables, " + ko + " bloqués ou trop lents.";
+  $("relancer").disabled = false;
+}
+$("relancer").addEventListener("click", lance);
+lance().catch(e=>{ $("bilan").textContent = "La liste ne se charge pas : " + e.message; $("relancer").disabled = false; });
+})();
+</script>
+</body>
+</html>
