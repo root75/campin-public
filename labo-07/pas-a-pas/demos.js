@@ -7,7 +7,7 @@ const Demo = (() => {
   const NOM = '07_CoulissesPC_Prenom_Nom';
   const FICHIER = '2026-10-09_OneDrive.docx';
 
-  /* Les animations, par clé. ETAPES dit lesquelles accompagnent chaque étape interne (0 à 6). */
+  /* Les animations, par clé. ETAPES dit lesquelles accompagnent chaque étape interne (0 à 8). */
   const DEMOS = {
     rapport: { titre: 'Créer et nommer mon rapport', images: [
       { ecran: 'gaufre', cible: 'gaufre', legende: 'Dans Chrome, compte de l’école : je clique sur la gaufre ⋮⋮⋮, en haut à droite.' },
@@ -82,7 +82,7 @@ const Demo = (() => {
       { ecran: 'classroom', joint: 1, remis: 1, cible: 'statut', ok: 1, legende: '« Remis » : c’est envoyé. Remise unique, à la toute fin de l’enquête.' }
     ] }
   };
-  const ETAPES = { 0: ['rapport', 'cote'], 1: ['gestionnaire', 'gimp', 'tableau', 'capture'], 3: ['onedrive'], 4: ['fenetres', 'moniteur'], 6: ['remise'] };
+  const ETAPES = { 0: ['rapport', 'cote'], 2: ['gestionnaire', 'gimp', 'tableau', 'capture'], 4: ['onedrive'], 5: ['fenetres', 'moniteur'], 8: ['remise'] };
 
   const el = (tag, cls, t) => { const n = document.createElement(tag); if (cls) n.className = cls; if (t != null) n.textContent = t; return n; };
   const c = (n, id) => { n.dataset.c = id; return n; };
@@ -277,7 +277,7 @@ const Demo = (() => {
     return box;
   }
 
-  /* Ce que blocs.js affiche sous les cases d'une étape : la première démo ouverte,
+  /* Ce que blocs.js affiche sous les cases d'une étape (DEMOS_SOUS_CASES dans fiche.js) : la première démo ouverte,
      les suivantes repliées (elles ne jouent qu'à l'ouverture). Une seule joue à la fois. */
   let actives = [];
   function stopTout() { actives.forEach(b => b.stop()); actives = []; }

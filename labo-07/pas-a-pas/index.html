@@ -168,7 +168,7 @@ table.trace input.faux{border-color:var(--faux);background:var(--faux-pale)} tab
 footer{font-size:.9rem;color:var(--doux);display:flex;flex-wrap:wrap;gap:4px 16px;justify-content:space-between}
 footer .auteur{margin-left:auto;font-weight:700}
 .etapes{padding-left:1.3rem}.etapes li{margin:0 0 .65rem}.etapes label{display:block}.etapes input{margin-right:.5rem}.bilan{display:grid;gap:12px}.bilan textarea{width:100%}
-dialog{max-height:90vh;overflow-y:auto}#rapport{display:none;width:min(95vw,48rem);max-width:48rem}#rapport[open]{display:grid;gap:16px}#rapport{overflow-wrap:anywhere}#rapport>*{min-width:0}#rapport textarea{min-width:0}#rapport textarea{box-sizing:border-box;width:100%;font:inherit}#rapport details{padding:12px;border:1px solid var(--trait);border-radius:8px}#rapport summary{cursor:pointer}#rapport ul{padding-left:1.3rem}
+dialog{max-height:90vh;overflow-y:auto}#rapport{display:none;width:min(95vw,48rem);max-width:48rem}#rapport[open]{display:grid;gap:16px}#rapport{overflow-wrap:anywhere}#rapport>*{min-width:0}#rapport textarea{min-width:0}#rapport textarea{box-sizing:border-box;width:100%;font:inherit}.outil-trame{margin:10px 0;display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center}#rapport details{padding:12px;border:1px solid var(--trait);border-radius:8px}#rapport summary{cursor:pointer}#rapport ul{padding-left:1.3rem}
 .incident{padding:12px;border:1px solid var(--trait);border-radius:8px;margin-bottom:12px}.incident summary{cursor:pointer;font-weight:700}.incident details{padding:8px}.grille{width:100%;border-collapse:collapse;font-size:1rem}.grille th,.grille td{border:1px solid var(--trait);padding:8px;text-align:left;vertical-align:top}.grille th:nth-child(2),.grille td:nth-child(2){white-space:nowrap}.grille caption{font-weight:700;text-align:left;margin-bottom:8px}#grille-criteree .defile{max-width:100%;overflow-x:auto}
 /* ===== Style « missions », repris du Rat de ville (4/11) ===== */
 :root{--vert:#2fa36b;--soleil:#ffcf3f;--ciel:#e8f4fb}
@@ -248,9 +248,9 @@ details.coince{border-radius:16px}
   <p class="qui" id="qui"></p>
   <section class="progression" aria-label="Mes missions">
     <div class="progres" id="progres"></div>
-    <p class="note">Trois missions et un défi final. Un seul rapport Google Docs, complété au fil des missions puis joint dans Classroom.</p>
+    <p class="note">Je prépare mon rapport, je mène trois missions et un défi final, puis je remets mon rapport. Un seul document Google Docs pour tout le labo.</p>
     <details><summary>Comment ça marche ?</summary><p class="note">Le site garde tes hypothèses de départ ; ton rapport contient les preuves courtes. Un seul incident est rédigé, les trois autres sont vérifiés à deux, chacun sur son poste. Une case cochée = action faite ; elle ne corrige rien et ne donne pas de point.</p></details>
-    <div class="actions"><button class="btn vide" type="button" id="rapport-btn">📄 Mon rapport et ma remise</button><a class="btn vide" href="https://root75.github.io/campin-public/labo-07/je-retiens.html" target="_blank" rel="noopener">Je retiens</a><button class="btn vide" type="button" id="memo-btn">🔎 Ma méthode d’enquête</button></div>
+    <div class="actions"><button class="btn vide" type="button" id="rapport-btn">📄 Mon rapport : trame et critères</button><a class="btn vide" href="https://root75.github.io/campin-public/labo-07/je-retiens.html" target="_blank" rel="noopener">Je retiens</a><button class="btn vide" type="button" id="memo-btn">🔎 Ma méthode d’enquête</button></div>
     <details class="demo-tout" id="demo-tout"><summary>👀 Toutes les animations « Regarde comment faire »</summary><p class="note">Un clic pour revoir un geste, sans changer d’étape ni toucher à ta progression.</p></details>
   </section>
 
@@ -279,21 +279,10 @@ details.coince{border-radius:16px}
 </dialog>
 
 <dialog id="rapport" aria-labelledby="rapport-titre">
-  <h2 id="rapport-titre">Mon rapport et ma remise</h2>
+  <h2 id="rapport-titre">Mon rapport : trame et critères</h2>
   <p>Un document personnel, le même pour les trois missions et le défi final. La trame donne le plan ; la mise en page est à faire.</p>
-  <h3>1. Préparer mon document — avant les premières mesures</h3>
-  <p class="note">La mission sur les fichiers utilise OneDrive dans l’Explorateur Windows. Ton rapport Google Docs se trouve en ligne, dans ton compte scolaire ; Classroom le propose via Ajouter ou créer ▸ Google Drive.</p>
-  <ol class="etapes">
-    <li>Ouvre <a href="https://docs.google.com/" target="_blank" rel="noopener">Google Docs</a> avec ton compte de l’école.</li>
-    <li>Clique sur le bouton + Document vierge.</li>
-    <li>Clique sur « Document sans titre », en haut à gauche.</li>
-    <li>Nomme le fichier <b>07_CoulissesPC_Prenom_Nom</b>, avec ton prénom et ton nom sans accents.</li>
-    <li>Copie la trame ci-dessous.</li>
-    <li>Dans le document, clique dans la page et utilise Édition ▸ Coller sans mise en forme (Ctrl + Maj + V).</li>
-    <li>Complète ton identification.</li>
-    <li>Garde le document ouvert avant de commencer les observations ; tu le retrouveras dans ton Drive scolaire.</li>
-    <li>Mets le cours et ton rapport côte à côte : clic droit sur l’onglet du rapport ▸ Ajouter l’onglet à une nouvelle vue fractionnée.</li>
-  </ol>
+  <h3>1. Créer mon document</h3>
+  <p>Les gestes sont dans la première étape du parcours, <b>« Préparer mon rapport »</b>, case par case avec l’animation. Ici : la trame, si tu dois la copier à nouveau.</p>
   <details><summary>Trame à copier, sans mise en forme</summary>
     <label for="trame-rapport">Plan du rapport (les réponses restent à écrire)</label>
     <textarea id="trame-rapport" rows="12" readonly></textarea>
@@ -356,17 +345,7 @@ details.coince{border-radius:16px}
   <h3>3. À la fin de l’heure de cours</h3>
   <p>Vérifie l’indication d’enregistrement dans Docs. Garde le nom du document et le bloc de reprise. <b>Ne remets pas le devoir à chaque cours</b> : complète le même rapport jusqu’à la fin.</p>
   <h3>4. Remettre une seule fois — quand le rapport est terminé</h3>
-  <p>Le professeur doit d’abord avoir publié le devoir. Si tu ne le trouves pas, clique sur « J'attends de l'aide » ; ne crée pas un deuxième document et ne poste pas ton travail dans le flux.</p>
-  <ol class="etapes">
-    <li><label><input type="checkbox">Relis le rapport : remplace les repères « à compléter » et supprime les indications entre crochets devenues inutiles.</label></li>
-    <li><label><input type="checkbox">Vérifie les trois exigences de présentation ci-dessus.</label></li>
-    <li><label><input type="checkbox">Ouvre <a href="https://classroom.google.com/" target="_blank" rel="noopener">Classroom</a> avec ton compte scolaire ▸ Informatique — 3F ▸ Travaux et devoirs ▸ Labo 07 — Dans les coulisses du PC ▸ Afficher les instructions.</label></li>
-    <li><label><input type="checkbox">Dans « Vos devoirs » (ou « Votre travail » selon l’interface), clique sur Ajouter ou créer ▸ Google Drive pour choisir ton rapport Docs en ligne.</label></li>
-    <li><label><input type="checkbox">Sélectionne <b>07_CoulissesPC_Prenom_Nom</b> ▸ Ajouter.</label></li>
-    <li><label><input type="checkbox">Ouvre la pièce jointe pour vérifier que c’est ton rapport complet ; n’ajoute pas seulement un lien collé dans le texte.</label></li>
-    <li><label><input type="checkbox">Reviens au devoir ▸ Rendre (ou Remettre) ▸ confirme.</label></li>
-    <li><label><input type="checkbox">Vérifie le statut « Remis » ou « Rendu » dans Classroom.</label></li>
-  </ol>
+  <p>Les gestes sont dans la dernière étape du parcours, <b>« Remettre mon rapport »</b>. Si tu ne trouves pas le devoir dans Classroom, clique sur « J'attends de l'aide » ; ne crée pas un deuxième document et ne poste pas ton travail dans le flux.</p>
   <p class="note">Les cases sont une aide personnelle. Le site ne lit ni les fichiers joints ni le statut Classroom. Seule la vérification dans Classroom confirme la remise.</p>
   <p><b>Proposition de travail quotidien /10 :</b> enquête /7 : hypothèse 1, test 2, preuve 1, conclusion 2, distinction 1 ; document et remise /3.</p>
   <form method="dialog" class="actions"><button class="btn plein">Revenir à l’enquête</button></form>
@@ -374,10 +353,10 @@ details.coince{border-radius:16px}
 
 <!-- Mode séquence (vue prof) : la fiche affiche le moment que le professeur projette. -->
 <script defer src="https://root75.github.io/campin-public/pas-a-pas/sequence-eleve.js?v=ecrans-20261105"></script>
-<script src="https://root75.github.io/campin-public/labo-07/pas-a-pas/demos.js?v=animations-20261105"></script>
-<script src="https://root75.github.io/campin-public/labo-07/pas-a-pas/fiche.js?v=variantes-20261105"></script>
-<script src="https://root75.github.io/campin-public/labo-07/pas-a-pas/rapport.js?v=gimp-20261104"></script>
-<script src="https://root75.github.io/campin-public/pas-a-pas/blocs.js?v=animations-20261105"></script>
+<script src="https://root75.github.io/campin-public/labo-07/pas-a-pas/demos.js?v=rapport-20261106"></script>
+<script src="https://root75.github.io/campin-public/labo-07/pas-a-pas/fiche.js?v=rapport-20261106"></script>
+<script src="https://root75.github.io/campin-public/labo-07/pas-a-pas/rapport.js?v=rapport-20261106"></script>
+<script src="https://root75.github.io/campin-public/pas-a-pas/blocs.js?v=rapport-20261106"></script>
 
 </body>
 </html>
