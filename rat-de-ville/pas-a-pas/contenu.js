@@ -1,8 +1,14 @@
 /* Transcription du formatif Drive ; papier conservé.
+   « id » : numéro interne de l'étape, celui des clés de cases (« 6.1 ») et du Journal. Il ne change
+   jamais, même si l'étape est déplacée ou renumérotée à l'écran (étapes 4 et 5 retirées le 6/11 :
+   les ids 4 et 5 restent libres). Le numéro affiché est la place dans ETAPES_RAT.
+   Le serveur lit les cases dans pas-a-pas/cours.json (« cases ») : les garder égales à ce fichier
+   (essai-rat.js le vérifie).
    Une case = une action. « icones » : index de l'action → icône(s) de icones/ affichée(s) devant.
-   Nombre de cases par étape : doit rester égal à CASES_RAT dans Code.gs. */
+ */
 const ETAPES_RAT = [
   {
+    "id": 1,
     "titre": "Je crée et je nomme",
     "min": 5,
     "periode": 1,
@@ -13,6 +19,7 @@ const ETAPES_RAT = [
     ]
   },
   {
+    "id": 2,
     "titre": "Je recopie la fable",
     "min": 30,
     "periode": 1,
@@ -51,6 +58,7 @@ const ETAPES_RAT = [
     }
   },
   {
+    "id": 3,
     "titre": "Je structure",
     "min": 10,
     "periode": 1,
@@ -69,25 +77,7 @@ const ETAPES_RAT = [
     }
   },
   {
-    "titre": "À la sonnerie : je ferme sans remettre",
-    "min": 2,
-    "periode": 1,
-    "consigne": "Je fais cette étape 2 minutes avant la sonnerie, où que j’en sois : même si je n’ai pas fini l’étape 2 ou 3, même si je suis déjà plus loin. Je reprendrai à la période 2.",
-    "actions": [
-      "Je ferme l’onglet du document. Je ne remets PAS encore : mon document est enregistré tout seul."
-    ]
-  },
-  {
-    "titre": "Période 2 : je retrouve mon document",
-    "min": 3,
-    "periode": 2,
-    "consigne": "Je fais cette étape au début de la période 2. Puis je reprends ma première étape pas encore finie (bouton en bas de l’étape).",
-    "actions": [
-      "Menu Google (la gaufre) ▸ Drive ▸ Récents ▸ double-clic sur mon document.",
-      "Je place mon document à côté du cours : je clique sur l’onglet du cours, puis clic droit sur l’onglet de mon document ▸ Ajouter l’onglet à une nouvelle vue fractionnée. Le cours et mon document s’affichent côte à côte dans la même fenêtre."
-    ]
-  },
-  {
+    "id": 6,
     "titre": "Titre, texte, auteur",
     "min": 10,
     "periode": 2,
@@ -103,6 +93,7 @@ const ETAPES_RAT = [
     "icones": { "0": ["centrer"], "1": ["gras"], "3": ["centrer"], "4": ["droite"], "5": ["italique"], "6": ["souligne"] }
   },
   {
+    "id": 7,
     "titre": "Une police par strophe",
     "min": 12,
     "periode": 2,
@@ -119,6 +110,7 @@ const ETAPES_RAT = [
     "icones": { "0": ["police","taille"], "1": ["police","taille"], "2": ["police","taille"], "3": ["police","taille"], "4": ["police","taille"], "5": ["police","taille"], "6": ["police","taille"] }
   },
   {
+    "id": 8,
     "titre": "Mon bloc-notes",
     "min": 12,
     "periode": 2,
@@ -151,6 +143,7 @@ const ETAPES_RAT = [
     }
   },
   {
+    "id": 9,
     "titre": "Je m’évalue et je remets",
     "min": 10,
     "periode": 2,
@@ -166,7 +159,7 @@ const ETAPES_RAT = [
       "Je vérifie l’auteur : à droite, en italique, souligné.",
       "Je vérifie que chaque strophe a sa police et sa taille.",
       "Je vérifie mon bloc-notes : une vraie liste à puces, une vraie liste numérotée d’au moins six gestes, ma phrase.",
-      "J’ouvre ma grille (bouton 📋, après l’étape 9) et je remplis la colonne « Moi » : A, B, C ou D pour chaque critère.",
+      "J’ouvre ma grille (bouton 📋, après l’étape 7) et je remplis la colonne « Moi » : A, B, C ou D pour chaque critère.",
       "Je montre mon document à mon voisin. Il le compare aux cases 2 à 10 et me montre un écart, sans toucher la souris. Je corrige.",
       "Classroom ▸ le devoir ▸ Votre travail ▸ Ajouter ou créer ▸ Google Drive ▸ mon document ▸ Insérer ▸ Remettre."
     ],
@@ -197,8 +190,6 @@ const REPERES_RAT = [
   {observe: "Je repère le nom du document en haut à gauche dans Docs.", verifie: "Le nom contient la date d’aujourd’hui, Le rat de ville, mon prénom et mon nom.", encouragement: "Un nom précis me permettra de retrouver mon travail à la prochaine période."},
   {observe: "J’ouvre l’image de la fiche. Je repère le titre, les vers et l’auteur avant de recopier.", verifie: "Je compare ma dernière ligne à l’image avant de passer au groupe suivant. Je dois retrouver 28 vers.", encouragement: "Les petits groupes de quatre vers m’aident à garder ma place."},
   {observe: "Une strophe regroupe quatre vers. Une ligne vide sépare deux strophes.", verifie: "Je compte sept groupes de quatre vers et je regarde la première lettre de chaque vers.", encouragement: "Les strophes sont maintenant plus faciles à repérer."},
-  {observe: "Je vérifie dans Docs que l’enregistrement est terminé avant de fermer l’onglet.", verifie: "Je ferme le document ; je ne clique pas encore sur Remettre dans Classroom.", encouragement: "Je reprendrai le même document à la période suivante."},
-  {observe: "Dans Drive, j’utilise le nom et la date pour reconnaître mon document.", verifie: "Je l’ouvre : est-ce que je retrouve ma fable et les sept strophes ? Sinon, je retourne dans Récents avant de continuer.", encouragement: "Retrouver mon travail fait aussi partie de la démarche."},
   {observe: "Je compare les trois zones du modèle : le titre, les strophes et l’auteur.", verifie: "Le titre est centré, gras et en majuscules ; le texte est centré ; l’auteur est à droite, italique et souligné. J’utilise les boutons d’alignement, sans taper d’espaces.", encouragement: "Sélectionner la bonne zone me permet de modifier seulement ce que je veux."},
   {observe: "Je repère le numéro de la strophe avant de choisir sa police et sa taille.", verifie: "Je clique dans chaque strophe et je lis la police et la taille dans la barre d’outils. Si les autres strophes ont changé aussi : Ctrl + Z, puis je sélectionne uniquement la strophe voulue.", encouragement: "Changer une strophe sans toucher aux autres montre que je maîtrise la sélection."},
   {observe: "Des puces pour les choses du festin ; des numéros pour raconter mes gestes dans l’ordre.", verifie: "Dans Docs : trois éléments du festin, au moins six gestes réellement faits et une phrase avec sélectionner, police et taille.", encouragement: "Nommer le bouton utilisé permet à quelqu’un d’autre de comprendre ma méthode."},

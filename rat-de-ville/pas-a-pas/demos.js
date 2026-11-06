@@ -33,16 +33,7 @@ const Demo = (() => {
       doc([L(TITRE), ...FABLE_MAJ.map(v => L(v, 'maj')), L(S2[0].toLowerCase())], { cible: 'L1', legende: '… je mets une majuscule au début de chaque vers.' }),
       doc([L(TITRE), ...FABLE_MAJ.map(v => L(v)), L(''), L(S2[0])], { cible: 'L5', ok: 1, legende: 'Je clique à la fin du vers 4, Entrée : une ligne vide sépare les strophes.' })
     ],
-    [ // 4. Je ferme sans remettre
-      doc(base(), { cible: 'enregistre', legende: 'Je regarde : « Enregistré ». Docs garde tout seul.' }),
-      doc(base(), { cible: 'onglet', ok: 1, legende: 'Je ferme l’onglet. Je ne remets PAS encore.' })
-    ],
-    [ // 5. Je retrouve mon document
-      { ecran: 'gaufre', menu: 1, cible: 'app-drive', legende: 'Gaufre ▸ Drive.' },
-      { ecran: 'drive', cible: 'recents', legende: 'Je clique sur « Récents », à gauche.' },
-      { ecran: 'drive', cible: 'fichier', ok: 1, legende: 'Double-clic sur mon document : il s’ouvre.' }
-    ],
-    [ // 6. Titre, texte, auteur
+    [ // 4. Titre, texte, auteur
       doc(base('sel'), { cible: 'L0', legende: 'Je sélectionne le titre.' }),
       doc(base('sel centre'), { cible: 'centrer', legende: 'Centrer (Ctrl + Maj + E).' }),
       doc(base('sel centre gras'), { cible: 'gras', legende: 'Gras (Ctrl + B).' }),
@@ -53,18 +44,18 @@ const Demo = (() => {
       doc(base('centre gras capitales', 'centre', 'sel droite italique'), { cible: 'italique', legende: 'Italique (Ctrl + I).' }),
       doc(base('centre gras capitales', 'centre', 'droite italique souligne'), { cible: 'souligne', ok: 1, legende: 'Souligner (Ctrl + U). Trois zones, trois mises en forme !' })
     ],
-    [ // 7. Une police par strophe
+    [ // 5. Une police par strophe
       doc(base('centre gras capitales', 'sel centre', 'droite italique souligne'), { cible: 'L2', legende: 'Je sélectionne SEULEMENT la strophe 1.' }),
       doc(base('centre gras capitales', 'sel centre', 'droite italique souligne'), { cible: 'item-Garamond', menu: { sous: 'police', items: ['Arial', 'Calibri', 'Garamond', 'Arial Black'], hi: 'Garamond' }, legende: 'Menu des polices ▸ Garamond.' }),
       doc(base('centre gras capitales', 'sel centre garamond', 'droite italique souligne'), { police: 'Garamond', cible: 'taille', legende: 'Je clique dans la case du nombre, je tape 14, Entrée.' }),
       doc(base('centre gras capitales', 'centre garamond grand', 'droite italique souligne'), { police: 'Garamond', taille: '14', cible: 'L2', ok: 1, legende: 'Seule la strophe 1 a changé. À la suivante !' })
     ],
-    [ // 8. Mon bloc-notes
+    [ // 6. Mon bloc-notes
       doc([L('Mon bloc-notes', 'gras'), L('le tapis', 'sel'), L('…', 'sel'), L('…', 'sel')], { cible: 'puces', legende: 'Je sélectionne mes 3 lignes ▸ Liste à puces (Ctrl + Maj + 8).' }),
       doc([L('Mon bloc-notes', 'gras'), L('le tapis', 'puce'), L('…', 'puce'), L('…', 'puce'), L('Mes gestes', 'gras'), L('J’ai sélectionné le titre, puis Centrer.', 'sel'), L('…', 'sel')], { cible: 'numeros', legende: 'Mes gestes ▸ Liste numérotée (Ctrl + Maj + 7).' }),
       doc([L('Mon bloc-notes', 'gras'), L('le tapis', 'puce'), L('…', 'puce'), L('…', 'puce'), L('Mes gestes', 'gras'), L('J’ai sélectionné le titre, puis Centrer.', 'num'), L('…', 'num'), L('Pour changer une seule strophe, je…')], { cible: 'L7', ok: 1, legende: 'Et ma phrase pour finir.' })
     ],
-    [ // 9. Je m'évalue et je remets
+    [ // 7. Je m'évalue et je remets
       doc(base('centre gras capitales', 'centre garamond', 'droite italique souligne'), { cible: 'orthographe', legende: 'Vérifier l’orthographe (Ctrl + Alt + X).' }),
       { ecran: 'classroom', cible: 'instructions', legende: 'Classroom ▸ ma classe ▸ Travaux et devoirs ▸ le devoir ▸ Afficher les instructions. Je relis ma grille.' },
       { ecran: 'classroom', cible: 'ajouter', legende: 'À droite, dans « Vos devoirs » : + Ajouter ou créer.' },
@@ -79,6 +70,15 @@ const Demo = (() => {
 
   // Démos hors étape, appelées par leur nom (fiche.js : Demo.cree('cote', false)).
   const AUTRES = {
+    fermer: [ // À la sonnerie : je ferme sans remettre (encadré sous chaque étape)
+      doc(base(), { cible: 'enregistre', legende: 'Je regarde : « Enregistré ». Docs garde tout seul.' }),
+      doc(base(), { cible: 'onglet', ok: 1, legende: 'Je ferme l’onglet. Je ne remets PAS encore.' })
+    ],
+    retrouver: [ // Je reprends : je retrouve mon document dans Drive (encadré « Je reprends »)
+      { ecran: 'gaufre', menu: 1, cible: 'app-drive', legende: 'Gaufre ▸ Drive.' },
+      { ecran: 'drive', cible: 'recents', legende: 'Je clique sur « Récents », à gauche.' },
+      { ecran: 'drive', cible: 'fichier', ok: 1, legende: 'Double-clic sur mon document : il s’ouvre.' }
+    ],
     cote: [ // Le cours et mon document côte à côte : vue fractionnée de Chrome
       { ecran: 'chrome', cible: 'ch-cours', legende: 'Je clique sur l’onglet du cours.' },
       { ecran: 'chrome', menu: 1, cible: 'ch-doc', legende: 'Clic droit sur l’onglet de mon document.' },
@@ -89,19 +89,17 @@ const Demo = (() => {
 
   /* Sous quelle case va chaque image : PAR_CASE[étape][image] = numéro de la case (à partir de 0),
      null = image gardée seulement dans « Toutes les animations ». Les démos hors étape vont sous la
-     case nommée dans AUTRES_PAR_CASE ('étape.case', comptés à partir de 1 comme les clés des cases). */
+     case nommée dans AUTRES_PAR_CASE ('place de l'étape.case', comptées à partir de 1). */
   const PAR_CASE = [
     [0, 0, 0, 1, 1],                  // 1. créer (gaufre, Docs, vierge) · nommer
     [0, 1, 1, 1],                     // 2. le titre · les vers 1 à 4
     [0, 0, 1],                        // 3. majuscules · lignes vides
-    [0, 0],                           // 4. fermer
-    [0, 0, 0],                        // 5. retrouver dans Drive
-    [0, 0, 1, 2, 3, 3, 4, 5, 6],      // 6. une image par geste
-    [0, 0, 0, 0],                     // 7. la strophe 1 (les autres : même geste)
-    [1, 2, 3],                        // 8. puces · gestes numérotés · phrase
-    [0, 12, 12, 12, 12, 12, 12, 12, 12] // 9. orthographe · remettre dans Classroom
+    [0, 0, 1, 2, 3, 3, 4, 5, 6],      // 4. une image par geste
+    [0, 0, 0, 0],                     // 5. la strophe 1 (les autres : même geste)
+    [1, 2, 3],                        // 6. puces · gestes numérotés · phrase
+    [0, 12, 12, 12, 12, 12, 12, 12, 12] // 7. orthographe · remettre dans Classroom
   ];
-  const AUTRES_PAR_CASE = { '1.3': 'cote', '5.2': 'cote' };
+  const AUTRES_PAR_CASE = { '1.3': 'cote' };
   // Une démo par case : les images de cette case seulement (ou la démo hors étape), sinon null.
   function images(i, j) {
     const autre = AUTRES_PAR_CASE[(i + 1) + '.' + (j + 1)];

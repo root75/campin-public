@@ -41,6 +41,13 @@ Sans cette installation, le tableau signale que le serveur utilise encore sa lis
    `"preuves": "nouveau-cours/pas-a-pas/preuves.json"`. Les cours corrigés par leur moteur
    n’ont pas besoin de ce champ. Les chemins sont relatifs à la racine de campin-public.
 
+   **Formatif déclaratif** (cases cochées par l’élève, sans correction, comme
+   `rat-de-ville-formatif`) : ajouter `"cases": { "1": 3, "2": 9, … }` (id d’étape : nombre de
+   cases) et `"criteres": 4` (critères de la grille). Le serveur Mes cours lit ces champs : changer
+   les étapes ou les cases d’un formatif se fait ici, **sans redéployer Code.gs**. Les ids sont les
+   clés du Journal (« 6.1 ») : on peut en retirer ou en ajouter, jamais en renuméroter un.
+   `catalogue.js` et `Code.gs` refusent un catalogue dont un champ est inconnu.
+
    **Règle anti-recopie (5 novembre 2026)** : chaque question de preuve a **toujours trois
    variantes du même type** (même forme de réponse, même difficulté, même contenu de l’étape),
    chacune avec sa bonne réponse, distincte des deux autres. Le serveur en tire une par élève,
