@@ -1,7 +1,7 @@
 # Suivi du formatif « Le rat de ville »
 
-Entrée du catalogue : `rat-de-ville-formatif`, 9 étapes sur deux périodes.
-Les 48 petites cases (une action ou une vérification par case) déclarent les actions terminées ; elles ne corrigent pas la copie.
+Entrée du catalogue : `rat-de-ville-formatif`, 7 étapes sur deux périodes (9 jusqu’au 6/11).
+Les 45 petites cases (une action ou une vérification par case) déclarent les actions terminées ; elles ne corrigent pas la copie.
 Navigation libre, copie par groupes de quatre vers (strophes séparées à l’étape 3) ; grille complète et colonne « Moi » en étape finale (bouton 📋). Plus de repère collectif depuis le 4/11 (voir LIVRAISON-RAT.md).
 À l’étape 8, chaque partie du bloc-notes dispose d’une explication à déplier :
 un élément du festin en exemple, un geste détaillé en exemple et un début de phrase
@@ -73,3 +73,19 @@ Chaque « 👀 Regarde comment faire » est sous la case qu'il montre (`PAR_CASE
 plus de démo d'étape en haut. Aux étapes 1 et 5, la vue fractionnée devient une case (48 cases,
 `CASES_RAT = [3, 9, 2, 1, 2, 7, 7, 4, 13]`). Les étapes 4 et 5 se font à la sonnerie et au début
 de la période 2, où que l'élève en soit : rappel sur les autres étapes, bouton de reprise à l'étape 5.
+
+## Étapes 4 et 5 retirées : « À la sonnerie » et « Je reprends » (6 novembre 2026)
+
+Fermer et rouvrir ne sont plus des étapes : les élèves ne les faisaient pas au même moment.
+- Sous chaque étape, l’encadré **🔔 À la sonnerie, où que j’en sois** (fermer l’onglet, ne pas
+  remettre, animation) et le lien « Je reviens après la sonnerie : je reprends mon document ».
+- En haut, l’encadré **▶ Je reprends mon travail** (Drive ▸ Récents, vue fractionnée, deux
+  animations, bouton « C’est fait : je reprends à l’étape N »). Il s’affiche seul quand l’élève
+  rouvre le cours avec déjà des cases cochées et plus de 5 minutes sans action. Pas de case.
+- **7 étapes, 45 cases.** Chaque étape garde son **id** interne (1, 2, 3, 6, 7, 8, 9 dans
+  `contenu.js`) : ce sont les clés des cases et du Journal, rien n’est perdu. Le numéro affiché
+  est la place (1 à 7). Une ancienne place 4 ou 5 envoie à la première étape non finie.
+- Les étapes terminées sont calculées par la fiche et le tableau, depuis les cases.
+- Le serveur lit les cases dans `pas-a-pas/cours.json` (`cases`, `criteres`) : la prochaine
+  modification des étapes ou des cases ne demande plus de redéployer Code.gs.
+- La fiche papier (`construire_rat.js`, 9 étapes) n’est pas modifiée.
