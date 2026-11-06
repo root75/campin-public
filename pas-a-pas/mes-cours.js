@@ -67,7 +67,7 @@ function affiche(d){
     document.querySelectorAll(".compte-adresse").forEach(n => n.textContent = d.identite.email || "Adresse indisponible");
     document.querySelectorAll(".compte-role").forEach(n => n.textContent = d.identite.libelle);
   }
-  ["attente","choisir","confirmer","mes-cours","seance-en-cours","erreur"].forEach(id => { const n = $(id); if(n) n.hidden = true; });
+  ["attente","choisir","confirmer","mes-cours","seance-en-cours","je-m-occupe","erreur"].forEach(id => { const n = $(id); if(n) n.hidden = true; });
   if(!d.email){ montreErreur("Ouvre ce lien avec ton compte de l'école (arcampin.be)."); return; }
   if(!d.classe){
     if(!d.classes.length){ montreErreur("Ton professeur n'a pas encore créé les classes. Attends sa consigne."); return; }
@@ -97,8 +97,15 @@ function affiche(d){
     const a = txt("a", "btn cours", c.titre + " ▸"); a.href = c.url; a.target = "_top"; return a; }));
   $("aucun").hidden = d.cours.length > 0;
   $("mes-cours").hidden = false;
+  // La récompense n'apparaît que si le professeur l'a ouverte pour cet élève (tableau ▸ 🎁).
+  const jusqua = Number(d.recompense) || 0;
+  if($("je-m-occupe") && jusqua){
+    $("occupe-lien").href = d.occupe;
+    $("occupe-fin").textContent = new Date(jusqua).toLocaleTimeString("fr-BE", { hour:"2-digit", minute:"2-digit" });
+    $("je-m-occupe").hidden = false;
+  }
 }
-function montreErreur(m){ ["attente","choisir","confirmer","mes-cours","seance-en-cours"].forEach(id => { const n = $(id); if(n) n.hidden = true; }); $("erreur").textContent = m; $("erreur").hidden = false; }
+function montreErreur(m){ ["attente","choisir","confirmer","mes-cours","seance-en-cours","je-m-occupe"].forEach(id => { const n = $(id); if(n) n.hidden = true; }); $("erreur").textContent = m; $("erreur").hidden = false; }
 const echec = err => montreErreur("Erreur : " + err.message + " — recharge la page (F5).");
 
 $("non").addEventListener("click", ()=>{ $("confirmer").hidden = true; $("choisir").hidden = false; });

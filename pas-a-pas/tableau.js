@@ -122,6 +122,8 @@ function dessine(d){
     const td = (cls,t) => { const c=txt("td",cls,t); tr.append(c); return c; };
     const n1 = td("nom", nom(e.email)); n1.title = e.email;
     if(SUIVI&&d.reprisesParSuivi&&d.peutReprendre){const cours=$("cours").value,seance=choisie();const r=txt("button","btn vide","Recommencer");r.type="button";r.setAttribute("aria-label","Faire recommencer "+nom(e.email));r.addEventListener("click",()=>{if(!confirm("Faire recommencer ce cours à "+nom(e.email)+" ? L’historique est conservé."))return;r.disabled=true;google.script.run.withSuccessHandler(()=>{charge();}).withFailureHandler(err=>{r.disabled=false;erreur(err);}).noter(cours,{type:'prof-reprise',email:e.email,debut:seance.debut});});n1.append(r);}
+    // « Je m'occupe » : la récompense, ouverte une heure pour cet élève après vérification de son travail.
+    if(SUIVI){const fin=Number(e.recompense)||0;const r=txt("button","btn vide",fin?"🎁 jusqu’à "+new Date(fin).toLocaleTimeString("fr-BE",{hour:"2-digit",minute:"2-digit"})+" · retirer":"🎁 Je m’occupe");r.type="button";r.setAttribute("aria-label",(fin?"Retirer Je m’occupe à ":"Ouvrir Je m’occupe pour ")+nom(e.email));r.addEventListener("click",()=>{r.disabled=true;google.script.run.withSuccessHandler(()=>{charge();}).withFailureHandler(err=>{r.disabled=false;erreur(err);}).recompenser(e.email,!fin);});n1.append(r);}
     const h = td("hum", e.humeur ? e.humeur.split(" ")[0] : ""); if(e.humeur) h.title = e.humeur;
     const b = txt("div","barre");
     for(let i=0;i<n;i++){ const s=txt("span"); s.className = i<e.atteint ? "fait" : (i===e.atteint && !e.fini ? "ici" : ""); b.append(s); }
