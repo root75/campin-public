@@ -49,7 +49,8 @@ function suite(){
   if(typeof PARCOURS==="undefined") return ici+1<BLOCS.length ? "Bloc suivant →" : "J'ai fini ✓";
   if(ici+1>=BLOCS.length) return "J’ai terminé l’enquête ✓";
   const avant=groupeCourant(), apres=groupeCourant(ici+1);
-  return avant===apres ? "Continuer →" : apres===PARCOURS[PARCOURS.length-1] ? "Défi final →" : "Mission suivante →";
+  // Un groupe peut donner son propre libellé (bouton:"…") ; sinon le dernier groupe est le défi final.
+  return avant===apres ? "Continuer →" : apres.bouton || (apres===PARCOURS[PARCOURS.length-1] ? "Défi final →" : "Mission suivante →");
 }
 function bulle(){
   const b = document.getElementById("bulle"), g = groupeCourant();
@@ -100,8 +101,12 @@ function affiche(){
     z.append(el("p","but",B.veux));
     /* Démo animée « Regarde comment faire », avant les cases : on regarde, puis on fait.
        Python : pas-a-pas/demos-python.js (Demo.pour) ; Labo 07 : labo-07/pas-a-pas/demos.js (Demo.pourEtape). */
-    if(typeof Demo!=="undefined"){ const d = Demo.pour ? Demo.pour(ici) : Demo.pourEtape ? Demo.pourEtape(ici) : null; if(d) z.append(d); }
+    // Option de la fiche : const DEMOS_SOUS_CASES = true (Labo 07) — d'abord les cases, puis les aides en dessous.
+    const demo = typeof Demo!=="undefined" ? (Demo.pour ? Demo.pour(ici) : Demo.pourEtape ? Demo.pourEtape(ici) : null) : null;
+    const sous = typeof DEMOS_SOUS_CASES!=="undefined" && DEMOS_SOUS_CASES;
+    if(demo && !sous) z.append(demo);
     z.append(el("div","faire",B.fais));
+    if(demo && sous) z.append(demo);
     const v = el("aside","repere verification"); v.append(txt("h3",null,"✅ À vérifier"), el("p",null,B.vois)); z.append(v);
   } else {
     const dl = el("dl","lignes");

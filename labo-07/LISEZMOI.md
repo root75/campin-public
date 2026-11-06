@@ -1,6 +1,6 @@
 # Labo 07 — version testable
 
-Contenu : `pas-a-pas/fiche.js` (trois missions et un défi final ; sept étapes internes pour le suivi, à reprendre selon les besoins).
+Contenu : `pas-a-pas/fiche.js` (préparer le rapport, trois missions, un défi final, remettre le rapport ; neuf étapes internes pour le suivi, à reprendre selon les besoins).
 Moteur : `../pas-a-pas/blocs.js`, partagé avec Python 1 et Python 2.
 Conducteur professeur : clé `labo-07` dans `../pas-a-pas/sequences.json` ; accessible au tableau.
 Préparation, corrigé et activation : dépôt privé `campin-pedagogique/cours/3ttr-labo/sequences/07-coulisses-pc/PROF.md`.
@@ -12,15 +12,15 @@ L’aperçu libre ne transmet ni ne conserve de réponse ; hors Apps Script, seu
 reste sur ce navigateur. En classe, passer par Mes cours, avec le compte de l’école.
 
 Rapport : `pas-a-pas/trame-rapport.txt` donne un plan sans mise en forme, copiable depuis
-« Mon rapport et ma remise ». La grille critériée complète /10 (descripteurs et points) est
+« Mon rapport : trame et critères » et depuis l’étape 1 « Préparer mon rapport » (bouton 📋 Copier la trame). La grille critériée complète /10 (descripteurs et points) est
 accessible dans ce même dialogue et copiée en fin de rapport avec la trame. L’élève crée un seul document Google Docs, le met en page et y saisit
 des preuves courtes : tableau et capture légendée, une phrase de disponibilité, un seul incident
 en quatre lignes et une décision finale en deux phrases. Les trois autres incidents sont
 manipulés et vérifiés en binôme, avec échange des rôles et correction par l’auteur, sans autre compte rendu. Le professeur garde le contrôle individuel du défi final. À la fin seulement, il joint ce document dans le
 nouveau devoir Classroom que le professeur devra préparer et publier lui-même.
 
-Collecte du site : API `noter()` et Journal existants. Les étapes internes **1, 3, 6** conservent les hypothèses
-initiales (et le test final) en texte court, ≤ 200 caractères. Les quatre autres étapes enregistrent une déclaration `rapport:…`. Deux exercices préalables
+Collecte du site : API `noter()` et Journal existants. Les étapes internes **2, 4, 7** conservent les hypothèses
+initiales (et le test final) en texte court, ≤ 200 caractères. Les six autres étapes enregistrent une déclaration `rapport:…`. Deux exercices préalables
 non cotés varient les méthodes : QCM de conclusion et cartes de gestes à remettre dans l’ordre.
 Leurs essais utilisent les événements existants (`faux`, `ouvert` préfixé `activité:`) sans faire
 avancer seuls la mission. Ils ne collectent pas les preuves du document. Le site ne lit ni Docs,
@@ -43,7 +43,7 @@ Le parcours élève et le conducteur ne fixent pas de calendrier. La mission fic
 OneDrive dans l’Explorateur scolaire ; le rapport Docs est joint via le sélecteur en ligne de
 Classroom. Aucun lecteur Google Drive installé n’est supposé.
 
-La progression élève montre quatre entrées. Les sept étapes internes distinguent hypothèse
+La progression élève montre six entrées : Rapport, Mission 1, Mission 2, Mission 3, Défi, Remise (06/11/2026 : création et remise du rapport sorties du dialogue pour devenir des étapes, case par case ; animations sous les cases via `DEMOS_SOUS_CASES`). Les neuf étapes internes distinguent hypothèse
 avant manipulation et déclaration de mission terminée. Aucun recueil de validation orale ajouté :
 le professeur note le contrôle individuel final sur une liste privée ; les vérifications d’entraînement sont réalisées en binôme. Si une ancienne séance de test à 14 étapes
 avait été utilisée, démarrer une nouvelle séance de test ; ne pas interpréter ses numéros comme
