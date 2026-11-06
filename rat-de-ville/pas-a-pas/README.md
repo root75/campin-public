@@ -1,7 +1,7 @@
 # Suivi du formatif « Le rat de ville »
 
 Entrée du catalogue : `rat-de-ville-formatif`, 9 étapes sur deux périodes.
-Les 46 petites cases (une action ou une vérification par case) déclarent les actions terminées ; elles ne corrigent pas la copie.
+Les 48 petites cases (une action ou une vérification par case) déclarent les actions terminées ; elles ne corrigent pas la copie.
 Navigation libre, copie par groupes de quatre vers (strophes séparées à l’étape 3) ; grille complète et colonne « Moi » en étape finale (bouton 📋). Plus de repère collectif depuis le 4/11 (voir LIVRAISON-RAT.md).
 À l’étape 8, chaque partie du bloc-notes dispose d’une explication à déplier :
 un élément du festin en exemple, un geste détaillé en exemple et un début de phrase
@@ -66,3 +66,10 @@ l'ouverture du volet, pour ne pas tourner en même temps que la démo de l'étap
 Volet « 👀 Toutes les animations « Regarde comment faire » », avant « Mes boutons » : un bouton
 par animation (les 9 étapes + le côte à côte) ; un clic l'affiche dans le volet, sans changer
 d'étape ni toucher à la progression. Une seule animation joue à la fois dans le volet.
+
+## Animations sous les cases (6 novembre 2026)
+
+Chaque « 👀 Regarde comment faire » est sous la case qu'il montre (`PAR_CASE` dans `demos.js`) ;
+plus de démo d'étape en haut. Aux étapes 1 et 5, la vue fractionnée devient une case (48 cases,
+`CASES_RAT = [3, 9, 2, 1, 2, 7, 7, 4, 13]`). Les étapes 4 et 5 se font à la sonnerie et au début
+de la période 2, où que l'élève en soit : rappel sur les autres étapes, bouton de reprise à l'étape 5.
