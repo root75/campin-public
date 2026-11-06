@@ -621,7 +621,7 @@
       "Préparer un seul devoir Classroom « Labo 07 — Dans les coulisses du PC », /10, avec remise d’un document personnel à la fin du parcours. La préparation ne crée ni ne publie ce devoir. Ne pas distribuer de copie déjà mise en page.",
       "L’élève crée un rapport Google Docs à partir de la trame en texte brut avant les premières mesures. Il garde ce même document pendant tout le travail et ne le remet qu’une fois terminé.",
       "Prévoir un fichier déjà enregistré dans le dossier OneDrive scolaire de l’Explorateur, par exemple celui du Labo 06 ; un fichier de démonstration sans donnée privée si nécessaire. La mission ne dépend pas d’une autre séquence obligatoirement réalisée juste avant.",
-      "Correction : hypothèses initiales aux étapes internes 2, 4 et 7 du Journal privé ; preuves écrites courtes dans le rapport joint à Classroom, incidents d’entraînement vérifiés à deux et geste final vérifié individuellement par le professeur. Les autres blocs enregistrent uniquement « rapport:… », une déclaration d’avancement, sans lecture du document ni contrôle de remise.",
+      "Correction : hypothèses initiales aux étapes internes 2, 5 et 8 du Journal privé ; preuves écrites courtes dans le rapport joint à Classroom, incidents d’entraînement vérifiés à deux et geste final vérifié individuellement par le professeur. Les autres blocs enregistrent uniquement « rapport:… », une déclaration d’avancement, sans lecture du document ni contrôle de remise.",
       "Grille : enquête /7, document et remise /3. Identification et nom ; styles de titres et vrai tableau ; capture ciblée et légendée, bon document joint et remise confirmée. Aucun calcul automatique de note.",
       "Compte scolaire : Mes cours ▸ classes et cours ouverts ▸ cocher labo-07 uniquement pour la classe concernée. Nouvelle séance au premier lancement ; conserver la séance pour les continuations.",
       "Vérifier sur un PC élève : Gestionnaire des tâches et ses totaux, GIMP (ouvert pour les élèves, temps d’ouverture), Calculatrice, Bloc-notes, fenêtres, chemin et Statut du fichier OneDrive. Aucun arrêt de processus, suppression ou changement de réglage.",
@@ -695,7 +695,7 @@
         ],
         "blocs": [
           1,
-          3
+          4
         ]
       },
       {
@@ -738,8 +738,8 @@
           "Note fichier, chemin et statut ; justifie en une phrase la disponibilité sans réseau."
         ],
         "blocs": [
-          4,
-          5
+          5,
+          6
         ],
         "repere": "Le chemin à relever est celui du fichier dans OneDrive sur ce poste. Le rapport Docs est un document en ligne distinct ; Google Drive n’est pas un lecteur installé sur les PC de l’école."
       },
@@ -783,8 +783,8 @@
           "Un seul incident rédigé en quatre lignes. Pour les trois autres : chacun formule sa propre hypothèse, manipule et explique au binôme ; inversez acteur et observateur."
         ],
         "blocs": [
-          6,
-          6
+          7,
+          7
         ],
         "repere": "Montrer une seule fois au groupe le bouton du moniteur externe. Les binômes vérifient les trois incidents non rédigés avec les critères annoncés ; le professeur intervient sur blocage persistant ou désaccord. Pas de passage obligatoire après chaque essai."
       },
@@ -829,8 +829,8 @@
           "Un point réussi, une correction possible. L’auteur corrige lui-même, puis inversez les rôles."
         ],
         "blocs": [
-          6,
-          6
+          7,
+          7
         ],
         "repere": "Les élèves gardent leur souris. Aucun nouveau paragraphe, note ou partage de document demandé. Le site ne recueille pas cette relecture. La partie finale reste individuelle ; aucune correction entre pairs avant sa remise."
       },
@@ -845,10 +845,10 @@
           "Montre ta manipulation et explique la distinction machine / Windows / application / fichier à l’oral."
         ],
         "blocs": [
-          7,
-          8
+          8,
+          9
         ],
-        "repere": "Travail quotidien /10 : enquête /7, document/remise /3. Hypothèse et test sur le site (étape interne 7), preuve et décision courtes dans le rapport. Observer le geste et faire justifier oralement ; aucune validation orale collectée par le site."
+        "repere": "Travail quotidien /10 : enquête /7, document/remise /3. Hypothèse et test sur le site (étape interne 8), preuve et décision courtes dans le rapport. Observer le geste et faire justifier oralement ; aucune validation orale collectée par le site."
       },
       {
         "type": "ecran",
