@@ -1,6 +1,8 @@
 /* Démos animées « Regarde comment faire » : une mini-maquette de Docs (ou de Drive,
    Classroom) rejoue chaque geste de l'étape. Aucune donnée élève ; rien n'est enregistré.
-   Une image = un état de l'écran + l'élément que la souris va cliquer + une légende. */
+   Une image = un état de l'écran + l'élément que la souris va cliquer + une légende.
+   Ici, seulement les maquettes et les images. Le lecteur est commun (pas-a-pas/demo-lecteur.js) ;
+   quelle image va sous quelle case : champ « demos » de chaque étape, dans contenu.js. */
 const Demo = (() => {
   const ICO = 'https://root75.github.io/campin-public/rat-de-ville/pas-a-pas/icones/';
   const FABLE = ['autrefois le rat de ville', 'invita le rat des champs,', 'd’une façon fort civile,', 'à des reliefs d’ortolans.'];
@@ -14,26 +16,27 @@ const Demo = (() => {
   // Le document de départ de la période 2 : titre, une strophe, l'auteur.
   const base = (t = '', s = '', a = '') => [L(TITRE, t), L(''), ...FABLE_MAJ.map(v => L(v, s)), L(''), L('Jean de La Fontaine', a)];
 
-  const DEMOS = [
-    [ // 1. Je crée et je nomme
+  /* Les animations, par clé : une par étape (etape + id de l’étape dans contenu.js), puis celles hors étape. */
+  const DEMOS = {
+    etape1: { titre: 'Je crée et je nomme', images: [
       { ecran: 'gaufre', cible: 'gaufre', legende: 'Je clique sur la gaufre, en haut à droite.' },
       { ecran: 'gaufre', menu: 1, cible: 'app-docs', legende: 'Je choisis Docs.' },
       { ecran: 'accueil', cible: 'vierge', legende: 'Je clique sur « Document vierge ».' },
       doc([L('')], { nom: 'Document sans titre', cible: 'nom', legende: 'Je clique sur « Document sans titre ».' }),
       doc([L('')], { nom: NOM, cible: 'nom', ok: 1, legende: 'Je tape la date à l’envers, le titre, mon prénom et mon nom.' })
-    ],
-    [ // 2. Je recopie la fable
+    ] },
+    etape2: { titre: 'Je recopie la fable', images: [
       doc([L(TITRE.toLowerCase())], { cible: 'page', legende: 'Je tape le titre, puis Entrée.' }),
       doc([L(TITRE.toLowerCase()), L(FABLE[0])], { cible: 'page', legende: 'Un vers = une ligne.' }),
       doc([L(TITRE.toLowerCase()), L(FABLE[0]), L(FABLE[1])], { cible: 'page', legende: 'Entrée au bout de chaque vers.' }),
       doc([L(TITRE.toLowerCase()), ...FABLE.map(v => L(v))], { cible: 'page', ok: 1, legende: 'Quatre vers : un repère. Je continue jusqu’au vers 28.' })
-    ],
-    [ // 3. Je structure
+    ] },
+    etape3: { titre: 'Je structure', images: [
       doc([L(TITRE.toLowerCase()), ...FABLE.map(v => L(v)), L(S2[0].toLowerCase())], { cible: 'L1', legende: 'Les vers commencent par une minuscule…' }),
       doc([L(TITRE), ...FABLE_MAJ.map(v => L(v, 'maj')), L(S2[0].toLowerCase())], { cible: 'L1', legende: '… je mets une majuscule au début de chaque vers.' }),
       doc([L(TITRE), ...FABLE_MAJ.map(v => L(v)), L(''), L(S2[0])], { cible: 'L5', ok: 1, legende: 'Je clique à la fin du vers 4, Entrée : une ligne vide sépare les strophes.' })
-    ],
-    [ // 4. Titre, texte, auteur
+    ] },
+    etape6: { titre: 'Titre, texte, auteur', images: [
       doc(base('sel'), { cible: 'L0', legende: 'Je sélectionne le titre.' }),
       doc(base('sel centre'), { cible: 'centrer', legende: 'Centrer (Ctrl + Maj + E).' }),
       doc(base('sel centre gras'), { cible: 'gras', legende: 'Gras (Ctrl + B).' }),
@@ -43,19 +46,19 @@ const Demo = (() => {
       doc(base('centre gras capitales', 'centre', 'sel droite'), { cible: 'droite', legende: 'L’auteur : Aligner à droite (Ctrl + Maj + R).' }),
       doc(base('centre gras capitales', 'centre', 'sel droite italique'), { cible: 'italique', legende: 'Italique (Ctrl + I).' }),
       doc(base('centre gras capitales', 'centre', 'droite italique souligne'), { cible: 'souligne', ok: 1, legende: 'Souligner (Ctrl + U). Trois zones, trois mises en forme !' })
-    ],
-    [ // 5. Une police par strophe
+    ] },
+    etape7: { titre: 'Une police par strophe', images: [
       doc(base('centre gras capitales', 'sel centre', 'droite italique souligne'), { cible: 'L2', legende: 'Je sélectionne SEULEMENT la strophe 1.' }),
       doc(base('centre gras capitales', 'sel centre', 'droite italique souligne'), { cible: 'item-Garamond', menu: { sous: 'police', items: ['Arial', 'Calibri', 'Garamond', 'Arial Black'], hi: 'Garamond' }, legende: 'Menu des polices ▸ Garamond.' }),
       doc(base('centre gras capitales', 'sel centre garamond', 'droite italique souligne'), { police: 'Garamond', cible: 'taille', legende: 'Je clique dans la case du nombre, je tape 14, Entrée.' }),
       doc(base('centre gras capitales', 'centre garamond grand', 'droite italique souligne'), { police: 'Garamond', taille: '14', cible: 'L2', ok: 1, legende: 'Seule la strophe 1 a changé. À la suivante !' })
-    ],
-    [ // 6. Mon bloc-notes
+    ] },
+    etape8: { titre: 'Mon bloc-notes', images: [
       doc([L('Mon bloc-notes', 'gras'), L('le tapis', 'sel'), L('…', 'sel'), L('…', 'sel')], { cible: 'puces', legende: 'Je sélectionne mes 3 lignes ▸ Liste à puces (Ctrl + Maj + 8).' }),
       doc([L('Mon bloc-notes', 'gras'), L('le tapis', 'puce'), L('…', 'puce'), L('…', 'puce'), L('Mes gestes', 'gras'), L('J’ai sélectionné le titre, puis Centrer.', 'sel'), L('…', 'sel')], { cible: 'numeros', legende: 'Mes gestes ▸ Liste numérotée (Ctrl + Maj + 7).' }),
       doc([L('Mon bloc-notes', 'gras'), L('le tapis', 'puce'), L('…', 'puce'), L('…', 'puce'), L('Mes gestes', 'gras'), L('J’ai sélectionné le titre, puis Centrer.', 'num'), L('…', 'num'), L('Pour changer une seule strophe, je…')], { cible: 'L7', ok: 1, legende: 'Et ma phrase pour finir.' })
-    ],
-    [ // 7. Je m'évalue et je remets
+    ] },
+    etape9: { titre: 'Je m’évalue et je remets', images: [
       doc(base('centre gras capitales', 'centre garamond', 'droite italique souligne'), { cible: 'orthographe', legende: 'Vérifier l’orthographe (Ctrl + Alt + X).' }),
       { ecran: 'classroom', cible: 'instructions', legende: 'Classroom ▸ ma classe ▸ Travaux et devoirs ▸ le devoir ▸ Afficher les instructions. Je relis ma grille.' },
       { ecran: 'classroom', cible: 'ajouter', legende: 'À droite, dans « Vos devoirs » : + Ajouter ou créer.' },
@@ -65,51 +68,25 @@ const Demo = (() => {
       { ecran: 'classroom', joint: 1, cible: 'remettre', legende: 'Mon document apparaît sous « Vos devoirs ». Joindre ne suffit pas : Remettre.' },
       { ecran: 'classroom', joint: 1, confirme: 1, cible: 'confirmer', legende: 'Je confirme : Remettre une deuxième fois.' },
       { ecran: 'classroom', joint: 1, remis: 1, cible: 'statut', ok: 1, legende: '« Vos devoirs » affiche Remis : c’est rendu. Bravo !' }
-    ]
-  ];
-
-  // Démos hors étape, appelées par leur nom (fiche.js : Demo.cree('cote', false)).
-  const AUTRES = {
-    fermer: [ // À la sonnerie : je ferme sans remettre (encadré sous chaque étape)
+    ] },
+    fermer: { titre: 'À la sonnerie : je ferme sans remettre', images: [ // À la sonnerie : je ferme sans remettre (encadré sous chaque étape)
       doc(base(), { cible: 'enregistre', legende: 'Je regarde : « Enregistré ». Docs garde tout seul.' }),
       doc(base(), { cible: 'onglet', ok: 1, legende: 'Je ferme l’onglet. Je ne remets PAS encore.' })
-    ],
-    retrouver: [ // Je reprends : je retrouve mon document dans Drive (encadré « Je reprends »)
+    ] },
+    retrouver: { titre: 'Je reprends : je retrouve mon document dans Drive', images: [ // Je reprends : je retrouve mon document dans Drive (encadré « Je reprends »)
       { ecran: 'gaufre', menu: 1, cible: 'app-drive', legende: 'Gaufre ▸ Drive.' },
       { ecran: 'drive', cible: 'recents', legende: 'Je clique sur « Récents », à gauche.' },
       { ecran: 'drive', cible: 'fichier', ok: 1, legende: 'Double-clic sur mon document : il s’ouvre.' }
-    ],
-    cote: [ // Le cours et mon document côte à côte : vue fractionnée de Chrome
+    ] },
+    cote: { titre: 'Le cours et mon document côte à côte', images: [ // Le cours et mon document côte à côte : vue fractionnée de Chrome
       { ecran: 'chrome', cible: 'ch-cours', legende: 'Je clique sur l’onglet du cours.' },
       { ecran: 'chrome', menu: 1, cible: 'ch-doc', legende: 'Clic droit sur l’onglet de mon document.' },
       { ecran: 'chrome', menu: 1, cible: 'item-split', legende: 'Je choisis « Ajouter l’onglet à une nouvelle vue fractionnée ».' },
       { ecran: 'chrome', split: 1, cible: 'vol-doc', ok: 1, legende: 'Le cours à gauche, mon document à droite. Je clique dans mon document pour écrire.' }
-    ]
+    ] }
   };
 
-  /* Sous quelle case va chaque image : PAR_CASE[étape][image] = numéro de la case (à partir de 0),
-     null = image gardée seulement dans « Toutes les animations ». Les démos hors étape vont sous la
-     case nommée dans AUTRES_PAR_CASE ('place de l'étape.case', comptées à partir de 1). */
-  const PAR_CASE = [
-    [0, 0, 0, 1, 1],                  // 1. créer (gaufre, Docs, vierge) · nommer
-    [0, 1, 1, 1],                     // 2. le titre · les vers 1 à 4
-    [0, 0, 1],                        // 3. majuscules · lignes vides
-    [0, 0, 1, 2, 3, 3, 4, 5, 6],      // 4. une image par geste
-    [0, 0, 0, 0],                     // 5. la strophe 1 (les autres : même geste)
-    [1, 2, 3],                        // 6. puces · gestes numérotés · phrase
-    [0, 12, 12, 12, 12, 12, 12, 12, 12] // 7. orthographe · remettre dans Classroom
-  ];
-  const AUTRES_PAR_CASE = { '1.3': 'cote' };
-  // Une démo par case : les images de cette case seulement (ou la démo hors étape), sinon null.
-  function images(i, j) {
-    const autre = AUTRES_PAR_CASE[(i + 1) + '.' + (j + 1)];
-    if (autre) return AUTRES[autre];
-    const t = (DEMOS[i] || []).filter((_, k) => PAR_CASE[i] && PAR_CASE[i][k] === j);
-    return t.length ? t : null;
-  }
-
-  const el = (tag, cls, t) => { const n = document.createElement(tag); if (cls) n.className = cls; if (t != null) n.textContent = t; return n; };
-  const c = (n, id) => { n.dataset.c = id; return n; };
+  const { el, c } = DemoLecteur;
   const ico = (nom, id) => { const b = c(el('span', 'md-btn'), id); const i = el('img'); i.src = ICO + nom + '.png'; i.alt = ''; b.append(i); return b; };
 
   function ecranDocs(f) {
@@ -202,51 +179,12 @@ const Demo = (() => {
     return e;
   }
 
-  function cree(i, auto = true, j) {
-    const frames = j != null ? images(i, j) : typeof i === 'string' ? AUTRES[i] : DEMOS[i]; if (!frames) return null;
-    const box = el('div', 'demo'); box.setAttribute('role', 'img');
-    const scene = el('div', 'demo-scene'), curseur = el('div', 'demo-curseur'), legende = el('p', 'demo-legende');
-    curseur.innerHTML = '<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M4 2l16 11-7 1.5L9.5 21z" fill="#111" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg>';
-    const ctrl = el('div', 'demo-ctrl'), prec = el('button', 'demo-b', '◀'), jouer = el('button', 'demo-b demo-jouer', '▶ Revoir'), suiv = el('button', 'demo-b', '▶');
-    [prec, jouer, suiv].forEach(b => { b.type = 'button'; });
-    prec.setAttribute('aria-label', 'Image précédente'); suiv.setAttribute('aria-label', 'Image suivante');
-    const points = el('span', 'demo-points');
-    ctrl.append(prec, points, suiv, jouer);
-    scene.append(curseur);
-    box.append(scene, legende, ctrl);
-    let k = 0, minuteur = null;
-    const calme = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    function montre(n) {
-      k = (n + frames.length) % frames.length; const f = frames[k];
-      scene.querySelectorAll('.md').forEach(x => x.remove());
-      const e = f.ecran === 'docs' ? ecranDocs(f) : ecranAutre(f); scene.prepend(e);
-      legende.textContent = (k + 1) + '. ' + f.legende; box.setAttribute('aria-label', 'Démonstration : ' + frames.map(x => x.legende).join(' '));
-      points.replaceChildren(...frames.map((_, j) => el('span', j === k ? 'on' : '')));
-      box.classList.toggle('demo-ok', !!f.ok);
-      const cible = e.querySelector('[data-c="' + f.cible + '"]');
-      requestAnimationFrame(() => {
-        const m = e.querySelector('.md-menu'), ancre = m && e.querySelector('[data-c="' + (f.menu.sous || 'm-format') + '"]');
-        if (ancre) { const a = e.getBoundingClientRect(), r = ancre.getBoundingClientRect(); m.style.left = Math.min(r.left - a.left, a.width - 170) + 'px'; m.style.top = (r.bottom - a.top + 4) + 'px'; }
-        if (!cible) return;
-        const a = scene.getBoundingClientRect(), b = cible.getBoundingClientRect();
-        curseur.style.transform = 'translate(' + (b.left - a.left + Math.min(b.width / 2, 40)) + 'px,' + (b.top - a.top + b.height / 2) + 'px)';
-        cible.classList.add('md-vise');
-        setTimeout(() => cible.classList.add('md-clic'), calme ? 0 : 700);
-      });
-    }
-    function stop() { clearTimeout(minuteur); minuteur = null; jouer.textContent = '▶ Revoir'; }
-    function joue(depuis = 0) {
-      stop(); jouer.textContent = '⏸ Pause'; montre(depuis);
-      const suite = () => { if (k >= frames.length - 1) { stop(); return; } minuteur = setTimeout(() => { montre(k + 1); suite(); }, 2600); };
-      suite();
-    }
-    prec.addEventListener('click', () => { stop(); montre(k - 1); });
-    suiv.addEventListener('click', () => { stop(); montre(k + 1); });
-    jouer.addEventListener('click', () => { minuteur ? stop() : joue(k >= frames.length - 1 ? 0 : k); });
-    // Lancée seulement une fois visible ; immobile si l'élève a demandé moins d'animations.
-    setTimeout(() => { montre(0); if (!calme && auto) joue(0); }, 60);
-    box.stop = stop; box.joue = () => { if (!calme) joue(0); else montre(0); };
-    return box;
-  }
-  return { cree, pourCase: (i, j, auto) => cree(i, auto, j), aCase: (i, j) => !!images(i, j), nombre: DEMOS.length };
+  /* Le lecteur est commun (pas-a-pas/demo-lecteur.js). Ici : le menu déroulant de Docs se place
+     sous son ancre (menu.sous, sinon le menu Format). */
+  const ecran = f => f.ecran === 'docs' ? ecranDocs(f) : ecranAutre(f);
+  const Lect = DemoLecteur.lecteur({ demos: DEMOS, ecran, place: (e, f) => {
+    const m = e.querySelector('.md-menu'), ancre = m && e.querySelector('[data-c="' + (f.menu.sous || 'm-format') + '"]');
+    if (ancre) DemoLecteur.sousAncre(e, m, ancre, 170);
+  } });
+  return { cree: Lect.cree, cles: Lect.cles };
 })();

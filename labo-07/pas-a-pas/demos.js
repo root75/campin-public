@@ -1,5 +1,6 @@
-/* Labo 07 — démos animées « Regarde comment faire ». Même lecteur que le Rat de ville :
-   une image = un état de l'écran maquetté + l'élément que la souris vise + une légende.
+/* Labo 07 — démos animées « Regarde comment faire » : seulement les maquettes et les images.
+   Le lecteur (scène, curseur, ◀ ▶) est commun : pas-a-pas/demo-lecteur.js, chargé avant ce fichier.
+   Une image = un état de l'écran maquetté + l'élément que la souris vise + une légende.
    Maquettes Windows (Démarrer, Gestionnaire des tâches, capture, Explorateur OneDrive,
    Alt + Tab, moniteur), Docs, Chrome et Classroom. Valeurs et noms fictifs ; rien n'est enregistré.
    Le défi final n'a pas d'animation : il reste une situation à résoudre seul. */
@@ -84,8 +85,7 @@ const Demo = (() => {
   };
   /* Quelle image va sous quelle case : champ `demos` de chaque bloc, dans fiche.js (moteur commun blocs.js). */
 
-  const el = (tag, cls, t) => { const n = document.createElement(tag); if (cls) n.className = cls; if (t != null) n.textContent = t; return n; };
-  const c = (n, id) => { n.dataset.c = id; return n; };
+  const { el, c } = DemoLecteur;
   const menu = m => {
     const box = el('div', 'md-menu'); box.dataset.sous = m.sous || '';
     m.items.forEach(t => { const li = c(el('div', 'md-item', t), 'item-' + t); if (t === m.hi) li.classList.add('hi'); box.append(li); });
@@ -232,70 +232,21 @@ const Demo = (() => {
     return e;
   }
 
-  /* Le lecteur : ◀ ▶, points, Revoir / Pause. Immobile si l'élève a demandé moins d'animations. */
-  /* images : numéros des images à montrer (une case), sinon toute l'animation. */
-  function cree(cle, auto = true, images) {
-    const d = DEMOS[cle]; if (!d) return null; const frames = images ? images.map(n => d.images[n]).filter(Boolean) : d.images; if (!frames.length) return null;
-    const box = el('div', 'demo'); box.setAttribute('role', 'img'); box.dataset.demo = cle;
-    const scene = el('div', 'demo-scene'), curseur = el('div', 'demo-curseur'), legende = el('p', 'demo-legende');
-    curseur.innerHTML = '<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M4 2l16 11-7 1.5L9.5 21z" fill="#111" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg>';
-    const ctrl = el('div', 'demo-ctrl'), prec = el('button', 'demo-b', '◀'), jouer = el('button', 'demo-b demo-jouer', '▶ Revoir'), suiv = el('button', 'demo-b', '▶');
-    [prec, jouer, suiv].forEach(b => { b.type = 'button'; });
-    prec.setAttribute('aria-label', 'Image précédente'); suiv.setAttribute('aria-label', 'Image suivante');
-    const points = el('span', 'demo-points');
-    ctrl.append(prec, points, suiv, jouer); scene.append(curseur); box.append(scene, legende, ctrl);
-    let k = 0, minuteur = null;
-    const calme = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    function montre(n) {
-      k = (n + frames.length) % frames.length; const f = frames[k];
-      scene.querySelectorAll('.md').forEach(x => x.remove());
-      const e = ecran(f); scene.prepend(e);
-      legende.textContent = (k + 1) + '. ' + f.legende;
-      box.setAttribute('aria-label', 'Démonstration : ' + frames.map(x => x.legende).join(' '));
-      points.replaceChildren(...frames.map((_, j) => el('span', j === k ? 'on' : '')));
-      box.classList.toggle('demo-ok', !!f.ok);
-      requestAnimationFrame(() => {
-        const m = e.querySelector('.md-menu'), ancre = m && m.dataset.sous && e.querySelector('[data-c="' + m.dataset.sous + '"]');
-        if (ancre) { const a = e.getBoundingClientRect(), r = ancre.getBoundingClientRect(); m.style.left = Math.max(4, Math.min(r.left - a.left, a.width - 190)) + 'px'; m.style.top = (r.bottom - a.top + 4) + 'px'; }
-        const cible = e.querySelector('[data-c="' + f.cible + '"]'); if (!cible) return;
-        const a = scene.getBoundingClientRect(), b = cible.getBoundingClientRect();
-        curseur.style.transform = 'translate(' + (b.left - a.left + Math.min(b.width / 2, 40)) + 'px,' + (b.top - a.top + b.height / 2) + 'px)';
-        cible.classList.add('md-vise');
-        setTimeout(() => cible.classList.add('md-clic'), calme ? 0 : 700);
-      });
-    }
-    function stop() { clearTimeout(minuteur); minuteur = null; jouer.textContent = '▶ Revoir'; }
-    function joue(depuis = 0) {
-      stop(); jouer.textContent = '⏸ Pause'; montre(depuis);
-      const suite = () => { if (k >= frames.length - 1) { stop(); return; } minuteur = setTimeout(() => { montre(k + 1); suite(); }, 2800); };
-      suite();
-    }
-    prec.addEventListener('click', () => { stop(); montre(k - 1); });
-    suiv.addEventListener('click', () => { stop(); montre(k + 1); });
-    jouer.addEventListener('click', () => { minuteur ? stop() : joue(k >= frames.length - 1 ? 0 : k); });
-    setTimeout(() => { montre(0); if (!calme && auto) joue(0); }, 60);
-    box.stop = stop; box.joue = () => { if (!calme) joue(0); else montre(0); };
-    return box;
-  }
-
-  /* Une seule animation joue à la fois dans le volet « Toutes les animations ». */
-  let actives = [];
-  function stopTout() { actives.forEach(b => b.stop()); actives = []; }
+  /* Le lecteur et le volet sont communs (pas-a-pas/demo-lecteur.js). Ici : le menu déroulant de Docs
+     se place sous le menu de la barre qui l'ouvre (data-sous). */
+  const L = DemoLecteur.lecteur({ demos: DEMOS, ecran, pas: 2800, place: e => {
+    const m = e.querySelector('.md-menu'), ancre = m && m.dataset.sous && e.querySelector('[data-c="' + m.dataset.sous + '"]');
+    if (ancre) DemoLecteur.sousAncre(e, m, ancre, 190, 4);
+  } });
 
   /* Le volet « Toutes les animations » : un bouton par animation, sans changer d'étape. */
   function volet(conteneur) {
     const liste = el('div', 'demo-liste'), vue = el('div', 'demo-vue');
-    let enCours = null;
-    Object.keys(DEMOS).forEach(cle => {
-      const b = el('button', 'btn vide', '👀 ' + DEMOS[cle].titre); b.type = 'button';
-      b.addEventListener('click', () => { stopTout(); if (enCours) enCours.stop(); enCours = cree(cle, true); vue.replaceChildren(enCours); });
-      liste.append(b);
-    });
     conteneur.append(liste, vue);
-    conteneur.addEventListener('toggle', () => { if (!conteneur.open && enCours) enCours.stop(); });
+    DemoLecteur.volet({ details: conteneur, liste, vue, cree: L.cree, entrees: Object.keys(DEMOS).map(cle => [cle, '👀 ' + DEMOS[cle].titre]) });
   }
 
-  return { cree, volet, stopTout, cles: Object.keys(DEMOS) };
+  return { cree: L.cree, volet, cles: L.cles };
 })();
 /* Le volet « Toutes les animations », dans l'en-tête de la fiche. */
 (() => { const v = document.getElementById('demo-tout'); if (v) Demo.volet(v); })();

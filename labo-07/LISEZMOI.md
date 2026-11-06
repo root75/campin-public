@@ -64,7 +64,8 @@ contrôle du professeur. Le bouton du moniteur est présenté une fois au groupe
 
 `pas-a-pas/demos.js` + `demos.css` : animations « 👀 Regarde comment faire » (maquettes Windows, Docs,
 Chrome, Classroom ; valeurs fictives), placées **sous chaque case** par le moteur commun `blocs.js` (champ `demos`
-des blocs, depuis le 06/11/2026),
+des blocs, depuis le 06/11/2026), jouées par le lecteur commun `../pas-a-pas/demo-lecteur.js` (`demos.js` ne garde
+que les maquettes et les images),
 et volet « Toutes les animations » en tête de fiche. Pas d’animation pour le défi final.
 QCM de l’étape 2 et ordre de l’étape 5 : trois variantes (`BLOCS[i].variantes`), tirées par l’adresse de
 l’élève (`tirage`, même hachage que `Code.gs`). Étape 1 : consigne « rapport à côté du cours » (vue

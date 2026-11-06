@@ -5,6 +5,9 @@
    Le serveur lit les cases dans pas-a-pas/cours.json (« cases ») : les garder égales à ce fichier
    (essai-rat.js le vérifie).
    Une case = une action. « icones » : index de l'action → icône(s) de icones/ affichée(s) devant.
+   « demos » : même format que le moteur commun blocs.js — "N" (N-ième case, à partir de 1) :
+   [clé de l'animation dans demos.js, numéros des images à montrer sous cette case].
+   Une image absente de toutes les cases reste visible dans « Toutes les animations ».
  */
 const ETAPES_RAT = [
   {
@@ -12,6 +15,11 @@ const ETAPES_RAT = [
     "titre": "Je crée et je nomme",
     "min": 5,
     "periode": 1,
+    "demos": {
+      "1": ["etape1", [0, 1, 2]],
+      "2": ["etape1", [3, 4]],
+      "3": ["cote", [0, 1, 2, 3]]
+    },
     "actions": [
       "Menu Google (la gaufre) ▸ Docs ▸ Créer un document ▸ Vierge.",
       "Je clique sur « Document sans titre » et je tape : AAAAMMJJ Le rat de ville – Prénom Nom. AAAAMMJJ : année, mois, jour de la date d’aujourd’hui.",
@@ -24,6 +32,10 @@ const ETAPES_RAT = [
     "min": 30,
     "periode": 1,
     "consigne": "Un vers = une ligne : touche Entrée au bout de chaque vers. Je ne laisse PAS de ligne vide : les 28 vers se suivent. Je séparerai les strophes à l’étape 3.",
+    "demos": {
+      "1": ["etape2", [0]],
+      "2": ["etape2", [1, 2, 3]]
+    },
     "actions": [
       "Je tape le titre.",
       "Je recopie les vers 1 à 4.",
@@ -62,6 +74,10 @@ const ETAPES_RAT = [
     "titre": "Je structure",
     "min": 10,
     "periode": 1,
+    "demos": {
+      "1": ["etape3", [0, 1]],
+      "2": ["etape3", [2]]
+    },
     "actions": [
       "Je mets une majuscule à la première lettre de chaque vers.",
       "Je clique à la fin du vers 4 et j’appuie sur Entrée : une ligne vide apparaît. Je fais pareil après les vers 8, 12, 16, 20 et 24 : j’obtiens 7 strophes."
@@ -81,6 +97,15 @@ const ETAPES_RAT = [
     "titre": "Titre, texte, auteur",
     "min": 10,
     "periode": 2,
+    "demos": {
+      "1": ["etape6", [0, 1]],
+      "2": ["etape6", [2]],
+      "3": ["etape6", [3]],
+      "4": ["etape6", [4, 5]],
+      "5": ["etape6", [6]],
+      "6": ["etape6", [7]],
+      "7": ["etape6", [8]]
+    },
     "actions": [
       "Je sélectionne le titre. Je clique sur Centrer (Ctrl + Maj + E).",
       "Le titre toujours sélectionné, je clique sur Gras (Ctrl + B).",
@@ -98,6 +123,9 @@ const ETAPES_RAT = [
     "min": 12,
     "periode": 2,
     "consigne": "Pour chaque strophe : je la sélectionne seule, je choisis la police dans le menu des polices, puis je tape la taille dans la case du nombre.",
+    "demos": {
+      "1": ["etape7", [0, 1, 2, 3]]
+    },
     "actions": [
       "Je sélectionne seulement la strophe 1 : Garamond, taille 14.",
       "Je sélectionne seulement la strophe 2 : Garamond, taille 14.",
@@ -114,6 +142,11 @@ const ETAPES_RAT = [
     "titre": "Mon bloc-notes",
     "min": 12,
     "periode": 2,
+    "demos": {
+      "2": ["etape8", [0]],
+      "3": ["etape8", [1]],
+      "4": ["etape8", [2]]
+    },
     "actions": [
       "Sous la fable, je laisse deux lignes vides et j’écris : Mon bloc-notes. Puis, dans l’ordre :",
       "Trois choses que l’on trouve au festin du rat de ville, en liste à puces (Ctrl + Maj + 8).",
@@ -148,6 +181,10 @@ const ETAPES_RAT = [
     "min": 10,
     "periode": 2,
     "consigne": "Je vérifie une chose par case, dans mon document. Si une chose manque, je la corrige avant de cocher.",
+    "demos": {
+      "1": ["etape9", [0]],
+      "13": ["etape9", [1, 2, 3, 4, 5, 6, 7, 8]]
+    },
     "actions": [
       "Je clique sur Vérifier l’orthographe (Ctrl + Alt + X) et je corrige.",
       "Je vérifie le nom : AAAAMMJJ Le rat de ville – Prénom Nom.",

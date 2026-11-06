@@ -78,7 +78,7 @@ function affiche(){
   const liste = document.getElementById("coince-liste"); liste.replaceChildren();
   document.getElementById("coince").open = false;
   if(demoCase) demoCase.stop(), demoCase = null;
-  if(ici >= BLOCS.length){ if(typeof Demo!=="undefined" && Demo.stopTout) Demo.stopTout(); fin(z); return; }
+  if(ici >= BLOCS.length){ fin(z); return; }
   const B = blocVu(ici);
 
   const num = el("div","numero");
@@ -102,7 +102,8 @@ function affiche(){
     z.append(el("p","but",B.veux));
     /* Démo animée « Regarde comment faire ». Deux façons, au choix de la fiche :
        - un bloc porte `demos` (Labo 07) : une animation sous chaque case qu'elle montre (voir demosSousCases) ;
-       - sinon, une démo par étape avant les cases : Demo.pour (Python, pas-a-pas/demos-python.js). */
+       - sinon, une démo par étape avant les cases : Demo.pour (Python, pas-a-pas/demos-python.js).
+       Le lecteur lui-même est commun à tous les cours : pas-a-pas/demo-lecteur.js. */
     const demo = !B.demos && typeof Demo!=="undefined" && Demo.pour ? Demo.pour(ici) : null;
     if(demo) z.append(demo);
     z.append(el("div","faire",B.fais));
@@ -163,7 +164,7 @@ function affiche(){
      demos: { "3": ["gestionnaire", [4]], "incident 2.4": ["fenetres", [3]] }
    Clé "N" = N-ième case de la consigne (à partir de 1) ; clé "classe K.N" = N-ième case du K-ième
    élément .classe du bloc (cartes, encarts). Valeur = [clé de l'animation, numéros des images].
-   Il suffit que Demo.cree(cle, auto, images) existe (le lecteur du cours).
+   Il suffit que Demo.cree(cle, auto, images) existe : DemoLecteur.lecteur(…).cree (pas-a-pas/demo-lecteur.js).
    Une seule animation ouverte : celle de la première case à l'arrivée ; cocher une case ouvre celle
    de la case suivante qui en a une, dans la même liste. */
 let demoCase = null;

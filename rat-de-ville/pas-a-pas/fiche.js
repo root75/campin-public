@@ -127,21 +127,25 @@ function progression(){
   $('progres-etapes').textContent=etapes+' / '+ETAPES_RAT.length+' étapes';
   const r=faites/total;$('bulle').textContent=BULLES[r===1?5:r>=.8?4:r>=.5?3:r>=.2?2:r>0?1:0];
 }
-/* « Regarde comment faire » sous chaque case : une démo par case, gardée d'un affichage à l'autre
-   (cocher ne la relance pas). Une seule ouverte à la fois ; en arrivant sur une étape, celle de la
-   première case pas encore cochée s'ouvre et joue. */
+/* « Regarde comment faire » sous chaque case : champ « demos » de l'étape (contenu.js), même format
+   que le moteur commun blocs.js ; le lecteur est pas-a-pas/demo-lecteur.js. Une démo par case, gardée
+   d'un affichage à l'autre (cocher ne la relance pas, les cases restent enregistrées). Une seule ouverte
+   à la fois ; en arrivant sur une étape, celle de la première case pas encore cochée s'ouvre et joue. */
 const demos={},ouverts=new Set();let etapeVue=null;
+const demoDe=(i,j)=>typeof Demo!=='undefined'&&ETAPES_RAT[i].demos&&ETAPES_RAT[i].demos[j+1];
 function entreEtape(i,b){
   if(etapeVue===i)return;etapeVue=i;
   ouverts.forEach(c=>demos[c]&&demos[c].stop());ouverts.clear();
   if(typeof Demo==='undefined')return;
-  const j=b.actions.findIndex((_,k)=>!etat.cases[b.id+'.'+(k+1)]&&Demo.aCase(i,k));
+  const j=b.actions.findIndex((_,k)=>!etat.cases[b.id+'.'+(k+1)]&&demoDe(i,k));
   if(j>=0&&!repriseVue)ouverts.add(i+'.'+j); // pas deux animations à la fois avec l'encadré « Je reprends »
 }
 function demoCase(i,j){
-  if(typeof Demo==='undefined'||!Demo.aCase(i,j))return null;
-  const cle=i+'.'+j,d=txt('details','demo-case');d.dataset.demo=cle;
-  if(!demos[cle])demos[cle]=Demo.pourCase(i,j,ouverts.has(cle));
+  const v=demoDe(i,j);if(!v)return null;
+  const cle=i+'.'+j;
+  if(!demos[cle])demos[cle]=Demo.cree(v[0],ouverts.has(cle),v[1]);
+  if(!demos[cle])return null;
+  const d=txt('details','demo-case');d.dataset.demo=cle;
   d.open=ouverts.has(cle);d.append(txt('summary',null,'👀 Regarde comment faire'),demos[cle]);
   d.addEventListener('toggle',()=>{
     if(d.open&&!ouverts.has(cle)){ouverts.forEach(c=>{demos[c].stop();const x=document.querySelector('details.demo-case[data-demo="'+c+'"]');if(x)x.open=false;});ouverts.clear();ouverts.add(cle);demos[cle].joue();}
@@ -178,13 +182,10 @@ function reprise(){
 }
 /* La première étape pas encore terminée (sa place), sinon la dernière. */
 function aReprendre(){const k=ETAPES_RAT.findIndex((_,j)=>!etat.etapes[j]);return k<0?ETAPES_RAT.length-1:k;}
-/* Volet « Toutes les animations » : retrouver n'importe quel tuto sans changer d'étape. */
-(function(){const liste=$('tutos-liste'),vue=$('tutos-vue');if(!liste||typeof Demo==='undefined')return;let enCours=null;
-  const tutos=ETAPES_RAT.map((e,i)=>[i,(i+1)+'. '+e.titre]).concat([['retrouver','Je retrouve mon document (reprise)'],['cote','Le cours et mon document côte à côte'],['fermer','À la sonnerie : je ferme sans remettre']]);
-  tutos.forEach(([cle,titre])=>{const b=txt('button','btn vide',titre);b.type='button';b.setAttribute('aria-pressed','false');
-    b.addEventListener('click',()=>{if(enCours)enCours.stop();liste.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));
-      enCours=Demo.cree(cle,false);const t=txt('p','demo-titre','👀 '+titre);vue.replaceChildren(t,enCours);setTimeout(()=>enCours.joue(),80);});liste.append(b);});
-  $('tutos').addEventListener('toggle',()=>{if(!$('tutos').open&&enCours)enCours.stop();});})();
+/* Volet « Toutes les animations » (pas-a-pas/demo-lecteur.js) : retrouver n'importe quel tuto sans changer d'étape. */
+(function(){const liste=$('tutos-liste'),vue=$('tutos-vue');if(!liste||typeof Demo==='undefined')return;
+  DemoLecteur.volet({details:$('tutos'),liste,vue,titre:true,cree:Demo.cree,
+    entrees:ETAPES_RAT.map((e,i)=>['etape'+e.id,(i+1)+'. '+e.titre]).concat([['retrouver','Je retrouve mon document (reprise)'],['cote','Le cours et mon document côte à côte'],['fermer','À la sonnerie : je ferme sans remettre']])});})();
 $('aide-btn').addEventListener('click',()=>sauve({type:etat.aide?'aide-fin':'aide',etape:etat.aide?etat.aide.bloc:etat.position}));
 $('compact').addEventListener('click',()=>{const actif=document.body.classList.toggle('compact');$('compact').setAttribute('aria-pressed',String(actif));});
 const boutons=[['','↶ Annuler (dès que je me trompe)','Ctrl + Z','Barre d’outils, tout à gauche : la flèche ↶'],['centrer','Centrer','Ctrl + Maj + E','Bouton « Aligner » ▾ de la barre d’outils'],['droite','Aligner à droite','Ctrl + Maj + R','Même bouton « Aligner » ▾'],['gras','Gras','Ctrl + B','Barre d’outils, après la taille'],['italique','Italique','Ctrl + I','Juste à côté du gras'],['souligne','Souligner','Ctrl + U','Juste à côté de l’italique'],['','MAJUSCULES','—','Format ▸ Texte ▸ Minuscules/majuscules ▸ MAJUSCULES'],['police','Changer la police','—','Le menu qui affiche le nom de la police'],['taille','Changer la taille','—','La case du nombre, avec – et +'],['puces','Liste à puces','Ctrl + Maj + 8','Barre d’outils, à droite'],['numeros','Liste numérotée','Ctrl + Maj + 7','Juste à côté des puces'],['orthographe','Vérifier l’orthographe','Ctrl + Alt + X','Barre d’outils, à gauche, à côté de l’imprimante']];
