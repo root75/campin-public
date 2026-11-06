@@ -1,7 +1,7 @@
 # Suivi du formatif « Le rat de ville »
 
-Entrée du catalogue : `rat-de-ville-formatif`, 9 étapes sur deux périodes.
-Les 48 petites cases (une action ou une vérification par case) déclarent les actions terminées ; elles ne corrigent pas la copie.
+Entrée du catalogue : `rat-de-ville-formatif`, 7 étapes sur deux périodes (9 jusqu’au 6/11).
+Les 45 petites cases (une action ou une vérification par case) déclarent les actions terminées ; elles ne corrigent pas la copie.
 Navigation libre, copie par groupes de quatre vers (strophes séparées à l’étape 3) ; grille complète et colonne « Moi » en étape finale (bouton 📋). Plus de repère collectif depuis le 4/11 (voir LIVRAISON-RAT.md).
 À l’étape 8, chaque partie du bloc-notes dispose d’une explication à déplier :
 un élément du festin en exemple, un geste détaillé en exemple et un début de phrase
@@ -75,18 +75,36 @@ plus de démo d'étape en haut. Aux étapes 1 et 5, la vue fractionnée devient 
 `CASES_RAT = [3, 9, 2, 1, 2, 7, 7, 4, 13]`). Les étapes 4 et 5 se font à la sonnerie et au début
 de la période 2, où que l'élève en soit : rappel sur les autres étapes, bouton de reprise à l'étape 5.
 
+## Étapes 4 et 5 retirées : « À la sonnerie » et « Je reprends » (6 novembre 2026)
+
+Fermer et rouvrir ne sont plus des étapes : les élèves ne les faisaient pas au même moment.
+- Sous chaque étape, l’encadré **🔔 À la sonnerie, où que j’en sois** (fermer l’onglet, ne pas
+  remettre, animation) et le lien « Je reviens après la sonnerie : je reprends mon document ».
+- En haut, l’encadré **▶ Je reprends mon travail** (Drive ▸ Récents, vue fractionnée, deux
+  animations, bouton « C’est fait : je reprends à l’étape N »). Il s’affiche seul quand l’élève
+  rouvre le cours avec déjà des cases cochées et plus de 5 minutes sans action. Pas de case.
+- **7 étapes, 45 cases.** Chaque étape garde son **id** interne (1, 2, 3, 6, 7, 8, 9 dans
+  `contenu.js`) : ce sont les clés des cases et du Journal, rien n’est perdu. Le numéro affiché
+  est la place (1 à 7). Une ancienne place 4 ou 5 envoie à la première étape non finie.
+- Les étapes terminées sont calculées par la fiche et le tableau, depuis les cases.
+- Le serveur lit les cases dans `pas-a-pas/cours.json` (`cases`, `criteres`) : la prochaine
+  modification des étapes ou des cases ne demande plus de redéployer Code.gs.
+- La fiche papier (`construire_rat.js`, 9 étapes) n’est pas modifiée.
+
 ## Lecteur commun et format `demos` (6 novembre 2026)
 
 Le lecteur d'animations (scène, curseur, légende, ◀ ▶ Revoir, prefers-reduced-motion) et le volet
 « Toutes les animations » sont communs à tous les cours : `pas-a-pas/demo-lecteur.js`, chargé avant
 `demos.js`. `demos.js` ne garde que les maquettes (Docs, Drive, Classroom, Chrome) et les images,
-rangées par clé (`etape1` à `etape9`, `cote`). Le placement sous les cases est au **même format que
-le moteur commun** `blocs.js` : dans `contenu.js`, chaque étape porte par exemple
+rangées par clé : `etape` + l'`id` de l'étape (`etape1`, `etape2`, `etape3`, `etape6` à `etape9`),
+puis `fermer`, `retrouver` et `cote`. Le placement sous les cases est au **même format que le moteur
+commun** `blocs.js` : dans `contenu.js`, chaque étape porte par exemple
 `"demos": { "1": ["etape1", [0, 1, 2]], "3": ["cote", [0, 1, 2, 3]] }` (case N, à partir de 1 →
-animation, numéros des images). Les images 1 à 8 de l'étape 9 vont sous la case 13 (remise).
+animation, numéros des images). Les images 1 à 8 de la dernière étape vont sous sa case 13 (remise).
+Les encadrés « À la sonnerie » et « Je reprends » ouvrent `fermer` et `retrouver` par leur nom.
 
-Le Rat garde son propre `fiche.js` : cases enregistrées une par une (`suiviFormatif`), navigation
-libre, grille « Moi » en étape finale, étapes 4 et 5 à la sonnerie. `blocs.js` est un parcours
-linéaire (bloc validé → bloc suivant, `noter`) : y passer changerait ce que voient les élèves.
-Différence assumée avec `blocs.js` : cocher une case n'ouvre pas l'animation suivante ; l'étape est
-redessinée et l'animation ouverte reste où elle est.
+Le Rat garde son propre `fiche.js` : cases enregistrées une à une (`suiviFormatif`), navigation
+libre, grille « Moi » en étape finale, encadrés de sonnerie et de reprise. `blocs.js` est un
+parcours linéaire (bloc validé → bloc suivant, `noter`) : y passer changerait ce que voient les
+élèves. Différence assumée avec `blocs.js` : cocher une case n'ouvre pas l'animation suivante ;
+l'étape est redessinée et l'animation ouverte reste où elle est.

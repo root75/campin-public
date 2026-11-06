@@ -92,7 +92,7 @@ function dessine(d){
 
   if(globalThis.FormatifProf) {
     FormatifProf.presentation($("cours").value === 'rat-de-ville-formatif');
-    if($("cours").value === 'rat-de-ville-formatif') { FormatifProf.dessine(d); syntheses(d, d.declaratif ? d.eleves : [], 9); return; }
+    if($("cours").value === 'rat-de-ville-formatif') { FormatifProf.dessine(d); syntheses(d, d.declaratif ? d.eleves : [], ETAPES_RAT.length, ETAPES_RAT.map(e=>e.id)); return; }
   }
   if(!$("guide-messagerie")){const lien=txt("a","btn vide","Repères professeur — Messagerie 01");lien.id="guide-messagerie";lien.href='https://script.google.com/a/macros/arcampin.be/s/AKfycbyOPTaq-L1PuittB1rkkiL9OOtShFc2WpiD8H_pH_INaw9ePWenCzhlIPlHu4zBOgLk/exec?vue=guide-prof';lien.target='_blank';lien.rel='noopener';$("guide-actions").append(lien);}
   if(!$("messagerie-recommencer")){const b=txt("button","btn vide","Recommencer Messagerie 01 pour tous");b.type='button';b.id='messagerie-recommencer';b.addEventListener('click',()=>{if(!confirm('Remettre tous les participants de Messagerie 01 au début ? L’historique est conservé.'))return;b.disabled=true;google.script.run.withSuccessHandler(r=>{b.disabled=false;$("maj").textContent=r.repris+' participants remis au début.';charge();}).withFailureHandler(err=>{b.disabled=false;erreur(err);}).noter('messagerie-1',{type:'prof-recommencer'});});$("gestion-actions").append(b);}
@@ -122,8 +122,7 @@ function dessine(d){
     const td = (cls,t) => { const c=txt("td",cls,t); tr.append(c); return c; };
     const n1 = td("nom", nom(e.email)); n1.title = e.email;
     if(SUIVI&&d.reprisesParSuivi&&d.peutReprendre){const cours=$("cours").value,seance=choisie();const r=txt("button","btn vide","Recommencer");r.type="button";r.setAttribute("aria-label","Faire recommencer "+nom(e.email));r.addEventListener("click",()=>{if(!confirm("Faire recommencer ce cours à "+nom(e.email)+" ? L’historique est conservé."))return;r.disabled=true;google.script.run.withSuccessHandler(()=>{charge();}).withFailureHandler(err=>{r.disabled=false;erreur(err);}).noter(cours,{type:'prof-reprise',email:e.email,debut:seance.debut});});n1.append(r);}
-    // « Je m'occupe » : la récompense, ouverte une heure pour cet élève après vérification de son travail.
-    if(SUIVI){const fin=Number(e.recompense)||0;const r=txt("button","btn vide",fin?"🎁 jusqu’à "+new Date(fin).toLocaleTimeString("fr-BE",{hour:"2-digit",minute:"2-digit"})+" · retirer":"🎁 Je m’occupe");r.type="button";r.setAttribute("aria-label",(fin?"Retirer Je m’occupe à ":"Ouvrir Je m’occupe pour ")+nom(e.email));r.addEventListener("click",()=>{r.disabled=true;google.script.run.withSuccessHandler(()=>{charge();}).withFailureHandler(err=>{r.disabled=false;erreur(err);}).recompenser(e.email,!fin);});n1.append(r);}
+    n1.append(caseRecompense(e));
     const h = td("hum", e.humeur ? e.humeur.split(" ")[0] : ""); if(e.humeur) h.title = e.humeur;
     const b = txt("div","barre");
     for(let i=0;i<n;i++){ const s=txt("span"); s.className = i<e.atteint ? "fait" : (i===e.atteint && !e.fini ? "ici" : ""); b.append(s); }
@@ -163,18 +162,19 @@ function dessine(d){
 
 /* Les trois encadrés communs à tous les cours : où le groupe bute, son humeur, ses avis.
    Cours déclaratif (formatif) : « où ça bute » compte les élèves qui ont sonné la cloche à chaque étape. */
-function syntheses(d, el, n){
+/* ids (formatif) : la jauge k lit parBloc[ids[k]] et s'affiche « Étape k+1 » ; sinon blocs 1 à n. */
+function syntheses(d, el, n, ids){
   $("blocs-titre").textContent = d.declaratif ? "Où le groupe bute — cloches par étape" : "Où le groupe bute — erreurs par bloc";
   $("blocs-astuce").textContent = d.declaratif
     ? "Nombre d’élèves qui ont sonné la cloche 🔔 à chaque étape sur la période choisie. Clic sur « Étape N » : la fiche s’ouvre à cette étape, en aperçu."
     : "Clic sur « Bloc N » (ici ou dans la colonne Bloc) : la fiche s’ouvre à ce bloc, en aperçu, pour la projeter. Rien n’y est enregistré. Chaque élève a sa variante de la question : survoler la jauge donne les erreurs par variante.";
   const zb = $("blocs"); zb.replaceChildren();
   const max = Math.max(1, ...Object.values(d.parBloc));
-  for(let i=1;i<=n;i++){
-    const v = d.parBloc[i] || 0;
+  for(let k=1;k<=n;k++){
+    const i = ids ? ids[k-1] : k, v = d.parBloc[i] || 0;
     const r = txt("div","bl"); const j = txt("div","jauge"); j.style.width = (v/max*100)+"%"; if(!v) j.style.opacity=".15";
     const w = txt("div"); w.append(j);
-    r.append(lienBloc(i, (d.declaratif ? "Étape " : "Bloc ")+i), w, txt("span","num",v)); zb.append(r);
+    r.append(lienBloc(i, (d.declaratif ? "Étape " : "Bloc ")+k), w, txt("span","num",v)); zb.append(r);
     /* Cours à variantes : le détail au survol. Une variante qui fait bien plus d'erreurs que les autres est mal écrite. */
     const dv = d.variantes && d.variantes[i];
     if(dv){ r.classList.add("detail"); w.title = r.lastChild.title = dv.map(x=>"Variante "+x.v+" : "+x.erreurs+" erreur"+(x.erreurs>1?"s":"")+", "+x.eleves+" élève"+(x.eleves>1?"s":"")).join(" · "); }
@@ -598,6 +598,24 @@ function dessineClasses(d){
   $("panneau-classes").hidden = false;
   $("eleves-statut").textContent="Liste à jour. Les changements de classe sont enregistrés après confirmation du serveur.";
 }
+/* « Je m'occupe » : une case 🎁 à côté du nom. Cochée = la récompense est ouverte une heure pour cet élève.
+   Partagée par le suivi en direct, le suivi formatif (formatif-prof.js) et la liste des élèves. */
+function caseRecompense(e, apres){
+  const fin = Number(e.recompense) || 0, l = txt("label", "recompense"), c = txt("input");
+  c.type = "checkbox"; c.checked = !!fin;
+  l.title = fin ? "Je m’occupe ouvert jusqu’à " + new Date(fin).toLocaleTimeString("fr-BE",{hour:"2-digit",minute:"2-digit"}) + " — décocher pour retirer" : "Cocher pour ouvrir Je m’occupe (1 h)";
+  c.setAttribute("aria-label", (fin ? "Retirer Je m’occupe à " : "Ouvrir Je m’occupe pour ") + nom(e.email));
+  l.append(c, document.createTextNode("🎁"));
+  if(fin) l.append(txt("span", null, new Date(fin).toLocaleTimeString("fr-BE",{hour:"2-digit",minute:"2-digit"})));
+  c.addEventListener("change", ()=>{
+    if(!SUIVI){ c.checked = !c.checked; return; }
+    c.disabled = true;
+    google.script.run.withSuccessHandler(()=>{ (apres || charge)(); })
+      .withFailureHandler(err=>{ c.disabled = false; c.checked = !c.checked; erreur(err); })
+      .recompenser(e.email, c.checked);
+  });
+  return l;
+}
 function dessineEleves(){
   const noms = Object.keys(CL.classes).sort(), f = $("el-filtre").value;
   const liste = CL.eleves.filter(e => !f || (f === "?" ? !CL.classes[e.classe] : e.classe === f))
@@ -605,7 +623,7 @@ function dessineEleves(){
   $("el-compte").textContent = liste.length + " élève" + (liste.length > 1 ? "s" : "");
   $("el-corps").replaceChildren(...liste.map(e=>{
     const tr = txt("tr"), td = txt("td"), sel = txt("select");
-    const nomEl = txt("td", "nom", nom(e.email)); nomEl.title = e.email;
+    const nomEl = txt("td", "nom", nom(e.email)); nomEl.title = e.email; nomEl.append(caseRecompense(e, chargeClasses));
     const options = [["", "À choisir"], ...(CL.classes[e.classe] ? [] : [[e.classe, e.classe + " (retirée)"]]), ...noms.map(n=>[n, n])];
     sel.replaceChildren(...options.map(([v, t])=>{ const o = txt("option", null, t); o.value = v; return o; }));
     sel.value = e.classe; sel.setAttribute("aria-label", "Classe de " + nom(e.email));

@@ -16,7 +16,7 @@ const Demo = (() => {
   // Le document de départ de la période 2 : titre, une strophe, l'auteur.
   const base = (t = '', s = '', a = '') => [L(TITRE, t), L(''), ...FABLE_MAJ.map(v => L(v, s)), L(''), L('Jean de La Fontaine', a)];
 
-  /* Les animations, par clé : une par étape (etape1 à etape9), puis celles hors étape. */
+  /* Les animations, par clé : une par étape (etape + id de l’étape dans contenu.js), puis celles hors étape. */
   const DEMOS = {
     etape1: { titre: 'Je crée et je nomme', images: [
       { ecran: 'gaufre', cible: 'gaufre', legende: 'Je clique sur la gaufre, en haut à droite.' },
@@ -35,15 +35,6 @@ const Demo = (() => {
       doc([L(TITRE.toLowerCase()), ...FABLE.map(v => L(v)), L(S2[0].toLowerCase())], { cible: 'L1', legende: 'Les vers commencent par une minuscule…' }),
       doc([L(TITRE), ...FABLE_MAJ.map(v => L(v, 'maj')), L(S2[0].toLowerCase())], { cible: 'L1', legende: '… je mets une majuscule au début de chaque vers.' }),
       doc([L(TITRE), ...FABLE_MAJ.map(v => L(v)), L(''), L(S2[0])], { cible: 'L5', ok: 1, legende: 'Je clique à la fin du vers 4, Entrée : une ligne vide sépare les strophes.' })
-    ] },
-    etape4: { titre: 'Je ferme sans remettre', images: [
-      doc(base(), { cible: 'enregistre', legende: 'Je regarde : « Enregistré ». Docs garde tout seul.' }),
-      doc(base(), { cible: 'onglet', ok: 1, legende: 'Je ferme l’onglet. Je ne remets PAS encore.' })
-    ] },
-    etape5: { titre: 'Je retrouve mon document', images: [
-      { ecran: 'gaufre', menu: 1, cible: 'app-drive', legende: 'Gaufre ▸ Drive.' },
-      { ecran: 'drive', cible: 'recents', legende: 'Je clique sur « Récents », à gauche.' },
-      { ecran: 'drive', cible: 'fichier', ok: 1, legende: 'Double-clic sur mon document : il s’ouvre.' }
     ] },
     etape6: { titre: 'Titre, texte, auteur', images: [
       doc(base('sel'), { cible: 'L0', legende: 'Je sélectionne le titre.' }),
@@ -78,7 +69,16 @@ const Demo = (() => {
       { ecran: 'classroom', joint: 1, confirme: 1, cible: 'confirmer', legende: 'Je confirme : Remettre une deuxième fois.' },
       { ecran: 'classroom', joint: 1, remis: 1, cible: 'statut', ok: 1, legende: '« Vos devoirs » affiche Remis : c’est rendu. Bravo !' }
     ] },
-    cote: { titre: 'Le cours et mon document côte à côte', images: [ // vue fractionnée de Chrome
+    fermer: { titre: 'À la sonnerie : je ferme sans remettre', images: [ // À la sonnerie : je ferme sans remettre (encadré sous chaque étape)
+      doc(base(), { cible: 'enregistre', legende: 'Je regarde : « Enregistré ». Docs garde tout seul.' }),
+      doc(base(), { cible: 'onglet', ok: 1, legende: 'Je ferme l’onglet. Je ne remets PAS encore.' })
+    ] },
+    retrouver: { titre: 'Je reprends : je retrouve mon document dans Drive', images: [ // Je reprends : je retrouve mon document dans Drive (encadré « Je reprends »)
+      { ecran: 'gaufre', menu: 1, cible: 'app-drive', legende: 'Gaufre ▸ Drive.' },
+      { ecran: 'drive', cible: 'recents', legende: 'Je clique sur « Récents », à gauche.' },
+      { ecran: 'drive', cible: 'fichier', ok: 1, legende: 'Double-clic sur mon document : il s’ouvre.' }
+    ] },
+    cote: { titre: 'Le cours et mon document côte à côte', images: [ // Le cours et mon document côte à côte : vue fractionnée de Chrome
       { ecran: 'chrome', cible: 'ch-cours', legende: 'Je clique sur l’onglet du cours.' },
       { ecran: 'chrome', menu: 1, cible: 'ch-doc', legende: 'Clic droit sur l’onglet de mon document.' },
       { ecran: 'chrome', menu: 1, cible: 'item-split', legende: 'Je choisis « Ajouter l’onglet à une nouvelle vue fractionnée ».' },
