@@ -80,6 +80,7 @@ function dessine(){
     if(i+delta>=ETAPES_RAT.length){const n=txt('button','btn vide','Ma grille d’évaluation →');n.type='button';n.addEventListener('click',()=>{vueGrille=true;dessine();scrollTo(0,0);});nav.append(n);continue;}
     const n=txt('button','btn vide',label);n.type='button';n.addEventListener('click',()=>sauve({type:'position',etape:ETAPES_RAT[i+delta].id}));nav.append(n);
   }z.append(sonnerie(),nav,txt('p','note','Je peux continuer même si une case reste vide. Je coche quand j’ai terminé ; le professeur examine mon document.'));
+  if(typeof PhraseFin!=='undefined'&&ETAPES_RAT.every((_,j)=>etat.etapes&&etat.etapes[j])){const f=PhraseFin.figure(CITATION);if(f)z.append(f);}
   cloche();coince();progression();commandes();
 }
 /* « Ça coince ? » : seulement les aides de l'étape affichée (et « Je me trompe »), sauf si l'élève demande tout. */
@@ -104,6 +105,9 @@ function dessineGrille(z){
   const nav=txt('div','actions'),n=txt('button','btn vide','← Étape '+ETAPES_RAT.length);n.type='button';n.addEventListener('click',()=>sauve({type:'position',etape:ETAPES_RAT[ETAPES_RAT.length-1].id}));nav.append(n);z.append(nav);
   cloche();coince();progression();commandes();
 }
+/* La phrase de la fin (code commun : pas-a-pas/phrase-fin.js) : quand toutes les étapes sont faites. */
+const CITATION={texte:'Rien ne sert de courir ; il faut partir à point.',auteur:'Jean de La Fontaine',source:'« Le Lièvre et la Tortue », Fables, livre VI, fable 10 (1668)',
+  lien:'Strophe après strophe, une case après l’autre : c’est la régularité qui a fait mon document.'};
 /* Encouragements : chaque mission cochée, chaque étape terminée. */
 const BRAVOS=['Bravo !','Super, une mission de plus !','Bien joué !','Continue comme ça !','Yes ! 🧀','Ça avance !','Top !'];
 const BULLES=['Salut ! On va mettre une fable en forme, mission par mission.','Bon début ! Regarde bien les démos.','Tu es lancé(e) !','Déjà la moitié ! Le rat est fier de toi.','Presque fini, courage !','Tout est coché : bravo ! Il reste à remettre dans Classroom.'];

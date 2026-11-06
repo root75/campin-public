@@ -359,14 +359,9 @@ function preuve(pr, B, apres){
   }
 }
 
-/* La phrase de la fin : une citation réelle, avec son auteur, et une ligne qui la relie au cours.
-   Une surprise, pas une récompense : elle s'affiche pour tous, quel que soit le nombre d'erreurs. */
-function citation(c){
-  const f = el("figure","citation");
-  f.append(txt("blockquote",null,"« "+c.texte+" »"), txt("figcaption",null,"— "+c.auteur+", "+c.source));
-  if(c.lien) f.append(txt("p",null,c.lien));
-  return f;
-}
+/* La phrase de la fin : code commun à tous les cours, pas-a-pas/phrase-fin.js (PhraseFin.figure).
+   Si une page ancienne ne charge pas ce fichier, l'écran de fin s'affiche sans la citation. */
+function citation(c){ return typeof PhraseFin!=="undefined" ? PhraseFin.figure(c) : null; }
 
 function fin(z){
   z.append(txt("h2",null,FIN.titre), txt("p",null,FIN.texte));
@@ -375,7 +370,7 @@ function fin(z){
     lien.href=FIN.revision.url;lien.target="_blank";lien.rel="noopener";
     revision.append(txt("p",null,FIN.revision.texte),lien);z.append(revision);
   }
-  if(FIN.citation) z.append(citation(FIN.citation));
+  const phrase = FIN.citation && citation(FIN.citation); if(phrase) z.append(phrase);
   const plus = el("div","encart");
   plus.append(txt("h3",null,MISSIONS ? "⚡ Fini avant les autres ?" : "⚡ J'ai fini avant les autres"), txt("p",null,FIN.plus),
     el("p",null,(MISSIONS ? "Puis révise : " : "Puis je révise : ")+FIN.lien+"."));
