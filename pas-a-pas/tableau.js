@@ -122,8 +122,7 @@ function dessine(d){
     const td = (cls,t) => { const c=txt("td",cls,t); tr.append(c); return c; };
     const n1 = td("nom", nom(e.email)); n1.title = e.email;
     if(SUIVI&&d.reprisesParSuivi&&d.peutReprendre){const cours=$("cours").value,seance=choisie();const r=txt("button","btn vide","Recommencer");r.type="button";r.setAttribute("aria-label","Faire recommencer "+nom(e.email));r.addEventListener("click",()=>{if(!confirm("Faire recommencer ce cours à "+nom(e.email)+" ? L’historique est conservé."))return;r.disabled=true;google.script.run.withSuccessHandler(()=>{charge();}).withFailureHandler(err=>{r.disabled=false;erreur(err);}).noter(cours,{type:'prof-reprise',email:e.email,debut:seance.debut});});n1.append(r);}
-    // « Je m'occupe » : la récompense, ouverte une heure pour cet élève après vérification de son travail.
-    if(SUIVI){const fin=Number(e.recompense)||0;const r=txt("button","btn vide",fin?"🎁 jusqu’à "+new Date(fin).toLocaleTimeString("fr-BE",{hour:"2-digit",minute:"2-digit"})+" · retirer":"🎁 Je m’occupe");r.type="button";r.setAttribute("aria-label",(fin?"Retirer Je m’occupe à ":"Ouvrir Je m’occupe pour ")+nom(e.email));r.addEventListener("click",()=>{r.disabled=true;google.script.run.withSuccessHandler(()=>{charge();}).withFailureHandler(err=>{r.disabled=false;erreur(err);}).recompenser(e.email,!fin);});n1.append(r);}
+    n1.append(caseRecompense(e));
     const h = td("hum", e.humeur ? e.humeur.split(" ")[0] : ""); if(e.humeur) h.title = e.humeur;
     const b = txt("div","barre");
     for(let i=0;i<n;i++){ const s=txt("span"); s.className = i<e.atteint ? "fait" : (i===e.atteint && !e.fini ? "ici" : ""); b.append(s); }
@@ -598,6 +597,24 @@ function dessineClasses(d){
   $("panneau-classes").hidden = false;
   $("eleves-statut").textContent="Liste à jour. Les changements de classe sont enregistrés après confirmation du serveur.";
 }
+/* « Je m'occupe » : une case 🎁 à côté du nom. Cochée = la récompense est ouverte une heure pour cet élève.
+   Partagée par le suivi en direct, le suivi formatif (formatif-prof.js) et la liste des élèves. */
+function caseRecompense(e, apres){
+  const fin = Number(e.recompense) || 0, l = txt("label", "recompense"), c = txt("input");
+  c.type = "checkbox"; c.checked = !!fin;
+  l.title = fin ? "Je m’occupe ouvert jusqu’à " + new Date(fin).toLocaleTimeString("fr-BE",{hour:"2-digit",minute:"2-digit"}) + " — décocher pour retirer" : "Cocher pour ouvrir Je m’occupe (1 h)";
+  c.setAttribute("aria-label", (fin ? "Retirer Je m’occupe à " : "Ouvrir Je m’occupe pour ") + nom(e.email));
+  l.append(c, document.createTextNode("🎁"));
+  if(fin) l.append(txt("span", null, new Date(fin).toLocaleTimeString("fr-BE",{hour:"2-digit",minute:"2-digit"})));
+  c.addEventListener("change", ()=>{
+    if(!SUIVI){ c.checked = !c.checked; return; }
+    c.disabled = true;
+    google.script.run.withSuccessHandler(()=>{ (apres || charge)(); })
+      .withFailureHandler(err=>{ c.disabled = false; c.checked = !c.checked; erreur(err); })
+      .recompenser(e.email, c.checked);
+  });
+  return l;
+}
 function dessineEleves(){
   const noms = Object.keys(CL.classes).sort(), f = $("el-filtre").value;
   const liste = CL.eleves.filter(e => !f || (f === "?" ? !CL.classes[e.classe] : e.classe === f))
@@ -605,7 +622,7 @@ function dessineEleves(){
   $("el-compte").textContent = liste.length + " élève" + (liste.length > 1 ? "s" : "");
   $("el-corps").replaceChildren(...liste.map(e=>{
     const tr = txt("tr"), td = txt("td"), sel = txt("select");
-    const nomEl = txt("td", "nom", nom(e.email)); nomEl.title = e.email;
+    const nomEl = txt("td", "nom", nom(e.email)); nomEl.title = e.email; nomEl.append(caseRecompense(e, chargeClasses));
     const options = [["", "À choisir"], ...(CL.classes[e.classe] ? [] : [[e.classe, e.classe + " (retirée)"]]), ...noms.map(n=>[n, n])];
     sel.replaceChildren(...options.map(([v, t])=>{ const o = txt("option", null, t); o.value = v; return o; }));
     sel.value = e.classe; sel.setAttribute("aria-label", "Classe de " + nom(e.email));
