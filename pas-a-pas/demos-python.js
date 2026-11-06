@@ -3,16 +3,16 @@
    du bloc. Aucune donnée élève ; rien n'est enregistré.
    Les démos sont déclarées dans le fiche.js de chaque cours : const DEMOS_FICHE = { numéro de bloc
    (0 = bloc 1) : { titre, replie?, images:[…] } }. Une image = un écran + l'élément que la souris
-   va cliquer (cible) + une légende. Chargé après fiche.js, avant blocs.js : blocs.js appelle
-   Demo.pour(i) en mode « missions ».
+   va cliquer (cible) + une légende. Ici, seulement les écrans : le lecteur est commun
+   (pas-a-pas/demo-lecteur.js). Chargé après fiche.js et demo-lecteur.js, avant blocs.js :
+   blocs.js appelle Demo.pour(i) en mode « missions ».
    Règle : une démo ne montre jamais la réponse d'une question de preuve (code caché par des barres
    grises, nom d'erreur masqué, indice arrêté avant la solution).
    Libellés Windows 11, Thonny et Chrome relevés de mémoire : à vérifier sur un poste de la B101. */
 const Demo = (() => {
   const DEMOS = typeof DEMOS_FICHE !== 'undefined' ? DEMOS_FICHE : {};
   const FICHIER = '01_Les-vies_Nom.py';
-  const el = (tag, cls, t) => { const n = document.createElement(tag); if (cls) n.className = cls; if (t != null) n.textContent = t; return n; };
-  const c = (n, id) => { n.dataset.c = id; return n; };
+  const { el, c } = DemoLecteur;
 
   /* ===== Les écrans ===== */
   function ecranBureau(f) {
@@ -144,88 +144,16 @@ const Demo = (() => {
   }
   const ECRANS = { bureau: ecranBureau, explorateur: ecranExplorateur, thonny: ecranThonny, chrome: ecranChrome, verres: ecranVerres };
 
-  /* ===== Le lecteur (même fonctionnement que le Rat de ville) ===== */
-  function cree(i, auto = true) {
-    const d = DEMOS[i]; if (!d) return null;
-    const frames = d.images;
-    const box = el('div', 'demo'); box.setAttribute('role', 'img');
-    const scene = el('div', 'demo-scene'), curseur = el('div', 'demo-curseur'), legende = el('p', 'demo-legende');
-    curseur.innerHTML = '<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M4 2l16 11-7 1.5L9.5 21z" fill="#111" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg>';
-    const ctrl = el('div', 'demo-ctrl'), prec = el('button', 'demo-b', '◀'), jouer = el('button', 'demo-b demo-jouer', '▶ Revoir'), suiv = el('button', 'demo-b', '▶');
-    [prec, jouer, suiv].forEach(b => { b.type = 'button'; });
-    prec.setAttribute('aria-label', 'Image précédente'); suiv.setAttribute('aria-label', 'Image suivante');
-    const points = el('span', 'demo-points');
-    ctrl.append(prec, points, suiv, jouer);
-    scene.append(curseur);
-    box.append(scene, legende, ctrl);
-    let k = 0, minuteur = null;
-    const calme = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    function montre(n) {
-      k = (n + frames.length) % frames.length; const f = frames[k];
-      scene.querySelectorAll('.md').forEach(x => x.remove());
-      const e = ECRANS[f.ecran](f); scene.prepend(e);
-      legende.textContent = (k + 1) + '. ' + f.legende; box.setAttribute('aria-label', 'Démonstration : ' + frames.map(x => x.legende).join(' '));
-      points.replaceChildren(...frames.map((_, j) => el('span', j === k ? 'on' : '')));
-      box.classList.toggle('demo-ok', !!f.ok);
-      const cible = f.cible && e.querySelector('[data-c="' + f.cible + '"]');
-      requestAnimationFrame(() => {
-        if (!cible) return;
-        const a = scene.getBoundingClientRect(), b = cible.getBoundingClientRect();
-        curseur.style.transform = 'translate(' + (b.left - a.left + Math.min(b.width / 2, 40)) + 'px,' + (b.top - a.top + b.height / 2) + 'px)';
-        cible.classList.add('md-vise');
-        setTimeout(() => cible.classList.add('md-clic'), calme ? 0 : 700);
-      });
-    }
-    function stop() { clearTimeout(minuteur); minuteur = null; jouer.textContent = '▶ Revoir'; }
-    function joue(depuis = 0) {
-      stop(); jouer.textContent = '⏸ Pause'; montre(depuis);
-      const suite = () => { if (k >= frames.length - 1) { stop(); return; } minuteur = setTimeout(() => { montre(k + 1); suite(); }, 2600); };
-      suite();
-    }
-    prec.addEventListener('click', () => { stop(); montre(k - 1); });
-    suiv.addEventListener('click', () => { stop(); montre(k + 1); });
-    jouer.addEventListener('click', () => { minuteur ? stop() : joue(k >= frames.length - 1 ? 0 : k); });
-    // Lancée seulement une fois visible ; immobile si l'élève a demandé moins d'animations.
-    setTimeout(() => { montre(0); if (!calme && auto) joue(0); }, 60);
-    box.stop = stop; box.joue = () => { if (!calme) joue(0); else montre(0); };
-    return box;
-  }
-
-  /* La démo du bloc, emballée pour la fiche. Gardée d'un affichage à l'autre ; une seule joue à la fois. */
-  const vues = {}; let enCours = null;
-  function pour(i) {
-    const d = DEMOS[i]; if (!d) return null;
-    if (enCours !== null && enCours !== i && vues[enCours]) vues[enCours].demo.stop();
-    enCours = i;
-    if (vues[i]) { if (!d.replie) setTimeout(() => vues[i].demo.joue(), 80); return vues[i].emballe; }
-    const demo = cree(i, !d.replie);
-    let emballe;
-    if (d.replie) {
-      emballe = el('details', 'demo-cote'); emballe.append(el('summary', null, '💡 ' + d.titre), demo);
-      emballe.addEventListener('toggle', () => { if (emballe.open) demo.joue(); else demo.stop(); });
-    } else { emballe = el('section', 'demo-bloc'); emballe.append(el('p', 'demo-titre', '👀 Regarde comment faire'), demo); }
-    vues[i] = { demo, emballe };
-    return emballe;
-  }
+  /* ===== Le lecteur, commun à tous les cours : pas-a-pas/demo-lecteur.js ===== */
+  const L = DemoLecteur.lecteur({ demos: DEMOS, ecran: f => ECRANS[f.ecran](f) });
 
   /* Volet « Toutes les animations » : retrouver n'importe quel tuto sans changer de bloc. */
   addEventListener('DOMContentLoaded', () => {
     const volet = document.getElementById('tutos'), liste = document.getElementById('tutos-liste'), vue = document.getElementById('tutos-vue');
     if (!volet || !liste) return;
-    if (!Object.keys(DEMOS).length) { volet.hidden = true; return; }
-    let joue = null;
-    Object.keys(DEMOS).filter(i => DEMOS[i].volet !== false).forEach(i => {
-      const titre = (+i + 1) + '. ' + DEMOS[i].titre;
-      const b = el('button', 'btn vide', titre); b.type = 'button'; b.setAttribute('aria-pressed', 'false');
-      b.addEventListener('click', () => {
-        if (joue) joue.stop();
-        liste.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
-        joue = cree(+i, false); vue.replaceChildren(el('p', 'demo-titre', '👀 ' + titre), joue); setTimeout(() => joue.joue(), 80);
-      });
-      liste.append(b);
-    });
-    volet.addEventListener('toggle', () => { if (!volet.open && joue) joue.stop(); });
+    DemoLecteur.volet({ details: volet, liste, vue, titre: true, cree: (i, auto) => L.cree(+i, auto),
+      entrees: Object.keys(DEMOS).filter(i => DEMOS[i].volet !== false).map(i => [i, (+i + 1) + '. ' + DEMOS[i].titre]) });
   });
 
-  return { cree, pour, blocs: Object.keys(DEMOS).map(Number) };
+  return { cree: L.cree, pour: L.pour, blocs: Object.keys(DEMOS).map(Number) };
 })();

@@ -69,7 +69,24 @@ d'étape ni toucher à la progression. Une seule animation joue à la fois dans 
 
 ## Animations sous les cases (6 novembre 2026)
 
-Chaque « 👀 Regarde comment faire » est sous la case qu'il montre (`PAR_CASE` dans `demos.js`) ;
+Chaque « 👀 Regarde comment faire » est sous la case qu'il montre (champ `demos` de chaque étape
+dans `contenu.js` depuis le 06/11/2026 — auparavant `PAR_CASE` dans `demos.js`) ;
 plus de démo d'étape en haut. Aux étapes 1 et 5, la vue fractionnée devient une case (48 cases,
 `CASES_RAT = [3, 9, 2, 1, 2, 7, 7, 4, 13]`). Les étapes 4 et 5 se font à la sonnerie et au début
 de la période 2, où que l'élève en soit : rappel sur les autres étapes, bouton de reprise à l'étape 5.
+
+## Lecteur commun et format `demos` (6 novembre 2026)
+
+Le lecteur d'animations (scène, curseur, légende, ◀ ▶ Revoir, prefers-reduced-motion) et le volet
+« Toutes les animations » sont communs à tous les cours : `pas-a-pas/demo-lecteur.js`, chargé avant
+`demos.js`. `demos.js` ne garde que les maquettes (Docs, Drive, Classroom, Chrome) et les images,
+rangées par clé (`etape1` à `etape9`, `cote`). Le placement sous les cases est au **même format que
+le moteur commun** `blocs.js` : dans `contenu.js`, chaque étape porte par exemple
+`"demos": { "1": ["etape1", [0, 1, 2]], "3": ["cote", [0, 1, 2, 3]] }` (case N, à partir de 1 →
+animation, numéros des images). Les images 1 à 8 de l'étape 9 vont sous la case 13 (remise).
+
+Le Rat garde son propre `fiche.js` : cases enregistrées une par une (`suiviFormatif`), navigation
+libre, grille « Moi » en étape finale, étapes 4 et 5 à la sonnerie. `blocs.js` est un parcours
+linéaire (bloc validé → bloc suivant, `noter`) : y passer changerait ce que voient les élèves.
+Différence assumée avec `blocs.js` : cocher une case n'ouvre pas l'animation suivante ; l'étape est
+redessinée et l'animation ouverte reste où elle est.
