@@ -27,7 +27,7 @@
     const tb=$('lignes');tb.replaceChildren();
     if(!eleves.length){const tr=txt('tr'),td=txt('td',null,SUIVI?'Aucune action sur cette période. Choisis une séance précédente pour consulter son suivi.':'Aperçu du formatif : aucune donnée scolaire.');td.colSpan=8;tr.append(td);tb.append(tr);}
     eleves.forEach(e=>{
-      const tr=txt('tr',e.aide?'aide':''),td=t=>{const n=txt('td',null,t);tr.append(n);return n;};td(nom(e.email)).title=e.email;td(e.classe);const cases=td(e.cochees+' / '+ETAPES_RAT.reduce((n,x)=>n+x.actions.length,0)+' cases');
+      const tr=txt('tr',e.aide?'aide':''),td=t=>{const n=txt('td',null,t);tr.append(n);return n;};const n1=td(nom(e.email));n1.title=e.email;n1.className='nom';n1.append(caseRecompense(e));td(e.classe);const cases=td(e.cochees+' / '+ETAPES_RAT.reduce((n,x)=>n+x.actions.length,0)+' cases');
       const detail=txt('details'),sum=txt('summary',null,'Détail des actions');detail.append(sum);
       ETAPES_RAT.forEach((etape,i)=>{const z=txt('p',null,(i+1)+'. '+etape.titre);detail.append(z);const ul=txt('ul');etape.actions.forEach((a,j)=>ul.append(txt('li',null,(e.cases[(i+1)+'.'+(j+1)]?'☑ ':'☐ ')+a)));detail.append(ul);});cases.append(detail);
       td().append(lienBloc(e.position,e.position+' / 9'));td(e.atteint+' / 9');td([1,2,3,4].map(i=>e.moi[i]||'—').join(' · '));
