@@ -74,11 +74,11 @@ p{margin:0}
     <p class="doux" id="aucun" hidden>Aucun cours n'est ouvert pour ta classe pour l'instant. Ton professeur te dira quand.</p>
   </section>
 
-  <!-- Toujours visible : la liste des sites autorisés quand le travail est fini et vérifié. -->
-  <section class="panneau" id="je-m-occupe">
-    <h2>J'ai fini ?</h2>
-    <p>☐ Ton travail est remis et ton professeur l'a vérifié ? Alors tu peux t'occuper.</p>
-    <a class="btn cours vide" href="https://root75.github.io/campin-public/je-m-occupe/" target="_top">Je m'occupe ▸</a>
+  <!-- La récompense : visible seulement quand le professeur l'a ouverte pour cet élève (tableau ▸ 🎁). -->
+  <section class="panneau" id="je-m-occupe" hidden>
+    <h2>🎁 Bravo, ton travail est vérifié !</h2>
+    <p>Ton professeur t'a ouvert <b>Je m'occupe</b> jusqu'à <b id="occupe-fin"></b>.</p>
+    <a class="btn cours" id="occupe-lien" href="#" target="_top">Je m'occupe ▸</a>
   </section>
 
   <p class="panneau" id="erreur" hidden></p>
