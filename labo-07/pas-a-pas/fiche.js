@@ -1,7 +1,7 @@
-/* Préparer le rapport, trois missions, un défi final, remettre le rapport. Neuf étapes internes réutilisent le suivi existant.
+/* Préparer le rapport, trois missions, un défi final, remettre le rapport. Dix étapes internes réutilisent le suivi existant.
  * Trois hypothèses sur le site ; tableau/capture et écrits courts dans le rapport ; entraide guidée et contrôle individuel final par le professeur. */
 const COURS = 'labo-07';
-const VERSION_PARCOURS = 'missions-3';   // 06/11/2026 : étapes « Préparer mon rapport » et « Remettre mon rapport » ajoutées
+const VERSION_PARCOURS = 'missions-4';   // 06/11/2026 : « Préparer » et « Remettre mon rapport » ajoutées, mission 1 en trois étapes
 const PRESENTATION = 'missions';   // blocs.js : cloche en haut à droite, bulle, bravo, sans « Je veux / Je fais / Je vois »
 const HORS_SUIVI = 'Essai local : aucune réponse envoyée. En classe, ouvre Mes cours avec ton compte scolaire.';
 let EMAIL = '';
@@ -16,11 +16,11 @@ const hache = s => {   // FNV-1a brassé, comme hache_() dans Code.gs
 const tirage = (cle, n) => n<2 || !EMAIL ? 1 : 1 + hache(EMAIL.toLowerCase()+"|"+cle) % n;
 const PARCOURS = [
  {titre:'Préparer mon rapport', court:'Rapport', debut:0, fin:1, bulle:'Avant l’enquête : ton carnet d’enquêteur. Un seul document pour tout le labo.'},
- {titre:'Mission 1 — Observer ce qui tourne', court:'Mission 1', debut:1, fin:3, bulle:'Première mission : que fait le PC quand une application s’ouvre ?'},
- {titre:'Mission 2 — Retrouver ses données', court:'Mission 2', debut:3, fin:5, bulle:'Bien joué ! Maintenant, où vit ton fichier ?'},
- {titre:'Mission 3 — Dépanner', court:'Mission 3', debut:5, fin:6, bulle:'Quatre petites pannes à élucider, à deux.'},
- {titre:'Défi final individuel', court:'Défi', bouton:'Défi final →', debut:6, fin:8, bulle:'Dernier défi, seul : montre ta méthode d’enquêteur.'},
- {titre:'Remettre mon rapport', court:'Remise', bouton:'Remettre mon rapport →', debut:8, fin:9, bulle:'Dernier geste : remettre ton rapport, une seule fois.'}
+ {titre:'Mission 1 — Observer ce qui tourne', court:'Mission 1', debut:1, fin:4, bulle:'Première mission : que fait le PC quand une application s’ouvre ?'},
+ {titre:'Mission 2 — Retrouver ses données', court:'Mission 2', debut:4, fin:6, bulle:'Bien joué ! Maintenant, où vit ton fichier ?'},
+ {titre:'Mission 3 — Dépanner', court:'Mission 3', debut:6, fin:7, bulle:'Quatre petites pannes à élucider, à deux.'},
+ {titre:'Défi final individuel', court:'Défi', bouton:'Défi final →', debut:7, fin:9, bulle:'Dernier défi, seul : montre ta méthode d’enquêteur.'},
+ {titre:'Remettre mon rapport', court:'Remise', bouton:'Remettre mon rapport →', debut:9, fin:10, bulle:'Dernier geste : remettre ton rapport, une seule fois.'}
 ];
 const BLOCS = [
   {
@@ -81,11 +81,11 @@ const BLOCS = [
   },
   {
     "partie": "1 — Observer ce qui tourne",
-    "titre": "Observer, comparer et conclure",
-    "min": 20,
-    "veux": "Comparer des mesures avant, pendant et après l’ouverture d’un logiciel gourmand.",
-    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\">Fais un clic droit sur l’icône ⊞ Démarrer ▸ Gestionnaire des tâches (ou Ctrl + Maj + Échap).</label></li><li><label><input type=\"checkbox\">Si nécessaire, clique sur Plus de détails.</label></li><li><label><input type=\"checkbox\">Clique sur Processus : repère deux applications dont tu reconnais le nom.</label></li><li><label><input type=\"checkbox\">Lis le total Processeur en % en haut de la colonne.</label></li><li><label><input type=\"checkbox\">Lis le total Mémoire en % en haut de la colonne.</label></li><li><label><input type=\"checkbox\">Dans ton rapport, partie 1, saisis ces valeurs dans la ligne Avant du tableau.</label></li><li><label><input type=\"checkbox\">Clique sur ⊞ Démarrer ▸ tape GIMP ▸ clique sur l’application GIMP. Elle met 5 à 20 secondes à s’ouvrir : ne clique pas une deuxième fois.</label></li><li><label><input type=\"checkbox\">Reviens tout de suite au Gestionnaire par son icône dans la barre des tâches (ou Alt + Tab).</label></li><li><label><input type=\"checkbox\">Environ 10 secondes après le clic sur GIMP, lis les deux mêmes totaux.</label></li><li><label><input type=\"checkbox\">Dans le tableau du rapport, complète la ligne Après 10 s.</label></li><li><label><input type=\"checkbox\">Laisse GIMP ouvert sans rien y faire et attends environ 1 minute.</label></li><li><label><input type=\"checkbox\">Dans le tableau du rapport, complète la ligne Après 1 min avec les deux mêmes totaux.</label></li><li><label><input type=\"checkbox\">Après le dernier relevé, prends une capture ciblée : ⊞ Démarrer ▸ Outil Capture d’écran ▸ Nouveau (ou Windows + Maj + S).</label></li><li><label><input type=\"checkbox\">Sélectionne seulement les noms utiles et les colonnes Processeur / Mémoire, sans autre travail visible.</label></li><li><label><input type=\"checkbox\">Reviens dans le rapport et colle la capture avec Édition ▸ Coller (Ctrl + V).</label></li><li><label><input type=\"checkbox\">Redimensionne par un coin pour garder les proportions et rester dans la page.</label></li><li><label><input type=\"checkbox\">Sous l’image, écris une légende qui explique ce qu’elle montre et sa limite.</label></li><li><label><input type=\"checkbox\">Dans le rapport, écris une conclusion de deux phrases : ce qui change dans tes relevés, puis une autre cause possible ou une limite.</label></li><li><label><input type=\"checkbox\">Après ta réponse personnelle, compare les observations avec un voisin.</label></li><li><label><input type=\"checkbox\">Participe à la mise en commun. Ensuite, le professeur affiche la synthèse sur ton écran.</label></li></ol>",
-    "vois": "Mon rapport contient deux noms d’applications, les trois relevés et une capture légendée ; ma conclusion distingue ce qui monte puis redescend de ce qui reste.",
+    "titre": "Relever les mesures avant et après GIMP",
+    "min": 12,
+    "veux": "Relever le processeur et la mémoire avant l’ouverture de GIMP, 10 secondes après, puis 1 minute après.",
+    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\">Fais un clic droit sur l’icône ⊞ Démarrer ▸ Gestionnaire des tâches (ou Ctrl + Maj + Échap).</label></li><li><label><input type=\"checkbox\">Si nécessaire, clique sur Plus de détails.</label></li><li><label><input type=\"checkbox\">Clique sur Processus : repère deux applications dont tu reconnais le nom.</label></li><li><label><input type=\"checkbox\">Lis le total Processeur en % en haut de la colonne.</label></li><li><label><input type=\"checkbox\">Lis le total Mémoire en % en haut de la colonne.</label></li><li><label><input type=\"checkbox\">Dans ton rapport, partie 1, saisis ces valeurs dans la ligne Avant du tableau.</label></li><li><label><input type=\"checkbox\">Clique sur ⊞ Démarrer ▸ tape GIMP ▸ clique sur l’application GIMP. Elle met 5 à 20 secondes à s’ouvrir : ne clique pas une deuxième fois.</label></li><li><label><input type=\"checkbox\">Reviens tout de suite au Gestionnaire par son icône dans la barre des tâches (ou Alt + Tab).</label></li><li><label><input type=\"checkbox\">Environ 10 secondes après le clic sur GIMP, lis les deux mêmes totaux.</label></li><li><label><input type=\"checkbox\">Dans le tableau du rapport, complète la ligne Après 10 s.</label></li><li><label><input type=\"checkbox\">Laisse GIMP ouvert sans rien y faire et attends environ 1 minute.</label></li><li><label><input type=\"checkbox\">Dans le tableau du rapport, complète la ligne Après 1 min avec les deux mêmes totaux.</label></li></ol>",
+    "vois": "Mon tableau contient deux noms d’applications et les trois relevés : Avant, Après 10 s, Après 1 min.",
     "coince": [
       "Compare la même grandeur : le total CPU avec le total CPU, pas le total avec une ligne d’application. La mémoire en % n’est pas celle d’un seul logiciel en Mo.",
       "GIMP met 5 à 20 secondes à s’ouvrir : c’est normal, ne relance pas. Relève quand même à 10 s, même si la fenêtre n’est pas encore là. Les totaux se lisent dans les en-têtes Processeur et Mémoire de Processus. Si l’accès est bloqué, note « accès refusé » et clique sur « J'attends de l'aide » : ne contourne pas la restriction."
@@ -100,12 +100,35 @@ const BLOCS = [
       "7": ["gimp", [0, 1]],
       "8": ["gimp", [2]],
       "9": ["gimp", [3]],
-      "12": ["gimp", [4]],
-      "13": ["capture", [0]],
-      "14": ["capture", [1]],
-      "15": ["capture", [2]],
-      "16": ["capture", [3]],
-      "17": ["capture", [4]]
+      "12": ["gimp", [4]]
+    },
+    "indices": true,
+    "q": {
+      "type": "rapport",
+      "q": "Tes trois relevés sont dans le tableau du rapport. Pas de phrase à écrire ici.",
+      "confirmation": "J’ai relevé les deux totaux trois fois et complété le tableau de mon rapport.",
+      "trace": "rapport:1 — Relevés de mesures",
+      "juste": "Le professeur examine les preuves et les gestes. Cette déclaration ne constitue ni une correction ni une remise."
+    },
+    "extra": "<p class=\"stop\">Observation seulement : ne termine aucune tâche dans le Gestionnaire, ne change aucun réglage.</p>"
+  },
+  {
+    "partie": "1 — Observer ce qui tourne",
+    "titre": "Capturer et conclure",
+    "min": 10,
+    "veux": "Montrer mes relevés par une capture, puis conclure prudemment.",
+    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\">Après le dernier relevé, prends une capture ciblée : ⊞ Démarrer ▸ Outil Capture d’écran ▸ Nouveau (ou Windows + Maj + S).</label></li><li><label><input type=\"checkbox\">Sélectionne seulement les noms utiles et les colonnes Processeur / Mémoire, sans autre travail visible.</label></li><li><label><input type=\"checkbox\">Reviens dans le rapport et colle la capture avec Édition ▸ Coller (Ctrl + V).</label></li><li><label><input type=\"checkbox\">Redimensionne par un coin pour garder les proportions et rester dans la page.</label></li><li><label><input type=\"checkbox\">Sous l’image, écris une légende qui explique ce qu’elle montre et sa limite.</label></li><li><label><input type=\"checkbox\">Dans le rapport, écris une conclusion de deux phrases : ce qui change dans tes relevés, puis une autre cause possible ou une limite.</label></li><li><label><input type=\"checkbox\">Après ta réponse personnelle, compare les observations avec un voisin.</label></li><li><label><input type=\"checkbox\">Participe à la mise en commun. Ensuite, le professeur affiche la synthèse sur ton écran.</label></li></ol>",
+    "vois": "Mon rapport contient deux noms d’applications, les trois relevés et une capture légendée ; ma conclusion distingue ce qui monte puis redescend de ce qui reste.",
+    "coince": [
+      "Ta capture montre seulement les noms et les colonnes Processeur / Mémoire. Le collage échoue ? Enregistre la capture dans l’Outil Capture d’écran, puis Docs ▸ Insertion ▸ Image ▸ Importer depuis l’ordinateur.",
+      "Une conclusion prudente : « Pendant l’ouverture, le processeur… ; une fois GIMP ouvert, la mémoire… ». Puis une limite : une autre tâche a pu travailler en même temps."
+    ],
+    "demos": {
+      "1": ["capture", [0]],
+      "2": ["capture", [1]],
+      "3": ["capture", [2]],
+      "4": ["capture", [3]],
+      "5": ["capture", [4]]
     },
     "indices": true,
     "q": {
@@ -321,7 +344,7 @@ const BLOCS = [
   }
 ];
 
-/* Une seule version du QCM (étape 3) et de l'ordre (étape 6) depuis le 06/11/2026 : exercices non cotés,
+/* Une seule version du QCM (étape 4) et de l'ordre (étape 7) depuis le 06/11/2026 : exercices non cotés,
    les trois variantes étaient presque identiques. Exception voulue à la règle des trois variantes. */
 
 const FIN = {
