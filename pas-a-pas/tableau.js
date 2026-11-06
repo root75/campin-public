@@ -58,16 +58,23 @@ async function chargeRessourcesProf(){
   }
 }
 
-/* La liste des séances : la plus récente d'abord, sélectionnée par défaut. */
-function remplitSeances(liste){
+/* La liste des séances : la plus récente d'abord, sélectionnée par défaut ; `garder` (un début) la garde choisie. */
+function remplitSeances(liste, garder){
   SEANCES = liste;
   const sel = $("seance");
   sel.replaceChildren(...(liste.length ? liste : [{classe:"", debut:0}]).map((s,i)=>{
-    const o = txt("option", null, s.debut ? (i===0 && !s.fin && s.active!==false ? "En cours · " : "") + s.classe + " · " + heure(s.debut) : "Toutes (aucune séance démarrée)");
+    const o = txt("option", null, s.debut ? (enCours(s,i) ? "En cours · " : "") + s.classe + " · " + heure(s.debut) : "Toutes (aucune séance démarrée)");
     o.value = i; return o; }));
+  const k = garder ? liste.findIndex(s=>s.debut===garder) : -1;
+  if(k >= 0) sel.value = String(k);
   etatTerminer();
   charge();
+  chargeSequence();
 }
+/* Une séance par cours ET par classe : `derniere` = la plus récente de sa classe (serveur depuis le
+   06/11/2026) ; un ancien serveur ne l'envoie pas, et seule la toute première de la liste compte. */
+const derniere = (s,i) => s.derniere !== undefined ? !!s.derniere : i===0 && !s.fin;
+const enCours = (s,i) => !!s.debut && derniere(s,i) && s.active!==false;
 function chargeSeances(){
   if(!SUIVI){ remplitSeances(demoSeances()); return; }
   google.script.run.withSuccessHandler(remplitSeances).withFailureHandler(erreur).seances($("cours").value);
@@ -198,7 +205,7 @@ function charge(){
   const cours=$("cours").value,demande=++numeroChargement;
   const contexte=cours+":"+s.debut;
   if(contexte!==contexteAffiche){$("lignes").replaceChildren();if($("python-plafond"))$("python-plafond").hidden=true;}
-  google.script.run.withSuccessHandler(d=>{if(demande===numeroChargement&&$("cours").value===cours&&choisie().debut===s.debut){contexteAffiche=contexte;dessine(d);}}).withFailureHandler(err=>{if(demande===numeroChargement)erreur(err);}).donnees(cours, s.debut, s.fin);
+  google.script.run.withSuccessHandler(d=>{if(demande===numeroChargement&&$("cours").value===cours&&choisie().debut===s.debut){contexteAffiche=contexte;dessine(d);}}).withFailureHandler(err=>{if(demande===numeroChargement)erreur(err);}).donnees(cours, s.debut, s.fin, s.classe);
 }
 
 /* Données fictives : l'aperçu hors Apps Script. */
@@ -237,16 +244,25 @@ $("nouvelle").addEventListener("click", async()=>{
 });
 /* Terminer : la séance en cours s'arrête, les élèves ne sont plus envoyés sur ce cours. Rien n'est effacé. */
 function etatTerminer(){
-  const s=SEANCES[Number($("seance").value)]||{},b=$("terminer");
-  b.hidden=!(s.debut && Number($("seance").value)===0 && !s.fin && s.active!==false);
+  const i=Number($("seance").value),s=SEANCES[i]||{};
+  $("terminer").hidden=!enCours(s,i);
+  /* Reprendre : la plus récente DE SA CLASSE, expirée (3 h) ou terminée, redevient la séance de ses élèves, même suivi. */
+  $("reprendre-seance").hidden=!(s.debut && derniere(s,i) && s.active===false);
 }
-$("seance").addEventListener("change", etatTerminer);
+$("seance").addEventListener("change", ()=>{etatTerminer();chargeSequence();});
 $("terminer").addEventListener("click", ()=>{
-  const s=SEANCES[0];if(!s||!s.debut)return;
+  const s=choisie();if(!s||!s.debut)return;
   if(!confirm("Terminer la séance "+s.classe+" ? Les élèves ne seront plus envoyés sur ce cours. Rien n'est effacé."))return;
-  if(!SUIVI){ remplitSeances(SEANCES.map((x,i)=>i?x:Object.assign({},x,{active:false}))); return; }
+  if(!SUIVI){ remplitSeances(SEANCES.map(x=>x===s?Object.assign({},x,{active:false}):x),s.debut); return; }
   const b=$("terminer");b.disabled=true;
-  google.script.run.withSuccessHandler(l=>{b.disabled=false;remplitSeances(l);}).withFailureHandler(e=>{b.disabled=false;erreur(e);}).terminerSeance($("cours").value, s.debut);
+  google.script.run.withSuccessHandler(l=>{b.disabled=false;remplitSeances(l,s.debut);}).withFailureHandler(e=>{b.disabled=false;erreur(e);}).terminerSeance($("cours").value, s.debut);
+});
+$("reprendre-seance").addEventListener("click", ()=>{
+  const s=choisie();if(!s||!s.debut)return;
+  if(!confirm("Reprendre la séance "+s.classe+" du "+heure(s.debut)+" ? Les élèves y sont renvoyés pour 3 h ; leur progression et le suivi restent ceux de cette séance."))return;
+  if(!SUIVI){ remplitSeances(SEANCES.map(x=>x===s?Object.assign({},x,{active:true}):x),s.debut); return; }
+  const b=$("reprendre-seance");b.disabled=true;
+  google.script.run.withSuccessHandler(l=>{b.disabled=false;remplitSeances(l,s.debut);$("maj").textContent="Séance reprise.";}).withFailureHandler(e=>{b.disabled=false;erreur(e);}).reprendreSeance($("cours").value, s.debut);
 });
 $("dlg").addEventListener("close", ()=>{
   const classe = $("dlg-classe").value.trim();
@@ -297,8 +313,8 @@ function dessineEtatSeq(){
   const b = (t, cls, f) => { const x = txt("button", "btn "+cls, t); x.type = "button"; x.addEventListener("click", f); z.append(x); };
   if(SEQ.etat){
     z.append(txt("span","maj","Cours collectif en cours · moment "+(SEQ.etat.i+1)+" / "+SEQ.contenu.moments.length));
-    b("Reprendre le cours collectif", "", ()=>serveur("reprendreSequence", $("cours").value).then(e=>{ SEQ.etat = e; ouvreProjection(); }).catch(erreur));
-    b("Arrêter", "vide", ()=>serveur("arreterSequence", $("cours").value).then(()=>{ SEQ.etat = null; dessineEtatSeq(); }).catch(erreur));
+    b("Reprendre le cours collectif", "", ()=>serveur("reprendreSequence", $("cours").value, choisie().classe).then(e=>{ SEQ.etat = e; ouvreProjection(); }).catch(erreur));
+    b("Arrêter", "vide", ()=>serveur("arreterSequence", $("cours").value, choisie().classe).then(()=>{ SEQ.etat = null; dessineEtatSeq(); }).catch(erreur));
   } else b("Lancer le cours collectif", "", ()=>allerA(0, "", true));
 }
 function dessineConducteur(){
@@ -339,15 +355,18 @@ function tableTrace(lignes){
   lignes.forEach((ligne,i)=>{ const tr=txt("tr"); ligne.forEach(t=>tr.append(txt(i ? "td" : "th",null,t))); table.append(tr); });
   return table;
 }
+/* Le cours collectif de la classe de la séance choisie : chaque classe a le sien. */
+let demandeSequence = 0;
 function chargeSequence(frais = false){
+  const demande = ++demandeSequence;
   SEQ.contenu = null; SEQ.etat = null; dessineEtatSeq();
-  serveur("sequence", $("cours").value, frais).then(r=>{ SEQ.contenu = r.sequence; SEQ.etat = r.etat; dessineEtatSeq(); }).catch(()=>{});
+  serveur("sequence", $("cours").value, frais, choisie().classe).then(r=>{ if(demande !== demandeSequence) return; SEQ.contenu = r.sequence; SEQ.etat = r.etat; dessineEtatSeq(); }).catch(()=>{});
 }
 
 function allerA(i, phase, nouvelle){
   const n = SEQ.contenu.moments.length;
   if(i < 0 || i >= n) return;
-  serveur("piloter", $("cours").value, i, phase || "", !!nouvelle).then(e=>{
+  serveur("piloter", $("cours").value, i, phase || "", !!nouvelle, choisie().classe).then(e=>{
     if(!SEQ.etat || e.i !== SEQ.etat.i || nouvelle){ SEQ.depuis = Date.now(); SEQ.montre = false; SEQ.choisi = null; SEQ.rep = null; }
     SEQ.etat = e; ouvreProjection();
   }).catch(erreur);
@@ -372,7 +391,7 @@ function rafraichitReponses(){
   if(!SEQ.etat || $("projection").hidden) return;
   const i = momentLu(); if(i == null) return;
   const avant = SEQ.etat.i;
-  serveur("reponses", $("cours").value, i).then(r=>{ if(SEQ.etat && SEQ.etat.i === avant){ SEQ.rep = r; scene(); } }).catch(erreur);
+  serveur("reponses", $("cours").value, i, choisie().classe).then(r=>{ if(SEQ.etat && SEQ.etat.i === avant){ SEQ.rep = r; scene(); } }).catch(erreur);
 }
 
 function chrono(){
@@ -611,7 +630,7 @@ function demarre(cours){
   const meme=cours.includes(avant);
   if(meme) $("cours").value=avant;
   if(!tableauDemarre){
-    $("cours").addEventListener("change",()=>{chargeRessourcesProf();chargeSeances();chargeSequence();if(globalThis.FormatifProf)FormatifProf.charge();});
+    $("cours").addEventListener("change",()=>{chargeRessourcesProf();chargeSeances();if(globalThis.FormatifProf)FormatifProf.charge();});
     $("seance").addEventListener("change",charge);
     setInterval(charge,RAFRAICHIR);tableauDemarre=true;
   }
