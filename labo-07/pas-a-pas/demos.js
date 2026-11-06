@@ -7,7 +7,7 @@ const Demo = (() => {
   const NOM = '07_CoulissesPC_Prenom_Nom';
   const FICHIER = '2026-10-09_OneDrive.docx';
 
-  /* Les animations, par clé. ETAPES dit lesquelles accompagnent chaque étape interne (0 à 8). */
+  /* Les animations, par clé. */
   const DEMOS = {
     rapport: { titre: 'Créer et nommer mon rapport', images: [
       { ecran: 'gaufre', cible: 'gaufre', legende: 'Dans Chrome, compte de l’école : je clique sur la gaufre ⋮⋮⋮, en haut à droite.' },
@@ -82,7 +82,7 @@ const Demo = (() => {
       { ecran: 'classroom', joint: 1, remis: 1, cible: 'statut', ok: 1, legende: '« Remis » : c’est envoyé. Remise unique, à la toute fin de l’enquête.' }
     ] }
   };
-  const ETAPES = { 0: ['rapport', 'cote'], 2: ['gestionnaire', 'gimp', 'tableau', 'capture'], 4: ['onedrive'], 5: ['fenetres', 'moniteur'], 8: ['remise'] };
+  /* Quelle image va sous quelle case : champ `demos` de chaque bloc, dans fiche.js (moteur commun blocs.js). */
 
   const el = (tag, cls, t) => { const n = document.createElement(tag); if (cls) n.className = cls; if (t != null) n.textContent = t; return n; };
   const c = (n, id) => { n.dataset.c = id; return n; };
@@ -233,8 +233,9 @@ const Demo = (() => {
   }
 
   /* Le lecteur : ◀ ▶, points, Revoir / Pause. Immobile si l'élève a demandé moins d'animations. */
-  function cree(cle, auto = true) {
-    const d = DEMOS[cle]; if (!d) return null; const frames = d.images;
+  /* images : numéros des images à montrer (une case), sinon toute l'animation. */
+  function cree(cle, auto = true, images) {
+    const d = DEMOS[cle]; if (!d) return null; const frames = images ? images.map(n => d.images[n]).filter(Boolean) : d.images; if (!frames.length) return null;
     const box = el('div', 'demo'); box.setAttribute('role', 'img'); box.dataset.demo = cle;
     const scene = el('div', 'demo-scene'), curseur = el('div', 'demo-curseur'), legende = el('p', 'demo-legende');
     curseur.innerHTML = '<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M4 2l16 11-7 1.5L9.5 21z" fill="#111" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg>';
@@ -277,27 +278,9 @@ const Demo = (() => {
     return box;
   }
 
-  /* Ce que blocs.js affiche sous les cases d'une étape (DEMOS_SOUS_CASES dans fiche.js) : la première démo ouverte,
-     les suivantes repliées (elles ne jouent qu'à l'ouverture). Une seule joue à la fois. */
+  /* Une seule animation joue à la fois dans le volet « Toutes les animations ». */
   let actives = [];
   function stopTout() { actives.forEach(b => b.stop()); actives = []; }
-  function pourEtape(i) {
-    stopTout();
-    const cles = ETAPES[i]; if (!cles) return null;
-    const w = el('section', 'demo-bloc');
-    cles.forEach((cle, n) => {
-      const d = el('details', 'demo-volet'); if (n === 0) d.open = true;
-      d.append(el('summary', 'demo-titre', '👀 Regarde comment faire — ' + DEMOS[cle].titre));
-      let box = null;
-      d.addEventListener('toggle', () => {
-        if (d.open) { w.querySelectorAll('details.demo-volet[open]').forEach(x => { if (x !== d) x.open = false; }); if (!box) { box = cree(cle, true); d.append(box); } else box.joue(); actives.push(box); }
-        else if (box) box.stop();
-      });
-      if (n === 0) { box = cree(cle, true); d.append(box); actives.push(box); }
-      w.append(d);
-    });
-    return w;
-  }
 
   /* Le volet « Toutes les animations » : un bouton par animation, sans changer d'étape. */
   function volet(conteneur) {
@@ -312,7 +295,7 @@ const Demo = (() => {
     conteneur.addEventListener('toggle', () => { if (!conteneur.open && enCours) enCours.stop(); });
   }
 
-  return { cree, pourEtape, volet, stopTout, cles: Object.keys(DEMOS), etapes: ETAPES };
+  return { cree, volet, stopTout, cles: Object.keys(DEMOS) };
 })();
 /* Le volet « Toutes les animations », dans l'en-tête de la fiche. */
 (() => { const v = document.getElementById('demo-tout'); if (v) Demo.volet(v); })();

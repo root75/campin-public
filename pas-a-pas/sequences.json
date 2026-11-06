@@ -621,7 +621,7 @@
       "Préparer un seul devoir Classroom « Labo 07 — Dans les coulisses du PC », /10, avec remise d’un document personnel à la fin du parcours. La préparation ne crée ni ne publie ce devoir. Ne pas distribuer de copie déjà mise en page.",
       "L’élève crée un rapport Google Docs à partir de la trame en texte brut avant les premières mesures. Il garde ce même document pendant tout le travail et ne le remet qu’une fois terminé.",
       "Prévoir un fichier déjà enregistré dans le dossier OneDrive scolaire de l’Explorateur, par exemple celui du Labo 06 ; un fichier de démonstration sans donnée privée si nécessaire. La mission ne dépend pas d’une autre séquence obligatoirement réalisée juste avant.",
-      "Correction : hypothèses initiales aux étapes internes 2, 4 et 7 du Journal privé ; preuves écrites courtes dans le rapport joint à Classroom, incidents d’entraînement vérifiés à deux et geste final vérifié individuellement par le professeur. Les autres blocs enregistrent uniquement « rapport:… », une déclaration d’avancement, sans lecture du document ni contrôle de remise.",
+      "Correction : hypothèses initiales aux étapes internes 2, 5 et 8 du Journal privé ; preuves écrites courtes dans le rapport joint à Classroom, incidents d’entraînement vérifiés à deux et geste final vérifié individuellement par le professeur. Les autres blocs enregistrent uniquement « rapport:… », une déclaration d’avancement, sans lecture du document ni contrôle de remise.",
       "Grille : enquête /7, document et remise /3. Identification et nom ; styles de titres et vrai tableau ; capture ciblée et légendée, bon document joint et remise confirmée. Aucun calcul automatique de note.",
       "Compte scolaire : Mes cours ▸ classes et cours ouverts ▸ cocher labo-07 uniquement pour la classe concernée. Nouvelle séance au premier lancement ; conserver la séance pour les continuations.",
       "Vérifier sur un PC élève : Gestionnaire des tâches et ses totaux, GIMP (ouvert pour les élèves, temps d’ouverture), Calculatrice, Bloc-notes, fenêtres, chemin et Statut du fichier OneDrive. Aucun arrêt de processus, suppression ou changement de réglage.",
@@ -695,7 +695,7 @@
         ],
         "blocs": [
           1,
-          3
+          4
         ]
       },
       {
@@ -711,7 +711,22 @@
           "Qu’avez-vous vraiment observé ?",
           "Quelle autre cause reste possible ?"
         ],
-        "repere": "Ouvrir la synthèse de la mission 1 après la discussion. Observation des ressources = prolongement, sans compétence de 3e artificiellement attribuée."
+        "repere": "Après la discussion : écran suivant, la synthèse. Observation des ressources = prolongement, sans compétence de 3e artificiellement attribuée."
+      },
+      {
+        "type": "ecran",
+        "titre": "Synthèse 1 — Ce qui tourne dans le PC",
+        "min": 3,
+        "methode": "Le professeur affiche la synthèse, au tableau et sur les postes",
+        "lignes": [
+          "Ce qu’on retient de la mission 1",
+          "Le PC est une machine ; Windows est un logiciel système. Plusieurs logiciels fonctionnent en même temps.",
+          "Le processeur effectue le travail ; la mémoire de travail garde les données des logiciels ouverts.",
+          "À l’ouverture, GIMP fait surtout travailler le processeur, quelques secondes ; une fois ouvert, il occupe la mémoire.",
+          "Des valeurs instantanées bougent : une comparaison courte donne un indice, pas une cause unique.",
+          "Mémoire de travail et place des fichiers sur le disque sont deux choses différentes."
+        ],
+        "repere": "Afficher après la discussion seulement. Les élèves ne la recopient pas : elle reste dans le « Je retiens »."
       },
       {
         "type": "atelier",
@@ -723,8 +738,8 @@
           "Note fichier, chemin et statut ; justifie en une phrase la disponibilité sans réseau."
         ],
         "blocs": [
-          4,
-          5
+          5,
+          6
         ],
         "repere": "Le chemin à relever est celui du fichier dans OneDrive sur ce poste. Le rapport Docs est un document en ligne distinct ; Google Drive n’est pas un lecteur installé sur les PC de l’école."
       },
@@ -741,7 +756,22 @@
           "Local et synchronisé s’excluent-ils ?",
           "Quel indice manque si le statut n’est pas affiché ?"
         ],
-        "repere": "Ouvrir la synthèse de la mission 2. Aucun changement des réglages OneDrive."
+        "repere": "Après la discussion : écran suivant, la synthèse. Aucun changement des réglages OneDrive."
+      },
+      {
+        "type": "ecran",
+        "titre": "Synthèse 2 — Visible et disponible",
+        "min": 3,
+        "methode": "Le professeur affiche la synthèse, au tableau et sur les postes",
+        "lignes": [
+          "Ce qu’on retient de la mission 2",
+          "Un fichier local est présent sur ce PC : cela ne prouve pas qu’une copie existe ailleurs.",
+          "Un fichier synchronisé appartient à OneDrive : ses changements partent en ligne quand la synchronisation fonctionne. Il peut avoir une copie locale ou être seulement en ligne.",
+          "Nuage bleu : en ligne seulement, réseau nécessaire. Cercle blanc à bord vert avec coche : disponible ici. Disque vert plein avec coche blanche : toujours conservé sur cet appareil.",
+          "Deux flèches : synchronisation en cours ; croix rouge : problème. Ces deux états ne prouvent pas que la copie en ligne est à jour.",
+          "Sans indication exploitable, on ne tranche pas."
+        ],
+        "repere": "Afficher après la discussion. Aucun changement des réglages OneDrive."
       },
       {
         "type": "atelier",
@@ -753,8 +783,8 @@
           "Un seul incident rédigé en quatre lignes. Pour les trois autres : chacun formule sa propre hypothèse, manipule et explique au binôme ; inversez acteur et observateur."
         ],
         "blocs": [
-          6,
-          6
+          7,
+          7
         ],
         "repere": "Montrer une seule fois au groupe le bouton du moniteur externe. Les binômes vérifient les trois incidents non rédigés avec les critères annoncés ; le professeur intervient sur blocage persistant ou désaccord. Pas de passage obligatoire après chaque essai."
       },
@@ -774,6 +804,21 @@
         "repere": "Ouvrir la synthèse de la mission 3. Faire justifier un test à l’oral sur cas fictif. Ne pas demander un deuxième incident rédigé."
       },
       {
+        "type": "ecran",
+        "titre": "Synthèse 3 — La méthode du dépanneur",
+        "min": 3,
+        "methode": "Le professeur affiche la synthèse, au tableau et sur les postes",
+        "lignes": [
+          "Ce qu’on retient de la mission 3",
+          "Partir du symptôme, proposer une hypothèse, choisir un test simple et réversible, observer, puis justifier — ou changer d’hypothèse.",
+          "Une fenêtre peut être masquée, une autre active.",
+          "Fermer une application ne supprime pas un fichier enregistré.",
+          "Éteindre l’écran n’arrête pas nécessairement le PC.",
+          "Windows reste le système qui permet d’utiliser la machine et ses applications."
+        ],
+        "repere": "Afficher après la discussion, avant la relecture en binôme."
+      },
+      {
         "type": "atelier",
         "titre": "Relecture en binôme — montre-moi l’indice",
         "min": 5,
@@ -784,8 +829,8 @@
           "Un point réussi, une correction possible. L’auteur corrige lui-même, puis inversez les rôles."
         ],
         "blocs": [
-          6,
-          6
+          7,
+          7
         ],
         "repere": "Les élèves gardent leur souris. Aucun nouveau paragraphe, note ou partage de document demandé. Le site ne recueille pas cette relecture. La partie finale reste individuelle ; aucune correction entre pairs avant sa remise."
       },
@@ -800,10 +845,10 @@
           "Montre ta manipulation et explique la distinction machine / Windows / application / fichier à l’oral."
         ],
         "blocs": [
-          7,
-          8
+          8,
+          9
         ],
-        "repere": "Travail quotidien /10 : enquête /7, document/remise /3. Hypothèse et test sur le site (étape interne 7), preuve et décision courtes dans le rapport. Observer le geste et faire justifier oralement ; aucune validation orale collectée par le site."
+        "repere": "Travail quotidien /10 : enquête /7, document/remise /3. Hypothèse et test sur le site (étape interne 8), preuve et décision courtes dans le rapport. Observer le geste et faire justifier oralement ; aucune validation orale collectée par le site."
       },
       {
         "type": "ecran",

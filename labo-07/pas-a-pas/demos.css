@@ -1,6 +1,7 @@
 /* Labo 07 — démos « Regarde comment faire ». Lecteur repris du Rat de ville ; maquettes Windows ajoutées.
    Les maquettes restent claires en mode sombre : elles imitent l'écran réel du poste. */
 .demo-bloc{display:grid;gap:8px;margin:12px 0}
+.demo-case{margin:10px 0 0 34px;border:1px solid var(--trait);border-radius:12px;padding:6px 10px;background:var(--carte)}.demo-case>summary{cursor:pointer;font-weight:700;color:var(--encre-bouton)}.demo-case[open]>summary{margin-bottom:6px}
 .demo-volet{border:1px solid var(--trait);border-radius:14px;padding:8px 12px;background:var(--carte)}
 .demo-volet>summary{cursor:pointer}
 .demo-volet[open]>summary{margin-bottom:8px}

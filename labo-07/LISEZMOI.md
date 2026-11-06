@@ -1,6 +1,6 @@
 # Labo 07 — version testable
 
-Contenu : `pas-a-pas/fiche.js` (préparer le rapport, trois missions, un défi final, remettre le rapport ; neuf étapes internes pour le suivi, à reprendre selon les besoins).
+Contenu : `pas-a-pas/fiche.js` (préparer le rapport, trois missions, un défi final, remettre le rapport ; dix étapes internes pour le suivi, à reprendre selon les besoins).
 Moteur : `../pas-a-pas/blocs.js`, partagé avec Python 1 et Python 2.
 Conducteur professeur : clé `labo-07` dans `../pas-a-pas/sequences.json` ; accessible au tableau.
 Préparation, corrigé et activation : dépôt privé `campin-pedagogique/cours/3ttr-labo/sequences/07-coulisses-pc/PROF.md`.
@@ -19,8 +19,8 @@ en quatre lignes et une décision finale en deux phrases. Les trois autres incid
 manipulés et vérifiés en binôme, avec échange des rôles et correction par l’auteur, sans autre compte rendu. Le professeur garde le contrôle individuel du défi final. À la fin seulement, il joint ce document dans le
 nouveau devoir Classroom que le professeur devra préparer et publier lui-même.
 
-Collecte du site : API `noter()` et Journal existants. Les étapes internes **2, 4, 7** conservent les hypothèses
-initiales (et le test final) en texte court, ≤ 200 caractères. Les six autres étapes enregistrent une déclaration `rapport:…`. Deux exercices préalables
+Collecte du site : API `noter()` et Journal existants. Les étapes internes **2, 5, 8** conservent les hypothèses
+initiales (et le test final) en texte court, ≤ 200 caractères. Les sept autres étapes enregistrent une déclaration `rapport:…`. Deux exercices préalables
 non cotés varient les méthodes : QCM de conclusion et cartes de gestes à remettre dans l’ordre.
 Leurs essais utilisent les événements existants (`faux`, `ouvert` préfixé `activité:`) sans faire
 avancer seuls la mission. Ils ne collectent pas les preuves du document. Le site ne lit ni Docs,
@@ -63,8 +63,17 @@ contrôle du professeur. Le bouton du moniteur est présenté une fois au groupe
 ## Animations et variantes (5 novembre 2026)
 
 `pas-a-pas/demos.js` + `demos.css` : animations « 👀 Regarde comment faire » (maquettes Windows, Docs,
-Chrome, Classroom ; valeurs fictives), placées sous le but de l’étape par `blocs.js` (`Demo.pourEtape`),
+Chrome, Classroom ; valeurs fictives), placées **sous chaque case** par le moteur commun `blocs.js` (champ `demos`
+des blocs, depuis le 06/11/2026),
 et volet « Toutes les animations » en tête de fiche. Pas d’animation pour le défi final.
 QCM de l’étape 2 et ordre de l’étape 5 : trois variantes (`BLOCS[i].variantes`), tirées par l’adresse de
 l’élève (`tirage`, même hachage que `Code.gs`). Étape 1 : consigne « rapport à côté du cours » (vue
 fractionnée de Chrome), avec son animation. Essai : `essai-labo07.js` (143 contrôles).
+
+**06/11/2026** : une seule version du QCM (étape 4) et de l’ordre (étape 7) — les trois variantes
+étaient presque identiques et ces exercices ne sont pas cotés ; exception voulue à la règle des trois
+variantes. Mission 1, étape 1 : la consigne est dans les cases (« À ton avis… », « Mon hypothèse »),
+sans « Lis le défi ». Remise : les trois exigences sont trois cases. Synthèses des missions 1 à 3 :
+retirées de la fiche, affichées par le professeur en mode séquence (écrans « Synthèse 1 / 2 / 3 »,
+juste après chaque mise en commun). Mission 1 en trois étapes : hypothèse, « Relever les mesures »
+(12 cases), « Capturer et conclure » (8 cases, QCM) ; dix étapes internes. Essai : 175 contrôles.
