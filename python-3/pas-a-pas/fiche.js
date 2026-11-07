@@ -265,7 +265,8 @@ const BLOCS = [
     bulle:"int( ) : du texte au nombre.",
     veux:"Transformer la réponse tapée en nombre.",
     fais:CASES("Exécute le programme tel quel : "+EXECUTER, "Ajoute int( ) au bon endroit.", "Exécute : la fiche essaie deux nombres."),
-    extra:`<div class="encart"><p><code>int("3")</code> transforme le texte <b>"3"</b> en nombre <b>3</b>. La forme la plus courante, à retenir :</p>${CODE('nombre = int(input("Un nombre ? "))')}</div>`,
+    extra:`<div class="encart"><p><code>int("3")</code> transforme le texte <b>"3"</b> en nombre <b>3</b>. La forme la plus courante, à retenir :</p>${CODE('nombre = int(input("Un nombre ? "))')}
+  <p><b>Dans Thonny</b>, <span class="chemin">menu Affichage ▸ Variables</span> le montre : sans int( ), la boîte contient <code>'3'</code>, <b>entre apostrophes</b> : c'est un texte. Avec int( ), elle contient <code>3</code>.</p></div>`,
     ...piegeCode(PIEGE_V[0]),
     variantes:[piegeCode(PIEGE_V[1]), piegeCode(PIEGE_V[2])] },
 
