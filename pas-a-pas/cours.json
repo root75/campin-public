@@ -21,6 +21,12 @@
       "etapes": 10
     },
     {
+      "id": "python-3",
+      "titre": "Python 03 — Texte, nombre et input()",
+      "chemin": "python-3/pas-a-pas/",
+      "etapes": 15
+    },
+    {
       "id": "labo-07",
       "titre": "Labo 07 — Dans les coulisses du PC",
       "chemin": "labo-07/pas-a-pas/",

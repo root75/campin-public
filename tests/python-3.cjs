@@ -1,0 +1,110 @@
+// node tests/python-3.cjs — chaque version de chaque preuve de Python 03, avec le vrai Python
+// et le lanceur de la fiche (input() simulé, essais). Une solution de référence doit passer,
+// le code de départ doit échouer, et la bonne réponse d'un QCM doit être ce que Python affiche.
+const fs = require('node:fs');
+const vm = require('node:vm');
+const assert = require('node:assert/strict');
+const { spawnSync } = require('node:child_process');
+
+const contenu = fs.readFileSync('python-3/pas-a-pas/fiche.js', 'utf8');
+const s = contenu + fs.readFileSync('pas-a-pas/blocs.js', 'utf8');
+const ctx = vm.createContext({});
+vm.runInContext(s.slice(0, s.indexOf('const MOTEUR =')) + '\nconst APERCU = true;\n' +
+  s.slice(s.indexOf('const apercuV ='), s.indexOf('\nfunction barre()')) +
+  '\nglobalThis.bloc = (i,v) => { apercuV[i-1]=v; return blocVu(i-1); };' +
+  '\nglobalThis.N = BLOCS.length; globalThis.LVde = () => LV;', ctx);
+const LANCEUR = contenu.match(/const LANCEUR = `([\s\S]*?)`;/)[1];
+
+/* Le même _lance que la page, dans le Python du poste : la sortie est capturée à part. */
+function lance(code, entrees = []) {
+  const prog = LANCEUR + `
+import io, contextlib
+_tampon = io.StringIO()
+with contextlib.redirect_stdout(_tampon):
+    _r = _lance(${JSON.stringify(code)}, ${JSON.stringify(JSON.stringify(entrees))})
+_d = json.loads(_r); _d["sortie"] = _tampon.getvalue(); _d["code"] = ${JSON.stringify(code)}
+print(json.dumps(_d))`;
+  const r = spawnSync('python3', ['-I', '-c', prog], { encoding: 'utf8' });
+  assert.equal(r.status, 0, r.stderr);
+  return JSON.parse(r.stdout.trim().split('\n').pop());
+}
+function execute(Q, code) {
+  if (!Q.essais) return lance(code);
+  const tous = Q.essais.map(e => lance(code, e));
+  return Object.assign({}, tous[0], { essais: tous, erreur: (tous.find(x => x.erreur) || {}).erreur || null });
+}
+
+assert.equal(ctx.N, 15, 'quinze blocs (cours.json : etapes 15)');
+const catalogue = JSON.parse(fs.readFileSync('pas-a-pas/cours.json', 'utf8')).cours.find(c => c.id === 'python-3');
+assert.equal(catalogue.etapes, ctx.N);
+const conducteur = JSON.parse(fs.readFileSync('pas-a-pas/sequences.json', 'utf8'))['python-3'];
+const couverts = new Set();
+conducteur.moments.filter(m => m.blocs).forEach(m => { for (let i = m.blocs[0]; i <= m.blocs[1]; i++) couverts.add(i); });
+assert.equal(couverts.size, ctx.N, 'le conducteur couvre chaque bloc');
+
+/* Solutions de référence : (bloc vu) → code. */
+const nombres = code => code.match(/\d+(\.\d+)?/g).map(Number);
+const SOLUTIONS = {
+  3: b => b.q.depart.replace(/"/g, ''),
+  5: b => { const [l1, l2] = b.q.depart.split('\n'); const nom = l1.split(' = ')[0]; const texte = l2.match(/"(.*?) : "/)[1]; return `${l1}\nprint("${texte} :", ${nom})`; },
+  7: b => b.q.depart + `print("${b.q.q.match(/affiche (\S+) et/)[1]}", prenom)`,
+  8: b => 'mot = input()\n' + 'print(mot)\n'.repeat(b.q.depart.split('\n').length),
+  10: b => b.q.depart.replace('input("Un nombre ? ")', 'int(input("Un nombre ? "))'),
+  13: () => '# on demande le nombre de pièces\npieces = int(input("Combien de pièces ? "))\n# on calcule\nscore = pieces * 10\n# on affiche\nprint("Score :", score)',
+  15: b => b.q.depart + 'degats = int(input("Dégâts ? "))\nvies = vies - degats\nprint("Il reste", vies, "vies")'
+};
+
+let total = 0;
+for (let n = 1; n <= ctx.N; n++) {
+  const nv = ctx.bloc(n, 1)._n;
+  const reponses = new Set();
+  for (let v = 1; v <= nv; v++) {
+    const b = ctx.bloc(n, v), Q = b.q;
+    assert.ok(b.titre && b.fais && b.coince && b.coince.length, `${n}/${v}: titre, cases, Ça coince`);
+    if (Q.type === 'code') {
+      const ok = execute(Q, SOLUTIONS[n](b));
+      assert.equal(Q.test(ok), true, `${n}/${v}: la solution de référence doit passer\n${ok.code}\n${JSON.stringify(ok.essais || ok)}`);
+      if (Q.depart) { const ko = execute(Q, Q.depart); assert.notEqual(Q.test(ko), true, `${n}/${v}: le départ ne doit pas passer`); }
+      reponses.add(SOLUTIONS[n](b) + JSON.stringify(Q.essais));
+    } else if (Q.type === 'qcm') {
+      assert.equal(new Set(Q.c).size, Q.c.length, `${n}/${v}: choix distincts`);
+      assert.equal(Q.p.length, Q.c.length, `${n}/${v}: un retour par choix`);
+      reponses.add(Q.c[0]);
+    } else if (Q.type === 'saisie') {
+      reponses.add(String(Q.q));
+    }
+    total++;
+  }
+  if (nv > 1) assert.equal(reponses.size, nv, `bloc ${n} : trois versions, trois bonnes réponses distinctes`);
+}
+
+/* Les QCM de prédiction : la bonne réponse est ce que Python affiche vraiment. */
+const derniere = r => r.sortie.trim().split('\n').pop();
+for (let v = 1; v <= 3; v++) {
+  const b2 = ctx.bloc(2, v); const expr = b2.q.q.match(/print\((.*)\) \?/)[1];
+  assert.equal(derniere(lance(`print(${expr})`)), b2.q.c[0], `bloc 2/${v}`);
+  const b4 = ctx.bloc(4, v); const e4 = b4.q.q.match(/print\((.*)\) \?/)[1];
+  assert.equal(derniere(lance(`print(${e4})`)), b4.q.c[0], `bloc 4/${v}`);
+  const b6 = ctx.bloc(6, v); const c6 = b6.extra.match(/<pre class="code">([\s\S]*?)<\/pre>/)[1];
+  assert.equal(derniere(lance(c6)), b6.q.c[0], `bloc 6/${v}`);
+  const b9 = ctx.bloc(9, v); const c9 = b9.extra.match(/<pre class="code">([\s\S]*?)<\/pre>/)[1].replace(/&quot;/g, '"');
+  const tape9 = b9.extra.match(/on tape <b>(\d+)<\/b>/)[1];
+  assert.equal(derniere(lance(c9, [tape9])), b9.q.c[0], `bloc 9/${v}`);
+  const b12 = ctx.bloc(12, v), n12 = b12.q.q.match(/taperas (\d+)/)[1];
+  const r12 = lance(SOLUTIONS[13](), [n12]);
+  assert.ok(b12.q.ok(derniere(r12).replace('Score : ', '')), `bloc 12/${v}`);
+  const b14 = ctx.bloc(14, v), t14 = b14.q.q.match(/tapes (\S+?)[,.]/)[1];
+  const r14 = lance(SOLUTIONS[13](), [t14]);
+  if (r14.erreur) assert.ok(b14.q.c[0].includes(r14.erreur.type), `bloc 14/${v}: ${r14.erreur.type}`);
+  else assert.ok(b14.q.c[0].includes(derniere(r14).replace('Score : ', '')), `bloc 14/${v}: ${derniere(r14)}`);
+  console.log(`OK prédictions version ${v} : ${b2.q.c[0]} · ${b4.q.c[0]} · ${b6.q.c[0]} · ${b9.q.c[0]} · ${b12.q.q.match(/taperas (\d+)/)[1]} → ${derniere(r12)} · ${t14} → ${r14.erreur ? r14.erreur.type : derniere(r14)}`);
+}
+console.log(`${total} versions de preuve vérifiées sur ${ctx.N} blocs.`);
+
+/* print( contient « int( » : le test doit regarder int( comme un mot. */
+const b13 = ctx.bloc(13, 1);
+const sansInt = execute(b13.q, 'pieces = input("Combien de pièces ? ")\nscore = pieces * 10\nprint(score)');
+assert.match(b13.q.test(sansInt), /Il manque int/);
+const b10 = ctx.bloc(10, 1);
+assert.match(b10.q.test(execute(b10.q, b10.q.depart)), /Utilise int/);
+console.log('OK sans int( ) : le retour le dit, malgré le print(.');

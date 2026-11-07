@@ -608,6 +608,213 @@
       }
     ]
   },
+  "python-3": {
+    "titre": "Python 03 — Texte, nombre et input()",
+    "objectif": "Distinguer texte et nombre, lire une réponse avec input(), la convertir avec int(), puis traduire le logigramme « Le score » (sans son losange) dans Thonny. Deux périodes environ : reprendre la même séance au cours suivant plutôt que couper un bloc.",
+    "competences": [
+      "S3M10.5 « Traduire un algorithme dans un langage informatique structuré. »",
+      "S3M10.3 « Reconnaître et manipuler des variables, des constantes et des types d'affectation. »",
+      "S3M10.4 « Appliquer les instructions d'entrée et de sortie. »"
+    ],
+    "preparation": [
+      "Tableau professeur → Cours : python-3. Nouvelle séance → 3F → Démarrer au premier lancement ; conserver la séance pour la reprise.",
+      "Panneau Mes cours — classes et cours ouverts : cocher Python 03 — Texte, nombre et input() pour 3F.",
+      "Vérifier sur un poste élève : bloc 7 (un programme avec input() s'exécute dans la page avec deux essais), puis Thonny ▸ F5 sur un programme qui pose une question (la console attend la réponse).",
+      "Évaluation : pas d'annonce tant que le rythme de la classe n'est pas connu (décision du 07/11/2026). Séance non cotée ; entraînements fait / non fait selon la décision de Vincent."
+    ],
+    "moments": [
+      {
+        "type": "ecran",
+        "titre": "Aujourd'hui, le programme écoute",
+        "min": 2,
+        "methode": "Collectif",
+        "lignes": [
+          "Jusqu'ici, nos programmes affichaient. Aujourd'hui, ils posent une question et utilisent la réponse."
+        ],
+        "questions": [
+          "Dans le logigramme, quelle forme sert à lire une valeur ?",
+          "Dans un jeu, qu'est-ce que le joueur tape ou choisit ?"
+        ],
+        "exemple": "Le parallélogramme « Lire » de LogProg 03 attendait sa traduction : c'est input()."
+      },
+      {
+        "type": "atelier",
+        "titre": "Rappel — Quelle sorte d'erreur ?",
+        "min": 3,
+        "methode": "Travail autonome — fiches accessibles",
+        "lignes": [
+          "Bloc 1 : nomme la sorte d'erreur avant de répondre."
+        ],
+        "blocs": [
+          1,
+          1
+        ],
+        "repere": "Trois versions : SyntaxError, NameError, erreur de logique. Écouter qui hésite entre logique et exécution."
+      },
+      {
+        "type": "vote",
+        "titre": "Vote — Je prédis",
+        "min": 1,
+        "methode": "Prédire seul, voter, puis expliquer",
+        "question": "Qu'affiche ce programme ?",
+        "choix": [
+          "34",
+          "7",
+          "3 + 4",
+          "Une erreur"
+        ],
+        "situations": [
+          {
+            "texte": "a = \"3\"\nb = \"4\"\nprint(a + b)",
+            "bonne": 0
+          }
+        ],
+        "repere": "Clore le vote pour afficher les effectifs. Puis Suivant : faire expliquer avant de révéler."
+      },
+      {
+        "type": "ecran",
+        "titre": "Mise en commun — Texte ou nombre",
+        "min": 3,
+        "methode": "Collectif",
+        "lignes": [
+          "Les guillemets changent tout."
+        ],
+        "questions": [
+          "Qui a choisi 7 ? Que changent les guillemets ?",
+          "Qui a choisi 34 ? Que fait + avec deux textes ?",
+          "Comment obtenir 7 sans toucher à la dernière ligne ?"
+        ],
+        "code": "a = \"3\"\nb = \"4\"\nprint(a + b)",
+        "exemple": "str, int, float : print(type(a)). Deux réparations : enlever les guillemets, ou int(a) + int(b)."
+      },
+      {
+        "type": "atelier",
+        "titre": "Texte ou nombre ?",
+        "min": 19,
+        "methode": "Travail autonome — fiches accessibles",
+        "lignes": [
+          "Blocs 2 à 6 : prédire, exécuter, réparer.",
+          "Bloc 5 : STOP, montre ta réparation à ton voisin avant de continuer."
+        ],
+        "blocs": [
+          2,
+          6
+        ],
+        "repere": "TypeError au bloc 5 : la virgule de print est la réparation attendue ; str(vies) est aussi accepté. Bloc 6 : 3.0 surprend, c'est voulu (leçon 4 de Cercles informatiques, QCM « Flottant »)."
+      },
+      {
+        "type": "vote",
+        "titre": "Vote — Le piège",
+        "min": 1,
+        "methode": "Prédire seul, voter, puis expliquer",
+        "question": "On tape 3 puis Entrée. Qu'affiche la dernière ligne ?",
+        "choix": [
+          "3333333333",
+          "30",
+          "Une erreur TypeError",
+          "nombre * 10"
+        ],
+        "situations": [
+          {
+            "texte": "nombre = input(\"Un nombre ? \")\nprint(nombre * 10)",
+            "bonne": 0
+          }
+        ],
+        "repere": "Ne pas révéler avant la mise en commun : c'est le moment clé de la séance."
+      },
+      {
+        "type": "ecran",
+        "titre": "Mise en commun — input() rend un texte",
+        "min": 3,
+        "methode": "Collectif",
+        "lignes": [
+          "Ce qu'on tape au clavier est toujours du texte."
+        ],
+        "questions": [
+          "Qui a choisi 30 ? Qu'est-ce que input() a rangé dans nombre ?",
+          "Où placer int() ?",
+          "Que se passerait-il si on tapait trois en lettres ?"
+        ],
+        "code": "nombre = int(input(\"Un nombre ? \"))\nprint(nombre * 10)",
+        "exemple": "Montrer une fois dans Thonny : F5, la console attend, on tape, Entrée. Dans la fiche, les réponses sont déjà tapées (deux essais)."
+      },
+      {
+        "type": "atelier",
+        "titre": "Le programme pose une question",
+        "min": 17,
+        "methode": "Travail autonome — fiches accessibles",
+        "lignes": [
+          "Blocs 7 à 10 : input(), Echo, le piège, int().",
+          "Bloc 10 : STOP, la fiche essaie deux nombres."
+        ],
+        "blocs": [
+          7,
+          10
+        ],
+        "repere": "Echo (leçon 5) : EOFError quand il y a plus d'input() que de lignes tapées. Les deux essais empêchent d'écrire le résultat en dur."
+      },
+      {
+        "type": "ecran",
+        "titre": "Du logigramme au programme",
+        "min": 3,
+        "methode": "Collectif",
+        "lignes": [
+          "Lire → int(input(…)) ; ← → = ; × → * ; Afficher → print()."
+        ],
+        "questions": [
+          "Combien de lignes Python pour ce logigramme ?",
+          "Quel nom de boîte, sans accent ?"
+        ],
+        "code": "Lire pieces            →  ?\nscore ← pieces × 10    →  ?\nAfficher score         →  ?",
+        "exemple": "Le logigramme 4 « Le score » de LogProg 03, sans son losange : le bonus attend le si… alors de Python 04. Ne pas écrire la solution."
+      },
+      {
+        "type": "atelier",
+        "titre": "« Le score », dans Thonny",
+        "min": 21,
+        "methode": "Travail autonome — fiches accessibles",
+        "lignes": [
+          "Blocs 11 à 14 : fichier 02_Le-score_Nom.py, traduire, prouver, commenter.",
+          "Bloc 14 : relecture à deux, le voisin teste avec SON nombre."
+        ],
+        "blocs": [
+          11,
+          14
+        ],
+        "repere": "Contrôler réellement le fichier quand un doute persiste. Relecture entre pairs : une chose réussie, une chose à corriger ; l'auteur corrige lui-même. Aucun avis de camarade ne vaut note."
+      },
+      {
+        "type": "atelier",
+        "titre": "Défi — Les vies, version jeu",
+        "min": 6,
+        "methode": "Individuel",
+        "lignes": [
+          "Bloc 15 : seul, sans modèle."
+        ],
+        "blocs": [
+          15,
+          15
+        ],
+        "repere": "Les nombres dépendent de la version de l'élève (3, 5 ou 6 vies), comme en Python 01 et 02. Pour les rapides : le défi « pizza » de la page de fin (float, round)."
+      },
+      {
+        "type": "fin",
+        "titre": "Bilan",
+        "min": 4,
+        "methode": "Bilan oral",
+        "lignes": [
+          "Enregistre 02_Le-score_Nom.py.",
+          "Texte ou nombre : comment le savoir ?"
+        ],
+        "questions": [
+          "Pourquoi \"3\" * 10 donne-t-il 3333333333 ?",
+          "Que fait int() ?",
+          "Que manque-t-il à « Le score » pour donner un bonus ?"
+        ],
+        "repere": "Annonce de Python 04 : si… alors (le bonus). Pas d'annonce d'évaluation tant que le rythme de la classe n'est pas connu."
+      }
+    ]
+  },
   "labo-07": {
     "ecransSurPostes": true,
     "titre": "Labo 07 — Dans les coulisses du PC",
