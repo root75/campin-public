@@ -1,4 +1,4 @@
-/* Démos animées « Regarde comment faire » des fiches Python (python-1, python-2), sur le modèle du
+/* Démos animées « Regarde comment faire » des fiches Python (python-1, python-2, python-3), sur le modèle du
    Rat de ville : une mini-maquette (Bureau Windows, Explorateur, Thonny, Chrome) rejoue chaque geste
    du bloc. Aucune donnée élève ; rien n'est enregistré.
    Les démos sont déclarées dans le fiche.js de chaque cours : const DEMOS_FICHE = { numéro de bloc
@@ -11,7 +11,7 @@
    Libellés Windows 11, Thonny et Chrome relevés de mémoire : à vérifier sur un poste de la B101. */
 const Demo = (() => {
   const DEMOS = typeof DEMOS_FICHE !== 'undefined' ? DEMOS_FICHE : {};
-  const FICHIER = '01_Les-vies_Nom.py';
+  const FICHIER_DEFAUT = '01_Les-vies_Nom.py';   // une image peut donner fichier: '…' (python-3)
   const { el, c } = DemoLecteur;
 
   /* ===== Les écrans ===== */
@@ -75,16 +75,18 @@ const Demo = (() => {
     const cons = c(el('div', 'md-th-console'), 'th-console');
     cons.append(el('div', 'md-th-ctitre', 'Console'));
     if (f.run) cons.append(el('div', 'md-th-run-l', '>>> %Run ' + f.nom));
-    if (f.run && !f.erreur) cons.append(el('div', 'md-th-res', '…le nombre affiché par TON programme'));
+    /* question : un input() qui attend ; tape : la réponse tapée ; resultat : ce qui s'affiche ensuite. */
+    if (f.run && f.question) { const q = el('div', 'md-th-res', f.question); q.append(el('b', null, f.tape || '▌')); cons.append(q); }
+    if (f.run && !f.erreur && (!f.question || f.resultat)) cons.append(el('div', 'md-th-res', '…le nombre affiché par TON programme'));
     if (f.erreur) {
       cons.append(el('div', 'md-th-err', 'Traceback (most recent call last):'), el('div', 'md-th-err', '  File "…\\' + f.nom + '", line 3'));
       const d = c(el('div', 'md-th-err md-th-der'), 'th-erreur'); d.append(el('span', 'md-th-masque', '▢▢▢▢'), 'Error: …'); cons.append(d);
     }
-    cons.append(el('div', null, '>>> '));
+    if (!f.question || f.resultat) cons.append(el('div', null, '>>> '));
     e.append(menus, outils, onglet, ed, cons);
     if (f.menu) {
       const m = el('div', 'md-menu md-th-menu');
-      [['Nouveau', 'Ctrl+N', ''], ['Ouvrir…', 'Ctrl+O', 'item-ouvrir'], ['Enregistrer', 'Ctrl+S', ''], ['Enregistrer sous…', 'Ctrl+Maj+S', 'item-sous'], ['Quitter', 'Alt+F4', '']]
+      [['Nouveau', 'Ctrl+N', 'item-nouveau'], ['Ouvrir…', 'Ctrl+O', 'item-ouvrir'], ['Enregistrer', 'Ctrl+S', ''], ['Enregistrer sous…', 'Ctrl+Maj+S', 'item-sous'], ['Quitter', 'Alt+F4', '']]
         .forEach(([t, r, id]) => { const i = c(el('div', 'md-item' + (id === f.menu ? ' hi' : '')), id || 'x'); i.append(el('span', null, t), el('small', null, r)); m.append(i); });
       e.append(m);
     }
@@ -93,7 +95,7 @@ const Demo = (() => {
   }
   /* Fenêtre Windows « Enregistrer sous » ou « Ouvrir ». dialogue : 1 = dans Documents, 2 = dans Python. */
   function dialogue(f) {
-    const ouvrir = f.ouvrir, d = el('div', 'md-dlg');
+    const ouvrir = f.ouvrir, d = el('div', 'md-dlg'), FICHIER = f.fichier || FICHIER_DEFAUT;
     d.append(el('div', 'md-dlg-titre', ouvrir ? 'Ouvrir' : 'Enregistrer sous'), el('div', 'md-ex-adresse', f.dialogue === 2 ? '› Documents › Python' : '› Documents'));
     const corps = el('div', 'md-dlg-corps'), nav = el('div', 'md-ex-nav'), liste = el('div', 'md-ex-liste');
     [['🖥 Bureau', ''], ['📄 Documents', 'dlg-documents'], ['⬇ Téléchargements', '']].forEach(([t, id]) => { const s = el('span', id ? 'actif' : '', t); if (id) c(s, id); nav.append(s); });
