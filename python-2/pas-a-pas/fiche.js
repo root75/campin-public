@@ -81,7 +81,7 @@ const soldes = (prix, pct) => {
 const BLOCS = [
   { partie:"A — Se remettre en route", titre:"Le quiz « Python — je révise »", min:8, stop:true,
     bulle:"Re-bonjour ! On se remet en route avec un petit quiz.",
-    veux:"Te rappeler print, les variables et = après le congé. Rien n'est coté.",
+    veux:"Te rappeler print, les variables et = avant d'aller plus loin. Rien n'est coté.",
     fais:CASES(`Clique sur le lien <a href="https://root75.github.io/campin-public/python-je-revise/" target="_blank" rel="noopener">Python — je révise</a> : il s'ouvre dans un nouvel onglet.`,
                `Clique sur <span class="chemin">l'onglet Quiz ▸ Commencer le quiz</span>.`,
                "Réponds aux cinq questions.",
@@ -162,8 +162,8 @@ const BLOCS = [
     variantes:[soldes(30, 20), soldes(50, 10)] },
 
   { partie:"C — « Les vies » cassé, réparé, commenté, dans Thonny", titre:"Ouvrir mon fichier", min:3, stop:true, cle:"vies", variantes:[{},{}],
-    bulle:"Retour dans Thonny : retrouve ton programme de la séance 1.",
-    veux:"Retrouver le programme de la séance 1.",
+    bulle:"Retour dans Thonny : retrouve ton programme de Python 01.",
+    veux:"Retrouver le programme de Python 01.",
     fais:CASES(`Appuie sur la touche <b>Windows</b> ⊞, tape <b>Thonny</b>, puis appuie sur <b>Entrée</b>.`,
                `Dans Thonny : <span class="chemin">menu Fichier ▸ Ouvrir…</span> (ou <b>Ctrl + O</b>).`,
                `<span class="chemin">Documents ▸ double-clic sur Python ▸ 01_Les-vies_Nom.py ▸ Ouvrir</span>.`,
@@ -259,9 +259,9 @@ const BLOCS = [
 ];
 
 const FIN = {
-  titre:"🎉 Séance 2 terminée !",
+  titre:"🎉 Python 02 terminé !",
   bulle:"Bravo ! Ton programme est réparé, commenté et enregistré.",
-  texte:"Ton programme est réparé, commenté et enregistré. Écoute l'annonce de la première évaluation : quoi et quand.",
+  texte:"Ton programme est réparé, commenté et enregistré. Prochaine étape : Python 03, des programmes qui posent des questions.",
   plus:"Change DEUX touches de « Les vies » pour qu'il affiche 1, puis corrige ton commentaire.",
   lien:'<a href="https://root75.github.io/campin-public/python-je-revise/" target="_blank" rel="noopener">Premiers pas en Python — je révise</a> (onglet Cartes)',
   citation:{

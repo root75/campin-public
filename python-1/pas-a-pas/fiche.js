@@ -280,9 +280,9 @@ const BLOCS = [
 ];
 
 const FIN = {
-  titre:"🎉 Séance 1 terminée !",
+  titre:"🎉 Python 01 terminé !",
   bulle:"Bravo ! Ton premier programme Python tourne.",
-  texte:"Ton fichier 01_Les-vies est enregistré dans Documents ▸ Python : ne le supprime pas, on le reprend à la séance 2.",
+  texte:"Ton fichier 01_Les-vies est enregistré dans Documents ▸ Python : ne le supprime pas, on le reprend dans Python 02.",
   plus:"Change DEUX touches de ton programme pour qu'il affiche 1. Prédis, puis F5.",
   lien:'<a href="https://root75.github.io/campin-public/python-je-revise/" target="_blank" rel="noopener">Premiers pas en Python — je révise</a>',
   citation:{
