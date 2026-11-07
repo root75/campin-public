@@ -375,7 +375,7 @@ const FIN = {
   bulle:"Bravo ! Tes programmes savent maintenant poser des questions.",
   texte:"Tu sais distinguer un texte d'un nombre, lire une réponse avec input( ) et la transformer avec int( ). Prochaine étape : le bonus du score, avec si… alors (Python 04).",
   plus:`Défi de la leçon 4 de Cercles informatiques, « Délicieux transtypage » : une pizza carrée de côté L cm (un nombre à virgule, par exemple 17.5) ; chaque personne mange 100 cm². Combien de personnes nourrit-elle ? Indice : float( ) au lieu de int( ), puis round( ) pour arrondir. Écris-le dans Thonny.`,
-  lien:'<a href="https://cscircles.cemc.uwaterloo.ca/4-fr/" target="_blank" rel="noopener">Cercles informatiques — leçon 4 « Types »</a> et <a href="https://cscircles.cemc.uwaterloo.ca/5-fr/" target="_blank" rel="noopener">leçon 5 « Entrée »</a>',
+  lien:'<a href="https://root75.github.io/campin-public/python-03-je-revise/" target="_blank" rel="noopener">Python 03 — je révise</a> (l\'essentiel, un quiz, des cartes) ; pour aller plus loin : <a href="https://cscircles.cemc.uwaterloo.ca/4-fr/" target="_blank" rel="noopener">Cercles informatiques, leçons 4</a> et <a href="https://cscircles.cemc.uwaterloo.ca/5-fr/" target="_blank" rel="noopener">5</a>',
   citation:{
     texte:"La Machine analytique n'a nullement la prétention de créer quoi que ce soit. Elle peut faire tout ce que nous savons lui ordonner de faire.",
     auteur:"Ada Lovelace", source:"Note G de sa traduction du mémoire de Menabrea (1843), traduit de l'anglais",
