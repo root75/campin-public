@@ -178,7 +178,7 @@
     "objectif": "Comprendre une adresse et la forme du mail avant de s’entraîner. Durées du collectif indicatives ; prévoir ensuite 25–35 min de simulation et 20–30 min d’échange Outlook, répartissables sur plusieurs séances."
   },
   "python-1": {
-    "titre": "Séance 1 — Du logigramme au code",
+    "titre": "Python 01 — Du logigramme au code",
     "objectif": "Traduire le logigramme « Les vies », prédire son résultat et enregistrer un programme Python.",
     "competences": [
       "S3M10.5 — Traduire un algorithme dans un langage informatique structuré.",
@@ -186,10 +186,10 @@
       "S3M10.4 — Utiliser la sortie print()."
     ],
     "preparation": [
-      "Tableau professeur → Cours : python-1. Pour une nouvelle séance : Nouvelle séance → 3F → Démarrer. Pour continuer, conserver la séance existante.",
-      "Panneau Mes cours — classes et cours ouverts : Python 01 — Premiers pas coché pour 3F.",
+      "Tableau professeur → Cours : python-1. Pour une nouvelle séance : Nouvelle séance → la classe → Démarrer. Pour continuer, conserver la séance existante.",
+      "Panneau Mes cours — classes et cours ouverts : Python 01 — Premiers pas coché pour la classe.",
       "Vérifier sur un poste élève : ouverture de la fiche et exécution Python. Thonny disponible ; emplacement réel de Documents connu.",
-      "Lancer le déroulé. Les élèves ouvrent Mes cours → 3F → Python 01 — Premiers pas. Aucun travail à rendre hors cours."
+      "Lancer le déroulé. Les élèves ouvrent Mes cours → leur classe → Python 01 — Premiers pas. Aucun travail à rendre hors cours."
     ],
     "moments": [
       {
@@ -445,7 +445,7 @@
     ]
   },
   "python-2": {
-    "titre": "Séance 2 — Lire, expliquer et réparer les erreurs",
+    "titre": "Python 02 — Lire, expliquer et réparer les erreurs",
     "objectif": "Repérer une erreur, expliquer sa cause et réparer le programme « Les vies » dans Thonny.",
     "competences": [
       "S3M10.5 — Traduire et corriger un programme simple.",
@@ -453,14 +453,14 @@
       "S3M10.4 — Vérifier la sortie print()."
     ],
     "preparation": [
-      "Tableau professeur → Cours : python-2. Nouvelle séance → 3F → Démarrer seulement pour un nouveau départ.",
-      "Ouvrir Python 02 — Lire et corriger les erreurs pour 3F. Vérifier le fichier 01_Les-vies_Nom.py et son emplacement réel.",
+      "Tableau professeur → Cours : python-2. Nouvelle séance → la classe → Démarrer seulement pour un nouveau départ.",
+      "Ouvrir Python 02 — Lire et corriger les erreurs pour la classe. Vérifier le fichier 01_Les-vies_Nom.py et son emplacement réel.",
       "Préparer l'annonce d'évaluation uniquement si le contenu et la date sont fixés : au moins une semaine de délai. Aucune date n'est présumée ici."
     ],
     "moments": [
       {
         "type": "ecran",
-        "titre": "Reprise après le congé",
+        "titre": "Reprise — où en étions-nous ?",
         "min": 2,
         "methode": "Collectif",
         "lignes": [
@@ -617,10 +617,10 @@
       "S3M10.4 « Appliquer les instructions d'entrée et de sortie. »"
     ],
     "preparation": [
-      "Tableau professeur → Cours : python-3. Nouvelle séance → 3F → Démarrer au premier lancement ; conserver la séance pour la reprise.",
-      "Panneau Mes cours — classes et cours ouverts : cocher Python 03 — Texte, nombre et input() pour 3F.",
+      "Tableau professeur → Cours : python-3. Nouvelle séance → la classe → Démarrer au premier lancement ; conserver la séance pour la reprise.",
+      "Panneau Mes cours — classes et cours ouverts : cocher Python 03 — Texte, nombre et input() pour la classe.",
       "Vérifier sur un poste élève : bloc 7 (un programme avec input() s'exécute dans la page avec deux essais), puis Thonny ▸ F5 sur un programme qui pose une question (la console attend la réponse).",
-      "Évaluation : pas d'annonce tant que le rythme de la classe n'est pas connu (décision du 07/11/2026). Séance non cotée ; entraînements fait / non fait selon la décision de Vincent."
+      "Évaluation : l'annoncer seulement quand le rythme de la classe est connu, au moins une semaine avant. Séance non cotée ; entraînements fait / non fait selon la décision de Vincent."
     ],
     "moments": [
       {
@@ -811,7 +811,7 @@
           "Que fait int() ?",
           "Que manque-t-il à « Le score » pour donner un bonus ?"
         ],
-        "repere": "Annonce de Python 04 : si… alors (le bonus). Pas d'annonce d'évaluation tant que le rythme de la classe n'est pas connu."
+        "repere": "Annonce de Python 04 : si… alors (le bonus). Pas d'annonce d'évaluation tant que le rythme de la classe n'est pas connu ; une évaluation globale s'annonce au moins une semaine avant."
       }
     ]
   },
