@@ -198,7 +198,7 @@ const ETAPES_RAT = [
       "Je vérifie mon bloc-notes : une vraie liste à puces, une vraie liste numérotée d’au moins six gestes, ma phrase.",
       "J’ouvre ma grille (bouton 📋, après l’étape 7) et je remplis la colonne « Moi » : A, B, C ou D pour chaque critère.",
       "Je montre mon document à mon voisin. Il le compare aux cases 2 à 10 et me montre un écart, sans toucher la souris. Je corrige.",
-      "Classroom ▸ le devoir ▸ Votre travail ▸ Ajouter ou créer ▸ Google Drive ▸ mon document ▸ Insérer ▸ Remettre."
+      "Classroom ▸ le devoir ▸ Vos devoirs ▸ Ajouter ou créer ▸ Google Drive ▸ mon document ▸ bouton bleu ▸ Rendre le devoir ▸ Rendre le devoir."
     ],
     "icones": { "0": ["orthographe"] }
   }

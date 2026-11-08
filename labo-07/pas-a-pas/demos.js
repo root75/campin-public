@@ -78,8 +78,8 @@ const Demo = (() => {
       { ecran: 'classroom', cible: 'ajouter', legende: 'Classroom ▸ Informatique — 3F ▸ Travaux et devoirs ▸ Labo 07 ▸ + Ajouter ou créer.' },
       { ecran: 'classroom', menu: 1, cible: 'gdrive', legende: 'Je choisis Google Drive.' },
       { ecran: 'classroom', picker: 2, cible: 'inserer', legende: 'Je clique sur ' + NOM + ', puis Ajouter.' },
-      { ecran: 'classroom', joint: 1, cible: 'remettre', legende: 'Joindre ne suffit pas : Remettre.' },
-      { ecran: 'classroom', joint: 1, confirme: 1, cible: 'confirmer', legende: 'Je confirme : Remettre une deuxième fois.' },
+      { ecran: 'classroom', joint: 1, cible: 'remettre', legende: 'Joindre ne suffit pas : Rendre le devoir.' },
+      { ecran: 'classroom', joint: 1, confirme: 1, cible: 'confirmer', legende: '« Rendre le devoir ? » : je confirme, Rendre le devoir une deuxième fois.' },
       { ecran: 'classroom', joint: 1, remis: 1, cible: 'statut', ok: 1, legende: '« Remis » : c’est envoyé. Remise unique, à la toute fin de l’enquête.' }
     ] }
   };
@@ -213,7 +213,7 @@ const Demo = (() => {
       if (f.joint) carte.append(el('div', 'md-cr-piece', '📄 ' + NOM));
       else carte.append(c(el('span', 'md-cr-ajouter', '+ Ajouter ou créer'), 'ajouter'));
       if (f.menu) { const m = el('div', 'md-cr-menu'); [['🟢 Google Drive', 'gdrive'], ['🔗 Lien', ''], ['📎 Fichier', '']].forEach(([t, id]) => m.append(c(el('div', 'md-item' + (id ? ' hi' : ''), t), id))); carte.append(m); }
-      carte.append(f.remis ? el('span', 'md-cr-btn', 'Annuler l’envoi') : c(el('span', 'md-cr-btn md-cr-plein', f.joint ? 'Remettre' : 'Marquer comme terminé'), 'remettre'));
+      carte.append(f.remis ? el('span', 'md-cr-btn', 'Annuler l’envoi') : c(el('span', 'md-cr-btn md-cr-plein', f.joint ? 'Rendre le devoir' : 'Marquer comme terminé'), 'remettre'));
       e.append(sujet, carte);
       if (f.picker) {
         const p = el('div', 'md-cr-picker'), liste = el('div', 'md-cr-fichiers');
@@ -224,8 +224,8 @@ const Demo = (() => {
       }
       if (f.confirme) {
         const dlg = el('div', 'md-cr-dialogue');
-        dlg.append(el('b', null, 'Remettre votre devoir ?'), el('div', 'md-cr-piece', '📄 ' + NOM));
-        const pied = el('div', 'md-cr-ppied'); pied.append(el('span', 'md-cr-btn', 'Annuler'), c(el('span', 'md-cr-btn md-cr-plein', 'Remettre'), 'confirmer'));
+        dlg.append(el('b', null, 'Rendre le devoir ?'), el('div', 'md-cr-piece', '📄 ' + NOM));
+        const pied = el('div', 'md-cr-ppied'); pied.append(el('span', 'md-cr-btn', 'Annuler'), c(el('span', 'md-cr-btn md-cr-plein', 'Rendre le devoir'), 'confirmer'));
         dlg.append(pied); e.append(dlg);
       }
     }

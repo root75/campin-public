@@ -4,7 +4,7 @@ Pages et jeux destinés aux élèves, servis par GitHub Pages. Rien de nominatif
 est public. Les sources pédagogiques (fiches, mémoire) restent dans `campin-pedagogique`, privé.
 
 - `index.html` — accueil public sans connexion ni redirection automatique, logo et valeurs WBE ; accès libre aux révisions et bouton vers la séance avec le compte scolaire.
-- `se-connecter/` — me connecter (Chrome, adresse, mot de passe), trouver mes devoirs, poser une question, rendre un devoir dans Classroom, « Ça coince ? » ; carte en tête de l’accueil et entrée « Rendre un devoir » du ☰ Menu des fiches.
+- `se-connecter/` — me connecter (Chrome, adresse, mot de passe), trouver mes devoirs, poser une question, rendre un devoir dans Classroom, « Ça coince ? », cinq animations « 👀 Regarde comment faire » (lecteur commun, `se-connecter/demos.js`) ; carte en tête de l’accueil et entrée « Rendre un devoir » du ☰ Menu des fiches.
 - `cours/` — redirection scolaire existante vers Mes cours.
 - `revisions/` — révisions et entraînements regroupés par niveau (1re, 2e, 3e).
 - `prof/` — raccourci vers le tableau professeur du même déploiement (`?vue=prof`).

@@ -1,0 +1,148 @@
+/* Me connecter et rendre un devoir — animations « Regarde comment faire ».
+   Règles du lecteur reprises de labo-07/pas-a-pas/demos.css (copie, pour que cette page ne dépende pas
+   d'une fiche) ; maquettes propres à la page en dessous. Les maquettes imitent l'écran réel. */
+.demo-zone{margin:12px 0}
+.demo{background:var(--ciel);border-radius:16px;padding:12px;display:grid;gap:8px}
+.demo-titre{font-weight:800;font-size:1.05rem;margin:0 0 6px}
+.demo-scene{position:relative;min-height:270px;overflow:hidden;border-radius:12px}
+.demo-curseur{position:absolute;left:0;top:0;transform:translate(60px,60px);transition:transform .7s cubic-bezier(.3,.7,.3,1);z-index:6;pointer-events:none}
+.demo-legende{font-weight:700;margin:0;min-height:2.6em}
+.demo.demo-ok .demo-legende::after{content:"  ⭐"}
+.demo-ctrl{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.demo-b{border:2px solid var(--encre-bouton);background:var(--carte);color:var(--encre-bouton);border-radius:20px;padding:4px 12px;font-weight:700;cursor:pointer;min-height:36px}
+.demo-jouer{margin-left:auto}
+.demo-points{display:flex;gap:5px}.demo-points span{width:9px;height:9px;border-radius:50%;background:#b9c9d4}.demo-points span.on{background:var(--encre-bouton)}
+@keyframes clic{40%{transform:scale(.92);background:#ffe9a8}}
+
+.md{background:#fff;color:#1f1f1f;font-family:"Segoe UI",Arial,sans-serif;font-size:13px;line-height:1.4;border:1px solid #c9d3db;border-radius:10px;min-height:270px;position:relative;box-sizing:border-box}
+.md-vise{outline:3px solid var(--fromage);outline-offset:2px;border-radius:4px}
+.md-clic{animation:clic .5s ease}
+.md-item{padding:5px 14px;font-size:13px}.md-item.hi{background:#e8f0fe;font-weight:700}
+
+/* Logos dessinés (pas d'image) */
+.md-logo-chrome{display:inline-block;width:22px;height:22px;border-radius:50%;background:radial-gradient(circle,#4285f4 0 30%,#fff 31% 42%,transparent 43%),conic-gradient(from -60deg,#db4437 0 120deg,#f4b400 0 240deg,#0f9d58 0)}
+.md-logo-edge{display:inline-block;width:22px;height:22px;border-radius:50% 50% 50% 20%;background:radial-gradient(circle at 65% 70%,#fff 0 18%,transparent 19%),linear-gradient(140deg,#37c6f4 0,#0c59a4 55%,#50c35f 100%)}
+.md-boite .md-logo-chrome{width:34px;height:34px}
+
+/* Windows */
+.md-bureau{background:linear-gradient(160deg,#cfe0f1,#e8eff7)}
+.md-win-fond{position:absolute;inset:0 0 38px}
+.md-win-barre{position:absolute;left:0;right:0;bottom:0;height:42px;background:#eef2f6ee;border-top:1px solid #c9d3db;display:flex;justify-content:center;align-items:center;gap:10px;border-radius:0 0 10px 10px}
+.md-win-ico{width:32px;height:32px;display:grid;place-items:center;border-radius:6px;font-size:17px}
+.md-win-start{color:#0067c0;font-size:20px;font-weight:700}
+
+/* Chrome */
+.md-ch-onglets{display:flex;align-items:end;gap:4px;background:#dee3ea;padding:6px 8px 0;border-radius:10px 10px 0 0}
+.md-ch-onglet{background:#cfd6df;border-radius:8px 8px 0 0;padding:4px 12px;font-size:12px}.md-ch-onglet.actif{background:#fff}
+.md-ch-barre{display:flex;align-items:center;gap:8px;padding:6px 8px}
+.md-ch-adresse{flex:1;background:#f1f3f4;border-radius:14px;padding:4px 12px;font-size:12px;color:#5f6368;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.md-profil{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:#e8eaed;font-size:15px;flex:none}
+.md-profil.ecole{background:#1e8e3e;color:#fff;font-weight:700}
+.md-ch-corps{display:grid;justify-items:center;gap:12px;padding:28px 10px}
+.md-google{font-size:26px;font-weight:700;color:#4285f4;padding:20px 24px}
+.md-ch-corps .md-google{padding:0}
+.md-recherche{width:70%;height:30px;border:1px solid #dadce0;border-radius:16px}
+.md-pmenu{position:absolute;right:8px;top:78px;width:200px;background:#fff;border:1px solid #c9d3db;border-radius:10px;box-shadow:0 4px 14px #0003;padding:6px 0;z-index:3}
+.md-pmenu-titre{font-weight:700;padding:4px 14px 6px;border-bottom:1px solid #eee}
+
+/* Écrans de connexion */
+.md-nouveau,.md-connexion,.md-microsoft,.md-moteur,.md-dialogue,.md-role{background:#f1f3f4}
+.md-boite{background:#fff;margin:18px auto;width:min(320px,86%);border-radius:12px;padding:16px;display:grid;gap:10px;box-shadow:0 1px 6px #0002;justify-items:start}
+.md-boite p{margin:0;color:#5f6368}
+.md-g{font-size:20px;font-weight:700;color:#4285f4}
+.md-champ{width:100%;box-sizing:border-box;border:1px solid #9aa0a6;border-radius:4px;padding:8px 10px;font-family:Consolas,monospace;min-height:36px;overflow-wrap:anywhere}
+.md-champ.vide::after{content:attr(data-vide);color:#9aa0a6;font-family:"Segoe UI",Arial,sans-serif}
+.md-pied{width:100%;display:flex;justify-content:flex-end}
+.md-bouton{background:#1a73e8;color:#fff;border-radius:18px;padding:6px 16px;font-weight:700}
+.md-bouton.ms{background:#0067b8;border-radius:0}
+.md-ms{border-radius:0}
+.md-ms-logo{width:22px;height:22px;background:linear-gradient(90deg,#f25022 0 47%,transparent 47% 53%,#7fba00 53%) top/100% 47% no-repeat,linear-gradient(90deg,#00a4ef 0 47%,transparent 47% 53%,#ffb900 53%) bottom/100% 47% no-repeat}
+
+/* Clavier */
+.md-clavier{display:grid;gap:5px;padding:10px;margin:0 10px;background:#e3e7eb;border-radius:8px}
+.md-clavier .md-rang{display:flex;gap:5px}
+.md-k{min-width:34px;height:38px;padding:2px 5px;box-sizing:border-box;background:#fff;border:1px solid #9aa5b1;border-bottom-width:3px;border-radius:6px;display:grid;align-content:center;justify-items:center;font-weight:700;font-size:14px;line-height:1.1}
+.md-k small{font-size:10px;color:#5f6368;font-weight:600}
+.md-k.l1{min-width:52px;font-size:12px}.md-k.l2{min-width:70px;font-size:12px}.md-k.espace{flex:1}
+.md-k.tenue{background:#ffe9a8;border-color:#b07d00;transform:translateY(2px);border-bottom-width:1px}
+.md-k.frappe{background:#c7dcfb;border-color:#1a73e8}
+.md-clavier+.md-note{margin:8px 12px;color:#5f6368;font-size:12px}
+.md-touches>.md-champ{margin:12px;width:auto;font-size:15px}
+
+/* Gaufre Google */
+.md-gaufre .md-google{padding:30px}
+.md-gaufre-ico{position:absolute;right:16px;top:16px;font-size:18px;letter-spacing:-3px;padding:4px 8px}
+.md-apps{position:absolute;right:14px;top:52px;display:grid;grid-template-columns:repeat(2,84px);gap:8px;background:#fff;border:1px solid #c9d3db;border-radius:12px;padding:10px;box-shadow:0 4px 14px #0003}
+.md-app{text-align:center;padding:10px 4px;border-radius:8px;background:#f1f3f4;font-weight:700;font-size:12px}
+.md-app-docs{color:#1a73e8}.md-app-drive{color:#188038}.md-app-classroom{color:#137333}.md-app-agenda{color:#1967d2}
+
+/* Classroom */
+.md-cr-haut{padding:10px 14px;border-bottom:1px solid #e0e0e0;font-size:15px;color:#3c4043}
+.md-cr-cours{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;padding:14px}
+.md-cr-cours-carte{border:1px solid #dadce0;border-radius:8px;overflow:hidden;min-height:96px}
+.md-cr-cours-tete{color:#fff;font-weight:700;padding:10px;min-height:38px}
+.md-cr-cours-carte small{display:block;padding:6px 10px;color:#5f6368}
+.md-cr-onglets{display:flex;gap:16px;justify-content:center;border-bottom:1px solid #e0e0e0;padding:6px 8px 0}
+.md-cr-onglets span{padding:4px 2px 6px;color:#5f6368}.md-cr-onglets span.on{color:#137333;border-bottom:3px solid #137333;font-weight:700}
+.md-cr-banniere{margin:12px;border-radius:8px;background:#1e8e3e;color:#fff;font-size:20px;font-weight:700;padding:30px 16px}
+.md-cr-flux{margin:0 12px;border:1px solid #dadce0;border-radius:8px;padding:10px;color:#5f6368}
+.md-cr-liste{display:grid;gap:8px;padding:12px 14px;justify-items:start}
+.md-cr-lien{color:#1967d2;font-weight:700;padding:4px 6px}
+.md-cr-ligne{display:flex;justify-content:space-between;gap:10px;width:100%;box-sizing:border-box;border-bottom:1px solid #eee;padding:8px 4px}
+.md-cr-ligne.autre{color:#5f6368}
+.md-cr-date{color:#5f6368;font-size:12px;white-space:nowrap}
+.md-devoir{display:grid;grid-template-columns:1fr minmax(170px,210px);gap:14px;padding:14px;align-items:start;align-content:start;min-height:320px}
+.md-cr-sujet{display:grid;gap:4px;align-content:start}.md-cr-icone{width:34px;height:34px;border-radius:50%;background:#1e8e3e;display:grid;place-items:center;font-size:16px}
+.md-cr-titre{font-size:17px;color:#137333}.md-cr-meta{color:#5f6368;font-size:12px}
+.md-cr-consigne{height:60px;margin-top:6px;background:repeating-linear-gradient(#fff 0 10px,#e8eaed 10px 18px)}
+.md-cr-carte{border:1px solid #dadce0;border-radius:8px;padding:12px;display:grid;gap:8px;box-shadow:0 1px 3px #0002;position:relative}
+.md-cr-tete{display:flex;justify-content:space-between;align-items:center;gap:6px}.md-cr-statut{color:#137333;font-size:12px}.md-cr-statut.remis{font-weight:700}
+.md-cr-ajouter,.md-cr-btn{border:1px solid #dadce0;border-radius:4px;padding:6px 10px;text-align:center;color:#1a73e8;font-weight:700}
+.md-cr-plein{background:#1a73e8;border-color:#1a73e8;color:#fff}
+.md-cr-piece{border:1px solid #dadce0;border-radius:4px;padding:6px;font-size:12px;overflow-wrap:anywhere}
+.md-cr-menu{position:absolute;left:12px;right:12px;top:72px;background:#fff;border:1px solid #c9d3db;border-radius:8px;box-shadow:0 4px 14px #0003;padding:4px 0;z-index:3}
+.md-cr-picker,.md-cr-dialogue{position:absolute;inset:18px 6%;background:#fff;border-radius:8px;box-shadow:0 6px 24px #0005;padding:12px;display:grid;gap:8px;align-content:start;z-index:4}
+.md-cr-dialogue{inset:40px 14%}
+.md-cr-ptitre{font-weight:700}.md-cr-fichiers{display:grid;gap:4px}.md-cr-f{padding:6px 8px;border-radius:6px;overflow-wrap:anywhere}.md-cr-f.choisi{background:#e8f0fe;outline:2px solid #1a73e8}.md-cr-f.autre{opacity:.6}
+.md-cr-ppied{display:flex;justify-content:flex-end;gap:8px}
+
+/* Ajouts relevés à l'écran (08/11) */
+.md-ch-points{font-size:16px;color:#5f6368;padding:0 2px}
+.md-pmenu{width:230px}
+.md-pmenu-carte{margin:4px 8px 6px;padding:8px;border-radius:8px;background:#f1f3f4;font-size:11px;color:#5f6368}
+.md-pmenu-sep{border-top:1px solid #eee;margin:4px 0}
+.md-bouton.discret{background:none;color:#1a73e8;border:1px solid #dadce0}
+.md-bouton.gris{background:#e8eaed;color:#9aa0a6}
+.md-pied{gap:8px;flex-wrap:wrap}
+.md-radios{display:grid;gap:4px;width:100%}
+.md-radio{padding:4px 8px;border-radius:6px}.md-radio::before{content:"○ ";color:#5f6368}.md-radio.on{background:#e8f0fe;font-weight:700}.md-radio.on::before{content:"◉ ";color:#1a73e8}
+.md-fleche{align-self:center;justify-self:center;width:34px;height:34px;border-radius:50%;background:#e8f0fe;color:#1a73e8;display:grid;place-items:center;font-weight:700;font-size:18px}
+.md-roles{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%}
+.md-role{border:1px solid #dadce0;border-radius:10px;padding:18px 8px;text-align:center;font-weight:700}
+.md-cr-invit{margin:14px;width:min(260px,80%);border:1px solid #dadce0;border-radius:8px;overflow:hidden}
+.md-cr-invit small,.md-cr-invit p{display:block;margin:6px 10px;color:#5f6368}.md-cr-invit .md-pied{padding:0 10px 10px;box-sizing:border-box}
+.md-win-cherche{background:#fff;border:1px solid #c9d3db;border-radius:14px;padding:3px 12px;font-size:12px;color:#5f6368}
+.md-win-start-menu{position:absolute;left:50%;transform:translateX(-50%);bottom:50px;width:min(330px,88%);background:#f3f3f3ee;border:1px solid #c9d3db;border-radius:10px;padding:12px;display:grid;gap:8px;box-shadow:0 6px 20px #0003}
+.md-win-recherche{background:#fff;border:1px solid #c9d3db;border-bottom:2px solid #0067c0;border-radius:16px;padding:6px 12px;min-height:20px}
+.md-win-meilleur{font-weight:700;font-size:12px}
+.md-win-res{display:flex;align-items:center;gap:10px;background:#fff;border-radius:8px;padding:8px}.md-win-res .md-logo-chrome{width:30px;height:30px}.md-win-res small{display:block;color:#5f6368}
+.md-win-epingles{display:flex;gap:10px;flex-wrap:wrap}.md-win-epingles span{display:grid;justify-items:center;gap:2px;font-size:11px;background:#fff;border-radius:6px;padding:6px 8px;min-width:44px}
+.md-cr-detail{width:100%;box-sizing:border-box;padding:6px 8px;background:#f8f9fa;border-radius:6px;display:grid;gap:6px}.md-cr-detail small{color:#5f6368}.md-cr-detail .md-cr-consigne{height:24px;margin:0}
+.md-cr-sous{font-weight:700;color:#5f6368;border-top:1px solid #eee;margin-top:4px}
+.md-cr-droite{display:grid;gap:10px;align-content:start}
+.md-cr-prive{gap:4px}.md-cr-prive small{color:#1967d2}
+.md-cr-menu{max-height:240px;overflow:hidden}
+.md-cr-sans{min-width:60px}
+/* Devoir corrigé */
+.md-cr-statut.note{font-weight:700;font-size:14px;color:#1f1f1f}
+.md-cr-msg{font-size:12px;background:#f1f3f4;border-radius:6px;padding:6px}
+.md-doc-corrige{background:#f8f9fa}
+.md-doc-haut{display:flex;align-items:center;gap:8px;padding:8px 10px;font-size:13px;overflow:hidden;white-space:nowrap}
+.md-doc-logo{width:14px;height:18px;background:#4285f4;border-radius:2px;flex:none}
+.md-doc-corps{display:grid;grid-template-columns:1fr minmax(120px,170px);gap:10px;padding:6px 10px 12px;align-items:start}
+.md-doc-page{background:#fff;box-shadow:0 1px 4px #0002;padding:12px 14px;min-height:180px;font-size:12px}.md-doc-page p{margin:6px 0}
+.md-doc-surligne{background:#fde293}
+.md-doc-com{background:#fff;border-radius:8px;box-shadow:0 1px 4px #0003;padding:8px;display:grid;gap:4px;font-size:12px;margin-top:50px}
+@media(max-width:560px){.demo-scene{min-height:320px}.md-devoir{grid-template-columns:1fr;min-height:430px}.md-k{min-width:26px;font-size:12px}.md-k.l1{min-width:40px}.md-k.l2{min-width:52px}.md-clavier .md-rang{gap:3px}}
+@media(prefers-reduced-motion:reduce){.demo-curseur{transition:none}.md-clic{animation:none}}
+@media print{.demo-zone{display:none}}
