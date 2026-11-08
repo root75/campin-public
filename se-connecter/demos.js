@@ -7,8 +7,10 @@
    connecté ? » ; « Confirmez qu'il s'agit bien de vous » ; « Ce profil sera géré » ; « Tapez moins et gagnez
    du temps » ; Classroom « Choisir votre rôle », « Rejoindre le cours », panneau « Vos devoirs »,
    « Marquer comme terminé » / « Rendre le devoir », « Rendre le devoir ? », « Remis », « Annuler l'envoi ».
-   Non relevé : le bouton du bas de l'écran « Bienvenue », le bouton du sélecteur Google Drive, et la vue
-   d'un devoir noté (place des points, commentaires privés et commentaires dans le document).
+   Points (capture de Vincent) : Travaux et devoirs ▸ « Afficher votre devoir » ▸ liste « Filtre de tâche : Tout »,
+   « Remis » ou la note à droite de chaque devoir.
+   Non relevé : le bouton du bas de l'écran « Bienvenue », le bouton du sélecteur Google Drive, la place de la
+   note dans le devoir ouvert.
    Nom d'élève fictif ; rien n'est enregistré.
    Chaque animation se place dans l'élément [data-animation="clé"] de la page et démarre quand elle devient
    visible (une seule joue à la fois). */
@@ -73,17 +75,10 @@
       { ecran: 'touches', saisie: 'chloe.remy@', cible: 'e2', tenue: 'altgr', frappe: 'e2', legende: '… et appuie sur é : l’arobase arrive.' },
       { ecran: 'touches', saisie: ADRESSE, cible: 'champ', ok: 1, legende: 'Termine par arcampin.be. Relis : un point, pas d’accent, .be.' }
     ] },
-    classroom: { images: [
-      { ecran: 'gaufre', cible: 'gaufre', legende: 'Page Google : clique sur les 9 points, en haut à droite.' },
-      { ecran: 'gaufre', menu: 1, cible: 'app-classroom', legende: 'Classroom.' },
-      { ecran: 'cr-accueil', cible: 'classe', legende: 'Clique sur ta classe.' },
-      { ecran: 'cr-classe', cible: 'onglet', legende: 'L’onglet Travaux et devoirs, en haut.' },
-      { ecran: 'cr-travaux', cible: 'ligne', legende: 'Clique sur la ligne du devoir. La date limite est à droite de la ligne.' },
-      { ecran: 'cr-travaux', deplie: 1, cible: 'instructions', ok: 1, legende: 'La ligne s’ouvre : Afficher les instructions ouvre le devoir.' }
-    ] },
     note: { images: [
-      { ecran: 'devoir', joint: 1, remis: 1, note: 1, cible: 'statut', legende: 'Devoir corrigé : tes points sont en haut du cadre Vos devoirs.' },
-      { ecran: 'devoir', joint: 1, remis: 1, note: 1, cible: 'prive', legende: 'Le message de M. Louviaux est sous Commentaires privés.' },
+      { ecran: 'cr-travaux', cible: 'afficher', legende: 'Ta classe ▸ Travaux et devoirs ▸ Afficher votre devoir, en haut à droite.' },
+      { ecran: 'cr-mes', cible: 'note-1', legende: 'Tous tes devoirs. À droite : Remis, ou tes points quand c’est corrigé.' },
+      { ecran: 'devoir', joint: 1, remis: 1, note: 1, cible: 'prive', legende: 'Clique sur le devoir : le message de M. Louviaux est sous Commentaires privés.' },
       { ecran: 'devoir', joint: 1, remis: 1, note: 1, cible: 'piece', legende: 'Clique sur ton document pour l’ouvrir…' },
       { ecran: 'doc-corrige', cible: 'commentaire', ok: 1, legende: '… les corrections sont des commentaires, dans la marge de droite.' }
     ] },
@@ -248,6 +243,7 @@
         e.append(el('div', 'md-cr-banniere', 'Informatique'), el('div', 'md-cr-flux', 'Annonces de M. Louviaux'));
       } else {
         const corps = el('div', 'md-cr-liste');
+        corps.append(c(el('span', 'md-cr-afficher', '👤 Afficher votre devoir'), 'afficher'));
         const l = c(el('div', 'md-cr-ligne'), 'ligne'); l.append(el('span', null, '📋 ' + DEVOIR), c(el('span', 'md-cr-date', 'Date limite : vendredi'), 'date'));
         corps.append(l);
         if (f.deplie) {
@@ -259,6 +255,15 @@
         corps.append(l2);
         e.append(corps);
       }
+    }
+    if (f.ecran === 'cr-mes') {
+      e.append(el('div', 'md-cr-haut', '☰  Classroom › Informatique'));
+      const corps = el('div', 'md-cr-liste'), qui = el('div', 'md-cr-qui');
+      qui.append(el('span', 'md-profil ecole', 'C'), el('b', null, 'Chloé Rémy'));
+      corps.append(qui, el('span', 'md-cr-filtre', 'Filtre de tâche : Tout ▾'));
+      [[DEVOIR, 'Date limite : vendredi', '8/10', 'note-1'], ['Je range mon Drive', 'Aucune date limite', 'Remis', ''], ['Exercices p. 12', 'lundi', 'Attribué', '']]
+        .forEach(([t, d, st, id]) => { const l = c(el('div', 'md-cr-ligne'), id); const g = el('span'); g.append(el('span', null, t), el('small', null, ' · ' + d)); l.append(g, el('b', 'md-cr-etat', st)); corps.append(l); });
+      e.append(corps);
     }
     if (f.ecran === 'cr-gauche' || f.ecran === 'cr-afaire') {
       e.append(el('div', 'md-cr-haut', '☰  Classroom'));
