@@ -208,7 +208,7 @@ const Demo = (() => {
       const sujet = el('div', 'md-cr-sujet');
       sujet.append(el('div', 'md-cr-icone', '📋'), el('div', 'md-cr-titre', 'Labo 07 — Dans les coulisses du PC'), el('div', 'md-cr-meta', 'M. Louviaux · 10 points'));
       const carte = el('div', 'md-cr-carte'), tete = el('div', 'md-cr-tete');
-      tete.append(el('b', null, 'Vos devoirs'), c(el('span', 'md-cr-statut' + (f.remis ? ' remis' : ''), f.remis ? 'Remis' : 'Attribué'), 'statut'));
+      tete.append(el('b', null, 'Votre travail'), c(el('span', 'md-cr-statut' + (f.remis ? ' remis' : ''), f.remis ? 'Remis' : 'Attribué'), 'statut'));
       carte.append(tete);
       if (f.joint) carte.append(el('div', 'md-cr-piece', '📄 ' + NOM));
       else carte.append(c(el('span', 'md-cr-ajouter', '+ Ajouter ou créer'), 'ajouter'));

@@ -6,7 +6,9 @@
 <title>Me connecter et rendre un devoir — M. Louviaux</title>
 <meta name="description" content="Se connecter avec son compte de l’école, trouver ses devoirs dans Classroom, poser une question et rendre un devoir : le pas-à-pas.">
 <link rel="stylesheet" href="https://root75.github.io/campin-public/assets/navigation.css">
+<link rel="stylesheet" href="demos.css?v=20261108">
 <style>
+:root{--ciel:#E6EEF6;--carte:#fff;--encre-bouton:#1F4E79;--fromage:#E3A922;--trait:#D5DCE2}
 body{font-family:Calibri,"Segoe UI",system-ui,sans-serif;background:#F4F6F9;color:#202020;margin:0;line-height:1.5;font-size:18px}
 header{background:#1F4E79;color:#fff;padding:16px 22px}
 h1{margin:0 auto;max-width:720px;font-size:26px}
@@ -69,14 +71,21 @@ Exemple : Chloé Rémy écrit <span class="adresse">chloe.remy@arcampin.be</span
 </div>
 
 <h3>Taper @ et le point</h3>
+<div class="demo-zone" data-animation="clavier"></div>
 <ul class="etapes">
 <li><label><input type="checkbox"><span><b>@</b> : garde <kbd>AltGr</kbd> enfoncé (à droite de la barre d’espace), puis appuie sur <kbd>é</kbd> (en haut, la touche du 2).</span></label></li>
 <li><label><input type="checkbox"><span><b>.</b> (le point) : garde <kbd>Maj ⇧</kbd> enfoncé (la grosse flèche à gauche du W), puis appuie sur <kbd>;</kbd> (en bas, la 2e touche après le N).</span></label></li>
 </ul>
 
-<h3>Ouvrir mon profil de l’école</h3>
+<h3>Ouvrir Chrome</h3>
+<div class="demo-zone" data-animation="chrome"></div>
 <ul class="etapes">
-<li><label><input type="checkbox"><span>Ouvre <b>Chrome</b> : le rond bleu, rouge, jaune et vert. Pas Edge, pas un autre : Chrome.</span></label></li>
+<li><label><input type="checkbox"><span>Ouvre <b>Chrome</b> <span class="md-logo-chrome" aria-hidden="true"></span> : le rond bleu, rouge, jaune et vert. Pas Edge, pas un autre : Chrome.</span></label></li>
+</ul>
+
+<h3>Ouvrir mon profil de l’école</h3>
+<div class="demo-zone" data-animation="profil"></div>
+<ul class="etapes">
 <li><label><input type="checkbox"><span>Clique sur le <b>rond du profil</b>, en haut à droite de la fenêtre Chrome.</span></label></li>
 <li><label><input type="checkbox"><span>Ton profil de l’école est dans la liste ? Clique dessus et passe directement à « Ouvrir Classroom ».<br>
 Sinon : clique sur <span class="btn">Ajouter</span>, tout en bas du menu ▸ <span class="btn">Se connecter</span>.</span></label></li>
@@ -98,6 +107,7 @@ Sinon : clique sur <span class="btn">Ajouter</span>, tout en bas du menu ▸ <sp
 
 <section id="trouver" aria-labelledby="t-trouver">
 <h2 id="t-trouver">2. Trouver mes devoirs</h2>
+<div class="demo-zone" data-animation="classroom"></div>
 <ul class="etapes">
 <li><label><input type="checkbox"><span>Dans Classroom, clique sur ta classe, à gauche.</span></label></li>
 <li><label><input type="checkbox"><span>Clique sur l’onglet <span class="btn">Travaux et devoirs</span>, en haut.</span></label></li>
@@ -134,6 +144,7 @@ Sinon : clique sur <span class="btn">Ajouter</span>, tout en bas du menu ▸ <sp
 </ul>
 
 <h3>B. Joindre mon fichier</h3>
+<div class="demo-zone" data-animation="remise"></div>
 <p>M. Louviaux t’a déjà donné ta copie ? Elle est déjà jointe sous <b>Votre travail</b> : ouvre-la, travaille dedans, puis passe à l’étape C.</p>
 <ul class="etapes">
 <li><label><input type="checkbox"><span>Clique sur <span class="btn">+ Ajouter ou créer</span>, à droite, dans le cadre <b>Votre travail</b>.</span></label></li>
@@ -174,6 +185,8 @@ Modèle : <b>AAAAMMJJ Titre – Prénom Nom</b></p>
 </section>
 
 </main>
+<script src="../pas-a-pas/demo-lecteur.js?v=lecteur-20261106"></script>
+<script src="demos.js?v=20261108"></script>
 <footer>AR R. Campin · Informatique · M. Louviaux</footer>
 </body>
 </html>
