@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Me connecter et rendre un devoir — M. Louviaux</title>
+<meta name="description" content="Se connecter avec son compte de l’école, trouver ses devoirs dans Classroom, poser une question et rendre un devoir : le pas-à-pas.">
+<link rel="stylesheet" href="https://root75.github.io/campin-public/assets/navigation.css">
+<style>
+body{font-family:Calibri,"Segoe UI",system-ui,sans-serif;background:#F4F6F9;color:#202020;margin:0;line-height:1.5;font-size:18px}
+header{background:#1F4E79;color:#fff;padding:16px 22px}
+h1{margin:0 auto;max-width:720px;font-size:26px}
+header p{margin:4px auto 0;max-width:720px}
+main{max-width:720px;margin:0 auto;padding:8px 16px 32px}
+h2{margin:36px 0 8px;color:#1F4E79;font-size:24px}
+h3{margin:20px 0 6px;color:#1F4E79;font-size:20px}
+a{color:#1F4E79}
+a:focus-visible{outline:3px solid #1F4E79;outline-offset:4px}
+.sommaire{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:16px 0;padding:0;list-style:none}
+.sommaire a{display:block;background:#fff;border-radius:12px;padding:12px 14px;text-decoration:none;box-shadow:0 2px 10px rgba(0,0,0,.08);font-weight:700;min-height:44px;box-sizing:border-box}
+.sommaire a span{display:block;font-weight:400;color:#515966;font-size:15px}
+section{background:#fff;border-radius:12px;padding:4px 20px 16px;margin:20px 0;box-shadow:0 2px 10px rgba(0,0,0,.06)}
+section>h2{margin-top:16px}
+ul.etapes{list-style:none;padding:0;margin:8px 0}
+ul.etapes li{margin:6px 0}
+ul.etapes label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;padding:6px 8px;border-radius:8px}
+ul.etapes label:hover{background:#EEF3F8}
+ul.etapes input{width:22px;height:22px;flex:none;margin-top:3px;accent-color:#1F4E79}
+ul.etapes input:checked+span{color:#515966;text-decoration:line-through;text-decoration-color:#9AA5B1}
+.btn{display:inline-block;border:1px solid #9AA5B1;border-radius:6px;padding:0 6px;background:#F4F6F9;font-weight:700;white-space:nowrap}
+kbd{display:inline-block;border:1px solid #9AA5B1;border-bottom-width:3px;border-radius:6px;padding:0 7px;background:#fff;font:700 16px/1.4 "Segoe UI",Arial,sans-serif;white-space:nowrap}
+.adresse{font:700 20px/1.4 Consolas,"Courier New",monospace;background:#EEF3F8;padding:2px 8px;border-radius:6px;white-space:nowrap}
+.encadre{border-left:6px solid #E3A922;background:#FFF7E0;border-radius:8px;padding:10px 14px;margin:12px 0}
+.encadre.bleu{border-left-color:#1F4E79;background:#EEF3F8}
+.encadre p{margin:4px 0}
+.alerte{border-left:6px solid #B42318;background:#FDECEA;border-radius:8px;padding:10px 14px;margin:12px 0;font-weight:700}
+.coince dt{font-weight:700;margin-top:14px}
+.coince dd{margin:4px 0 0 0}
+.haut{display:inline-block;margin-top:8px;font-size:16px}
+footer{max-width:720px;margin:auto;padding:8px 16px 24px;color:#515966;font-size:16px}
+@media (max-width:480px){body{font-size:17px}h1{font-size:22px}section{padding:4px 14px 14px}.adresse{font-size:17px;white-space:normal;word-break:break-all}.btn{white-space:normal}}
+@media print{.campin-navigation,.sommaire,.haut{display:none}section{box-shadow:none;border:1px solid #ccc;break-inside:avoid}body{background:#fff}}
+</style>
+</head>
+<body>
+<nav class="campin-navigation" aria-label="Navigation du site"><a href="https://root75.github.io/campin-public/" target="_top"><span aria-hidden="true">⌂</span> Accueil</a></nav>
+<header id="haut">
+<h1>Me connecter et rendre un devoir</h1>
+<p>Avec ton compte de l’école, dans Chrome et dans Classroom. Coche chaque case quand c’est fait.</p>
+</header>
+<main>
+
+<ul class="sommaire" aria-label="Sur cette page">
+<li><a href="#connecter">1. Me connecter<span>Chrome, adresse, mot de passe</span></a></li>
+<li><a href="#trouver">2. Trouver mes devoirs<span>Classroom, date limite</span></a></li>
+<li><a href="#question">3. Poser une question<span>à la classe ou au prof</span></a></li>
+<li><a href="#rendre">4. Rendre un devoir<span>3 étapes obligatoires</span></a></li>
+<li><a href="#coince">Ça coince ?<span>les blocages connus</span></a></li>
+</ul>
+
+<section id="connecter" aria-labelledby="t-connecter">
+<h2 id="t-connecter">1. Me connecter</h2>
+
+<div class="encadre bleu">
+<p><b>Mon adresse de l’école</b> — on me la demandera toute l’année :</p>
+<p><span class="adresse">prenom.nom@arcampin.be</span></p>
+<p>Mon prénom, un point, mon nom. En minuscules, sans accent, sans tiret, et <b>.be</b> à la fin (pas .com).<br>
+Exemple : Chloé Rémy écrit <span class="adresse">chloe.remy@arcampin.be</span></p>
+</div>
+
+<h3>Taper @ et le point</h3>
+<ul class="etapes">
+<li><label><input type="checkbox"><span><b>@</b> : garde <kbd>AltGr</kbd> enfoncé (à droite de la barre d’espace), puis appuie sur <kbd>é</kbd> (en haut, la touche du 2).</span></label></li>
+<li><label><input type="checkbox"><span><b>.</b> (le point) : garde <kbd>Maj ⇧</kbd> enfoncé (la grosse flèche à gauche du W), puis appuie sur <kbd>;</kbd> (en bas, la 2e touche après le N).</span></label></li>
+</ul>
+
+<h3>Ouvrir mon profil de l’école</h3>
+<ul class="etapes">
+<li><label><input type="checkbox"><span>Ouvre <b>Chrome</b> : le rond bleu, rouge, jaune et vert. Pas Edge, pas un autre : Chrome.</span></label></li>
+<li><label><input type="checkbox"><span>Clique sur le <b>rond du profil</b>, en haut à droite de la fenêtre Chrome.</span></label></li>
+<li><label><input type="checkbox"><span>Ton profil de l’école est dans la liste ? Clique dessus et passe directement à « Ouvrir Classroom ».<br>
+Sinon : clique sur <span class="btn">Ajouter</span>, tout en bas du menu ▸ <span class="btn">Se connecter</span>.</span></label></li>
+<li><label><input type="checkbox"><span>Tape ton adresse de l’école.</span></label></li>
+<li><label><input type="checkbox"><span>Sur l’écran Microsoft qui s’ouvre, tape ton mot de passe : celui écrit dans ton journal de classe.</span></label></li>
+<li><label><input type="checkbox"><span>Vérifie que <kbd>Verr Maj</kbd> est éteint : sinon tout s’écrit en majuscules.</span></label></li>
+</ul>
+
+<h3>Ouvrir Classroom</h3>
+<ul class="etapes">
+<li><label><input type="checkbox"><span>Clique sur les <b>9 points</b> <span aria-hidden="true">⠿</span>, en haut à droite de la page Google ▸ <span class="btn">Classroom</span>.</span></label></li>
+</ul>
+
+<div class="encadre">
+<p><b>Règle d’or : toujours mon profil à moi.</b> Jamais celui d’un copain, jamais « Invité ». C’est ce profil que je rouvre à chaque cours.</p>
+</div>
+<a class="haut" href="#haut">↑ Haut de la page</a>
+</section>
+
+<section id="trouver" aria-labelledby="t-trouver">
+<h2 id="t-trouver">2. Trouver mes devoirs</h2>
+<ul class="etapes">
+<li><label><input type="checkbox"><span>Dans Classroom, clique sur ta classe, à gauche.</span></label></li>
+<li><label><input type="checkbox"><span>Clique sur l’onglet <span class="btn">Travaux et devoirs</span>, en haut.</span></label></li>
+<li><label><input type="checkbox"><span>Clique sur le devoir ▸ <span class="btn">Afficher votre devoir</span>.</span></label></li>
+<li><label><input type="checkbox"><span>Regarde la <b>date limite</b>, à droite.</span></label></li>
+</ul>
+<p>Tous tes devoirs d’un coup, toutes classes confondues : menu en haut de Classroom ▸ <span class="btn">Vos devoirs</span>.</p>
+<a class="haut" href="#haut">↑ Haut de la page</a>
+</section>
+
+<section id="question" aria-labelledby="t-question">
+<h2 id="t-question">3. Poser une question</h2>
+<ul class="etapes">
+<li><label><input type="checkbox"><span>Ouvre le devoir.</span></label></li>
+<li><label><input type="checkbox"><span>Question pour <b>toute la classe</b> : clique sur <span class="btn">Ajouter un commentaire à un cours</span>.</span></label></li>
+<li><label><input type="checkbox"><span>Question pour <b>M. Louviaux seul</b> : clique sur <span class="btn">Ajouter un commentaire pour M. Louviaux</span>.</span></label></li>
+<li><label><input type="checkbox"><span>Écris ta question en une phrase, puis envoie-la.</span></label></li>
+</ul>
+<div class="encadre bleu">
+<p><b>En classe, pendant un pas-à-pas :</b> relis la consigne, demande à ton voisin, puis sonne la cloche 🔔 <b>« J’attends de l’aide »</b> et continue. Pas de main levée.</p>
+</div>
+<a class="haut" href="#haut">↑ Haut de la page</a>
+</section>
+
+<section id="rendre" aria-labelledby="t-rendre">
+<h2 id="t-rendre">4. Rendre un devoir</h2>
+<p class="alerte">3 étapes obligatoires. Joindre le fichier ne suffit pas : il faut aussi cliquer sur Remettre.</p>
+
+<h3>A. Lire les instructions</h3>
+<ul class="etapes">
+<li><label><input type="checkbox"><span>Clique sur le devoir ▸ <span class="btn">Afficher les instructions</span>.</span></label></li>
+<li><label><input type="checkbox"><span>Lis les consignes jusqu’au bout.</span></label></li>
+<li><label><input type="checkbox"><span>Regarde la grille d’évaluation : elle dit comment tu es coté.</span></label></li>
+</ul>
+
+<h3>B. Joindre mon fichier</h3>
+<p>M. Louviaux t’a déjà donné ta copie ? Elle est déjà jointe sous <b>Votre travail</b> : ouvre-la, travaille dedans, puis passe à l’étape C.</p>
+<ul class="etapes">
+<li><label><input type="checkbox"><span>Clique sur <span class="btn">+ Ajouter ou créer</span>, à droite, dans le cadre <b>Votre travail</b>.</span></label></li>
+<li><label><input type="checkbox"><span>Choisis <span class="btn">Google Drive</span> (ou <span class="btn">Fichier</span> si ton fichier est sur l’ordinateur).</span></label></li>
+<li><label><input type="checkbox"><span>Sélectionne ton fichier ▸ <span class="btn">Ajouter</span>.</span></label></li>
+<li><label><input type="checkbox"><span>Vérifie que le nom de ton fichier apparaît sous <b>Votre travail</b>.</span></label></li>
+</ul>
+<div class="encadre">
+<p><b>Le nom de mon fichier :</b> la date à l’envers (année, mois, jour, sans espace), le titre, puis mon prénom et mon nom.<br>
+Modèle : <b>AAAAMMJJ Titre – Prénom Nom</b></p>
+</div>
+
+<h3>C. Remettre</h3>
+<ul class="etapes">
+<li><label><input type="checkbox"><span>Vérifie que ton fichier est bien joint.</span></label></li>
+<li><label><input type="checkbox"><span>Clique sur <span class="btn">Remettre</span>.</span></label></li>
+<li><label><input type="checkbox"><span>Clique une deuxième fois sur <span class="btn">Remettre</span> pour confirmer.</span></label></li>
+<li><label><input type="checkbox"><span>Vérifie que <b>Votre travail</b> affiche <b>Remis</b>.</span></label></li>
+</ul>
+<a class="haut" href="#haut">↑ Haut de la page</a>
+</section>
+
+<section id="coince" aria-labelledby="t-coince">
+<h2 id="t-coince">Ça coince ?</h2>
+<dl class="coince">
+<dt>« Compte introuvable » quand je tape mon adresse.</dt>
+<dd>Relis-la lettre par lettre : un point entre prénom et nom, aucun accent, <b>@arcampin.be</b> et pas .com.</dd>
+<dt>Mon mot de passe est refusé.</dt>
+<dd>Regarde <kbd>Verr Maj</kbd> : il doit être éteint. Retape lentement, en regardant ton journal de classe. Toujours refusé ? Il n’existe pas de « mot de passe oublié » ici : passe au B101.</dd>
+<dt>Je ne trouve pas ma classe dans Classroom.</dt>
+<dd>Tu es sans doute dans le mauvais profil. Clique sur le rond en haut à droite de Chrome et lis l’adresse : elle doit finir par <b>@arcampin.be</b>.</dd>
+<dt>Je vois « Marquer comme terminé » au lieu de « Remettre ».</dt>
+<dd>Aucun fichier n’est joint. Reviens à l’étape B, puis remets.</dd>
+<dt>Je veux changer mon mot de passe.</dt>
+<dd>Ouvre <b>myaccount.microsoft.com</b> et connecte-toi ▸ colonne de gauche : <span class="btn">Mot de passe</span> ▸ <span class="btn">Modifier le mot de passe</span> ▸ l’ancien, puis le nouveau deux fois ▸ <span class="btn">Envoyer</span>. Écris le nouveau dans ton journal de classe : il vaut aussi pour Google.</dd>
+</dl>
+<a class="haut" href="#haut">↑ Haut de la page</a>
+</section>
+
+</main>
+<footer>AR R. Campin · Informatique · M. Louviaux</footer>
+</body>
+</html>
