@@ -20,7 +20,19 @@
   const FICHIER = `${d.getFullYear()}${z(d.getMonth() + 1)}${z(d.getDate())} Mon portrait chinois – Chloé Rémy`;
   const DEVOIR = 'Mon portrait chinois';
 
+  const COPIE = 'Chloé Rémy - ' + DEVOIR;   // nom donné par Classroom à une copie par élève
   const DEMOS = {
+    cours: { images: [
+      { ecran: 'demarrer', saisie: 'chrome', resultat: 1, cible: 'res-chrome', legende: '⊞ Démarrer ▸ tape chrome ▸ Google Chrome.' },
+      { ecran: 'chrome', menu: 1, cible: 'p-ecole', legende: 'Rond du profil, en haut à droite ▸ ton profil de l’école.' },
+      { ecran: 'gaufre', menu: 1, cible: 'app-classroom', legende: '9 points, en haut à droite ▸ Classroom.' },
+      { ecran: 'cr-gauche', cible: 'a-faire', legende: 'Menu de gauche ▸ À faire.' },
+      { ecran: 'cr-afaire', cible: 'devoir', legende: 'Clique sur le devoir.' },
+      { ecran: 'devoir', joint: 1, copie: 1, cible: 'piece', legende: 'Ta copie est dans Vos devoirs : ouvre-la et travaille dedans.' },
+      { ecran: 'devoir', joint: 1, copie: 1, cible: 'rendre', legende: 'Fini ? Rendre le devoir.' },
+      { ecran: 'devoir', joint: 1, copie: 1, confirme: 1, cible: 'confirmer', legende: '« Rendre le devoir ? » : encore Rendre le devoir.' },
+      { ecran: 'devoir', joint: 1, copie: 1, remis: 1, cible: 'statut', ok: 1, legende: 'Remis, en vert : c’est envoyé.' }
+    ] },
     chrome: { images: [
       { ecran: 'bureau', cible: 'demarrer', legende: 'Clique sur ⊞ Démarrer, en bas de l’écran (ou touche ⊞ Windows).' },
       { ecran: 'demarrer', saisie: 'chr', cible: 'recherche', legende: 'Tape chrome.' },
@@ -102,6 +114,7 @@
       const m = el('div', 'md-pmenu');
       m.append(el('div', 'md-pmenu-carte', 'Connectez-vous pour accéder à vos mots de passe, vos favoris et plus'),
         el('div', 'md-pmenu-titre', 'Autres profils Chrome'),
+        c(el('div', 'md-item', '🟢 Chloé (arcampin.be)'), 'p-ecole'),
         el('div', 'md-item', '👤 Personne 1'),
         el('div', 'md-pmenu-sep'),
         c(el('div', 'md-item hi', '➕ Ajouter un profil Chrome'), 'p-ajouter'),
@@ -247,6 +260,24 @@
         e.append(corps);
       }
     }
+    if (f.ecran === 'cr-gauche' || f.ecran === 'cr-afaire') {
+      e.append(el('div', 'md-cr-haut', '☰  Classroom'));
+      const cols = el('div', 'md-cr-cols'), nav = el('div', 'md-cr-nav');
+      nav.append(el('span', null, '🏠 Accueil'), el('span', null, '📅 Agenda'), el('span', 'md-cr-nav-titre', 'Inscrit'),
+        c(el('span', f.ecran === 'cr-afaire' ? 'on' : '', '☑ À faire'), 'a-faire'), el('span', null, 'Informatique'), el('span', null, '🗄 Cours archivés'));
+      const droite = el('div', 'md-cr-liste');
+      if (f.ecran === 'cr-afaire') {
+        droite.append(el('b', null, 'À faire'));
+        const l = c(el('div', 'md-cr-ligne'), 'devoir'); const t = el('span'); t.append(el('span', null, '📋 ' + DEVOIR), el('small', null, ' · Informatique')); l.append(t, el('span', 'md-cr-date', 'vendredi'));
+        const l2 = el('div', 'md-cr-ligne autre'); l2.append(el('span', null, '📋 Exercices p. 12'), el('span', 'md-cr-date', 'lundi'));
+        droite.append(l, l2);
+      } else {
+        const g = el('div', 'md-cr-cours');
+        [['Informatique', '#1e8e3e'], ['Français', '#1967d2']].forEach(([t, col]) => { const k = el('div', 'md-cr-cours-carte'); const h = el('div', 'md-cr-cours-tete', t); h.style.background = col; k.append(h); g.append(k); });
+        droite.append(g);
+      }
+      cols.append(nav, droite); e.append(cols);
+    }
     if (f.ecran === 'doc-corrige') {
       const haut = el('div', 'md-doc-haut'); haut.append(el('span', 'md-doc-logo'), el('span', null, FICHIER));
       const corps = el('div', 'md-doc-corps'), page = el('div', 'md-doc-page');
@@ -261,7 +292,7 @@
       const carte = el('div', 'md-cr-carte'), tete = el('div', 'md-cr-tete');
       tete.append(el('b', null, 'Vos devoirs'), c(el('span', 'md-cr-statut' + (f.note ? ' note' : f.remis ? ' remis' : ''), (f.note ? '8/10' : f.remis ? 'Remis' : 'Attribué')), 'statut'));
       carte.append(tete);
-      if (f.joint) carte.append(c(el('div', 'md-cr-piece', '📄 ' + FICHIER), 'piece'));
+      if (f.joint) carte.append(c(el('div', 'md-cr-piece', '📄 ' + (f.copie ? COPIE : FICHIER)), 'piece'));
       if (!f.remis) carte.append(c(el('span', 'md-cr-ajouter', '+ Ajouter ou créer'), 'ajouter'));
       if (f.menu) {
         const m = el('div', 'md-cr-menu');
@@ -285,13 +316,21 @@
       }
       if (f.confirme) {
         const dlg = el('div', 'md-cr-dialogue');
-        dlg.append(el('b', null, 'Rendre le devoir ?'), el('small', null, '1 pièce jointe sera envoyée pour « ' + DEVOIR + ' ».'), el('div', 'md-cr-piece', '📄 ' + FICHIER));
+        dlg.append(el('b', null, 'Rendre le devoir ?'), el('small', null, '1 pièce jointe sera envoyée pour « ' + DEVOIR + ' ».'), el('div', 'md-cr-piece', '📄 ' + (f.copie ? COPIE : FICHIER)));
         const pied = el('div', 'md-cr-ppied'); pied.append(el('span', 'md-cr-btn', 'Annuler'), c(el('span', 'md-cr-btn md-cr-plein', 'Rendre le devoir'), 'confirmer'));
         dlg.append(pied); e.append(dlg);
       }
     }
     return e;
   }
+
+  /* Un lien vers un bloc replié (#premiere-fois, #joindre…) l'ouvre. */
+  function ouvrirCible() {
+    const id = decodeURIComponent(location.hash.slice(1)); if (!id) return;
+    const cible = document.getElementById(id); if (!cible) return;
+    const d = cible.closest('details'); if (d && !d.open) { d.open = true; cible.scrollIntoView(); }
+  }
+  addEventListener('hashchange', ouvrirCible); ouvrirCible();
 
   /* Placement : chaque [data-animation] reçoit son animation, lancée quand elle devient visible. */
   const L = DemoLecteur.lecteur({ demos: DEMOS, ecran, pas: 2600 });
