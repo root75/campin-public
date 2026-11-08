@@ -133,6 +133,16 @@
 .md-cr-prive{gap:4px}.md-cr-prive small{color:#1967d2}
 .md-cr-menu{max-height:240px;overflow:hidden}
 .md-cr-sans{min-width:60px}
+/* Devoir corrigé */
+.md-cr-statut.note{font-weight:700;font-size:14px;color:#1f1f1f}
+.md-cr-msg{font-size:12px;background:#f1f3f4;border-radius:6px;padding:6px}
+.md-doc-corrige{background:#f8f9fa}
+.md-doc-haut{display:flex;align-items:center;gap:8px;padding:8px 10px;font-size:13px;overflow:hidden;white-space:nowrap}
+.md-doc-logo{width:14px;height:18px;background:#4285f4;border-radius:2px;flex:none}
+.md-doc-corps{display:grid;grid-template-columns:1fr minmax(120px,170px);gap:10px;padding:6px 10px 12px;align-items:start}
+.md-doc-page{background:#fff;box-shadow:0 1px 4px #0002;padding:12px 14px;min-height:180px;font-size:12px}.md-doc-page p{margin:6px 0}
+.md-doc-surligne{background:#fde293}
+.md-doc-com{background:#fff;border-radius:8px;box-shadow:0 1px 4px #0003;padding:8px;display:grid;gap:4px;font-size:12px;margin-top:50px}
 @media(max-width:560px){.demo-scene{min-height:320px}.md-devoir{grid-template-columns:1fr;min-height:430px}.md-k{min-width:26px;font-size:12px}.md-k.l1{min-width:40px}.md-k.l2{min-width:52px}.md-clavier .md-rang{gap:3px}}
 @media(prefers-reduced-motion:reduce){.demo-curseur{transition:none}.md-clic{animation:none}}
 @media print{.demo-zone{display:none}}

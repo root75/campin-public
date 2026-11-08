@@ -7,7 +7,8 @@
    connecté ? » ; « Confirmez qu'il s'agit bien de vous » ; « Ce profil sera géré » ; « Tapez moins et gagnez
    du temps » ; Classroom « Choisir votre rôle », « Rejoindre le cours », panneau « Vos devoirs »,
    « Marquer comme terminé » / « Rendre le devoir », « Rendre le devoir ? », « Remis », « Annuler l'envoi ».
-   Non relevé : le bouton du bas de l'écran « Bienvenue » et le bouton du sélecteur Google Drive.
+   Non relevé : le bouton du bas de l'écran « Bienvenue », le bouton du sélecteur Google Drive, et la vue
+   d'un devoir noté (place des points, commentaires privés et commentaires dans le document).
    Nom d'élève fictif ; rien n'est enregistré.
    Chaque animation se place dans l'élément [data-animation="clé"] de la page et démarre quand elle devient
    visible (une seule joue à la fois). */
@@ -67,6 +68,12 @@
       { ecran: 'cr-classe', cible: 'onglet', legende: 'L’onglet Travaux et devoirs, en haut.' },
       { ecran: 'cr-travaux', cible: 'ligne', legende: 'Clique sur la ligne du devoir. La date limite est à droite de la ligne.' },
       { ecran: 'cr-travaux', deplie: 1, cible: 'instructions', ok: 1, legende: 'La ligne s’ouvre : Afficher les instructions ouvre le devoir.' }
+    ] },
+    note: { images: [
+      { ecran: 'devoir', joint: 1, remis: 1, note: 1, cible: 'statut', legende: 'Devoir corrigé : tes points sont en haut du cadre Vos devoirs.' },
+      { ecran: 'devoir', joint: 1, remis: 1, note: 1, cible: 'prive', legende: 'Le message de M. Louviaux est sous Commentaires privés.' },
+      { ecran: 'devoir', joint: 1, remis: 1, note: 1, cible: 'piece', legende: 'Clique sur ton document pour l’ouvrir…' },
+      { ecran: 'doc-corrige', cible: 'commentaire', ok: 1, legende: '… les corrections sont des commentaires, dans la marge de droite.' }
     ] },
     remise: { images: [
       { ecran: 'devoir', cible: 'ajouter', legende: 'Devoir ouvert. À droite, dans Vos devoirs : + Ajouter ou créer.' },
@@ -240,12 +247,19 @@
         e.append(corps);
       }
     }
+    if (f.ecran === 'doc-corrige') {
+      const haut = el('div', 'md-doc-haut'); haut.append(el('span', 'md-doc-logo'), el('span', null, FICHIER));
+      const corps = el('div', 'md-doc-corps'), page = el('div', 'md-doc-page');
+      page.append(el('b', null, DEVOIR), el('p', null, '1. Si j’étais un animal, je serais un chat.'), c(el('p', 'md-doc-surligne', '3. Si j’étais un livre…'), 'surligne'), el('p', null, '4. Si j’étais une couleur…'));
+      const com = c(el('div', 'md-doc-com'), 'commentaire'); com.append(el('b', null, 'M. Louviaux'), el('span', null, 'Il manque la source : où as-tu trouvé cette phrase ?'));
+      corps.append(page, com); e.append(haut, corps);
+    }
     if (f.ecran === 'devoir') {
       const sujet = el('div', 'md-cr-sujet');
       sujet.append(el('div', 'md-cr-icone', '📋'), el('div', 'md-cr-titre', DEVOIR), el('div', 'md-cr-meta', 'M. Louviaux · Date limite : vendredi'), el('div', 'md-cr-consigne'),
         el('div', 'md-cr-meta', '👥 Commentaires ajoutés au cours'));
       const carte = el('div', 'md-cr-carte'), tete = el('div', 'md-cr-tete');
-      tete.append(el('b', null, 'Vos devoirs'), c(el('span', 'md-cr-statut' + (f.remis ? ' remis' : ''), f.remis ? 'Remis' : 'Attribué'), 'statut'));
+      tete.append(el('b', null, 'Vos devoirs'), c(el('span', 'md-cr-statut' + (f.note ? ' note' : f.remis ? ' remis' : ''), (f.note ? '8/10' : f.remis ? 'Remis' : 'Attribué')), 'statut'));
       carte.append(tete);
       if (f.joint) carte.append(c(el('div', 'md-cr-piece', '📄 ' + FICHIER), 'piece'));
       if (!f.remis) carte.append(c(el('span', 'md-cr-ajouter', '+ Ajouter ou créer'), 'ajouter'));
@@ -256,8 +270,10 @@
         ['Docs', 'Slides', 'Sheets', 'Drawings', 'Vids'].forEach(t => m.append(el('div', 'md-item', t)));
         carte.append(m);
       }
-      carte.append(f.remis ? el('span', 'md-cr-btn', 'Annuler l’envoi') : c(el('span', 'md-cr-btn md-cr-plein', f.joint ? 'Rendre le devoir' : 'Marquer comme terminé'), 'rendre'));
-      const prive = el('div', 'md-cr-carte md-cr-prive'); prive.append(el('b', null, 'Commentaires privés'), el('small', null, 'Ajouter un commentaire pour…'));
+      if (!f.note) carte.append(f.remis ? el('span', 'md-cr-btn', 'Annuler l’envoi') : c(el('span', 'md-cr-btn md-cr-plein', f.joint ? 'Rendre le devoir' : 'Marquer comme terminé'), 'rendre'));
+      const prive = c(el('div', 'md-cr-carte md-cr-prive'), 'prive'); prive.append(el('b', null, 'Commentaires privés'));
+      if (f.note) prive.append(el('div', 'md-cr-msg', 'M. Louviaux : Bon travail. Relis la consigne 3 : il manque la source.'));
+      prive.append(el('small', null, 'Ajouter un commentaire pour…'));
       const droite = el('div', 'md-cr-droite'); droite.append(carte, prive);
       e.append(sujet, droite);
       if (f.picker) {
