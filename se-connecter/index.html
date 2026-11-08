@@ -6,7 +6,7 @@
 <title>Me connecter et rendre un devoir — M. Louviaux</title>
 <meta name="description" content="Se connecter avec son compte de l’école, trouver ses devoirs dans Classroom, poser une question et rendre un devoir : le pas-à-pas.">
 <link rel="stylesheet" href="https://root75.github.io/campin-public/assets/navigation.css">
-<link rel="stylesheet" href="demos.css?v=20261108c">
+<link rel="stylesheet" href="demos.css?v=20261108d">
 <style>
 :root{--ciel:#E6EEF6;--carte:#fff;--encre-bouton:#1F4E79;--fromage:#E3A922;--trait:#D5DCE2}
 body{font-family:Calibri,"Segoe UI",system-ui,sans-serif;background:#F4F6F9;color:#202020;margin:0;line-height:1.5;font-size:18px}
@@ -42,167 +42,129 @@ kbd{display:inline-block;border:1px solid #9AA5B1;border-bottom-width:3px;border
 footer{max-width:720px;margin:auto;padding:8px 16px 24px;color:#515966;font-size:16px}
 @media (max-width:480px){body{font-size:17px}h1{font-size:22px}section{padding:4px 14px 14px}.adresse{font-size:17px;white-space:normal;word-break:break-all}.btn{white-space:normal}}
 @media print{.campin-navigation,.sommaire,.haut{display:none}section{box-shadow:none;border:1px solid #ccc;break-inside:avoid}body{background:#fff}}
+details.plie{background:#fff;border-radius:12px;margin:10px 0;box-shadow:0 2px 10px rgba(0,0,0,.06)}
+details.plie>summary{cursor:pointer;font-weight:700;font-size:19px;color:#1F4E79;padding:14px 20px;min-height:44px;box-sizing:border-box;list-style:none}
+details.plie>summary::-webkit-details-marker{display:none}
+details.plie>summary::before{content:"▸ ";display:inline-block;transition:transform .2s}
+details.plie[open]>summary::before{transform:rotate(90deg)}
+details.plie[open]{padding:0 20px 14px}details.plie[open]>summary{padding-left:0}
+.si-besoin{margin:32px 0 0}.note-plie{margin:2px 0 8px;color:#515966}
+@media print{details.plie{display:none}}
 </style>
 </head>
 <body>
 <nav class="campin-navigation" aria-label="Navigation du site"><a href="https://root75.github.io/campin-public/" target="_top"><span aria-hidden="true">⌂</span> Accueil</a></nav>
 <header id="haut">
 <h1>Me connecter et rendre un devoir</h1>
-<p>Avec ton compte de l’école, dans Chrome et dans Classroom. Coche chaque case quand c’est fait.</p>
+<p>Sept gestes à chaque cours. Le reste est replié en dessous, pour quand tu en as besoin.</p>
 </header>
 <main>
 
-<ul class="sommaire" aria-label="Sur cette page">
-<li><a href="#connecter">1. Me connecter<span>Chrome, adresse, mot de passe</span></a></li>
-<li><a href="#trouver">2. Trouver mes devoirs<span>date limite, points, corrections</span></a></li>
-<li><a href="#question">3. Poser une question<span>à la classe ou au prof</span></a></li>
-<li><a href="#rendre">4. Rendre un devoir<span>3 étapes obligatoires</span></a></li>
-<li><a href="#coince">Ça coince ?<span>les blocages connus</span></a></li>
+<section id="chaque-cours" aria-labelledby="t-chaque">
+<h2 id="t-chaque">À chaque cours</h2>
+<div class="demo-zone" data-animation="cours"></div>
+<ul class="etapes">
+<li><label><input type="checkbox"><span>Ouvre Chrome : <b>⊞ Démarrer</b> (ou touche <kbd>⊞ Windows</kbd>) ▸ tape <b>chrome</b> ▸ <span class="btn">Google Chrome</span> <span class="md-logo-chrome" aria-hidden="true"></span>.</span></label></li>
+<li><label><input type="checkbox"><span>Rond du profil, en haut à droite ▸ clique sur <b>ton profil de l’école</b>. Il n’y est pas ? Ouvre <a href="#premiere-fois">La première fois</a>.</span></label></li>
+<li><label><input type="checkbox"><span>Clique sur les <b>9 points</b> <span aria-hidden="true">⠿</span>, en haut à droite de la page Google ▸ <span class="btn">Classroom</span>.</span></label></li>
+<li><label><input type="checkbox"><span>Menu de gauche ▸ <span class="btn">À faire</span> ▸ clique sur le devoir.</span></label></li>
+<li><label><input type="checkbox"><span>Lis la consigne. Ta copie est à droite, dans <b>Vos devoirs</b> : ouvre-la et travaille dedans.</span></label></li>
+<li id="rendre"><label><input type="checkbox"><span>Fini ? Clique sur <span class="btn">Rendre le devoir</span> ▸ dans la fenêtre « Rendre le devoir ? », encore <span class="btn">Rendre le devoir</span>.</span></label></li>
+<li><label><input type="checkbox"><span>Vérifie : <b>Remis</b> s’affiche en vert.</span></label></li>
 </ul>
+<div class="encadre">
+<p><b>Règle d’or : toujours mon profil à moi.</b> Jamais celui d’un copain, jamais « Ouvrir le profil invité ».</p>
+</div>
+</section>
 
-<section id="connecter" aria-labelledby="t-connecter">
-<h2 id="t-connecter">1. Me connecter</h2>
+<h2 class="si-besoin">Si besoin</h2>
+<p class="note-plie">Clique sur un titre pour l’ouvrir.</p>
 
+<details class="plie" id="premiere-fois">
+<summary>La première fois : créer mon profil de l’école</summary>
 <div class="encadre bleu">
 <p><b>Mon adresse de l’école</b> — on me la demandera toute l’année :</p>
 <p><span class="adresse">prenom.nom@arcampin.be</span></p>
 <p>Mon prénom, un point, mon nom. En minuscules, sans accent, sans tiret, et <b>.be</b> à la fin (pas .com).<br>
 Exemple : Chloé Rémy écrit <span class="adresse">chloe.remy@arcampin.be</span></p>
 </div>
-
 <h3>Taper @ et le point</h3>
 <div class="demo-zone" data-animation="clavier"></div>
 <ul class="etapes">
 <li><label><input type="checkbox"><span><b>@</b> : garde <kbd>AltGr</kbd> enfoncé (à droite de la barre d’espace), puis appuie sur <kbd>é</kbd> (en haut, la touche du 2).</span></label></li>
 <li><label><input type="checkbox"><span><b>.</b> (le point) : garde <kbd>Maj ⇧</kbd> enfoncé (la grosse flèche à gauche du W), puis appuie sur <kbd>;</kbd> (en bas, la 2e touche après le N).</span></label></li>
 </ul>
-
-<h3>Ouvrir Chrome</h3>
-<div class="demo-zone" data-animation="chrome"></div>
-<ul class="etapes">
-<li><label><input type="checkbox"><span>Clique sur <b>⊞ Démarrer</b>, en bas de l’écran (ou appuie sur la touche <kbd>⊞ Windows</kbd>).</span></label></li>
-<li><label><input type="checkbox"><span>Tape <b>chrome</b>.</span></label></li>
-<li><label><input type="checkbox"><span>Sous « Meilleure correspondance », clique sur <span class="btn">Google Chrome</span> <span class="md-logo-chrome" aria-hidden="true"></span> : le rond bleu, rouge, jaune et vert. Pas Microsoft Edge.</span></label></li>
-</ul>
-<p>Plus rapide : si l’icône <span class="md-logo-chrome" aria-hidden="true"></span> est dans la barre des tâches, en bas, un clic suffit.</p>
-
-<h3>Ouvrir mon profil de l’école</h3>
-<ul class="etapes">
-<li><label><input type="checkbox"><span>Clique sur le <b>rond du profil</b>, en haut à droite de Chrome (à gauche des ⋮).</span></label></li>
-<li><label><input type="checkbox"><span>Ton profil de l’école est sous <b>Autres profils Chrome</b> ? Clique dessus, puis passe à « Ouvrir Classroom ».<br>
-Il n’y est pas ? Suis « La première fois », juste en dessous.</span></label></li>
-</ul>
-
-<h3>La première fois : créer mon profil de l’école</h3>
+<h3>Ajouter mon profil</h3>
 <div class="demo-zone" data-animation="profil"></div>
 <ul class="etapes">
 <li><label><input type="checkbox"><span>Rond du profil ▸ <span class="btn">Ajouter un profil Chrome</span>, en bas du menu.</span></label></li>
 <li><label><input type="checkbox"><span>« Configurez votre nouveau profil Chrome » ▸ <span class="btn">Se connecter</span>.</span></label></li>
 <li><label><input type="checkbox"><span>Tape ton adresse de l’école ▸ <span class="btn">Suivant</span>.</span></label></li>
-<li><label><input type="checkbox"><span>« Sélectionnez votre moteur de recherche » : coche <b>Google</b> ▸ <span class="btn">Définir par défaut</span>. La liste change d’ordre à chaque fois : cherche le mot Google.</span></label></li>
-<li><label><input type="checkbox"><span>Écran Microsoft « Entrez le mot de passe » : tape ton mot de passe, celui écrit dans ton journal de classe ▸ <span class="btn">Se connecter</span>.</span></label></li>
-<li><label><input type="checkbox"><span>Vérifie que <kbd>Verr Maj</kbd> est éteint : sinon tout s’écrit en majuscules.</span></label></li>
+<li><label><input type="checkbox"><span>« Sélectionnez votre moteur de recherche » : coche <b>Google</b> ▸ <span class="btn">Définir par défaut</span>. La liste change d’ordre : cherche le mot Google.</span></label></li>
+<li><label><input type="checkbox"><span>Écran Microsoft « Entrez le mot de passe » : tape ton mot de passe (celui de ton journal de classe, <kbd>Verr Maj</kbd> éteint) ▸ <span class="btn">Se connecter</span>.</span></label></li>
 </ul>
+<h3>Terminer</h3>
 <div class="demo-zone" data-animation="profil-fin"></div>
 <ul class="etapes">
-<li><label><input type="checkbox"><span>« Rester connecté ? » ▸ <span class="btn">Oui</span>. Chrome propose « Enregistrer le mot de passe ? » : clique sur <span class="btn">Non, merci</span>.</span></label></li>
+<li><label><input type="checkbox"><span>« Rester connecté ? » ▸ <span class="btn">Oui</span>. « Enregistrer le mot de passe ? » ▸ <span class="btn">Non, merci</span>.</span></label></li>
 <li><label><input type="checkbox"><span>« Confirmez qu’il s’agit bien de vous » ▸ <span class="btn">Continuer</span>.</span></label></li>
 <li><label><input type="checkbox"><span>« Bienvenue » : descends avec la flèche ↓ jusqu’au bouton bleu, en bas, et clique dessus.</span></label></li>
 <li><label><input type="checkbox"><span>« Ce profil sera géré » ▸ <span class="btn">Continuer</span>.</span></label></li>
-<li><label><input type="checkbox"><span>« Tapez moins et gagnez du temps » ▸ <span class="btn">Oui, j’accepte</span>.<br>
-La fenêtre n’est pas venue ? Rond du profil ▸ <span class="btn">Activer</span> ▸ <span class="btn">Oui, j’accepte</span>.</span></label></li>
-<li><label><input type="checkbox"><span>Vérifie : le rond du profil montre la première lettre de ton prénom.</span></label></li>
+<li><label><input type="checkbox"><span>« Tapez moins et gagnez du temps » ▸ <span class="btn">Oui, j’accepte</span>. (Pas venue ? Rond du profil ▸ <span class="btn">Activer</span>.)</span></label></li>
 </ul>
-
-<h3>Ouvrir Classroom</h3>
-<ul class="etapes">
-<li><label><input type="checkbox"><span>Clique sur les <b>9 points</b> <span aria-hidden="true">⠿</span>, en haut à droite de la page Google ▸ <span class="btn">Classroom</span>.</span></label></li>
-</ul>
-<p><b>La première fois</b>, Classroom pose trois questions :</p>
+<h3>Rejoindre le cours de M. Louviaux</h3>
 <div class="demo-zone" data-animation="classroom-debut"></div>
 <ul class="etapes">
-<li><label><input type="checkbox"><span>Vérifie que c’est bien ton adresse de l’école ▸ <span class="btn">Continuer</span>.</span></label></li>
-<li><label><input type="checkbox"><span>« Choisir votre rôle » ▸ <span class="btn">Je suis un élève</span>. Jamais « Je suis enseignant ».</span></label></li>
-<li><label><input type="checkbox"><span>Sur la carte du cours de M. Louviaux ▸ <span class="btn">Rejoindre le cours</span> ▸ encore <span class="btn">Rejoindre le cours</span> pour confirmer.</span></label></li>
+<li><label><input type="checkbox"><span>9 points ▸ Classroom ▸ vérifie ton adresse ▸ <span class="btn">Continuer</span>.</span></label></li>
+<li><label><input type="checkbox"><span>« Choisir votre rôle » ▸ <span class="btn">Je suis un élève</span>.</span></label></li>
+<li><label><input type="checkbox"><span>Carte du cours ▸ <span class="btn">Rejoindre le cours</span> ▸ encore <span class="btn">Rejoindre le cours</span>.</span></label></li>
 </ul>
+</details>
 
-<div class="encadre">
-<p><b>Règle d’or : toujours mon profil à moi.</b> Jamais celui d’un copain, jamais « Ouvrir le profil invité ». C’est ce profil que je rouvre à chaque cours.</p>
-</div>
-<a class="haut" href="#haut">↑ Haut de la page</a>
-</section>
-
-<section id="trouver" aria-labelledby="t-trouver">
-<h2 id="t-trouver">2. Trouver mes devoirs</h2>
-<div class="demo-zone" data-animation="classroom"></div>
-<ul class="etapes">
-<li><label><input type="checkbox"><span>Dans Classroom, clique sur ta classe.</span></label></li>
-<li><label><input type="checkbox"><span>Clique sur l’onglet <span class="btn">Travaux et devoirs</span>, en haut.</span></label></li>
-<li><label><input type="checkbox"><span>Clique sur la ligne du devoir : elle s’ouvre. La <b>date limite</b> est à droite de la ligne.</span></label></li>
-<li><label><input type="checkbox"><span>Clique sur <span class="btn">Afficher les instructions</span> pour ouvrir le devoir.</span></label></li>
-</ul>
-<p>Tous tes devoirs à faire, toutes classes confondues : menu de gauche ▸ <span class="btn">À faire</span>.</p>
-
-<h3>Voir mes points et les corrections</h3>
-<div class="demo-zone" data-animation="note"></div>
-<ul class="etapes">
-<li><label><input type="checkbox"><span>Travaux et devoirs ▸ clique sur le devoir corrigé ▸ <span class="btn">Afficher les instructions</span>.</span></label></li>
-<li><label><input type="checkbox"><span>Tes <b>points</b> s’affichent en haut du cadre <b>Vos devoirs</b>, à droite.</span></label></li>
-<li><label><input type="checkbox"><span>Lis le message de M. Louviaux sous <b>Commentaires privés</b>.</span></label></li>
-<li><label><input type="checkbox"><span>Ouvre ton document dans le cadre <b>Vos devoirs</b> : les corrections sont des <b>commentaires</b>, dans la marge de droite.</span></label></li>
-<li><label><input type="checkbox"><span>Une question sur ta note ? Réponds sous <b>Commentaires privés</b> ▸ <span class="btn">Ajouter un commentaire pour…</span></span></label></li>
-</ul>
-<a class="haut" href="#haut">↑ Haut de la page</a>
-</section>
-
-<section id="question" aria-labelledby="t-question">
-<h2 id="t-question">3. Poser une question</h2>
-<ul class="etapes">
-<li><label><input type="checkbox"><span>Ouvre le devoir.</span></label></li>
-<li><label><input type="checkbox"><span>Question pour <b>toute la classe</b> : sous la consigne, à gauche, « Commentaires ajoutés au cours » ▸ <span class="btn">Ajouter un commentaire</span>.</span></label></li>
-<li><label><input type="checkbox"><span>Question pour <b>M. Louviaux seul</b> : à droite, sous « Vos devoirs », « Commentaires privés » ▸ <span class="btn">Ajouter un commentaire pour…</span></span></label></li>
-<li><label><input type="checkbox"><span>Écris ta question en une phrase, puis envoie-la.</span></label></li>
-</ul>
-<div class="encadre bleu">
-<p><b>En classe, pendant un pas-à-pas :</b> relis la consigne, demande à ton voisin, puis sonne la cloche 🔔 <b>« J’attends de l’aide »</b> et continue. Pas de main levée.</p>
-</div>
-<a class="haut" href="#haut">↑ Haut de la page</a>
-</section>
-
-<section id="rendre" aria-labelledby="t-rendre">
-<h2 id="t-rendre">4. Rendre un devoir</h2>
-<p class="alerte">3 étapes obligatoires. Joindre le fichier ne suffit pas : il faut aussi cliquer sur Rendre le devoir.</p>
-
-<h3>A. Lire les instructions</h3>
-<ul class="etapes">
-<li><label><input type="checkbox"><span>Travaux et devoirs ▸ clique sur le devoir ▸ <span class="btn">Afficher les instructions</span>.</span></label></li>
-<li><label><input type="checkbox"><span>Lis les consignes jusqu’au bout.</span></label></li>
-<li><label><input type="checkbox"><span>Regarde la grille d’évaluation : elle dit comment tu es coté.</span></label></li>
-</ul>
-
-<h3>B. Joindre mon fichier</h3>
+<details class="plie" id="joindre">
+<summary>Joindre un fichier (quand il n’y a pas de copie)</summary>
+<p class="alerte">Joindre ne suffit pas : il faut ensuite cliquer sur Rendre le devoir.</p>
 <div class="demo-zone" data-animation="remise"></div>
-<p>M. Louviaux t’a déjà donné ta copie ? Elle est déjà jointe dans le cadre <b>Vos devoirs</b> : ouvre-la, travaille dedans, puis passe à l’étape C.</p>
 <ul class="etapes">
-<li><label><input type="checkbox"><span>À droite, dans le cadre <b>Vos devoirs</b> : clique sur <span class="btn">+ Ajouter ou créer</span>.</span></label></li>
-<li><label><input type="checkbox"><span>Choisis <span class="btn">Google Drive</span> (ou <span class="btn">Fichier</span> si ton fichier est sur l’ordinateur).</span></label></li>
+<li><label><input type="checkbox"><span>Dans le cadre <b>Vos devoirs</b> ▸ <span class="btn">+ Ajouter ou créer</span> ▸ <span class="btn">Google Drive</span> (ou <span class="btn">Fichier</span> si ton fichier est sur l’ordinateur).</span></label></li>
 <li><label><input type="checkbox"><span>Clique sur ton fichier ▸ bouton bleu, en bas à droite.</span></label></li>
-<li><label><input type="checkbox"><span>Vérifie que ton fichier apparaît dans le cadre <b>Vos devoirs</b>.</span></label></li>
+<li><label><input type="checkbox"><span>Ton fichier apparaît dans <b>Vos devoirs</b> ▸ <span class="btn">Rendre le devoir</span> ▸ encore <span class="btn">Rendre le devoir</span>.</span></label></li>
 </ul>
 <div class="encadre">
 <p><b>Le nom de mon fichier :</b> la date à l’envers (année, mois, jour, sans espace), le titre, puis mon prénom et mon nom.<br>
 Modèle : <b>AAAAMMJJ Titre – Prénom Nom</b></p>
 </div>
+</details>
 
-<h3>C. Rendre le devoir</h3>
+<details class="plie" id="note">
+<summary>Voir mes points et les corrections</summary>
+<div class="demo-zone" data-animation="note"></div>
 <ul class="etapes">
-<li><label><input type="checkbox"><span>Vérifie que ton fichier est bien joint.</span></label></li>
-<li><label><input type="checkbox"><span>Clique sur <span class="btn">Rendre le devoir</span>.</span></label></li>
-<li><label><input type="checkbox"><span>La fenêtre « Rendre le devoir ? » s’ouvre : clique encore sur <span class="btn">Rendre le devoir</span>.</span></label></li>
-<li><label><input type="checkbox"><span>Vérifie : <b>Remis</b> s’affiche en vert, et le bouton devient « Annuler l’envoi ». N’y touche pas.</span></label></li>
+<li><label><input type="checkbox"><span>Ouvre le devoir corrigé : tes <b>points</b> sont en haut du cadre <b>Vos devoirs</b>.</span></label></li>
+<li><label><input type="checkbox"><span>Lis le message sous <b>Commentaires privés</b>.</span></label></li>
+<li><label><input type="checkbox"><span>Ouvre ton document : les corrections sont des <b>commentaires</b>, dans la marge de droite.</span></label></li>
 </ul>
-<a class="haut" href="#haut">↑ Haut de la page</a>
-</section>
+</details>
+
+<details class="plie" id="question">
+<summary>Poser une question</summary>
+<ul class="etapes">
+<li><label><input type="checkbox"><span>Pour <b>toute la classe</b> : sous la consigne, « Commentaires ajoutés au cours » ▸ <span class="btn">Ajouter un commentaire</span>.</span></label></li>
+<li><label><input type="checkbox"><span>Pour <b>M. Louviaux seul</b> : sous « Vos devoirs », « Commentaires privés » ▸ <span class="btn">Ajouter un commentaire pour…</span></span></label></li>
+</ul>
+<div class="encadre bleu">
+<p><b>En classe, pendant un pas-à-pas :</b> relis la consigne, demande à ton voisin, puis sonne la cloche 🔔 <b>« J’attends de l’aide »</b> et continue. Pas de main levée.</p>
+</div>
+</details>
+
+<details class="plie" id="ancien">
+<summary>Retrouver un devoir déjà rendu</summary>
+<div class="demo-zone" data-animation="classroom"></div>
+<ul class="etapes">
+<li><label><input type="checkbox"><span>Dans Classroom, clique sur ta classe ▸ onglet <span class="btn">Travaux et devoirs</span>.</span></label></li>
+<li><label><input type="checkbox"><span>Clique sur la ligne du devoir ▸ <span class="btn">Afficher les instructions</span>.</span></label></li>
+</ul>
+</details>
 
 <section id="coince" aria-labelledby="t-coince">
 <h2 id="t-coince">Ça coince ?</h2>
@@ -211,21 +173,20 @@ Modèle : <b>AAAAMMJJ Titre – Prénom Nom</b></p>
 <dd>Relis-la lettre par lettre : un point entre prénom et nom, aucun accent, <b>@arcampin.be</b> et pas .com.</dd>
 <dt>Mon mot de passe est refusé.</dt>
 <dd>Regarde <kbd>Verr Maj</kbd> : il doit être éteint. Retape lentement, en regardant ton journal de classe. Toujours refusé ? Il n’existe pas de « mot de passe oublié » ici : passe au B101.</dd>
-<dt>Je ne trouve pas ma classe dans Classroom.</dt>
-<dd>Tu as peut-être rejoint le cours ? Sinon, Accueil ▸ carte du cours ▸ « Rejoindre le cours ». Ou tu es dans le mauvais profil. Clique sur le rond en haut à droite de Chrome et lis l’adresse : elle doit finir par <b>@arcampin.be</b>.</dd>
+<dt>Le devoir n’est pas dans « À faire ».</dt>
+<dd>Tu l’as peut-être déjà rendu : ouvre <a href="#ancien">Retrouver un devoir déjà rendu</a>. Pas de cours du tout ? Tu n’as pas encore rejoint le cours (<a href="#premiere-fois">La première fois</a>), ou tu es dans le mauvais profil : le rond, en haut à droite, doit montrer ton adresse <b>@arcampin.be</b>.</dd>
 <dt>Je vois « Marquer comme terminé » au lieu de « Rendre le devoir ».</dt>
-<dd>Aucun fichier n’est joint. Reviens à l’étape B : le bouton devient alors « Rendre le devoir ».</dd>
-<dt>Le menu « Sélectionnez votre moteur de recherche » bloque tout.</dt>
+<dd>Aucun fichier n’est joint : ouvre <a href="#joindre">Joindre un fichier</a>.</dd>
+<dt>« Sélectionnez votre moteur de recherche » bloque tout.</dt>
 <dd>Le bouton « Définir par défaut » reste gris tant que rien n’est coché : coche Google, puis clique dessus.</dd>
 <dt>Je veux changer mon mot de passe.</dt>
 <dd>Ouvre <b>myaccount.microsoft.com</b> et connecte-toi ▸ colonne de gauche : <span class="btn">Mot de passe</span> ▸ <span class="btn">Modifier le mot de passe</span> ▸ l’ancien, puis le nouveau deux fois ▸ <span class="btn">Envoyer</span>. Écris le nouveau dans ton journal de classe : il vaut aussi pour Google.</dd>
 </dl>
-<a class="haut" href="#haut">↑ Haut de la page</a>
 </section>
 
 </main>
 <script src="../pas-a-pas/demo-lecteur.js?v=lecteur-20261106"></script>
-<script src="demos.js?v=20261108c"></script>
+<script src="demos.js?v=20261108d"></script>
 <footer>AR R. Campin · Informatique · M. Louviaux</footer>
 </body>
 </html>

@@ -133,6 +133,12 @@
 .md-cr-prive{gap:4px}.md-cr-prive small{color:#1967d2}
 .md-cr-menu{max-height:240px;overflow:hidden}
 .md-cr-sans{min-width:60px}
+/* Classroom : menu de gauche et « À faire » */
+.md-cr-cols{display:grid;grid-template-columns:130px 1fr;min-height:220px}
+.md-cr-nav{display:grid;gap:2px;align-content:start;padding:8px 6px;border-right:1px solid #e0e0e0}
+.md-cr-nav span{padding:6px 10px;border-radius:0 16px 16px 0;font-size:12px}.md-cr-nav span.on{background:#e6f4ea;color:#137333;font-weight:700}
+.md-cr-nav .md-cr-nav-titre{font-weight:700;color:#5f6368;padding-top:10px}
+.md-cr-ligne small{color:#5f6368}
 /* Devoir corrigé */
 .md-cr-statut.note{font-weight:700;font-size:14px;color:#1f1f1f}
 .md-cr-msg{font-size:12px;background:#f1f3f4;border-radius:6px;padding:6px}
