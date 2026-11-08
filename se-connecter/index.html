@@ -6,7 +6,7 @@
 <title>Me connecter et rendre un devoir — M. Louviaux</title>
 <meta name="description" content="Se connecter avec son compte de l’école, trouver ses devoirs dans Classroom, poser une question et rendre un devoir : le pas-à-pas.">
 <link rel="stylesheet" href="https://root75.github.io/campin-public/assets/navigation.css">
-<link rel="stylesheet" href="demos.css?v=20261108d">
+<link rel="stylesheet" href="demos.css?v=20261108e">
 <style>
 :root{--ciel:#E6EEF6;--carte:#fff;--encre-bouton:#1F4E79;--fromage:#E3A922;--trait:#D5DCE2}
 body{font-family:Calibri,"Segoe UI",system-ui,sans-serif;background:#F4F6F9;color:#202020;margin:0;line-height:1.5;font-size:18px}
@@ -137,11 +137,12 @@ Modèle : <b>AAAAMMJJ Titre – Prénom Nom</b></p>
 </details>
 
 <details class="plie" id="note">
-<summary>Voir mes points et les corrections</summary>
+<summary>Voir mes points et mes devoirs rendus</summary>
 <div class="demo-zone" data-animation="note"></div>
 <ul class="etapes">
-<li><label><input type="checkbox"><span>Ouvre le devoir corrigé : tes <b>points</b> sont en haut du cadre <b>Vos devoirs</b>.</span></label></li>
-<li><label><input type="checkbox"><span>Lis le message sous <b>Commentaires privés</b>.</span></label></li>
+<li><label><input type="checkbox"><span>Classroom ▸ ta classe ▸ onglet <span class="btn">Travaux et devoirs</span> ▸ <span class="btn">Afficher votre devoir</span>, en haut à droite.</span></label></li>
+<li><label><input type="checkbox"><span>La liste montre tous tes devoirs. À droite : <b>Remis</b>, ou <b>tes points</b> quand le devoir est corrigé.</span></label></li>
+<li><label><input type="checkbox"><span>Clique sur un devoir : le message de M. Louviaux est sous <b>Commentaires privés</b>.</span></label></li>
 <li><label><input type="checkbox"><span>Ouvre ton document : les corrections sont des <b>commentaires</b>, dans la marge de droite.</span></label></li>
 </ul>
 </details>
@@ -157,15 +158,6 @@ Modèle : <b>AAAAMMJJ Titre – Prénom Nom</b></p>
 </div>
 </details>
 
-<details class="plie" id="ancien">
-<summary>Retrouver un devoir déjà rendu</summary>
-<div class="demo-zone" data-animation="classroom"></div>
-<ul class="etapes">
-<li><label><input type="checkbox"><span>Dans Classroom, clique sur ta classe ▸ onglet <span class="btn">Travaux et devoirs</span>.</span></label></li>
-<li><label><input type="checkbox"><span>Clique sur la ligne du devoir ▸ <span class="btn">Afficher les instructions</span>.</span></label></li>
-</ul>
-</details>
-
 <section id="coince" aria-labelledby="t-coince">
 <h2 id="t-coince">Ça coince ?</h2>
 <dl class="coince">
@@ -174,7 +166,7 @@ Modèle : <b>AAAAMMJJ Titre – Prénom Nom</b></p>
 <dt>Mon mot de passe est refusé.</dt>
 <dd>Regarde <kbd>Verr Maj</kbd> : il doit être éteint. Retape lentement, en regardant ton journal de classe. Toujours refusé ? Il n’existe pas de « mot de passe oublié » ici : passe au B101.</dd>
 <dt>Le devoir n’est pas dans « À faire ».</dt>
-<dd>Tu l’as peut-être déjà rendu : ouvre <a href="#ancien">Retrouver un devoir déjà rendu</a>. Pas de cours du tout ? Tu n’as pas encore rejoint le cours (<a href="#premiere-fois">La première fois</a>), ou tu es dans le mauvais profil : le rond, en haut à droite, doit montrer ton adresse <b>@arcampin.be</b>.</dd>
+<dd>Tu l’as peut-être déjà rendu : ouvre <a href="#note">Voir mes points et mes devoirs rendus</a>. Pas de cours du tout ? Tu n’as pas encore rejoint le cours (<a href="#premiere-fois">La première fois</a>), ou tu es dans le mauvais profil : le rond, en haut à droite, doit montrer ton adresse <b>@arcampin.be</b>.</dd>
 <dt>Je vois « Marquer comme terminé » au lieu de « Rendre le devoir ».</dt>
 <dd>Aucun fichier n’est joint : ouvre <a href="#joindre">Joindre un fichier</a>.</dd>
 <dt>« Sélectionnez votre moteur de recherche » bloque tout.</dt>
@@ -186,7 +178,7 @@ Modèle : <b>AAAAMMJJ Titre – Prénom Nom</b></p>
 
 </main>
 <script src="../pas-a-pas/demo-lecteur.js?v=lecteur-20261106"></script>
-<script src="demos.js?v=20261108d"></script>
+<script src="demos.js?v=20261108e"></script>
 <footer>AR R. Campin · Informatique · M. Louviaux</footer>
 </body>
 </html>

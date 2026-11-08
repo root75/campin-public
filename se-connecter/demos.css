@@ -139,6 +139,11 @@
 .md-cr-nav span{padding:6px 10px;border-radius:0 16px 16px 0;font-size:12px}.md-cr-nav span.on{background:#e6f4ea;color:#137333;font-weight:700}
 .md-cr-nav .md-cr-nav-titre{font-weight:700;color:#5f6368;padding-top:10px}
 .md-cr-ligne small{color:#5f6368}
+/* « Afficher votre devoir » */
+.md-cr-afficher{justify-self:end;border:1px solid #747775;border-radius:18px;padding:4px 12px;color:#1967d2;font-weight:700;font-size:12px}
+.md-cr-qui{display:flex;align-items:center;gap:8px;font-size:15px}
+.md-cr-filtre{border:2px solid #1967d2;border-radius:4px;padding:4px 10px;font-size:12px}
+.md-cr-etat{font-size:13px;white-space:nowrap}
 /* Devoir corrigé */
 .md-cr-statut.note{font-weight:700;font-size:14px;color:#1f1f1f}
 .md-cr-msg{font-size:12px;background:#f1f3f4;border-radius:6px;padding:6px}
