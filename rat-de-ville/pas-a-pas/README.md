@@ -108,3 +108,11 @@ libre, grille « Moi » en étape finale, encadrés de sonnerie et de reprise. `
 parcours linéaire (bloc validé → bloc suivant, `noter`) : y passer changerait ce que voient les
 élèves. Différence assumée avec `blocs.js` : cocher une case n'ouvre pas l'animation suivante ;
 l'étape est redessinée et l'animation ouverte reste où elle est.
+
+## Revenir à une image d'une animation (9 novembre 2026)
+
+Sous chaque animation, les points sont devenus des **numéros cliquables** (1, 2, 3…) : un clic
+arrête l'animation et ramène à cette image, avec sa légende et l'écran maquetté (curseur sur la
+cible). Survoler un numéro affiche la légende en infobulle. Le changement est dans le lecteur
+commun `pas-a-pas/demo-lecteur.js` : il vaut pour tous les cours qui l'utilisent (Python, Labo 07,
+Se connecter), dont les feuilles de style ont reçu le même style de numéros.

@@ -1,7 +1,8 @@
 /* Lecteur commun des animations « 👀 Regarde comment faire » — tous les cours.
    Une animation = une liste d'images ; une image = un état de l'écran maquetté (ecran), l'élément que
    la souris vise (cible, l'attribut data-c d'un nœud de la maquette) et une légende. ok: 1 = étoile finale.
-   Ce fichier ne contient que le lecteur (scène, curseur, légende, ◀ ▶, points, Revoir / Pause,
+   Ce fichier ne contient que le lecteur (scène, curseur, légende, ◀ ▶, numéros cliquables — un clic
+   ramène à cette image, légende en infobulle —, Revoir / Pause,
    prefers-reduced-motion) et le volet « Toutes les animations ». Chaque cours garde dans son propre
    demos.js ses maquettes d'écran et ses listes d'images, puis appelle :
 
@@ -51,7 +52,13 @@ const DemoLecteur = (() => {
         const e = o.ecran(f); scene.prepend(e);
         legende.textContent = (k + 1) + '. ' + f.legende;
         box.setAttribute('aria-label', 'Démonstration : ' + frames.map(x => x.legende).join(' '));
-        points.replaceChildren(...frames.map((_, j) => el('span', j === k ? 'on' : '')));
+        points.replaceChildren(...frames.map((x, j) => {
+          const b = el('button', j === k ? 'on' : '', String(j + 1)); b.type = 'button';
+          b.title = (j + 1) + '. ' + x.legende; b.setAttribute('aria-label', 'Revoir l’image ' + b.title);
+          if (j === k) b.setAttribute('aria-current', 'step');
+          b.addEventListener('click', () => { stop(); montre(j); });
+          return b;
+        }));
         box.classList.toggle('demo-ok', !!f.ok);
         requestAnimationFrame(() => {
           if (o.place) o.place(e, f);
