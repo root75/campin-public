@@ -16,7 +16,12 @@ function prepare(r){r.cases=r.cases||{};r.etapes=ETAPES_RAT.map(e=>e.actions.eve
 function appel(evt){return new Promise((ok,ko)=>google.script.run.withSuccessHandler(r=>ok(prepare(r))).withFailureHandler(ko).suiviFormatif(COURS,evt));}
 async function envoieHumeurAvis(evt){const r=SUIVI?await appel(evt):demo(evt);if(!occupe)etat=r;return r;}
 function humeurDuJour(){if(typeof HumeurAvis==='undefined')return;HumeurAvis.humeur($('humeur'),{valeur:etat.humeur,suivi:!!SUIVI,envoie:v=>envoieHumeurAvis({type:'humeur',reponse:v})});}
-function commandes(){document.querySelectorAll('#etapes button,#travail input,#travail button,#travail select,#aide-btn').forEach(n=>n.disabled=!pret||occupe);}
+function commandes(){document.querySelectorAll('#travail input,#travail select,#aide-btn').forEach(n=>n.disabled=!pret||occupe);
+  /* Changer d'étape ne dépend pas du serveur : pastilles et boutons d'étape restent actifs pendant un enregistrement. */
+  document.querySelectorAll('#etapes button,#travail button').forEach(n=>n.disabled=!pret);}
+/* Aller à une étape : affichage immédiat, puis la place est enregistrée dès que le serveur est libre. */
+let positionVoulue=null;
+function va(id){if(!pret)return;positionVoulue=id;etat.position=id;vueGrille=false;dessine();if(!occupe)sauve({type:'position',etape:id});}
 function calcule(){prepare(etat);}
 function demo(evt){
   if(evt.type==='position')etat.position=evt.etape;
@@ -30,21 +35,22 @@ function demo(evt){
 }
 async function sauve(evt){
   if(!pret||occupe)return;
-  if(evt.type==='position')vueGrille=false;
   occupe=true;commandes();$('sauvegarde').textContent=SUIVI?'Enregistrement…':'Aperçu : essai sans sauvegarde scolaire.';
   try{
     const avant=(etat.etapes||[]).slice();
     etat=SUIVI?await appel(evt):demo(evt);
+    if(positionVoulue!=null){if(evt.type==='position'&&evt.etape===positionVoulue)positionVoulue=null;else etat.position=positionVoulue;}
     $('sauvegarde').textContent=SUIVI?'Enregistré avec mon compte scolaire.':'Aperçu : rien n’est enregistré.';
     if(evt.type==='case'&&evt.fait){const j=place(evt.etape);if(etat.etapes[j]&&!avant[j])fete(j);else bravo(BRAVOS[Math.floor(Math.random()*BRAVOS.length)],false);}
-  }catch(e){$('sauvegarde').textContent='Non enregistré. Réessaie la case ou le déplacement. '+(e.message||'Connexion indisponible.');}
-  finally{occupe=false;dessine();}
+  }catch(e){if(evt.type==='position'){etat.position=positionVoulue!=null?positionVoulue:evt.etape;positionVoulue=null;}
+    $('sauvegarde').textContent='Non enregistré. Réessaie la case ou le déplacement. '+(e.message||'Connexion indisponible.');}
+  finally{occupe=false;dessine();if(positionVoulue!=null)sauve({type:'position',etape:positionVoulue});}
 }
 function dessine(){
   const i=Math.max(0,place(etat.position)),b=ETAPES_RAT[i];arreteAutres();
   $('etapes').replaceChildren(...ETAPES_RAT.map((e,j)=>{
     const faites=e.actions.filter((_,k)=>etat.cases[e.id+'.'+(k+1)]).length;
-    const n=txt('button',etat.etapes[j]?'fini':'',etat.etapes[j]?'✓':String(j+1));n.style.setProperty('--p',Math.round(100*faites/e.actions.length));n.type='button';n.title=(j+1)+'. '+e.titre;n.setAttribute('aria-label',n.title+(etat.etapes[j]?' — déclaré terminé':''));if(j===i&&!vueGrille)n.setAttribute('aria-current','step');n.addEventListener('click',()=>sauve({type:'position',etape:e.id}));return n;
+    const n=txt('button',etat.etapes[j]?'fini':'',etat.etapes[j]?'✓':String(j+1));n.style.setProperty('--p',Math.round(100*faites/e.actions.length));n.type='button';n.title=(j+1)+'. '+e.titre;n.setAttribute('aria-label',n.title+(etat.etapes[j]?' — déclaré terminé':''));if(j===i&&!vueGrille)n.setAttribute('aria-current','step');n.addEventListener('click',()=>va(e.id));return n;
   }));
   const g=txt('button','grille-etape','📋');g.type='button';g.title='Ma grille d’évaluation';g.setAttribute('aria-label',g.title);if(vueGrille)g.setAttribute('aria-current','step');g.addEventListener('click',()=>{vueGrille=true;dessine();});$('etapes').append(g);
   const z=$('travail');
@@ -78,7 +84,7 @@ function dessine(){
   const nav=txt('div','actions');for(const [delta,label] of [[-1,'← Étape précédente'],[1,'Étape suivante →']]){
     if(i+delta<0)continue;
     if(i+delta>=ETAPES_RAT.length){const n=txt('button','btn vide','Ma grille d’évaluation →');n.type='button';n.addEventListener('click',()=>{vueGrille=true;dessine();scrollTo(0,0);});nav.append(n);continue;}
-    const n=txt('button','btn vide',label);n.type='button';n.addEventListener('click',()=>sauve({type:'position',etape:ETAPES_RAT[i+delta].id}));nav.append(n);
+    const n=txt('button','btn vide',label);n.type='button';n.addEventListener('click',()=>va(ETAPES_RAT[i+delta].id));nav.append(n);
   }z.append(sonnerie(),nav,txt('p','note','Je peux continuer même si une case reste vide. Je coche quand j’ai terminé ; le professeur examine mon document.'));
   if(typeof PhraseFin!=='undefined'&&ETAPES_RAT.every((_,j)=>etat.etapes&&etat.etapes[j])){const f=PhraseFin.figure(CITATION);if(f)z.append(f);}
   cloche();coince();progression();commandes();
@@ -102,7 +108,7 @@ function dessineGrille(z){
   z.replaceChildren(txt('p','numero','Étape finale · après mes '+ETAPES_RAT.length+' étapes'),txt('h2',null,'Ma grille d’évaluation'),txt('p','agir','Pour chaque critère, je lis les colonnes A à D. Je choisis ma lettre dans « Moi ».'),GRILLE);
   GRILLE.querySelectorAll('[data-critere]').forEach(n=>{n.value=etat.moi[n.dataset.critere]||'';});
   if(typeof HumeurAvis!=='undefined'){const av=txt('div');HumeurAvis.avis(av,{valeur:etat.avis,suivi:!!SUIVI,classeBouton:'btn',envoie:a=>envoieHumeurAvis({type:'avis',avis:a})});z.append(av);}
-  const nav=txt('div','actions'),n=txt('button','btn vide','← Étape '+ETAPES_RAT.length);n.type='button';n.addEventListener('click',()=>sauve({type:'position',etape:ETAPES_RAT[ETAPES_RAT.length-1].id}));nav.append(n);z.append(nav);
+  const nav=txt('div','actions'),n=txt('button','btn vide','← Étape '+ETAPES_RAT.length);n.type='button';n.addEventListener('click',()=>va(ETAPES_RAT[ETAPES_RAT.length-1].id));nav.append(n);z.append(nav);
   cloche();coince();progression();commandes();
 }
 /* La phrase de la fin (code commun : pas-a-pas/phrase-fin.js) : quand toutes les étapes sont faites. */
@@ -177,7 +183,7 @@ function reprise(){
    ['Je place mon document à côté du cours : je clique sur l’onglet du cours, puis clic droit sur l’onglet de mon document ▸ Ajouter l’onglet à une nouvelle vue fractionnée.','cote']]
     .forEach(([t,cle])=>{const li=txt('li',null,t);li.append(demoAutre(cle));ol.append(li);});
   const b=txt('button','btn','C’est fait : je reprends à l’étape '+(k+1)+' — '+ETAPES_RAT[k].titre);b.type='button';
-  b.addEventListener('click',()=>{repriseVue=false;etapeVue=null;const id=ETAPES_RAT[k].id;if(id===etat.position&&!vueGrille)dessine();else sauve({type:'position',etape:id});scrollTo(0,0);});
+  b.addEventListener('click',()=>{repriseVue=false;etapeVue=null;const id=ETAPES_RAT[k].id;va(id);scrollTo(0,0);});
   box.append(ol,b);return box;
 }
 /* La première étape pas encore terminée (sa place), sinon la dernière. */

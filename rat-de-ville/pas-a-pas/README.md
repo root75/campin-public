@@ -116,3 +116,11 @@ arrête l'animation et ramène à cette image, avec sa légende et l'écran maqu
 cible). Survoler un numéro affiche la légende en infobulle. Le changement est dans le lecteur
 commun `pas-a-pas/demo-lecteur.js` : il vaut pour tous les cours qui l'utilisent (Python, Labo 07,
 Se connecter), dont les feuilles de style ont reçu le même style de numéros.
+
+## Pastilles d'étape toujours cliquables (9 novembre 2026)
+
+Les pastilles 1 à 7 (et 📋) ne sont plus désactivées pendant l'enregistrement d'une case : avec
+Apps Script, chaque case les bloquait 1 à 2 s sans signe visible, et indéfiniment si le serveur ne
+répondait pas. Un clic affiche l'étape tout de suite ; la place est enregistrée dès que le serveur
+est libre (`va()` dans `fiche.js`). Les boutons « Étape précédente / suivante », « ← Étape 7 » et
+« C’est fait : je reprends » passent par le même chemin. Au survol : main et léger grossissement.

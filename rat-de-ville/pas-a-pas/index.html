@@ -27,6 +27,7 @@ body{background:radial-gradient(circle at 10% 0,var(--fromage-pale),transparent 
 .jauge span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--fromage),var(--soleil));border-radius:9px;transition:width .6s ease}
 #etapes{display:flex;flex-wrap:wrap;gap:8px}
 #etapes button{width:46px;height:46px;border-radius:50%;padding:0;font-weight:800;font-size:1.05rem;border:3px solid var(--encre-bouton);background:conic-gradient(var(--fromage) calc(var(--p,0)*1%),var(--carte) 0);color:var(--encre);position:relative}
+#etapes button{cursor:pointer;transition:transform .15s}#etapes button:hover:not(:disabled){transform:scale(1.12);box-shadow:0 2px 6px #0003}
 #etapes button[aria-current]{outline:3px solid var(--fromage);outline-offset:2px;transform:scale(1.1)}
 #etapes button.fini{background:var(--vert);border-color:var(--vert);color:#fff}
 /* La carte de l'étape */
@@ -186,5 +187,5 @@ table{border-collapse:collapse;width:100%}th,td{border:1px solid var(--trait);pa
 <script defer src="https://root75.github.io/campin-public/rat-de-ville/pas-a-pas/demos.js?v=lecteur-20261106"></script>
 <script defer src="https://root75.github.io/campin-public/pas-a-pas/phrase-fin.js?v=20261106"></script>
 <script defer src="https://root75.github.io/campin-public/pas-a-pas/humeur-avis.js?v=20261104"></script>
-<script defer src="https://root75.github.io/campin-public/rat-de-ville/pas-a-pas/fiche.js?v=lecteur-phrase-20261106"></script>
+<script defer src="https://root75.github.io/campin-public/rat-de-ville/pas-a-pas/fiche.js?v=pastilles-20261109"></script>
 </body></html>
