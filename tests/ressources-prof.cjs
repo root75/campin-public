@@ -15,5 +15,6 @@ vm.runInContext(script,c);
  assert.match(zone.children[0].href,/python/,'Une réponse tardive ne remplace pas le cours sélectionné');
  const absent=c.chargeRessourcesProf();assert.equal(zone.children.length,0,'L’ancien lien disparaît immédiatement');appels[2].ok({});await absent;assert.match(zone.textContent,/non renseignée/);
  const invalide=c.chargeRessourcesProf();appels[3].ok({preparation:'javascript:alert(1)',dossier:'https://evil.example/'});await invalide;assert.equal(zone.children.length,0);
- console.log('Liens professeur : choix du cours, réponses tardives, nouvel onglet, absence et URL invalide vérifiés.');
+ const github=c.chargeRessourcesProf();appels[4].ok({preparation:'https://github.com/root75/campin-pedagogique/blob/main/cours/activites-info-2e/sequences/04-messagerie/PROF.md'});await github;assert.equal(zone.children.length,1,'Une fiche prof PROF.md sur GitHub est affichée');assert.match(zone.children[0].href,/github\.com/);
+ console.log('Liens professeur : choix du cours, réponses tardives, nouvel onglet, absence, URL invalide et fiche GitHub vérifiés.');
 })().catch(e=>{console.error(e);process.exitCode=1;});

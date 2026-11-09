@@ -48,7 +48,7 @@ async function chargeRessourcesProf(){
     for(const [cle, libelle] of [["preparation","Fiche professeur — préparation et corrigé"],["dossier","Dossier Drive"]]){
       if(!liens || !liens[cle]) continue;
       const url = new URL(liens[cle]);
-      if(url.protocol !== "https:" || !["docs.google.com","drive.google.com"].includes(url.hostname)) continue;
+      if(url.protocol !== "https:" || !["docs.google.com","drive.google.com","github.com"].includes(url.hostname)) continue;
       const a = txt("a","btn vide",libelle); a.href = url.href; a.target = "_blank"; a.rel = "noopener noreferrer";
       a.title = libelle + " — nouvel onglet"; zone.append(a);
     }
