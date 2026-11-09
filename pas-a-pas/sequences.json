@@ -261,7 +261,8 @@
       "Tableau professeur → Cours : python-1. Pour une nouvelle séance : Nouvelle séance → la classe → Démarrer. Pour continuer, conserver la séance existante.",
       "Panneau Mes cours — classes et cours ouverts : Python 01 — Premiers pas coché pour la classe.",
       "Vérifier sur un poste élève : ouverture de la fiche et exécution Python. Thonny disponible ; emplacement réel de Documents connu.",
-      "Lancer le déroulé. Les élèves ouvrent Mes cours → leur classe → Python 01 — Premiers pas. Aucun travail à rendre hors cours."
+      "Lancer le déroulé. Les élèves ouvrent Mes cours → leur classe → Python 01 — Premiers pas.",
+      "Classroom : devoir « Python 01 — Les vies » publié, sur 5. Les élèves y rendent 01_Les-vies_Nom.py au bloc 13."
     ],
     "moments": [
       {
@@ -490,12 +491,12 @@
         "min": 10,
         "methode": "Travail autonome — fiches accessibles",
         "lignes": [
-          "Blocs 9 à 12 : dossier, fichier, traduction et prédiction.",
-          "Enregistre, exécute, puis montre ton écran."
+          "Blocs 9 à 13 : dossier, fichier, traduction, prédiction, puis rendu dans Classroom.",
+          "Enregistre, exécute, montre ton écran, puis rends ton fichier."
         ],
         "blocs": [
           9,
-          12
+          13
         ],
         "repere": "Vérifier le fichier au nom de l'élève et la sortie correspondant à SA variante : 2, 3 ou 4. Demander : « Montre où la valeur change. » Si Thonny échoue : travail à deux sur un poste fonctionnel, puis reprise individuelle dès que possible."
       },
@@ -505,14 +506,14 @@
         "min": 3,
         "methode": "Bilan oral et enregistrement",
         "lignes": [
-          "Enregistre ton fichier : nous le reprendrons.",
+          "Enregistre et rends ton fichier dans Classroom : nous le reprendrons.",
           "Explique : à quoi servent = et print() ?"
         ],
         "questions": [
           "Comment distinguer un texte du nom d'une variable ?",
           "Quel programme ou quelle ligne sais-tu maintenant expliquer ?"
         ],
-        "repere": "Contrôler les fichiers avant la sortie ; séances 1 et 2 non cotées. Si tout n'est pas terminé, reprendre la même séance pour conserver l'avancement."
+        "repere": "Contrôler dans Classroom que chaque élève a rendu 01_Les-vies (statut « Remis »), coté sur 5. Python 02 et 03 non cotés. Si tout n'est pas terminé, reprendre la même séance pour conserver l'avancement."
       }
     ]
   },
