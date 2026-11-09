@@ -2,13 +2,20 @@
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 const base=__dirname+'/../messagerie-2/pas-a-pas/';
 const src=fs.readFileSync(base+'fiche.js','utf8');const proofs=JSON.parse(fs.readFileSync(base+'preuves.json'));
+const moteur=fs.readFileSync(__dirname+'/../pas-a-pas/blocs.js','utf8');
+const fonction=(s,n)=>{const i=s.indexOf('function '+n+'(');let p=s.indexOf('{',i),d=0,j=p;for(;j<s.length;j++){if(s[j]==='{')d++;else if(s[j]==='}'&&--d===0)break;}return s.slice(i,j+1);};
 const x=vm.createContext({module:{exports:{}},Map,Set,console});vm.runInContext(src,x);
 const F=x.module.exports;
-assert.equal(proofs.blocs.length,F.NB,'une liste de preuves par étape');
-assert.equal(F.TITRES.length,F.NB);assert.equal(F.MIN.length,F.NB);
+// La règle locale du moteur (blocs.js), la même que regle_() de Code.gs.
+vm.runInContext(moteur.slice(moteur.indexOf('const norm ='),moteur.indexOf('const melange'))+'\n'+fonction(moteur,'regle')+';globalThis.regleMoteur=regle;',x);
+F.regle=x.regleMoteur;
+assert.equal(F.BLOCS.length,proofs.blocs.length,'un bloc par liste de preuves');
+F.BLOCS.forEach((B,i)=>{assert.ok(B.q&&B.q.serveur,'bloc '+(i+1)+' corrigé par le serveur');for(const k of ['partie','titre','min','veux','vois'])assert.ok(B[k],k+' '+(i+1));assert.ok((B.gestes||[]).length>=3,'gestes '+(i+1));assert.ok(B.coince.length,'coince '+(i+1));});
+assert.equal(F.BLOCS[7].q.type,'redaction');assert.equal(typeof F.BLOCS[7].q.controle,'function');
 const cat=JSON.parse(fs.readFileSync(__dirname+'/../pas-a-pas/cours.json')).cours.find(c=>c.id==='messagerie-2');
-assert.ok(cat&&cat.etapes===F.NB&&cat.preuves==='messagerie-2/pas-a-pas/preuves.json','catalogue');
-assert.ok(JSON.parse(fs.readFileSync(__dirname+'/../pas-a-pas/sequences.json'))['messagerie-2'].moments.length>=4,'conducteur');
+assert.ok(cat&&cat.etapes===F.BLOCS.length&&cat.preuves==='messagerie-2/pas-a-pas/preuves.json','catalogue');
+assert.ok(JSON.parse(fs.readFileSync(__dirname+'/../pas-a-pas/sequences.json'))['messagerie-2'].moments.length>=3,'conducteur');
+const minutes=F.BLOCS.reduce((t,B)=>t+B.min,0);
 
 // Règle anti-recopie : toutes les étapes sauf le brouillon (8) ont 3 variantes, chacune avec sa bonne réponse.
 proofs.blocs.forEach((l,i)=>{
@@ -68,8 +75,7 @@ if(gs){
 assert.ok(F.regle(proofs.blocs[7][0].regle,ok.slice(0,190)),'brouillon : règle locale');
 assert.ok(!F.regle(proofs.blocs[7][0].regle,'Salut, voici ma fiche'),'brouillon : règle refuse');
 
-// Contrôle local des QCM : la bonne réponse passe, un piège renvoie son explication.
-F.preuves=proofs;
-F.state.reponses[3]=proofs.blocs[3][0].c[0];assert.equal(F.erreurLocale(3),null);
-F.state.reponses[3]=proofs.blocs[3][0].c[1];assert.equal(F.erreurLocale(3)[0],proofs.blocs[3][0].p[1]);
-console.log('OK : Messagerie 02 — '+proofs.blocs.length+' étapes, variantes, réponse au professeur, '+cas.length+' erreurs repérées.');
+// Le contrôle du bloc 8, tel que le moteur l'appelle : controle(texte, valeurs, {classe}).
+assert.deepEqual([...F.BLOCS[7].q.controle(ok,{nom:'Lina Dupont'},{classe:'2B'})],[]);
+assert.ok(F.BLOCS[7].q.controle('Salut',{nom:''},{classe:''}).length>0);
+console.log('OK : Messagerie 02 — '+proofs.blocs.length+' blocs ('+minutes+' min de travail), variantes, réponse au professeur, '+cas.length+' erreurs repérées.');

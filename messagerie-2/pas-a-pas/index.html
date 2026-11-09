@@ -1,11 +1,94 @@
-<!doctype html><html lang="fr"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Messagerie 02 — Je réponds, je joins, je transfère</title><style>
-[hidden]{display:none!important}*{box-sizing:border-box}body{margin:0;background:#f1f5f9;color:#172b42;font:17px/1.55 system-ui,sans-serif}header{background:#075b80;color:white;padding:24px max(24px,calc((100vw - 1200px)/2))}header p{margin:5px 0}h1{font-size:30px;margin:5px 0}h2{font-size:27px;margin-top:0}main{max-width:1200px;margin:24px auto;padding:0 20px}.intro{font-size:14px;background:#fff2d4;border-radius:10px;padding:12px 18px}.layout{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(280px,1fr);gap:24px;margin-top:20px}article,.side,.prof{background:white;border:1px solid #d9e3eb;border-radius:16px;padding:26px}.side{align-self:start;position:sticky;top:20px;padding:20px}.side h2{font-size:20px}.email{border:1px solid #c5d7e2;border-radius:10px;overflow:hidden;background:white}.ligne-mail{display:flex;gap:16px;border-bottom:1px solid #dbe5eb;padding:14px;overflow-wrap:anywhere}.ligne-mail b{min-width:42px}.corps{padding:18px;min-height:180px}.corps p{white-space:pre-wrap;overflow-wrap:anywhere}.tag{font-size:12px;text-transform:uppercase;color:#5a7184;letter-spacing:.06em}.mission{border-left:4px solid #0086ad;padding:12px 16px;background:#edf8fc;margin-bottom:20px}.mission p{margin:5px 0;font-size:15px}label{display:block;font-weight:700;margin-top:18px}input,textarea,select{width:100%;border:2px solid #b6c7d4;border-radius:8px;padding:12px;font:inherit;background:white;color:#172b42}input:focus,textarea:focus,select:focus,button:focus-visible,summary:focus-visible{outline:3px solid #efaa28;outline-offset:3px}textarea{resize:vertical}button,.bouton{display:inline-block;border:0;border-radius:8px;background:#006f98;color:white;padding:13px 18px;font:600 16px system-ui;cursor:pointer;text-decoration:none}.secondaire{background:#eaf0f5;color:#24435c}.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}.aide-champ,.note{font-size:14px;color:#53697c}.aide-champ{margin:4px 0 8px}.retour{padding:16px;border-radius:10px;margin-top:18px}.faux{background:#fff0eb;border:1px solid #d7927d}.juste{background:#e9f6ee;border:1px solid #8cbaa0}details{padding:14px;border-bottom:1px solid #dbe5eb}summary{cursor:pointer;font-weight:600}details p{margin:12px 0 0}progress{width:100%;height:12px;accent-color:#007a9e;margin:10px 0}.prof{margin:24px 0}.prof summary{font-size:19px}.prof table{border-collapse:collapse;width:100%;font-size:14px}.prof td,.prof th{border:1px solid #cad7e1;padding:10px;text-align:left}img{width:100%;height:auto}a{color:#006f98}.deux{display:grid;grid-template-columns:1fr;gap:0}footer{font-size:13px;color:#53697c;margin:20px 0}.outlookbar{background:#edf5fa;padding:10px 16px;border-bottom:1px solid #c5d7e2;color:#075b80;font-size:14px}.prof select{max-width:440px;margin-right:10px}@media(max-width:850px){.layout{grid-template-columns:1fr}.side{position:static}article{padding:18px}h1{font-size:25px}}@media print{.actions,.prof,header,progress{display:none}.layout{display:block}.side{display:none}}
-.mode-action{background:#e1f3e9;border-left:6px solid #27844d;padding:14px;margin-bottom:20px;font-size:16px}.collectif{background:#eef0ff;border:2px solid #687ac0;padding:22px;border-radius:14px;margin:20px 0}.collectif h2{font-size:24px}.collectif details{background:white;margin:12px 0;border-radius:8px}.collectif p{max-width:850px}.collectif button{background:#465ca4}.collectif[hidden]{display:none}.aide-fixe{position:sticky;top:0;z-index:20;display:flex;gap:16px;align-items:center;flex-wrap:wrap;background:#fff8e8;border-bottom:2px solid #d89b28;padding:10px 20px}.aide-fixe button{background:#8c4b00}.aide-fixe p{margin:0;font-size:14px}.aide-fixe [hidden]{display:none}:root{--carte:#fff;--trait:#c5d7e2;--doux:#53697c;--encre:#172b42;--encre-bouton:#006f98;--juste:#287544;--faux:#a33}.en-sequence #aide{display:flex!important}#aide{position:fixed;top:10px;right:max(12px,env(safe-area-inset-right,0px));z-index:20;display:flex;flex-direction:column;align-items:flex-end;gap:6px}#bloque{position:relative;width:58px;height:58px;border-radius:50%;border:3px solid #d89b28;background:#fff;color:#172b42;font-size:1.7rem;line-height:1;cursor:pointer;box-shadow:0 3px 10px #0002;padding:0}#bloque .mot{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}#aide.active #bloque{background:#ffcf3f;animation:sonne 1s ease 2}@keyframes sonne{0%,100%{transform:rotate(0)}20%{transform:rotate(-18deg)}40%{transform:rotate(15deg)}60%{transform:rotate(-10deg)}80%{transform:rotate(6deg)}}#aide-bloque{background:#fff;border:2px solid #d89b28;border-radius:12px;padding:6px 10px;font-size:.85rem;font-weight:700;max-width:15rem;margin:0}#aide:not(.active):not(.info) #aide-bloque{display:none}#aide:not(.active):hover #aide-bloque,#aide:not(.active):focus-within #aide-bloque{display:block}#bravo{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(140%);background:#287544;color:#fff;font-weight:800;padding:12px 22px;border-radius:30px;box-shadow:0 6px 20px #0003;z-index:30;transition:transform .35s cubic-bezier(.3,1.4,.5,1);text-align:center;max-width:90vw}#bravo:not(.vu){visibility:hidden}#bravo.vu{transform:translateX(-50%) translateY(0)}#bravo.grand{font-size:1.2rem;background:linear-gradient(90deg,#075b80,#0086ad)}.confetti{position:fixed;top:-20px;width:10px;height:14px;z-index:29;pointer-events:none;animation:tombe 1.6s linear forwards}@keyframes tombe{to{transform:translateY(105vh) rotate(540deg)}}@media(max-width:600px){#bloque{width:48px;height:48px;font-size:1.4rem}}@media(prefers-reduced-motion:reduce){#aide.active #bloque,.confetti{animation:none}#bravo{transition:none}}header{padding-right:max(90px,calc((100vw - 1200px)/2))}#seq[hidden]{display:none}#seq{max-width:1160px;margin:24px auto}button:disabled{opacity:.55;cursor:wait}.side{top:90px}.mission.fini{background:#e8f6ee;border-left-color:#27844d}.mission.cote{background:#fff4d6;border-left-color:#c27c0e}.mission.cote ol{margin:6px 0 4px;padding-left:22px;font-size:15px}.duree{display:inline-block;background:#eaf0f5;color:#24435c;border-radius:20px;padding:4px 12px;font-size:14px;font-weight:600;margin:0 0 12px}.reel{background:#fff4d6;border-left:4px solid #c27c0e;padding:10px 14px;border-radius:6px}
-.gestes{list-style:none;padding:0;margin:16px 0;counter-reset:g}.gestes li{counter-increment:g;margin:8px 0}.gestes label{display:flex;gap:12px;align-items:flex-start;font-weight:400;margin:0;cursor:pointer}.gestes input{width:22px;height:22px;flex-shrink:0;margin-top:2px;accent-color:#27844d}.gestes span::before{content:counter(g) ". ";font-weight:700}.gestes input:checked+span{color:#53697c;text-decoration:line-through}
-.preuve{border:2px solid #0086ad;border-radius:12px;padding:16px 18px;margin:20px 0;background:#f6fbfd}.preuve legend{font-weight:700;padding:0 6px}.preuve label{margin-top:0}.choix{display:grid;gap:10px;margin-top:10px}.un-choix{display:flex!important;gap:12px;align-items:flex-start;font-weight:400!important;margin:0!important;background:white;border:2px solid #c5d7e2;border-radius:10px;padding:12px;cursor:pointer}.un-choix input{width:22px;height:22px;flex-shrink:0;accent-color:#006f98}.un-choix:has(input:checked){border-color:#b7791f;background:#fff4d6;box-shadow:0 0 0 2px #b7791f}
-.mini-mail{display:grid;gap:2px;overflow-wrap:anywhere}.mini-mail .pj{font-family:ui-monospace,Consolas,monospace;font-size:15px;color:#24435c}
-.coince{background:#fff8e8;border:1px solid #e3c27a;border-radius:10px;margin:16px 0}.coince ul{margin:10px 0 0;padding-left:20px}.coince li{margin:6px 0}
-.regle{background:#fff4d6;border-left-color:#c27c0e}table.lettre,table.reperes{border-collapse:collapse;width:100%;font-size:15px;margin:12px 0}.lettre td,.lettre th,.reperes td,.reperes th{border:1px solid #c5d7e2;padding:8px;text-align:left;vertical-align:top}.lettre th,.reperes th{background:#edf5fa}
-.modele{border:1px dashed #0086ad;border-radius:10px;padding:12px 16px;background:#f6fbfd;margin:12px 0}.modele p{white-space:pre-wrap;font-family:ui-monospace,Consolas,monospace;font-size:15px;margin:6px 0 0}
-.panneau>*,article>*{min-width:0}.side table{font-size:14px}</style><body><div class="page"><header><p>MES COURS · COMMUNICATION NUMÉRIQUE</p><h1>Messagerie 02 · Je réponds, je joins, je transfère</h1><p>Ouvrir une pièce jointe sans risque, la renvoyer complétée, faire suivre un message.</p></header><section id="aide" aria-label="Demander de l’aide"><button type="button" id="bloque" aria-controls="aide-bloque" title="J’ai relu, demandé au voisin ? Je sonne.">🔔<span class="mot">Je bloque</span></button><p id="aide-bloque" role="status"></p></section><div id="bravo" role="status" aria-live="polite"></div><main><p class="intro" id="suivi-status" role="status">Connexion au suivi…</p><section class="collectif" id="collectif"><p><b>ENSEMBLE · OBSERVE ET RÉPONDS AU PROFESSEUR</b></p><h2>Une pièce jointe, c’est un document glissé dans l’enveloppe</h2><p>Pour le moment, ne remplis rien. Regarde les exemples et prépare une réponse orale. Attends le signal du professeur pour commencer seul.</p><p><b>Tu travailles seul, hors séance ?</b> Clique directement sur le bouton en bas de ce cadre. Ton avancement est gardé.</p><details open><summary>1. La règle de la leçon</summary><p>Avant d’ouvrir une pièce jointe, je regarde <b>QUI</b> l’envoie et <b>QUEL</b> fichier c’est. Un inconnu, une adresse mal écrite, un fichier inattendu en .exe ou .zip : je n’ouvre pas, je montre à mon professeur.</p></details><details><summary>2. Ouvrir ou ne pas ouvrir ?</summary><p>De : Service Colis &lt;colis.livraison24@gmail.com&gt; · 📎 suivi-colis.zip</p><p>De : Secrétariat &lt;secretariat@arcampin.be&gt; · 📎 horaire.pdf</p><p><b>Réponds au professeur :</b> lequel ouvres-tu ? Qu’est-ce qui te met en garde dans l’autre ?</p></details><details><summary>3. Répondre, Répondre à tous ou Transférer ?</summary><p>Ton professeur t’envoie une fiche. Le délégué écrit à toute la classe. Ton voisin absent n’a pas reçu l’horaire.</p><p><b>Réponds au professeur :</b> quel bouton dans chaque cas ? Qui reçoit le message ?</p></details><button type="button" id="demarrer-individuel">Je commence (signal du professeur, ou travail seul hors séance) →</button></section><button type="button" class="secondaire" id="revoir-collectif" hidden>Revoir le support collectif</button><div id="individuel" hidden><p id="compteur"></p><progress id="barre" max="10" value="1" aria-label="Étape actuelle"></progress><div class="layout"><article id="contenu"></article><aside class="side"><h2>Les repères</h2><table class="reperes"><tr><th>À l’écran</th><th>Pour une lettre</th></tr><tr><td>📎 La carte du fichier</td><td>le document glissé dans l’enveloppe</td></tr><tr><td>↩ Répondre</td><td>je réponds à celui qui m’a écrit</td></tr><tr><td>↩↩ Répondre à tous</td><td>je réponds à tous ceux qui l’ont reçue</td></tr><tr><td>↪ Transférer (TR:)</td><td>je fais suivre la lettre, pièce jointe comprise</td></tr><tr><td>Cc</td><td>une photocopie pour quelqu’un d’autre</td></tr><tr><td>OneDrive</td><td>mon classeur de l’école, en ligne</td></tr></table><h2>Mon professeur</h2><table class="reperes"><tr><th>Classe</th><th>Je tape</th><th>Je salue</th></tr><tr><td>2B, 2F</td><td>Louviaux</td><td>Bonjour Monsieur,</td></tr><tr><td>2E</td><td>Michiels</td><td>Bonjour Madame,</td></tr></table><p class="note">Dans la liste d’Outlook, je choisis toujours la ligne qui finit par <b>@arcampin.be</b>.</p></aside></div>
-</div><footer>Messagerie 02 · Personnages et messages d’entraînement fictifs · Créé pour Mes cours.</footer></main></div><script src="https://root75.github.io/campin-public/pas-a-pas/phrase-fin.js?v=20261106"></script><script src="https://root75.github.io/campin-public/pas-a-pas/humeur-avis.js?v=20261104"></script><script src="https://root75.github.io/campin-public/messagerie-2/pas-a-pas/fiche.js?v=20261109"></script><script defer src="https://root75.github.io/campin-public/pas-a-pas/sequence-eleve.js?v=ecrans-20261105"></script></body></html>
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<!-- Messagerie 02 — page faite à partir de pas-a-pas/modele/index.html (moteur pas-a-pas/blocs.js, mode d'emploi pas-a-pas/MOTEUR.md). -->
+<script>
+/* Une erreur JavaScript s'affiche en haut de la page : sur un téléphone ou un poste d'élève, pas de console. */
+addEventListener("error", e => {
+  if(e.target && e.target.tagName === "LINK") return;   // une police qui manque n'empêche rien
+  const p = document.createElement("p");
+  p.style.cssText = "background:#f8e3e0;color:#b23a2e;border-left:5px solid #b23a2e;padding:8px 12px;margin:8px 0;font:14px/1.4 Arial,sans-serif";
+  p.textContent = "⚠ Erreur dans la page : " + (e.message || (e.target && e.target.src ? "chargement de " + e.target.src : "inconnue")) + (e.lineno ? " (ligne " + e.lineno + ")" : "");
+  if(e.lineno){   // les lignes telles que la page les a reçues : ce que le serveur a pu y changer
+    const pre = document.createElement("pre");
+    pre.style.cssText = "white-space:pre-wrap;word-break:break-all;margin:6px 0 0;font:12px/1.35 monospace";
+    pre.textContent = document.documentElement.outerHTML.split("\n").slice(Math.max(0, e.lineno-4), e.lineno+2)
+      .map((l,i) => (Math.max(0, e.lineno-4)+i+1) + "│" + l).join("\n");
+    p.append(pre);
+  }
+  (document.body || document.documentElement).prepend(p);
+}, true);
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Messagerie 02 — Je réponds, je joins, je transfère — pas à pas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,600;0,800;1,600&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
+<link rel="stylesheet" href="https://root75.github.io/campin-public/pas-a-pas/fiche.css?v=moteur-20261109">
+<link rel="stylesheet" href="https://root75.github.io/campin-public/assets/navigation.css">
+<link rel="stylesheet" href="https://root75.github.io/campin-public/pas-a-pas/python-missions.css?v=missions-20261105">
+<style>
+.mini-mail{display:grid;gap:2px;overflow-wrap:anywhere}.mini-mail .pj{font-family:ui-monospace,Consolas,monospace}
+table.lettre{border-collapse:collapse;width:100%;font-size:1rem}table.lettre th,table.lettre td{border:1px solid var(--trait);padding:6px 8px;text-align:left;vertical-align:top}
+.reel{background:#fff4d6;border-left:5px solid #c27c0e;padding:10px 14px;border-radius:8px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.repere.regle,.repere.cote{background:#fff4d6;border-left-color:#c27c0e}.repere.cote ol{margin:6px 0 0;padding-left:1.3rem}
+</style>
+</head>
+<body>
+<nav class="campin-navigation" aria-label="Navigation du site">
+  <details class="campin-menu">
+    <summary>☰ Menu</summary>
+    <div class="campin-menu-liens">
+      <a href="https://root75.github.io/campin-public/cours/" target="_top">Mes cours</a>
+      <a href="https://root75.github.io/campin-public/revisions/" target="_top">Révisions et entraînements</a>
+      <a href="https://root75.github.io/campin-public/se-connecter/#rendre" target="_top">Rendre un devoir</a>
+      <a href="https://root75.github.io/campin-public/" target="_top">Accueil</a>
+    </div>
+  </details>
+</nav>
+
+<div class="page">
+  <header class="entete"><span class="mascotte" id="mascotte" aria-hidden="true" style="font-size:64px;line-height:1">📎</span><div>
+    <div class="surtitre">Activités Info · 2e · La messagerie · Messagerie 02</div>
+    <h1>Messagerie 02 — Je réponds, je joins, je transfère</h1>
+    <p class="bulle" id="bulle">Aujourd’hui : une pièce jointe à ouvrir sans risque, à compléter et à renvoyer.</p>
+  </div></header>
+  <p class="qui" id="qui"></p>
+
+  <section class="humeur" id="humeur" hidden aria-label="Humeur du jour"></section>
+
+  <div class="progres" id="progres" aria-hidden="true"></div>
+
+  <main class="panneau" id="bloc" aria-live="polite"></main>
+
+  <details class="coince" id="coince">
+    <summary>Ça coince ?</summary>
+    <ul id="coince-liste"></ul>
+    <p class="protocole">Toujours bloqué ? Relis le bloc → demande au voisin (il explique, il ne touche pas ta souris) → sonne la cloche 🔔, en haut à droite, et continue ce qui reste possible.</p>
+  </details>
+
+  <section id="aide" aria-label="Demander de l’aide"><button id="aide-btn" type="button" aria-label="J'attends de l'aide" title="Tu as relu « Ça coince ? » et demandé au voisin ? Sonne.">🔔<span class="mot">J'attends de l'aide</span></button><p id="aide-texte">Tu as relu « Ça coince ? » et demandé au voisin ? Sonne.</p></section>
+  <div id="bravo" role="status" aria-live="polite"></div>
+
+  <div class="actions">
+    <button class="btn vide" type="button" id="memo-btn">📌 Les repères</button>
+  </div>
+
+  <footer><span id="pied"></span><span class="auteur">M. Louviaux</span></footer>
+</div>
+
+<dialog id="memo">
+  <h3>📌 Les repères</h3>
+  <div class="encart" style="margin-top:10px">
+    <table><tr><th>À l’écran</th><th>Pour une lettre</th></tr><tr><td>📎 La carte du fichier</td><td>le document glissé dans l’enveloppe</td></tr><tr><td>↩ Répondre</td><td>je réponds à celui qui m’a écrit</td></tr><tr><td>↩↩ Répondre à tous</td><td>je réponds à tous ceux qui l’ont reçue</td></tr><tr><td>↪ Transférer (TR:)</td><td>je fais suivre la lettre, pièce jointe comprise</td></tr><tr><td>Cc</td><td>une photocopie pour quelqu’un d’autre</td></tr><tr><td>OneDrive</td><td>mon classeur de l’école, en ligne</td></tr></table></div><div class="encart" style="margin-top:10px"><table><tr><th>Classe</th><th>Mon professeur</th><th>Je salue</th></tr><tr><td>2B, 2F</td><td>Louviaux</td><td>Bonjour Monsieur,</td></tr><tr><td>2E</td><td>Michiels</td><td>Bonjour Madame,</td></tr></table><p class="note">Dans Outlook, je choisis toujours la ligne qui finit par @arcampin.be.</p>
+  </div>
+  <form method="dialog" class="actions" style="margin-top:14px"><button class="btn plein">Fermer</button></form>
+</dialog>
+
+<!-- Ordre : sequence-eleve (différé), fiche.js (les données), phrase-fin, blocs.js (le moteur). -->
+<script defer src="https://root75.github.io/campin-public/pas-a-pas/sequence-eleve.js?v=ecrans-20261105"></script>
+<script src="https://root75.github.io/campin-public/messagerie-2/pas-a-pas/fiche.js?v=moteur-20261109"></script>
+<script src="https://root75.github.io/campin-public/pas-a-pas/phrase-fin.js?v=20261106"></script>
+<script src="https://root75.github.io/campin-public/pas-a-pas/blocs.js?v=moteur-20261109"></script>
+</body>
+</html>

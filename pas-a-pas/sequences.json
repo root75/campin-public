@@ -179,19 +179,8 @@
   },
   "messagerie-2": {
     "titre": "Messagerie 02 — Ouvrir sans risque, répondre, transférer",
-    "objectif": "Poser la règle de la pièce jointe (qui l’envoie, quel fichier) et distinguer Répondre, Répondre à tous et Transférer avant le travail dans Outlook. Durées du collectif indicatives ; prévoir ensuite 60–70 min de travail autonome, répartissables sur plusieurs séances.",
+    "objectif": "Poser la règle de la pièce jointe (qui l’envoie, quel fichier) avant le travail dans Outlook. Collectif court, environ 10 min : Messagerie 01 a montré que le collectif déborde (44 min avant le travail autonome le 03/11). Répondre, Répondre à tous, Transférer et Joindre sont travaillés aux blocs 2 et 7.",
     "moments": [
-      {
-        "type": "ecran",
-        "titre": "Retour sur Messagerie 01",
-        "min": 3,
-        "methode": "Question projetée, à l’oral",
-        "lignes": [
-          "Tu as écrit à un camarade avec ton professeur en Cc.",
-          "Qui a reçu ton message ? Où vérifies-tu qu’il est parti ?",
-          "Aujourd’hui : ouvrir une pièce jointe sans risque, la renvoyer complétée, faire suivre un message."
-        ]
-      },
       {
         "type": "ecran",
         "titre": "La règle de la leçon",
@@ -245,46 +234,6 @@
             "bonne": 0,
             "explication": "Ton professeur, un document Word annoncé : c’est la fiche du jour."
           }
-        ]
-      },
-      {
-        "type": "vote",
-        "titre": "Répondre, Répondre à tous ou Transférer ?",
-        "min": 5,
-        "methode": "Choix individuels, puis justification : qui reçoit le message ?",
-        "question": "Quel bouton choisis-tu dans chaque situation ?",
-        "choix": [
-          "Répondre",
-          "Répondre à tous",
-          "Transférer"
-        ],
-        "situations": [
-          {
-            "texte": "Ton professeur t’a envoyé une fiche. Tu la lui renvoies, à lui seul.",
-            "bonne": 0,
-            "explication": "Répondre : seul l’expéditeur reçoit ta réponse."
-          },
-          {
-            "texte": "Le délégué a écrit à toute la classe : « Qui apporte quoi pour le goûter ? ». Tout le monde doit lire ta réponse.",
-            "bonne": 1,
-            "explication": "Répondre à tous : chaque destinataire reçoit ta réponse."
-          },
-          {
-            "texte": "Ton voisin était absent : il n’a pas reçu l’horaire de l’excursion.",
-            "bonne": 2,
-            "explication": "Transférer : tu fais suivre le message, pièce jointe comprise, à quelqu’un qui ne l’a pas."
-          }
-        ]
-      },
-      {
-        "type": "ecran",
-        "titre": "Joindre, pas Partager le lien",
-        "min": 2,
-        "methode": "Exposé bref, montré au projecteur",
-        "lignes": [
-          "Onglet Message ▸ 📎 Joindre un fichier ▸ OneDrive ▸ coche ta fiche.",
-          "En bas : petite flèche ▾ à côté de Partager le lien ▸ Joindre.",
-          "La carte de ta fiche apparaît sous l’objet : elle part avec ta réponse."
         ]
       },
       {
