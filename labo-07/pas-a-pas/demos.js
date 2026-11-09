@@ -41,7 +41,7 @@ const Demo = (() => {
     ] },
     gimp: { titre: 'Faire calculer une grande image à GIMP et relever', images: [
       { ecran: 'bureau', menu: 'gimp', cible: 'app-gimp', legende: '⊞ Démarrer ▸ je tape GIMP ▸ je clique UNE fois sur l’application.' },
-      { ecran: 'bureau', chargement: 1, cible: 'chargement', legende: 'GIMP met 5 à 20 secondes à s’ouvrir. Je ne clique pas une deuxième fois.' },
+      { ecran: 'bureau', chargement: 1, cible: 'chargement', legende: 'GIMP met 5 à 20 secondes à s’ouvrir. Je ne clique pas une deuxième fois. « Bienvenue dans GIMP » : je ferme par le ×.' },
       { ecran: 'gimp', dialogue: 'nouvelle', cible: 'valider', legende: 'Fichier ▸ Nouvelle image (Ctrl + N) : Largeur 10000, Hauteur 10000, unité px ▸ Valider.' },
       { ecran: 'gimp', dialogue: 'taille', cible: 'ok', legende: '« Confirmer la taille de l’image » : environ 932 Mo, plus que la taille prévue par GIMP. Je clique sur Valider.' },
       { ecran: 'gimp', image: 1, menu: { sous: 'm-filtres', items: ['Flou ▸', 'Rendu ▸ Bruit ▸ Plasma…', 'Distorsions ▸'], hi: 'Rendu ▸ Bruit ▸ Plasma…' }, cible: 'item-Rendu ▸ Bruit ▸ Plasma…', legende: 'Image grise affichée : Filtres ▸ Rendu ▸ Bruit ▸ Plasma ▸ Valider.' },
