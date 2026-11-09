@@ -15,7 +15,7 @@ function erreursReponse(texte, nom, classe){
   const t = String(texte||'').replace(/\r/g,'');
   const lignes = t.split('\n').map(l=>l.trim()).filter(Boolean);
   const err = [];
-  if(lignes.length<4) return ['Écris ta réponse sur plusieurs lignes, comme le modèle : la salutation, tes phrases, la formule de fin, puis ta signature. Passe à la ligne avec la touche Entrée ↵.'];
+  if(lignes.length<4) return ['Écris ta réponse sur plusieurs lignes, comme le modèle : la salutation, tes phrases, la formule de fin, puis ta signature. Passe à la ligne avec la touche Enter ↵.'];
   if(/\[|\]/.test(t)) err.push('Remplace les indications entre crochets [ ] par ton propre texte, et retire les crochets.');
   const sal = lignes[0];
   if(!/^bonjour/i.test(sal)) err.push('Commence par la salutation : « Bonjour Monsieur, » ou « Bonjour Madame, ».');
@@ -23,7 +23,7 @@ function erreursReponse(texte, nom, classe){
   else if(!/^Bonjour (monsieur|madame)\b/i.test(sal)) err.push('Pour un professeur, écris « Bonjour Monsieur, » ou « Bonjour Madame, ».');
   else if(!/^Bonjour (Monsieur|Madame)\b/.test(sal)) err.push('« Monsieur » et « Madame » prennent une majuscule.');
   else if(!/^Bonjour (Monsieur|Madame),/.test(sal)) err.push('Mets une virgule juste après « Monsieur » ou « Madame ».');
-  else if(!/^Bonjour (Monsieur|Madame),$/.test(sal)) err.push('Écris seulement la salutation sur la première ligne, puis passe à la ligne (Entrée ↵).');
+  else if(!/^Bonjour (Monsieur|Madame),$/.test(sal)) err.push('Écris seulement la salutation sur la première ligne, puis passe à la ligne (Enter ↵).');
   const iFin = lignes.findIndex((l,i)=>i>0 && FINS.includes(NORM_M2(l).replace(/[\s!,.]+$/,'')));
   if(iFin<0){ err.push('Ajoute une formule de fin seule sur sa ligne, avant ta signature : « Bonne journée, » (ou Merci, Cordialement, À bientôt).'); return err; }
   const milieu = lignes.slice(1,iFin).join(' ');
@@ -108,11 +108,11 @@ const BLOCS = [
   extra:COTE,
   gestes:['Écris ta réponse dans la case, en suivant le modèle.','Clique sur <b>Vérifier</b> et corrige ce qui est signalé.','Clique sur <b>📋 Copier mon texte</b> (ou sélectionne le texte, puis Ctrl+C).','Onglet <b>Courrier</b> ▸ clique dans la zone blanche de ta réponse, <b>au-dessus</b> du message de ton professeur.','Colle : <b>Ctrl+V</b> (ou clic droit ▸ Coller).','<b>N’envoie pas encore</b> : tu relis au bloc suivant.'],
   vois:'Ma réponse est collée dans Outlook, au-dessus du message de mon professeur.',
-  coince:['Le texte collé n’a pas les mêmes lignes : remets les retours à la ligne avec Entrée ↵ dans Outlook.','Monsieur ou Madame ? Ton professeur est un homme : Monsieur. Une femme : Madame. Toujours avec une majuscule et une virgule.'],
+  coince:['Le texte collé n’a pas les mêmes lignes : remets les retours à la ligne avec Enter ↵ dans Outlook.','Monsieur ou Madame ? Ton professeur est un homme : Monsieur. Une femme : Madame. Toujours avec une majuscule et une virgule.'],
   q:{serveur:true, type:'redaction', copier:true,
      modele:'Bonjour Monsieur,          (2E : Bonjour Madame,)\nVoici ma fiche complétée, en pièce jointe.\n[Une phrase : la réponse de ma fiche que je préfère, et pourquoi.]\nBonne journée,\n[Prénom Nom], [classe]',
      champs:[{cle:'nom', nom:'Ton prénom et ton nom', aide:'Ils servent à vérifier ta signature.'}],
-     zone:{nom:'Ta réponse', aide:'Une ligne pour la salutation, tes phrases, une ligne pour la formule de fin, une ligne pour ta signature. Passe à la ligne avec Entrée ↵.', lignes:8},
+     zone:{nom:'Ta réponse', aide:'Une ligne pour la salutation, tes phrases, une ligne pour la formule de fin, une ligne pour ta signature. Passe à la ligne avec Enter ↵.', lignes:8},
      controle:(texte, v, ctx) => erreursReponse(texte, v.nom, ctx.classe)}},
  {partie:'C — Je réponds et je joins ma fiche', titre:'Envoyer et vérifier', min:5,
   veux:'Être sûr que mon professeur va recevoir ma fiche. Une réponse envoyée ne se reprend pas.',
@@ -123,7 +123,7 @@ const BLOCS = [
   q:{serveur:true}},
  {partie:'D — Je transfère', titre:'Transférer au voisin, professeur en Cc', min:8,
   veux:'Faire suivre le message de mon professeur à mon voisin, avec la fiche. Mon professeur est en copie (Cc) : il voit que je sais transférer. Pas de cote.',
-  gestes:['À gauche, <b>Boîte de réception</b> ▸ ouvre le message « Ta fiche à compléter ».','Clique sur <b>↪ Transférer</b> (touche Maj+F) : sous le message, ou l’icône en haut à droite du message.','Dans <b>À</b>, tape le nom de ton voisin ▸ clique sur la ligne qui finit par <b>@arcampin.be</b>.','Dans <b>Cc</b>, '+PROF+' ▸ clique sur la ligne qui finit par <b>@arcampin.be</b>.','Au-dessus du message, écris : « Bonjour » et le prénom de ton voisin, puis « Voici la fiche que nous avons reçue. », puis ton prénom.','Clique sur <b>Envoyer</b>.'],
+  gestes:['À gauche, <b>Boîte de réception</b> ▸ ouvre le message « Ta fiche à compléter ».','Clique sur <b>↪ Transférer</b> (touche Shift+F) : sous le message, ou l’icône en haut à droite du message.','Dans <b>À</b>, tape le nom de ton voisin ▸ clique sur la ligne qui finit par <b>@arcampin.be</b>.','Dans <b>Cc</b>, '+PROF+' ▸ clique sur la ligne qui finit par <b>@arcampin.be</b>.','Au-dessus du message, écris : « Bonjour » et le prénom de ton voisin, puis « Voici la fiche que nous avons reçue. », puis ton prénom.','Clique sur <b>Envoyer</b>.'],
   vois:'Avant d’envoyer : l’objet commence par <b>TR:</b> et la carte de la fiche est là.',
   coince:['Le nom de mon voisin ne s’affiche pas : tape son adresse en entier, prenom.nom@arcampin.be, vérifiée avec lui.','Outlook propose plusieurs lignes pour mon professeur : choisis celle qui finit par @arcampin.be. Pas « Externe », pas @arcampin.com.'],
   q:{serveur:true}}

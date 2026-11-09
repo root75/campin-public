@@ -26,36 +26,36 @@ const Demo = (() => {
       doc([L('')], { nom: NOM, cible: 'nom', ok: 1, legende: 'Je tape la date à l’envers, le titre, mon prénom et mon nom.' })
     ] },
     etape2: { titre: 'Je recopie la fable', images: [
-      doc([L(TITRE.toLowerCase())], { cible: 'page', legende: 'Je tape le titre, puis Entrée.' }),
+      doc([L(TITRE.toLowerCase())], { cible: 'page', legende: 'Je tape le titre, puis Enter.' }),
       doc([L(TITRE.toLowerCase()), L(FABLE[0])], { cible: 'page', legende: 'Un vers = une ligne.' }),
-      doc([L(TITRE.toLowerCase()), L(FABLE[0]), L(FABLE[1])], { cible: 'page', legende: 'Entrée au bout de chaque vers.' }),
+      doc([L(TITRE.toLowerCase()), L(FABLE[0]), L(FABLE[1])], { cible: 'page', legende: 'Enter au bout de chaque vers.' }),
       doc([L(TITRE.toLowerCase()), ...FABLE.map(v => L(v))], { cible: 'page', ok: 1, legende: 'Quatre vers : un repère. Je continue jusqu’au vers 28.' })
     ] },
     etape3: { titre: 'Je structure', images: [
       doc([L(TITRE.toLowerCase()), ...FABLE.map(v => L(v)), L(S2[0].toLowerCase())], { cible: 'L1', legende: 'Les vers commencent par une minuscule…' }),
       doc([L(TITRE), ...FABLE_MAJ.map(v => L(v, 'maj')), L(S2[0].toLowerCase())], { cible: 'L1', legende: '… je mets une majuscule au début de chaque vers.' }),
-      doc([L(TITRE), ...FABLE_MAJ.map(v => L(v)), L(''), L(S2[0])], { cible: 'L5', ok: 1, legende: 'Je clique à la fin du vers 4, Entrée : une ligne vide sépare les strophes.' })
+      doc([L(TITRE), ...FABLE_MAJ.map(v => L(v)), L(''), L(S2[0])], { cible: 'L5', ok: 1, legende: 'Je clique à la fin du vers 4, Enter : une ligne vide sépare les strophes.' })
     ] },
     etape6: { titre: 'Titre, texte, auteur', images: [
       doc(base('sel'), { cible: 'L0', legende: 'Je sélectionne le titre.' }),
-      doc(base('sel centre'), { cible: 'centrer', legende: 'Centrer (Ctrl + Maj + E).' }),
+      doc(base('sel centre'), { cible: 'centrer', legende: 'Centrer (Ctrl + Shift + E).' }),
       doc(base('sel centre gras'), { cible: 'gras', legende: 'Gras (Ctrl + B).' }),
       doc(base('sel centre gras'), { cible: 'm-format', menu: ['Texte ▸', 'Minuscules/majuscules ▸', 'MAJUSCULES'], legende: 'Format ▸ Texte ▸ Minuscules/majuscules ▸ MAJUSCULES.' }),
       doc(base('centre gras capitales', 'sel'), { cible: 'L2', legende: 'Je sélectionne les strophes.' }),
-      doc(base('centre gras capitales', 'sel centre'), { cible: 'centrer', legende: 'Centrer (Ctrl + Maj + E).' }),
-      doc(base('centre gras capitales', 'centre', 'sel droite'), { cible: 'droite', legende: 'L’auteur : Aligner à droite (Ctrl + Maj + R).' }),
+      doc(base('centre gras capitales', 'sel centre'), { cible: 'centrer', legende: 'Centrer (Ctrl + Shift + E).' }),
+      doc(base('centre gras capitales', 'centre', 'sel droite'), { cible: 'droite', legende: 'L’auteur : Aligner à droite (Ctrl + Shift + R).' }),
       doc(base('centre gras capitales', 'centre', 'sel droite italique'), { cible: 'italique', legende: 'Italique (Ctrl + I).' }),
       doc(base('centre gras capitales', 'centre', 'droite italique souligne'), { cible: 'souligne', ok: 1, legende: 'Souligner (Ctrl + U). Trois zones, trois mises en forme !' })
     ] },
     etape7: { titre: 'Une police par strophe', images: [
       doc(base('centre gras capitales', 'sel centre', 'droite italique souligne'), { cible: 'L2', legende: 'Je sélectionne SEULEMENT la strophe 1.' }),
       doc(base('centre gras capitales', 'sel centre', 'droite italique souligne'), { cible: 'item-Garamond', menu: { sous: 'police', items: ['Arial', 'Calibri', 'Garamond', 'Arial Black'], hi: 'Garamond' }, legende: 'Menu des polices ▸ Garamond.' }),
-      doc(base('centre gras capitales', 'sel centre garamond', 'droite italique souligne'), { police: 'Garamond', cible: 'taille', legende: 'Je clique dans la case du nombre, je tape 14, Entrée.' }),
+      doc(base('centre gras capitales', 'sel centre garamond', 'droite italique souligne'), { police: 'Garamond', cible: 'taille', legende: 'Je clique dans la case du nombre, je tape 14, Enter.' }),
       doc(base('centre gras capitales', 'centre garamond grand', 'droite italique souligne'), { police: 'Garamond', taille: '14', cible: 'L2', ok: 1, legende: 'Seule la strophe 1 a changé. À la suivante !' })
     ] },
     etape8: { titre: 'Mon bloc-notes', images: [
-      doc([L('Mon bloc-notes', 'gras'), L('le tapis', 'sel'), L('…', 'sel'), L('…', 'sel')], { cible: 'puces', legende: 'Je sélectionne mes 3 lignes ▸ Liste à puces (Ctrl + Maj + 8).' }),
-      doc([L('Mon bloc-notes', 'gras'), L('le tapis', 'puce'), L('…', 'puce'), L('…', 'puce'), L('Mes gestes', 'gras'), L('J’ai sélectionné le titre, puis Centrer.', 'sel'), L('…', 'sel')], { cible: 'numeros', legende: 'Mes gestes ▸ Liste numérotée (Ctrl + Maj + 7).' }),
+      doc([L('Mon bloc-notes', 'gras'), L('le tapis', 'sel'), L('…', 'sel'), L('…', 'sel')], { cible: 'puces', legende: 'Je sélectionne mes 3 lignes ▸ Liste à puces (Ctrl + Shift + 8).' }),
+      doc([L('Mon bloc-notes', 'gras'), L('le tapis', 'puce'), L('…', 'puce'), L('…', 'puce'), L('Mes gestes', 'gras'), L('J’ai sélectionné le titre, puis Centrer.', 'sel'), L('…', 'sel')], { cible: 'numeros', legende: 'Mes gestes ▸ Liste numérotée (Ctrl + Shift + 7).' }),
       doc([L('Mon bloc-notes', 'gras'), L('le tapis', 'puce'), L('…', 'puce'), L('…', 'puce'), L('Mes gestes', 'gras'), L('J’ai sélectionné le titre, puis Centrer.', 'num'), L('…', 'num'), L('Pour changer une seule strophe, je…')], { cible: 'L7', ok: 1, legende: 'Et ma phrase pour finir.' })
     ] },
     etape9: { titre: 'Je m’évalue et je remets', images: [

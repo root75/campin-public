@@ -31,7 +31,7 @@ const hache = s => {   // FNV-1a brassé, comme hache_() dans Code.gs
 const tirage = (cle, n) => n<2 || !EMAIL ? 1 : 1 + hache(EMAIL.toLowerCase()+"|"+cle) % n;
 
 const CASES = (...l) => `<ol class="etapes">${l.map(x => `<li><label><input type="checkbox"><span>${x}</span></label></li>`).join("")}</ol>`;
-const EXECUTER = `Clique sur <span class="chemin">▶ Exécuter</span> (ou <b>Ctrl + Entrée</b>).`;
+const EXECUTER = `Clique sur <span class="chemin">▶ Exécuter</span> (ou <b>Ctrl + Enter</b>).`;
 const sansAccent = s => s.normalize("NFD").replace(/[̀-ͯ]/g,"");
 
 /* Le nom du fichier doit porter le nom de l'élève : le prénom ou le nom de son adresse. */
@@ -109,7 +109,7 @@ const echo = n => ({
 /* Le piège du nombre tapé : "3" * 10 → 3333333333. */
 const PIEGE_V = [{n:3,m:10},{n:5,m:4},{n:7,m:3}];
 const piegeQ = ({n,m}) => ({
-  extra: CODE(`nombre = input("Un nombre ? ")\nprint(nombre * ${m})`) + `<p>À l'exécution, on tape <b>${n}</b> puis Entrée.</p>`,
+  extra: CODE(`nombre = input("Un nombre ? ")\nprint(nombre * ${m})`) + `<p>À l'exécution, on tape <b>${n}</b> puis Enter.</p>`,
   q:{ type:"qcm", q:"Prédis : qu'affiche la dernière ligne ?",
       c:[String(n).repeat(m), String(n*m), "Une erreur TypeError", `nombre * ${m}`],
       p:[null, `input( ) rend TOUJOURS un texte : "${n}", pas ${n}. Et un texte fois ${m}, c'est le texte recopié ${m} fois.`,
@@ -238,8 +238,8 @@ const BLOCS = [
     bulle:"Jusqu'ici, tes programmes parlaient. Maintenant, ils écoutent !",
     veux:"Écrire un programme qui demande quelque chose à la personne qui l'utilise.",
     fais:CASES("Lis l'encadré.", "Complète le programme : une 2e ligne qui affiche le mot demandé et le prénom.", EXECUTER),
-    extra:`<div class="encart"><p><code>prenom = input("Ton prénom ? ")</code> affiche la question, <b>attend</b> qu'on tape une réponse et Entrée, puis range la réponse dans la boîte <code>prenom</code>.</p>
-  <p><b>Dans Thonny</b>, la console du bas attend : tu tapes ta réponse, puis Entrée.<br><b>Dans cette page</b>, les réponses sont déjà tapées pour toi : la fiche essaie ton programme avec <b>Léa</b>, puis avec <b>Sam</b>.</p>
+    extra:`<div class="encart"><p><code>prenom = input("Ton prénom ? ")</code> affiche la question, <b>attend</b> qu'on tape une réponse et Enter, puis range la réponse dans la boîte <code>prenom</code>.</p>
+  <p><b>Dans Thonny</b>, la console du bas attend : tu tapes ta réponse, puis Enter.<br><b>Dans cette page</b>, les réponses sont déjà tapées pour toi : la fiche essaie ton programme avec <b>Léa</b>, puis avec <b>Sam</b>.</p>
   <p>Dans la console, la ligne tapée reste affichée, comme dans Thonny.</p></div>`,
     coince:["Les noms de variables s'écrivent sans accent : prenom, pas prénom.",
             "print(\"Bonjour\", prenom) : le texte entre guillemets, une virgule, la boîte sans guillemets."],
@@ -273,15 +273,15 @@ const BLOCS = [
   { partie:"D — « Le score », dans Thonny", titre:"Un nouveau fichier à mon nom", min:3, stop:true,
     bulle:"Retour dans Thonny : un nouveau programme, un nouveau fichier.",
     veux:"Enregistrer un nouveau fichier à ton nom AVANT d'écrire.",
-    fais:CASES(`Appuie sur la touche <b>Windows</b> ⊞, tape <b>Thonny</b>, puis appuie sur <b>Entrée</b>.`,
+    fais:CASES(`Appuie sur la touche <b>Windows</b> ⊞, tape <b>Thonny</b>, puis appuie sur <b>Enter</b>.`,
                `Dans Thonny : <span class="chemin">menu Fichier ▸ Nouveau</span> (ou <b>Ctrl + N</b>).`,
-               `Puis <span class="chemin">menu Fichier ▸ Enregistrer sous…</span> (ou <b>Ctrl + Maj + S</b>).`,
+               `Puis <span class="chemin">menu Fichier ▸ Enregistrer sous…</span> (ou <b>Ctrl + Shift + S</b>).`,
                `Dans la fenêtre qui s'ouvre : <span class="chemin">Documents ▸ double-clic sur Python</span>.`,
                `Dans <span class="chemin">Nom du fichier</span>, tape <b>02_Le-score_Nom.py</b>, avec TON nom à la place de Nom.`,
                `Clique sur <span class="chemin">Enregistrer</span>.`),
     vois:"L'onglet, en haut de Thonny, affiche 02_Le-score_ et ton nom.",
-    coince:["Thonny ne se lance pas : nouvel onglet (Ctrl + T) ▸ barre d’adresse ▸ https://cscircles.cemc.uwaterloo.ca/dev/console-fr/ ▸ Entrée. Rien n’y est enregistré : sonne la cloche 🔔 ; le professeur organise la sauvegarde.",
-            "Ton dossier Python n'est pas dans Documents : crée-le. Documents ▸ ⊕ Nouveau ▸ Dossier ▸ Python ▸ Entrée.",
+    coince:["Thonny ne se lance pas : nouvel onglet (Ctrl + T) ▸ barre d’adresse ▸ https://cscircles.cemc.uwaterloo.ca/dev/console-fr/ ▸ Enter. Rien n’y est enregistré : sonne la cloche 🔔 ; le professeur organise la sauvegarde.",
+            "Ton dossier Python n'est pas dans Documents : crée-le. Documents ▸ ⊕ Nouveau ▸ Dossier ▸ Python ▸ Enter.",
             "Deux signes différents : le tiret - entre Le et score, le trait de soulignement _ partout ailleurs."],
     q:{ type:"saisie", q:"Recopie le nom de ton fichier, tel que Thonny l'affiche.",
         ok: r => /^02_le-score_[^\s_]{2,}.*\.py$/i.test(r.trim()) && !/_nom\.py$/i.test(r.trim()) && portemonNom(r.trim().slice(12)),
@@ -298,16 +298,16 @@ const BLOCS = [
                `Pour « Lire pieces » : <code>pieces = int(input("Combien de pièces ? "))</code>.`,
                `Enregistre : <span class="chemin">icône disquette « Enregistrer »</span> (ou <b>Ctrl + S</b>).`,
                "N'exécute pas encore : prédis, ci-dessous.",
-               `Puis <span class="chemin">icône ▶ verte</span> (ou <b>F5</b>) : clique dans la console du bas, tape ton nombre, puis <b>Entrée</b>.`),
+               `Puis <span class="chemin">icône ▶ verte</span> (ou <b>F5</b>) : clique dans la console du bas, tape ton nombre, puis <b>Enter</b>.`),
     vois:"Trois lignes de Python. La console pose la question, attend ta réponse, puis affiche le score.",
     extra: LOGIGRAMME_SCORE + `<div class="encart"><table>
   <tr><th>Dans le logigramme</th><th>En Python</th></tr>
   <tr><td>Lire (parallélogramme)</td><td><b>int(input(…))</b>, rangé dans une boîte</td></tr>
   <tr><td>la flèche ←</td><td><b>=</b></td></tr>
-  <tr><td>le signe ×</td><td><b>*</b> (Maj + ù, ou le * du pavé numérique)</td></tr>
+  <tr><td>le signe ×</td><td><b>*</b> (Shift + ù, ou le * du pavé numérique)</td></tr>
   <tr><td>Afficher (parallélogramme)</td><td><b>print( )</b></td></tr></table></div>`,
     coince:["Le bouton 🐍 « Texte, nombre et input() », en bas de la page, redit les règles.",
-            "Rien ne se passe après F5 : le programme attend ! Clique dans la console du bas, tape un nombre, puis Entrée.",
+            "Rien ne se passe après F5 : le programme attend ! Clique dans la console du bas, tape un nombre, puis Enter.",
             "pieces s'écrit sans accent, partout pareil.",
             "Toujours bloqué après ton voisin : la 1re ligne est donnée dans les cases. Cherche les deux autres seul."],
     ...scorePredit(SCORE_V[0]),
@@ -390,9 +390,9 @@ const FICHIER_SCORE = "02_Le-score_Nom.py";
 const DEMOS_FICHE = {
   10: { titre:"Nouveau fichier et Enregistrer sous", images:[
     { ecran:"bureau", cible:"demarrer", legende:"Appuie sur la touche Windows ⊞ (ou clique sur Démarrer)." },
-    { ecran:"bureau", demarrer:1, cible:"app-thonny", legende:"Tape Thonny, puis Entrée." },
+    { ecran:"bureau", demarrer:1, cible:"app-thonny", legende:"Tape Thonny, puis Enter." },
     { ecran:"thonny", nom:"<sans nom>", menu:"item-nouveau", cible:"item-nouveau", legende:"Menu Fichier ▸ Nouveau (ou Ctrl + N) : un onglet vide." },
-    { ecran:"thonny", nom:"<sans nom>", menu:"item-sous", cible:"item-sous", legende:"Menu Fichier ▸ Enregistrer sous… (ou Ctrl + Maj + S)." },
+    { ecran:"thonny", nom:"<sans nom>", menu:"item-sous", cible:"item-sous", legende:"Menu Fichier ▸ Enregistrer sous… (ou Ctrl + Shift + S)." },
     { ecran:"thonny", nom:"<sans nom>", dialogue:1, fichier:FICHIER_SCORE, cible:"dlg-documents", legende:"À gauche, clique sur Documents." },
     { ecran:"thonny", nom:"<sans nom>", dialogue:1, fichier:FICHIER_SCORE, cible:"dlg-python", legende:"Double-clic sur le dossier Python." },
     { ecran:"thonny", nom:"<sans nom>", dialogue:2, fichier:FICHIER_SCORE, cible:"dlg-nom", legende:"Nom du fichier : 02_Le-score_ puis TON nom, puis .py." },
@@ -402,7 +402,7 @@ const DEMOS_FICHE = {
     { ecran:"thonny", nom:FICHIER_SCORE, lignes:3, modifie:1, cible:"th-enregistrer", legende:"Tes trois lignes écrites : disquette « Enregistrer » (ou Ctrl + S)." },
     { ecran:"thonny", nom:FICHIER_SCORE, lignes:3, cible:"th-executer", legende:"Icône ▶ verte (ou F5)." },
     { ecran:"thonny", nom:FICHIER_SCORE, lignes:3, run:1, question:"Combien de pièces ? ", cible:"th-console", legende:"La console pose la question et ATTEND. Clique dans la console." },
-    { ecran:"thonny", nom:FICHIER_SCORE, lignes:3, run:1, question:"Combien de pièces ? ", tape:"ton nombre", cible:"th-console", legende:"Tape ton nombre, puis Entrée." },
+    { ecran:"thonny", nom:FICHIER_SCORE, lignes:3, run:1, question:"Combien de pièces ? ", tape:"ton nombre", cible:"th-console", legende:"Tape ton nombre, puis Enter." },
     { ecran:"thonny", nom:FICHIER_SCORE, lignes:3, run:1, question:"Combien de pièces ? ", tape:"ton nombre", resultat:1, cible:"th-console", ok:1, legende:"Le score s’affiche. Compare avec ta prédiction." } ] }
 };
 
@@ -488,7 +488,7 @@ function editeur(zone, Q, reussi, rate){
   const ta = el("textarea","editeur"); ta.value = Q.depart || ""; ta.spellcheck = false;
   ta.setAttribute("autocapitalize","off"); ta.setAttribute("aria-label","Mon programme");
   ta.rows = Math.max(4, ta.value.split("\n").length + 1);
-  const lance = txt("button","btn plein","▶ Exécuter (Ctrl+Entrée)"); lance.type = "button";
+  const lance = txt("button","btn plein","▶ Exécuter (Ctrl+Enter)"); lance.type = "button";
   const depart = txt("button","btn vide","↺ Code de départ"); depart.type = "button";
   const ecran = el("pre","console"); ecran.hidden = true; ecran.setAttribute("aria-live","polite");
   const barre = el("div","actions"); barre.append(lance, depart);

@@ -38,7 +38,7 @@ const VIES = CODE("vies = {D}\nvies = vies - {K}\nprint(vies)");
 
 /* Une case par action, à l'impératif (style « missions » du Labo 07 et du Rat de ville). */
 const CASES = (...l) => `<ol class="etapes">${l.map(x => `<li><label><input type="checkbox"><span>${x}</span></label></li>`).join("")}</ol>`;
-const EXECUTER = `Clique sur <span class="chemin">▶ Exécuter</span> (ou <b>Ctrl + Entrée</b>).`;
+const EXECUTER = `Clique sur <span class="chemin">▶ Exécuter</span> (ou <b>Ctrl + Enter</b>).`;
 
 /* Les exercices à nombres variables : une fonction rend la partie du bloc qui change. */
 const additionneur = n => {
@@ -88,7 +88,7 @@ const BLOCS = [
                "Reviens à cette fiche (son onglet, en haut de Chrome) et regarde le projecteur : le professeur reprend la question la plus ratée."),
     vois:"Ton score sur 5, et la trace au projecteur.",
     coince:["Garde deux onglets : celui-ci pour la fiche, l'autre pour le quiz. Pour revenir à la fiche : clic sur son onglet, en haut de Chrome.",
-            "Le lien ne s'ouvre pas : nouvel onglet (Ctrl + T) ▸ barre d'adresse ▸ root75.github.io/campin-public/python-je-revise/ ▸ Entrée.",
+            "Le lien ne s'ouvre pas : nouvel onglet (Ctrl + T) ▸ barre d'adresse ▸ root75.github.io/campin-public/python-je-revise/ ▸ Enter.",
             "Un trou de mémoire : l'onglet « L'essentiel » de la même page redit tout en cinq lignes."],
     q:{ type:"qcm", q:"Dans vies = vies - 1, que fait Python ?",
         c:["Il calcule à droite, puis il range à gauche.","Il vérifie que vies est égal à vies - 1.","Il range 1 dans vies.","Il affiche vies."],
@@ -116,7 +116,7 @@ const BLOCS = [
   { partie:"B — Lire les messages d'erreur", titre:"L'additionneur", min:5,
     bulle:"Une faute d'écriture : un seul caractère à trouver.",
     veux:"Réparer une faute d'écriture : un seul caractère.",
-    fais:CASES(`Exécute le programme tel quel : <span class="chemin">▶ Exécuter</span> (ou <b>Ctrl + Entrée</b>).`,
+    fais:CASES(`Exécute le programme tel quel : <span class="chemin">▶ Exécuter</span> (ou <b>Ctrl + Enter</b>).`,
                "Lis la ligne rouge.", "Trouve le caractère fautif et corrige-le.", EXECUTER),
     coince:["SyntaxError : l'écriture est cassée. Regarde juste avant la parenthèse finale.",
             "Un seul caractère à enlever, rien à ajouter."],
@@ -126,7 +126,7 @@ const BLOCS = [
   { partie:"B — Lire les messages d'erreur", min:5,
     bulle:"Cette fois, l'erreur arrive pendant l'exécution.",
     veux:"Réparer une erreur qui arrive pendant l'exécution. Deux caractères.",
-    fais:CASES(`Exécute le programme tel quel : <span class="chemin">▶ Exécuter</span> (ou <b>Ctrl + Entrée</b>).`,
+    fais:CASES(`Exécute le programme tel quel : <span class="chemin">▶ Exécuter</span> (ou <b>Ctrl + Enter</b>).`,
                "Lis le nom de l'erreur.", "Dis à ton voisin quelle ligne est fautive.", "Corrige-la.", EXECUTER),
     ...bonjour("Joe"),
     variantes:[bonjour("Léa"), bonjour("Sam")] },
@@ -164,14 +164,14 @@ const BLOCS = [
   { partie:"C — « Les vies » cassé, réparé, commenté, dans Thonny", titre:"Ouvrir mon fichier", min:3, stop:true, cle:"vies", variantes:[{},{}],
     bulle:"Retour dans Thonny : retrouve ton programme de Python 01.",
     veux:"Retrouver le programme de Python 01.",
-    fais:CASES(`Appuie sur la touche <b>Windows</b> ⊞, tape <b>Thonny</b>, puis appuie sur <b>Entrée</b>.`,
+    fais:CASES(`Appuie sur la touche <b>Windows</b> ⊞, tape <b>Thonny</b>, puis appuie sur <b>Enter</b>.`,
                `Dans Thonny : <span class="chemin">menu Fichier ▸ Ouvrir…</span> (ou <b>Ctrl + O</b>).`,
                `<span class="chemin">Documents ▸ double-clic sur Python ▸ 01_Les-vies_Nom.py ▸ Ouvrir</span>.`,
                `Exécute : <span class="chemin">icône ▶ verte « Exécuter le script courant »</span> (ou <b>F5</b>).`),
     vois:"Tes trois lignes, comme le modèle ci-dessous, et {R} dans la console du bas.",
     extra: VIES,
-    coince:["Ton fichier n'est pas là : recrée-le. Documents ▸ bouton Nouveau ▸ Dossier ▸ Python ; puis dans Thonny, Fichier ▸ Enregistrer sous… (Ctrl + Maj + S) ▸ 01_Les-vies_Nom.py, et tape les trois lignes du modèle.",
-            "Thonny ne se lance pas : nouvel onglet (Ctrl + T) ▸ barre d’adresse ▸ https://cscircles.cemc.uwaterloo.ca/dev/console-fr/ ▸ Entrée. Tape les trois lignes du modèle dans la console de secours et exécute. Rien n’y est enregistré : sonne la cloche 🔔 ; le professeur vérifie le résultat et organise la sauvegarde. Puis reviens à cette fiche."],
+    coince:["Ton fichier n'est pas là : recrée-le. Documents ▸ bouton Nouveau ▸ Dossier ▸ Python ; puis dans Thonny, Fichier ▸ Enregistrer sous… (Ctrl + Shift + S) ▸ 01_Les-vies_Nom.py, et tape les trois lignes du modèle.",
+            "Thonny ne se lance pas : nouvel onglet (Ctrl + T) ▸ barre d’adresse ▸ https://cscircles.cemc.uwaterloo.ca/dev/console-fr/ ▸ Enter. Tape les trois lignes du modèle dans la console de secours et exécute. Rien n’y est enregistré : sonne la cloche 🔔 ; le professeur vérifie le résultat et organise la sauvegarde. Puis reviens à cette fiche."],
     q:{ type:"qcm", q:"F5 : qu'affiche la console du bas ?",
         c:["{R}","{D}","vies","Un message d'erreur"],
         p:[null,"vies - {K} doit être rangé : vies = vies - {K}. Corrige, Ctrl+S, F5.","print(\"vies\") affiche le mot : enlève les guillemets, Ctrl+S, F5.","Lis le message, compare avec le modèle, corrige, Ctrl+S, F5."] } },
@@ -214,7 +214,7 @@ const BLOCS = [
                "Puis F5 : lis le message d'erreur.",
                "Remets la parenthèse, puis F5."),
     vois:"Un message d'erreur, puis de nouveau {R} après la réparation.",
-    coince:["La parenthèse ) est la touche à droite du 0, sans Maj."],
+    coince:["La parenthèse ) est la touche à droite du 0, sans Shift."],
     q:{ type:"qcm", q:"Prédis : avec print(vies sans la parenthèse finale, quelle erreur ?",
         c:["SyntaxError : une faute d'écriture.","NameError : un nom inconnu.","Aucune : il affiche {R}.","Il affiche vies."],
         p:[null,"Le nom vies est connu : c'est l'écriture qui est cassée.","Python ne devine pas la parenthèse manquante.","Rien ne s'affiche quand l'écriture est cassée."] },
@@ -223,7 +223,7 @@ const BLOCS = [
                    "Réponds à la question ci-dessous AVANT de faire F5.",
                    "Puis F5 : lis le message d'erreur.",
                    "Répare (print(vies)), puis F5."),
-        coince:["La parenthèse ( est la touche 5, sans Maj."],
+        coince:["La parenthèse ( est la touche 5, sans Shift."],
         q:{ type:"qcm", q:"Prédis : avec print vies), sans la parenthèse ouvrante, quelle erreur ?",
             c:["SyntaxError : une faute d'écriture.","NameError : un nom inconnu.","Aucune : il affiche {R}.","Il affiche vies."],
             p:[null,"Le nom vies est connu : c'est l'écriture qui est cassée.","Python ne devine pas la parenthèse manquante.","Rien ne s'affiche quand l'écriture est cassée."] } },
@@ -290,7 +290,7 @@ const DEMOS_FICHE = {
     { ecran:"chrome", page:"quiz", cible:"ch-fiche", ok:1, legende:"Pour revenir à la fiche : clique sur son onglet, en haut." } ] },
   6: { titre:"Ouvrir mon fichier dans Thonny", images:[
     { ecran:"bureau", cible:"demarrer", legende:"Appuie sur la touche Windows ⊞ (ou clique sur Démarrer)." },
-    { ecran:"bureau", demarrer:1, cible:"app-thonny", legende:"Tape Thonny, puis Entrée." },
+    { ecran:"bureau", demarrer:1, cible:"app-thonny", legende:"Tape Thonny, puis Enter." },
     { ecran:"thonny", nom:"<sans nom>", cible:"m-fichier", legende:"Clique sur le menu Fichier." },
     { ecran:"thonny", nom:"<sans nom>", menu:"item-ouvrir", cible:"item-ouvrir", legende:"Ouvrir… (ou Ctrl + O)." },
     { ecran:"thonny", nom:"<sans nom>", dialogue:1, ouvrir:1, cible:"dlg-documents", legende:"À gauche, clique sur Documents." },
@@ -303,7 +303,7 @@ const DEMOS_FICHE = {
   8: Object.assign({}, CASSER, { volet:false }),
   9: { titre:"Ajouter un commentaire au-dessus d’une ligne", images:[
     { ecran:"thonny", nom:FICHIER_VIES, lignes:3, cible:"L0", legende:"Clique au tout début de la ligne 1." },
-    { ecran:"thonny", nom:FICHIER_VIES, modifie:1, code:[["","sel"],["","cache"],["","cache"],["","cache"]], cible:"L0", legende:"Entrée : une ligne vide apparaît au-dessus. Remonte dessus (flèche ↑)." },
+    { ecran:"thonny", nom:FICHIER_VIES, modifie:1, code:[["","sel"],["","cache"],["","cache"],["","cache"]], cible:"L0", legende:"Enter : une ligne vide apparaît au-dessus. Remonte dessus (flèche ↑)." },
     { ecran:"thonny", nom:FICHIER_VIES, modifie:1, code:[["# …","sel"],["","cache"],["","cache"],["","cache"]], cible:"L0", legende:"Tape # (AltGr + 3), puis ce que fait la ligne du dessous." },
     { ecran:"thonny", nom:FICHIER_VIES, modifie:1, code:[["","com"],["","cache"],["","com"],["","cache"],["","com"],["","cache"]], cible:"th-editeur", legende:"Pareil au-dessus de chaque ligne : 3 commentaires, 3 instructions." },
     { ecran:"thonny", nom:FICHIER_VIES, modifie:1, code:[["","com"],["","cache"],["","com"],["","cache"],["","com"],["","cache"]], cible:"th-enregistrer", legende:"Disquette « Enregistrer » (ou Ctrl + S)." },
@@ -380,7 +380,7 @@ function editeur(zone, Q, reussi, rate){
   const ta = el("textarea","editeur"); ta.value = Q.depart || ""; ta.spellcheck = false;
   ta.setAttribute("autocapitalize","off"); ta.setAttribute("aria-label","Mon programme");
   ta.rows = Math.max(4, ta.value.split("\n").length + 1);
-  const lance = txt("button","btn plein","▶ Exécuter (Ctrl+Entrée)"); lance.type = "button";
+  const lance = txt("button","btn plein","▶ Exécuter (Ctrl+Enter)"); lance.type = "button";
   const depart = txt("button","btn vide","↺ Code de départ"); depart.type = "button";
   const ecran = el("pre","console"); ecran.hidden = true; ecran.setAttribute("aria-live","polite");
   const barre = el("div","actions"); barre.append(lance, depart);

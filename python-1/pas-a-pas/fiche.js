@@ -48,7 +48,7 @@ const LOGIGRAMME_VIES = `<figure class="logigramme"><svg viewBox="0 0 240 380" r
 
 /* Une case par action, à l'impératif (style « missions » du Labo 07 et du Rat de ville). */
 const CASES = (...l) => `<ol class="etapes">${l.map(x => `<li><label><input type="checkbox"><span>${x}</span></label></li>`).join("")}</ol>`;
-const EXECUTER = `Clique sur <span class="chemin">▶ Exécuter</span> (ou <b>Ctrl + Entrée</b>).`;
+const EXECUTER = `Clique sur <span class="chemin">▶ Exécuter</span> (ou <b>Ctrl + Enter</b>).`;
 
 /* Les exercices à nombres variables : une fonction rend la partie du bloc qui change. */
 const afficheExact = (t, detail) => ({
@@ -112,7 +112,7 @@ const BLOCS = [
   { partie:"A — Mon premier programme", titre:"Exécuter un programme", min:3,
     bulle:"Salut ! Aujourd'hui, tu écris tes premières lignes de Python.",
     veux:"Voir ce qu'un programme affiche.",
-    fais:CASES(`Sous « Mon programme », clique sur <span class="chemin">▶ Exécuter</span> (ou <b>Ctrl + Entrée</b>).`,
+    fais:CASES(`Sous « Mon programme », clique sur <span class="chemin">▶ Exécuter</span> (ou <b>Ctrl + Enter</b>).`,
                "La première fois, attends quelques secondes : Python se prépare."),
     vois:"Dans le cadre du dessous, le texte écrit par le programme : Bonjour !",
     coince:["Rien ne s'affiche après une minute : recharge la page (touche F5), puis clique de nouveau sur Exécuter.",
@@ -126,7 +126,7 @@ const BLOCS = [
     veux:"Voir à quoi ressemble un message d'erreur, et à quoi servent les guillemets.",
     fais:CASES(`Efface les deux guillemets <b>"</b>.`, EXECUTER, "Lis la ligne rouge à voix haute à ton voisin."),
     vois:"Une ligne rouge : le numéro de la ligne fautive, puis le nom de l'erreur.",
-    coince:["Le guillemet \" est la touche 3 du clavier, sans Maj.",
+    coince:["Le guillemet \" est la touche 3 du clavier, sans Shift.",
             "Le programme marche encore : il reste un guillemet. Efface les deux."],
     q:{ type:"code", q:"Efface les guillemets, puis exécute.", depart:'print("Bonjour !")',
         test: r => !r.erreur ? "Pas d'erreur : il reste au moins un guillemet. Efface les deux, puis Exécuter."
@@ -199,10 +199,10 @@ const BLOCS = [
     veux:"Créer, dans Documents, le dossier qui rangera tous tes programmes de l'année.",
     fais:CASES(`Ouvre l'Explorateur de fichiers : <span class="chemin">icône dossier jaune de la barre des tâches</span> (ou <b>Windows + E</b>).`,
                `Dans la colonne de gauche, clique sur <span class="chemin">Documents</span>.`,
-               `En haut à gauche, clique sur <span class="chemin">⊕ Nouveau ▸ Dossier</span> (ou <b>Ctrl + Maj + N</b>).`,
-               "Tape <b>Python</b>, puis appuie sur <b>Entrée</b>."),
+               `En haut à gauche, clique sur <span class="chemin">⊕ Nouveau ▸ Dossier</span> (ou <b>Ctrl + Shift + N</b>).`,
+               "Tape <b>Python</b>, puis appuie sur <b>Enter</b>."),
     vois:"Un dossier <b>Python</b> dans Documents.",
-    coince:["Le dossier s'appelle « Nouveau dossier » : clic droit dessus ▸ Renommer (touche F2) ▸ tape Python ▸ Entrée.",
+    coince:["Le dossier s'appelle « Nouveau dossier » : clic droit dessus ▸ Renommer (touche F2) ▸ tape Python ▸ Enter.",
             "Pas de bouton Nouveau : clic droit dans une zone vide de Documents ▸ Nouveau ▸ Dossier.",
             "Le dossier Python existe déjà : rien à refaire, passe à la suite."],
     q:{ type:"qcm", q:"Où est ton dossier Python ?",
@@ -213,19 +213,19 @@ const BLOCS = [
             c:["Python","Thonny","Documents","Mes programmes"],
             p:[null,"Thonny est le programme, pas le dossier.","Documents contient ton dossier : lui s'appelle Python.","Tu l'as nommé Python : c'est ce nom qu'on cherchera à chaque séance."] } },
       { q:{ type:"qcm", q:"Dans l'Explorateur de fichiers, quel raccourci crée un nouveau dossier ?",
-            c:["Ctrl+Maj+N","Ctrl+N","Ctrl+S","F2"],
+            c:["Ctrl+Shift+N","Ctrl+N","Ctrl+S","F2"],
             p:[null,"Ctrl+N ouvre une nouvelle fenêtre de l'Explorateur.","Ctrl+S enregistre un fichier.","F2 renomme ce qui est sélectionné."] } } ] },
 
   { partie:"C — Défi « Les vies », dans Thonny", titre:"Ouvrir Thonny et enregistrer", min:3, stop:true,
     bulle:"Un fichier à ton nom, enregistré avant d'écrire une seule ligne.",
     veux:"Enregistrer un fichier à ton nom AVANT d'écrire, pour ne rien perdre.",
-    fais:CASES(`Appuie sur la touche <b>Windows</b> ⊞, tape <b>Thonny</b>, puis appuie sur <b>Entrée</b>.`,
-               `Dans Thonny : <span class="chemin">menu Fichier ▸ Enregistrer sous…</span> (ou <b>Ctrl + Maj + S</b>).`,
+    fais:CASES(`Appuie sur la touche <b>Windows</b> ⊞, tape <b>Thonny</b>, puis appuie sur <b>Enter</b>.`,
+               `Dans Thonny : <span class="chemin">menu Fichier ▸ Enregistrer sous…</span> (ou <b>Ctrl + Shift + S</b>).`,
                `Dans la fenêtre qui s'ouvre : <span class="chemin">Documents ▸ double-clic sur Python</span>.`,
                `Dans <span class="chemin">Nom du fichier</span>, tape <b>01_Les-vies_Nom.py</b>, avec TON nom à la place de Nom.`,
                `Clique sur <span class="chemin">Enregistrer</span>.`),
     vois:"L'onglet, en haut de Thonny, affiche le nom de ton fichier.",
-    coince:["Thonny ne se lance pas : nouvel onglet (Ctrl + T) ▸ barre d’adresse ▸ https://cscircles.cemc.uwaterloo.ca/dev/console-fr/ ▸ Entrée. Sonne la cloche 🔔 : le professeur organise la sauvegarde avant que tu continues le défi dans cette console de secours. Ne recopie pas un nom de fichier fictif pour valider ce bloc.",
+    coince:["Thonny ne se lance pas : nouvel onglet (Ctrl + T) ▸ barre d’adresse ▸ https://cscircles.cemc.uwaterloo.ca/dev/console-fr/ ▸ Enter. Sonne la cloche 🔔 : le professeur organise la sauvegarde avant que tu continues le défi dans cette console de secours. Ne recopie pas un nom de fichier fictif pour valider ce bloc.",
             "Sans .py à la fin, Thonny n'exécute pas comme attendu : Fichier ▸ Enregistrer sous… et corrige le nom.",
             "Deux signes différents : le tiret - entre Les et vies, le trait de soulignement _ partout ailleurs."],
     q:{ type:"saisie", q:"Recopie le nom de ton fichier, tel que Thonny l'affiche.",
@@ -283,7 +283,7 @@ const BLOCS = [
     veux:"Rendre ton fichier 01_Les-vies dans Classroom, pour qu'il soit coté sur 5.",
     fais:CASES(`Lis la grille ci-dessous : vérifie chaque ligne dans ton programme.`,
                `Dans Thonny, enregistre une dernière fois : <span class="chemin">menu Fichier ▸ Enregistrer</span> (ou <b>Ctrl + S</b>).`,
-               `Ouvre un nouvel onglet (<b>Ctrl + T</b>), tape <b>classroom.google.com</b>, puis appuie sur <b>Entrée</b>.`,
+               `Ouvre un nouvel onglet (<b>Ctrl + T</b>), tape <b>classroom.google.com</b>, puis appuie sur <b>Enter</b>.`,
                `Clique sur le cours de <b>Logique et programmation</b> ▸ onglet <span class="chemin">Travaux et devoirs</span> ▸ le devoir <b>Python 01 — Les vies</b> ▸ <span class="chemin">Afficher le devoir</span>.`,
                `À droite, dans <span class="chemin">Vos devoirs</span> : <span class="chemin">＋ Ajouter ou créer ▸ Fichier ▸ Parcourir</span>.`,
                `Dans la fenêtre : <span class="chemin">Documents ▸ double-clic sur Python ▸ clic sur 01_Les-vies_… ▸ Ouvrir</span>, puis <span class="chemin">Importer</span>.`,
@@ -297,7 +297,7 @@ const BLOCS = [
   <tr><td>F5 : le programme s'exécute sans message rouge et affiche <b>{R}</b>.</td><td>1</td></tr></table>
   <p>Avant tout : le fichier rendu s'appelle 01_Les-vies_ suivi de ton nom, et finit par .py. Sinon, le professeur ne peut pas l'ouvrir.</p></div>`,
     coince:["Pas de devoir « Python 01 — Les vies » dans Travaux et devoirs : vérifie que tu es dans le cours de Logique et programmation. Toujours rien : sonne la cloche 🔔.",
-            "Ton fichier n'est pas dans Documents ▸ Python : dans la fenêtre, tape 01_Les-vies dans la case Rechercher, en haut à droite, puis Entrée.",
+            "Ton fichier n'est pas dans Documents ▸ Python : dans la fenêtre, tape 01_Les-vies dans la case Rechercher, en haut à droite, puis Enter.",
             "Le bouton dit « Marquer comme terminé » : ton fichier n'est pas joint. Reprends à l'étape ＋ Ajouter ou créer.",
             "Tu as rendu le mauvais fichier : clique sur Annuler l'envoi ▸ Annuler l'envoi, retire-le avec la ✕ à droite de son nom, puis reprends à l'étape ＋ Ajouter ou créer."],
     q:{ type:"rapport", q:"Ton fichier est-il rendu ?",
@@ -333,16 +333,16 @@ const DEMOS_FICHE = {
     { ecran: 'bureau', cible: 'dossier-jaune', legende: 'Clique sur le dossier jaune de la barre des tâches (ou Windows + E).' },
     { ecran: 'explorateur', lieu: 'Accueil', cible: 'nav-documents', legende: 'Dans la colonne de gauche, clique sur Documents.' },
     { ecran: 'explorateur', lieu: 'Documents', cible: 'nouveau', legende: 'En haut à gauche, clique sur ⊕ Nouveau.' },
-    { ecran: 'explorateur', lieu: 'Documents', menu: 1, cible: 'item-dossier', legende: 'Choisis Dossier (ou Ctrl + Maj + N).' },
+    { ecran: 'explorateur', lieu: 'Documents', menu: 1, cible: 'item-dossier', legende: 'Choisis Dossier (ou Ctrl + Shift + N).' },
     { ecran: 'explorateur', lieu: 'Documents', neuf: 'Nouveau dossier', cible: 'neuf', legende: '« Nouveau dossier » est déjà sélectionné : tape directement Python.' },
-    { ecran: 'explorateur', lieu: 'Documents', neuf: 'Python', cible: 'neuf', legende: 'Appuie sur Entrée.' },
+    { ecran: 'explorateur', lieu: 'Documents', neuf: 'Python', cible: 'neuf', legende: 'Appuie sur Enter.' },
     { ecran: 'explorateur', lieu: 'Documents', python: 1, cible: 'dossier-python', ok: 1, legende: 'Le dossier Python est dans Documents.' }
   ] },
   9: { titre: 'Ouvrir Thonny et enregistrer à mon nom', images: [
     { ecran: 'bureau', cible: 'demarrer', legende: 'Appuie sur la touche Windows ⊞ (ou clique sur Démarrer).' },
-    { ecran: 'bureau', demarrer: 1, cible: 'app-thonny', legende: 'Tape Thonny, puis Entrée.' },
+    { ecran: 'bureau', demarrer: 1, cible: 'app-thonny', legende: 'Tape Thonny, puis Enter.' },
     { ecran: 'thonny', nom: '<sans nom>', cible: 'm-fichier', legende: 'Thonny est ouvert. Clique sur le menu Fichier.' },
-    { ecran: 'thonny', nom: '<sans nom>', menu: 'item-sous', cible: 'item-sous', legende: 'Enregistrer sous… (ou Ctrl + Maj + S).' },
+    { ecran: 'thonny', nom: '<sans nom>', menu: 'item-sous', cible: 'item-sous', legende: 'Enregistrer sous… (ou Ctrl + Shift + S).' },
     { ecran: 'thonny', nom: '<sans nom>', dialogue: 1, cible: 'dlg-documents', legende: 'À gauche, clique sur Documents.' },
     { ecran: 'thonny', nom: '<sans nom>', dialogue: 1, cible: 'dlg-python', legende: 'Double-clic sur le dossier Python.' },
     { ecran: 'thonny', nom: '<sans nom>', dialogue: 2, cible: 'dlg-nom', legende: 'Nom du fichier : 01_Les-vies_ puis TON nom, puis .py.' },
@@ -432,7 +432,7 @@ function editeur(zone, Q, reussi, rate){
   const ta = el("textarea","editeur"); ta.value = Q.depart || ""; ta.spellcheck = false;
   ta.setAttribute("autocapitalize","off"); ta.setAttribute("aria-label","Mon programme");
   ta.rows = Math.max(4, ta.value.split("\n").length + 1);
-  const lance = txt("button","btn plein","▶ Exécuter (Ctrl+Entrée)"); lance.type = "button";
+  const lance = txt("button","btn plein","▶ Exécuter (Ctrl+Enter)"); lance.type = "button";
   const depart = txt("button","btn vide","↺ Code de départ"); depart.type = "button";
   const ecran = el("pre","console"); ecran.hidden = true; ecran.setAttribute("aria-live","polite");
   const barre = el("div","actions"); barre.append(lance, depart);

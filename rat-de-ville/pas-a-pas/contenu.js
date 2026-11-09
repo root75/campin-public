@@ -31,7 +31,7 @@ const ETAPES_RAT = [
     "titre": "Je recopie la fable",
     "min": 30,
     "periode": 1,
-    "consigne": "Un vers = une ligne : touche Entrée au bout de chaque vers. Je ne laisse PAS de ligne vide : les 28 vers se suivent. Je séparerai les strophes à l’étape 3.",
+    "consigne": "Un vers = une ligne : touche Enter au bout de chaque vers. Je ne laisse PAS de ligne vide : les 28 vers se suivent. Je séparerai les strophes à l’étape 3.",
     "demos": {
       "1": ["etape2", [0]],
       "2": ["etape2", [1, 2, 3]]
@@ -51,9 +51,9 @@ const ETAPES_RAT = [
     "aides": {
       "1": {
         "titre": "Comment taper ç et à ?",
-        "explication": "Sur le clavier belge : ç est sur la touche 9, à sur la touche 0. Je tape la touche seule, sans Maj.",
+        "explication": "Sur le clavier belge : ç est sur la touche 9, à sur la touche 0. Je tape la touche seule, sans Shift.",
         "exemple": "façon · à des reliefs",
-        "rappel": "Avec Maj, ces touches donnent 9 et 0. Je me suis trompé ? ↶ Annuler (Ctrl + Z)."
+        "rappel": "Avec Shift, ces touches donnent 9 et 0. Je me suis trompé ? ↶ Annuler (Ctrl + Z)."
       },
       "3": {
         "titre": "Comment taper ê (accent circonflexe) ?",
@@ -63,7 +63,7 @@ const ETAPES_RAT = [
       },
       "5": {
         "titre": "Comment taper ô et les guillemets « » ?",
-        "explication": "ô : je tape la touche ^, à droite du P (rien ne s’affiche, c’est normal), puis o. Guillemets : j’utilise les guillemets américains \" : la touche 3, sans Maj, avant et après les mots.",
+        "explication": "ô : je tape la touche ^, à droite du P (rien ne s’affiche, c’est normal), puis o. Guillemets : j’utilise les guillemets américains \" : la touche 3, sans Shift, avant et après les mots.",
         "exemple": "aussitôt · rôt · \"achevons tout notre rôt.\"",
         "rappel": "Le ^ apparaît seul ? Je l’efface et je recommence : ^, puis o, sans espace. Les guillemets « » de l’image ne sont pas sur le clavier : \" les remplace."
       }
@@ -80,14 +80,14 @@ const ETAPES_RAT = [
     },
     "actions": [
       "Je mets une majuscule à la première lettre de chaque vers.",
-      "Je clique à la fin du vers 4 et j’appuie sur Entrée : une ligne vide apparaît. Je fais pareil après les vers 8, 12, 16, 20 et 24 : j’obtiens 7 strophes."
+      "Je clique à la fin du vers 4 et j’appuie sur Enter : une ligne vide apparaît. Je fais pareil après les vers 8, 12, 16, 20 et 24 : j’obtiens 7 strophes."
     ],
     "aides": {
       "0": {
         "titre": "Comment mettre à en majuscule (À) ?",
         "explication": "Je double-clique sur le à pour le sélectionner, seul. Puis Format ▸ Texte ▸ Minuscules/majuscules ▸ MAJUSCULES.",
         "exemple": "à la porte de la salle → À la porte de la salle",
-        "rappel": "Deux vers commencent par à : le vers 4 et le vers 13. Pour les autres lettres, j’efface la minuscule et je tape la majuscule avec Maj.",
+        "rappel": "Deux vers commencent par à : le vers 4 et le vers 13. Pour les autres lettres, j’efface la minuscule et je tape la majuscule avec Shift.",
         "image": "capture-majuscules.png"
       }
     }
@@ -107,11 +107,11 @@ const ETAPES_RAT = [
       "7": ["etape6", [8]]
     },
     "actions": [
-      "Je sélectionne le titre. Je clique sur Centrer (Ctrl + Maj + E).",
+      "Je sélectionne le titre. Je clique sur Centrer (Ctrl + Shift + E).",
       "Le titre toujours sélectionné, je clique sur Gras (Ctrl + B).",
       "Le titre toujours sélectionné : Format ▸ Texte ▸ Minuscules/majuscules ▸ MAJUSCULES.",
-      "Je sélectionne les 7 strophes. Je clique sur Centrer (Ctrl + Maj + E).",
-      "Je sélectionne l’auteur. Je clique sur Aligner à droite (Ctrl + Maj + R).",
+      "Je sélectionne les 7 strophes. Je clique sur Centrer (Ctrl + Shift + E).",
+      "Je sélectionne l’auteur. Je clique sur Aligner à droite (Ctrl + Shift + R).",
       "L’auteur toujours sélectionné, je clique sur Italique (Ctrl + I).",
       "L’auteur toujours sélectionné, je clique sur Souligner (Ctrl + U)."
     ],
@@ -149,22 +149,22 @@ const ETAPES_RAT = [
     },
     "actions": [
       "Sous la fable, je laisse deux lignes vides et j’écris : Mon bloc-notes. Puis, dans l’ordre :",
-      "Trois choses que l’on trouve au festin du rat de ville, en liste à puces (Ctrl + Maj + 8).",
-      "J’écris : Mes gestes. Puis, en liste numérotée (Ctrl + Maj + 7) : chaque geste de mise en forme, dans l’ordre, avec le bouton, le menu ou le raccourci utilisé. Au moins six gestes.",
+      "Trois choses que l’on trouve au festin du rat de ville, en liste à puces (Ctrl + Shift + 8).",
+      "J’écris : Mes gestes. Puis, en liste numérotée (Ctrl + Shift + 7) : chaque geste de mise en forme, dans l’ordre, avec le bouton, le menu ou le raccourci utilisé. Au moins six gestes.",
       "J’écris une phrase qui répond à : Comment je change la police d’une seule strophe sans toucher aux autres ?"
     ],
     "icones": { "1": ["puces"], "2": ["numeros"] },
     "aides": {
       "1": {
         "titre": "Qu’écrire dans la liste à puces ?",
-        "explication": "Je choisis trois choses présentes au festin dans la fable. Dans mon document Docs, j’écris une chose par ligne, je sélectionne ces trois lignes, puis je clique sur le bouton Liste à puces (Ctrl + Maj + 8).",
+        "explication": "Je choisis trois choses présentes au festin dans la fable. Dans mon document Docs, j’écris une chose par ligne, je sélectionne ces trois lignes, puis je clique sur le bouton Liste à puces (Ctrl + Shift + 8).",
         "exemple": "Exemple d’un élément possible : le tapis.",
         "rappel": "Je trouve les autres éléments dans la fable. Trois éléments sont attendus au total."
       },
       "2": {
         "titre": "Que signifie « Mes gestes » ?",
-        "explication": "Je raconte comment j’ai mis mon document en forme. Pour chaque geste, je précise ce que j’ai sélectionné et le bouton, le menu ou le raccourci utilisé. Sous « Mes gestes », j’écris un geste par ligne, je sélectionne les lignes, puis je clique sur Liste numérotée (Ctrl + Maj + 7).",
-        "exemple": "Exemple d’un geste : « J’ai sélectionné le titre, puis cliqué sur le bouton Centrer (Ctrl + Maj + E). »",
+        "explication": "Je raconte comment j’ai mis mon document en forme. Pour chaque geste, je précise ce que j’ai sélectionné et le bouton, le menu ou le raccourci utilisé. Sous « Mes gestes », j’écris un geste par ligne, je sélectionne les lignes, puis je clique sur Liste numérotée (Ctrl + Shift + 7).",
+        "exemple": "Exemple d’un geste : « J’ai sélectionné le titre, puis cliqué sur le bouton Centrer (Ctrl + Shift + E). »",
         "rappel": "J’écris au moins six gestes que j’ai réellement faits, dans l’ordre où je les ai faits. Ma liste doit correspondre à mon document."
       },
       "3": {
