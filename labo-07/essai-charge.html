@@ -4,14 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Banc d’essai — Labo 07</title>
-<!-- Page d'essai pour le professeur : faire travailler le processeur, occuper la mémoire, figer un onglet.
-     Rien n'est envoyé ni enregistré. Pas encore reliée à la fiche élève. -->
+<!-- Banc d'essai du Labo 07 (mission 1, relevé « Pendant le calcul » ; prolongement « Figer sans fin »).
+     Faire travailler le processeur, occuper la mémoire, figer un onglet. Rien n'est envoyé ni enregistré. -->
 <style>
 :root{color-scheme:light dark;--fond:#f3f5f7;--carte:#fff;--encre:#1f2a33;--doux:#5b6873;--trait:#d5dce2;--accent:#1d5a73;--pale:#e2f3ea;--alerte:#fff4d6}
 @media(prefers-color-scheme:dark){:root{--fond:#141a1f;--carte:#1d252c;--encre:#e8edf1;--doux:#a3b0ba;--trait:#33404a;--accent:#7cc3de;--pale:#183427;--alerte:#3a3216}}
 *{box-sizing:border-box}body{margin:0;background:var(--fond);color:var(--encre);font:1.125rem/1.6 'Segoe UI',Arial,sans-serif}
 main{max-width:48rem;margin:auto;padding:24px 16px 48px;display:grid;gap:20px}h1,h2,p{margin:0}h1{font-size:2rem;line-height:1.25}h2{font-size:1.4rem}
-header,section{display:grid;gap:12px}section{background:var(--carte);border:1px solid var(--trait);padding:18px;border-radius:12px}
+header,section,details{display:grid;gap:12px}details:not([open]){display:block}summary{cursor:pointer;font-weight:700}section,details{background:var(--carte);border:1px solid var(--trait);padding:18px;border-radius:12px}
 .doux{color:var(--doux);font-size:1rem}.ligne{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 button,select{font:inherit;padding:8px 14px;border-radius:8px;border:1px solid var(--trait);background:var(--carte);color:var(--encre);cursor:pointer}
 button.plein{background:var(--accent);border-color:var(--accent);color:#fff}button:disabled{opacity:.5;cursor:default}
@@ -24,9 +24,9 @@ ol{margin:0;padding-left:1.4rem}
 <body>
 <main>
 <header>
-  <p class="doux">Labo 07 · Dans les coulisses du PC · page d’essai</p>
+  <p class="doux">Labo 07 · Dans les coulisses du PC</p>
   <h1>Banc d’essai</h1>
-  <p>Faire travailler le processeur, occuper la mémoire, figer un onglet — puis observer dans le Gestionnaire des tâches. Rien n’est envoyé ni enregistré.</p>
+  <p>Fais seulement ce que ta fiche demande, puis observe dans le Gestionnaire des tâches. Rien n’est envoyé ni enregistré. Garde cet onglet ouvert jusqu’à la fin de la mission 1.</p>
   <p class="methode" id="machine">Ce PC : …</p>
 </header>
 
@@ -76,12 +76,12 @@ ol{margin:0;padding-left:1.4rem}
   </div>
 </section>
 
-<section aria-labelledby="t-mesure">
-  <h2 id="t-mesure">Pour le professeur : relever les valeurs</h2>
+<details>
+  <summary>Pour le professeur : relever les valeurs</summary>
   <p>Dans PowerShell (⊞ Démarrer ▸ tape PowerShell ▸ Entrée), ce script relève le processeur et la mémoire chaque seconde pendant une minute, puis copie le résultat dans le presse-papiers.</p>
   <pre id="script">$log = 1..60 | % { $c=(Get-CimInstance Win32_PerfFormattedData_PerfOS_Processor -Filter "Name='_Total'").PercentProcessorTime; $o=Get-CimInstance Win32_OperatingSystem; $m=[math]::Round(100*(1-$o.FreePhysicalMemory/$o.TotalVisibleMemorySize)); "{0:HH:mm:ss}  CPU {1} %  MEM {2} %" -f (Get-Date),$c,$m; Start-Sleep 1 }; $log | Set-Clipboard; $log</pre>
   <div class="ligne"><button id="copier" type="button">📋 Copier le script</button><span id="copie" aria-live="polite"></span></div>
-</section>
+</details>
 </main>
 
 <script>

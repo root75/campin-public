@@ -1,7 +1,7 @@
 /* Labo 07 — démos animées « Regarde comment faire » : seulement les maquettes et les images.
    Le lecteur (scène, curseur, ◀ ▶) est commun : pas-a-pas/demo-lecteur.js, chargé avant ce fichier.
    Une image = un état de l'écran maquetté + l'élément que la souris vise + une légende.
-   Maquettes Windows (Démarrer, Gestionnaire des tâches et ses Performances, GIMP, capture, Explorateur OneDrive,
+   Maquettes Windows (Démarrer, Gestionnaire des tâches et ses Performances, GIMP, Banc d’essai, capture, Explorateur OneDrive,
    Alt + Tab, moniteur), Docs, Chrome et Classroom. Valeurs et noms fictifs ; rien n'est enregistré.
    Le défi final n'a pas d'animation : il reste une situation à résoudre seul. */
 const Demo = (() => {
@@ -39,15 +39,19 @@ const Demo = (() => {
       { ecran: 'gestion', perf: 'mem', cible: 'perf-info', legende: 'Mémoire : la quantité totale, en haut à droite. Ici 16,0 Go.' },
       { ecran: 'gestion', perf: 'disque', cible: 'perf-bas', ok: 1, legende: 'Disque 0 (C:) : la Capacité, sous le graphique. Je note les quatre informations dans « Mon PC ».' }
     ] },
-    gimp: { titre: 'Faire calculer une grande image à GIMP et relever', images: [
+    gimp: { titre: 'Ouvrir GIMP et créer une grande image', images: [
       { ecran: 'bureau', menu: 'gimp', cible: 'app-gimp', legende: '⊞ Démarrer ▸ je tape GIMP ▸ je clique UNE fois sur l’application.' },
       { ecran: 'bureau', chargement: 1, cible: 'chargement', legende: 'GIMP met 5 à 20 secondes à s’ouvrir. Je ne clique pas une deuxième fois. « Bienvenue dans GIMP » : je ferme par le ×.' },
       { ecran: 'gimp', dialogue: 'nouvelle', cible: 'valider', legende: 'Fichier ▸ Nouvelle image (Ctrl + N) : Largeur 10000, Hauteur 10000, unité px ▸ Valider.' },
       { ecran: 'gimp', dialogue: 'taille', cible: 'ok', legende: '« Confirmer la taille de l’image » : environ 932 Mo, plus que la taille prévue par GIMP. Je clique sur Valider.' },
-      { ecran: 'gimp', image: 1, menu: { sous: 'm-filtres', items: ['Flou ▸', 'Rendu ▸ Bruit ▸ Plasma…', 'Distorsions ▸'], hi: 'Rendu ▸ Bruit ▸ Plasma…' }, cible: 'item-Rendu ▸ Bruit ▸ Plasma…', legende: 'Image grise affichée : Filtres ▸ Rendu ▸ Bruit ▸ Plasma ▸ Valider.' },
-      { ecran: 'alttab', fenetres: ['Gestionnaire des tâches', 'GIMP — calcul en cours', 'Mon rapport'], hi: 0, cible: 'fen-0', legende: 'Pendant que la barre de progression avance : Alt + Tab vers le Gestionnaire.' },
-      { ecran: 'gestion', gimp: 1, cpu: '62 %', mem: '46 %', cible: 'tot-cpu', legende: 'Pendant le calcul : je relis les deux totaux. Valeurs fictives : les miennes peuvent différer.' },
-      { ecran: 'gestion', gimp: 1, cpu: '6 %', mem: '46 %', cible: 'tot-mem', ok: 1, legende: 'Après 1 minute sans rien faire : troisième relevé. Le processeur est redescendu, la mémoire garde l’image.' }
+      { ecran: 'gimp', image: 1, cible: 'toile', ok: 1, legende: 'L’image grise s’affiche. Je la laisse ouverte : GIMP la garde en mémoire.' }
+    ] },
+    banc: { titre: 'Faire calculer le PC avec le Banc d’essai', images: [
+      { ecran: 'banc', cible: 'lancer', legende: 'Le Banc d’essai s’ouvre dans un nouvel onglet : je clique sur ▶ Lancer le calcul.' },
+      { ecran: 'alttab', fenetres: ['Gestionnaire des tâches', 'Banc d’essai', 'GIMP'], hi: 0, cible: 'fen-0', legende: 'Tout de suite : Alt + Tab vers le Gestionnaire.' },
+      { ecran: 'gestion', gimp: 1, cpu: '98 %', mem: '46 %', cible: 'tot-cpu', legende: 'Pendant le calcul : je relis les deux totaux. Valeurs fictives : les miennes peuvent différer.' },
+      { ecran: 'banc', marche: 1, cible: 'arreter', legende: 'Je reviens sur l’onglet Banc d’essai : ■ Arrêter. GIMP reste ouvert.' },
+      { ecran: 'gestion', gimp: 1, cpu: '6 %', mem: '46 %', cible: 'tot-mem', ok: 1, legende: 'Après 1 minute : le processeur est redescendu, la mémoire garde l’image de GIMP.' }
     ] },
     fintache: { titre: 'Arrêter GIMP avec Terminer la tâche', images: [
       { ecran: 'gestion', gimp: 1, cpu: '6 %', mem: '46 %', choisi: 1, cible: 'ligne-gimp', legende: 'Processus : je clique UNE fois sur la ligne GNU Image Manipulation Program.' },
@@ -116,7 +120,7 @@ const Demo = (() => {
     (f.lignes || []).forEach((t, k) => page.append(c(el('p', 'md-l' + (/^\d —/.test(t) ? ' titre' : ''), t || ' '), 'L' + k)));
     if (f.table) {
       const t = c(el('table', 'md-table'), 'table');
-      [['Moment', 'Processeur (%)', 'Mémoire (%)'], ['Avant', '5', '40'], ['Pendant le calcul', '62', '46'], ['Après 1 min', '6', '46'], ['Après fin de tâche', '5', '41']]
+      [['Moment', 'Processeur (%)', 'Mémoire (%)'], ['Avant', '5', '40'], ['Pendant le calcul', '98', '46'], ['Après 1 min', '6', '46'], ['Après fin de tâche', '5', '41']]
         .forEach((r, i) => { const tr = el('tr'); r.forEach(x => tr.append(el(i ? 'td' : 'th', null, x))); t.append(tr); });
       page.append(t);
     }
@@ -182,8 +186,8 @@ const Demo = (() => {
         const outils = el('div', 'md-tm-outils'); outils.append(el('b', null, 'Processus'), c(el('span', null, '⊘ Terminer la tâche'), 'terminer'));
         const t = el('table', 'md-tm-table'); const h = el('tr');
         h.append(el('th', null, 'Nom'), c(el('th', 'md-tm-tot', (f.cpu || '5 %') + '\nProcesseur'), 'tot-cpu'), c(el('th', 'md-tm-tot', (f.mem || '40 %') + '\nMémoire'), 'tot-mem')); t.append(h);
-        const lignes = [['Google Chrome', '1,2 %', '780 Mo'], ['Explorateur Windows', '0,3 %', '95 Mo'], ['Microsoft OneDrive', '0,1 %', '60 Mo']];
-        if (f.gimp) lignes.unshift(['GNU Image Manipulation Program', f.cpu === '62 %' ? '55 %' : '0,1 %', '1 050 Mo']);
+        const lignes = [['Google Chrome', f.cpu === '98 %' ? '92 %' : '1,2 %', '780 Mo'], ['Explorateur Windows', '0,3 %', '95 Mo'], ['Microsoft OneDrive', '0,1 %', '60 Mo']];
+        if (f.gimp) lignes.unshift(['GNU Image Manipulation Program', '0,1 %', '1 050 Mo']);
         lignes.forEach((r, i) => { const tr = el('tr', f.gimp && !i && f.choisi ? 'choisi' : null); r.forEach(x => tr.append(el('td', null, x))); if (f.gimp && !i) c(tr, 'ligne-gimp'); t.append(tr); });
         const d = el('div'); d.append(outils, t); corps.append(nav, d);
       }
@@ -193,7 +197,7 @@ const Demo = (() => {
     if (f.ecran === 'gimp') {
       const w = el('div', 'md-gimp-fen'), barre = el('div', 'md-gimp-menus');
       ['Fichier', 'Édition', 'Sélection', 'Affichage', 'Image', 'Calque', 'Filtres'].forEach(m => barre.append(c(el('span', null, m), 'm-' + m.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''))));
-      w.append(el('div', 'md-gimp-titre', '🦊 GNU Image Manipulation Program'), barre, el('div', 'md-gimp-toile' + (f.image ? ' image' : ''), f.image ? '10000 × 10000 px' : ''));
+      w.append(el('div', 'md-gimp-titre', '🦊 GNU Image Manipulation Program'), barre, c(el('div', 'md-gimp-toile' + (f.image ? ' image' : ''), f.image ? '10000 × 10000 px' : ''), 'toile'));
       e.append(w);
       if (f.dialogue === 'nouvelle') {
         const d = el('div', 'md-gimp-dlg'); d.append(el('b', null, 'Créer une nouvelle image'));
@@ -205,6 +209,14 @@ const Demo = (() => {
         const pied = el('div', 'md-gimp-pied'); pied.append(c(el('span', 'plein', 'Valider'), 'ok'), el('span', null, 'Annuler')); d.append(pied); e.append(d);
       }
       if (f.menu) e.append(menu(f.menu));
+    }
+    if (f.ecran === 'banc') {
+      const pg = el('div', 'md-banc');
+      pg.append(el('b', null, 'Banc d’essai'), el('span', 'md-banc-doux', 'Ce PC : 12 processeurs logiques.'), el('span', null, '1. Faire travailler le processeur'));
+      const l = el('div', 'md-banc-ligne');
+      l.append(c(el('span', 'md-banc-btn' + (f.marche ? '' : ' plein'), '▶ Lancer le calcul'), 'lancer'), c(el('span', 'md-banc-btn', '■ Arrêter'), 'arreter'),
+        el('span', 'md-banc-etat', f.marche ? '12 processeurs logiques au travail · 8 s' : 'À l’arrêt.'));
+      pg.append(l); e.append(pg);
     }
     if (f.ecran === 'alttab') {
       const r = el('div', 'md-alttab');
