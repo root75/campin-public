@@ -780,7 +780,7 @@
         "titre": "Vote — Le piège",
         "min": 1,
         "methode": "Prédire seul, voter, puis expliquer",
-        "question": "On tape 3 puis Entrée. Qu'affiche la dernière ligne ?",
+        "question": "On tape 3 puis Enter. Qu'affiche la dernière ligne ?",
         "choix": [
           "3333333333",
           "30",
@@ -809,7 +809,7 @@
           "Que se passerait-il si on tapait trois en lettres ?"
         ],
         "code": "nombre = int(input(\"Un nombre ? \"))\nprint(nombre * 10)",
-        "exemple": "Montrer une fois dans Thonny : F5, la console attend, on tape, Entrée. Dans la fiche, les réponses sont déjà tapées (deux essais)."
+        "exemple": "Montrer une fois dans Thonny : F5, la console attend, on tape, Enter. Dans la fiche, les réponses sont déjà tapées (deux essais)."
       },
       {
         "type": "atelier",

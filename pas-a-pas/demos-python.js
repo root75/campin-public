@@ -86,7 +86,7 @@ const Demo = (() => {
     e.append(menus, outils, onglet, ed, cons);
     if (f.menu) {
       const m = el('div', 'md-menu md-th-menu');
-      [['Nouveau', 'Ctrl+N', 'item-nouveau'], ['Ouvrir…', 'Ctrl+O', 'item-ouvrir'], ['Enregistrer', 'Ctrl+S', ''], ['Enregistrer sous…', 'Ctrl+Maj+S', 'item-sous'], ['Quitter', 'Alt+F4', '']]
+      [['Nouveau', 'Ctrl+N', 'item-nouveau'], ['Ouvrir…', 'Ctrl+O', 'item-ouvrir'], ['Enregistrer', 'Ctrl+S', ''], ['Enregistrer sous…', 'Ctrl+Shift+S', 'item-sous'], ['Quitter', 'Alt+F4', '']]
         .forEach(([t, r, id]) => { const i = c(el('div', 'md-item' + (id === f.menu ? ' hi' : '')), id || 'x'); i.append(el('span', null, t), el('small', null, r)); m.append(i); });
       e.append(m);
     }

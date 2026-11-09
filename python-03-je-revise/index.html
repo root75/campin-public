@@ -139,7 +139,7 @@ footer{font-size:.9rem;color:var(--doux);text-align:center}
       <li><span>Entre guillemets, c'est un <strong>texte</strong> : <code>"3"</code>. Sans guillemets, un <strong>nombre</strong> : <code>3</code> (entier) ou <code>3.5</code> (à virgule, avec un POINT).</span></li>
       <li><span>Avec deux nombres, <code>+</code> <strong>calcule</strong> : <code>3 + 4</code> → 7. Avec deux textes, il <strong>colle</strong> : <code>"3" + "4"</code> → 34. Et <code>"ha" * 3</code> → hahaha.</span></li>
       <li><span>Un texte <code>+</code> un nombre : <strong>TypeError</strong>. Pour afficher les deux, une virgule : <code>print("Vies :", vies)</code>.</span></li>
-      <li><span><code>input("…")</code> pose une question, <strong>attend</strong> la réponse, et rend <strong>toujours un texte</strong>. Dans Thonny, la console attend : je tape, puis Entrée.</span></li>
+      <li><span><code>input("…")</code> pose une question, <strong>attend</strong> la réponse, et rend <strong>toujours un texte</strong>. Dans Thonny, la console attend : je tape, puis Enter.</span></li>
       <li><span><code>int( )</code> transforme le texte en nombre : <code>nombre = int(input("Un nombre ? "))</code>. Sans lui, <code>"3" * 10</code> → 3333333333.</span></li>
       <li><span>Logigramme → Python : <strong>Lire</strong> → <code>int(input(…))</code> ; <strong>←</strong> → <code>=</code> ; <strong>×</strong> → <code>*</code> ; <strong>Afficher</strong> → <code>print( )</code>.</span></li>
     </ol>
@@ -173,7 +173,7 @@ footer{font-size:.9rem;color:var(--doux);text-align:center}
       <div class="bloc coince">
         <h3>Ça coince ?</h3>
         <p>Le programme ne marche pas ? Trois gestes :</p>
-        <ol class="etapes"><li><code>TypeError</code> : je mélange texte et nombre. Une virgule dans <code>print</code>, ou <code>int( )</code> sur le texte.</li><li><code>ValueError</code> : <code>int( )</code> a reçu autre chose qu'un nombre entier (des lettres, une virgule).</li><li>Thonny semble bloqué après F5 ? Le programme <strong>attend</strong> : je clique dans la console du bas, je tape, puis Entrée.</li><li><code>EOFError</code> (dans la fiche) : un <code>input( )</code> de trop, il lit une réponse qui n'a pas été tapée.</li></ol>
+        <ol class="etapes"><li><code>TypeError</code> : je mélange texte et nombre. Une virgule dans <code>print</code>, ou <code>int( )</code> sur le texte.</li><li><code>ValueError</code> : <code>int( )</code> a reçu autre chose qu'un nombre entier (des lettres, une virgule).</li><li>Thonny semble bloqué après F5 ? Le programme <strong>attend</strong> : je clique dans la console du bas, je tape, puis Enter.</li><li><code>EOFError</code> (dans la fiche) : un <code>input( )</code> de trop, il lit une réponse qui n'a pas été tapée.</li></ol>
         <div id="consolidation"></div>
       </div>
       <div class="bloc fini">
@@ -215,7 +215,7 @@ const QUIZ = [
        "Le texte s'arrête au guillemet ; le problème est le + avec un nombre."],
     h:"Qu'y a-t-il de chaque côté du + ?",
     e:"Texte + nombre → TypeError. La réparation : print(\"Vies :\", vies) — la virgule affiche les deux, séparés d'un espace." },
-  { q:"On exécute, on tape 3 puis Entrée. Qu'affiche la dernière ligne ?", code:'nombre = input("Un nombre ? ")\nprint(nombre * 10)', m:true,
+  { q:"On exécute, on tape 3 puis Enter. Qu'affiche la dernière ligne ?", code:'nombre = input("Un nombre ? ")\nprint(nombre * 10)', m:true,
     c:["3333333333","30","Une erreur TypeError","nombre * 10"],
     p:[null,
        "input( ) rend TOUJOURS un texte : \"3\", pas 3. Un texte × 10 est recopié 10 fois.",
@@ -244,7 +244,7 @@ const CONSOLIDATION = { q:"Après F5, Thonny affiche la question et ne fait plus
   c:["Le programme attend ma réponse dans la console.","Thonny est bloqué : je le ferme.","Le programme est fini.","Il y a une erreur."],
   p:[null,"Rien n'est bloqué : input( ) attend. Fermer ferait perdre la réponse.","Il n'est pas fini : il n'a pas encore reçu ce qu'il attend.","Une erreur s'écrirait en rouge."],
   h:"Que fait input( ) après avoir affiché la question ?",
-  e:"input( ) attend : je clique dans la console du bas, je tape, puis Entrée." };
+  e:"input( ) attend : je clique dans la console du bas, je tape, puis Enter." };
 const DEPASSEMENT = { q:"On tape 07. Qu'affiche ce programme ?", code:'pieces = int(input("Combien ? "))\nprint(pieces * 10)', m:true,
   c:["70","070","Une erreur ValueError","0707070707…"],
   p:[null,"int(\"07\") vaut 7 : le zéro devant disparaît.","07 est fait de chiffres : int( ) le lit sans problème.","int( ) a transformé le texte en nombre : il n'est plus recopié."],

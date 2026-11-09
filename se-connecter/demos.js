@@ -51,7 +51,7 @@
       { ecran: 'moteur', cible: 'm-google', legende: 'Choix du moteur de recherche : coche Google. L’ordre change à chaque fois.' },
       { ecran: 'moteur', choisi: 1, cible: 'definir', legende: 'Puis Définir par défaut.' },
       { ecran: 'microsoft', cible: 'champ', legende: 'Écran Microsoft : tape ton mot de passe (celui de ton journal de classe).' },
-      { ecran: 'microsoft', points: 1, cible: 'se-connecter', ok: 1, legende: 'Verr Maj éteint ? Alors Se connecter.' }
+      { ecran: 'microsoft', points: 1, cible: 'se-connecter', ok: 1, legende: 'Caps Lock éteint ? Alors Se connecter.' }
     ] },
     'profil-fin': { images: [
       { ecran: 'dialogue', titre: 'Rester connecté ?', texte: 'Cela vous permet de réduire le nombre de fois où vous êtes invité à vous connecter.', boutons: ['Non', 'Oui'], ms: 1, cible: 'b-Oui', legende: '« Rester connecté ? » : Oui.' },
@@ -69,7 +69,7 @@
       { ecran: 'dialogue', titre: 'Rejoindre le cours ?', texte: 'Si vous acceptez, vos coordonnées seront partagées avec les membres du cours.', boutons: ['Annuler', 'Rejoindre le cours'], cible: 'b-Rejoindre le cours', ok: 1, legende: 'Confirme : Rejoindre le cours, une deuxième fois.' }
     ] },
     clavier: { images: [
-      { ecran: 'touches', saisie: 'chloe', cible: 'maj', tenue: 'maj', legende: 'Après le prénom : garde Maj ⇧ enfoncé…' },
+      { ecran: 'touches', saisie: 'chloe', cible: 'maj', tenue: 'maj', legende: 'Après le prénom : garde Shift ⇧ enfoncé…' },
       { ecran: 'touches', saisie: 'chloe.', cible: 'pv', tenue: 'maj', frappe: 'pv', legende: '… et appuie sur ; : le point arrive.' },
       { ecran: 'touches', saisie: 'chloe.remy', cible: 'altgr', tenue: 'altgr', legende: 'Après le nom : garde AltGr enfoncé…' },
       { ecran: 'touches', saisie: 'chloe.remy@', cible: 'e2', tenue: 'altgr', frappe: 'e2', legende: '… et appuie sur é : l’arobase arrive.' },
@@ -213,10 +213,10 @@
       e.append(champ(f.saisie));
       const k = el('div', 'md-clavier');
       const r1 = el('div', 'md-rang'); r1.append(touche('²', null, f), touche('<small>1</small>&amp;', null, f), touche('<small>2 @</small>é', 'e2', f), touche('<small>3 #</small>"', null, f), touche('<small>4</small>\'', null, f));
-      const r2 = el('div', 'md-rang'); r2.append(touche('Maj ⇧', 'maj', f, 'l2'), touche('W', null, f), touche('X', null, f), touche('C', null, f), touche('V', null, f), touche('B', null, f), touche('N', null, f), touche('<small>?</small>,', null, f), touche('<small>.</small>;', 'pv', f));
+      const r2 = el('div', 'md-rang'); r2.append(touche('Shift ⇧', 'maj', f, 'l2'), touche('W', null, f), touche('X', null, f), touche('C', null, f), touche('V', null, f), touche('B', null, f), touche('N', null, f), touche('<small>?</small>,', null, f), touche('<small>.</small>;', 'pv', f));
       const r3 = el('div', 'md-rang'); r3.append(touche('Ctrl', null, f, 'l1'), touche('Alt', null, f, 'l1'), touche('', null, f, 'espace'), touche('AltGr', 'altgr', f, 'l1'));
       k.append(r1, r2, r3);
-      e.append(k, el('p', 'md-note', 'Ce qu’on obtient avec Maj ou AltGr est écrit en haut de la touche.'));
+      e.append(k, el('p', 'md-note', 'Ce qu’on obtient avec Shift ou AltGr est écrit en haut de la touche.'));
     }
     if (f.ecran === 'gaufre') {
       e.append(el('div', 'md-google', 'Google'), c(el('span', 'md-gaufre-ico', '⋮⋮⋮'), 'gaufre'));
