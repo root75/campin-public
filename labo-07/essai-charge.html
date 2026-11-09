@@ -64,7 +64,7 @@ ol{margin:0;padding-left:1.4rem}
   <div class="alerte">
     <p><b>Pour arrêter un onglet figé</b>, sans fermer Chrome ni les autres onglets :</p>
     <ol>
-      <li>Chrome ▸ ⋮ en haut à droite ▸ Plus d’outils ▸ Gestionnaire de tâches (ou Maj + Échap).</li>
+      <li>Chrome ▸ ⋮ en haut à droite ▸ Plus d’outils ▸ Gestionnaire de tâches (ou Shift + Esc).</li>
       <li>Clique sur la ligne « Onglet : Banc d’essai — Labo 07 ».</li>
       <li>Bouton Arrêter le processus.</li>
     </ol>
@@ -78,7 +78,7 @@ ol{margin:0;padding-left:1.4rem}
 
 <details>
   <summary>Pour le professeur : relever les valeurs</summary>
-  <p>Dans PowerShell (⊞ Démarrer ▸ tape PowerShell ▸ Entrée), ce script relève le processeur et la mémoire chaque seconde pendant une minute, puis copie le résultat dans le presse-papiers.</p>
+  <p>Dans PowerShell (⊞ Démarrer ▸ tape PowerShell ▸ Enter), ce script relève le processeur et la mémoire chaque seconde pendant une minute, puis copie le résultat dans le presse-papiers.</p>
   <pre id="script">$log = 1..60 | % { $c=(Get-CimInstance Win32_PerfFormattedData_PerfOS_Processor -Filter "Name='_Total'").PercentProcessorTime; $o=Get-CimInstance Win32_OperatingSystem; $m=[math]::Round(100*(1-$o.FreePhysicalMemory/$o.TotalVisibleMemorySize)); "{0:HH:mm:ss}  CPU {1} %  MEM {2} %" -f (Get-Date),$c,$m; Start-Sleep 1 }; $log | Set-Clipboard; $log</pre>
   <div class="ligne"><button id="copier" type="button">📋 Copier le script</button><span id="copie" aria-live="polite"></span></div>
 </details>
@@ -136,7 +136,7 @@ ol{margin:0;padding-left:1.4rem}
   const fige = ms => { const fin = ms ? Date.now() + ms : Infinity; let x = 1; while (Date.now() < fin) x = (x * 1103515245 + 12345) | 0; };
   $('fige-20').onclick = () => { $('fige-20').textContent = 'Figée… (20 s)'; setTimeout(() => { fige(20000); $('fige-20').textContent = 'Figer 20 secondes'; }, 50); };
   $('fige-fin').onclick = () => {
-    if (!confirm('La page ne répondra plus jusqu’à ce que tu l’arrêtes : Gestionnaire de tâches de Chrome (Maj + Échap) ▸ Arrêter le processus, ou le × de l’onglet. Continuer ?')) return;
+    if (!confirm('La page ne répondra plus jusqu’à ce que tu l’arrêtes : Gestionnaire de tâches de Chrome (Shift + Esc) ▸ Arrêter le processus, ou le × de l’onglet. Continuer ?')) return;
     setTimeout(() => fige(0), 50);
   };
 

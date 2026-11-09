@@ -15,8 +15,8 @@ const Demo = (() => {
       { ecran: 'gaufre', menu: 1, cible: 'app-docs', legende: 'Je choisis Docs.' },
       { ecran: 'accueil', cible: 'vierge', legende: 'Je clique sur « + Document vierge ».' },
       { ecran: 'docs', nom: 'Document sans titre', lignes: [''], cible: 'nom', legende: 'Je clique sur « Document sans titre », en haut à gauche.' },
-      { ecran: 'docs', lignes: [''], cible: 'nom', legende: 'Je tape LABO07_CoulissesPC_Prenom_Nom, sans accents, puis Entrée.' },
-      { ecran: 'docs', lignes: [''], menu: { sous: 'm-edition', items: ['Couper', 'Copier', 'Coller', 'Coller sans mise en forme'], hi: 'Coller sans mise en forme' }, cible: 'item-Coller sans mise en forme', legende: 'Trame copiée : je clique dans la page ▸ Édition ▸ Coller sans mise en forme (Ctrl + Maj + V).' },
+      { ecran: 'docs', lignes: [''], cible: 'nom', legende: 'Je tape LABO07_CoulissesPC_Prenom_Nom, sans accents, puis Enter.' },
+      { ecran: 'docs', lignes: [''], menu: { sous: 'm-edition', items: ['Couper', 'Copier', 'Coller', 'Coller sans mise en forme'], hi: 'Coller sans mise en forme' }, cible: 'item-Coller sans mise en forme', legende: 'Trame copiée : je clique dans la page ▸ Édition ▸ Coller sans mise en forme (Ctrl + Shift + V).' },
       { ecran: 'docs', lignes: ['Dans les coulisses du PC', 'Prénom Nom · 3F · date', '1 — Observer ce qui tourne', '…'], cible: 'enregistre', ok: 1, legende: 'La trame est là, sans mise en forme. « Enregistré » : Docs garde tout seul.' }
     ] },
     cote: { titre: 'Mettre le cours et mon rapport côte à côte', images: [
@@ -27,7 +27,7 @@ const Demo = (() => {
     ] },
     gestionnaire: { titre: 'Ouvrir le Gestionnaire et lire les totaux', images: [
       { ecran: 'bureau', cible: 'demarrer', legende: 'Clic droit sur l’icône ⊞ Démarrer, en bas.' },
-      { ecran: 'bureau', clicdroit: 1, cible: 'item-gest', legende: 'Je choisis « Gestionnaire des tâches » (ou Ctrl + Maj + Échap).' },
+      { ecran: 'bureau', clicdroit: 1, cible: 'item-gest', legende: 'Je choisis « Gestionnaire des tâches » (ou Ctrl + Shift + Esc).' },
       { ecran: 'gestion', reduit: 1, cible: 'plus', legende: 'Seulement si la fenêtre est petite, sans colonnes : « Plus de détails », en bas à gauche. Sinon, rien à faire.' },
       { ecran: 'gestion', cible: 'processus', legende: 'À gauche : Processus.' },
       { ecran: 'gestion', cible: 'tot-cpu', legende: 'Le total Processeur se lit en haut de sa colonne.' },
@@ -55,7 +55,7 @@ const Demo = (() => {
     ] },
     fintache: { titre: 'Arrêter GIMP avec Terminer la tâche', images: [
       { ecran: 'gestion', gimp: 1, cpu: '6 %', mem: '46 %', choisi: 1, cible: 'ligne-gimp', legende: 'Processus : je clique UNE fois sur la ligne GNU Image Manipulation Program.' },
-      { ecran: 'gestion', gimp: 1, cpu: '6 %', mem: '46 %', choisi: 1, cible: 'terminer', legende: 'Bouton ⊘ Terminer la tâche, en haut (ou touche Suppr). GIMP se ferme sans rien demander : l’image est perdue.' },
+      { ecran: 'gestion', gimp: 1, cpu: '6 %', mem: '46 %', choisi: 1, cible: 'terminer', legende: 'Bouton ⊘ Terminer la tâche, en haut (ou touche Delete). GIMP se ferme sans rien demander : l’image est perdue.' },
       { ecran: 'gestion', cpu: '5 %', mem: '41 %', cible: 'tot-mem', ok: 1, legende: '10 secondes plus tard : GIMP a disparu, la mémoire est libérée. Ligne Après fin de tâche.' }
     ] },
     tableau: { titre: 'Insérer le tableau de mesures dans Docs', images: [
@@ -65,7 +65,7 @@ const Demo = (() => {
       { ecran: 'docs', lignes: ['1 — Observer ce qui tourne'], table: 1, cible: 'table', ok: 1, legende: 'En-têtes Moment / Processeur (%) / Mémoire (%), puis Avant, Pendant le calcul, Après 1 min, Après fin de tâche.' }
     ] },
     capture: { titre: 'Capturer, coller et légender', images: [
-      { ecran: 'gestion', gimp: 1, cpu: '6 %', mem: '46 %', cible: 'tot-cpu', legende: 'GIMP encore ouvert, après le relevé d’1 minute : Windows + Maj + S (ou ⊞ Démarrer ▸ Outil Capture d’écran ▸ Nouveau).' },
+      { ecran: 'gestion', gimp: 1, cpu: '6 %', mem: '46 %', cible: 'tot-cpu', legende: 'GIMP encore ouvert, après le relevé d’1 minute : Windows + Shift + S (ou ⊞ Démarrer ▸ Outil Capture d’écran ▸ Nouveau).' },
       { ecran: 'gestion', gimp: 1, cpu: '6 %', mem: '46 %', capture: 1, cible: 'zone', legende: 'Rectangle : je sélectionne seulement les noms utiles et les colonnes Processeur / Mémoire.' },
       { ecran: 'docs', lignes: ['1 — Observer ce qui tourne'], table: 1, image: 1, cible: 'image', legende: 'Dans le rapport : Édition ▸ Coller (Ctrl + V).' },
       { ecran: 'docs', lignes: ['1 — Observer ce qui tourne'], table: 1, image: 1, poignee: 1, cible: 'coin', legende: 'Je redimensionne par un COIN : l’image garde ses proportions.' },
