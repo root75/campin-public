@@ -17,6 +17,8 @@ un autre poste, l'humeur, l'avis et la phrase de fin sont faits par le moteur co
 Puis, si le cours a un moment collectif : son conducteur dans [`sequences.json`](sequences.json).
 Puis un test `tests/<cours>.cjs` (modèle : [`tests/messagerie-02.cjs`](../tests/messagerie-02.cjs)).
 **Aucun Code.gs à redéployer** pour un nouveau cours : publier, puis tableau ▸ « Actualiser le catalogue ».
+Les liens prof du cours (fiche professeur, dossier Drive) : une ligne dans l'onglet « Liens prof » de la
+feuille « Pas à pas — suivi », colonne Cours = l'id du catalogue ; pas de redéploiement non plus.
 
 Les adresses des scripts restent **absolues** (`https://root75.github.io/campin-public/…`) : la page
 est aussi servie par Apps Script, où une adresse relative ne mène nulle part.
