@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Banc d’essai — Labo 07</title>
+<!-- Page d'essai pour le professeur : faire travailler le processeur, occuper la mémoire, figer un onglet.
+     Rien n'est envoyé ni enregistré. Pas encore reliée à la fiche élève. -->
+<style>
+:root{color-scheme:light dark;--fond:#f3f5f7;--carte:#fff;--encre:#1f2a33;--doux:#5b6873;--trait:#d5dce2;--accent:#1d5a73;--pale:#e2f3ea;--alerte:#fff4d6}
+@media(prefers-color-scheme:dark){:root{--fond:#141a1f;--carte:#1d252c;--encre:#e8edf1;--doux:#a3b0ba;--trait:#33404a;--accent:#7cc3de;--pale:#183427;--alerte:#3a3216}}
+*{box-sizing:border-box}body{margin:0;background:var(--fond);color:var(--encre);font:1.125rem/1.6 'Segoe UI',Arial,sans-serif}
+main{max-width:48rem;margin:auto;padding:24px 16px 48px;display:grid;gap:20px}h1,h2,p{margin:0}h1{font-size:2rem;line-height:1.25}h2{font-size:1.4rem}
+header,section{display:grid;gap:12px}section{background:var(--carte);border:1px solid var(--trait);padding:18px;border-radius:12px}
+.doux{color:var(--doux);font-size:1rem}.ligne{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+button,select{font:inherit;padding:8px 14px;border-radius:8px;border:1px solid var(--trait);background:var(--carte);color:var(--encre);cursor:pointer}
+button.plein{background:var(--accent);border-color:var(--accent);color:#fff}button:disabled{opacity:.5;cursor:default}
+button:focus-visible,select:focus-visible{outline:3px solid #e3a922;outline-offset:3px}
+.etat{font-weight:700}.alerte{background:var(--alerte);padding:12px;border-radius:8px}.methode{background:var(--pale);padding:12px;border-radius:8px}
+code,pre{font:0.9rem/1.5 Consolas,monospace}pre{white-space:pre-wrap;word-break:break-all;margin:0;background:var(--fond);padding:12px;border-radius:8px}
+ol{margin:0;padding-left:1.4rem}
+</style>
+</head>
+<body>
+<main>
+<header>
+  <p class="doux">Labo 07 · Dans les coulisses du PC · page d’essai</p>
+  <h1>Banc d’essai</h1>
+  <p>Faire travailler le processeur, occuper la mémoire, figer un onglet — puis observer dans le Gestionnaire des tâches. Rien n’est envoyé ni enregistré.</p>
+  <p class="methode" id="machine">Ce PC : …</p>
+</header>
+
+<section aria-labelledby="t-cpu">
+  <h2 id="t-cpu">1. Faire travailler le processeur</h2>
+  <p>Un calcul sans fin sur chaque processeur logique choisi. Arrêt automatique après 3 minutes.</p>
+  <div class="ligne">
+    <label for="fils">Processeurs logiques au travail :</label>
+    <select id="fils"></select>
+  </div>
+  <div class="ligne">
+    <button class="plein" id="cpu-go" type="button">▶ Lancer le calcul</button>
+    <button id="cpu-stop" type="button" disabled>■ Arrêter</button>
+    <span class="etat" id="cpu-etat" aria-live="polite">À l’arrêt.</span>
+  </div>
+</section>
+
+<section aria-labelledby="t-mem">
+  <h2 id="t-mem">2. Occuper la mémoire</h2>
+  <p>Réserve de la mémoire vive et l’occupe réellement, par blocs de 256 Mo. « Libérer » la rend aussitôt.</p>
+  <div class="ligne">
+    <label for="taille">Quantité :</label>
+    <select id="taille"><option value="512">512 Mo</option><option value="1024" selected>1 Go</option><option value="2048">2 Go</option></select>
+  </div>
+  <div class="ligne">
+    <button class="plein" id="mem-go" type="button">▶ Occuper</button>
+    <button id="mem-stop" type="button" disabled>■ Libérer</button>
+    <span class="etat" id="mem-etat" aria-live="polite">Rien d’occupé.</span>
+  </div>
+</section>
+
+<section aria-labelledby="t-fige">
+  <h2 id="t-fige">3. Figer cet onglet</h2>
+  <p>La page ne répond plus : les boutons et le défilement ne réagissent plus. Chrome peut afficher « Page ne répond pas ».</p>
+  <div class="alerte">
+    <p><b>Pour arrêter un onglet figé</b>, sans fermer Chrome ni les autres onglets :</p>
+    <ol>
+      <li>Chrome ▸ ⋮ en haut à droite ▸ Plus d’outils ▸ Gestionnaire de tâches (ou Maj + Échap).</li>
+      <li>Clique sur la ligne « Onglet : Banc d’essai — Labo 07 ».</li>
+      <li>Bouton Arrêter le processus.</li>
+    </ol>
+    <p>Ou plus simple : le × de l’onglet. Dans la fenêtre « Page ne répond pas » : Quitter les pages.</p>
+  </div>
+  <div class="ligne">
+    <button id="fige-20" type="button">Figer 20 secondes</button>
+    <button id="fige-fin" type="button">Figer sans fin…</button>
+  </div>
+</section>
+
+<section aria-labelledby="t-mesure">
+  <h2 id="t-mesure">Pour le professeur : relever les valeurs</h2>
+  <p>Dans PowerShell (⊞ Démarrer ▸ tape PowerShell ▸ Entrée), ce script relève le processeur et la mémoire chaque seconde pendant une minute, puis copie le résultat dans le presse-papiers.</p>
+  <pre id="script">$log = 1..60 | % { $c=(Get-CimInstance Win32_PerfFormattedData_PerfOS_Processor -Filter "Name='_Total'").PercentProcessorTime; $o=Get-CimInstance Win32_OperatingSystem; $m=[math]::Round(100*(1-$o.FreePhysicalMemory/$o.TotalVisibleMemorySize)); "{0:HH:mm:ss}  CPU {1} %  MEM {2} %" -f (Get-Date),$c,$m; Start-Sleep 1 }; $log | Set-Clipboard; $log</pre>
+  <div class="ligne"><button id="copier" type="button">📋 Copier le script</button><span id="copie" aria-live="polite"></span></div>
+</section>
+</main>
+
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const n = navigator.hardwareConcurrency || 4;
+  const go = navigator.deviceMemory ? ' · mémoire annoncée par Chrome : environ ' + navigator.deviceMemory + ' Go (valeur arrondie)' : '';
+  $('machine').textContent = 'Ce PC : ' + n + ' processeurs logiques' + go + '.';
+  [[1, '1 (un seul)'], [Math.max(1, n >> 1), Math.max(1, n >> 1) + ' (la moitié)'], [n, n + ' (tous)']]
+    .filter((v, i, a) => a.findIndex(w => w[0] === v[0]) === i)
+    .forEach(([v, t]) => { const o = document.createElement('option'); o.value = v; o.textContent = t; $('fils').append(o); });
+  $('fils').value = n;
+
+  const worker = code => { const url = URL.createObjectURL(new Blob([code], { type: 'text/javascript' })); const w = new Worker(url); URL.revokeObjectURL(url); return w; };
+
+  /* 1. Processeur : un worker par processeur logique, boucle sans fin, arrêt par terminate(). */
+  let calc = [], debut = 0, minuteur = 0;
+  const cpuStop = msg => {
+    calc.forEach(w => w.terminate()); calc = []; clearInterval(minuteur);
+    $('cpu-go').disabled = false; $('cpu-stop').disabled = true; $('cpu-etat').textContent = msg || 'À l’arrêt.';
+  };
+  $('cpu-go').onclick = () => {
+    const k = Number($('fils').value);
+    for (let i = 0; i < k; i++) calc.push(worker('let x = 1; for (;;) { x = (x * 1103515245 + 12345) | 0; }'));
+    debut = Date.now(); $('cpu-go').disabled = true; $('cpu-stop').disabled = false;
+    minuteur = setInterval(() => {
+      const s = Math.round((Date.now() - debut) / 1000);
+      if (s >= 180) return cpuStop('Arrêt automatique après 3 minutes.');
+      $('cpu-etat').textContent = k + ' processeur(s) logique(s) au travail · ' + s + ' s';
+    }, 500);
+  };
+  $('cpu-stop').onclick = () => cpuStop();
+
+  /* 2. Mémoire : allouée dans un worker, une écriture par page de 4 Ko pour l'occuper vraiment ; terminate() la rend. */
+  let mem = null;
+  const memStop = msg => { if (mem) mem.terminate(); mem = null; $('mem-go').disabled = false; $('mem-stop').disabled = true; $('mem-etat').textContent = msg || 'Rien d’occupé.'; };
+  $('mem-go').onclick = () => {
+    const mo = Number($('taille').value);
+    mem = worker(`onmessage = e => { const garde = []; try { for (let i = 0; i < e.data / 256; i++) {
+        const b = new Uint8Array(256 * 1048576); for (let j = 0; j < b.length; j += 4096) b[j] = 1; garde.push(b); postMessage((i + 1) * 256); }
+        self.garde = garde; postMessage('fini'); } catch (err) { postMessage('erreur'); } };`);
+    mem.onmessage = e => {
+      if (e.data === 'fini') $('mem-etat').textContent = 'Occupé : ' + mo + ' Mo. Clique sur Libérer pour les rendre.';
+      else if (e.data === 'erreur') memStop('Chrome a refusé d’en réserver plus : mémoire libérée.');
+      else $('mem-etat').textContent = 'Occupation en cours… ' + e.data + ' Mo';
+    };
+    mem.postMessage(mo); $('mem-go').disabled = true; $('mem-stop').disabled = false;
+  };
+  $('mem-stop').onclick = () => memStop();
+
+  /* 3. Onglet figé : boucle sur le fil principal de la page. */
+  const fige = ms => { const fin = ms ? Date.now() + ms : Infinity; let x = 1; while (Date.now() < fin) x = (x * 1103515245 + 12345) | 0; };
+  $('fige-20').onclick = () => { $('fige-20').textContent = 'Figée… (20 s)'; setTimeout(() => { fige(20000); $('fige-20').textContent = 'Figer 20 secondes'; }, 50); };
+  $('fige-fin').onclick = () => {
+    if (!confirm('La page ne répondra plus jusqu’à ce que tu l’arrêtes : Gestionnaire de tâches de Chrome (Maj + Échap) ▸ Arrêter le processus, ou le × de l’onglet. Continuer ?')) return;
+    setTimeout(() => fige(0), 50);
+  };
+
+  $('copier').onclick = () => navigator.clipboard.writeText($('script').textContent)
+    .then(() => { $('copie').textContent = 'Copié.'; }, () => { $('copie').textContent = 'Copie refusée : sélectionne le texte, puis Ctrl + C.'; });
+})();
+</script>
+</body>
+</html>
