@@ -56,14 +56,21 @@ const BLOCS = [
   {
     "partie": "1 — Observer ce qui tourne",
     "titre": "Défi : une application ouverte, qu’est-ce qui change ?",
-    "min": 8,
-    "veux": "Prévoir ce qui changera pour le processeur et la mémoire du PC quand j’ouvrirai GIMP, un logiciel de retouche d’images.",
-    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\">Vérifie que ton rapport est ouvert à droite du cours.</label></li><li><label><input type=\"checkbox\">Tu vas observer deux choses : le processeur (il calcule) et la mémoire (elle garde ce que les logiciels ouverts utilisent).</label></li><li><label><input type=\"checkbox\">À ton avis, quand GIMP s’ouvrira, que feront le processeur et la mémoire ? Ils montent, ils baissent, ils restent pareils ?</label></li><li><label><input type=\"checkbox\">Écris ta réponse dans « Mon hypothèse », sous les cases. GIMP reste fermé tant que ce n’est pas écrit.</label></li></ol>",
-    "vois": "Mon hypothèse annonce un changement possible et ce qui me permettrait de le constater.",
+    "min": 12,
+    "veux": "Relever les caractéristiques de mon PC, puis prévoir ce que feront le processeur et la mémoire quand GIMP calculera une grande image, et quand je l’arrêterai.",
+    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\">Vérifie que ton rapport est ouvert à droite du cours.</label></li><li><label><input type=\"checkbox\">Fais un clic droit sur l’icône ⊞ Démarrer ▸ Gestionnaire des tâches (ou Ctrl + Maj + Échap).</label></li><li><label><input type=\"checkbox\">Si nécessaire, clique sur Plus de détails.</label></li><li><label><input type=\"checkbox\">À gauche, clique sur 📈 Performances, puis sur Processeur : lis son nom, en haut à droite, et le nombre de Cœurs, sous le graphique.</label></li><li><label><input type=\"checkbox\">Clique sur Mémoire : lis la quantité totale, en haut à droite (par exemple 16,0 Go).</label></li><li><label><input type=\"checkbox\">Clique sur Disque 0 (C:) : lis sa Capacité, sous le graphique.</label></li><li><label><input type=\"checkbox\">Dans ton rapport, partie 1, complète la ligne « Mon PC » avec ces quatre informations.</label></li><li><label><input type=\"checkbox\">Tu vas observer deux choses : le processeur (il calcule) et la mémoire (elle garde ce que les logiciels ouverts utilisent).</label></li><li><label><input type=\"checkbox\">À ton avis, que feront le processeur et la mémoire quand GIMP calculera une grande image ? Et quand tu arrêteras GIMP ?</label></li><li><label><input type=\"checkbox\">Écris ta réponse dans « Mon hypothèse », sous les cases. GIMP reste fermé tant que ce n’est pas écrit.</label></li></ol>",
+    "vois": "Mon rapport indique le processeur, les cœurs, la mémoire et le disque de mon PC ; mon hypothèse annonce un changement possible et ce qui me permettrait de le constater.",
     "coince": [
-      "Une hypothèse est une idée à tester, pas une définition. Un résultat stable peut aussi être intéressant.",
-      "Commence par « Si j’ouvre GIMP, je pense que… ». Indique ce que tu comparerais avant, pendant son ouverture et une fois ouvert. Pas encore de rapport ? Clique sur ← Étape précédente."
+      "Pas de noms à gauche du Gestionnaire ? Clique sur ☰, en haut à gauche, ou agrandis la fenêtre. Tes valeurs diffèrent de celles du voisin ? Normal : chaque PC a les siennes. Une hypothèse est une idée à tester, pas une définition.",
+      "Commence par « Si GIMP calcule une grande image, je pense que… ». Indique ce que tu comparerais avant, pendant le calcul et après l’arrêt. Pas encore de rapport ? Clique sur ← Étape précédente."
     ],
+    "demos": {
+      "2": ["gestionnaire", [0, 1]],
+      "3": ["gestionnaire", [2]],
+      "4": ["performances", [0, 1]],
+      "5": ["performances", [2]],
+      "6": ["performances", [3]]
+    },
     "indices": true,
     "q": {
       "type": "enquete",
@@ -77,58 +84,59 @@ const BLOCS = [
       ],
       "juste": "Cette réponse marque une étape faite. Elle ne constitue pas une correction ni une note."
     },
-    "extra": "<p class=\"stop\">Chacun manipule son propre PC. Première réponse seul ; comparaison à deux ensuite. Aucune fin de tâche, aucune suppression, aucun réglage.</p>"
+    "extra": "<p class=\"stop\">Chacun manipule son propre PC. Première réponse seul ; comparaison à deux ensuite. Ici, on observe seulement : aucune fin de tâche, aucun réglage.</p>"
   },
   {
     "partie": "1 — Observer ce qui tourne",
-    "titre": "Relever les mesures avant et après GIMP",
-    "min": 14,
-    "veux": "Relever le processeur et la mémoire avant l’ouverture de GIMP, 10 secondes après, puis 1 minute après.",
-    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\">Dans ton rapport, partie 1, clique sur la ligne « [Insérer un vrai tableau…] » ▸ menu Insertion ▸ Tableau ▸ glisse sur la grille jusqu’à 3 × 4. Tape les en-têtes Moment, Processeur (%), Mémoire (%), puis Avant, Après 10 s, Après 1 min dans la première colonne. Efface la ligne entre crochets.</label></li><li><label><input type=\"checkbox\">Fais un clic droit sur l’icône ⊞ Démarrer ▸ Gestionnaire des tâches (ou Ctrl + Maj + Échap).</label></li><li><label><input type=\"checkbox\">Si nécessaire, clique sur Plus de détails.</label></li><li><label><input type=\"checkbox\">Clique sur Processus : repère deux applications dont tu reconnais le nom.</label></li><li><label><input type=\"checkbox\">Lis le total Processeur en % en haut de la colonne.</label></li><li><label><input type=\"checkbox\">Lis le total Mémoire en % en haut de la colonne.</label></li><li><label><input type=\"checkbox\">Dans ton rapport, partie 1, saisis ces valeurs dans la ligne Avant du tableau.</label></li><li><label><input type=\"checkbox\">Clique sur ⊞ Démarrer ▸ tape GIMP ▸ clique sur l’application GIMP. Elle met 5 à 20 secondes à s’ouvrir : ne clique pas une deuxième fois.</label></li><li><label><input type=\"checkbox\">Reviens tout de suite au Gestionnaire par son icône dans la barre des tâches (ou Alt + Tab).</label></li><li><label><input type=\"checkbox\">Environ 10 secondes après le clic sur GIMP, lis les deux mêmes totaux.</label></li><li><label><input type=\"checkbox\">Dans le tableau du rapport, complète la ligne Après 10 s.</label></li><li><label><input type=\"checkbox\">Laisse GIMP ouvert sans rien y faire et attends environ 1 minute.</label></li><li><label><input type=\"checkbox\">Dans le tableau du rapport, complète la ligne Après 1 min avec les deux mêmes totaux.</label></li></ol>",
-    "vois": "Mon tableau contient deux noms d’applications et les trois relevés : Avant, Après 10 s, Après 1 min.",
+    "titre": "Relever les mesures avant, pendant et après GIMP",
+    "min": 20,
+    "veux": "Relever le processeur et la mémoire avant GIMP, pendant un gros calcul, 1 minute après, puis après avoir arrêté GIMP.",
+    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\">Dans ton rapport, partie 1, clique sur la ligne « [Insérer un vrai tableau…] » ▸ menu Insertion ▸ Tableau ▸ glisse sur la grille jusqu’à 3 × 5. Tape les en-têtes Moment, Processeur (%), Mémoire (%), puis Avant, Pendant le calcul, Après 1 min, Après fin de tâche dans la première colonne. Efface la ligne entre crochets.</label></li><li><label><input type=\"checkbox\">Reviens au Gestionnaire des tâches par son icône dans la barre des tâches (ou Alt + Tab) ▸ à gauche, clique sur ☰ Processus. Repère deux applications dont tu reconnais le nom.</label></li><li><label><input type=\"checkbox\">Lis le total Processeur en % en haut de la colonne.</label></li><li><label><input type=\"checkbox\">Lis le total Mémoire en % en haut de la colonne.</label></li><li><label><input type=\"checkbox\">Dans le tableau du rapport, complète la ligne Avant.</label></li><li><label><input type=\"checkbox\">Clique sur ⊞ Démarrer ▸ tape GIMP ▸ clique sur l’application GIMP. Elle met 5 à 20 secondes à s’ouvrir : ne clique pas une deuxième fois.</label></li><li><label><input type=\"checkbox\">Dans GIMP : menu Fichier ▸ Nouvelle image (ou Ctrl + N). Tape 10000 en Largeur et 10000 en Hauteur, unité px ▸ Valider.</label></li><li><label><input type=\"checkbox\">GIMP prévient que l’image est très grande : clique sur OK. Attends que l’image grise apparaisse.</label></li><li><label><input type=\"checkbox\">Menu Filtres ▸ Rendu ▸ Bruit ▸ Plasma ▸ Valider. GIMP calcule : une barre de progression avance en bas de sa fenêtre.</label></li><li><label><input type=\"checkbox\">Tout de suite, reviens au Gestionnaire (Alt + Tab) et lis les deux totaux pendant le calcul.</label></li><li><label><input type=\"checkbox\">Dans le tableau du rapport, complète la ligne Pendant le calcul.</label></li><li><label><input type=\"checkbox\">Laisse GIMP ouvert sans rien y faire et attends environ 1 minute.</label></li><li><label><input type=\"checkbox\">Lis les deux mêmes totaux et complète la ligne Après 1 min.</label></li><li><label><input type=\"checkbox\">GIMP encore ouvert, prends ta capture : Windows + Maj + S (ou ⊞ Démarrer ▸ Outil Capture d’écran ▸ Nouveau) ▸ rectangle autour des noms utiles et des colonnes Processeur / Mémoire. Tu la colleras à l’étape suivante.</label></li><li><label><input type=\"checkbox\">Dans Processus, clique une fois sur la ligne GNU Image Manipulation Program ▸ bouton ⊘ Terminer la tâche, en haut (ou touche Suppr). GIMP se ferme sans rien demander : l’image n’est pas enregistrée.</label></li><li><label><input type=\"checkbox\">Attends 10 secondes, lis les deux totaux et complète la ligne Après fin de tâche.</label></li></ol>",
+    "vois": "Mon tableau contient les quatre relevés : Avant, Pendant le calcul, Après 1 min, Après fin de tâche. Ma capture attend d’être collée.",
     "coince": [
-      "Compare la même grandeur : le total CPU avec le total CPU, pas le total avec une ligne d’application. La mémoire en % n’est pas celle d’un seul logiciel en Mo.",
-      "GIMP met 5 à 20 secondes à s’ouvrir : c’est normal, ne relance pas. Relève quand même à 10 s, même si la fenêtre n’est pas encore là. Les totaux se lisent dans les en-têtes Processeur et Mémoire de Processus. Si l’accès est bloqué, note « accès refusé » et clique sur « J'attends de l'aide » : ne contourne pas la restriction."
+      "Compare la même grandeur : le total Processeur avec le total Processeur, pas avec une ligne d’application. La mémoire en % n’est pas celle d’un seul logiciel en Mo.",
+      "Le Plasma est fini avant ton relevé ? Dans GIMP : Édition ▸ Annuler (Ctrl + Z), relance Filtres ▸ Rendu ▸ Bruit ▸ Plasma ▸ Valider, puis Alt + Tab tout de suite. GIMP refuse 10000 ? Vérifie que l’unité est px. Si l’accès est bloqué, note « accès refusé » et clique sur « J'attends de l'aide » : ne contourne pas la restriction."
     ],
     "demos": {
       "1": ["tableau", [0, 1, 2, 3]],
-      "2": ["gestionnaire", [0, 1]],
-      "3": ["gestionnaire", [2]],
-      "4": ["gestionnaire", [3]],
-      "5": ["gestionnaire", [4]],
-      "6": ["gestionnaire", [5]],
-      "8": ["gimp", [0, 1]],
-      "9": ["gimp", [2]],
-      "10": ["gimp", [3]],
-      "13": ["gimp", [4]]
+      "2": ["gestionnaire", [3]],
+      "3": ["gestionnaire", [4]],
+      "4": ["gestionnaire", [5]],
+      "6": ["gimp", [0, 1]],
+      "7": ["gimp", [2]],
+      "8": ["gimp", [3]],
+      "9": ["gimp", [4]],
+      "10": ["gimp", [5, 6]],
+      "13": ["gimp", [7]],
+      "14": ["capture", [0, 1]],
+      "15": ["fintache", [0, 1]],
+      "16": ["fintache", [2]]
     },
     "indices": true,
     "q": {
       "type": "rapport",
-      "q": "Tes trois relevés sont dans le tableau du rapport. Pas de phrase à écrire ici.",
-      "confirmation": "J’ai relevé les deux totaux trois fois et complété le tableau de mon rapport.",
+      "q": "Tes quatre relevés sont dans le tableau du rapport. Pas de phrase à écrire ici.",
+      "confirmation": "J’ai relevé les deux totaux quatre fois, pris ma capture et complété le tableau de mon rapport.",
       "trace": "rapport:1 — Relevés de mesures",
       "juste": "Le professeur examine les preuves et les gestes. Cette déclaration ne constitue ni une correction ni une remise."
     },
-    "extra": "<p class=\"stop\">Observation seulement : ne termine aucune tâche dans le Gestionnaire, ne change aucun réglage.</p>"
+    "extra": "<p class=\"stop\">Fin de tâche uniquement sur GIMP, et seulement quand la case le demande. Terminer la tâche ferme de force : ce qui n’est pas enregistré est perdu. On ne s’en sert que si le × ne répond plus. Aucune autre tâche, aucun réglage.</p>"
   },
   {
     "partie": "1 — Observer ce qui tourne",
     "titre": "Capturer et conclure",
-    "min": 10,
-    "veux": "Montrer mes relevés par une capture, puis conclure prudemment.",
-    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\">Après le dernier relevé, prends une capture ciblée : ⊞ Démarrer ▸ Outil Capture d’écran ▸ Nouveau (ou Windows + Maj + S).</label></li><li><label><input type=\"checkbox\">Sélectionne seulement les noms utiles et les colonnes Processeur / Mémoire, sans autre travail visible.</label></li><li><label><input type=\"checkbox\">Reviens dans le rapport et colle la capture avec Édition ▸ Coller (Ctrl + V).</label></li><li><label><input type=\"checkbox\">Redimensionne par un coin pour garder les proportions et rester dans la page.</label></li><li><label><input type=\"checkbox\">Sous l’image, écris une légende qui explique ce qu’elle montre et sa limite.</label></li><li><label><input type=\"checkbox\">Dans le rapport, écris une conclusion de deux phrases : ce qui change dans tes relevés, puis une autre cause possible ou une limite.</label></li><li><label><input type=\"checkbox\">Après ta réponse personnelle, compare les observations avec un voisin.</label></li><li><label><input type=\"checkbox\">Participe à la mise en commun. Ensuite, le professeur affiche la synthèse sur ton écran.</label></li></ol>",
-    "vois": "Mon rapport contient deux noms d’applications, les trois relevés et une capture légendée ; ma conclusion distingue ce qui monte puis redescend de ce qui reste.",
+    "min": 8,
+    "veux": "Montrer mes relevés par la capture, puis conclure prudemment.",
+    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\">Reviens dans ton rapport, sous le tableau, et colle ta capture : Édition ▸ Coller (Ctrl + V).</label></li><li><label><input type=\"checkbox\">Redimensionne par un coin pour garder les proportions et rester dans la page.</label></li><li><label><input type=\"checkbox\">Sous l’image, écris une légende qui explique ce qu’elle montre et sa limite.</label></li><li><label><input type=\"checkbox\">Dans le rapport, écris une conclusion de deux phrases : ce qui change dans tes relevés, puis une autre cause possible ou une limite.</label></li><li><label><input type=\"checkbox\">Après ta réponse personnelle, compare les observations avec un voisin.</label></li><li><label><input type=\"checkbox\">Participe à la mise en commun. Ensuite, le professeur affiche la synthèse sur ton écran.</label></li></ol>",
+    "vois": "Mon rapport contient les caractéristiques de mon PC, les quatre relevés et une capture légendée ; ma conclusion distingue ce qui monte puis redescend, ce qui reste, et ce que la fin de tâche libère.",
     "coince": [
-      "Ta capture montre seulement les noms et les colonnes Processeur / Mémoire. Le collage échoue ? Enregistre la capture dans l’Outil Capture d’écran, puis Docs ▸ Insertion ▸ Image ▸ Importer depuis l’ordinateur.",
-      "Une conclusion prudente : « Pendant l’ouverture, le processeur… ; une fois GIMP ouvert, la mémoire… ». Puis une limite : une autre tâche a pu travailler en même temps."
+      "Le collage ne donne rien ? Windows a aussi enregistré ta capture : Docs ▸ Insertion ▸ Image ▸ Importer depuis l’ordinateur ▸ dossier Images ▸ Captures d’écran. Ta capture montre seulement les noms et les colonnes Processeur / Mémoire.",
+      "Une conclusion prudente : « Pendant le calcul, le processeur… ; tant que GIMP garde l’image, la mémoire… ; après la fin de tâche, … ». Puis une limite : une autre tâche a pu travailler en même temps."
     ],
     "demos": {
-      "1": ["capture", [0]],
-      "2": ["capture", [1]],
-      "3": ["capture", [2]],
-      "4": ["capture", [3]],
-      "5": ["capture", [4]]
+      "1": ["capture", [2]],
+      "2": ["capture", [3]],
+      "3": ["capture", [4]]
     },
     "indices": true,
     "q": {
@@ -136,18 +144,18 @@ const BLOCS = [
       "q": "Après tes observations : choisis une conclusion défendable, puis confirme ce que tu as fait dans le rapport.",
       "activite": {
         "type": "qcm",
-        "q": "Cas fictif : le processeur passe de 5 % à 45 % pendant l’ouverture de GIMP, puis redescend à 7 % ; la mémoire passe de 40 % à 46 % et y reste. Que peut-on affirmer ?",
+        "q": "Cas fictif, sur un PC de 16 Go : le processeur passe de 5 % à 62 % pendant le calcul, puis redescend à 6 % ; la mémoire passe de 40 % à 45 %, y reste, puis revient à 41 % après la fin de tâche. Que peut-on affirmer ?",
         "c": [
-          "Le processeur a surtout travaillé pendant l’ouverture ; la mémoire reste occupée tant que GIMP est ouvert. Ces seuls relevés ne prouvent pas une cause unique.",
+          "Le processeur a surtout travaillé pendant le calcul ; la mémoire a gardé l’image tant que GIMP était ouvert, puis l’a libérée à la fin de tâche. Ces seuls relevés ne prouvent pas une cause unique.",
           "Toute la hausse vient forcément de GIMP, et de rien d’autre.",
-          "Le PC est en panne parce que le processeur est monté à 45 %.",
-          "La hausse du processeur prouve que le disque est plein."
+          "Le PC est en panne parce que le processeur est monté à 62 %.",
+          "Terminer la tâche a fermé GIMP proprement : l’image est enregistrée."
         ],
         "p": [
           null,
           "GIMP est très probablement en cause, mais deux événements qui se suivent ne suffisent pas à l’isoler. Quelles autres tâches peuvent travailler en même temps ?",
-          "Un processeur peut travailler fort quelques secondes sans panne : il est redescendu ensuite. Observe avant de diagnostiquer.",
-          "Le travail du processeur et la place des fichiers sur le disque sont deux observations différentes."
+          "Un processeur peut travailler fort pendant un calcul sans être en panne : il est redescendu ensuite. Observe avant de diagnostiquer.",
+          "Terminer la tâche ferme de force, sans proposer d’enregistrer : l’image est perdue. C’est un dernier recours, quand le × ne répond plus."
         ],
         "juste": "Tu relies une observation à une conclusion prudente. Explique à l’oral ce qu’il faudrait encore vérifier."
       },
@@ -159,7 +167,7 @@ const BLOCS = [
         "juste": "Le professeur examine les preuves et les gestes. Cette déclaration ne constitue ni une correction ni une remise."
       }
     },
-    "extra": "<details class=\"encart\"><summary>Prolongement — si j’ai terminé</summary><p>Ferme GIMP par le × en haut à droite de sa fenêtre, puis relis les deux totaux après 10 secondes. Lequel redescend ? Propose une manière de rendre la comparaison plus fiable. L’observation des ressources est un prolongement, sans nouvelle compétence de 3e attribuée.</p></details>"
+    "extra": "<details class=\"encart\"><summary>Prolongement — si j’ai terminé</summary><p>Rouvre GIMP, crée une petite image (Fichier ▸ Nouvelle image ▸ Valider) et trace un trait avec l’outil Pinceau 🖌 (touche P). Ferme ensuite GIMP par le × en haut à droite de sa fenêtre. Que te demande-t-il ? Pourquoi Terminer la tâche ne l’a-t-il pas demandé ? L’observation des ressources est un prolongement, sans nouvelle compétence de 3e attribuée.</p></details>"
   },
   {
     "partie": "2 — Retrouver ses données",

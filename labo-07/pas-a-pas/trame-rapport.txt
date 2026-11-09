@@ -5,11 +5,12 @@ Date : [à compléter]
 
 1. Observer ce qui tourne
 Mes hypothèses initiales restent dans Mes cours : je ne les recopie pas.
+Mon PC — Processeur : [nom] ; Cœurs : [nombre] ; Mémoire : [Go] ; Disque C: : [capacité en Go]
 Deux applications identifiées : [à compléter]
-[Insérer un vrai tableau de 3 colonnes et 4 lignes.]
+[Insérer un vrai tableau de 3 colonnes et 5 lignes.]
 En-têtes : Moment ; Processeur (%) ; Mémoire (%)
-Lignes : Avant ; Après 10 s ; Après 1 min
-[Insérer une seule capture ciblée après le dernier relevé.]
+Lignes : Avant ; Pendant le calcul ; Après 1 min ; Après fin de tâche
+[Insérer une seule capture ciblée, prise après le relevé d’1 minute, GIMP encore ouvert.]
 Légende de la capture : [une phrase]
 Conclusion : [deux phrases : observation appuyée sur les relevés, puis autre cause possible ou limite]
 
@@ -55,7 +56,7 @@ Identification et nom du fichier — /1
 0,5 : titre, prénom/nom, classe/date présents ; 0,5 : nom LABO07_CoulissesPC_Prenom_Nom respecté.
 
 Titres et tableau — /1
-0,5 : même style de titre pour les quatre parties ; 0,5 : vrai tableau 3×4, lisible, lignes et unités identifiées.
+0,5 : même style de titre pour les quatre parties ; 0,5 : vrai tableau 3×5, lisible, lignes et unités identifiées.
 
 Capture et remise — /1
 0,5 : capture utile, lisible, proportionnée, avec légende explicative ; 0,5 : bon document joint, remise confirmée dans Classroom.
