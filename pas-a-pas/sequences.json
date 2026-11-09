@@ -177,6 +177,78 @@
     ],
     "objectif": "Comprendre une adresse et la forme du mail avant de s’entraîner. Durées du collectif indicatives ; prévoir ensuite 25–35 min de simulation et 20–30 min d’échange Outlook, répartissables sur plusieurs séances."
   },
+  "messagerie-2": {
+    "titre": "Messagerie 02 — Ouvrir sans risque, répondre, transférer",
+    "objectif": "Poser la règle de la pièce jointe (qui l’envoie, quel fichier) avant le travail dans Outlook. Collectif court, environ 10 min : Messagerie 01 a montré que le collectif déborde (44 min avant le travail autonome le 03/11). Répondre, Répondre à tous, Transférer et Joindre sont travaillés aux blocs 2 et 7.",
+    "moments": [
+      {
+        "type": "ecran",
+        "titre": "La règle de la leçon",
+        "min": 3,
+        "methode": "Exposé bref",
+        "paires": [
+          [
+            "QUI l’envoie ?",
+            "Une adresse que je connais, qui finit par @arcampin.be — lettre par lettre."
+          ],
+          [
+            "QUEL fichier ?",
+            "Un fichier attendu : .docx, .pdf, .pptx. Un .exe ou un .zip inattendu : je n’ouvre pas."
+          ]
+        ],
+        "exemple": "Un doute ? Je n’ouvre pas. Je sonne la cloche et je montre à mon professeur."
+      },
+      {
+        "type": "vote",
+        "titre": "Ouvrir ou ne pas ouvrir ?",
+        "min": 5,
+        "methode": "Choix individuels, justification orale et correction collective",
+        "question": "Pour chaque message reçu, coche ce que tu fais, puis envoie tes choix.",
+        "choix": [
+          "J’ouvre",
+          "Je n’ouvre pas"
+        ],
+        "situations": [
+          {
+            "texte": "Secrétariat <secretariat@arcampin.be> · 📎 horaire.pdf",
+            "bonne": 0,
+            "explication": "Adresse de l’école, document attendu : on peut l’ouvrir."
+          },
+          {
+            "texte": "Service Colis <colis.livraison24@gmail.com> · 📎 suivi-colis.zip",
+            "bonne": 1,
+            "explication": "Un inconnu, un paquet .zip que je n’attends pas : on n’ouvre pas."
+          },
+          {
+            "texte": "Jeux Gratuits <cadeau@jeux-gratuits.net> · 📎 installer-jeu.exe",
+            "bonne": 1,
+            "explication": "Un .exe installe un programme : jamais d’un inconnu."
+          },
+          {
+            "texte": "Secrétariat <secretariat@arcampim.be> · 📎 bulletin.docx",
+            "bonne": 1,
+            "explication": "arcampim au lieu de arcampin : une lettre change, ce n’est plus l’école."
+          },
+          {
+            "texte": "Ton professeur <…@arcampin.be> · 📎 Ma fiche a completer.docx",
+            "bonne": 0,
+            "explication": "Ton professeur, un document Word annoncé : c’est la fiche du jour."
+          }
+        ]
+      },
+      {
+        "type": "fin",
+        "titre": "Bascule",
+        "min": 2,
+        "methode": "Travail autonome",
+        "lignes": [
+          "À TOI D’AGIR — commence par ton humeur du jour.",
+          "Étapes 1 et 2 dans la fiche, puis tout se passe dans Courrier.",
+          "Bloqué ? Relis, demande au voisin, puis sonne la cloche 🔔."
+        ]
+      }
+    ]
+  },
   "python-1": {
     "titre": "Python 01 — Du logigramme au code",
     "objectif": "Traduire le logigramme « Les vies », prédire son résultat et enregistrer un programme Python.",

@@ -9,6 +9,13 @@
       "preuves": "messagerie/pas-a-pas/preuves.json"
     },
     {
+      "id": "messagerie-2",
+      "titre": "Messagerie 02 — Je réponds, je joins, je transfère",
+      "chemin": "messagerie-2/pas-a-pas/",
+      "etapes": 10,
+      "preuves": "messagerie-2/pas-a-pas/preuves.json"
+    },
+    {
       "id": "python-1",
       "titre": "Python 01 — Premiers pas",
       "chemin": "python-1/pas-a-pas/",
