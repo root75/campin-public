@@ -28,7 +28,7 @@ const Demo = (() => {
     gestionnaire: { titre: 'Ouvrir le Gestionnaire et lire les totaux', images: [
       { ecran: 'bureau', cible: 'demarrer', legende: 'Clic droit sur l’icône ⊞ Démarrer, en bas.' },
       { ecran: 'bureau', clicdroit: 1, cible: 'item-gest', legende: 'Je choisis « Gestionnaire des tâches » (ou Ctrl + Maj + Échap).' },
-      { ecran: 'gestion', reduit: 1, cible: 'plus', legende: 'Si la fenêtre est petite : « Plus de détails ».' },
+      { ecran: 'gestion', reduit: 1, cible: 'plus', legende: 'Seulement si la fenêtre est petite, sans colonnes : « Plus de détails », en bas à gauche. Sinon, rien à faire.' },
       { ecran: 'gestion', cible: 'processus', legende: 'À gauche : Processus.' },
       { ecran: 'gestion', cible: 'tot-cpu', legende: 'Le total Processeur se lit en haut de sa colonne.' },
       { ecran: 'gestion', cible: 'tot-mem', ok: 1, legende: 'Le total Mémoire aussi. Je note les deux, ligne Avant.' }
