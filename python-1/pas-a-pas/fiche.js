@@ -554,32 +554,43 @@ function raisonEchange(rep){
  const perte=/(ecras|perd|pert|ef?fac|dispar|oubli|rempla|deux fois|identique|meme (valeur|nombre|chiffre|resultat))/.test(n);
  return garde||perte;
 }
+/* Après SEUIL_ECHANGE erreurs différentes à une étape, la réponse s'affiche sous l'explication
+   (Vincent : « affiche la réponse si trop d'essais »). Le suivi le note : « réponse montrée ». */
+const SEUIL_ECHANGE=3;
 function echangeGuide(zone,Q,reussi,rate,effaceRetour=()=>{}){
- const a=Q.initialA,b=Q.initialB,x=a+11,y=b+3;let codeValide='';const preuves=[];
+ const a=Q.initialA,b=Q.initialB,x=a+11,y=b+3;let codeValide='';const preuves=[];const montrees=[];
+ const rateEtape=(etape,reponse)=>{let n=0,derniere=null;return (erreur,r)=>{
+  if(r!==derniere){derniere=r;n++;}
+  if(n<SEUIL_ECHANGE){rate(erreur,r);return;}
+  if(!montrees.includes(etape))montrees.push(etape);
+  rate([erreur,'Voici la réponse : '+reponse+'. Recopie-la, puis explique-la à ton voisin.'],r);
+  const retour=zone.nextElementSibling;   // la réponse remplace « Toujours bloqué… J'attends de l'aide »
+  if(retour)[...retour.querySelectorAll('p')].filter(x=>/^Toujours bloqué/.test(x.textContent)).forEach(x=>x.remove());
+ };};
  const titre=t=>zone.append(txt('h3',null,t));
  const texte=t=>zone.append(txt('p',null,t));
  const programme=t=>{const pre=el('pre');pre.textContent=t;zone.append(pre);};
- const champs=(definitions,verifie,suite)=>{
+ const champs=(definitions,verifie,suite,rateIci=rate)=>{
   const f=el('form','bilan');const inputs=definitions.map(([label,numerique])=>{const lab=el('label'),inp=el('input');inp.type='text';inp.required=true;inp.maxLength=numerique?12:180;inp.setAttribute('aria-label',label);if(numerique)inp.inputMode='numeric';lab.append(txt('span',null,label),inp);f.append(lab);return inp;});
   const btn=txt('button','btn plein','Vérifier mon raisonnement');btn.type='submit';f.append(btn);zone.append(f);
-  f.addEventListener('submit',e=>{e.preventDefault();if(btn.disabled)return;const r=inputs.map(x=>x.value.trim());if(r.some(x=>!x))return;const erreur=verifie(r);if(erreur){rate(erreur,r.join(' | '));return;}btn.disabled=true;inputs.forEach(x=>x.disabled=true);preuves.push(r.join('/'));zone.replaceChildren();effaceRetour();suite();});inputs[0].focus();
+  f.addEventListener('submit',e=>{e.preventDefault();if(btn.disabled)return;const r=inputs.map(x=>x.value.trim());if(r.some(x=>!x))return;const erreur=verifie(r);if(erreur){rateIci(erreur,r.join(' | '));return;}btn.disabled=true;inputs.forEach(x=>x.disabled=true);preuves.push(r.join('/'));zone.replaceChildren();effaceRetour();suite();});inputs[0].focus();
  };
  const transfert=()=>{
   titre('4. Vérifie avec d’autres valeurs');texte(`Sans exécuter : a vaut ${x} et b vaut ${y} au départ. On ne fait que les deux instructions suivantes.`);programme('temp = a\na = b');
   champs([['Valeur de a après ces deux lignes',true],['Valeur de b après ces deux lignes',true],['Valeur conservée dans temp',true]],r=>r[0]===String(y)&&r[1]===String(y)&&r[2]===String(x)?'':'Relis les affectations : copier dans a ne modifie pas b. Quelle boîte garde encore la valeur de départ de a ?',()=>{
    titre('Échange construit et raisonnement vérifié');programme(codeValide);texte('Explique à ton voisin pourquoi temp est nécessaire, sans lui dicter les trois lignes. Le professeur peut te demander cette explication.');
-   reussi('prediction:'+preuves[0]+' | pourquoi:'+preuves[1].slice(0,100)+' | echange OK | transfert:'+preuves.at(-1));
-  });
+   reussi('prediction:'+preuves[0]+' | pourquoi:'+preuves[1].slice(0,100)+' | echange OK | transfert:'+preuves.at(-1)+(montrees.length?' | réponse montrée étape '+montrees.join(','):''));
+  },rateEtape(4,`a vaut ${y}, b vaut ${y}, temp vaut ${x}`));
  };
  const construire=()=>{
   titre('3. Construis un échange qui marche avec tous les nombres');texte('Ajoute des affectations entre les deux lignes de départ et print. Utilise temp pour conserver une valeur. Ne recopie aucun nombre dans tes instructions.');
-  editeur(zone,Q,code=>{codeValide=code;zone.replaceChildren();effaceRetour();transfert();},rate);
+  editeur(zone,Q,code=>{codeValide=code;zone.replaceChildren();effaceRetour();transfert();},rateEtape(3,`entre b = ${b} et print(a, b), écris trois lignes : temp = a, puis a = b, puis b = temp`));
  };
  const expliquer=()=>{
   titre('2. Où est passée la première valeur ?');texte(`Après a = b puis b = a, les deux boîtes contiennent ${b}.`);
   texte('Explique le rôle de la troisième boîte avec tes mots, en une phrase. Le professeur vérifie aussi le sens.');
-  champs([['Quelle valeur de départ a été perdue ?',true],['Pourquoi utiliser une boîte temporaire ?',false]],r=>!(r[0].match(/-?\d+/g)||[]).includes(String(a))||(r[0].match(/-?\d+/g)||[]).includes(String(b))?'Repère la valeur de a avant la première affectation.':!raisonEchange(r[1])?'Dis à quoi sert temp : ce qu’elle garde, ou ce qui se passerait sans elle.':'',construire);
+  champs([['Quelle valeur de départ a été perdue ?',true],['Pourquoi utiliser une boîte temporaire ?',false]],r=>!(r[0].match(/-?\d+/g)||[]).includes(String(a))||(r[0].match(/-?\d+/g)||[]).includes(String(b))?'Repère la valeur de a avant la première affectation.':!raisonEchange(r[1])?'Dis à quoi sert temp : ce qu’elle garde, ou ce qui se passerait sans elle.':'',construire,rateEtape(2,`la valeur perdue est ${a} ; pourquoi : pour garder la valeur de a avant qu’elle soit écrasée`));
  };
  titre('1. Prévois avant de programmer');texte(`Au départ, a vaut ${a} et b vaut ${b}. Ne lance pas Python : suis ces deux instructions dans l’ordre.`);programme('a = b\nb = a');
- champs([['Valeur finale de a',true],['Valeur finale de b',true]],r=>r[0]===String(b)&&r[1]===String(b)?'':'À la première ligne, a reçoit le contenu de b. À la deuxième, on lit la nouvelle valeur de a : on ne retrouve pas automatiquement l’ancienne.',expliquer);
+ champs([['Valeur finale de a',true],['Valeur finale de b',true]],r=>r[0]===String(b)&&r[1]===String(b)?'':'À la première ligne, a reçoit le contenu de b. À la deuxième, on lit la nouvelle valeur de a : on ne retrouve pas automatiquement l’ancienne.',expliquer,rateEtape(1,`a vaut ${b} et b vaut ${b}`));
 }
