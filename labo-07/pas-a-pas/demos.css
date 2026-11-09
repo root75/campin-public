@@ -14,7 +14,7 @@
 .demo-ctrl{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .demo-b{border:2px solid var(--encre-bouton);background:var(--carte);color:var(--encre-bouton);border-radius:20px;padding:4px 12px;font-weight:700;cursor:pointer}
 .demo-jouer{margin-left:auto}
-.demo-points{display:flex;gap:5px}.demo-points span{width:9px;height:9px;border-radius:50%;background:#b9c9d4}.demo-points span.on{background:var(--encre-bouton)}
+.demo-points{display:flex;flex-wrap:wrap;gap:4px}.demo-points button{min-width:26px;height:26px;padding:0 4px;border-radius:13px;border:2px solid #b9c9d4;background:#fff;color:#1f1f1f;font:inherit;font-size:.8rem;font-weight:700;line-height:1;cursor:pointer}.demo-points button:hover{border-color:var(--encre-bouton)}.demo-points button.on{background:var(--encre-bouton);border-color:var(--encre-bouton);color:#fff}
 .demo-tout{margin-top:10px}.demo-tout>summary{cursor:pointer;font-weight:700}
 .demo-liste{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}.demo-liste .btn{font-size:.95rem;padding:6px 12px}
 .note.apres{margin:10px 0 0}
