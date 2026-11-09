@@ -554,16 +554,34 @@ function bilan(){
   return f;
 }
 
-/* « J'attends de l'aide » : l'équivalent de la case entourée, et le signal pour le professeur. */
-function basculeAide(){
-  enAide = !enAide;
-  const a = document.getElementById("aide"), b = document.getElementById("aide-btn");
-  a.classList.toggle("active", enAide);
+/* « J'attends de l'aide » : l'équivalent de la case entourée, et le signal pour le professeur.
+   Avant de sonner : avertissement et 3 sonneries par heure au plus (code commun pas-a-pas/cloche.js ;
+   le serveur compte et refuse la 4e). Se débloquer ne demande rien et ne compte pas. */
+function allumeAide(on){
+  enAide = on;
+  document.getElementById("aide").classList.toggle("active", enAide);
   document.getElementById("aide-texte").textContent = enAide
     ? (MISSIONS ? "🔔 Le professeur sait que tu attends" : "✋ Ton professeur sait que tu attends")+" "+(groupeCourant() ? "dans « "+groupeCourant().titre+" »" : "au bloc "+(ici+1))+". "+(MISSIONS ? "Continue ce qui reste possible et relis « Ça coince ? »." : "Je continue ailleurs, et en attendant je relis « Ça coince ? ».")
     : (MISSIONS ? AIDE_REPOS : "Je suis bloqué malgré « Ça coince ? » et mon voisin :");
   libelleAide(enAide ? "Je me suis débloqué" : "J'attends de l'aide");
-  envoie({ etape:Math.min(ici,BLOCS.length-1)+1, type: enAide ? "aide" : "aide-fin" });
+}
+function basculeAide(){
+  const ancre = document.getElementById("aide"), etape = Math.min(ici,BLOCS.length-1)+1, commun = typeof Cloche!=="undefined";
+  if(enAide){ if(commun) Cloche.ferme(ancre); allumeAide(false); envoie({ etape, type:"aide-fin" }); return; }
+  const sonne = () => {
+    allumeAide(true);
+    if(!SUIVI || APERCU){ if(commun) Cloche.sonnee(); return; }
+    google.script.run.withSuccessHandler(()=>{ if(commun) Cloche.sonnee(); }).withFailureHandler(err=>{
+      const m = String(err && err.message || "");
+      allumeAide(false);
+      document.getElementById("aide-texte").textContent = /sonneries/.test(m) ? m.replace(/^(Exception|Error): /,"") : "Cloche non transmise. Réessaie dans un instant.";
+    }).noter(COURS, { etape, type:"aide" });
+  };
+  if(!commun){ sonne(); return; }
+  if(Cloche.ouvert(ancre)){ Cloche.ferme(ancre); return; }
+  Cloche.verifie({ ancre, etape: groupeCourant() ? "de « "+groupeCourant().titre+" »" : "du bloc "+(ici+1),
+    info: SUIVI && !APERCU ? new Promise(ok=>google.script.run.withSuccessHandler(ok).withFailureHandler(()=>ok(null)).cloches(COURS)) : null,
+    coince: document.getElementById("coince"), sonne });
 }
 /* En mode missions, le bouton est une cloche : l'icône reste, le mot passe dans l'étiquette accessible. */
 const AIDE_REPOS = MISSIONS ? document.getElementById("aide-texte").textContent : "";
