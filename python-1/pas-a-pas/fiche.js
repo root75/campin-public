@@ -276,13 +276,40 @@ const BLOCS = [
         c:["{R}","{D}","vies","Un message d'erreur"],
         p:[null,"Tu as écrit vies - {K} seul sur sa ligne ? Le calcul est fait, puis jeté. Où ranges-tu le résultat ? Corrige, Ctrl+S, F5.",
                "print(\"vies\") affiche le mot. Tu veux le mot, ou ce qu'il y a dans la boîte ? Enlève les guillemets, Ctrl+S, F5.",
-               "Lis le message : quel nom ne connaît-il pas ? Compare chaque ligne avec le logigramme du bloc précédent, corrige, Ctrl+S, F5."] } }
+               "Lis le message : quel nom ne connaît-il pas ? Compare chaque ligne avec le logigramme du bloc précédent, corrige, Ctrl+S, F5."] } },
+
+  { partie:"D — Rendre mon programme", titre:"Rendre mon fichier dans Classroom", min:4, stop:true, cle:"vies", variantes:[{},{}],
+    bulle:"Dernière mission : ton programme part chez le professeur. Il est coté sur 5.",
+    veux:"Rendre ton fichier 01_Les-vies dans Classroom, pour qu'il soit coté sur 5.",
+    fais:CASES(`Lis la grille ci-dessous : vérifie chaque ligne dans ton programme.`,
+               `Dans Thonny, enregistre une dernière fois : <span class="chemin">menu Fichier ▸ Enregistrer</span> (ou <b>Ctrl + S</b>).`,
+               `Ouvre un nouvel onglet (<b>Ctrl + T</b>), tape <b>classroom.google.com</b>, puis appuie sur <b>Entrée</b>.`,
+               `Clique sur le cours de <b>Logique et programmation</b> ▸ onglet <span class="chemin">Travaux et devoirs</span> ▸ le devoir <b>Python 01 — Les vies</b> ▸ <span class="chemin">Afficher le devoir</span>.`,
+               `À droite, dans <span class="chemin">Vos devoirs</span> : <span class="chemin">＋ Ajouter ou créer ▸ Fichier ▸ Parcourir</span>.`,
+               `Dans la fenêtre : <span class="chemin">Documents ▸ double-clic sur Python ▸ clic sur 01_Les-vies_… ▸ Ouvrir</span>, puis <span class="chemin">Importer</span>.`,
+               `Ton fichier apparaît sous Vos devoirs : clique sur <span class="chemin">Rendre le devoir ▸ Rendre le devoir</span>.`),
+    vois:"Dans Classroom, le devoir affiche « Remis » et ton fichier 01_Les-vies_… .py.",
+    extra:`<div class="encart"><p><b>Grille — sur 5.</b> Le professeur ouvre ton fichier et l'exécute.</p><table>
+  <tr><th>Dans ton programme</th><th>Points</th></tr>
+  <tr><td><code>vies = {D}</code> : la variable est créée avec la valeur de départ du logigramme.</td><td>1</td></tr>
+  <tr><td><code>vies = vies - {K}</code> : le calcul est à droite du =, le résultat est rangé dans vies.</td><td>2</td></tr>
+  <tr><td><code>print(vies)</code> : sans guillemets, on affiche ce qu'il y a dans la boîte.</td><td>1</td></tr>
+  <tr><td>F5 : le programme s'exécute sans message rouge et affiche <b>{R}</b>.</td><td>1</td></tr></table>
+  <p>Avant tout : le fichier rendu s'appelle 01_Les-vies_ suivi de ton nom, et finit par .py. Sinon, le professeur ne peut pas l'ouvrir.</p></div>`,
+    coince:["Pas de devoir « Python 01 — Les vies » dans Travaux et devoirs : vérifie que tu es dans le cours de Logique et programmation. Toujours rien : sonne la cloche 🔔.",
+            "Ton fichier n'est pas dans Documents ▸ Python : dans la fenêtre, tape 01_Les-vies dans la case Rechercher, en haut à droite, puis Entrée.",
+            "Le bouton dit « Marquer comme terminé » : ton fichier n'est pas joint. Reprends à l'étape ＋ Ajouter ou créer.",
+            "Tu as rendu le mauvais fichier : clique sur Annuler l'envoi ▸ Annuler l'envoi, retire-le avec la ✕ à droite de son nom, puis reprends à l'étape ＋ Ajouter ou créer."],
+    q:{ type:"rapport", q:"Ton fichier est-il rendu ?",
+        confirmation:"J'ai rendu 01_Les-vies dans Classroom : je vois « Remis ».",
+        trace:"rendu Classroom : 01_Les-vies",
+        juste:"Le professeur ouvre ton fichier, l'exécute et le cote sur 5 avec la grille ci-dessus." } }
 ];
 
 const FIN = {
   titre:"🎉 Python 01 terminé !",
   bulle:"Bravo ! Ton premier programme Python tourne.",
-  texte:"Ton fichier 01_Les-vies est enregistré dans Documents ▸ Python : ne le supprime pas, on le reprend dans Python 02.",
+  texte:"Ton fichier 01_Les-vies est rendu dans Classroom et enregistré dans Documents ▸ Python : ne le supprime pas, on le reprend dans Python 02.",
   plus:"Change DEUX touches de ton programme pour qu'il affiche 1. Prédis, puis F5.",
   lien:'<a href="https://root75.github.io/campin-public/python-je-revise/" target="_blank" rel="noopener">Premiers pas en Python — je révise</a>',
   citation:{
