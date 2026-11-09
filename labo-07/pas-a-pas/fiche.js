@@ -28,8 +28,8 @@ const BLOCS = [
     "titre": "Créer mon rapport et le placer à côté du cours",
     "min": 8,
     "veux": "Préparer le document où j’écrirai mes preuves, avant toute mesure.",
-    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\"><span>Dans Chrome, clique sur la gaufre ⋮⋮⋮, en haut à droite ▸ Docs. Ou ouvre <a href=\"https://docs.google.com/\" target=\"_blank\" rel=\"noopener\">Google Docs</a>. Compte de l’école.</span></label></li><li><label><input type=\"checkbox\">Clique sur + Document vierge.</label></li><li><label><input type=\"checkbox\">Clique sur « Document sans titre », en haut à gauche.</label></li><li><label><input type=\"checkbox\"><span>Tape <b>07_CoulissesPC_Prenom_Nom</b>, avec ton prénom et ton nom sans accents, puis Entrée.</span></label></li><li><label><input type=\"checkbox\">Reviens sur l’onglet du cours. Clique sur le bouton 📋 Copier la trame, juste en dessous.</label></li></ol><p class=\"outil-trame\"><button class=\"btn plein\" type=\"button\" data-copier-trame>📋 Copier la trame</button> <span class=\"note trame-statut\" role=\"status\"></span><a class=\"note\" href=\"https://root75.github.io/campin-public/labo-07/pas-a-pas/trame-rapport.txt\" target=\"_blank\" rel=\"noopener\">Trame en texte brut</a></p><ol class=\"etapes\"><li><label><input type=\"checkbox\">Dans ton document, clique dans la page ▸ Édition ▸ Coller sans mise en forme (Ctrl + Maj + V).</label></li><li><label><input type=\"checkbox\">Complète ton prénom, ton nom et la date en haut du document.</label></li><li><label><input type=\"checkbox\">Clic droit sur l’onglet du rapport ▸ Ajouter l’onglet à une nouvelle vue fractionnée. Le cours à gauche, le rapport à droite.</label></li><li><label><input type=\"checkbox\">Vérifie en haut du document l’indication « Enregistré dans Drive ».</label></li></ol>",
-    "vois": "Mon document s’appelle 07_CoulissesPC_Prenom_Nom, contient la trame et mon identification, et s’affiche à côté du cours.",
+    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\"><span>Dans Chrome, clique sur la gaufre ⋮⋮⋮, en haut à droite ▸ Docs. Ou ouvre <a href=\"https://docs.google.com/\" target=\"_blank\" rel=\"noopener\">Google Docs</a>. Compte de l’école.</span></label></li><li><label><input type=\"checkbox\">Clique sur + Document vierge.</label></li><li><label><input type=\"checkbox\">Clique sur « Document sans titre », en haut à gauche.</label></li><li><label><input type=\"checkbox\"><span>Tape <b>LABO07_CoulissesPC_Prenom_Nom</b>, avec ton prénom et ton nom sans accents, puis Entrée.</span></label></li><li><label><input type=\"checkbox\">Reviens sur l’onglet du cours. Clique sur le bouton 📋 Copier la trame, juste en dessous.</label></li></ol><p class=\"outil-trame\"><button class=\"btn plein\" type=\"button\" data-copier-trame>📋 Copier la trame</button> <span class=\"note trame-statut\" role=\"status\"></span><a class=\"note\" href=\"https://root75.github.io/campin-public/labo-07/pas-a-pas/trame-rapport.txt\" target=\"_blank\" rel=\"noopener\">Trame en texte brut</a></p><ol class=\"etapes\"><li><label><input type=\"checkbox\">Dans ton document, clique dans la page ▸ Édition ▸ Coller sans mise en forme (Ctrl + Maj + V).</label></li><li><label><input type=\"checkbox\">Complète ton prénom, ton nom et la date en haut du document.</label></li><li><label><input type=\"checkbox\">Clic droit sur l’onglet du rapport ▸ Ajouter l’onglet à une nouvelle vue fractionnée. Le cours à gauche, le rapport à droite.</label></li><li><label><input type=\"checkbox\">Vérifie en haut du document l’indication « Enregistré dans Drive ».</label></li></ol>",
+    "vois": "Mon document s’appelle LABO07_CoulissesPC_Prenom_Nom, contient la trame et mon identification, et s’affiche à côté du cours.",
     "coince": [
       "La copie ne marche pas ? Clique sur le lien « Trame en texte brut » ▸ Ctrl + A ▸ Ctrl + C. Puis, dans ton document : Ctrl + Maj + V.",
       "Pas de « vue fractionnée » dans le menu ? Garde deux onglets et passe de l’un à l’autre en cliquant sur leur titre. Docs ouvre un autre compte ? Clique sur la photo ronde, en haut à droite ▸ choisis ton compte de l’école."
@@ -47,7 +47,7 @@ const BLOCS = [
     "q": {
       "type": "rapport",
       "q": "Ton document est créé, nommé, avec la trame et ton identification.",
-      "confirmation": "J’ai créé mon rapport 07_CoulissesPC_Prenom_Nom, collé la trame et complété mon identification.",
+      "confirmation": "J’ai créé mon rapport LABO07_CoulissesPC_Prenom_Nom, collé la trame et complété mon identification.",
       "trace": "rapport:0 — Préparer mon rapport",
       "juste": "Ton rapport est prêt. Garde-le ouvert : tu y écriras à chaque mission."
     },
@@ -82,25 +82,25 @@ const BLOCS = [
   {
     "partie": "1 — Observer ce qui tourne",
     "titre": "Relever les mesures avant et après GIMP",
-    "min": 12,
+    "min": 14,
     "veux": "Relever le processeur et la mémoire avant l’ouverture de GIMP, 10 secondes après, puis 1 minute après.",
-    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\">Fais un clic droit sur l’icône ⊞ Démarrer ▸ Gestionnaire des tâches (ou Ctrl + Maj + Échap).</label></li><li><label><input type=\"checkbox\">Si nécessaire, clique sur Plus de détails.</label></li><li><label><input type=\"checkbox\">Clique sur Processus : repère deux applications dont tu reconnais le nom.</label></li><li><label><input type=\"checkbox\">Lis le total Processeur en % en haut de la colonne.</label></li><li><label><input type=\"checkbox\">Lis le total Mémoire en % en haut de la colonne.</label></li><li><label><input type=\"checkbox\">Dans ton rapport, partie 1, saisis ces valeurs dans la ligne Avant du tableau.</label></li><li><label><input type=\"checkbox\">Clique sur ⊞ Démarrer ▸ tape GIMP ▸ clique sur l’application GIMP. Elle met 5 à 20 secondes à s’ouvrir : ne clique pas une deuxième fois.</label></li><li><label><input type=\"checkbox\">Reviens tout de suite au Gestionnaire par son icône dans la barre des tâches (ou Alt + Tab).</label></li><li><label><input type=\"checkbox\">Environ 10 secondes après le clic sur GIMP, lis les deux mêmes totaux.</label></li><li><label><input type=\"checkbox\">Dans le tableau du rapport, complète la ligne Après 10 s.</label></li><li><label><input type=\"checkbox\">Laisse GIMP ouvert sans rien y faire et attends environ 1 minute.</label></li><li><label><input type=\"checkbox\">Dans le tableau du rapport, complète la ligne Après 1 min avec les deux mêmes totaux.</label></li></ol>",
+    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\">Dans ton rapport, partie 1, clique sur la ligne « [Insérer un vrai tableau…] » ▸ menu Insertion ▸ Tableau ▸ glisse sur la grille jusqu’à 3 × 4. Tape les en-têtes Moment, Processeur (%), Mémoire (%), puis Avant, Après 10 s, Après 1 min dans la première colonne. Efface la ligne entre crochets.</label></li><li><label><input type=\"checkbox\">Fais un clic droit sur l’icône ⊞ Démarrer ▸ Gestionnaire des tâches (ou Ctrl + Maj + Échap).</label></li><li><label><input type=\"checkbox\">Si nécessaire, clique sur Plus de détails.</label></li><li><label><input type=\"checkbox\">Clique sur Processus : repère deux applications dont tu reconnais le nom.</label></li><li><label><input type=\"checkbox\">Lis le total Processeur en % en haut de la colonne.</label></li><li><label><input type=\"checkbox\">Lis le total Mémoire en % en haut de la colonne.</label></li><li><label><input type=\"checkbox\">Dans ton rapport, partie 1, saisis ces valeurs dans la ligne Avant du tableau.</label></li><li><label><input type=\"checkbox\">Clique sur ⊞ Démarrer ▸ tape GIMP ▸ clique sur l’application GIMP. Elle met 5 à 20 secondes à s’ouvrir : ne clique pas une deuxième fois.</label></li><li><label><input type=\"checkbox\">Reviens tout de suite au Gestionnaire par son icône dans la barre des tâches (ou Alt + Tab).</label></li><li><label><input type=\"checkbox\">Environ 10 secondes après le clic sur GIMP, lis les deux mêmes totaux.</label></li><li><label><input type=\"checkbox\">Dans le tableau du rapport, complète la ligne Après 10 s.</label></li><li><label><input type=\"checkbox\">Laisse GIMP ouvert sans rien y faire et attends environ 1 minute.</label></li><li><label><input type=\"checkbox\">Dans le tableau du rapport, complète la ligne Après 1 min avec les deux mêmes totaux.</label></li></ol>",
     "vois": "Mon tableau contient deux noms d’applications et les trois relevés : Avant, Après 10 s, Après 1 min.",
     "coince": [
       "Compare la même grandeur : le total CPU avec le total CPU, pas le total avec une ligne d’application. La mémoire en % n’est pas celle d’un seul logiciel en Mo.",
       "GIMP met 5 à 20 secondes à s’ouvrir : c’est normal, ne relance pas. Relève quand même à 10 s, même si la fenêtre n’est pas encore là. Les totaux se lisent dans les en-têtes Processeur et Mémoire de Processus. Si l’accès est bloqué, note « accès refusé » et clique sur « J'attends de l'aide » : ne contourne pas la restriction."
     ],
     "demos": {
-      "1": ["gestionnaire", [0, 1]],
-      "2": ["gestionnaire", [2]],
-      "3": ["gestionnaire", [3]],
-      "4": ["gestionnaire", [4]],
-      "5": ["gestionnaire", [5]],
-      "6": ["tableau", [0, 1, 2, 3]],
-      "7": ["gimp", [0, 1]],
-      "8": ["gimp", [2]],
-      "9": ["gimp", [3]],
-      "12": ["gimp", [4]]
+      "1": ["tableau", [0, 1, 2, 3]],
+      "2": ["gestionnaire", [0, 1]],
+      "3": ["gestionnaire", [2]],
+      "4": ["gestionnaire", [3]],
+      "5": ["gestionnaire", [4]],
+      "6": ["gestionnaire", [5]],
+      "8": ["gimp", [0, 1]],
+      "9": ["gimp", [2]],
+      "10": ["gimp", [3]],
+      "13": ["gimp", [4]]
     },
     "indices": true,
     "q": {
@@ -318,11 +318,11 @@ const BLOCS = [
     "titre": "Remettre mon rapport dans Classroom",
     "min": 5,
     "veux": "Remettre une seule fois mon rapport terminé, puis vérifier qu’il est bien arrivé.",
-    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\">Relis ton rapport : remplace chaque « [à compléter] » et efface les indications entre crochets.</label></li><li><label><input type=\"checkbox\"><span>Vérifie l’identification : titre visible, prénom, nom, classe, date ; fichier nommé <b>07_CoulissesPC_Prenom_Nom</b>.</span></label></li><li><label><input type=\"checkbox\">Vérifie les titres et le tableau : même style pour les quatre titres de partie ; vrai tableau de trois colonnes et quatre lignes, avec % dans les en-têtes.</label></li><li><label><input type=\"checkbox\">Vérifie la capture : ciblée, lisible, pas étirée, avec sa légende juste dessous.</label></li><li><label><input type=\"checkbox\"><span>Ouvre <a href=\"https://classroom.google.com/\" target=\"_blank\" rel=\"noopener\">Classroom</a> avec ton compte scolaire ▸ Informatique — 3F ▸ Travaux et devoirs ▸ Labo 07 — Dans les coulisses du PC ▸ Afficher les instructions.</span></label></li><li><label><input type=\"checkbox\">Dans « Vos devoirs », clique sur Ajouter ou créer ▸ Google Drive.</label></li><li><label><input type=\"checkbox\"><span>Sélectionne <b>07_CoulissesPC_Prenom_Nom</b> ▸ Ajouter.</span></label></li><li><label><input type=\"checkbox\">Clique sur la pièce jointe pour vérifier que c’est ton rapport complet.</label></li><li><label><input type=\"checkbox\">Clique sur Rendre le devoir ▸ confirme : Rendre le devoir.</label></li><li><label><input type=\"checkbox\">Vérifie que le devoir affiche « Remis ».</label></li></ol>",
+    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\">Relis ton rapport : remplace chaque « [à compléter] » et efface les indications entre crochets.</label></li><li><label><input type=\"checkbox\"><span>Vérifie l’identification : titre visible, prénom, nom, classe, date ; fichier nommé <b>LABO07_CoulissesPC_Prenom_Nom</b>.</span></label></li><li><label><input type=\"checkbox\">Vérifie les titres et le tableau : même style pour les quatre titres de partie ; vrai tableau de trois colonnes et quatre lignes, avec % dans les en-têtes.</label></li><li><label><input type=\"checkbox\">Vérifie la capture : ciblée, lisible, pas étirée, avec sa légende juste dessous.</label></li><li><label><input type=\"checkbox\"><span>Ouvre <a href=\"https://classroom.google.com/\" target=\"_blank\" rel=\"noopener\">Classroom</a> avec ton compte scolaire ▸ Informatique — 3F ▸ Travaux et devoirs ▸ Labo 07 — Dans les coulisses du PC ▸ Afficher les instructions.</span></label></li><li><label><input type=\"checkbox\">Dans « Vos devoirs », clique sur Ajouter ou créer ▸ Google Drive.</label></li><li><label><input type=\"checkbox\"><span>Sélectionne <b>LABO07_CoulissesPC_Prenom_Nom</b> ▸ Ajouter.</span></label></li><li><label><input type=\"checkbox\">Clique sur la pièce jointe pour vérifier que c’est ton rapport complet.</label></li><li><label><input type=\"checkbox\">Clique sur Rendre le devoir ▸ confirme : Rendre le devoir.</label></li><li><label><input type=\"checkbox\">Vérifie que le devoir affiche « Remis ».</label></li></ol>",
     "vois": "Dans Classroom, le devoir affiche « Remis » et la pièce jointe est mon rapport complet.",
     "coince": [
       "Le devoir n’apparaît pas ? Le professeur ne l’a peut-être pas encore publié. Ne crée pas de deuxième document, ne poste rien dans le flux : sonne la cloche 🔔 et attends.",
-      "Ton rapport n’est pas dans la liste Google Drive ? Tape 07_CoulissesPC dans la barre de recherche de la fenêtre. Mauvais fichier joint ? Clique sur la croix ✕ à droite de la pièce jointe, puis recommence Ajouter ou créer ▸ Google Drive."
+      "Ton rapport n’est pas dans la liste Google Drive ? Tape LABO07_CoulissesPC dans la barre de recherche de la fenêtre. Mauvais fichier joint ? Clique sur la croix ✕ à droite de la pièce jointe, puis recommence Ajouter ou créer ▸ Google Drive."
     ],
     "demos": {
       "1": ["remise", [0]],

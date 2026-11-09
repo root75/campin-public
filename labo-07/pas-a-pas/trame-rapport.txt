@@ -52,7 +52,7 @@ Machine / système / application / fichier — /1
 1 : quatre rôles distingués à l’oral dans le cas ; 0,5 : distinction partielle ; 0 : confusion persistante.
 
 Identification et nom du fichier — /1
-0,5 : titre, prénom/nom, classe/date présents ; 0,5 : nom 07_CoulissesPC_Prenom_Nom respecté.
+0,5 : titre, prénom/nom, classe/date présents ; 0,5 : nom LABO07_CoulissesPC_Prenom_Nom respecté.
 
 Titres et tableau — /1
 0,5 : même style de titre pour les quatre parties ; 0,5 : vrai tableau 3×4, lisible, lignes et unités identifiées.

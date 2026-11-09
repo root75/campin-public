@@ -5,7 +5,7 @@
    Alt + Tab, moniteur), Docs, Chrome et Classroom. Valeurs et noms fictifs ; rien n'est enregistré.
    Le défi final n'a pas d'animation : il reste une situation à résoudre seul. */
 const Demo = (() => {
-  const NOM = '07_CoulissesPC_Prenom_Nom';
+  const NOM = 'LABO07_CoulissesPC_Prenom_Nom';
   const FICHIER = '2026-10-09_OneDrive.docx';
 
   /* Les animations, par clé. */
@@ -15,7 +15,7 @@ const Demo = (() => {
       { ecran: 'gaufre', menu: 1, cible: 'app-docs', legende: 'Je choisis Docs.' },
       { ecran: 'accueil', cible: 'vierge', legende: 'Je clique sur « + Document vierge ».' },
       { ecran: 'docs', nom: 'Document sans titre', lignes: [''], cible: 'nom', legende: 'Je clique sur « Document sans titre », en haut à gauche.' },
-      { ecran: 'docs', lignes: [''], cible: 'nom', legende: 'Je tape 07_CoulissesPC_Prenom_Nom, sans accents, puis Entrée.' },
+      { ecran: 'docs', lignes: [''], cible: 'nom', legende: 'Je tape LABO07_CoulissesPC_Prenom_Nom, sans accents, puis Entrée.' },
       { ecran: 'docs', lignes: [''], menu: { sous: 'm-edition', items: ['Couper', 'Copier', 'Coller', 'Coller sans mise en forme'], hi: 'Coller sans mise en forme' }, cible: 'item-Coller sans mise en forme', legende: 'Trame copiée : je clique dans la page ▸ Édition ▸ Coller sans mise en forme (Ctrl + Maj + V).' },
       { ecran: 'docs', lignes: ['Dans les coulisses du PC', 'Prénom Nom · 3F · date', '1 — Observer ce qui tourne', '…'], cible: 'enregistre', ok: 1, legende: 'La trame est là, sans mise en forme. « Enregistré » : Docs garde tout seul.' }
     ] },
