@@ -43,7 +43,7 @@ const Demo = (() => {
       { ecran: 'bureau', menu: 'gimp', cible: 'app-gimp', legende: '⊞ Démarrer ▸ je tape GIMP ▸ je clique UNE fois sur l’application.' },
       { ecran: 'bureau', chargement: 1, cible: 'chargement', legende: 'GIMP met 5 à 20 secondes à s’ouvrir. Je ne clique pas une deuxième fois.' },
       { ecran: 'gimp', dialogue: 'nouvelle', cible: 'valider', legende: 'Fichier ▸ Nouvelle image (Ctrl + N) : Largeur 10000, Hauteur 10000, unité px ▸ Valider.' },
-      { ecran: 'gimp', dialogue: 'taille', cible: 'ok', legende: 'GIMP prévient que l’image est très grande : je clique sur OK.' },
+      { ecran: 'gimp', dialogue: 'taille', cible: 'ok', legende: '« Confirmer la taille de l’image » : environ 932 Mo, plus que la taille prévue par GIMP. Je clique sur Valider.' },
       { ecran: 'gimp', image: 1, menu: { sous: 'm-filtres', items: ['Flou ▸', 'Rendu ▸ Bruit ▸ Plasma…', 'Distorsions ▸'], hi: 'Rendu ▸ Bruit ▸ Plasma…' }, cible: 'item-Rendu ▸ Bruit ▸ Plasma…', legende: 'Image grise affichée : Filtres ▸ Rendu ▸ Bruit ▸ Plasma ▸ Valider.' },
       { ecran: 'alttab', fenetres: ['Gestionnaire des tâches', 'GIMP — calcul en cours', 'Mon rapport'], hi: 0, cible: 'fen-0', legende: 'Pendant que la barre de progression avance : Alt + Tab vers le Gestionnaire.' },
       { ecran: 'gestion', gimp: 1, cpu: '62 %', mem: '45 %', cible: 'tot-cpu', legende: 'Pendant le calcul : je relis les deux totaux. Valeurs fictives : les miennes peuvent différer.' },
@@ -201,8 +201,8 @@ const Demo = (() => {
         const pied = el('div', 'md-gimp-pied'); pied.append(el('span', null, 'Réinitialiser'), c(el('span', 'plein', 'Valider'), 'valider'), el('span', null, 'Annuler')); d.append(pied); e.append(d);
       }
       if (f.dialogue === 'taille') {
-        const d = el('div', 'md-gimp-dlg'); d.append(el('b', null, 'Confirmer la taille de l’image'), el('p', null, 'Vous essayez de créer une très grande image. Elle utilisera beaucoup de mémoire.'));
-        const pied = el('div', 'md-gimp-pied'); pied.append(el('span', null, 'Annuler'), c(el('span', 'plein', 'OK'), 'ok')); d.append(pied); e.append(d);
+        const d = el('div', 'md-gimp-dlg'); d.append(el('b', null, 'Confirmer la taille de l’image'), el('p', null, '⚠ Vous essayez de créer une image avec une taille de 932,0 MB.'));
+        const pied = el('div', 'md-gimp-pied'); pied.append(c(el('span', 'plein', 'Valider'), 'ok'), el('span', null, 'Annuler')); d.append(pied); e.append(d);
       }
       if (f.menu) e.append(menu(f.menu));
     }
