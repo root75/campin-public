@@ -242,13 +242,24 @@ async function demarre(){
  }
  window.majCloche=()=>{if(!zoneAide.classList.contains('info'))cloche();};
  window.eteintCloche=info=>{if(!aide)return;aide=false;cloche(info);};
- btnAide.onclick=async function(){
-  this.disabled=true;
+ /* Avant de sonner : avertissement et 3 sonneries par heure au plus (code commun pas-a-pas/cloche.js ;
+    le serveur compte et refuse la 4e). Se débloquer ne demande rien et ne compte pas. */
+ const commun=typeof Cloche!=='undefined';
+ async function basculeCloche(){
+  btnAide.disabled=true;
   try{
-   if(SUIVI){const etape=aide?aideEtape:state.etape+1;await envoie({etape,type:aide?'aide-fin':'aide'});aide=!aide;aideEtape=etape;cloche();}
+   if(SUIVI){const etape=aide?aideEtape:state.etape+1,type=aide?'aide-fin':'aide';
+    await new Promise((ok,ko)=>google.script.run.withSuccessHandler(ok).withFailureHandler(ko).noter(COURS,{etape,type}));
+    aide=!aide;aideEtape=etape;if(aide&&commun)Cloche.sonnee();cloche();}
    else cloche('Entraînement libre : la cloche n’est pas transmise. Appelle le professeur.');
-  }catch(e){cloche('Cloche non transmise. Réessaie ou appelle le professeur.');}
-  finally{this.disabled=false;}
+  }catch(e){const m=String(e&&e.message||'');cloche(/sonneries/.test(m)?m.replace(/^(Exception|Error): /,''):'Cloche non transmise. Réessaie ou appelle le professeur.');}
+  finally{btnAide.disabled=false;}
+ }
+ btnAide.onclick=function(){
+  if(aide||!SUIVI||!commun){if(commun)Cloche.ferme(zoneAide);basculeCloche();return;}
+  if(Cloche.ouvert(zoneAide)){Cloche.ferme(zoneAide);return;}
+  Cloche.verifie({ancre:zoneAide,etape:'de l’étape '+(state.etape+1),
+   info:new Promise(ok=>google.script.run.withSuccessHandler(ok).withFailureHandler(()=>ok(null)).cloches(COURS)),sonne:basculeCloche});
  };
  cloche();
  if(SUIVI){

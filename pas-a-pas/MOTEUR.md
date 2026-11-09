@@ -64,7 +64,9 @@ Vérifier dans le test que la réponse d'une version ne valide pas les deux autr
 ## Ce que le moteur fait seul
 
 Humeur du jour au bloc 1 ; avis en fin de parcours ; cloche 🔔 « J'attends de l'aide » (relue du
-serveur après un rechargement, éteinte quand le professeur la traite) ; bandeau « bravo » ; reprise de
+serveur après un rechargement, éteinte quand le professeur la traite ; avant de sonner, avertissement
+et trois cases à cocher, **3 sonneries par heure au plus** — code commun [`cloche.js`](cloche.js), à charger
+avant `blocs.js` comme dans `modele/index.html`) ; bandeau « bravo » ; reprise de
 l'avancement depuis le serveur ; aperçu professeur `#bloc=N` avec le choix de la version de la preuve ;
 brouillon d'une rédaction gardé sur le poste ; erreurs envoyées au tableau (« Où le groupe bute »).
 

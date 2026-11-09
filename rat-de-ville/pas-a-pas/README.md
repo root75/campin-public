@@ -134,3 +134,7 @@ qu'une fois les trois cases cochées. Au maximum, la cloche passe en pointillés
 l'heure de la prochaine sonnerie possible. Le compte vient du serveur (`cloches`, `clocheLibre`) ;
 avec un serveur antérieur ou en aperçu, il est tenu dans la page ouverte. Se débloquer ne compte
 pas et ne demande rien. Détails et déploiement : `campin-pedagogique/outils/pas-a-pas/LIVRAISON-RAT.md`.
+
+Depuis le même jour, le panneau et le compte sont du **code commun** : `pas-a-pas/cloche.js`, aussi
+utilisé par `blocs.js` (Python 1 à 3, Labo 07, Messagerie 2) et Messagerie 01. Le serveur applique la
+même règle à tous les cours (`verifieCloche_` dans Code.gs).

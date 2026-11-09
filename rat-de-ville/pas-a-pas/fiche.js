@@ -41,7 +41,7 @@ async function sauve(evt){
     etat=SUIVI?await appel(evt):demo(evt);
     if(positionVoulue!=null){if(evt.type==='position'&&evt.etape===positionVoulue)positionVoulue=null;else etat.position=positionVoulue;}
     $('sauvegarde').textContent=SUIVI?'Enregistré avec mon compte scolaire.':'Aperçu : rien n’est enregistré.';
-    if(evt.type==='aide')sonneesIci.push(Date.now());
+    if(evt.type==='aide'&&typeof Cloche!=='undefined')Cloche.sonnee();
     if(evt.type==='case'&&evt.fait){const j=place(evt.etape);if(etat.etapes[j]&&!avant[j])fete(j);else bravo(BRAVOS[Math.floor(Math.random()*BRAVOS.length)],false);}
   }catch(e){if(evt.type==='position'){etat.position=positionVoulue!=null?positionVoulue:evt.etape;positionVoulue=null;}
     $('sauvegarde').textContent=evt.type==='aide'&&/sonneries/.test(e.message||'')?'Cloche non sonnée. '+e.message.replace(/^(Exception|Error): /,''):'Non enregistré. Réessaie la case ou le déplacement. '+(e.message||'Connexion indisponible.');}
@@ -102,8 +102,7 @@ $('coince-tout').addEventListener('click',()=>{coinceTout=!coinceTout;coince();}
 function cloche(){
   $('aide').classList.toggle('active',!!etat.aide);
   $('aide-texte').textContent=etat.aide?'J’attends de l’aide (étape '+numero(etat.aide.bloc)+'). Je continue ailleurs. Débloqué ? Je re-clique.':'Relu ? Demandé au voisin ? Alors je sonne.';
-  const r=clochesRestantes();$('aide').classList.toggle('epuise',!etat.aide&&r.n<=0);
-  if(!etat.aide)$('aide-texte').textContent+=r.n>0?' Il me reste '+r.n+' sonnerie'+(r.n>1?'s':'')+' sur '+CLOCHE_MAX+' cette heure.':' Plus de sonnerie avant '+heure(r.libre)+'.';
+  if(typeof Cloche!=='undefined'){Cloche.marque($('aide'),etat);if(!etat.aide)$('aide-texte').textContent+=' '+Cloche.phrase(etat);}
   const mot=etat.aide?'Je me suis débloqué':'Je bloque à l’étape '+numero(etat.position);
   $('aide-btn').replaceChildren('🔔',txt('span','mot',mot));$('aide-btn').setAttribute('aria-label',mot);
 }
@@ -195,46 +194,16 @@ function aReprendre(){const k=ETAPES_RAT.findIndex((_,j)=>!etat.etapes[j]);retur
 (function(){const liste=$('tutos-liste'),vue=$('tutos-vue');if(!liste||typeof Demo==='undefined')return;
   DemoLecteur.volet({details:$('tutos'),liste,vue,titre:true,cree:Demo.cree,
     entrees:ETAPES_RAT.map((e,i)=>['etape'+e.id,(i+1)+'. '+e.titre]).concat([['retrouver','Je retrouve mon document (reprise)'],['cote','Le cours et mon document côte à côte'],['fermer','À la sonnerie : je ferme sans remettre']])});})();
-/* Limiteur de cloche : 3 sonneries par heure glissante (compté par le serveur, champ « cloches »).
-   Avant de sonner, trois vérifications à cocher : consigne relue, « Ça coince ? » ouvert, voisin consulté.
-   Se débloquer (re-cliquer quand la cloche sonne) ne demande rien et ne compte pas. */
-const CLOCHE_MAX=3,CLOCHE_HEURE=3600000;let sonneesIci=[]; // aperçu, ou serveur qui ne compte pas encore
-const heure=t=>new Date(t).toLocaleTimeString('fr-BE',{hour:'2-digit',minute:'2-digit'});
-function clochesRestantes(){
-  if(typeof etat.cloches==='number')return{n:Math.max(0,(etat.clocheMax||CLOCHE_MAX)-etat.cloches),libre:etat.clocheLibre||0};
-  const t=Date.now();sonneesIci=sonneesIci.filter(x=>t-x<CLOCHE_HEURE);
-  return{n:Math.max(0,CLOCHE_MAX-sonneesIci.length),libre:sonneesIci.length>=CLOCHE_MAX?sonneesIci[sonneesIci.length-CLOCHE_MAX]+CLOCHE_HEURE:0};
-}
-function fermeVerif(){$('aide-verif').hidden=true;$('aide').classList.remove('verif');}
-function verifCloche(){
-  const v=$('aide-verif'),r=clochesRestantes();$('aide').classList.add('verif');v.hidden=false;
-  const fermer=t=>{const b=txt('button','btn vide',t);b.type='button';b.addEventListener('click',()=>{fermeVerif();$('aide-btn').focus();});return b;};
-  const coince=txt('button','lien','Ouvrir « Ça coince ? »');coince.type='button';
-  coince.addEventListener('click',()=>{const d=document.querySelector('details.coince');d.open=true;d.scrollIntoView({block:'start'});});
-  if(r.n<=0){
-    v.replaceChildren(txt('p','titre','⚠️ Plus de sonnerie pour l’instant'),
-      txt('p',null,'J’ai déjà sonné '+CLOCHE_MAX+' fois en une heure. Prochaine sonnerie possible vers '+heure(r.libre)+'.'),
-      txt('p',null,'En attendant : je relis « Ça coince ? », je demande à un autre voisin, ou j’entoure la case et je continue à une autre étape.'),coince,fermer('J’ai compris'));
-    return;
-  }
-  const ul=txt('ul','verif-liste'),go=txt('button','btn','🔔 Je sonne');go.type='button';go.disabled=true;
-  ['J’ai relu la consigne de l’étape '+numero(etat.position)+'.','J’ai lu « Ça coince ? » pour mon étape.','J’ai demandé à mon voisin (il explique, il ne touche pas la souris).'].forEach(t=>{
-    const li=txt('li'),lab=txt('label'),cb=txt('input');cb.type='checkbox';
-    cb.addEventListener('change',()=>{go.disabled=![...ul.querySelectorAll('input')].every(x=>x.checked);});
-    lab.append(cb,' '+t);li.append(lab);ul.append(li);
-  });
-  go.addEventListener('click',()=>{fermeVerif();sauve({type:'aide',etape:etat.position});});
-  const pied=txt('div','actions');pied.append(go,fermer('Annuler'));
-  v.replaceChildren(txt('p','titre','⚠️ Attention, avant de sonner'),ul,coince,
-    txt('p','note','Il me reste '+r.n+' sonnerie'+(r.n>1?'s':'')+' sur '+CLOCHE_MAX+' cette heure.'),pied);
-  ul.querySelector('input').focus();
-}
+/* Cloche : avertissement avant de sonner et 3 sonneries par heure, code commun pas-a-pas/cloche.js.
+   Le compte vient du serveur (etat.cloches) ; se débloquer ne demande rien et ne compte pas. */
 $('aide-btn').addEventListener('click',()=>{
-  if(etat.aide){fermeVerif();sauve({type:'aide-fin',etape:etat.aide.bloc});return;}
-  if(!$('aide-verif').hidden){fermeVerif();return;}
-  verifCloche();
+  const ancre=$('aide'),commun=typeof Cloche!=='undefined';
+  if(etat.aide){if(commun)Cloche.ferme(ancre);sauve({type:'aide-fin',etape:etat.aide.bloc});return;}
+  if(!commun){sauve({type:'aide',etape:etat.position});return;}
+  if(Cloche.ouvert(ancre)){Cloche.ferme(ancre);return;}
+  Cloche.verifie({ancre,etape:'de l’étape '+numero(etat.position),info:etat,coince:document.querySelector('details.coince'),
+    sonne:()=>sauve({type:'aide',etape:etat.position})});
 });
-document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('aide-verif').hidden)fermeVerif();});
 $('compact').addEventListener('click',()=>{const actif=document.body.classList.toggle('compact');$('compact').setAttribute('aria-pressed',String(actif));});
 const boutons=[['','↶ Annuler (dès que je me trompe)','Ctrl + Z','Barre d’outils, tout à gauche : la flèche ↶'],['centrer','Centrer','Ctrl + Maj + E','Bouton « Aligner » ▾ de la barre d’outils'],['droite','Aligner à droite','Ctrl + Maj + R','Même bouton « Aligner » ▾'],['gras','Gras','Ctrl + B','Barre d’outils, après la taille'],['italique','Italique','Ctrl + I','Juste à côté du gras'],['souligne','Souligner','Ctrl + U','Juste à côté de l’italique'],['','MAJUSCULES','—','Format ▸ Texte ▸ Minuscules/majuscules ▸ MAJUSCULES'],['police','Changer la police','—','Le menu qui affiche le nom de la police'],['taille','Changer la taille','—','La case du nombre, avec – et +'],['puces','Liste à puces','Ctrl + Maj + 8','Barre d’outils, à droite'],['numeros','Liste numérotée','Ctrl + Maj + 7','Juste à côté des puces'],['orthographe','Vérifier l’orthographe','Ctrl + Alt + X','Barre d’outils, à gauche, à côté de l’imprimante']];
 boutons.forEach(([ico,nom,racc,ou])=>{const tr=txt('tr'),td=txt('td');if(ico){const img=txt('img');img.src=ICONES+ico+'.png';img.alt='';td.append(img);}td.append(nom);tr.append(td,txt('td',null,racc),txt('td',null,ou));$('mes-boutons').append(tr);});
