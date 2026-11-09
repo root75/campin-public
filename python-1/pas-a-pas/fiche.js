@@ -544,9 +544,15 @@ function echangeGeneral(code,a,b){
  if(!gestes.length||gestes.some(x=>!x)||!gestes.some(x=>x[1]==='temp'))return false;
  return [[a,b],[13,-6],[-2,11]].every(([x,y])=>{const v={a:x,b:y};for(const g of gestes){if(!(g[2] in v))return false;v[g[1]]=v[g[2]];}return v.a===y&&v.b===x;});
 }
+/* Souple (Vincent, 09/11/2026) : une idée suffit, avec les mots de l'élève et ses fautes.
+   Soit temp garde une valeur (garder, stocker, mettre de côté, retenir…), soit sans elle on la
+   perd (écrasée, remplacée, effacée, deux fois le même nombre…). Refus : négation ou rien de tout ça. */
 function raisonEchange(rep){
  const n=norm(rep);
- return !/(pas besoin|inutile|sert a rien|ne sert pas|ne conserve pas|ne garde pas)/.test(n)&&/(valeur|contenu|nombre)/.test(n)&&(/(conserv|gard|sauvegard|sauv|abri|preserv)/.test(n)&&/(ecras|perd|remplac|avant)/.test(n)||/(pour|afin de) ne pas (perdre|ecraser)/.test(n));
+ if(/(pas besoin|inutile|sert a rien|ne sert pas|ne (conserve|garde) pas)/.test(n))return false;
+ const garde=/(gard|conserv|sauv|stoc?k|reti?en|souvi?en|memo|abri|preserv|de cote|copi|reserv|enregistr)/.test(n);
+ const perte=/(ecras|perd|pert|ef?fac|dispar|oubli|rempla|deux fois|identique|meme (valeur|nombre|chiffre|resultat))/.test(n);
+ return garde||perte;
 }
 function echangeGuide(zone,Q,reussi,rate,effaceRetour=()=>{}){
  const a=Q.initialA,b=Q.initialB,x=a+11,y=b+3;let codeValide='';const preuves=[];
@@ -571,8 +577,8 @@ function echangeGuide(zone,Q,reussi,rate,effaceRetour=()=>{}){
  };
  const expliquer=()=>{
   titre('2. Où est passée la première valeur ?');texte(`Après a = b puis b = a, les deux boîtes contiennent ${b}.`);
-  texte('Explique le rôle de la troisième boîte avec tes mots. Ta phrase doit relier la conservation de la valeur au risque de l’écraser. Le contrôle repère ces idées ; le professeur vérifie aussi le sens.');
-  champs([['Quelle valeur de départ a été perdue ?',true],['Pourquoi utiliser une boîte temporaire ?',false]],r=>r[0]!==String(a)?'Repère la valeur de a avant la première affectation.':!raisonEchange(r[1])?'Explique ce que l’on conserve avant qu’une affectation écrase ou remplace une valeur.':'',construire);
+  texte('Explique le rôle de la troisième boîte avec tes mots, en une phrase. Le professeur vérifie aussi le sens.');
+  champs([['Quelle valeur de départ a été perdue ?',true],['Pourquoi utiliser une boîte temporaire ?',false]],r=>!(r[0].match(/-?\d+/g)||[]).includes(String(a))||(r[0].match(/-?\d+/g)||[]).includes(String(b))?'Repère la valeur de a avant la première affectation.':!raisonEchange(r[1])?'Dis à quoi sert temp : ce qu’elle garde, ou ce qui se passerait sans elle.':'',construire);
  };
  titre('1. Prévois avant de programmer');texte(`Au départ, a vaut ${a} et b vaut ${b}. Ne lance pas Python : suis ces deux instructions dans l’ordre.`);programme('a = b\nb = a');
  champs([['Valeur finale de a',true],['Valeur finale de b',true]],r=>r[0]===String(b)&&r[1]===String(b)?'':'À la première ligne, a reçoit le contenu de b. À la deuxième, on lit la nouvelle valeur de a : on ne retrouve pas automatiquement l’ancienne.',expliquer);
