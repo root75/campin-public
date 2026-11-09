@@ -904,7 +904,7 @@
       "Correction : hypothèses initiales aux étapes internes 2, 5 et 8 du Journal privé ; preuves écrites courtes dans le rapport joint à Classroom, incidents d’entraînement vérifiés à deux et geste final vérifié individuellement par le professeur. Les autres blocs enregistrent uniquement « rapport:… », une déclaration d’avancement, sans lecture du document ni contrôle de remise.",
       "Grille : enquête /7, document et remise /3. Identification et nom ; styles de titres et vrai tableau ; capture ciblée et légendée, bon document joint et remise confirmée. Aucun calcul automatique de note.",
       "Compte scolaire : Mes cours ▸ classes et cours ouverts ▸ cocher labo-07 uniquement pour la classe concernée. Nouvelle séance au premier lancement ; conserver la séance pour les continuations.",
-      "Vérifier sur un PC élève : Gestionnaire des tâches et ses totaux, Performances (processeur, mémoire, disque), GIMP (ouvert pour les élèves, temps d’ouverture, image 10000 × 10000 et durée du Plasma), Terminer la tâche sur GIMP, Calculatrice, Bloc-notes, fenêtres, chemin et Statut du fichier OneDrive. Seul arrêt de processus : GIMP, quand la fiche le demande ; aucune suppression ni changement de réglage.",
+      "Vérifier sur un PC élève : Gestionnaire des tâches et ses totaux, Performances (processeur, mémoire, disque), GIMP (ouvert pour les élèves, temps d’ouverture, image 10000 × 10000), Banc d’essai labo-07/essai-charge.html (processeur près de 100 % pendant le calcul), Terminer la tâche sur GIMP, Calculatrice, Bloc-notes, fenêtres, chemin et Statut du fichier OneDrive. Seul arrêt de processus : GIMP, quand la fiche le demande ; aucune suppression ni changement de réglage.",
       "Projection : utiliser uniquement Lancer la séquence. Ne jamais projeter tableau nominatif, Journal, humeur, avis ou copies. Un vote initial recueille des choix ; seuls les effectifs agrégés sont projetés. Aucun texte libre d’élève n’est affiché.",
       "Varier les méthodes : prédiction écrite, vote collectif, manipulation sur le poste, QCM après les ressources, chemin et statut à observer, quatre incidents puis ordre de la démarche, explication orale, transfert final individuel. Les exercices du site ne demandent pas de texte supplémentaire dans le rapport.",
       "Autonomie : indices puis binôme, « J'attends de l'aide » si le blocage persiste. Pendant l’entraînement, cibler les blocages et désaccords au lieu de demander trois validations orales par élève. Le professeur conserve le contrôle individuel du défi final.",
@@ -1002,7 +1002,7 @@
           "Ce qu’on retient de la mission 1",
           "Le PC est une machine ; Windows est un logiciel système. Plusieurs logiciels fonctionnent en même temps.",
           "Le processeur effectue le travail ; la mémoire de travail garde les données des logiciels ouverts.",
-          "Quand GIMP calcule, le processeur travaille ; tant que l’image est ouverte, elle occupe la mémoire ; la fin de tâche libère cette mémoire.",
+          "Pendant un gros calcul, le processeur travaille ; tant qu’une grande image est ouverte dans GIMP, elle occupe la mémoire ; la fin de tâche libère cette mémoire.",
           "Terminer la tâche ferme de force, sans proposer d’enregistrer : c’est un dernier recours, quand le × ne répond plus.",
           "Des valeurs instantanées bougent : une comparaison courte donne un indice, pas une cause unique.",
           "Mémoire de travail et place des fichiers sur le disque sont deux choses différentes."
