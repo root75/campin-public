@@ -68,6 +68,10 @@ serveur après un rechargement, éteinte quand le professeur la traite ; avant d
 et trois cases à cocher, **3 sonneries par heure au plus** — code commun [`cloche.js`](cloche.js), à charger
 avant `blocs.js` comme dans `modele/index.html`) ; bandeau « bravo » ; reprise de
 l'avancement depuis le serveur ; aperçu professeur `#bloc=N` avec le choix de la version de la preuve ;
+barre des blocs (une pastille par bloc, cliquable jusqu'au premier bloc non validé ; cours sans `PARCOURS`) ;
+**plafond de séance** : la fiche s'arrête après un bloc et affiche un message, sur ordre du tableau
+(« Gestion des parcours » ▸ « Bloquer la classe ») ou du moment `atelier` de la séquence qui porte
+`"blocs": [premier, dernier]` — reçu avec `etat()` puis avec `moment()`, sans appel de plus ;
 brouillon d'une rédaction gardé sur le poste ; programme validé (question `code`) gardé sur le poste et
 relu quand on revient sur le bloc : code de départ, essais ratés (programme, message de Python, explication), programme validé, lignes changées en gras,
 explication `juste` ; erreurs envoyées au tableau (« Où le groupe bute »).

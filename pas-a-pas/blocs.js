@@ -129,7 +129,56 @@ function barre(){
     PARCOURS.forEach((g,k)=>{const s=el("span");s.className=etat.atteint>=g.fin ? "fait" : (ici>=g.debut && ici<g.fin ? "ici" : "");s.title=g.titre;
       if(MISSIONS) s.textContent = (etat.atteint>=g.fin ? "✓ " : "") + (g.court || String(k+1));
       b.append(s);});
-  }else BLOCS.forEach((_,i)=>{ const s=el("span"); s.className = i<etat.atteint ? "fait" : (i===ici ? "ici" : ""); b.append(s); });
+    return;
+  }
+  /* Une pastille par bloc, cliquable jusqu'au premier bloc non validé : on revient relire un bloc
+     fait. Le nom s'écrit sur la pastille du bloc affiché ; les autres le donnent au survol. */
+  styleBarre();
+  b.classList.add("nav"); b.removeAttribute("aria-hidden"); b.setAttribute("role","navigation"); b.setAttribute("aria-label","Mes blocs");
+  BLOCS.forEach((B,i)=>{
+    const fait = i<etat.atteint, n = txt("button", fait ? "fait" : "", (fait ? "✓ " : "")+(i+1)+(i===ici ? ". "+B.titre : ""));
+    n.type = "button"; n.title = (i+1)+". "+B.titre;
+    n.setAttribute("aria-label", n.title+(fait ? " — validé" : ""));
+    if(i===ici) n.setAttribute("aria-current","step");
+    n.disabled = !APERCU && i>etat.atteint;
+    if(plafond && !APERCU && i===plafond.bloc-1) n.classList.add("dernier");
+    n.addEventListener("click",()=>{ if(ici===i) return; ici = i; affiche(); scrollTo(0,0); });
+    b.append(n);
+  });
+}
+function styleBarre(){
+  if(document.getElementById("style-barre-blocs")) return;
+  const st = el("style"); st.id = "style-barre-blocs";
+  st.textContent = ".progres.nav{flex-wrap:wrap;gap:6px}"
+    +".progres.nav button{font:inherit;font-weight:700;font-size:.9rem;min-width:2.5rem;min-height:2.3rem;padding:3px 11px;border-radius:1.2rem;border:2px solid var(--trait);background:var(--carte);color:var(--doux);cursor:pointer}"
+    +".progres.nav button.fait{background:var(--juste-pale);border-color:var(--juste);color:var(--encre)}"
+    +".progres.nav button[aria-current]{background:var(--encre-bouton);border-color:var(--encre-bouton);color:var(--carte)}"
+    +".progres.nav button:disabled{opacity:.5;cursor:default}"
+    +".progres.nav button.dernier{margin-right:14px;box-shadow:10px 0 0 -7px var(--faux)}"
+    +".progres.nav button:focus-visible{outline:3px solid var(--fromage,#b7791f);outline-offset:2px}";
+  document.head.append(st);
+}
+
+/* Le plafond de séance : le professeur (ou le moment « atelier » de la séquence) arrête la classe
+   après un bloc. Il arrive avec etat() au démarrage, puis avec moment() toutes les 5 s
+   (sequence-eleve.js appelle PAS_A_PAS.plafond). Les blocs déjà validés restent lisibles. */
+let plafond = null;
+const enPause = () => !!plafond && !APERCU && plafond.bloc<BLOCS.length && ici>=plafond.bloc && ici>=etat.atteint;
+function recoitPlafond(p){
+  p = p && Number(p.bloc)>0 ? { bloc:Number(p.bloc), message:String(p.message||"") } : null;
+  if(JSON.stringify(p)===JSON.stringify(plafond)) return;
+  const avant = enPause(); plafond = p;
+  if(avant || enPause()) affiche(); else barre();
+}
+function pause(z){
+  z.append(txt("div","numero","⏸ Pause"), txt("h2",null,"On s’arrête après le bloc "+plafond.bloc),
+    txt("p","stop",plafond.message || "On attend la correction ensemble."),
+    txt("p",null,"En attendant, reviens sur tes blocs : clique sur une pastille ✓, juste au-dessus. Pour chacun, sais-tu expliquer l’erreur à ton voisin, sans lire l’explication ?"),
+    txt("p","note","La suite s’ouvrira toute seule, sans recharger la page."));
+  const nav = el("div","actions"), avant = txt("button","btn vide","← Bloc précédent"); avant.type = "button";
+  avant.addEventListener("click",()=>{ ici = Math.min(ici, BLOCS.length)-1; affiche(); });
+  nav.append(avant); z.append(nav);
+  document.body.dataset.pret = "1";
 }
 
 /* B.gestes = une liste de consignes (HTML permis) : une case à cocher par geste, à l'impératif. */
@@ -140,6 +189,7 @@ function affiche(){
   const liste = document.getElementById("coince-liste"); liste.replaceChildren();
   document.getElementById("coince").open = false;
   if(demoCase) demoCase.stop(), demoCase = null;
+  if(enPause()){ pause(z); return; }
   if(ici >= BLOCS.length){ fin(z); return; }
   const B = blocVu(ici);
 
@@ -691,11 +741,12 @@ if(APERCU){
     if(s && s.humeur) etat.humeur = s.humeur;
     if(s && s.avis) etat.avis = s.avis;
     humeur();
+    if(s && s.plafond) plafond = { bloc:Number(s.plafond.bloc), message:String(s.plafond.message||"") };
     if(s && s.atteint){ etat.atteint = s.atteint; etat.fini = s.atteint >= BLOCS.length; ici = Math.min(s.atteint, BLOCS.length); }
     const demarre = () => { affiche(); envoie({ etape:Math.min(ici,BLOCS.length-1)+1, type:"ouvert" }); restaureAide(); };
     if(typeof PREUVES==="undefined") demarre(); else pretPreuves.then(variantesServeur).then(demarre);
   }).withFailureHandler(()=>{ humeur(); quandPret(affiche); }).etat(COURS);
-  window.PAS_A_PAS = { cours: COURS, envoie };   // lu par sequence-eleve.js (chargé en différé : il ne bloque jamais la fiche)
+  window.PAS_A_PAS = { cours: COURS, envoie, plafond: recoitPlafond };   // lu par sequence-eleve.js (chargé en différé : il ne bloque jamais la fiche)
 } else {
   qui.textContent = typeof HORS_SUIVI!=="undefined" ? HORS_SUIVI : "Garde deux fenêtres : cette fiche, et Thonny quand elle le demande.";
   pied.textContent = "Ton avancement reste sur cet ordinateur. Aucune donnée n'est envoyée.";
