@@ -236,12 +236,12 @@ const BLOCS = [
             p:[null,"Le nom vies est connu : c'est l'écriture qui est cassée.","Python ne devine pas qu'il faut ignorer la parenthèse en trop.","Rien ne s'affiche quand l'écriture est cassée."] } } ] },
 
   { partie:"C — « Les vies » cassé, réparé, commenté, dans Thonny", titre:"Commenter chaque ligne", min:6, stop:true,
-    bulle:"Dernière étape : un programme que tout le monde comprend.",
+    bulle:"Un programme que tout le monde comprend : explique chaque ligne.",
     veux:"Un programme que n'importe qui comprend en le lisant.",
     fais:CASES("Au-dessus de chaque ligne, ajoute une ligne qui commence par <b>#</b> et dit ce que fait la ligne.",
                `Enregistre : <span class="chemin">icône disquette « Enregistrer »</span> (ou <b>Ctrl + S</b>).`,
                `Exécute : <span class="chemin">icône ▶ verte</span> (ou <b>F5</b>).`,
-               "Réponds ci-dessous. Ensuite, montre ton programme à ton voisin : il lit tes commentaires et te dit s'il comprend chaque ligne."),
+               "Réponds ci-dessous. Ensuite, montre ton programme à ton voisin : il lit tes commentaires et te dit s'il comprend chaque ligne. Il ne les recopie pas : chacun écrit les siens, avec ses mots."),
     vois:"Six lignes : trois commentaires, trois instructions. La console affiche toujours {R}.",
     extra: CODE("# on range {D} dans la boîte vies\nvies = {D}\n# …\nvies = vies - {K}\n# …\nprint(vies)"),
     coince:["Le # est AltGr + 3.",
@@ -255,13 +255,44 @@ const BLOCS = [
             p:[null,"Pour afficher, c'est print( ). Python n'affiche jamais un commentaire.","Le programme continue : Python saute simplement la ligne.","Ranger, c'est le = . Une ligne qui commence par # ne fait rien."] } },
       { q:{ type:"qcm", q:"Tu écris # devant print(vies). Qu'affiche le programme ?",
             c:["Rien : la ligne est devenue un commentaire.","{R}","# print(vies)","Une erreur."],
-            p:[null,"La ligne print(vies) est devenue un commentaire : Python ne l'exécute plus.","Python n'affiche jamais un commentaire, même s'il contient print.","Un commentaire n'est jamais une erreur : Python l'ignore."] } } ] }
+            p:[null,"La ligne print(vies) est devenue un commentaire : Python ne l'exécute plus.","Python n'affiche jamais un commentaire, même s'il contient print.","Un commentaire n'est jamais une erreur : Python l'ignore."] } } ] },
+
+  { partie:"D — Rendre mon programme", titre:"Rendre mon fichier commenté dans Classroom", min:4, stop:true, cle:"vies", variantes:[{},{}],
+    bulle:"Dernière mission : ton programme commenté part chez le professeur. Il est coté sur 5.",
+    veux:"Rendre ton fichier 01_Les-vies, commenté, dans Classroom, pour qu'il soit coté sur 5.",
+    fais:CASES(`Lis la grille ci-dessous : vérifie chaque ligne dans ton programme.`,
+               `Relis tes trois commentaires : ce sont TES mots, pas ceux de ton voisin, et pas la ligne recopiée.`,
+               `Dans Thonny, enregistre une dernière fois : <span class="chemin">menu Fichier ▸ Enregistrer</span> (ou <b>Ctrl + S</b>).`,
+               `Ouvre un nouvel onglet (<b>Ctrl + T</b>), tape <b>classroom.google.com</b>, puis appuie sur <b>Enter</b>.`,
+               `Clique sur le cours de <b>Logique et programmation</b> ▸ onglet <span class="chemin">Travaux et devoirs</span> ▸ le devoir <b>Python 02 — Les vies commenté</b> ▸ <span class="chemin">Afficher le devoir</span>.`,
+               `À droite, dans <span class="chemin">Vos devoirs</span> : <span class="chemin">＋ Ajouter ou créer ▸ Fichier ▸ Parcourir</span>.`,
+               `Dans la fenêtre : <span class="chemin">Documents ▸ double-clic sur Python ▸ clic sur 01_Les-vies_… ▸ Ouvrir</span>, puis <span class="chemin">Importer</span>.`,
+               `Ton fichier apparaît sous Vos devoirs : clique sur <span class="chemin">Rendre le devoir ▸ Rendre le devoir</span>.`),
+    vois:"Dans Classroom, le devoir affiche « Remis » et ton fichier 01_Les-vies_… .py.",
+    extra:`<div class="encart"><p><b>Grille — sur 5.</b> Le professeur ouvre ton fichier, l'exécute et lit tes commentaires.</p><table>
+  <tr><th>Dans ton programme</th><th>Points</th></tr>
+  <tr><td>F5 : le programme s'exécute sans message rouge et affiche <b>{R}</b>.</td><td>1</td></tr>
+  <tr><td>Trois commentaires : une ligne qui commence par <code>#</code> au-dessus de chacune des trois instructions.</td><td>1</td></tr>
+  <tr><td>Au-dessus de <code>vies = {D}</code> : ton commentaire explique qu'on range {D} dans la boîte vies.</td><td>1</td></tr>
+  <tr><td>Au-dessus de <code>vies = vies - {K}</code> : ton commentaire explique le calcul, et que le résultat est rangé dans vies.</td><td>1</td></tr>
+  <tr><td>Au-dessus de <code>print(vies)</code> : ton commentaire explique qu'on affiche ce qu'il y a dans la boîte vies.</td><td>1</td></tr></table>
+  <p>Un commentaire explique avec TES mots ce que fait la ligne. Recopier la ligne (<code># vies = vies - {K}</code>) n'explique rien : 0 point pour cette ligne.</p>
+  <p class="stop">Pas de copier-coller du voisin. Des commentaires copiés sur un autre élève, c'est 0 sur 5, pour les deux fichiers.</p>
+  <p>Avant tout : le fichier rendu s'appelle 01_Les-vies_ suivi de ton nom, et finit par .py. Sinon, le professeur ne peut pas l'ouvrir.</p></div>`,
+    coince:["Pas de devoir « Python 02 — Les vies commenté » dans Travaux et devoirs : vérifie que tu es dans le cours de Logique et programmation. Toujours rien : sonne la cloche 🔔.",
+            "Ton fichier n'est pas dans Documents ▸ Python : dans la fenêtre, tape 01_Les-vies dans la case Rechercher, en haut à droite, puis Enter.",
+            "Le bouton dit « Marquer comme terminé » : ton fichier n'est pas joint. Reprends à l'étape ＋ Ajouter ou créer.",
+            "Tu as rendu le fichier sans tes commentaires : clique sur Annuler l'envoi ▸ Annuler l'envoi, retire-le avec la ✕ à droite de son nom, enregistre dans Thonny (Ctrl + S), puis reprends à l'étape ＋ Ajouter ou créer."],
+    q:{ type:"rapport", q:"Ton fichier commenté est-il rendu ?",
+        confirmation:"J'ai rendu 01_Les-vies, commenté, dans Classroom : je vois « Remis ».",
+        trace:"rendu Classroom : 01_Les-vies commenté",
+        juste:"Le professeur ouvre ton fichier, l'exécute, lit tes commentaires et le cote sur 5 avec la grille ci-dessus." } }
 ];
 
 const FIN = {
   titre:"🎉 Python 02 terminé !",
-  bulle:"Bravo ! Ton programme est réparé, commenté et enregistré.",
-  texte:"Ton programme est réparé, commenté et enregistré. Prochaine étape : Python 03, des programmes qui posent des questions.",
+  bulle:"Bravo ! Ton programme est réparé, commenté et rendu.",
+  texte:"Ton programme est réparé, commenté et rendu dans Classroom. Prochaine étape : Python 03, des programmes qui posent des questions.",
   plus:"Change DEUX touches de « Les vies » pour qu'il affiche 1, puis corrige ton commentaire.",
   lien:'<a href="https://root75.github.io/campin-public/python-je-revise/" target="_blank" rel="noopener">Premiers pas en Python — je révise</a> (onglet Cartes)',
   citation:{

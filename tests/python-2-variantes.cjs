@@ -44,3 +44,12 @@ for (const [cours,n] of [['python-1',10],['python-2',7]]) {
   }
 }
 console.log(`${total} versions vérifiées ; 18 exécutions en erreur et 18 réparations Python.`);
+// Bloc 11 : rendu Classroom, grille sur 5 avec les nombres de la version de l'élève.
+for (let v=1; v<=3; v++) {
+  const b=bloc(11,v), pts=[...b.extra.matchAll(/<td>(\d)<\/td>/g)].map(m=>Number(m[1]));
+  assert.equal(b.q.type,'rapport');
+  assert.equal(pts.reduce((a,x)=>a+x,0),5,`11/${v}: grille sur 5`);
+  assert.ok(!/\{[DKR]\}/.test(b.extra+b.fais),`11/${v}: nombres remplacés`);
+  assert.ok(b.fais.includes('Python 02 — Les vies commenté') && b.fais.includes('Rendre le devoir ▸ Rendre le devoir'));
+}
+console.log('OK Python 2 bloc 11 : rendu Classroom, grille sur 5, trois versions');
