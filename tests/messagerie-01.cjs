@@ -63,3 +63,15 @@ assert.ok(/state\.etape===7[\s\S]{0,700}escapeHtml\(state\.reponse\)/.test(s), '
 
 // Étapes 9 à 12 : une case à cocher par consigne (les listes numérotées de l'étape deviennent des cases).
 assert.ok(/function casesAGestes\(z,e\)/.test(s) && /z\.innerHTML=h;\n casesAGestes\(z,e\);/.test(s), 'les consignes des étapes Outlook portent une case');
+
+// La vue d'Outlook est une image à part, demandée à l'ouverture du volet : plus de capture.js (1,28 Mo) au chargement.
+{
+  const dossier = __dirname + '/../messagerie/pas-a-pas/';
+  const lire = f => fs.readFileSync(dossier + f, 'utf8');
+  assert.ok(fs.existsSync(dossier + 'capture.webp') && !fs.existsSync(dossier + 'capture.js'), 'capture.webp remplace capture.js');
+  assert.ok(fs.statSync(dossier + 'capture.webp').size < 500000, 'capture.webp reste sous 500 Ko');
+  assert.ok(!/capture\.js/.test(lire('index.html')), 'la page ne charge plus capture.js');
+  for (const f of ['fiche.js', 'visuels.js']) assert.ok(!/\bCAPTURE\b(?!_URL)/.test(lire(f)), f + ' ne lit plus la variable CAPTURE');
+  assert.ok(/<img loading="lazy" src="[^"]*capture\.webp/.test(lire('fiche.js')), 'étape 10 : image chargée à l’ouverture du volet');
+  console.log('OK : vue Outlook en image séparée, chargée à la demande.');
+}
