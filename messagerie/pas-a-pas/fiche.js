@@ -65,8 +65,9 @@ function verifie(k,d=state){
   if(v.length<35)return 'Ta réponse est trop courte. Il faut, dans l’ordre : la salutation, une phrase complète sur ton loisir, une formule de fin et ta signature.';const mots=norm(d.nom).split(/[^a-z0-9'-]+/).filter(Boolean);
  if(!mots.length)return 'Écris d’abord ton prénom et ton nom dans la case « Ton prénom et ton nom », juste au-dessus de ta réponse.';
  if(!mots.every(m=>v.split(/[^a-z0-9'-]+/).includes(m)))return 'Dans ta signature, reprends le prénom et le nom du bloc 6 : '+d.nom.trim()+'.';
- const classe=classeSignature(d);
- if(!classe)return 'Reviens au bloc 6 pour ajouter ta classe dans ta signature.';
+ /* La classe : celle du serveur ou du bloc 6 ; sans brouillon (autre poste, aperçu), celle écrite dans la réponse. */
+ const classe=classeSignature(d)||(/(?:^|[\s,:])([12]\s*[a-z](?:\d)?)(?=$|[\s,.;])/i.exec(d.reponse.trim())?.[1]||'');
+ if(!classe)return 'Ajoute ta classe dans ta signature, après ton prénom et ton nom (exemple : 2B).';
  if(!v.replace(/\s/g,'').includes(norm(classe).replace(/\s/g,'')))return 'Dans ta signature, reprends la classe du bloc 6 : '+classe+'.';
  return ''; }
  if(k==='a')return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.a.trim())&&d.a.trim().toLowerCase()===DEST ? '' : 'Écris l’adresse de Camille indiquée dans la mission. Vérifie chaque lettre : un @ et une adresse plausible ne suffisent pas.';
@@ -107,6 +108,23 @@ const CITATION={texte:'Ce que l’on conçoit bien s’énonce clairement,\nEt l
 const FINI='<aside class="mission fini" id="fini-avant"><b>🏁 Tu as fini avant les autres ? Dans l’ordre :</b><ol><li>Donne ton avis, juste en dessous : trois phrases courtes.</li><li>Révise avec « Mon premier message — je révise » : <a href="https://root75.github.io/campin-public/messagerie/" target="_blank" rel="noopener">ouvrir la page ↗</a>. Réponds aux questions, puis retourne les cartes mémoire.</li><li>Si ton professeur te le propose, deviens <b>aidant</b> : va voir un camarade qui a sonné la cloche 🔔. Tu expliques avec des mots, tu ne touches pas sa souris.</li></ol></aside>';
 const corps=d=>[d.salutation,d.message,d.fin,d.signature].join('\n\n');
 const erreurs=d=>['a','objet','salutation','message','fin','signature'].map(k=>({champ:k,texte:verifie(k,d)})).filter(x=>x.texte);
+/* La barre des étapes, comme dans les autres cours : une pastille numérotée par étape, le titre sur celle de l'étape
+   affichée (les autres le donnent au survol), ✓ sur les étapes validées. Cliquable jusqu'à la première étape non
+   validée : on revient relire, puis on repart en avant. Sans la barre (ancienne page en cache), rien ne se passe. */
+function pastilles(e){
+ const b=document.getElementById('pastilles');if(!b)return;
+ for(const id of ['compteur','barre'])document.getElementById(id).hidden=true;
+ b.replaceChildren();
+ TITRES.forEach((t,i)=>{
+  const fait=i<state.atteint,n=document.createElement('button');n.type='button';
+  if(fait)n.className='fait';
+  n.textContent=(fait?'✓ ':'')+(i+1)+(i===e?'. '+t:'');n.title=(i+1)+'. '+t;
+  n.setAttribute('aria-label',n.title+(fait?' — validée':''));if(i===e)n.setAttribute('aria-current','step');
+  n.disabled=i>state.atteint;
+  n.addEventListener('click',()=>{if(i===e||i>state.atteint)return;state.etape=i;state.preuve='';sauve();render();scrollTo(0,0);});
+  b.append(n);
+ });
+}
 /* Reprise au bloc 8 sur un autre poste : le brouillon des blocs 1 à 7 (dont le prénom et le nom du bloc 6) n'est gardé que
    sur l'ordinateur d'origine. Sans lui, la signature ne peut pas être vérifiée : on redemande le nom ici, une fois. */
 let nomDemandeIci=false;
@@ -120,6 +138,7 @@ function render(){
  const e=state.etape;
  document.getElementById('compteur').textContent=`${e+1} / ${TITRES.length} — ${TITRES[e]}`;
  document.getElementById('barre').value=e+1;
+ pastilles(e);
  document.getElementById('choix-etape').value=e;for(const o of document.getElementById('choix-etape').options)o.disabled=Number(o.value)>state.atteint;
  const z=document.getElementById('contenu');
  const mission='<aside class="mission"><b>Ta mission d’entraînement</b><p>Écris à Camille pour lui demander quel sport ou quel loisir elle pratique.</p><p>Camille est fictive. Son adresse : <b>camille.martin@example.org</b>.</p></aside>';
@@ -149,10 +168,20 @@ Camille</p></div></div><p><b>Utilise Répondre :</b> le destinataire et l’obje
  z.innerHTML=h;
  for(const el of z.querySelectorAll('input,textarea')){el.value=state[el.id]||'';el.addEventListener('input',()=>{state[el.id]=el.value;sauve();document.getElementById('aperçu-courant').innerHTML=apercu();document.getElementById('retour').innerHTML='';document.getElementById('retour').className='';});}
  document.getElementById('ouvrir-reponse')?.addEventListener('click',()=>{document.getElementById('zone-reponse').hidden=false;document.getElementById('reponse').focus();});
+ /* Étape 8 : une réponse déjà commencée se rouvre toute seule (retour sur l'étape, rechargement). */
+ if(e===7&&state.reponse.trim())document.getElementById('zone-reponse').hidden=false;
  document.getElementById('precedent')?.addEventListener('click',()=>{state.etape--;state.preuve='';render();});
  document.getElementById('revoir')?.addEventListener('click',()=>{state.etape=6;render();});
  document.getElementById('suivant')?.addEventListener('click',async()=>{
   if(document.getElementById('suivant').disabled)return;
+  /* Étape 8 : « Vérifier » sans avoir cliqué sur « Répondre à Camille ». La case de la réponse est encore fermée :
+     on l'ouvre et on le dit, sans compter d'erreur ni reprocher une salutation que l'élève ne peut pas voir. */
+  if(e===7&&document.getElementById('zone-reponse').hidden){
+   document.getElementById('zone-reponse').hidden=false;
+   const f=document.getElementById('retour');f.className='retour faux';
+   f.innerHTML='<b>Écris d’abord ta réponse à Camille</b><p>La case « Corps de ta réponse » vient de s’ouvrir, plus haut. Écris-y ta réponse, puis clique de nouveau sur « Vérifier cette étape ».</p>';
+   document.getElementById('reponse').focus();return;
+  }
   const champs={0:['locale','domaine'],1:['a'],2:['objet'],3:['salutation'],4:['message'],5:['fin','signature'],7:['reponse']}[e]||[];
   const err=e===6?erreurs(state):champs.map(k=>({champ:k,texte:verifie(k)})).filter(x=>x.texte);
   const feedback=document.getElementById('retour');

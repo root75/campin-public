@@ -29,3 +29,12 @@ assert.match(verifie('reponse',{...good,reponse:'bonjour camille, je pratique le
 // Reprise au bloc 8 sur un autre poste : sans brouillon local, le prénom et le nom se redemandent au bloc 8.
 assert.ok(/nomSiManquant\(\)\+champ\('reponse'/.test(s), 'bloc 8 : la case prénom et nom apparaît quand le brouillon manque');
 assert.match(verifie('reponse',{...good,nom:'',reponse:'Bonjour Camille, je pratique le dessin le mercredi. Bonne journée, Lina Dupont, 2B'}),/juste au-dessus de ta réponse/);
+
+// La barre des étapes : une pastille par étape, à la place du compteur et de la ligne de progression.
+{
+  const page = fs.readFileSync(__dirname + '/../messagerie/pas-a-pas/index.html', 'utf8');
+  assert.ok(/<nav class="progres nav" id="pastilles"/.test(page), 'la page porte la barre des étapes');
+  assert.ok(/<progress id="barre"[^>]*hidden/.test(page) && /<p id="compteur" hidden>/.test(page), 'l’ancienne ligne est cachée');
+  assert.ok(/function pastilles\(e\)/.test(s) && /\n pastilles\(e\);/.test(s), 'fiche.js dessine les pastilles à chaque étape');
+  assert.ok(/n\.disabled=i>state\.atteint/.test(s), 'on ne saute pas une étape non validée');
+}
