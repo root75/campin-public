@@ -154,7 +154,7 @@ const scorePredit = ({n,r}) => ({
                : "Fais la trace : pieces vaut "+n+", puis score vaut pieces × 10.",
       juste:`pieces vaut ${n}, score vaut ${n} × 10 = ${r}. Maintenant F5, et vérifie dans Thonny.` } });
 
-/* Le dernier bloc : la grille sur 5 du fichier rendu, avec le nombre de pièces de la version de l'élève
+/* Le bloc de rendu (avant le défi, pour que la cote ne dépende pas d'un bloc facultatif) : la grille sur 5 du fichier rendu, avec le nombre de pièces de la version de l'élève
    (la même qu'au bloc « Traduire « Le score » », par cle:"score"). */
 const rendreScore = ({n,r}) => ({
   extra:`<div class="encart"><p><b>Grille — sur 5.</b> Le professeur ouvre ton fichier, l'exécute et lit tes commentaires.</p><table>
@@ -366,25 +366,8 @@ const BLOCS = [
             [null,"-2 est un nombre entier : int( ) le lit sans problème.","Le signe moins est gardé : -2 × 10 = -20.","int( ) a transformé le texte en nombre : il n'est plus recopié."],
             "int(\"-2\") vaut -2 : -2 × 10 = -20. Un score négatif ! Il faudra l'empêcher avec un si… alors.") ] },
 
-  { partie:"E — Défi", titre:"Les vies, version jeu", min:6, cle:"vies", variantes:[{},{}],
-    bulle:"Défi : « Les vies » devient un vrai morceau de jeu.",
-    veux:"Écrire seul un programme qui lit, calcule et affiche.",
-    fais:CASES("Le joueur commence avec {D} vies.",
-               "Le programme demande les dégâts reçus, puis affiche les vies qui restent.",
-               "Écris-le dans le cadre ci-dessous, sans modèle.", EXECUTER),
-    vois:"La fiche tape {K} : il reste {R} vies. Puis elle tape 1 : il en reste une de moins que {D}.",
-    coince:["Même plan que « Le score » : une boîte de départ, un int(input(…)), un calcul, un print.",
-            "Des noms sans accent : degats, pas dégâts.",
-            "Toujours bloqué après ton voisin : relis ton programme « Les vies » de Python 01 et ajoute un int(input(…))."],
-    q:{ type:"code", q:"Écris le programme « Les vies, version jeu ».", depart:"vies = {D}\n", essais:[["{K}"],["1"]],
-        test: r => r.erreur ? (r.erreur.type==="EOFError" ? "Un seul input( ) : on ne tape qu'une fois les dégâts." : r.erreur.type==="TypeError" ? "TypeError : texte et nombre mélangés. As-tu mis int( ) autour de input( ) ?" : "Lis la ligne rouge, corrige, puis exécute.")
-                 : !/input\(/.test(r.code) ? "Le programme doit demander les dégâts avec input( )."
-                 : r.essais.every((e,i) => (DERNIERE(e).match(/-?\d+/g)||[]).pop()===String([LV.r, LV.d-1][i])) ? true
-                 : `Avec ${LV.k} de dégâts, ta dernière ligne est « ${DERNIERE(r.essais[0])} ». On attend ${LV.r}.`,
-        juste:"Ton programme lit les dégâts, les retire et affiche les vies : un vrai morceau de jeu." } },
-
-  { partie:"F — Rendre mon programme", titre:"Rendre « Le score » dans Classroom", min:4, stop:true, cle:"score",
-    bulle:"Dernière mission : ton programme « Le score » part chez le professeur. Il est coté sur 5.",
+  { partie:"E — Rendre mon programme", titre:"Rendre « Le score » dans Classroom", min:4, stop:true, cle:"score",
+    bulle:"Ton programme « Le score » part chez le professeur. Il est coté sur 5.",
     veux:"Rendre ton fichier 02_Le-score, commenté, dans Classroom, pour qu'il soit coté sur 5.",
     fais:CASES(`Lis la grille ci-dessous : vérifie chaque ligne dans ton programme.`,
                `Relis tes trois commentaires : ce sont TES mots, pas ceux de ton voisin, et pas la ligne recopiée.`,
@@ -404,7 +387,24 @@ const BLOCS = [
     q:{ type:"rapport", q:"Ton fichier « Le score » est-il rendu ?",
         confirmation:"J'ai rendu 02_Le-score, commenté, dans Classroom : je vois « Remis ».",
         trace:"rendu Classroom : 02_Le-score commenté",
-        juste:"Le professeur ouvre ton fichier, l'exécute, lit tes commentaires et le cote sur 5 avec la grille ci-dessus." } }
+        juste:"Le professeur ouvre ton fichier, l'exécute, lit tes commentaires et le cote sur 5 avec la grille ci-dessus." } },
+
+  { partie:"F — Défi", titre:"Les vies, version jeu", min:6, cle:"vies", variantes:[{},{}],
+    bulle:"Ton fichier est rendu. Défi, pour finir : « Les vies » devient un vrai morceau de jeu.",
+    veux:"Écrire seul un programme qui lit, calcule et affiche.",
+    fais:CASES("Le joueur commence avec {D} vies.",
+               "Le programme demande les dégâts reçus, puis affiche les vies qui restent.",
+               "Écris-le dans le cadre ci-dessous, sans modèle.", EXECUTER),
+    vois:"La fiche tape {K} : il reste {R} vies. Puis elle tape 1 : il en reste une de moins que {D}.",
+    coince:["Même plan que « Le score » : une boîte de départ, un int(input(…)), un calcul, un print.",
+            "Des noms sans accent : degats, pas dégâts.",
+            "Toujours bloqué après ton voisin : relis ton programme « Les vies » de Python 01 et ajoute un int(input(…))."],
+    q:{ type:"code", q:"Écris le programme « Les vies, version jeu ».", depart:"vies = {D}\n", essais:[["{K}"],["1"]],
+        test: r => r.erreur ? (r.erreur.type==="EOFError" ? "Un seul input( ) : on ne tape qu'une fois les dégâts." : r.erreur.type==="TypeError" ? "TypeError : texte et nombre mélangés. As-tu mis int( ) autour de input( ) ?" : "Lis la ligne rouge, corrige, puis exécute.")
+                 : !/input\(/.test(r.code) ? "Le programme doit demander les dégâts avec input( )."
+                 : r.essais.every((e,i) => (DERNIERE(e).match(/-?\d+/g)||[]).pop()===String([LV.r, LV.d-1][i])) ? true
+                 : `Avec ${LV.k} de dégâts, ta dernière ligne est « ${DERNIERE(r.essais[0])} ». On attend ${LV.r}.`,
+        juste:"Ton programme lit les dégâts, les retire et affiche les vies : un vrai morceau de jeu." } }
 ];
 
 const FIN = {

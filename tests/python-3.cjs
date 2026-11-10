@@ -51,7 +51,7 @@ const SOLUTIONS = {
   8: b => 'mot = input()\n' + 'print(mot)\n'.repeat(b.q.depart.split('\n').length),
   10: b => b.q.depart.replace('input("Un nombre ? ")', 'int(input("Un nombre ? "))'),
   13: () => '# on demande le nombre de pièces\npieces = int(input("Combien de pièces ? "))\n# on calcule\nscore = pieces * 10\n# on affiche\nprint("Score :", score)',
-  15: b => b.q.depart + 'degats = int(input("Dégâts ? "))\nvies = vies - degats\nprint("Il reste", vies, "vies")'
+  16: b => b.q.depart + 'degats = int(input("Dégâts ? "))\nvies = vies - degats\nprint("Il reste", vies, "vies")'
 };
 
 let total = 0;
@@ -111,18 +111,20 @@ const b10 = ctx.bloc(10, 1);
 assert.match(b10.q.test(execute(b10.q, b10.q.depart)), /Utilise int/);
 console.log('OK sans int( ) : le retour le dit, malgré le print(.');
 
-/* Bloc 16 : rendu Classroom de 02_Le-score_Nom.py, grille sur 5 avec les nombres de la version de l'élève
-   (les mêmes qu'au bloc 12, par cle:"score"), sur le modèle du bloc 11 de Python 02. */
-assert.equal(ctx.bloc(16, 1).cle, ctx.bloc(12, 1).cle, 'bloc 16 : même tirage que le bloc 12');
+/* Bloc 15 : rendu Classroom de 02_Le-score_Nom.py, grille sur 5 avec les nombres de la version de l'élève
+   (les mêmes qu'au bloc 12, par cle:"score"), sur le modèle du bloc 11 de Python 02.
+   Il vient AVANT le défi (bloc 16) : la cote ne dépend pas d'un bloc facultatif. */
+assert.equal(ctx.bloc(16, 1).cle, 'vies', 'le défi est le dernier bloc');
+assert.equal(ctx.bloc(15, 1).cle, ctx.bloc(12, 1).cle, 'bloc 15 : même tirage que le bloc 12');
 for (let v = 1; v <= 3; v++) {
-  const b = ctx.bloc(16, v), pts = [...b.extra.matchAll(/<td>(\d)<\/td>/g)].map(m => Number(m[1]));
+  const b = ctx.bloc(15, v), pts = [...b.extra.matchAll(/<td>(\d)<\/td>/g)].map(m => Number(m[1]));
   assert.equal(b.q.type, 'rapport');
-  assert.equal(pts.length, 5); assert.equal(pts.reduce((a, x) => a + x, 0), 5, `16/${v}: grille sur 5`);
+  assert.equal(pts.length, 5); assert.equal(pts.reduce((a, x) => a + x, 0), 5, `15/${v}: grille sur 5`);
   const n = ctx.bloc(12, v).q.q.match(/taperas (\d+)/)[1];
   const r = lance(SOLUTIONS[13](), [n]);
-  assert.ok(b.extra.includes(`on tape <b>${n}</b>`) && b.extra.includes(`affiche <b>${derniere(r).match(/\d+/)[0]}</b>`), `16/${v}: la grille annonce ce que Python affiche pour ${n}`);
-  assert.ok(/0 sur 5, pour les deux fichiers/.test(b.extra), `16/${v}: copier-coller du voisin = 0`);
-  assert.ok(b.fais.includes('Python 03 — Le score') && b.fais.includes('02_Le-score_') && b.fais.includes('Rendre le devoir ▸ Rendre le devoir'), `16/${v}: chemin de clics`);
+  assert.ok(b.extra.includes(`on tape <b>${n}</b>`) && b.extra.includes(`affiche <b>${derniere(r).match(/\d+/)[0]}</b>`), `15/${v}: la grille annonce ce que Python affiche pour ${n}`);
+  assert.ok(/0 sur 5, pour les deux fichiers/.test(b.extra), `15/${v}: copier-coller du voisin = 0`);
+  assert.ok(b.fais.includes('Python 03 — Le score') && b.fais.includes('02_Le-score_') && b.fais.includes('Rendre le devoir ▸ Rendre le devoir'), `15/${v}: chemin de clics`);
   assert.ok(b.q.confirmation.includes('02_Le-score') && !/\$\{|undefined/.test(b.extra + b.fais));
 }
-console.log('OK Python 3 bloc 16 : rendu Classroom, grille sur 5, trois versions.');
+console.log('OK Python 3 bloc 15 : rendu Classroom, grille sur 5, trois versions.');

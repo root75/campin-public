@@ -859,12 +859,12 @@
       },
       {
         "type": "atelier",
-        "titre": "Défi, puis rendre « Le score »",
+        "titre": "Rendre « Le score », puis le défi",
         "min": 10,
         "methode": "Individuel",
         "lignes": [
-          "Bloc 15 : le défi « Les vies, version jeu », seul, sans modèle.",
-          "Bloc 16 : relire la grille sur 5, puis rendre 02_Le-score_Nom.py dans Classroom."
+          "Bloc 15 : relire la grille sur 5, puis rendre 02_Le-score_Nom.py dans Classroom.",
+          "Bloc 16 : le défi « Les vies, version jeu », seul, sans modèle."
         ],
         "blocs": [
           15,
