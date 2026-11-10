@@ -859,17 +859,18 @@
       },
       {
         "type": "atelier",
-        "titre": "Défi — Les vies, version jeu",
-        "min": 6,
+        "titre": "Rendre « Le score », puis le défi",
+        "min": 10,
         "methode": "Individuel",
         "lignes": [
-          "Bloc 15 : seul, sans modèle."
+          "Bloc 15 : relire la grille sur 5, puis rendre 02_Le-score_Nom.py dans Classroom.",
+          "Bloc 16 : le défi « Les vies, version jeu », seul, sans modèle."
         ],
         "blocs": [
           15,
-          15
+          16
         ],
-        "repere": "Les nombres dépendent de la version de l'élève (3, 5 ou 6 vies), comme en Python 01 et 02. Pour les rapides : le défi « pizza » de la page de fin (float, round)."
+        "repere": "Les nombres dépendent de la version de l'élève (3, 5 ou 6 vies), comme en Python 01 et 02. Le devoir « Python 03 — Le score » doit être publié dans Classroom avant ce moment. Le site ne voit pas la remise : la vérifier dans Classroom. Pour les rapides : le défi « pizza » de la page de fin (float, round)."
       },
       {
         "type": "fin",
