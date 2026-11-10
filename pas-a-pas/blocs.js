@@ -192,6 +192,8 @@ function affiche(){
   const fait = !APERCU && etat.atteint > ici;   // en aperçu, chaque version reste à essayer
   if(!fait && ["enquete","rapport","mixte"].includes(B.q.type)){
     preuve(pr,B);
+  } else if(fait && B.q.type==="code"){
+    relecture(pr, B);
   } else if(fait){
     pr.append(txt("p","retour juste",["enquete","rapport","mixte"].includes(B.q.type) ? "✅ Étape déjà enregistrée. Les preuves du rapport restent à examiner par le professeur." : "✅ Bloc déjà validé."));
   } else if(B.cases){
@@ -220,6 +222,46 @@ function affiche(){
   nav.append(avant, el("span","espace"));
   if(fait || (APERCU && ici+1<BLOCS.length)){ const s=txt("button","btn plein",suite()); s.type="button"; s.addEventListener("click",()=>{ici++;affiche();}); nav.append(s); }
   z.append(nav);
+}
+
+/* Un programme validé reste lisible quand on revient sur le bloc : le code de départ, le programme
+   de l'élève, les lignes changées surlignées et l'explication (Q.juste) — pour pouvoir expliquer
+   l'erreur, à son voisin ou au professeur. Le programme est gardé sur le poste, par élève. */
+const programmesValides = {};
+const cleProgramme = i => CLE+":"+(emailMoteur||"")+":"+(i+1)+":valide";
+function gardeProgramme(i, code){
+  programmesValides[i] = code;
+  if(APERCU) return; try{ localStorage.setItem(cleProgramme(i), code); }catch(e){}
+}
+function programmeValide(i){
+  if(programmesValides[i]!=null) return programmesValides[i];
+  try{ return localStorage.getItem(cleProgramme(i)); }catch(e){ return null; }
+}
+function relecture(pr, B){
+  const Q = B.q, mien = programmeValide(ici), depart = Q.depart || "";
+  const net = t => t.replace(/\s+$/,"").split("\n");
+  const cadre = (titre, code, autre, couleur) => {
+    const hors = new Set(autre==null ? [] : net(autre).map(l=>l.trim()));
+    const pre = el("pre","console relu");
+    net(code).forEach(l=>{
+      const s = txt("span",null,l || " "); s.style.display = "block";
+      if(autre!=null && l.trim() && !hors.has(l.trim())){
+        s.className = "change"; s.style.background = "var(--"+couleur+"-pale)";
+        s.style.boxShadow = "-4px 0 0 var(--"+couleur+")"; s.style.fontWeight = "700";
+      }
+      pre.append(s);
+    });
+    pr.append(txt("div","etiquette",titre), pre);
+  };
+  pr.append(txt("p","retour juste","✅ Bloc déjà validé."));
+  if(mien==null){
+    if(depart) cadre("Le code de départ", depart, null);
+    pr.append(txt("p","note","Ton programme validé n’est pas gardé sur ce poste."));
+  } else if(depart && net(depart).join("\n")!==net(mien).join("\n")){
+    cadre("Le code de départ — en gras, ce qui a changé", depart, mien, "faux");
+    cadre("Mon programme validé — en gras, ce que j’ai écrit", mien, depart, "juste");
+  } else cadre("Mon programme validé", mien, null);
+  if(Q.juste){ const r = el("div","retour juste"); r.append(txt("strong",null,"L’explication"), txt("p",null,Q.juste)); pr.append(r); }
 }
 
 /* « Regarde comment faire » sous chaque case — commun à tous les cours sur ce moteur.
@@ -282,6 +324,7 @@ function preuve(pr, B, apres){
       envoie({etape:ici+1,type:"ouvert",reponse:"activité:"+v(reponse)});
       apres();return; // L’exercice prépare la mission ; sa réussite ne valide pas le rapport.
     }
+    if(Q.type==="code") gardeProgramme(ici, String(reponse));
     if(!["enquete","rapport"].includes(Q.type) && !Q.serveur) envoie({ etape:ici+1, type:"juste", essais:essais, reponse:v(reponse) });   // serveur : verifier() l'a écrit
     const g0 = groupeCourant(), avant = etat.atteint;
     etat.atteint = Math.max(etat.atteint, ici+1); ecrit(etat); barre();

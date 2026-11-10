@@ -68,7 +68,9 @@ serveur après un rechargement, éteinte quand le professeur la traite ; avant d
 et trois cases à cocher, **3 sonneries par heure au plus** — code commun [`cloche.js`](cloche.js), à charger
 avant `blocs.js` comme dans `modele/index.html`) ; bandeau « bravo » ; reprise de
 l'avancement depuis le serveur ; aperçu professeur `#bloc=N` avec le choix de la version de la preuve ;
-brouillon d'une rédaction gardé sur le poste ; erreurs envoyées au tableau (« Où le groupe bute »).
+brouillon d'une rédaction gardé sur le poste ; programme validé (question `code`) gardé sur le poste et
+relu quand on revient sur le bloc : code de départ, programme de l'élève, lignes changées en gras,
+explication `juste` ; erreurs envoyées au tableau (« Où le groupe bute »).
 
 ## Vérifier avant de publier
 
