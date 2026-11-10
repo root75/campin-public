@@ -63,10 +63,11 @@ function verifie(k,d=state){
   if(!/loisir|sport|activite|pratique|aime|joue|lecture|lire|musique|dessin|danse|anime/.test(v))return 'Réponds à la question de Camille : écris une phrase complète sur ton sport ou ton loisir, par exemple « Je pratique le football. »';
   if(!/bonne journee|a bientot|merci|cordialement|bonne soiree/.test(v))return 'Avant ta signature, ajoute une formule de fin du modèle : « Bonne journée, » ou « À bientôt, » (Merci, Cordialement ou Bonne soirée conviennent aussi).';
   if(v.length<35)return 'Ta réponse est trop courte. Il faut, dans l’ordre : la salutation, une phrase complète sur ton loisir, une formule de fin et ta signature.';const mots=norm(d.nom).split(/[^a-z0-9'-]+/).filter(Boolean);
- if(!mots.length)return 'Reviens au bloc 6 pour renseigner ton prénom et ton nom.';
+ if(!mots.length)return 'Écris d’abord ton prénom et ton nom dans la case « Ton prénom et ton nom », juste au-dessus de ta réponse.';
  if(!mots.every(m=>v.split(/[^a-z0-9'-]+/).includes(m)))return 'Dans ta signature, reprends le prénom et le nom du bloc 6 : '+d.nom.trim()+'.';
- const classe=classeSignature(d);
- if(!classe)return 'Reviens au bloc 6 pour ajouter ta classe dans ta signature.';
+ /* La classe : celle du serveur ou du bloc 6 ; sans brouillon (autre poste, aperçu), celle écrite dans la réponse. */
+ const classe=classeSignature(d)||(/(?:^|[\s,:])([12]\s*[a-z](?:\d)?)(?=$|[\s,.;])/i.exec(d.reponse.trim())?.[1]||'');
+ if(!classe)return 'Ajoute ta classe dans ta signature, après ton prénom et ton nom (exemple : 2B).';
  if(!v.replace(/\s/g,'').includes(norm(classe).replace(/\s/g,'')))return 'Dans ta signature, reprends la classe du bloc 6 : '+classe+'.';
  return ''; }
  if(k==='a')return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.a.trim())&&d.a.trim().toLowerCase()===DEST ? '' : 'Écris l’adresse de Camille indiquée dans la mission. Vérifie chaque lettre : un @ et une adresse plausible ne suffisent pas.';
@@ -100,19 +101,44 @@ function verifie(k,d=state){
 }
 /* Le nom à taper dans Cc : Outlook trouve la personne dans l'annuaire de l'école. */
 function nomProf(){const c=String(classeScolaire||state.classe||'').replace(/\s/g,'').toUpperCase();if(/^2E/.test(c))return 'Michiels';if(c)return 'Louviaux';return 'Louviaux (2B, 2F) ou Michiels (2E)';}
-const COTE=()=>`<aside class="mission cote"><b>⚠ Ton message au camarade est coté sur 5</b><p>Ton professeur est <b>en copie (Cc)</b> : il reçoit ton message et vérifie chaque élément.</p><ol><li><b>À</b> : l’adresse de ton camarade · <b>Cc</b> : ton professeur, ${nomProf()}</li><li><b>Objet</b> : un titre court qui annonce ta question.</li><li><b>Salutation</b> : « Bonjour », le prénom de ton camarade avec sa majuscule, puis une virgule. Par exemple « Bonjour Lucas, ».</li><li><b>Message</b> : la question de ton professeur, posée à ton camarade, avec une majuscule et un point d’interrogation.</li><li><b>Fin et signature</b> : une formule de fin, puis ton prénom, ton nom et ta classe.</li></ol><p>Sans ton professeur en Cc, il ne reçoit pas ton message et ne peut pas le coter.</p></aside>`;
+const COTE=(rappel=false)=>`<aside class="mission cote"><b>${rappel?'Avant d’envoyer : la grille de ton message, coté sur 5':'⚠ Ton message au camarade est coté sur 5'}</b><p>Ton professeur est <b>en copie (Cc)</b> : il reçoit ton message et le cote avec cette grille. Un point par ligne.</p><table class="grille-cote"><tr><th>Dans ton message</th><th>Points</th></tr><tr><td><b>À</b> : l’adresse de ton camarade · <b>Cc</b> : ton professeur, ${nomProf()}</td><td>1</td></tr><tr><td><b>Objet</b> : un titre court qui annonce ta question.</td><td>1</td></tr><tr><td><b>Salutation</b> : « Bonjour », le prénom de ton camarade avec sa majuscule, puis une virgule. Par exemple « Bonjour Lucas, ».</td><td>1</td></tr><tr><td><b>Message</b> : la question de ton professeur, posée à ton camarade, avec une majuscule et un point d’interrogation.</td><td>1</td></tr><tr><td><b>Fin et signature</b> : une formule de fin, puis ton prénom, ton nom et ta classe.</td><td>1</td></tr></table><p>Sans ton professeur en Cc, il ne reçoit pas ton message et ne peut pas le coter.</p></aside>`;
 /* La phrase de la fin (code commun : pas-a-pas/phrase-fin.js), sous le message de réussite de l'étape 11. */
 const CITATION={texte:'Ce que l’on conçoit bien s’énonce clairement,\nEt les mots pour le dire arrivent aisément.',auteur:'Nicolas Boileau',source:'L’Art poétique, chant I (1674)',lien:'Un bon mail aussi : je sais ce que je veux dire, puis je l’écris simplement.'};
 /* Pour ceux qui ont fini avant les autres : un ordre, une chose à la fois. */
 const FINI='<aside class="mission fini" id="fini-avant"><b>🏁 Tu as fini avant les autres ? Dans l’ordre :</b><ol><li>Donne ton avis, juste en dessous : trois phrases courtes.</li><li>Révise avec « Mon premier message — je révise » : <a href="https://root75.github.io/campin-public/messagerie/" target="_blank" rel="noopener">ouvrir la page ↗</a>. Réponds aux questions, puis retourne les cartes mémoire.</li><li>Si ton professeur te le propose, deviens <b>aidant</b> : va voir un camarade qui a sonné la cloche 🔔. Tu expliques avec des mots, tu ne touches pas sa souris.</li></ol></aside>';
 const corps=d=>[d.salutation,d.message,d.fin,d.signature].join('\n\n');
 const erreurs=d=>['a','objet','salutation','message','fin','signature'].map(k=>({champ:k,texte:verifie(k,d)})).filter(x=>x.texte);
+/* La barre des étapes, comme dans les autres cours : une pastille numérotée par étape, le titre sur celle de l'étape
+   affichée (les autres le donnent au survol), ✓ sur les étapes validées. Cliquable jusqu'à la première étape non
+   validée : on revient relire, puis on repart en avant. Sans la barre (ancienne page en cache), rien ne se passe. */
+function pastilles(e){
+ const b=document.getElementById('pastilles');if(!b)return;
+ for(const id of ['compteur','barre'])document.getElementById(id).hidden=true;
+ b.replaceChildren();
+ TITRES.forEach((t,i)=>{
+  const fait=i<state.atteint,n=document.createElement('button');n.type='button';
+  if(fait)n.className='fait';
+  n.textContent=(fait?'✓ ':'')+(i+1)+(i===e?'. '+t:'');n.title=(i+1)+'. '+t;
+  n.setAttribute('aria-label',n.title+(fait?' — validée':''));if(i===e)n.setAttribute('aria-current','step');
+  n.disabled=i>state.atteint;
+  n.addEventListener('click',()=>{if(i===e||i>state.atteint)return;state.etape=i;state.preuve='';sauve();render();scrollTo(0,0);});
+  b.append(n);
+ });
+}
+/* Reprise au bloc 8 sur un autre poste : le brouillon des blocs 1 à 7 (dont le prénom et le nom du bloc 6) n'est gardé que
+   sur l'ordinateur d'origine. Sans lui, la signature ne peut pas être vérifiée : on redemande le nom ici, une fois. */
+let nomDemandeIci=false;
+function nomSiManquant(){
+ if(!state.nom.trim())nomDemandeIci=true;
+ return nomDemandeIci?champ('nom','Ton prénom et ton nom','Tu reprends sur un autre poste : écris-les ici, ta signature sera vérifiée avec eux.'):'';
+}
 function champ(k,label,help,area=false){return `<label for="${k}">${label}</label>${help?`<p class="aide-champ" id="aide-${k}">${help}</p>`:''}<${area?'textarea':'input'} id="${k}" name="${k}" ${area?'rows="4"':'type="text"'} maxlength="${['message','reponse'].includes(k)?700:120}" ${help?`aria-describedby="aide-${k}"`:''}>${area?escapeHtml(state[k]):''}${area?'</textarea>':''}`;}
 function apercu(d=state){return `<div class="email"><div class="ligne-mail"><b>À</b><span>${escapeHtml(d.a)||'…'}</span></div><div class="ligne-mail"><b>Objet</b><span>${escapeHtml(d.objet)||'…'}</span></div><div class="corps"><span class="tag">Corps du message</span><p>${escapeHtml(corps(d))||'…'}</p></div></div>`;}
 function render(){
  const e=state.etape;
  document.getElementById('compteur').textContent=`${e+1} / ${TITRES.length} — ${TITRES[e]}`;
  document.getElementById('barre').value=e+1;
+ pastilles(e);
  document.getElementById('choix-etape').value=e;for(const o of document.getElementById('choix-etape').options)o.disabled=Number(o.value)>state.atteint;
  const z=document.getElementById('contenu');
  const mission='<aside class="mission"><b>Ta mission d’entraînement</b><p>Écris à Camille pour lui demander quel sport ou quel loisir elle pratique.</p><p>Camille est fictive. Son adresse : <b>camille.martin@example.org</b>.</p></aside>';
@@ -130,11 +156,11 @@ function render(){
 Je pratique la boxe thaï. Et toi, quel sport ou quel loisir pratiques-tu ?
 
 Bonne journée,
-Camille</p></div></div><p><b>Utilise Répondre :</b> le destinataire et l’objet de la conversation sont conservés. Écris seulement ta réponse au-dessus du message précédent.</p><button type="button" id="ouvrir-reponse">↶ Répondre à Camille</button><div id="zone-reponse" hidden><div class="ligne-mail"><b>À</b><span>camille.martin@example.org</span></div><div class="ligne-mail"><b>Objet</b><span>RE : ${escapeHtml(state.objet)}</span></div>`+champ('reponse','Corps de ta réponse','Commence par la salutation du modèle, « Bonjour Camille, ». Réponds à sa question par une phrase complète, puis ajoute une formule de fin (« Bonne journée, ») et ta signature. Tu peux inventer un loisir si tu préfères.'+(state.nom&&classeSignature(state)?'<br><b>Signature à reprendre :</b> '+escapeHtml(state.nom)+', '+escapeHtml(classeSignature(state))+'.':''),true)+`</div><p class="note">Les contrôles vérifient des éléments de forme. Le professeur vérifie aussi que la réponse a du sens et répond bien à la question.</p>`;
+Camille</p></div></div><p><b>Utilise Répondre :</b> le destinataire et l’objet de la conversation sont conservés. Écris seulement ta réponse au-dessus du message précédent.</p><button type="button" id="ouvrir-reponse">↶ Répondre à Camille</button><div id="zone-reponse" hidden><div class="ligne-mail"><b>À</b><span>camille.martin@example.org</span></div><div class="ligne-mail"><b>Objet</b><span>RE : ${escapeHtml(state.objet)}</span></div>`+nomSiManquant()+champ('reponse','Corps de ta réponse','Commence par la salutation du modèle, « Bonjour Camille, ». Réponds à sa question par une phrase complète, puis ajoute une formule de fin (« Bonne journée, ») et ta signature. Tu peux inventer un loisir si tu préfères.'+(state.nom&&classeSignature(state)?'<br><b>Signature à reprendre :</b> '+escapeHtml(state.nom)+', '+escapeHtml(classeSignature(state))+'.':''),true)+`</div><p class="note">Les contrôles vérifient des éléments de forme. Le professeur vérifie aussi que la réponse a du sens et répond bien à la question.</p>`;
  if(e===8)h+=`<p><b>À partir d’ici, tout est réel.</b> Ouvre Outlook avec ton compte scolaire et lis le message de ton professeur <b>en entier</b>. Tu n’y réponds pas : tu vas te servir de sa question à l’étape suivante.</p><p><a class="bouton" href="https://outlook.office.com/" target="_blank" rel="noopener">Ouvrir Outlook ↗</a></p><ol><li>Ouvre <b>Boîte de réception</b>, à gauche.</li><li>Cherche le message « <b>Bienvenue dans ta boîte de l’école</b> ». Pas là ? Regarde l’onglet <b>Autres</b>, ou tape le nom du professeur dans <b>Rechercher</b>, tout en haut.</li><li>Clique sur le message pour l’ouvrir, puis lis-le jusqu’au bout.</li><li>Repère son nom, son adresse, l’objet et <b>la question qu’il te pose</b>.</li><li>Retiens cette question : à l’étape suivante, tu la poses à ton camarade.</li></ol><p class="note"><b>Ici, tu lis seulement.</b> Tu ne réponds pas au professeur et tu n’écris aucun message : cela vient à l’étape 10.</p>`+`<p><b>Repères :</b> les messages reçus sont dans Boîte de réception ; les messages commencés restent dans Brouillons ; les envois sont dans Éléments envoyés.</p>`+champPreuve(8);
  if(e===9)h+=`<p>Écris maintenant un vrai message à un camarade désigné par le professeur, <b>avec ton professeur en copie</b>.</p><ol><li>Vérifie avec ton camarade son adresse scolaire exacte. <b>N’utilise pas l’adresse fictive de Camille.</b></li><li>Outlook ▸ onglet <b>Accueil</b> ▸ bouton bleu <b>Nouveau message</b> (touche N).</li><li>Dans <b>À</b>, écris l’adresse de ton camarade et choisis-la dans la liste proposée.</li><li>Dans <b>Cc</b>, juste sous la ligne À, tape simplement le <b>nom</b> de ton professeur : <b>${nomProf()}</b>. Outlook te propose plusieurs lignes : clique sur celle dont l’adresse finit par <b>@arcampin.be</b>. Pas une ligne marquée « Externe », pas une adresse en @arcampin.com ou @gmail.com.</li><li>Laisse <b>Cci</b> vide.</li></ol><p class="note"><b>Pour écrire à n’importe quel professeur de l’école</b> : tape son nom dans À ou dans Cc, puis choisis dans la liste la ligne dont l’adresse finit par <b>@arcampin.be</b>. Outlook trouve son adresse tout seul : pas besoin de la connaître par cœur.</p><ol start="6"><li>Dans <b>Objet</b>, écris un titre court qui annonce ta question.</li><li><b>Clique dans la grande zone sous l’objet.</b> Écris « Bonjour », le prénom de ton camarade avec une majuscule et une virgule (« Bonjour Lucas, »), puis passe à la ligne.</li><li>Pose-lui <b>la question que ton professeur t’a posée</b> (étape 9). Passe à la ligne.</li><li>Ajoute une formule de fin, puis ton prénom, ton nom et ta classe.</li><li><b>N’envoie pas encore</b> : tu relis à l’étape suivante.</li></ol>`+COTE()+`<details><summary>Voir les champs dans Outlook</summary><img loading="lazy" src="https://root75.github.io/campin-public/messagerie/pas-a-pas/capture.webp?v=20261110" alt="Vue adaptée d’Outlook : À, Cc, Objet et corps du message."><p>Vue adaptée à partir de la capture fournie.</p></details>`+champPreuve(9);
- if(e===10)h+=`<p>Avant l’envoi, relis ton mail dans Outlook.</p><ul class="controle"><li><b>À</b> : l’adresse de ton camarade.</li><li><b>Cc</b> : ton professeur, ${nomProf()}, avec une adresse qui finit par @arcampin.be.</li><li><b>Objet</b> : il annonce ta question.</li><li>Le corps contient la salutation, la question du professeur, une formule de fin et ta signature (prénom, nom, classe).</li><li>Tu as relu l’orthographe : majuscule au début, point d’interrogation à la fin de ta question.</li></ul><ol><li>Clique sur <b>Envoyer</b>.</li><li>Clique sur <b>Éléments envoyés</b>, à gauche, et ouvre ton mail : ton professeur doit apparaître dans la ligne Cc. S’il est encore dans <b>Brouillons</b>, il n’est pas parti.</li><li>Ton camarade te répond à l’étape 12. Pas de mail reçu chez lui ? Vérifiez ensemble l’adresse dans la ligne À.</li></ol>`+champPreuve(10);
- if(e===11)h+=`<p>Ouvre le mail reçu de ton camarade.</p><ol><li>Lis sa question en entier.</li><li>Clique sur <b>Répondre à tous</b> (et pas Répondre) : ton professeur reste en Cc et reçoit ta réponse.</li><li>Garde l’objet de la conversation (« RE: »).</li><li>Dans le corps, salue ton camarade puis réponds à sa question par une phrase complète.</li><li>Ajoute une formule de fin et ta signature.</li><li>Relis, envoie, et vérifie dans Éléments envoyés. Vérifie aussi que tu as reçu sa réponse à ton premier mail.</li></ol><p class="note">Cette page ne voit pas Outlook. La vraie preuve, c’est ton professeur en Cc : il reçoit ton message et ta réponse.</p>`+champPreuve(11);
+ if(e===10)h+=`<p>Avant l’envoi, relis ton mail dans Outlook.</p><ul class="controle"><li><b>À</b> : l’adresse de ton camarade.</li><li><b>Cc</b> : ton professeur, ${nomProf()}, avec une adresse qui finit par @arcampin.be.</li><li><b>Objet</b> : il annonce ta question.</li><li>Le corps contient la salutation, la question du professeur, une formule de fin et ta signature (prénom, nom, classe).</li><li>Tu as relu l’orthographe : majuscule au début, point d’interrogation à la fin de ta question.</li></ul>`+COTE(true)+`<ol><li>Clique sur <b>Envoyer</b>.</li><li>Clique sur <b>Éléments envoyés</b>, à gauche, et ouvre ton mail : ton professeur doit apparaître dans la ligne Cc. S’il est encore dans <b>Brouillons</b>, il n’est pas parti.</li><li>Ton camarade te répond à l’étape 12. Pas de mail reçu chez lui ? Vérifiez ensemble l’adresse dans la ligne À.</li></ol>`+champPreuve(10);
+ if(e===11)h+=`<p>Ouvre le mail reçu de ton camarade.</p><p class="note">Cette réponse n’est pas cotée : c’est ton premier message, envoyé à l’étape 11, qui est coté sur 5. Elle montre que tu sais répondre à tous.</p><ol><li>Lis sa question en entier.</li><li>Clique sur <b>Répondre à tous</b> (et pas Répondre) : ton professeur reste en Cc et reçoit ta réponse.</li><li>Garde l’objet de la conversation (« RE: »).</li><li>Dans le corps, salue ton camarade puis réponds à sa question par une phrase complète.</li><li>Ajoute une formule de fin et ta signature.</li><li>Relis, envoie, et vérifie dans Éléments envoyés. Vérifie aussi que tu as reçu sa réponse à ton premier mail.</li></ol><p class="note">Cette page ne voit pas Outlook. La vraie preuve, c’est ton professeur en Cc : il reçoit ton message et ta réponse.</p>`+champPreuve(11);
  if(e===7)h+=champPreuve(7);
  h+='<div id="retour" role="status" aria-live="polite" tabindex="-1"></div>';
  if(e===11&&state.atteint>=12)h+=FINI;
@@ -142,10 +168,20 @@ Camille</p></div></div><p><b>Utilise Répondre :</b> le destinataire et l’obje
  z.innerHTML=h;
  for(const el of z.querySelectorAll('input,textarea')){el.value=state[el.id]||'';el.addEventListener('input',()=>{state[el.id]=el.value;sauve();document.getElementById('aperçu-courant').innerHTML=apercu();document.getElementById('retour').innerHTML='';document.getElementById('retour').className='';});}
  document.getElementById('ouvrir-reponse')?.addEventListener('click',()=>{document.getElementById('zone-reponse').hidden=false;document.getElementById('reponse').focus();});
+ /* Étape 8 : une réponse déjà commencée se rouvre toute seule (retour sur l'étape, rechargement). */
+ if(e===7&&state.reponse.trim())document.getElementById('zone-reponse').hidden=false;
  document.getElementById('precedent')?.addEventListener('click',()=>{state.etape--;state.preuve='';render();});
  document.getElementById('revoir')?.addEventListener('click',()=>{state.etape=6;render();});
  document.getElementById('suivant')?.addEventListener('click',async()=>{
   if(document.getElementById('suivant').disabled)return;
+  /* Étape 8 : « Vérifier » sans avoir cliqué sur « Répondre à Camille ». La case de la réponse est encore fermée :
+     on l'ouvre et on le dit, sans compter d'erreur ni reprocher une salutation que l'élève ne peut pas voir. */
+  if(e===7&&document.getElementById('zone-reponse').hidden){
+   document.getElementById('zone-reponse').hidden=false;
+   const f=document.getElementById('retour');f.className='retour faux';
+   f.innerHTML='<b>Écris d’abord ta réponse à Camille</b><p>La case « Corps de ta réponse » vient de s’ouvrir, plus haut. Écris-y ta réponse, puis clique de nouveau sur « Vérifier cette étape ».</p>';
+   document.getElementById('reponse').focus();return;
+  }
   const champs={0:['locale','domaine'],1:['a'],2:['objet'],3:['salutation'],4:['message'],5:['fin','signature'],7:['reponse']}[e]||[];
   const err=e===6?erreurs(state):champs.map(k=>({champ:k,texte:verifie(k)})).filter(x=>x.texte);
   const feedback=document.getElementById('retour');
