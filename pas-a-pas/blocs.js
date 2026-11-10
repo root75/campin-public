@@ -212,6 +212,9 @@ function affiche(){
     /* Présentation « missions » (Labo 07) : le but en une phrase, les cases, puis ce qu'on vérifie.
        Pas d'étiquettes répétées à chaque bloc. */
     z.append(el("p","but",B.veux));
+    /* B.avant = ce qu'il faut avoir sous les yeux AVANT de cocher (un exemple analysé, un tableau à lire) : les
+       cases ne demandent jamais de lire ce qui n'est pas encore à l'écran, comme la question de preuve. */
+    if(B.avant) z.append(el("div","avant",B.avant));
     /* Démo animée « Regarde comment faire ». Deux façons, au choix de la fiche :
        - un bloc porte `demos` (Labo 07) : une animation sous chaque case qu'elle montre (voir demosSousCases) ;
        - sinon, une démo par étape avant les cases : Demo.pour (Python, pas-a-pas/demos-python.js).
