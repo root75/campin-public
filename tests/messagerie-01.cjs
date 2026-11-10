@@ -25,3 +25,7 @@ assert.match(verifie('salutation',{...good,salutation:'Coucou Camille'}),/saluta
 for(const [sal,motif] of [['bonjour Camille,',/majuscule : « Bonjour »/],['Bonjour camille,',/prénom prend une majuscule/],['Bonjour Camille',/virgule/],['Bonjour,',/écris le prénom/],['Bonjour Lucas,',/Salue Camille/],['Salut Camille,',/^$/],['Bonjour Camille, ça va ?',/seulement la salutation/]])assert.match(verifie('salutation',{...good,salutation:sal}),motif,sal);
 assert.match(verifie('reponse',{...good,reponse:'bonjour camille, je pratique le dessin. Bonne journée, Lina Dupont, 2B'}),/majuscule/);
 (async()=>{vm.runInContext('preuves='+JSON.stringify(proofs)+';Object.assign(state,'+JSON.stringify(good)+');',x);await vm.runInContext('valideServeur(0)',x);assert.ok(s.includes('dejaValide.get(e)===reponse'));assert.ok(s.includes('document.getElementById(\'suivant\').disabled)return'));assert.ok(s.includes("actuel?.q!==q.q"));console.log('OK : validations des champs, 12 preuves locales/serveur, réponses incorrectes rejetées.');})().catch(e=>{console.error(e);process.exitCode=1});
+
+// Reprise au bloc 8 sur un autre poste : sans brouillon local, le prénom et le nom se redemandent au bloc 8.
+assert.ok(/nomSiManquant\(\)\+champ\('reponse'/.test(s), 'bloc 8 : la case prénom et nom apparaît quand le brouillon manque');
+assert.match(verifie('reponse',{...good,nom:'',reponse:'Bonjour Camille, je pratique le dessin le mercredi. Bonne journée, Lina Dupont, 2B'}),/juste au-dessus de ta réponse/);
