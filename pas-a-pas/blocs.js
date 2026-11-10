@@ -444,13 +444,23 @@ function trous(zone, Q, reussi, rate){
   }
   dessine();
   zone.append(p, boite, consigne, actions);
-  ok.addEventListener("click",()=>{
+  let tentatives = 0;
+  ok.addEventListener("click",async ()=>{
+    if(ok.disabled) return;
     const choisis = places.map(k=>banque[k]), reponse = choisis.join(" | ");
     rouges = choisis.map((m,i)=>norm(m)===norm(Q.mots[i]) ? -1 : i).filter(i=>i>=0);
+    /* Question « serveur » (preuves.json), fiche suivie : c'est Code.gs qui tranche et écrit juste / faux au Journal. */
+    const serveur = Q.serveur && SUIVI && !APERCU;
+    if(serveur){
+      ok.disabled = true;
+      try { const r = await correctionServeur(Q, reponse, ++tentatives); rouges = r.juste ? [] : (Array.isArray(r.rouges) && r.rouges.length ? r.rouges : (rouges.length ? rouges : [0])); }
+      catch(e){ ok.disabled = false; consigne.textContent = e.message; return; }
+      ok.disabled = false;
+    }
     if(rouges.length){
       dessine();
       rate(Q.faux || (rouges.length===1 ? "Un mot n’est pas à sa place : le trou rouge." : rouges.length+" mots ne sont pas à leur place : les trous rouges.")
-        +" Clique sur un trou rouge pour le vider, puis choisis un autre mot. Relis la phrase entière à voix basse.", reponse);
+        +" Clique sur un trou rouge pour le vider, puis choisis un autre mot. Relis la phrase entière à voix basse.", reponse, serveur);
       return;
     }
     fige = true; dessine(); consigne.remove(); actions.remove();

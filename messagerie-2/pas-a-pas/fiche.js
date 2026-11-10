@@ -3,7 +3,7 @@
 const COURS = 'messagerie-2';
 const VERSION_PARCOURS = 'v1';
 const PRESENTATION = 'missions';
-const PREUVES = 'https://root75.github.io/campin-public/messagerie-2/pas-a-pas/preuves.json?v=20261109b';
+const PREUVES = 'https://root75.github.io/campin-public/messagerie-2/pas-a-pas/preuves.json?v=20261110';
 const HORS_SUIVI = 'Entraînement libre : rien n’est transmis au professeur. En classe, ouvre Mes cours avec ton compte scolaire.';
 
 /* ===== La réponse au professeur (bloc 8), contrôlée ligne par ligne ===== */
@@ -61,14 +61,14 @@ const BLOCS = [
  {partie:'A — Je m’entraîne, rien n’est envoyé', titre:'Repérer le mail piège', min:5,
   veux:'Avant d’ouvrir une pièce jointe, je regarde <b>QUI</b> l’envoie et <b>QUEL</b> fichier c’est.',
   extra:'<aside class="repere regle"><h3>⭐ La règle de la leçon</h3><p>Un inconnu, une adresse mal écrite, un fichier inattendu en <b>.exe</b> ou <b>.zip</b> : je n’ouvre pas, je sonne la cloche 🔔 et je montre à mon professeur.</p></aside>',
-  gestes:['Lis les quatre messages de la question.','Regarde l’adresse après « De : », lettre par lettre.','Regarde la fin du nom du fichier, après le point.','Clique sur le message qu’il ne faut <b>pas</b> ouvrir.'],
+  gestes:['Lis le message de la question.','Regarde l’adresse après « De : », lettre par lettre.','Regarde la fin du nom du fichier, après le point.','Complète l’explication avec les mots de la banque, puis écris ta phrase.'],
   vois:'Le message piège est repéré : je sais dire si c’est l’expéditeur ou le fichier qui pose problème.',
   coince:['.docx, .pdf, .pptx : un document Word, un PDF, une présentation. Normaux s’ils sont attendus.','.exe est un programme qui s’installe ; .zip est un paquet fermé de fichiers. D’un inconnu : on n’ouvre jamais.','Les adresses de l’école finissent par @arcampin.be. Une seule lettre change, et ce n’est plus l’école.'],
-  q:{serveur:true, rendu:carteMail}},
+  q:{serveur:true}},
  {partie:'A — Je m’entraîne, rien n’est envoyé', titre:'Répondre, Répondre à tous ou Transférer ?', min:5,
   veux:'Avant de cliquer, je sais <b>qui</b> va recevoir mon message.',
   extra:'<table class="lettre"><tr><th>Bouton</th><th>Pour une lettre</th><th>Qui reçoit ?</th></tr><tr><td><b>↩ Répondre</b></td><td>je réponds à celui qui m’a écrit</td><td>l’expéditeur, seul</td></tr><tr><td><b>↩↩ Répondre à tous</b></td><td>je réponds à tous ceux qui ont reçu la lettre</td><td>l’expéditeur et tous les autres destinataires</td></tr><tr><td><b>↪ Transférer</b></td><td>je fais suivre la lettre à quelqu’un d’autre</td><td>la personne que je choisis ; la pièce jointe part avec</td></tr></table>',
-  gestes:['Lis le tableau.','Lis la situation de la question.','Demande-toi : qui doit recevoir mon message ?','Clique sur le bon bouton.'],
+  gestes:['Lis le tableau.','Lis la situation de la question.','Demande-toi : qui doit recevoir mon message ?','Complète l’explication avec les mots de la banque, puis écris ta phrase.'],
   vois:'Je peux expliquer mon choix à mon voisin : qui reçoit le message.',
   coince:['Presque toujours Répondre. Répondre à tous seulement si tout le monde doit lire ta réponse : si le message a été envoyé à toute la classe, toute la classe la lit !'],
   q:{serveur:true}},

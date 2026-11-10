@@ -67,9 +67,51 @@ function remplitSeances(liste, garder){
     o.value = i; return o; }));
   const k = garder ? liste.findIndex(s=>s.debut===garder) : -1;
   if(k >= 0) sel.value = String(k);
+  caseAutresClasses();
   etatTerminer();
   charge();
   chargeSequence();
+}
+/* Deux classes en même temps dans le local (co-enseignement) : une séance par classe côté serveur, mais UN tableau.
+   La case ajoute à la séance choisie les élèves des autres classes dont la séance de ce cours est en cours.
+   Rien ne change côté serveur : un appel donnees() par classe, réunis ici. Les boutons d'un élève (Recommencer,
+   Aide traitée) agissent sur la séance de SA classe. Cadenas et cours collectif restent ceux de la séance choisie. */
+/* Les classes réunies : une case par classe, cochée par le professeur et gardée sur le poste. Une classe proposée =
+   une classe qui a ce cours ouvert (panneau « Mes cours ») ou qui a déjà eu une séance de ce cours. Pour chacune : sa
+   séance la plus récente, en cours ou non ; sans aucune séance, tout son historique (début 0), comme le fait etat()
+   pour ses élèves. Aucune séance n'est créée ni reprise : l'avancement des élèves ne bouge pas. */
+let classesVues = [];
+try { classesVues = JSON.parse(localStorage.getItem("tableau:classes-vues") || "[]"); } catch(e){}
+function classesPossibles(){
+  const s = choisie(), cours = $("cours").value, noms = new Set(SEANCES.map(x=>x.classe).filter(Boolean));
+  if(CL && CL.classes) Object.keys(CL.classes).forEach(c=>{ if((CL.classes[c]||[]).includes(cours)) noms.add(c); });
+  noms.delete(s.classe);
+  return [...noms].sort((a,b)=>a.localeCompare(b,"fr",{numeric:true}));
+}
+const seanceDe = c => { const i = SEANCES.findIndex((x,k)=>x.classe===c && derniere(x,k)); return i>=0 ? SEANCES[i] : { classe:c, debut:0, fin:null, sansSeance:true }; };
+const autresSeances = () => { const possibles = classesPossibles(); return classesVues.filter(c=>possibles.includes(c)).map(seanceDe); };
+function caseAutresClasses(){
+  if(!SUIVI) return;
+  let z = $("autres-classes-label");
+  if(!z){
+    z = txt("div","filtre-aide"); z.id = "autres-classes-label"; z.style.cssText = "display:flex;flex-wrap:wrap;gap:4px 14px;align-items:center;width:100%;font-weight:700";
+    $("seance").after(z);
+    $("seance").addEventListener("change", caseAutresClasses);
+  }
+  const possibles = classesPossibles();
+  z.hidden = !SUIVI || !possibles.length || !choisie().debut;
+  z.replaceChildren(txt("span",null,"Voir aussi :"), ...possibles.map(c=>{
+    const lab = txt("label"), cb = txt("input"), se = seanceDe(c), k = SEANCES.indexOf(se);
+    lab.style.cssText = "display:inline-flex;gap:5px;align-items:center;font-weight:400";
+    cb.type = "checkbox"; cb.dataset.classe = c; cb.checked = classesVues.includes(c);
+    cb.addEventListener("change",()=>{
+      classesVues = classesVues.filter(x=>x!==c).concat(cb.checked ? [c] : []);
+      try { localStorage.setItem("tableau:classes-vues", JSON.stringify(classesVues)); } catch(e){}
+      contexteAffiche = ""; charge();
+    });
+    lab.title = se.sansSeance ? "Pas de séance pour cette classe : tout son historique sur ce cours." : (k>=0 && enCours(se,k) ? "Séance en cours" : "Dernière séance (pas en cours)") + " : " + heure(se.debut);
+    lab.append(cb, txt("span",null,c + (se.sansSeance ? " (sans séance)" : k>=0 && enCours(se,k) ? " (en séance)" : "")));
+    return lab; }));
 }
 /* Une séance par cours ET par classe : `derniere` = la plus récente de sa classe (serveur depuis le
    06/11/2026) ; un ancien serveur ne l'envoie pas, et seule la toute première de la liste compte. */
@@ -163,7 +205,8 @@ function dessine(d){
     const tr = txt("tr", e.aide ? "aide" : e.fini ? "fini" : "");
     const td = (cls,t) => { const c=txt("td",cls,t); tr.append(c); return c; };
     const n1 = td("nom", nom(e.email)); n1.title = e.email;
-    if(SUIVI&&d.reprisesParSuivi&&d.peutReprendre){const cours=$("cours").value,seance=choisie();const r=txt("button","btn vide","Recommencer");r.type="button";r.setAttribute("aria-label","Faire recommencer "+nom(e.email));r.addEventListener("click",()=>{if(!confirm("Faire recommencer ce cours à "+nom(e.email)+" ? L’historique est conservé."))return;r.disabled=true;google.script.run.withSuccessHandler(()=>{charge();}).withFailureHandler(err=>{r.disabled=false;erreur(err);}).noter(cours,{type:'prof-reprise',email:e.email,debut:seance.debut});});n1.append(r);}
+    if(d._classes){ const c = txt("span","qui"," · "+e.classe); c.style.cssText = "color:var(--doux);font-weight:400"; n1.append(c); }
+    if(SUIVI&&(e._d||d).reprisesParSuivi&&(e._d||d).peutReprendre){const cours=$("cours").value,seance=e._seance||choisie();const r=txt("button","btn vide","Recommencer");r.type="button";r.setAttribute("aria-label","Faire recommencer "+nom(e.email));r.addEventListener("click",()=>{if(!confirm("Faire recommencer ce cours à "+nom(e.email)+" ? L’historique est conservé."))return;r.disabled=true;google.script.run.withSuccessHandler(()=>{charge();}).withFailureHandler(err=>{r.disabled=false;erreur(err);}).noter(cours,{type:'prof-reprise',email:e.email,debut:seance.debut});});n1.append(r);}
     n1.append(caseRecompense(e));
     const h = td("hum", e.humeur ? e.humeur.split(" ")[0] : ""); if(e.humeur) h.title = e.humeur;
     const b = txt("div","barre");
@@ -175,8 +218,8 @@ function dessine(d){
     const etat = td();
     if(e.aide){
       etat.append(txt("span","pastille aide","✋ aide · bloc "+e.aide.bloc+" · "+ilya(d.maintenant-e.aide.depuis).replace("il y a ","")));
-      if(SUIVI && d.peutCloreAide){
-        const cours=$("cours").value,seance=choisie(),depuis=e.aide.depuis;
+      if(SUIVI && (e._d||d).peutCloreAide){
+        const cours=$("cours").value,seance=e._seance||choisie(),depuis=e.aide.depuis;
         const b=txt("button","btn vide","Aide traitée");b.type="button";
         b.setAttribute("aria-label","Aide traitée pour "+nom(e.email));
         b.addEventListener("click",()=>{
@@ -198,7 +241,7 @@ function dessine(d){
   });
 
   syntheses(d, el, n);
-  const s = choisie(); $("titre-classe").textContent = s.classe ? s.classe + " · " : "";
+  const s = choisie(); $("titre-classe").textContent = d._classes ? d._classes.join(" + ") + " · " : s.classe ? s.classe + " · " : "";
   $("maj").textContent = "Mis à jour à " + new Date(d.maintenant).toLocaleTimeString("fr-BE",{hour:"2-digit",minute:"2-digit",second:"2-digit"});
 }
 
@@ -278,6 +321,21 @@ function charge(){
   const cours=$("cours").value,demande=++numeroChargement;
   const contexte=cours+":"+s.debut;
   if(contexte!==contexteAffiche){$("lignes").replaceChildren();if($("python-plafond"))$("python-plafond").hidden=true;}
+  const autres = s.debut ? autresSeances() : [];
+  if(autres.length){
+    Promise.all([s].concat(autres).map(x=>serveur("donnees", cours, x.debut, x.fin, x.classe))).then(l=>{
+      if(demande!==numeroChargement || $("cours").value!==cours || choisie().debut!==s.debut) return;
+      const d = l[0]; d.eleves.forEach(e=>{ e.classe = s.classe; });
+      l.slice(1).forEach((dk,k)=>{
+        dk.eleves.forEach(e=>{ e.classe = autres[k].classe; e._seance = autres[k]; e._d = dk; });
+        d.eleves = d.eleves.concat(dk.eleves);
+        Object.keys(dk.parBloc||{}).forEach(b=>{ d.parBloc[b] = (d.parBloc[b]||0) + dk.parBloc[b]; });
+      });
+      d._classes = [s.classe].concat(autres.map(x=>x.classe));
+      contexteAffiche = contexte; dessine(d);
+    }).catch(err=>{ if(demande===numeroChargement) erreur(err); });
+    return;
+  }
   google.script.run.withSuccessHandler(d=>{if(demande===numeroChargement&&$("cours").value===cours&&choisie().debut===s.debut){contexteAffiche=contexte;dessine(d);}}).withFailureHandler(err=>{if(demande===numeroChargement)erreur(err);}).donnees(cours, s.debut, s.fin, s.classe);
 }
 
@@ -649,6 +707,7 @@ function serveurCl(fn, ...args){
 const appelCl = (fn, ...args) => serveurCl(fn, ...args).then(dessineClasses, erreur);
 function dessineClasses(d){
   CL = d;
+  if($("seance")) caseAutresClasses();   // les classes qui ont ce cours ouvert viennent d'arriver
   const noms = Object.keys(d.classes).sort();
   const tete = txt("tr"); tete.append(txt("th", null, "Classe"), ...d.cours.map(c=>{ const th = txt("th", null, c.titre); th.title = c.cle; return th; }), txt("th"));
   $("cl-tete").replaceChildren(tete);

@@ -1,104 +1,122 @@
 {
- "_lisezmoi": "Messagerie 02 (version 2026-11-09). Une liste par étape, variante 1 d’abord. QCM : bonne réponse TOUJOURS en premier (mélangée à l’affichage), p = ce qu’on dit à l’élève qui choisit ce piège. Étapes 1 à 7, 9 et 10 : trois variantes du même type, tirées par élève côté serveur (règle anti-recopie). Étape 8 : brouillon guidé de la réponse, une seule règle ; le vrai contrôle est la réponse reçue par le professeur (cotée /5).",
+ "_lisezmoi": "Messagerie 02 (version 2026-11-10). Une liste par étape, variante 1 d’abord. Viser « j’ai compris », pas « j’ai fini » : plus de QCM. Étapes 1 et 2 : texte à trous (texte avec ___, mots = le bon mot de chaque trou dans l’ordre, pieges = les intrus) puis phrase libre non jugée (phrase), la même pour les trois variantes. Étapes 3 à 7, 9 et 10 : saisie de ce que l’élève lit sur SON écran (regle : egal, motif, sauf, sur la réponse sans accents ni majuscules). Trois variantes par étape, tirées par élève côté serveur (règle anti-recopie). Étape 8 : brouillon guidé de la réponse, une seule règle ; le vrai contrôle est la réponse reçue par le professeur (cotée /5).",
  "blocs": [
   [
    {
-    "type": "qcm",
-    "q": "Lequel de ces quatre messages ne faut-il PAS ouvrir ?",
-    "c": [
-     "De : Service Colis <colis.livraison24@gmail.com> · Objet : Votre colis est bloqué ! · Pièce jointe : suivi-colis.zip",
-     "De : M. Louviaux <vlouviaux@arcampin.be> · Objet : Ta fiche à compléter · Pièce jointe : Ma fiche a completer.docx",
-     "De : Secrétariat <secretariat@arcampin.be> · Objet : Horaire de la semaine · Pièce jointe : horaire.pdf",
-     "De : Lina Dupont <lina.dupont@arcampin.be> · Objet : Notre exposé · Pièce jointe : expose.pptx"
+    "type": "trous",
+    "q": "Tu as reçu ce message — De : Service Colis <colis.livraison24@gmail.com> · Objet : Votre colis est bloqué ! · Pièce jointe : suivi-colis.zip. Complète l’explication.",
+    "texte": "Je n’ouvre pas ce message. L’adresse de l’expéditeur finit par ___ : ce n’est pas une adresse de l’école. Le fichier joint finit par ___ : c’est un paquet fermé, je ne sais pas ce qu’il ___.",
+    "mots": [
+     "gmail.com",
+     ".zip",
+     "contient"
     ],
-    "p": [
-     null,
-     "Ce message vient d’une adresse de l’école (@arcampin.be) et le fichier est attendu : tu peux l’ouvrir. Cherche celui où l’expéditeur OU le fichier pose problème.",
-     "Ce message vient d’une adresse de l’école (@arcampin.be) et le fichier est attendu : tu peux l’ouvrir. Cherche celui où l’expéditeur OU le fichier pose problème.",
-     "Ce message vient d’une adresse de l’école (@arcampin.be) et le fichier est attendu : tu peux l’ouvrir. Cherche celui où l’expéditeur OU le fichier pose problème."
+    "pieges": [
+     "arcampin.be",
+     ".docx",
+     "pèse"
     ],
-    "aide": "Regarde deux choses dans chaque message : qui l’envoie, et la fin du nom du fichier."
+    "phrase": "à quoi vois-tu qu’il ne faut pas ouvrir une pièce jointe ?",
+    "juste": "Un inconnu et un paquet fermé : deux raisons de ne pas ouvrir. Tu sonnes la cloche 🔔 et tu montres le message à ton professeur.",
+    "faux": "",
+    "aide": "Lis toute la phrase à voix basse avant de choisir un mot."
    },
    {
-    "type": "qcm",
-    "q": "Lequel de ces quatre messages ne faut-il PAS ouvrir ?",
-    "c": [
-     "De : Jeux Gratuits <cadeau@jeux-gratuits.net> · Objet : Tu as gagné un jeu ! · Pièce jointe : installer-jeu.exe",
-     "De : M. Louviaux <vlouviaux@arcampin.be> · Objet : Ta fiche à compléter · Pièce jointe : Ma fiche a completer.docx",
-     "De : Secrétariat <secretariat@arcampin.be> · Objet : Horaire de la semaine · Pièce jointe : horaire.pdf",
-     "De : Lina Dupont <lina.dupont@arcampin.be> · Objet : Notre exposé · Pièce jointe : expose.pptx"
+    "type": "trous",
+    "q": "Tu as reçu ce message — De : Jeux Gratuits <cadeau@jeux-gratuits.net> · Objet : Tu as gagné un jeu ! · Pièce jointe : installer-jeu.exe. Complète l’explication.",
+    "texte": "Je n’ouvre pas ce message. L’adresse de l’expéditeur finit par ___ : je ne connais pas cet expéditeur. Le fichier joint finit par ___ : c’est un programme, il s’___ sur l’ordinateur.",
+    "mots": [
+     "jeux-gratuits.net",
+     ".exe",
+     "installe"
     ],
-    "p": [
-     null,
-     "Ce message vient d’une adresse de l’école (@arcampin.be) et le fichier est attendu : tu peux l’ouvrir. Cherche celui où l’expéditeur OU le fichier pose problème.",
-     "Ce message vient d’une adresse de l’école (@arcampin.be) et le fichier est attendu : tu peux l’ouvrir. Cherche celui où l’expéditeur OU le fichier pose problème.",
-     "Ce message vient d’une adresse de l’école (@arcampin.be) et le fichier est attendu : tu peux l’ouvrir. Cherche celui où l’expéditeur OU le fichier pose problème."
+    "pieges": [
+     "arcampin.be",
+     ".pdf",
+     "imprime"
     ],
-    "aide": "Regarde deux choses dans chaque message : qui l’envoie, et la fin du nom du fichier."
+    "phrase": "à quoi vois-tu qu’il ne faut pas ouvrir une pièce jointe ?",
+    "juste": "Un inconnu et un programme qui s’installe : deux raisons de ne pas ouvrir. Tu sonnes la cloche 🔔 et tu montres le message à ton professeur.",
+    "faux": "",
+    "aide": "Lis toute la phrase à voix basse avant de choisir un mot."
    },
    {
-    "type": "qcm",
-    "q": "Lequel de ces quatre messages ne faut-il PAS ouvrir ?",
-    "c": [
-     "De : Secrétariat <secretariat@arcampim.be> · Objet : Urgent : ton bulletin · Pièce jointe : bulletin.docx",
-     "De : M. Louviaux <vlouviaux@arcampin.be> · Objet : Ta fiche à compléter · Pièce jointe : Ma fiche a completer.docx",
-     "De : Secrétariat <secretariat@arcampin.be> · Objet : Horaire de la semaine · Pièce jointe : horaire.pdf",
-     "De : Lina Dupont <lina.dupont@arcampin.be> · Objet : Notre exposé · Pièce jointe : expose.pptx"
+    "type": "trous",
+    "q": "Tu as reçu ce message — De : Secrétariat <secretariat@arcampim.be> · Objet : Urgent : ton bulletin · Pièce jointe : bulletin.docx. Complète l’explication.",
+    "texte": "Je n’ouvre pas ce message. L’adresse de l’expéditeur finit par ___ : une seule ___ a changé, et ce n’est plus l’école. Le fichier a l’air normal, mais l’expéditeur est un ___.",
+    "mots": [
+     "arcampim.be",
+     "lettre",
+     "inconnu"
     ],
-    "p": [
-     null,
-     "Ce message vient d’une adresse de l’école (@arcampin.be) et le fichier est attendu : tu peux l’ouvrir. Cherche celui où l’expéditeur OU le fichier pose problème.",
-     "Ce message vient d’une adresse de l’école (@arcampin.be) et le fichier est attendu : tu peux l’ouvrir. Cherche celui où l’expéditeur OU le fichier pose problème.",
-     "Ce message vient d’une adresse de l’école (@arcampin.be) et le fichier est attendu : tu peux l’ouvrir. Cherche celui où l’expéditeur OU le fichier pose problème."
+    "pieges": [
+     "arcampin.be",
+     "phrase",
+     "camarade"
     ],
-    "aide": "Lis l’adresse de l’expéditeur lettre par lettre : l’école, c’est arcampin.be."
+    "phrase": "à quoi vois-tu qu’il ne faut pas ouvrir une pièce jointe ?",
+    "juste": "Une seule lettre change, et ce n’est plus l’école : un fichier qui a l’air normal ne suffit pas. Tu sonnes la cloche 🔔 et tu montres le message à ton professeur.",
+    "faux": "",
+    "aide": "Lis toute la phrase à voix basse avant de choisir un mot."
    }
   ],
   [
    {
-    "type": "qcm",
-    "q": "Ton professeur t’a envoyé une fiche à compléter. Tu la lui renvoies, à lui seul. Quel bouton choisis-tu ?",
-    "c": [
+    "type": "trous",
+    "q": "Ton professeur t’a envoyé une fiche à compléter. Tu la lui renvoies, à lui seul. Complète l’explication.",
+    "texte": "Je clique sur ___ : seul l’___ reçoit mon message. Avec Répondre à tous, les autres ___ du message l’auraient reçu aussi.",
+    "mots": [
      "Répondre",
-     "Répondre à tous",
-     "Transférer"
+     "expéditeur",
+     "destinataires"
     ],
-    "p": [
-     null,
-     "Répondre à tous enverrait ta fiche à tous ceux qui ont reçu le message. Ici, seul ton professeur doit la recevoir.",
-     "Transférer fait suivre le message à quelqu’un d’autre. Ici, tu réponds à celui qui t’a écrit."
-    ],
-    "aide": "Qui doit lire ta réponse ? Une seule personne, ou tout le monde ?"
-   },
-   {
-    "type": "qcm",
-    "q": "Le délégué a écrit à toute la classe : « Qui apporte quoi pour le goûter de classe ? ». Tout le monde doit lire ta réponse. Quel bouton choisis-tu ?",
-    "c": [
-     "Répondre à tous",
-     "Répondre",
-     "Transférer"
-    ],
-    "p": [
-     null,
-     "Répondre n’envoie ta réponse qu’au délégué. Ici, toute la classe doit la lire.",
-     "Transférer fait suivre le message à quelqu’un qui ne l’a pas reçu. Ici, tout le monde l’a déjà."
-    ],
-    "aide": "Qui doit lire ta réponse ? Une seule personne, ou tout le monde ?"
-   },
-   {
-    "type": "qcm",
-    "q": "Tu as reçu l’horaire de l’excursion en pièce jointe. Ton voisin était absent et ne l’a pas reçu. Quel bouton choisis-tu pour le lui faire suivre ?",
-    "c": [
+    "pieges": [
      "Transférer",
+     "objet",
+     "fichiers"
+    ],
+    "phrase": "comment choisis-tu entre Répondre, Répondre à tous et Transférer ?",
+    "juste": "Répondre : ta réponse va à celui qui t’a écrit, et à lui seul.",
+    "faux": "",
+    "aide": "Lis toute la phrase à voix basse avant de choisir un mot."
+   },
+   {
+    "type": "trous",
+    "q": "Le délégué a écrit à toute la classe : « Qui apporte quoi pour le goûter de classe ? ». Tout le monde doit lire ta réponse. Complète l’explication.",
+    "texte": "Je clique sur ___ : l’expéditeur et tous les autres ___ reçoivent ma réponse. Avec Répondre tout court, seul le ___ l’aurait lue.",
+    "mots": [
+     "Répondre à tous",
+     "destinataires",
+     "délégué"
+    ],
+    "pieges": [
+     "Transférer",
+     "fichiers",
+     "professeur"
+    ],
+    "phrase": "comment choisis-tu entre Répondre, Répondre à tous et Transférer ?",
+    "juste": "Répondre à tous : seulement quand tout le monde doit lire ta réponse.",
+    "faux": "",
+    "aide": "Lis toute la phrase à voix basse avant de choisir un mot."
+   },
+   {
+    "type": "trous",
+    "q": "Tu as reçu l’horaire de l’excursion en pièce jointe. Ton voisin était absent et ne l’a pas reçu. Complète l’explication.",
+    "texte": "Je clique sur ___ : c’est moi qui choisis le ___, puisque mon voisin n’a pas reçu le message. La pièce jointe ___ avec le message.",
+    "mots": [
+     "Transférer",
+     "destinataire",
+     "part"
+    ],
+    "pieges": [
      "Répondre",
-     "Répondre à tous"
+     "mot de passe",
+     "disparaît"
     ],
-    "p": [
-     null,
-     "Répondre renvoie le message à celui qui l’a écrit, pas à ton voisin.",
-     "Répondre à tous renvoie le message à ceux qui l’ont déjà reçu. Ton voisin, lui, ne l’a pas."
-    ],
-    "aide": "Ton voisin a-t-il reçu le message ? Si non, il faut le lui faire suivre."
+    "phrase": "comment choisis-tu entre Répondre, Répondre à tous et Transférer ?",
+    "juste": "Transférer : tu fais suivre le message, avec sa pièce jointe, à la personne que tu choisis.",
+    "faux": "",
+    "aide": "Lis toute la phrase à voix basse avant de choisir un mot."
    }
   ],
   [
@@ -135,190 +153,120 @@
   ],
   [
    {
-    "type": "qcm",
-    "q": "Quel programme a ouvert ta fiche dans le nouvel onglet ?",
-    "c": [
-     "Word, dans le navigateur",
-     "Google Docs",
-     "Le Bloc-notes"
-    ],
-    "p": [
-     null,
-     "Google Docs est le traitement de texte de Google. Le fichier joint s’ouvre avec celui de Microsoft.",
-     "Le Bloc-notes n’ouvre pas les fichiers .docx. Regarde le nom en haut à gauche du nouvel onglet."
-    ],
+    "type": "saisie",
+    "q": "Regarde le nouvel onglet : quel programme a ouvert ta fiche ? Écris son nom.",
+    "regle": {
+     "motif": "\\bword\\b"
+    },
+    "faux": "Regarde le nom écrit en haut à gauche du nouvel onglet : c’est le programme qui a ouvert ta fiche.",
     "aide": "Regarde le nom écrit en haut à gauche du nouvel onglet."
    },
    {
-    "type": "qcm",
-    "q": "Retourne dans l’onglet Courrier. Qu’est-il écrit sous la carte du fichier, maintenant ?",
-    "c": [
-     "Enregistré sur OneDrive",
-     "Fichier supprimé",
-     "Envoyé"
-    ],
-    "p": [
-     null,
-     "Le fichier n’est pas supprimé : regarde juste sous la carte du fichier.",
-     "Rien n’est envoyé : tu as seulement ouvert la fiche. Regarde juste sous la carte du fichier."
-    ],
+    "type": "saisie",
+    "q": "Retourne dans l’onglet Courrier. Recopie ce qui est écrit sous la carte du fichier, maintenant.",
+    "regle": {
+     "motif": "enregistre.*onedrive"
+    },
+    "faux": "Clique sur l’onglet Courrier, puis recopie les mots écrits juste sous la carte du fichier.",
     "aide": "Clique sur l’onglet Courrier, puis regarde juste sous la carte du fichier."
    },
    {
-    "type": "qcm",
-    "q": "Où Outlook a-t-il rangé ta fiche quand tu l’as ouverte ?",
-    "c": [
-     "OneDrive › Pièces jointes",
-     "Google Drive › Mon Drive",
-     "Le Bureau de l’ordinateur"
-    ],
-    "p": [
-     null,
-     "Google Drive, c’est Google. Outlook range les fichiers dans OneDrive, chez Microsoft.",
-     "Rien n’est sur le Bureau : le fichier est rangé en ligne. Clique sur le petit nuage à côté du titre, en haut de Word."
-    ],
+    "type": "saisie",
+    "q": "Dans Word, clique sur le petit nuage à côté du titre du document. Dans quel dossier de OneDrive ta fiche est-elle rangée ? Recopie son nom.",
+    "regle": {
+     "motif": "pieces? ?jointes?"
+    },
+    "faux": "Clique sur le petit nuage à côté du titre : le nom du dossier est écrit après « OneDrive › ».",
     "aide": "Dans Word, clique sur le petit nuage à côté du titre du document."
    }
   ],
   [
    {
-    "type": "qcm",
-    "q": "Quelle est la première ligne de ta fiche ?",
-    "c": [
-     "Mon prénom et ma classe",
-     "Le plat que je préfère",
-     "Ce que j’aimerais apprendre en informatique"
-    ],
-    "p": [
-     null,
-     "C’est la troisième ligne. Regarde tout en haut du tableau.",
-     "C’est la dernière ligne. Regarde tout en haut du tableau."
-    ],
+    "type": "saisie",
+    "q": "Recopie le titre de la première ligne du tableau de ta fiche.",
+    "regle": {
+     "motif": "prenom.*classe"
+    },
+    "faux": "Lis le tableau de ta fiche, de haut en bas, et recopie le titre de la première ligne.",
     "aide": "Lis le tableau de ta fiche, de haut en bas."
    },
    {
-    "type": "qcm",
-    "q": "Quelle est la troisième ligne de ta fiche ?",
-    "c": [
-     "Le plat que je préfère",
-     "Mon prénom et ma classe",
-     "Ce que j’aimerais apprendre en informatique"
-    ],
-    "p": [
-     null,
-     "C’est la première ligne. Compte les lignes du tableau : un, deux, trois.",
-     "C’est la dernière ligne. Compte les lignes du tableau : un, deux, trois."
-    ],
+    "type": "saisie",
+    "q": "Recopie le titre de la troisième ligne du tableau de ta fiche.",
+    "regle": {
+     "motif": "plat.*prefere"
+    },
+    "faux": "Lis le tableau de ta fiche, de haut en bas, et recopie le titre de la troisième ligne.",
     "aide": "Lis le tableau de ta fiche, de haut en bas."
    },
    {
-    "type": "qcm",
-    "q": "Quelle est la dernière ligne de ta fiche ?",
-    "c": [
-     "Ce que j’aimerais apprendre en informatique",
-     "Mon prénom et ma classe",
-     "Le plat que je préfère"
-    ],
-    "p": [
-     null,
-     "C’est la première ligne. Regarde tout en bas du tableau.",
-     "C’est la troisième ligne. Regarde tout en bas du tableau."
-    ],
+    "type": "saisie",
+    "q": "Recopie le titre de la dernière ligne du tableau de ta fiche.",
+    "regle": {
+     "motif": "apprendre.*informatique"
+    },
+    "faux": "Lis le tableau de ta fiche, de haut en bas, et recopie le titre de la dernière ligne.",
     "aide": "Lis le tableau de ta fiche, de haut en bas."
    }
   ],
   [
    {
-    "type": "qcm",
-    "q": "Comment commence maintenant l’objet de ta réponse ?",
-    "c": [
-     "RE:",
-     "TR:",
-     "Cc:"
-    ],
-    "p": [
-     null,
-     "TR: veut dire transféré. Tu as cliqué sur Transférer ? Ferme ce message et recommence avec Répondre.",
-     "Cc n’est pas dans l’objet : c’est une ligne pour les copies. Regarde la ligne Objet."
-    ],
+    "type": "saisie",
+    "q": "Regarde la ligne Objet de ta réponse. Recopie les deux lettres qu’Outlook a ajoutées au début.",
+    "regle": {
+     "motif": "^re ?:?$"
+    },
+    "faux": "Regarde le tout début de la ligne Objet : deux lettres, avant le titre du message.",
     "aide": "Regarde la ligne Objet de ta réponse, sous la ligne À."
    },
    {
-    "type": "qcm",
-    "q": "Quel nom est déjà écrit dans la ligne À de ta réponse ?",
-    "c": [
-     "Celui de mon professeur",
-     "Celui de mon voisin",
-     "Aucun : la ligne est vide"
-    ],
-    "p": [
-     null,
-     "Ton voisin ne t’a pas écrit ce message. Avec Répondre, Outlook remplit la ligne À avec l’expéditeur.",
-     "Avec Répondre, Outlook remplit la ligne À tout seul. Elle est vide ? Tu as peut-être cliqué sur Nouveau message."
-    ],
-    "aide": "Regarde la ligne À, tout en haut de ta réponse."
+    "type": "saisie",
+    "q": "Dans quelle ligne de ta réponse le nom de ton professeur est-il déjà écrit ? Écris le nom de cette ligne.",
+    "regle": {
+     "motif": "^(dans )?(la |le )?(ligne |champ )?a$"
+    },
+    "faux": "Regarde tout en haut de ta réponse : le nom de ton professeur est dans la première ligne. Écris seulement le nom de cette ligne.",
+    "aide": "Regarde tout en haut de ta réponse, avant l’objet."
    },
    {
-    "type": "qcm",
-    "q": "Où écris-tu le texte de ta réponse ?",
-    "c": [
-     "Au-dessus du message de mon professeur",
-     "Sous le message de mon professeur",
-     "Dans la ligne Objet"
-    ],
-    "p": [
-     null,
-     "Le message de ton professeur est en dessous, en plus petit : on écrit au-dessus.",
-     "L’objet est déjà rempli : on ne le change pas. Le texte va dans la grande zone blanche."
-    ],
+    "type": "saisie",
+    "q": "Où écris-tu le texte de ta réponse : au-dessus ou en dessous du message de ton professeur ? Écris ta réponse.",
+    "regle": {
+     "motif": "dessus|avant|haut",
+     "sauf": "dessous|sous|apres|bas"
+    },
+    "faux": "Regarde la grande zone blanche de ta réponse : le message de ton professeur est déjà là. Ta réponse va-t-elle avant ou après ?",
     "aide": "Regarde la grande zone blanche de ta réponse : qu’y a-t-il en dessous ?"
    }
   ],
   [
    {
-    "type": "qcm",
-    "q": "Dans le sélecteur OneDrive, quel choix fait partir le fichier lui-même ?",
-    "c": [
-     "Joindre",
-     "Partager le lien",
-     "Annuler"
-    ],
-    "p": [
-     null,
-     "Partager le lien envoie un lien vers ton fichier, pas le fichier lui-même. Ouvre la petite flèche à côté et choisis Joindre.",
-     "Annuler ferme le sélecteur sans rien joindre."
-    ],
+    "type": "saisie",
+    "q": "Dans le sélecteur OneDrive, sur quel choix cliques-tu pour faire partir le fichier lui-même ? Recopie-le.",
+    "regle": {
+     "motif": "^joindre",
+     "sauf": "lien"
+    },
+    "faux": "Ouvre la petite flèche ▾ à côté de Partager le lien : le bon choix fait partir le fichier, pas un lien.",
     "aide": "Regarde en bas du sélecteur : la petite flèche ▾ à côté de Partager le lien."
    },
    {
-    "type": "qcm",
-    "q": "Où vois-tu que ta fiche est bien jointe à ta réponse ?",
-    "c": [
-     "Sa carte apparaît sous l’objet",
-     "Son nom apparaît dans la ligne À",
-     "Rien ne change à l’écran"
-    ],
-    "p": [
-     null,
-     "La ligne À contient des adresses, jamais des fichiers.",
-     "Quand la fiche est jointe, quelque chose apparaît sous l’objet. Rien ? Recommence Joindre un fichier."
-    ],
+    "type": "saisie",
+    "q": "Ta fiche est jointe. Qu’est-ce qui est apparu sous l’objet de ta réponse ? Recopie le nom écrit dessus, avec sa fin (.docx).",
+    "regle": {
+     "motif": "fiche.*complet.*docx"
+    },
+    "faux": "Regarde sous la ligne Objet : une carte porte le nom de ton fichier. Recopie-le avec .docx. Rien sous l’objet ? Recommence Joindre un fichier.",
     "aide": "Regarde sous la ligne Objet de ta réponse."
    },
    {
-    "type": "qcm",
-    "q": "Ta fiche n’est pas dans Récents. Où la trouves-tu, à gauche du sélecteur ?",
-    "c": [
-     "Fichiers ▸ Pièces jointes",
-     "Partagés avec vous",
-     "Groupes"
-    ],
-    "p": [
-     null,
-     "Partagés avec vous, ce sont les fichiers des autres. Ta fiche est rangée dans tes fichiers.",
-     "Groupes, ce sont les espaces d’équipe. Ta fiche est rangée dans tes fichiers."
-    ],
-    "aide": "Outlook a rangé ta fiche dans OneDrive › Pièces jointes, à l’étape 4."
+    "type": "saisie",
+    "q": "Ta fiche n’est pas dans Récents. Dans quel dossier la trouves-tu, à gauche du sélecteur ? Recopie son nom.",
+    "regle": {
+     "motif": "pieces? ?jointes?"
+    },
+    "faux": "Outlook a rangé ta fiche à l’étape 4 : à gauche du sélecteur, ouvre Fichiers et recopie le nom du dossier.",
+    "aide": "Outlook a rangé ta fiche dans OneDrive, à l’étape 4."
    }
   ],
   [
@@ -334,95 +282,59 @@
   ],
   [
    {
-    "type": "qcm",
-    "q": "Dans Éléments envoyés, quel petit dessin montre que ta fiche est partie avec ta réponse ?",
-    "c": [
-     "Le trombone 📎",
-     "Le drapeau 🚩",
-     "La corbeille 🗑"
-    ],
-    "p": [
-     null,
-     "Le drapeau sert à marquer un message à suivre. Regarde à droite de ta réponse dans la liste.",
-     "La corbeille sert à supprimer. Regarde à droite de ta réponse dans la liste."
-    ],
-    "aide": "Clique sur Éléments envoyés, à gauche, puis regarde ta réponse en haut de la liste."
+    "type": "saisie",
+    "q": "Dans quel dossier, à gauche, retrouves-tu ta réponse maintenant qu’elle est partie ? Recopie son nom.",
+    "regle": {
+     "motif": "elements? ?envoyes?"
+    },
+    "faux": "Regarde la liste des dossiers, à gauche d’Outlook : ta réponse est dans celui des messages partis.",
+    "aide": "Regarde la liste des dossiers, à gauche."
    },
    {
-    "type": "qcm",
-    "q": "Ta réponse n’est pas dans Éléments envoyés. Dans quel dossier est-elle restée ?",
-    "c": [
-     "Brouillons",
-     "Courrier indésirable",
-     "Archive"
-    ],
-    "p": [
-     null,
-     "Courrier indésirable reçoit les messages suspects qui arrivent. Un message pas envoyé reste ailleurs.",
-     "Archive range les messages qu’on a choisi de garder. Un message pas envoyé reste ailleurs."
-    ],
+    "type": "saisie",
+    "q": "Ta réponse n’est pas dans Éléments envoyés : dans quel dossier est-elle restée ? Recopie son nom.",
+    "regle": {
+     "motif": "brouillon"
+    },
+    "faux": "Un message commencé mais pas envoyé reste dans un autre dossier, à gauche : la lettre pas encore postée.",
     "aide": "Un message commencé mais pas envoyé : la lettre pas encore postée."
    },
    {
-    "type": "qcm",
-    "q": "Ouvre ta réponse dans Éléments envoyés. Qui l’a reçue ?",
-    "c": [
-     "Mon professeur, seul",
-     "Toute la classe",
-     "Mon voisin"
-    ],
-    "p": [
-     null,
-     "Toute la classe l’aurait reçue avec Répondre à tous. Regarde la ligne À de ta réponse.",
-     "Ton voisin n’est pas dans la ligne À. Regarde-la."
-    ],
-    "aide": "Regarde la ligne À de ta réponse envoyée."
+    "type": "saisie",
+    "q": "Dans Éléments envoyés, un petit dessin à droite de ta réponse montre que ta fiche est partie avec elle. Écris son nom.",
+    "regle": {
+     "motif": "trombone"
+    },
+    "faux": "Clique sur Éléments envoyés, puis regarde à droite de ta réponse, en haut de la liste : comment s’appelle ce petit dessin ?",
+    "aide": "Clique sur Éléments envoyés, à gauche, puis regarde ta réponse en haut de la liste."
    }
   ],
   [
    {
-    "type": "qcm",
-    "q": "Comment commence l’objet de ton transfert ?",
-    "c": [
-     "TR:",
-     "RE:",
-     "Cc:"
-    ],
-    "p": [
-     null,
-     "RE: veut dire réponse. Tu as cliqué sur Répondre ? Ferme ce message et recommence avec Transférer.",
-     "Cc n’est pas dans l’objet : c’est une ligne pour les copies. Regarde la ligne Objet."
-    ],
+    "type": "saisie",
+    "q": "Regarde la ligne Objet de ton transfert. Recopie les deux lettres qu’Outlook a ajoutées au début.",
+    "regle": {
+     "motif": "^tr ?:?$"
+    },
+    "faux": "Regarde le tout début de la ligne Objet de ton transfert : deux lettres, avant le titre du message.",
     "aide": "Regarde la ligne Objet de ton transfert."
    },
    {
-    "type": "qcm",
-    "q": "La fiche est-elle partie avec ton transfert ?",
-    "c": [
-     "Oui : sa carte est sous l’objet",
-     "Non : un transfert garde seulement le texte",
-     "Seulement si je clique sur Joindre un fichier"
-    ],
-    "p": [
-     null,
-     "Regarde sous l’objet de ton transfert : la carte du fichier y est déjà.",
-     "Pas besoin : Transférer reprend la pièce jointe toute seule. Regarde sous l’objet."
-    ],
+    "type": "saisie",
+    "q": "Regarde sous l’objet de ton transfert. Recopie le nom du fichier parti avec lui, avec sa fin (.docx).",
+    "regle": {
+     "motif": "fiche.*complet.*docx"
+    },
+    "faux": "Regarde sous l’objet de ton transfert : la carte du fichier est là. Recopie son nom avec .docx.",
     "aide": "Regarde sous l’objet de ton transfert."
    },
    {
-    "type": "qcm",
-    "q": "Dans ton transfert, où as-tu mis le nom de ton professeur ?",
-    "c": [
-     "Dans la ligne Cc",
-     "Dans la ligne À",
-     "Dans l’objet"
-    ],
-    "p": [
-     null,
-     "La ligne À, c’est pour ton voisin, le destinataire. Ton professeur reçoit une copie.",
-     "L’objet est un titre. Ton professeur reçoit une copie : c’est une autre ligne."
-    ],
+    "type": "saisie",
+    "q": "Dans quelle ligne de ton transfert as-tu mis le nom de ton professeur ? Écris le nom de cette ligne.",
+    "regle": {
+     "motif": "^(dans )?(la |le )?(ligne |champ )?cc$"
+    },
+    "faux": "Ton professeur reçoit une copie : regarde sous la ligne À, quelle ligne sert aux copies ?",
     "aide": "Ton professeur reçoit une copie : quelle ligne sert aux copies ?"
    }
   ]
