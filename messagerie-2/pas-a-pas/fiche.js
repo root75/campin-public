@@ -75,7 +75,7 @@ const BLOCS = [
   q:{serveur:true}},
  {partie:'B — J’ouvre la pièce jointe sans risque', titre:'Ouvrir le message et vérifier', min:5,
   veux:'Lire le message « Ta fiche à compléter » et vérifier sa pièce jointe avant de l’ouvrir.',
-  extra:REEL,
+  avant:REEL,
   gestes:['Ouvre Courrier : le bouton ci-dessus, ou barre de favoris ▸ <b>Favoris du domaine arcampin.com</b> ▸ <b>Microsoft 365</b> ▸ <b>Courrier</b>.','À gauche, clique sur <b>Boîte de réception</b>.','Clique sur le message « <b>Ta fiche à compléter</b> » de ton professeur.','Regarde l’expéditeur : son adresse finit-elle par <b>@arcampin.be</b> ?','Regarde la carte du fichier, sous l’objet : son nom finit-il par <b>.docx</b> ?','Les deux sont bons ? Continue. Un doute : n’ouvre pas, sonne la cloche 🔔.'],
   vois:'Expéditeur de l’école, fichier .docx attendu : je peux ouvrir.', stop:true,
   coince:['Je ne trouve pas le message : regarde l’onglet Autres, au-dessus de la liste. Ou tape le nom de ton professeur dans Rechercher, tout en haut.','Je ne vois pas l’adresse : clique sur le nom du professeur, en haut du message.'],
