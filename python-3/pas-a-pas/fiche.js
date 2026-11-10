@@ -154,6 +154,20 @@ const scorePredit = ({n,r}) => ({
                : "Fais la trace : pieces vaut "+n+", puis score vaut pieces × 10.",
       juste:`pieces vaut ${n}, score vaut ${n} × 10 = ${r}. Maintenant F5, et vérifie dans Thonny.` } });
 
+/* Le dernier bloc : la grille sur 5 du fichier rendu, avec le nombre de pièces de la version de l'élève
+   (la même qu'au bloc « Traduire « Le score » », par cle:"score"). */
+const rendreScore = ({n,r}) => ({
+  extra:`<div class="encart"><p><b>Grille — sur 5.</b> Le professeur ouvre ton fichier, l'exécute et lit tes commentaires.</p><table>
+  <tr><th>Dans ton programme</th><th>Points</th></tr>
+  <tr><td>F5, puis on tape <b>${n}</b> : le programme s'exécute sans message rouge et affiche <b>${r}</b>.</td><td>1</td></tr>
+  <tr><td>Trois commentaires : une ligne qui commence par <code>#</code> au-dessus de chacune des trois instructions.</td><td>1</td></tr>
+  <tr><td>Au-dessus de <code>pieces = int(input(…))</code> : ton commentaire explique qu'on demande le nombre de pièces, et à quoi sert int( ).</td><td>1</td></tr>
+  <tr><td>Au-dessus de <code>score = pieces * 10</code> : ton commentaire explique le calcul, et que le résultat est rangé dans score.</td><td>1</td></tr>
+  <tr><td>Au-dessus de <code>print(score)</code> : ton commentaire explique qu'on affiche ce qu'il y a dans la boîte score.</td><td>1</td></tr></table>
+  <p>Un commentaire explique avec TES mots ce que fait la ligne. Recopier la ligne (<code># score = pieces * 10</code>) n'explique rien : 0 point pour cette ligne.</p>
+  <p class="stop">Pas de copier-coller du voisin. Des commentaires copiés sur un autre élève, c'est 0 sur 5, pour les deux fichiers.</p>
+  <p>Avant tout : le fichier rendu s'appelle 02_Le-score_ suivi de ton nom, et finit par .py. Sinon, le professeur ne peut pas l'ouvrir.</p></div>` });
+
 const BLOCS = [
   { partie:"A — Se remettre en route", titre:"Quelle sorte d'erreur ?", min:3,
     bulle:"Re-bonjour ! D'abord, un rappel de la séance des erreurs.",
@@ -367,7 +381,30 @@ const BLOCS = [
                  : !/input\(/.test(r.code) ? "Le programme doit demander les dégâts avec input( )."
                  : r.essais.every((e,i) => (DERNIERE(e).match(/-?\d+/g)||[]).pop()===String([LV.r, LV.d-1][i])) ? true
                  : `Avec ${LV.k} de dégâts, ta dernière ligne est « ${DERNIERE(r.essais[0])} ». On attend ${LV.r}.`,
-        juste:"Ton programme lit les dégâts, les retire et affiche les vies : un vrai morceau de jeu." } }
+        juste:"Ton programme lit les dégâts, les retire et affiche les vies : un vrai morceau de jeu." } },
+
+  { partie:"F — Rendre mon programme", titre:"Rendre « Le score » dans Classroom", min:4, stop:true, cle:"score",
+    bulle:"Dernière mission : ton programme « Le score » part chez le professeur. Il est coté sur 5.",
+    veux:"Rendre ton fichier 02_Le-score, commenté, dans Classroom, pour qu'il soit coté sur 5.",
+    fais:CASES(`Lis la grille ci-dessous : vérifie chaque ligne dans ton programme.`,
+               `Relis tes trois commentaires : ce sont TES mots, pas ceux de ton voisin, et pas la ligne recopiée.`,
+               `Dans Thonny, enregistre une dernière fois : <span class="chemin">menu Fichier ▸ Enregistrer</span> (ou <b>Ctrl + S</b>).`,
+               `Ouvre un nouvel onglet (<b>Ctrl + T</b>), tape <b>classroom.google.com</b>, puis appuie sur <b>Enter</b>.`,
+               `Clique sur le cours de <b>Logique et programmation</b> ▸ onglet <span class="chemin">Travaux et devoirs</span> ▸ le devoir <b>Python 03 — Le score</b> ▸ <span class="chemin">Afficher le devoir</span>.`,
+               `À droite, dans <span class="chemin">Vos devoirs</span> : <span class="chemin">＋ Ajouter ou créer ▸ Fichier ▸ Parcourir</span>.`,
+               `Dans la fenêtre : <span class="chemin">Documents ▸ double-clic sur Python ▸ clic sur 02_Le-score_… ▸ Ouvrir</span>, puis <span class="chemin">Importer</span>.`,
+               `Ton fichier apparaît sous Vos devoirs : clique sur <span class="chemin">Rendre le devoir ▸ Rendre le devoir</span>.`),
+    vois:"Dans Classroom, le devoir affiche « Remis » et ton fichier 02_Le-score_… .py.",
+    coince:["Pas de devoir « Python 03 — Le score » dans Travaux et devoirs : vérifie que tu es dans le cours de Logique et programmation. Toujours rien : sonne la cloche 🔔.",
+            "Ton fichier n'est pas dans Documents ▸ Python : dans la fenêtre, tape 02_Le-score dans la case Rechercher, en haut à droite, puis Enter.",
+            "Le bouton dit « Marquer comme terminé » : ton fichier n'est pas joint. Reprends à l'étape ＋ Ajouter ou créer.",
+            "Tu as rendu le mauvais fichier (01_Les-vies, ou « Le score » sans tes commentaires) : clique sur Annuler l'envoi ▸ Annuler l'envoi, retire-le avec la ✕ à droite de son nom, enregistre dans Thonny (Ctrl + S), puis reprends à l'étape ＋ Ajouter ou créer."],
+    ...rendreScore(SCORE_V[0]),
+    variantes:[rendreScore(SCORE_V[1]), rendreScore(SCORE_V[2])],
+    q:{ type:"rapport", q:"Ton fichier « Le score » est-il rendu ?",
+        confirmation:"J'ai rendu 02_Le-score, commenté, dans Classroom : je vois « Remis ».",
+        trace:"rendu Classroom : 02_Le-score commenté",
+        juste:"Le professeur ouvre ton fichier, l'exécute, lit tes commentaires et le cote sur 5 avec la grille ci-dessus." } }
 ];
 
 const FIN = {
