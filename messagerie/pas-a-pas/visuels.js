@@ -50,19 +50,18 @@
     return f;
   }
 
-  let capturePromise;
+  /* La vue d'Outlook : une image à part (capture.webp, sans perte), demandée seulement quand l'élève ouvre le volet.
+     Avant le 10/11/2026, elle était dans capture.js (1,28 Mo en base64), chargé par la page avant tout le reste. */
+  const CAPTURE_URL='https://root75.github.io/campin-public/messagerie/pas-a-pas/capture.webp?v=20261110';
   function capture(){
     const details=el('details','mv-real');details.append(el('summary',null,'Retrouver les champs dans Outlook'));
-    details.addEventListener('toggle',async()=>{
+    details.addEventListener('toggle',()=>{
       if(!details.open||details.querySelector('img'))return;
-      try{
-        if(typeof CAPTURE==='undefined'){
-          if(!capturePromise)capturePromise=new Promise((ok,ko)=>{const s=el('script');s.src='https://root75.github.io/campin-public/messagerie/pas-a-pas/capture.js?v=20261103';s.onload=ok;s.onerror=()=>{capturePromise=null;ko(Error());};document.head.append(s);});
-          await capturePromise;
-        }
-        if(details.querySelector('img'))return;
-        const img=el('img');img.src=CAPTURE;img.alt='Vue adaptée d’Outlook : le champ À, le champ Objet et la grande zone du corps du message.';img.loading='lazy';details.append(img,el('p',null,'Vue adaptée de l’interface Outlook. Accueil → Nouveau message.'));
-      }catch(_){if(!details.querySelector('p'))details.append(el('p',null,'La vue Outlook ne s’est pas chargée. Ferme ce volet puis ouvre-le pour réessayer.'));}
+      details.querySelectorAll('p').forEach(p=>p.remove());
+      const img=el('img');img.alt='Vue adaptée d’Outlook : le champ À, le champ Objet et la grande zone du corps du message.';
+      const legende=el('p',null,'Vue adaptée de l’interface Outlook. Accueil → Nouveau message.');
+      img.addEventListener('error',()=>{img.remove();legende.textContent='La vue Outlook ne s’est pas chargée. Ferme ce volet puis ouvre-le pour réessayer.';});
+      img.src=CAPTURE_URL;details.append(img,legende);
     });return details;
   }
 
