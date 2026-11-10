@@ -69,7 +69,7 @@ et trois cases à cocher, **3 sonneries par heure au plus** — code commun [`cl
 avant `blocs.js` comme dans `modele/index.html`) ; bandeau « bravo » ; reprise de
 l'avancement depuis le serveur ; aperçu professeur `#bloc=N` avec le choix de la version de la preuve ;
 brouillon d'une rédaction gardé sur le poste ; programme validé (question `code`) gardé sur le poste et
-relu quand on revient sur le bloc : code de départ, programme de l'élève, lignes changées en gras,
+relu quand on revient sur le bloc : code de départ, essais ratés (programme, message de Python, explication), programme validé, lignes changées en gras,
 explication `juste` ; erreurs envoyées au tableau (« Où le groupe bute »).
 
 ## Vérifier avant de publier

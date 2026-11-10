@@ -237,6 +237,23 @@ function programmeValide(i){
   if(programmesValides[i]!=null) return programmesValides[i];
   try{ return localStorage.getItem(cleProgramme(i)); }catch(e){ return null; }
 }
+/* Les essais ratés d'un bloc « code » : le programme, ce que Python a affiché, l'explication de la fiche.
+   Les 12 derniers, gardés comme le programme validé. */
+const essaisRates = {};
+const cleEssais = i => CLE+":"+(emailMoteur||"")+":"+(i+1)+":essais";
+function essaisDe(i){
+  if(essaisRates[i]) return essaisRates[i];
+  let l = []; try{ l = JSON.parse(localStorage.getItem(cleEssais(i))) || []; }catch(e){}
+  return essaisRates[i] = Array.isArray(l) ? l : [];
+}
+function gardeEssai(i, essai){
+  const l = essaisDe(i); l.push(essai); if(l.length>12) l.splice(0, l.length-12);
+  if(APERCU) return; try{ localStorage.setItem(cleEssais(i), JSON.stringify(l)); }catch(e){}
+}
+function oublieProgrammes(){
+  BLOCS.forEach((_,i)=>{ delete essaisRates[i]; delete programmesValides[i];
+    try{ localStorage.removeItem(cleEssais(i)); localStorage.removeItem(cleProgramme(i)); }catch(e){} });
+}
 function relecture(pr, B){
   const Q = B.q, mien = programmeValide(ici), depart = Q.depart || "";
   const net = t => t.replace(/\s+$/,"").split("\n");
@@ -253,14 +270,22 @@ function relecture(pr, B){
     });
     pr.append(txt("div","etiquette",titre), pre);
   };
+  const rates = () => essaisDe(ici).forEach((e,k)=>{
+    cadre("Essai raté "+(k+1), e.code, depart || null, "faux");
+    if(e.ecran){ pr.append(txt("pre","console",e.ecran)); }
+    const r = el("div","retour faux"); r.append(txt("strong",null,"Pourquoi ça ne passait pas"));
+    [].concat(e.pourquoi||[]).forEach(x=>r.append(txt("p",null,x))); pr.append(r);
+  });
   pr.append(txt("p","retour juste","✅ Bloc déjà validé."));
   if(mien==null){
     if(depart) cadre("Le code de départ", depart, null);
+    rates();
     pr.append(txt("p","note","Ton programme validé n’est pas gardé sur ce poste."));
   } else if(depart && net(depart).join("\n")!==net(mien).join("\n")){
     cadre("Le code de départ — en gras, ce qui a changé", depart, mien, "faux");
+    rates();
     cadre("Mon programme validé — en gras, ce que j’ai écrit", mien, depart, "juste");
-  } else cadre("Mon programme validé", mien, null);
+  } else { rates(); cadre("Mon programme validé", mien, null); }
   if(Q.juste){ const r = el("div","retour juste"); r.append(txt("strong",null,"L’explication"), txt("p",null,Q.juste)); pr.append(r); }
 }
 
@@ -324,7 +349,7 @@ function preuve(pr, B, apres){
       envoie({etape:ici+1,type:"ouvert",reponse:"activité:"+v(reponse)});
       apres();return; // L’exercice prépare la mission ; sa réussite ne valide pas le rapport.
     }
-    if(Q.type==="code") gardeProgramme(ici, String(reponse));
+    if(Q.type==="code" && !apres) gardeProgramme(ici, String(reponse));
     if(!["enquete","rapport"].includes(Q.type) && !Q.serveur) envoie({ etape:ici+1, type:"juste", essais:essais, reponse:v(reponse) });   // serveur : verifier() l'a écrit
     const g0 = groupeCourant(), avant = etat.atteint;
     etat.atteint = Math.max(etat.atteint, ici+1); ecrit(etat); barre();
@@ -343,6 +368,7 @@ function preuve(pr, B, apres){
     if(empreinte===derniereErreur){retour.hidden=false;if(!retour.querySelector(".sans-doublon"))retour.append(txt("p","sans-doublon","Modifie ta réponse avant de vérifier à nouveau. Cette tentative identique ne compte pas une erreur de plus."));return;}
     derniereErreur=empreinte;
     essais++; etat.erreurs++; ecrit(etat);
+    if(Q.type==="code" && !apres){ const c = zone.querySelector("pre.console"); gardeEssai(ici, { code:empreinte, ecran:c && !c.hidden ? c.innerText.trim() : "", pourquoi:explication }); }
     if(!dejaNote) envoie({ etape:ici+1, type:"faux", essais:essais, reponse:v(reponse) });
     const expl = Array.isArray(explication) ? el("ul") : txt("p",null,explication);
     if(Array.isArray(explication)) explication.forEach(x=>expl.append(txt("li",null,x)));
@@ -541,7 +567,7 @@ function fin(z){
   nav.append(avant);
   if(!SUIVI){
     const zero = txt("button","btn vide","Recommencer à zéro"); zero.type="button";
-    zero.addEventListener("click",()=>{ etat = { atteint:0, erreurs:0 }; ecrit(etat); ici=0; humeur(); affiche(); });
+    zero.addEventListener("click",()=>{ etat = { atteint:0, erreurs:0 }; ecrit(etat); oublieProgrammes(); ici=0; humeur(); affiche(); });
     nav.append(zero);
   }
   z.append(bilan(), plus, nav);
