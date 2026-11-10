@@ -67,9 +67,30 @@ function remplitSeances(liste, garder){
     o.value = i; return o; }));
   const k = garder ? liste.findIndex(s=>s.debut===garder) : -1;
   if(k >= 0) sel.value = String(k);
+  caseAutresClasses();
   etatTerminer();
   charge();
   chargeSequence();
+}
+/* Deux classes en même temps dans le local (co-enseignement) : une séance par classe côté serveur, mais UN tableau.
+   La case ajoute à la séance choisie les élèves des autres classes dont la séance de ce cours est en cours.
+   Rien ne change côté serveur : un appel donnees() par classe, réunis ici. Les boutons d'un élève (Recommencer,
+   Aide traitée) agissent sur la séance de SA classe. Cadenas et cours collectif restent ceux de la séance choisie. */
+let avecAutresClasses = false;
+try { avecAutresClasses = localStorage.getItem("tableau:autres-classes") === "1"; } catch(e){}
+const autresSeances = () => { const s = choisie(); return SEANCES.filter((x,i)=>x !== s && x.classe !== s.classe && enCours(x,i)); };
+function caseAutresClasses(){
+  let lab = $("autres-classes-label");
+  if(!lab){
+    lab = txt("label","filtre-aide"); lab.id = "autres-classes-label"; lab.style.cssText = "display:inline-flex;gap:6px;align-items:center;font-weight:700";
+    const cb = txt("input"); cb.type = "checkbox"; cb.id = "autres-classes"; cb.checked = avecAutresClasses;
+    cb.addEventListener("change",()=>{ avecAutresClasses = cb.checked; try { localStorage.setItem("tableau:autres-classes", cb.checked ? "1" : "0"); } catch(e){} contexteAffiche = ""; charge(); });
+    lab.append(cb, txt("span")); $("seance").after(lab);
+    $("seance").addEventListener("change", caseAutresClasses);
+  }
+  const autres = autresSeances();
+  lab.hidden = !SUIVI || !autres.length;
+  lab.lastChild.textContent = "＋ " + autres.map(x=>x.classe).join(", ") + " (aussi en séance)";
 }
 /* Une séance par cours ET par classe : `derniere` = la plus récente de sa classe (serveur depuis le
    06/11/2026) ; un ancien serveur ne l'envoie pas, et seule la toute première de la liste compte. */
@@ -163,7 +184,8 @@ function dessine(d){
     const tr = txt("tr", e.aide ? "aide" : e.fini ? "fini" : "");
     const td = (cls,t) => { const c=txt("td",cls,t); tr.append(c); return c; };
     const n1 = td("nom", nom(e.email)); n1.title = e.email;
-    if(SUIVI&&d.reprisesParSuivi&&d.peutReprendre){const cours=$("cours").value,seance=choisie();const r=txt("button","btn vide","Recommencer");r.type="button";r.setAttribute("aria-label","Faire recommencer "+nom(e.email));r.addEventListener("click",()=>{if(!confirm("Faire recommencer ce cours à "+nom(e.email)+" ? L’historique est conservé."))return;r.disabled=true;google.script.run.withSuccessHandler(()=>{charge();}).withFailureHandler(err=>{r.disabled=false;erreur(err);}).noter(cours,{type:'prof-reprise',email:e.email,debut:seance.debut});});n1.append(r);}
+    if(d._classes){ const c = txt("span","qui"," · "+e.classe); c.style.cssText = "color:var(--doux);font-weight:400"; n1.append(c); }
+    if(SUIVI&&(e._d||d).reprisesParSuivi&&(e._d||d).peutReprendre){const cours=$("cours").value,seance=e._seance||choisie();const r=txt("button","btn vide","Recommencer");r.type="button";r.setAttribute("aria-label","Faire recommencer "+nom(e.email));r.addEventListener("click",()=>{if(!confirm("Faire recommencer ce cours à "+nom(e.email)+" ? L’historique est conservé."))return;r.disabled=true;google.script.run.withSuccessHandler(()=>{charge();}).withFailureHandler(err=>{r.disabled=false;erreur(err);}).noter(cours,{type:'prof-reprise',email:e.email,debut:seance.debut});});n1.append(r);}
     n1.append(caseRecompense(e));
     const h = td("hum", e.humeur ? e.humeur.split(" ")[0] : ""); if(e.humeur) h.title = e.humeur;
     const b = txt("div","barre");
@@ -175,8 +197,8 @@ function dessine(d){
     const etat = td();
     if(e.aide){
       etat.append(txt("span","pastille aide","✋ aide · bloc "+e.aide.bloc+" · "+ilya(d.maintenant-e.aide.depuis).replace("il y a ","")));
-      if(SUIVI && d.peutCloreAide){
-        const cours=$("cours").value,seance=choisie(),depuis=e.aide.depuis;
+      if(SUIVI && (e._d||d).peutCloreAide){
+        const cours=$("cours").value,seance=e._seance||choisie(),depuis=e.aide.depuis;
         const b=txt("button","btn vide","Aide traitée");b.type="button";
         b.setAttribute("aria-label","Aide traitée pour "+nom(e.email));
         b.addEventListener("click",()=>{
@@ -198,7 +220,7 @@ function dessine(d){
   });
 
   syntheses(d, el, n);
-  const s = choisie(); $("titre-classe").textContent = s.classe ? s.classe + " · " : "";
+  const s = choisie(); $("titre-classe").textContent = d._classes ? d._classes.join(" + ") + " · " : s.classe ? s.classe + " · " : "";
   $("maj").textContent = "Mis à jour à " + new Date(d.maintenant).toLocaleTimeString("fr-BE",{hour:"2-digit",minute:"2-digit",second:"2-digit"});
 }
 
@@ -278,6 +300,21 @@ function charge(){
   const cours=$("cours").value,demande=++numeroChargement;
   const contexte=cours+":"+s.debut;
   if(contexte!==contexteAffiche){$("lignes").replaceChildren();if($("python-plafond"))$("python-plafond").hidden=true;}
+  const autres = avecAutresClasses ? autresSeances() : [];
+  if(autres.length){
+    Promise.all([s].concat(autres).map(x=>serveur("donnees", cours, x.debut, x.fin, x.classe))).then(l=>{
+      if(demande!==numeroChargement || $("cours").value!==cours || choisie().debut!==s.debut) return;
+      const d = l[0]; d.eleves.forEach(e=>{ e.classe = s.classe; });
+      l.slice(1).forEach((dk,k)=>{
+        dk.eleves.forEach(e=>{ e.classe = autres[k].classe; e._seance = autres[k]; e._d = dk; });
+        d.eleves = d.eleves.concat(dk.eleves);
+        Object.keys(dk.parBloc||{}).forEach(b=>{ d.parBloc[b] = (d.parBloc[b]||0) + dk.parBloc[b]; });
+      });
+      d._classes = [s.classe].concat(autres.map(x=>x.classe));
+      contexteAffiche = contexte; dessine(d);
+    }).catch(err=>{ if(demande===numeroChargement) erreur(err); });
+    return;
+  }
   google.script.run.withSuccessHandler(d=>{if(demande===numeroChargement&&$("cours").value===cours&&choisie().debut===s.debut){contexteAffiche=contexte;dessine(d);}}).withFailureHandler(err=>{if(demande===numeroChargement)erreur(err);}).donnees(cours, s.debut, s.fin, s.classe);
 }
 
