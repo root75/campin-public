@@ -55,7 +55,7 @@ function carteMail(t){
 
 const PROF = 'tape <b>Louviaux</b> (2B, 2F) ou <b>Michiels</b> (2E)';
 const COTE = '<aside class="repere cote"><h3>⚠ Ta réponse au professeur est cotée sur 5</h3><ol><li>C’est une <b>réponse</b> à son message (bouton Répondre) : l’objet commence par <b>RE:</b>.</li><li>Ta fiche <b>complétée</b> est <b>jointe</b> : sa carte est sous l’objet.</li><li>Le texte commence par « <b>Bonjour Monsieur,</b> » (2E : « <b>Bonjour Madame,</b> »).</li><li>Des <b>phrases complètes</b>, avec une majuscule et un point ; pas de langage SMS.</li><li>Le message finit par ton <b>prénom</b>, ton <b>nom</b> et ta <b>classe</b>.</li></ol></aside>';
-const REEL = '<p class="reel">À partir d’ici, <b>tout est réel</b> : tu travailles dans Outlook. Garde deux onglets : cette fiche et Courrier. <a class="btn vide" href="https://outlook.cloud.microsoft/mail/" target="_blank" rel="noopener">Ouvrir Courrier ↗</a></p>';
+const REEL = '<p class="reel"><span>À partir d’ici, <b>tout est réel</b> : tu travailles dans Outlook. Garde deux onglets : cette fiche et Courrier.</span> <a class="btn vide" href="https://outlook.cloud.microsoft/mail/" target="_blank" rel="noopener">Ouvrir Courrier ↗</a></p>';
 
 const BLOCS = [
  {partie:'A — Je m’entraîne, rien n’est envoyé', titre:'Repérer le mail piège', min:5,
@@ -75,8 +75,8 @@ const BLOCS = [
   q:{serveur:true}},
  {partie:'B — J’ouvre la pièce jointe sans risque', titre:'Ouvrir le message et vérifier', min:5,
   veux:'Lire le message « Ta fiche à compléter » et vérifier sa pièce jointe avant de l’ouvrir.',
-  extra:REEL,
-  gestes:['Ouvre Courrier : le bouton ci-dessus, ou barre de favoris ▸ <b>Favoris du domaine arcampin.com</b> ▸ <b>Microsoft 365</b> ▸ <b>Courrier</b>.','À gauche, clique sur <b>Boîte de réception</b>.','Clique sur le message « <b>Ta fiche à compléter</b> » de ton professeur.','Regarde l’expéditeur : son adresse finit-elle par <b>@arcampin.be</b> ?','Regarde la carte du fichier, sous l’objet : son nom finit-il par <b>.docx</b> ?','Les deux sont bons ? Continue. Un doute : n’ouvre pas, sonne la cloche 🔔.'],
+  avant:REEL,
+  gestes:['Ouvre Courrier : le bouton ci-dessus, ou barre de favoris ▸ <b>Favoris du domaine arcampin.com</b> ▸ <b>Microsoft 365</b> ▸ <b>Courrier</b>.','À gauche, clique sur <b>Boîte de réception</b>.','Clique sur le message « <b>Ta fiche à compléter</b> » de ton professeur.','Regarde l’expéditeur : son adresse finit-elle par <b>@arcampin.be</b> ?','Regarde la carte du fichier, sous l’objet : son nom finit-il par <b>.docx</b> ?','Les deux sont bons ? Continue. Un doute : n’ouvre pas, compare avec ton voisin.'],
   vois:'Expéditeur de l’école, fichier .docx attendu : je peux ouvrir.', stop:true,
   coince:['Je ne trouve pas le message : regarde l’onglet Autres, au-dessus de la liste. Ou tape le nom de ton professeur dans Rechercher, tout en haut.','Je ne vois pas l’adresse : clique sur le nom du professeur, en haut du message.'],
   q:{serveur:true}},
