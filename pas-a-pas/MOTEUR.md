@@ -32,6 +32,7 @@ est aussi servie par Apps Script, où une adresse relative ne mène nulle part.
 { partie:'A — Je découvre',   // « A » s'affiche ; le reste sert de repère
   titre:'…', min:5,            // durée indicative, affichée ⏱
   veux:'Le but en une phrase.',
+  avant:'<aside class="repere">…</aside>',       // facultatif : HTML AVANT les cases (un exemple analysé, un tableau à lire)
   gestes:['Une action par ligne, à l’impératif, avec le chemin de clics.', '…'],  // une case par geste
   vois:'Ce qui est à l’écran quand c’est fait.',   // encadré « ✅ À vérifier »
   stop:true,                   // facultatif : 🛑 ne continue pas avant d'avoir vérifié
@@ -39,6 +40,10 @@ est aussi servie par Apps Script, où une adresse relative ne mène nulle part.
   coince:['Blocage prévisible et sa solution.', '…'],  // le « Ça coince ? » du bloc
   q:{ … } }                    // la preuve, ci-dessous
 ```
+
+**Une case ne demande jamais de lire ce qui n'est pas encore à l'écran.** La question de preuve n'apparaît qu'après
+« ✅ C'est vérifié » : ce que l'élève doit lire d'abord (exemple, tableau) va dans `avant`, et la dernière case
+annonce la question (« Clique sur ✅ C'est vérifié : … »).
 
 `fais:'<ol class="etapes">…</ol>'` reste accepté à la place de `gestes` (fiches plus anciennes).
 
