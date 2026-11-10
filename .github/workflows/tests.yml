@@ -1,0 +1,32 @@
+# Vérification automatique : chaque PR (et chaque fusion dans main) lance tous les tests de tests/.
+# Aucun secret, aucune dépendance : les tests n'utilisent que Node.
+# Les essais avec Chromium et le vrai Code.gs tournent dans campin-pedagogique (dépôt privé).
+name: Tests
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: node tests/*.cjs
+        run: |
+          echec=0
+          for t in tests/*.cjs; do
+            echo "::group::$t"
+            node "$t" || { echec=1; echo "::error file=$t::$t échoue"; }
+            echo "::endgroup::"
+          done
+          exit $echec
