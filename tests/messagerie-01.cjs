@@ -25,3 +25,15 @@ assert.match(verifie('salutation',{...good,salutation:'Coucou Camille'}),/saluta
 for(const [sal,motif] of [['bonjour Camille,',/majuscule : « Bonjour »/],['Bonjour camille,',/prénom prend une majuscule/],['Bonjour Camille',/virgule/],['Bonjour,',/écris le prénom/],['Bonjour Lucas,',/Salue Camille/],['Salut Camille,',/^$/],['Bonjour Camille, ça va ?',/seulement la salutation/]])assert.match(verifie('salutation',{...good,salutation:sal}),motif,sal);
 assert.match(verifie('reponse',{...good,reponse:'bonjour camille, je pratique le dessin. Bonne journée, Lina Dupont, 2B'}),/majuscule/);
 (async()=>{vm.runInContext('preuves='+JSON.stringify(proofs)+';Object.assign(state,'+JSON.stringify(good)+');',x);await vm.runInContext('valideServeur(0)',x);assert.ok(s.includes('dejaValide.get(e)===reponse'));assert.ok(s.includes('document.getElementById(\'suivant\').disabled)return'));assert.ok(s.includes("actuel?.q!==q.q"));console.log('OK : validations des champs, 12 preuves locales/serveur, réponses incorrectes rejetées.');})().catch(e=>{console.error(e);process.exitCode=1});
+
+// La vue d'Outlook est une image à part, demandée à l'ouverture du volet : plus de capture.js (1,28 Mo) au chargement.
+{
+  const dossier = __dirname + '/../messagerie/pas-a-pas/';
+  const lire = f => fs.readFileSync(dossier + f, 'utf8');
+  assert.ok(fs.existsSync(dossier + 'capture.webp') && !fs.existsSync(dossier + 'capture.js'), 'capture.webp remplace capture.js');
+  assert.ok(fs.statSync(dossier + 'capture.webp').size < 500000, 'capture.webp reste sous 500 Ko');
+  assert.ok(!/capture\.js/.test(lire('index.html')), 'la page ne charge plus capture.js');
+  for (const f of ['fiche.js', 'visuels.js']) assert.ok(!/\bCAPTURE\b(?!_URL)/.test(lire(f)), f + ' ne lit plus la variable CAPTURE');
+  assert.ok(/<img loading="lazy" src="[^"]*capture\.webp/.test(lire('fiche.js')), 'étape 10 : image chargée à l’ouverture du volet');
+  console.log('OK : vue Outlook en image séparée, chargée à la demande.');
+}
