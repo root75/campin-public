@@ -14,6 +14,9 @@ un autre poste, l'humeur, l'avis et la phrase de fin sont faits par le moteur co
 | `<dossier>/pas-a-pas/preuves.json` | les questions corrigées par le serveur (facultatif) | [`messagerie-2/pas-a-pas/preuves.json`](../messagerie-2/pas-a-pas/preuves.json) |
 | [`cours.json`](cours.json) | une entrée : id, titre, chemin, nombre d'étapes, `preuves` | voir [CATALOGUE.md](CATALOGUE.md) |
 
+Les styles communs sont dans [`fiche.css`](fiche.css) (puis [`python-missions.css`](python-missions.css) pour le style « missions ») :
+la page les charge par leur adresse absolue et ne garde dans son `<style>` que ce qui lui est propre (`tests/styles-communs.cjs`).
+
 Puis, si le cours a un moment collectif : son conducteur dans [`sequences.json`](sequences.json).
 Puis un test `tests/<cours>.cjs` (modèle : [`tests/messagerie-02.cjs`](../tests/messagerie-02.cjs)).
 **Aucun Code.gs à redéployer** pour un nouveau cours : publier, puis tableau ▸ « Actualiser le catalogue ».
