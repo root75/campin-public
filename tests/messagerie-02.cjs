@@ -10,7 +10,7 @@ const F=x.module.exports;
 vm.runInContext(moteur.slice(moteur.indexOf('const norm ='),moteur.indexOf('const melange'))+'\n'+fonction(moteur,'regle')+';globalThis.regleMoteur=regle;',x);
 F.regle=x.regleMoteur;
 assert.equal(F.BLOCS.length,proofs.blocs.length,'un bloc par liste de preuves');
-F.BLOCS.forEach((B,i)=>{assert.ok(B.q&&B.q.serveur,'bloc '+(i+1)+' corrigé par le serveur');for(const k of ['partie','titre','min','veux','vois'])assert.ok(B[k],k+' '+(i+1));assert.ok((B.gestes||[]).length>=3,'gestes '+(i+1));assert.ok(B.coince.length,'coince '+(i+1));});
+F.BLOCS.forEach((B,i)=>{assert.ok(B.q&&B.q.serveur,'bloc '+(i+1)+' corrigé par le serveur');for(const k of ['partie','titre','min','veux','vois'])assert.ok(B[k],k+' '+(i+1));assert.ok(B.essai?(B.avant&&B.essai.q&&B.essai.choix.length>=3&&B.essai.choix.some(c=>/sais pas/.test(c[0]))):(B.gestes||[]).length>=3,'gestes ou essai '+(i+1));assert.ok(B.coince.length,'coince '+(i+1));});
 assert.equal(F.BLOCS[7].q.type,'redaction');assert.equal(typeof F.BLOCS[7].q.controle,'function');
 const cat=JSON.parse(fs.readFileSync(__dirname+'/../pas-a-pas/cours.json')).cours.find(c=>c.id==='messagerie-2');
 assert.ok(cat&&cat.etapes===F.BLOCS.length&&cat.preuves==='messagerie-2/pas-a-pas/preuves.json','catalogue');
@@ -107,3 +107,6 @@ assert.ok(!F.regle(proofs.blocs[7][0].regle,'Salut, voici ma fiche'),'brouillon 
 assert.deepEqual([...F.BLOCS[7].q.controle(ok,{nom:'Lina Dupont'},{classe:'2B'})],[]);
 assert.ok(F.BLOCS[7].q.controle('Salut',{nom:''},{classe:''}).length>0);
 console.log('OK : Messagerie 02 — '+proofs.blocs.length+' blocs ('+minutes+' min de travail), variantes, réponse au professeur, '+cas.length+' erreurs repérées.');
+
+// Avec 29 élèves, la fiche n'envoie pas vers le professeur pour un mail piège : on n'ouvre pas, on supprime.
+assert.ok(!/montre[sz]? (le message )?à (mon|ton) professeur/.test(require('fs').readFileSync(__dirname+'/../messagerie-2/pas-a-pas/fiche.js','utf8')+require('fs').readFileSync(__dirname+'/../messagerie-2/pas-a-pas/preuves.json','utf8')),'pas de « je montre à mon professeur »');

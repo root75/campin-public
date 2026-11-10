@@ -183,6 +183,21 @@ function pause(z){
 
 /* B.gestes = une liste de consignes (HTML permis) : une case à cocher par geste, à l'impératif. */
 const gestesHtml = l => !l ? "" : '<ol class="etapes">'+l.map(g=>'<li><label><input type="checkbox"><span>'+g+'</span></label></li>').join("")+'</ol>';
+/* E = { q:"question", choix:[["libellé","retour"],…], apres:"<p>l'analyse</p>", suite:"libellé du bouton de preuve" } */
+function essaiHtml(E, fini){
+  if(!document.getElementById("style-essai")){
+    const st = el("style"); st.id = "style-essai";
+    st.textContent = ".essai{display:grid;gap:10px}.essai .q-essai{font-weight:700;margin:0}.essai .choix-essai{display:flex;flex-wrap:wrap;gap:8px}.essai .retour-essai{display:grid;gap:6px;border-left:4px solid var(--accent,#1f5c73);padding:8px 12px;background:var(--fond-doux,rgba(31,92,115,.07));border-radius:8px}.essai .retour-essai p{margin:0}";
+    document.head.append(st);
+  }
+  const d = el("div","faire essai"), ch = el("div","choix-essai"), r = el("div","retour-essai"); r.hidden = true;
+  d.append(el("p","q-essai",E.q));
+  E.choix.forEach(c=>{ const b = txt("button","btn vide",c[0]); b.type = "button";
+    b.addEventListener("click",()=>{ ch.querySelectorAll("button").forEach(x=>{ x.className = "btn vide"; }); b.className = "btn plein";
+      r.replaceChildren(el("p",null,"<b>"+c[1]+"</b>"), el("div",null,E.apres||"")); r.hidden = false; fini(); });
+    ch.append(b); });
+  d.append(ch, r); return d;
+}
 function affiche(){
   barre(); if(MISSIONS) bulle();
   const z = document.getElementById("bloc"); z.replaceChildren();
@@ -192,6 +207,7 @@ function affiche(){
   if(enPause()){ pause(z); return; }
   if(ici >= BLOCS.length){ fin(z); return; }
   const B = blocVu(ici);
+  let essaiFait = !(MISSIONS && B.essai), apresEssai = null;
 
   const num = el("div","numero");
   const groupe=groupeCourant();
@@ -221,7 +237,10 @@ function affiche(){
        Le lecteur lui-même est commun à tous les cours : pas-a-pas/demo-lecteur.js. */
     const demo = !B.demos && typeof Demo!=="undefined" && Demo.pour ? Demo.pour(ici) : null;
     if(demo) z.append(demo);
-    z.append(el("div","faire",B.fais || gestesHtml(B.gestes)));
+    /* B.essai = une question d'essai sur ce qui est montré dans `avant`, À LA PLACE des cases : l'élève se prononce
+       (« Je ne sais pas » compris), puis lit l'analyse. Rien n'est noté ni envoyé : la preuve vient après. */
+    if(B.essai) z.append(essaiHtml(B.essai, ()=>{ essaiFait = true; if(apresEssai) apresEssai(); }));
+    else z.append(el("div","faire",B.fais || gestesHtml(B.gestes)));
     const v = el("aside","repere verification"); v.append(txt("h3",null,"✅ À vérifier"), el("p",null,B.vois)); z.append(v);
   } else {
     const dl = el("dl","lignes");
@@ -261,7 +280,8 @@ function affiche(){
   } else if(["code","ordre","trace","ligne","redaction"].includes(B.q.type)){
     preuve(pr,B);
   } else {
-    const go = txt("button","btn plein ouvre-preuve",MISSIONS ? "✅ C’est vérifié" : "👀 Je vois ça"); go.type="button";
+    const go = txt("button","btn plein ouvre-preuve",B.essai && B.essai.suite ? B.essai.suite : MISSIONS ? "✅ C’est vérifié" : "👀 Je vois ça"); go.type="button";
+    if(!essaiFait){ go.disabled = true; apresEssai = ()=>{ go.disabled = false; }; }
     go.addEventListener("click",()=>{ go.remove(); preuve(pr,B); });
     pr.append(go);
   }

@@ -17,7 +17,7 @@
      "pèse"
     ],
     "phrase": "à quoi vois-tu qu’il ne faut pas ouvrir une pièce jointe ?",
-    "juste": "Un inconnu et un paquet fermé : deux raisons de ne pas ouvrir. Tu sonnes la cloche 🔔 et tu montres le message à ton professeur.",
+    "juste": "Un inconnu et un paquet fermé : deux raisons de ne pas ouvrir. Tu n’ouvres pas, et tu supprimes le message.",
     "faux": "",
     "aide": "Lis toute la phrase à voix basse avant de choisir un mot."
    },
@@ -36,7 +36,7 @@
      "imprime"
     ],
     "phrase": "à quoi vois-tu qu’il ne faut pas ouvrir une pièce jointe ?",
-    "juste": "Un inconnu et un programme qui s’installe : deux raisons de ne pas ouvrir. Tu sonnes la cloche 🔔 et tu montres le message à ton professeur.",
+    "juste": "Un inconnu et un programme qui s’installe : deux raisons de ne pas ouvrir. Tu n’ouvres pas, et tu supprimes le message.",
     "faux": "",
     "aide": "Lis toute la phrase à voix basse avant de choisir un mot."
    },
@@ -55,7 +55,7 @@
      "camarade"
     ],
     "phrase": "à quoi vois-tu qu’il ne faut pas ouvrir une pièce jointe ?",
-    "juste": "Une seule lettre change, et ce n’est plus l’école : un fichier qui a l’air normal ne suffit pas. Tu sonnes la cloche 🔔 et tu montres le message à ton professeur.",
+    "juste": "Une seule lettre change, et ce n’est plus l’école : un fichier qui a l’air normal ne suffit pas. Tu n’ouvres pas, et tu supprimes le message.",
     "faux": "",
     "aide": "Lis toute la phrase à voix basse avant de choisir un mot."
    }
