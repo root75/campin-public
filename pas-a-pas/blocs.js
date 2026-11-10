@@ -379,11 +379,106 @@ function demosSousCases(z, B){
   if(premier) premier.open = true;
 }
 
+/* Texte à trous — « Explique avec tes mots », en deux temps (Vincent, 10/11/2026).
+   1. Q.texte porte un trou par « ___ » ; Q.mots = le bon mot de chaque trou, dans l'ordre ;
+      Q.pieges = les intrus de la banque. Corrigé ici : c'est la preuve du bloc. Trois versions du
+      même bloc par `variantes`, comme les autres questions.
+   2. Q.phrase (facultatif) = la question à laquelle l'élève répond par une phrase libre. Elle est
+      enregistrée SANS verdict (événement « phrase » du Journal) : le professeur la lit au tableau,
+      panneau « Leurs phrases », pour la correction ensemble. Le bloc s'ouvre après la phrase. */
+function styleTrous(){
+  if(document.getElementById("style-trous")) return;
+  const st = el("style"); st.id = "style-trous";
+  st.textContent = ".trous{line-height:2.5;margin:0}"
+    +".trous .trou{font:inherit;font-weight:700;min-width:5.5rem;min-height:2.2rem;margin:0 3px;padding:2px 10px;border-radius:8px;border:2px dashed var(--doux);background:var(--papier);color:var(--encre);cursor:pointer;vertical-align:baseline}"
+    +".trous .trou.plein{border-style:solid;border-color:var(--encre-bouton);background:var(--carte)}"
+    +".trous .trou.ici{outline:3px solid var(--fromage,#b7791f);outline-offset:2px}"
+    +".trous .trou.faux{border-style:solid;border-color:var(--faux);background:var(--faux-pale)}"
+    +".trous .trou.juste{border-style:solid;border-color:var(--juste);background:var(--juste-pale);cursor:default}"
+    +".banque{display:flex;flex-wrap:wrap;gap:8px;padding:10px 12px;border:1px dashed var(--trait);border-radius:10px}"
+    +".banque button{font:inherit;font-weight:700;min-height:2.4rem;padding:4px 14px;border-radius:1.2rem;border:2px solid var(--encre-bouton);background:var(--carte);color:var(--encre-bouton);cursor:pointer}"
+    +".banque button:disabled{opacity:.35;cursor:default;border-style:dashed}"
+    +".banque button:focus-visible,.trous .trou:focus-visible{outline:3px solid var(--fromage,#b7791f);outline-offset:2px}"
+    +".phrase-libre textarea{width:100%;box-sizing:border-box;font:inherit;padding:10px;border:2px solid var(--trait);border-radius:8px}";
+  document.head.append(st);
+}
+function trous(zone, Q, reussi, rate){
+  styleTrous();
+  const morceaux = Q.texte.split("___"), n = Q.mots.length;
+  const banque = melange(Q.mots.concat(Q.pieges || []));
+  const places = Q.mots.map(()=>null);   // pour chaque trou : le numéro du mot de la banque posé dedans
+  let vise = 0, fige = false, rouges = [];
+  const p = el("p","trous"), boite = el("div","banque");
+  boite.setAttribute("role","group"); boite.setAttribute("aria-label","Banque de mots");
+  const boutonsTrous = [], boutonsMots = [];
+  morceaux.forEach((m,i)=>{
+    p.append(m);
+    if(i>=n) return;
+    const b = el("button","trou"); b.type = "button";
+    b.addEventListener("click",()=>{ if(fige) return; places[i] = null; vise = i; rouges = rouges.filter(x=>x!==i); dessine(); });
+    boutonsTrous.push(b); p.append(b);
+  });
+  banque.forEach((mot,k)=>{
+    const b = txt("button",null,mot); b.type = "button";
+    b.addEventListener("click",()=>{
+      if(fige) return;
+      places[vise] = k; rouges = rouges.filter(x=>x!==vise);
+      const libre = places.indexOf(null); if(libre>=0) vise = libre;
+      dessine();
+    });
+    boutonsMots.push(b); boite.append(b);
+  });
+  const ok = txt("button","btn plein","Vérifier ma phrase"); ok.type = "button";
+  const actions = el("div","actions"); actions.append(ok);
+  const consigne = txt("p","note","Clique sur un mot : il va dans le trou entouré. Clique sur un trou pour le vider.");
+  function dessine(){
+    boutonsTrous.forEach((b,i)=>{
+      const plein = places[i]!=null;
+      b.textContent = plein ? banque[places[i]] : "…";
+      b.className = "trou" + (plein ? " plein" : "") + (fige ? " juste" : rouges.includes(i) ? " faux" : "") + (!fige && i===vise ? " ici" : "");
+      b.setAttribute("aria-label","Trou "+(i+1)+" : "+(plein ? banque[places[i]] : "vide"));
+      b.disabled = fige;
+    });
+    boutonsMots.forEach((b,k)=>{ b.disabled = fige || places.includes(k); });
+    ok.disabled = fige || places.includes(null);
+  }
+  dessine();
+  zone.append(p, boite, consigne, actions);
+  ok.addEventListener("click",()=>{
+    const choisis = places.map(k=>banque[k]), reponse = choisis.join(" | ");
+    rouges = choisis.map((m,i)=>norm(m)===norm(Q.mots[i]) ? -1 : i).filter(i=>i>=0);
+    if(rouges.length){
+      dessine();
+      rate(Q.faux || (rouges.length===1 ? "Un mot n’est pas à sa place : le trou rouge." : rouges.length+" mots ne sont pas à leur place : les trous rouges.")
+        +" Clique sur un trou rouge pour le vider, puis choisis un autre mot. Relis la phrase entière à voix basse.", reponse);
+      return;
+    }
+    fige = true; dessine(); consigne.remove(); actions.remove();
+    if(!Q.phrase){ reussi(reponse); return; }
+    // Deuxième temps : la phrase libre. Ni juste ni faux ici ; on vérifie seulement qu'il y a une phrase.
+    const f = el("form","bilan phrase-libre"), lab = el("label"), ta = el("textarea");
+    ta.rows = 3; ta.maxLength = 200; ta.required = true; ta.setAttribute("autocapitalize","sentences");
+    lab.append(txt("span",null,"✅ Les mots sont à leur place. Maintenant, avec tes mots : "+Q.phrase), ta);
+    const statut = txt("p","note","La fiche ne dit ni juste ni faux à ta phrase. Ton professeur la lit, et la classe corrige ensemble.");
+    const go = txt("button","btn plein","Enregistrer ma phrase"); go.type = "submit";
+    f.append(lab, statut, go); zone.append(f); ta.focus();
+    f.addEventListener("submit",e=>{
+      e.preventDefault(); if(go.disabled) return;
+      const t = ta.value.trim().replace(/\s+/g," ");
+      if(t.split(" ").length<4){ statut.textContent = "Écris une phrase complète : au moins quatre mots."; return; }
+      go.disabled = true; ta.readOnly = true; go.remove();
+      statut.textContent = SUIVI && !APERCU ? "Phrase enregistrée. Ton professeur la lira avec la classe." : "Phrase gardée pour cet essai (rien n’est envoyé).";
+      envoie({ etape:ici+1, type:"phrase", reponse:t });
+      reussi(reponse);
+    });
+  });
+}
+
 /* La question de preuve. Faux : on explique, on compte, et on recommence. */
 function preuve(pr, B, apres){
   const Q = B.q;
   const v = r => (B._n>1 ? "v"+B._v+":" : "") + (r==null ? "" : r);   // le Journal note la version
-  if(Q.type!=="mixte") pr.append(txt("div","etiquette", ["code","ordre"].includes(Q.type) ? "Mon programme" : Q.type==="rapport" ? "Mon rapport individuel" : typeof PARCOURS!=="undefined" ? "Je vérifie mon raisonnement" : "Je prouve que j’ai fait le bloc"));
+  if(Q.type!=="mixte") pr.append(txt("div","etiquette", ["code","ordre"].includes(Q.type) ? "Mon programme" : Q.type==="trous" ? "J’explique" : Q.type==="rapport" ? "Mon rapport individuel" : typeof PARCOURS!=="undefined" ? "Je vérifie mon raisonnement" : "Je prouve que j’ai fait le bloc"));
   pr.append(txt("p","question",Q.q));
   if(Q.serveur && Q.aide) pr.append(txt("p","note",Q.aide));
   const retour = el("div","retour"); retour.hidden = true;
@@ -510,6 +605,7 @@ function preuve(pr, B, apres){
     : Promise.resolve({ juste, texte:explication, note:false });
   if(Q.type==="redaction"){ redaction(zone, Q, reussi, rate, juge); return; }
   if(typeof Q.guide==="function"){Q.guide(zone,Q,reussi,rate,()=>{retour.hidden=true;});return;}
+  if(Q.type==="trous"){ trous(zone, Q, reussi, rate); return; }
   if(Q.type==="code"){ editeur(zone, Q, reussi, rate); return; }
   if(Q.type==="ordre"){ ordre(zone, Q, reussi, rate); return; }
   if(Q.type==="trace"){ trace(zone, Q, reussi, rate); return; }

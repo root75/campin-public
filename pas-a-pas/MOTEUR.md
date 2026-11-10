@@ -46,8 +46,23 @@ est aussi servie par Apps Script, où une adresse relative ne mène nulle part.
 | `qcm` | clique un choix (2 à 8) ; `c[0]` est la bonne, `p[k]` explique le piège k | page, ou serveur |
 | `saisie` | tape une réponse ; `regle:{egal, exact, contient, motif, sauf}` ou `ok:(r)=>…` | page, ou serveur |
 | `redaction` | écrit un texte contrôlé par `controle(texte, valeurs, {classe})`, puis le copie (`copier:true`) | page, puis serveur |
+| `trous` | complète un texte à trous avec une banque de mots, puis écrit une phrase libre (`phrase`) | page ; la phrase n'est **pas** jugée |
 | `ordre`, `ligne`, `trace`, `code`, `ordre-gestes` | Python et logigrammes (voir les fiches Python) | page |
 | `rapport`, `enquete`, `mixte` | déclare une étape, écrit un court raisonnement (Labo 07) | non corrigé |
+
+**« Explique avec tes mots » = `trous`** (10/11/2026). `texte` porte un trou par `___` ; `mots` = le bon mot de chaque trou, dans
+l'ordre ; `pieges` = les intrus de la banque ; `phrase` (facultatif) = la question de la phrase libre. La fiche corrige les
+trous (les faux passent en rouge) ; la phrase libre est enregistrée sans verdict (événement `phrase`, 200 caractères, au moins
+quatre mots) et s'affiche au tableau, panneau « Leurs phrases », sans les noms tant que la case n'est pas cochée. Le bloc
+s'ouvre après la phrase. Trois versions par `variantes`, avec **la même `phrase`** pour la corriger ensemble.
+Exemple : Python 02, bloc 2 ; contrôle : `tests/trous.cjs`.
+
+```js
+q:{ type:"trous", q:"Complète la règle avec les mots de la banque.",
+    texte:"Je commence par ___ le message. Il me dit quelle ___ est fautive.",
+    mots:["lire","ligne"], pieges:["effacer","couleur"],
+    phrase:"pourquoi faut-il lire le message avant de toucher au code ?", juste:"…" }
+```
 
 **Variantes — règle anti-recopie : trois versions du même type, chacune avec sa bonne réponse.**
 Deux façons de faire :

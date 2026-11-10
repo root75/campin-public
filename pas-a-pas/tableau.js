@@ -240,7 +240,36 @@ function syntheses(d, el, n, ids){
     else { const ul = txt("ul"); rep.forEach(e=>{ const li = txt("li",null,e.avis[k]+" "); li.append(txt("span","qui","— "+nom(e.email))); ul.append(li); }); col.append(ul); }
     za.append(col);
   });
-
+  phrasesLibres(el);
+}
+/* « Explique avec tes mots » : les phrases libres des blocs à trous, non jugées par la fiche, pour la
+   correction ensemble. Sans les noms tant que la case n'est pas cochée : le panneau peut être projeté.
+   Le panneau est créé ici (pas dans tableau.html) et reste caché tant qu'aucune phrase n'est arrivée. */
+let phrasesAvecNoms = false;
+function phrasesLibres(el){
+  let section = $("panneau-phrases");
+  if(!section){
+    section = txt("section","panneau"); section.id = "panneau-phrases";
+    const titre = txt("h2",null,"Leurs phrases — « Explique avec tes mots »");
+    const astuce = txt("p","astuce","La fiche a corrigé le texte à trous, pas ces phrases : elles sont à lire et à corriger ensemble. La dernière phrase de chaque élève, par bloc.");
+    const lab = txt("label","astuce"), cb = txt("input"); cb.type = "checkbox"; cb.id = "phrases-noms";
+    cb.addEventListener("change",()=>{ phrasesAvecNoms = cb.checked; section.querySelectorAll(".qui").forEach(x=>x.hidden=!phrasesAvecNoms); });
+    lab.append(cb," Afficher les noms (à décocher avant de projeter)");
+    const zone = txt("div","avis"); zone.id = "phrases";
+    section.append(titre, astuce, lab, zone);
+    $("avis").closest("section").before(section);
+  }
+  const parBloc = {};
+  el.forEach(e=>Object.keys(e.phrases||{}).forEach(b=>(parBloc[b]||(parBloc[b]=[])).push([e.email, e.phrases[b]])));
+  const blocs = Object.keys(parBloc).map(Number).sort((a,b)=>a-b);
+  section.hidden = !blocs.length;
+  const zone = $("phrases"); zone.replaceChildren();
+  blocs.forEach(b=>{
+    const col = txt("div"), ul = txt("ul");
+    col.append(txt("h3",null,"Bloc "+b+" — "+parBloc[b].length+" phrase"+(parBloc[b].length>1?"s":"")));
+    parBloc[b].forEach(([email,phrase])=>{ const li = txt("li",null,phrase+" "); const q = txt("span","qui","— "+nom(email)); q.hidden = !phrasesAvecNoms; li.append(q); ul.append(li); });
+    col.append(ul); zone.append(col);
+  });
 }
 let numeroChargement=0,contexteAffiche="";
 function charge(){
@@ -260,10 +289,10 @@ function demo(){
   return { maintenant:t, parBloc:{1:2,4:5,5:3,6:9,8:4,9:6,10:2,12:1},
     variantes:{1:vr([1,3],[1,2],[0,3]), 4:vr([1,3],[4,3],[0,2]), 6:vr([2,3],[1,2],[6,3]), 9:vr([2,2],[2,3],[2,3])}, eleves:[
     e("lina.dubois@arcampin.be",5,7,4,1,{aide:{bloc:6,depuis:t-3*m}, humeur:"🙁 Pas top"}),
-    e("noah.martin@arcampin.be",9,3,1,0,{humeur:"🙂 Bien"}),
+    e("noah.martin@arcampin.be",9,3,1,0,{humeur:"🙂 Bien", phrases:{2:"Parce que le message dit la ligne où chercher, sinon je change des trucs au hasard."}}),
     e("ines.lambert@arcampin.be",12,2,0,2,{fini:true, humeur:"😄 Super", avis:{plu:"Les questions pour passer au bloc suivant, on sait tout de suite si c'est juste.", progres:"Ça coince ? quand je me trompais.", gene:""}}),
     e("adam.peeters@arcampin.be",3,5,3,1,{humeur:"😣 Pas bien"}),
-    e("sara.janssens@arcampin.be",7,4,0,11),
+    e("sara.janssens@arcampin.be",7,4,0,11,{phrases:{2:"Si je lis pas le message je sais pas quelle erreur c'est."}}),
     e("yanis.leroy@arcampin.be",8,6,2,0,{aide:{bloc:9,depuis:t-1*m}, humeur:"😐 Bof"}),
     e("emma.dupont@arcampin.be",12,1,0,1,{fini:true, humeur:"🙂 Bien", avis:{plu:"Travailler à mon rythme.", progres:"Refaire le programme moi-même.", gene:"Attendre que la page charge au début."}})
   ]};
