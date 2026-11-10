@@ -6,7 +6,7 @@ const commun = new Set(fs.readFileSync('pas-a-pas/fiche.css', 'utf8').split('\n'
 const cours = JSON.parse(fs.readFileSync('pas-a-pas/cours.json', 'utf8')).cours;
 let pages = 0;
 for (const c of cours) {
-  const page = fs.readFileSync(c.chemin, 'utf8');
+  const page = fs.readFileSync(c.chemin.replace(/\/?$/, '/index.html').replace(/index\.html\/index\.html$/, 'index.html'), 'utf8');
   if (!/pas-a-pas\/blocs\.js/.test(page)) continue;   // Messagerie 01 et le Rat de ville ont leur propre moteur
   pages++;
   assert.match(page, /<link rel="stylesheet" href="https:\/\/root75\.github\.io\/campin-public\/pas-a-pas\/fiche\.css/, c.id + ' : fiche.css absent');
