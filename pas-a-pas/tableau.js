@@ -76,21 +76,42 @@ function remplitSeances(liste, garder){
    La case ajoute à la séance choisie les élèves des autres classes dont la séance de ce cours est en cours.
    Rien ne change côté serveur : un appel donnees() par classe, réunis ici. Les boutons d'un élève (Recommencer,
    Aide traitée) agissent sur la séance de SA classe. Cadenas et cours collectif restent ceux de la séance choisie. */
-let avecAutresClasses = false;
-try { avecAutresClasses = localStorage.getItem("tableau:autres-classes") === "1"; } catch(e){}
-const autresSeances = () => { const s = choisie(); return SEANCES.filter((x,i)=>x !== s && x.classe !== s.classe && enCours(x,i)); };
+/* Les classes réunies : une case par classe, cochée par le professeur et gardée sur le poste. Une classe proposée =
+   une classe qui a ce cours ouvert (panneau « Mes cours ») ou qui a déjà eu une séance de ce cours. Pour chacune : sa
+   séance la plus récente, en cours ou non ; sans aucune séance, tout son historique (début 0), comme le fait etat()
+   pour ses élèves. Aucune séance n'est créée ni reprise : l'avancement des élèves ne bouge pas. */
+let classesVues = [];
+try { classesVues = JSON.parse(localStorage.getItem("tableau:classes-vues") || "[]"); } catch(e){}
+function classesPossibles(){
+  const s = choisie(), cours = $("cours").value, noms = new Set(SEANCES.map(x=>x.classe).filter(Boolean));
+  if(CL && CL.classes) Object.keys(CL.classes).forEach(c=>{ if((CL.classes[c]||[]).includes(cours)) noms.add(c); });
+  noms.delete(s.classe);
+  return [...noms].sort((a,b)=>a.localeCompare(b,"fr",{numeric:true}));
+}
+const seanceDe = c => { const i = SEANCES.findIndex((x,k)=>x.classe===c && derniere(x,k)); return i>=0 ? SEANCES[i] : { classe:c, debut:0, fin:null, sansSeance:true }; };
+const autresSeances = () => { const possibles = classesPossibles(); return classesVues.filter(c=>possibles.includes(c)).map(seanceDe); };
 function caseAutresClasses(){
-  let lab = $("autres-classes-label");
-  if(!lab){
-    lab = txt("label","filtre-aide"); lab.id = "autres-classes-label"; lab.style.cssText = "display:inline-flex;gap:6px;align-items:center;font-weight:700";
-    const cb = txt("input"); cb.type = "checkbox"; cb.id = "autres-classes"; cb.checked = avecAutresClasses;
-    cb.addEventListener("change",()=>{ avecAutresClasses = cb.checked; try { localStorage.setItem("tableau:autres-classes", cb.checked ? "1" : "0"); } catch(e){} contexteAffiche = ""; charge(); });
-    lab.append(cb, txt("span")); $("seance").after(lab);
+  if(!SUIVI) return;
+  let z = $("autres-classes-label");
+  if(!z){
+    z = txt("div","filtre-aide"); z.id = "autres-classes-label"; z.style.cssText = "display:flex;flex-wrap:wrap;gap:4px 14px;align-items:center;width:100%;font-weight:700";
+    $("seance").after(z);
     $("seance").addEventListener("change", caseAutresClasses);
   }
-  const autres = autresSeances();
-  lab.hidden = !SUIVI || !autres.length;
-  lab.lastChild.textContent = "＋ " + autres.map(x=>x.classe).join(", ") + " (aussi en séance)";
+  const possibles = classesPossibles();
+  z.hidden = !SUIVI || !possibles.length || !choisie().debut;
+  z.replaceChildren(txt("span",null,"Voir aussi :"), ...possibles.map(c=>{
+    const lab = txt("label"), cb = txt("input"), se = seanceDe(c), k = SEANCES.indexOf(se);
+    lab.style.cssText = "display:inline-flex;gap:5px;align-items:center;font-weight:400";
+    cb.type = "checkbox"; cb.dataset.classe = c; cb.checked = classesVues.includes(c);
+    cb.addEventListener("change",()=>{
+      classesVues = classesVues.filter(x=>x!==c).concat(cb.checked ? [c] : []);
+      try { localStorage.setItem("tableau:classes-vues", JSON.stringify(classesVues)); } catch(e){}
+      contexteAffiche = ""; charge();
+    });
+    lab.title = se.sansSeance ? "Pas de séance pour cette classe : tout son historique sur ce cours." : (k>=0 && enCours(se,k) ? "Séance en cours" : "Dernière séance (pas en cours)") + " : " + heure(se.debut);
+    lab.append(cb, txt("span",null,c + (se.sansSeance ? " (sans séance)" : k>=0 && enCours(se,k) ? " (en séance)" : "")));
+    return lab; }));
 }
 /* Une séance par cours ET par classe : `derniere` = la plus récente de sa classe (serveur depuis le
    06/11/2026) ; un ancien serveur ne l'envoie pas, et seule la toute première de la liste compte. */
@@ -300,7 +321,7 @@ function charge(){
   const cours=$("cours").value,demande=++numeroChargement;
   const contexte=cours+":"+s.debut;
   if(contexte!==contexteAffiche){$("lignes").replaceChildren();if($("python-plafond"))$("python-plafond").hidden=true;}
-  const autres = avecAutresClasses ? autresSeances() : [];
+  const autres = s.debut ? autresSeances() : [];
   if(autres.length){
     Promise.all([s].concat(autres).map(x=>serveur("donnees", cours, x.debut, x.fin, x.classe))).then(l=>{
       if(demande!==numeroChargement || $("cours").value!==cours || choisie().debut!==s.debut) return;
@@ -686,6 +707,7 @@ function serveurCl(fn, ...args){
 const appelCl = (fn, ...args) => serveurCl(fn, ...args).then(dessineClasses, erreur);
 function dessineClasses(d){
   CL = d;
+  if($("seance")) caseAutresClasses();   // les classes qui ont ce cours ouvert viennent d'arriver
   const noms = Object.keys(d.classes).sort();
   const tete = txt("tr"); tete.append(txt("th", null, "Classe"), ...d.cours.map(c=>{ const th = txt("th", null, c.titre); th.title = c.cle; return th; }), txt("th"));
   $("cl-tete").replaceChildren(tete);
