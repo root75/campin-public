@@ -81,29 +81,28 @@ function chargeSeances(){
 }
 const erreur = err => {let note=$("erreur-tableau");if(!note){note=txt("p");note.id="erreur-tableau";note.setAttribute("role","alert");document.querySelector("header").after(note);}note.textContent="Échec de l’action : "+(err.message||String(err));};
 
-/* Bloquer la classe après un bloc (plafonnerSeance dans Code.gs) : les fiches s'arrêtent là et
-   affichent le message, sans rechargement. Passer à un autre moment de la séquence débloque. */
+/* Les blocs ouverts à la classe (plafonnerSeance dans Code.gs) : une pastille par bloc, sous les
+   commandes de séance. Un clic sur la pastille N ouvre les blocs 1 à N ; les suivants portent un
+   cadenas sur les postes, sans rechargement. Passer à un autre moment de la séquence rouvre tout. */
 const MESSAGES_PLAFOND = ["On attend la correction ensemble.", "On reprend en séquence collective."];
 let clePlafond = "";
 function dessinePlafond(){
   let z = $("plafond-seance");
   if(!z){
-    z = txt("div"); z.id = "plafond-seance"; z.style.cssText = "display:flex;gap:8px;flex-wrap:wrap;align-items:center;width:100%";
-    const bloc = document.createElement("select"); bloc.id = "plafond-bloc"; bloc.setAttribute("aria-label","Bloquer la classe après le bloc");
-    const msg = document.createElement("input"); msg.id = "plafond-message"; msg.type = "text"; msg.maxLength = 200; msg.style.cssText = "flex:1;min-width:16rem;font:inherit;padding:6px 10px";
+    z = txt("div"); z.id = "plafond-seance"; z.style.cssText = "display:flex;gap:6px;flex-wrap:wrap;align-items:center;width:100%;padding:4px 0";
+    const titre = txt("strong",null,"Blocs ouverts :"), rang = txt("span"); rang.id = "plafond-blocs"; rang.style.cssText = "display:flex;gap:4px;flex-wrap:wrap";
+    const msg = document.createElement("input"); msg.id = "plafond-message"; msg.type = "text"; msg.maxLength = 200; msg.style.cssText = "flex:1;min-width:14rem;font:inherit;padding:6px 10px";
     msg.setAttribute("aria-label","Mon message aux élèves"); msg.placeholder = "Mon message aux élèves";
-    const dl = document.createElement("select"); dl.id = "plafond-choix"; dl.setAttribute("aria-label","Message affiché aux élèves");
+    const dl = document.createElement("select"); dl.id = "plafond-choix"; dl.setAttribute("aria-label","Message affiché sous le cadenas");
     [...MESSAGES_PLAFOND, "Autre message…"].forEach((m,k)=>{ const o = txt("option",null,m); o.value = k<MESSAGES_PLAFOND.length ? m : ""; dl.append(o); });
     dl.addEventListener("change",()=>{ msg.hidden = !!dl.value; if(dl.value) msg.value = dl.value; else { msg.value = ""; msg.focus(); } });
-    const go = txt("button","btn plein","Bloquer la classe"); go.type = "button"; go.id = "plafond-bloquer";
-    const fin = txt("button","btn vide","Débloquer"); fin.type = "button"; fin.id = "plafond-debloquer";
-    const etat = txt("strong"); etat.id = "plafond-etat"; etat.style.width = "100%";
-    const envoie = n => { const s = choisie(); go.disabled = fin.disabled = true;
-      serveur("plafonnerSeance", $("cours").value, s.debut, n, msg.value).then(l=>{ go.disabled = fin.disabled = false; remplitSeances(l, s.debut); })
-        .catch(e=>{ go.disabled = fin.disabled = false; erreur(e); }); };
-    go.addEventListener("click",()=>envoie(Number(bloc.value)));
-    fin.addEventListener("click",()=>envoie(0));
-    z.append(etat, bloc, dl, msg, go, fin); $("gestion-actions").append(z);
+    const tout = txt("button","btn vide","Tout ouvrir"); tout.type = "button"; tout.id = "plafond-tout";
+    const etat = txt("span","astuce"); etat.id = "plafond-etat"; etat.style.width = "100%";
+    z.ouvre = n => { const s = choisie(); z.querySelectorAll("button").forEach(b=>b.disabled = true);
+      serveur("plafonnerSeance", $("cours").value, s.debut, n, msg.value).then(l=>{ clePlafond = ""; remplitSeances(l, s.debut); })
+        .catch(e=>{ clePlafond = ""; dessinePlafond(); erreur(e); }); };
+    tout.addEventListener("click",()=>z.ouvre(0));
+    z.append(titre, rang, tout, dl, msg, etat); document.querySelector(".outils-secondaires").before(z);
   }
   const i = Number($("seance").value), s = SEANCES[i] || {}, cours = $("cours").value;
   z.hidden = !SUIVI || !enCours(s,i) || cours === "rat-de-ville-formatif";
@@ -111,13 +110,17 @@ function dessinePlafond(){
   const n = NB_BLOCS[cours] || 1, cle = [cours, s.debut, s.plafond||0, s.messagePlafond||"", n].join("|");
   if(cle === clePlafond) return;          // ne pas défaire ce que le professeur est en train de choisir
   clePlafond = cle;
-  $("plafond-bloc").replaceChildren(...Array.from({length:Math.max(1,n-1)},(_,k)=>{ const o = txt("option",null,"Bloquer après le bloc "+(k+1)); o.value = k+1; return o; }));
-  $("plafond-bloc").value = String(Math.min(s.plafond || 1, Math.max(1,n-1)));
+  const dernier = s.plafond && s.plafond<n ? s.plafond : n;
+  $("plafond-blocs").replaceChildren(...Array.from({length:n},(_,k)=>{
+    const ouvert = k<dernier, b = txt("button","btn "+(ouvert ? "plein" : "vide"),(ouvert ? "" : "🔒 ")+(k+1)); b.type = "button"; b.dataset.bloc = k+1;
+    b.style.cssText = "min-width:2.6rem;padding:4px 8px"; b.title = "Ouvrir les blocs 1 à "+(k+1)+(k+1<n ? ", fermer les suivants" : "");
+    b.setAttribute("aria-label", b.title); b.setAttribute("aria-pressed", String(ouvert));
+    b.addEventListener("click",()=>z.ouvre(k+1<n ? k+1 : 0)); return b; }));
   $("plafond-message").value = s.messagePlafond || MESSAGES_PLAFOND[0];
   $("plafond-choix").value = MESSAGES_PLAFOND.includes($("plafond-message").value) ? $("plafond-message").value : "";
   $("plafond-message").hidden = !!$("plafond-choix").value;
-  $("plafond-etat").textContent = s.plafond ? "🔒 Classe bloquée après le bloc "+s.plafond+" — « "+(s.messagePlafond || MESSAGES_PLAFOND[0])+" »" : "Classe libre (la séquence peut bloquer à la fin d’un atelier).";
-  $("plafond-debloquer").hidden = !s.plafond;
+  $("plafond-tout").hidden = dernier===n; $("plafond-tout").disabled = false;
+  $("plafond-etat").textContent = dernier<n ? "🔒 Blocs 1 à "+dernier+" ouverts ; les suivants portent un cadenas sur les postes." : "Tous les blocs sont ouverts. Clique sur un numéro pour fermer les blocs suivants (l’atelier d’une séquence le fait aussi).";
 }
 function dessine(d){
   ["messagerie-recommencer","python-plafond","guide-messagerie"].forEach(id=>{if($(id))$(id).hidden=true;});

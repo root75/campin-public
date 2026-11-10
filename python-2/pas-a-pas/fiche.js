@@ -241,7 +241,7 @@ const BLOCS = [
     fais:CASES("Au-dessus de chaque ligne, ajoute une ligne qui commence par <b>#</b> et dit ce que fait la ligne.",
                `Enregistre : <span class="chemin">icône disquette « Enregistrer »</span> (ou <b>Ctrl + S</b>).`,
                `Exécute : <span class="chemin">icône ▶ verte</span> (ou <b>F5</b>).`,
-               "Réponds ci-dessous. Ensuite, montre ton programme à ton voisin : il lit tes commentaires et te dit s'il comprend chaque ligne."),
+               "Réponds ci-dessous. Ensuite, montre ton programme à ton voisin : il lit tes commentaires et te dit s'il comprend chaque ligne. Il ne les recopie pas : chacun écrit les siens, avec ses mots."),
     vois:"Six lignes : trois commentaires, trois instructions. La console affiche toujours {R}.",
     extra: CODE("# on range {D} dans la boîte vies\nvies = {D}\n# …\nvies = vies - {K}\n# …\nprint(vies)"),
     coince:["Le # est AltGr + 3.",
@@ -261,6 +261,7 @@ const BLOCS = [
     bulle:"Dernière mission : ton programme commenté part chez le professeur. Il est coté sur 5.",
     veux:"Rendre ton fichier 01_Les-vies, commenté, dans Classroom, pour qu'il soit coté sur 5.",
     fais:CASES(`Lis la grille ci-dessous : vérifie chaque ligne dans ton programme.`,
+               `Relis tes trois commentaires : ce sont TES mots, pas ceux de ton voisin, et pas la ligne recopiée.`,
                `Dans Thonny, enregistre une dernière fois : <span class="chemin">menu Fichier ▸ Enregistrer</span> (ou <b>Ctrl + S</b>).`,
                `Ouvre un nouvel onglet (<b>Ctrl + T</b>), tape <b>classroom.google.com</b>, puis appuie sur <b>Enter</b>.`,
                `Clique sur le cours de <b>Logique et programmation</b> ▸ onglet <span class="chemin">Travaux et devoirs</span> ▸ le devoir <b>Python 02 — Les vies commenté</b> ▸ <span class="chemin">Afficher le devoir</span>.`,
@@ -276,6 +277,7 @@ const BLOCS = [
   <tr><td>Au-dessus de <code>vies = vies - {K}</code> : ton commentaire explique le calcul, et que le résultat est rangé dans vies.</td><td>1</td></tr>
   <tr><td>Au-dessus de <code>print(vies)</code> : ton commentaire explique qu'on affiche ce qu'il y a dans la boîte vies.</td><td>1</td></tr></table>
   <p>Un commentaire explique avec TES mots ce que fait la ligne. Recopier la ligne (<code># vies = vies - {K}</code>) n'explique rien : 0 point pour cette ligne.</p>
+  <p class="stop">Pas de copier-coller du voisin. Des commentaires copiés sur un autre élève, c'est 0 sur 5, pour les deux fichiers.</p>
   <p>Avant tout : le fichier rendu s'appelle 01_Les-vies_ suivi de ton nom, et finit par .py. Sinon, le professeur ne peut pas l'ouvrir.</p></div>`,
     coince:["Pas de devoir « Python 02 — Les vies commenté » dans Travaux et devoirs : vérifie que tu es dans le cours de Logique et programmation. Toujours rien : sonne la cloche 🔔.",
             "Ton fichier n'est pas dans Documents ▸ Python : dans la fenêtre, tape 01_Les-vies dans la case Rechercher, en haut à droite, puis Enter.",

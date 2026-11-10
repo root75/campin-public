@@ -136,12 +136,12 @@ function barre(){
   styleBarre();
   b.classList.add("nav"); b.removeAttribute("aria-hidden"); b.setAttribute("role","navigation"); b.setAttribute("aria-label","Mes blocs");
   BLOCS.forEach((B,i)=>{
-    const fait = i<etat.atteint, n = txt("button", fait ? "fait" : "", (fait ? "✓ " : "")+(i+1)+(i===ici ? ". "+B.titre : ""));
-    n.type = "button"; n.title = (i+1)+". "+B.titre;
+    const fait = i<etat.atteint, ferme = !!plafond && !APERCU && !fait && i>=plafond.bloc;   // pas encore ouvert par le professeur
+    const n = txt("button", fait ? "fait" : ferme ? "ferme" : "", (fait ? "✓ " : ferme ? "🔒 " : "")+(i+1)+(i===ici ? ". "+B.titre : ""));
+    n.type = "button"; n.title = (i+1)+". "+B.titre+(ferme ? " — pas encore ouvert" : "");
     n.setAttribute("aria-label", n.title+(fait ? " — validé" : ""));
     if(i===ici) n.setAttribute("aria-current","step");
-    n.disabled = !APERCU && i>etat.atteint;
-    if(plafond && !APERCU && i===plafond.bloc-1) n.classList.add("dernier");
+    n.disabled = !APERCU && i>etat.atteint;   // le premier bloc fermé reste cliquable : il dit pourquoi
     n.addEventListener("click",()=>{ if(ici===i) return; ici = i; affiche(); scrollTo(0,0); });
     b.append(n);
   });
@@ -154,13 +154,13 @@ function styleBarre(){
     +".progres.nav button.fait{background:var(--juste-pale);border-color:var(--juste);color:var(--encre)}"
     +".progres.nav button[aria-current]{background:var(--encre-bouton);border-color:var(--encre-bouton);color:var(--carte)}"
     +".progres.nav button:disabled{opacity:.5;cursor:default}"
-    +".progres.nav button.dernier{margin-right:14px;box-shadow:10px 0 0 -7px var(--faux)}"
+    +".progres.nav button.ferme{border-style:dashed}"
     +".progres.nav button:focus-visible{outline:3px solid var(--fromage,#b7791f);outline-offset:2px}";
   document.head.append(st);
 }
 
-/* Le plafond de séance : le professeur (ou le moment « atelier » de la séquence) arrête la classe
-   après un bloc. Il arrive avec etat() au démarrage, puis avec moment() toutes les 5 s
+/* Les blocs ouverts : le professeur (ou le moment « atelier » de la séquence) ouvre la classe
+   jusqu'à un bloc ; les suivants portent un cadenas dans la barre. Il arrive avec etat() au démarrage, puis avec moment() toutes les 5 s
    (sequence-eleve.js appelle PAS_A_PAS.plafond). Les blocs déjà validés restent lisibles. */
 let plafond = null;
 const enPause = () => !!plafond && !APERCU && plafond.bloc<BLOCS.length && ici>=plafond.bloc && ici>=etat.atteint;
@@ -171,10 +171,10 @@ function recoitPlafond(p){
   if(avant || enPause()) affiche(); else barre();
 }
 function pause(z){
-  z.append(txt("div","numero","⏸ Pause"), txt("h2",null,"On s’arrête après le bloc "+plafond.bloc),
+  z.append(txt("div","numero","🔒 Blocs 1 à "+plafond.bloc+" ouverts"), txt("h2",null,"Le bloc "+(plafond.bloc+1)+" n’est pas encore ouvert"),
     txt("p","stop",plafond.message || "On attend la correction ensemble."),
     txt("p",null,"En attendant, reviens sur tes blocs : clique sur une pastille ✓, juste au-dessus. Pour chacun, sais-tu expliquer l’erreur à ton voisin, sans lire l’explication ?"),
-    txt("p","note","La suite s’ouvrira toute seule, sans recharger la page."));
+    txt("p","note","Le professeur ouvre la suite : le cadenas 🔒 disparaîtra tout seul, sans recharger la page."));
   const nav = el("div","actions"), avant = txt("button","btn vide","← Bloc précédent"); avant.type = "button";
   avant.addEventListener("click",()=>{ ici = Math.min(ici, BLOCS.length)-1; affiche(); });
   nav.append(avant); z.append(nav);
