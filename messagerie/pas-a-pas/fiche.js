@@ -117,6 +117,22 @@ function apercuCote(){
 }
 const corps=d=>[d.salutation,d.message,d.fin,d.signature].join('\n\n');
 const erreurs=d=>['a','objet','salutation','message','fin','signature'].map(k=>({champ:k,texte:verifie(k,d)})).filter(x=>x.texte);
+/* Étapes 9 à 12 (dans le vrai Outlook) : une case à cocher par consigne, comme dans les autres cours. Les cases
+   cochées sont gardées avec le brouillon (rechargement, retour sur l'étape) ; elles ne bloquent rien et ne sont pas notées. */
+function casesAGestes(z,e){
+ if(e<8)return;
+ const coches=(state.coches&&typeof state.coches==='object')?state.coches:(state.coches={});
+ const faites=Array.isArray(coches[e])?coches[e]:(coches[e]=[]);
+ let n=0;
+ z.querySelectorAll(':scope > ol').forEach(ol=>{
+  ol.classList.add('etapes');
+  [...ol.children].forEach(li=>{
+   const k=n++,lab=document.createElement('label'),cb=document.createElement('input'),sp=document.createElement('span');
+   cb.type='checkbox';cb.checked=faites.includes(k);sp.append(...li.childNodes);lab.append(cb,sp);li.append(lab);
+   cb.addEventListener('change',()=>{const i=faites.indexOf(k);if(cb.checked&&i<0)faites.push(k);else if(!cb.checked&&i>=0)faites.splice(i,1);sauve();});
+  });
+ });
+}
 /* La barre des étapes, comme dans les autres cours : une pastille numérotée par étape, le titre sur celle de l'étape
    affichée (les autres le donnent au survol), ✓ sur les étapes validées. Cliquable jusqu'à la première étape non
    validée : on revient relire, puis on repart en avant. Sans la barre (ancienne page en cache), rien ne se passe. */
@@ -191,6 +207,7 @@ Camille</p></div></div><p><b>Utilise Répondre :</b> le destinataire et l’obje
  if(e===11&&state.atteint>=12)h+=FINI;
  h+='<div class="actions">'+(e>0?'<button type="button" class="secondaire" id="precedent">← Revenir</button>':'')+(e<=11?`<button type="button" id="suivant">${e===0?'Vérifier les deux parties de l’adresse':e===6?'Vérifier mon mail d’entraînement':'Vérifier cette étape'}</button>`:'<button type="button" id="revoir">Revoir mon entraînement</button>')+'</div>';
  z.innerHTML=h;
+ casesAGestes(z,e);
  for(const el of z.querySelectorAll('input,textarea')){el.value=state[el.id]||'';el.addEventListener('input',()=>{state[el.id]=el.value;sauve();document.getElementById('aperçu-courant').innerHTML=apercuCote();document.getElementById('retour').innerHTML='';document.getElementById('retour').className='';});}
  document.getElementById('ouvrir-reponse')?.addEventListener('click',()=>{document.getElementById('zone-reponse').hidden=false;document.getElementById('reponse').focus();});
  /* Étape 8 : une réponse déjà commencée se rouvre toute seule (retour sur l'étape, rechargement). */

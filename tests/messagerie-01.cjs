@@ -60,3 +60,6 @@ assert.ok(/state\.etape===7[\s\S]{0,700}escapeHtml\(state\.reponse\)/.test(s), '
   assert.ok(/plafond:recoitPlafond/.test(s) && /const p=etat\.plafond/.test(s), 'fiche.js lit le plafond d’etat() et l’offre à sequence.js');
   assert.ok(/const enPause=\(\)=>!!plafond&&!APERCU&&plafond\.bloc<TITRES\.length&&state\.etape>=plafond\.bloc&&state\.etape>=state\.atteint/.test(s), 'même règle que blocs.js');
 }
+
+// Étapes 9 à 12 : une case à cocher par consigne (les listes numérotées de l'étape deviennent des cases).
+assert.ok(/function casesAGestes\(z,e\)/.test(s) && /z\.innerHTML=h;\n casesAGestes\(z,e\);/.test(s), 'les consignes des étapes Outlook portent une case');
