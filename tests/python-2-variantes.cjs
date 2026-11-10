@@ -7,7 +7,7 @@ function charge(cours) {
   const contenu = fs.readFileSync(`${cours}/pas-a-pas/fiche.js`, 'utf8');
   const s = contenu + fs.readFileSync('pas-a-pas/blocs.js', 'utf8');
   const ctx = vm.createContext({ echangeGuide() {} });   // défini après MOTEUR, hors du découpage
-  vm.runInContext(s.slice(0, s.indexOf('const MOTEUR =')) + '\nconst APERCU = true;\n' +
+  vm.runInContext(s.slice(0, s.indexOf('/* ===== Python dans la page')) + '\nconst APERCU = true;\n' +
     s.slice(s.indexOf('const apercuV ='), s.indexOf('\nfunction barre()')) +
     '\nglobalThis.bloc = (i,v) => { apercuV[i-1]=v; return blocVu(i-1); };', ctx);
   return ctx.bloc;

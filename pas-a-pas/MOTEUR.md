@@ -14,6 +14,9 @@ un autre poste, l'humeur, l'avis et la phrase de fin sont faits par le moteur co
 | `<dossier>/pas-a-pas/preuves.json` | les questions corrigées par le serveur (facultatif) | [`messagerie-2/pas-a-pas/preuves.json`](../messagerie-2/pas-a-pas/preuves.json) |
 | [`cours.json`](cours.json) | une entrée : id, titre, chemin, nombre d'étapes, `preuves` | voir [CATALOGUE.md](CATALOGUE.md) |
 
+Les styles communs sont dans [`fiche.css`](fiche.css) (puis [`python-missions.css`](python-missions.css) pour le style « missions ») :
+la page les charge par leur adresse absolue et ne garde dans son `<style>` que ce qui lui est propre (`tests/styles-communs.cjs`).
+
 Puis, si le cours a un moment collectif : son conducteur dans [`sequences.json`](sequences.json).
 Puis un test `tests/<cours>.cjs` (modèle : [`tests/messagerie-02.cjs`](../tests/messagerie-02.cjs)).
 **Aucun Code.gs à redéployer** pour un nouveau cours : publier, puis tableau ▸ « Actualiser le catalogue ».
@@ -50,6 +53,9 @@ est aussi servie par Apps Script, où une adresse relative ne mène nulle part.
 | `ordre`, `ligne`, `trace`, `code`, `ordre-gestes` | Python et logigrammes (voir les fiches Python) | page |
 | `rapport`, `enquete`, `mixte` | déclare une étape, écrit un court raisonnement (Labo 07) | non corrigé |
 
+`code`, `ordre`, `trace` et `ligne` (Python dans la page, Pyodide) sont dans [`python-editeur.js`](python-editeur.js), commun aux
+fiches Python : la page le charge **avant** sa fiche et avant `blocs.js`. La fiche peut déclarer `const PYTHON_INPUT = true`
+(`input( )` lit les réponses de `q.essais`) et `const ERREURS_FICHE = {…}` (explications d'erreurs du cours).
 **« Explique avec tes mots » = `trous`** (10/11/2026). `texte` porte un trou par `___` ; `mots` = le bon mot de chaque trou, dans
 l'ordre ; `pieges` = les intrus de la banque ; `phrase` (facultatif) = la question de la phrase libre. La fiche corrige les
 trous (les faux passent en rouge) ; la phrase libre est enregistrée sans verdict (événement `phrase`, 200 caractères, au moins
