@@ -52,3 +52,11 @@ assert.match(verifie('reponse',{...good,nom:'',reponse:'Bonjour Camille, je prat
 // Le panneau de droite suit ce que l'élève tape : à l'étape 8, sa réponse à Camille.
 assert.ok(/function apercuCote\(\)/.test(s) && !/innerHTML=apercu\(\);/.test(s), 'le panneau de droite passe par apercuCote()');
 assert.ok(/state\.etape===7[\s\S]{0,700}escapeHtml\(state\.reponse\)/.test(s), 'étape 8 : le panneau montre la réponse en cours');
+
+// Blocs ouverts (cadenas) : Messagerie 01 reçoit le plafond du serveur, comme le moteur commun.
+{
+  const seq = fs.readFileSync(__dirname + '/../messagerie/pas-a-pas/sequence.js', 'utf8');
+  assert.ok(/if\(o\.plafond\) o\.plafond\(m && m\.plafond\)/.test(seq), 'sequence.js transmet le plafond reçu avec moment()');
+  assert.ok(/plafond:recoitPlafond/.test(s) && /const p=etat\.plafond/.test(s), 'fiche.js lit le plafond d’etat() et l’offre à sequence.js');
+  assert.ok(/const enPause=\(\)=>!!plafond&&!APERCU&&plafond\.bloc<TITRES\.length&&state\.etape>=plafond\.bloc&&state\.etape>=state\.atteint/.test(s), 'même règle que blocs.js');
+}
