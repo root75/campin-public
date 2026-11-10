@@ -120,14 +120,25 @@ const erreurs=d=>['a','objet','salutation','message','fin','signature'].map(k=>(
 /* La barre des étapes, comme dans les autres cours : une pastille numérotée par étape, le titre sur celle de l'étape
    affichée (les autres le donnent au survol), ✓ sur les étapes validées. Cliquable jusqu'à la première étape non
    validée : on revient relire, puis on repart en avant. Sans la barre (ancienne page en cache), rien ne se passe. */
+/* Blocs ouverts (cadenas), comme dans le moteur commun : le professeur ouvre la classe jusqu'à une étape (tableau ▸
+   rangée « Blocs ouverts »). Les étapes suivantes portent un cadenas ; l'élève qui y arrive lit le message et peut
+   relire ses étapes validées. Le plafond arrive avec etat() au démarrage, puis avec moment() toutes les 5 s. */
+let plafond=null;
+const enPause=()=>!!plafond&&!APERCU&&plafond.bloc<TITRES.length&&state.etape>=plafond.bloc&&state.etape>=state.atteint;
+function recoitPlafond(p){
+ p=p&&Number(p.bloc)>0?{bloc:Number(p.bloc),message:String(p.message||'')}:null;
+ if(JSON.stringify(p)===JSON.stringify(plafond))return;
+ const avant=enPause();plafond=p;
+ if(avant||enPause())render();else pastilles(state.etape);
+}
 function pastilles(e){
  const b=document.getElementById('pastilles');if(!b)return;
  for(const id of ['compteur','barre'])document.getElementById(id).hidden=true;
  b.replaceChildren();
  TITRES.forEach((t,i)=>{
-  const fait=i<state.atteint,n=document.createElement('button');n.type='button';
-  if(fait)n.className='fait';
-  n.textContent=(fait?'✓ ':'')+(i+1)+(i===e?'. '+t:'');n.title=(i+1)+'. '+t;
+  const fait=i<state.atteint,ferme=!!plafond&&!APERCU&&!fait&&i>=plafond.bloc,n=document.createElement('button');n.type='button';
+  if(fait)n.className='fait';else if(ferme)n.className='ferme';
+  n.textContent=(fait?'✓ ':ferme?'🔒 ':'')+(i+1)+(i===e?'. '+t:'');n.title=(i+1)+'. '+t+(ferme?' — pas encore ouverte':'');
   n.setAttribute('aria-label',n.title+(fait?' — validée':''));if(i===e)n.setAttribute('aria-current','step');
   n.disabled=i>state.atteint;
   n.addEventListener('click',()=>{if(i===e||i>state.atteint)return;state.etape=i;state.preuve='';sauve();render();scrollTo(0,0);});
@@ -150,6 +161,11 @@ function render(){
  pastilles(e);
  document.getElementById('choix-etape').value=e;for(const o of document.getElementById('choix-etape').options)o.disabled=Number(o.value)>state.atteint;
  const z=document.getElementById('contenu');
+ if(enPause()){
+  z.innerHTML=`<div class="mode-action"><b>🔒 Étapes 1 à ${plafond.bloc} ouvertes</b></div><h2>L’étape ${plafond.bloc+1} n’est pas encore ouverte</h2><p class="mission cote"><b>${escapeHtml(plafond.message||'On attend la correction ensemble.')}</b></p><p>En attendant, reviens sur tes étapes : clique sur une pastille ✓, juste au-dessus. Pour chacune, saurais-tu l’expliquer à ton voisin ?</p><p class="note">Le professeur ouvre la suite : le cadenas 🔒 disparaîtra tout seul, sans recharger la page.</p><div class="actions"><button type="button" class="secondaire" id="precedent">← Revenir</button></div>`;
+  document.getElementById('precedent').addEventListener('click',()=>{state.etape--;state.preuve='';render();});
+  return;
+ }
  const mission='<aside class="mission"><b>Ta mission d’entraînement</b><p>Écris à Camille pour lui demander quel sport ou quel loisir elle pratique.</p><p>Camille est fictive. Son adresse : <b>camille.martin@example.org</b>.</p></aside>';
  let h=`<div class="mode-action"><b>À TOI D’AGIR</b> · Lis la consigne, réalise l’action, puis clique sur Vérifier.</div><h2>${TITRES[e]}</h2>`;
  if(e===0)h+=`<p>Avant de toucher Outlook, observe les parties de ce mail. Clique sur chaque repère pour comprendre son rôle.</p><div class="email exemple"><details><summary>À : camille.martin@example.org</summary><p><b>Le destinataire</b> : la personne qui doit recevoir le mail. Une lettre différente peut changer son adresse.</p></details><details><summary>Objet : Une question sur tes loisirs</summary><p><b>L’objet</b> : un titre court. Il annonce le sujet et aide à retrouver le mail dans la liste.</p></details><details><summary>Bonjour Camille,</summary><p><b>La salutation</b> : elle s’adapte à la personne. Pour un professeur : Bonjour Monsieur, ou Bonjour Madame,. On en choisit une seule.</p></details><details><summary>Quel sport ou quel loisir pratiques-tu ?</summary><p><b>Le message</b> : il dit pourquoi tu écris et ce que tu demandes. Le destinataire doit pouvoir répondre.</p></details><details><summary>Bonne journée,</summary><p><b>La formule de fin</b> : elle termine le message poliment.</p></details><details><summary>Lina Dupont, 2B</summary><p><b>La signature</b> : elle permet d’identifier l’élève et sa classe.</p></details></div><p class="note">Le corps du mail réunit la salutation, le message, la formule de fin et la signature.</p>`;
@@ -258,7 +274,7 @@ async function demarre(){
  const status=document.getElementById('suivi-status');
  try{
   const r=await fetch('https://root75.github.io/campin-public/messagerie/pas-a-pas/preuves.json?v=20261105b');if(!r.ok)throw Error();preuves=await r.json();
-  if(SUIVI){const etat=await rpc('etat',COURS);identite=':'+etat.email;classeScolaire=String(etat.classe||'').trim();repriseServeur=Number(etat.reprise)||0;atteintServeur=Math.min(12,Number(etat.atteint)||0);humeurServeur=etat.humeur||'';avisServeur=etat.avis||null;status.textContent='Suivi professeur connecté. Les preuves courtes et demandes d’aide sont enregistrées.';await envoie({etape:0,type:'ouvert'});
+  if(SUIVI){const etat=await rpc('etat',COURS);identite=':'+etat.email;classeScolaire=String(etat.classe||'').trim();repriseServeur=Number(etat.reprise)||0;atteintServeur=Math.min(12,Number(etat.atteint)||0);{const p=etat.plafond;plafond=p&&Number(p.bloc)>0?{bloc:Number(p.bloc),message:String(p.message||'')}:null;}humeurServeur=etat.humeur||'';avisServeur=etat.avis||null;status.textContent='Suivi professeur connecté. Les preuves courtes et demandes d’aide sont enregistrées.';await envoie({etape:0,type:'ouvert'});
    await Promise.all([7,8,9,10,11].map(async e=>{try{const a=await rpc('preuve',COURS,e+1);const v=preuves.blocs[e].find(x=>x.q===a?.q);if(v)questionsEleve[e]=v;}catch(_){}}));}
   else status.innerHTML='Entraînement libre : aucun résultat ni appel à l’aide transmis au professeur. Pour la séance suivie, <a href="https://script.google.com/a/macros/arcampin.be/s/AKfycbyOPTaq-L1PuittB1rkkiL9OOtShFc2WpiD8H_pH_INaw9ePWenCzhlIPlHu4zBOgLk/exec">ouvre ta séance scolaire</a>.';
   try{const saved=JSON.parse(stockage()?.getItem(CLE+identite)||'null');if(saved&&Number.isInteger(saved.etape)&&saved.etape>=0&&saved.etape<12){if(!SUIVI||Number(saved.reprise||0)===repriseServeur)Object.assign(state,saved);
@@ -312,7 +328,7 @@ async function demarre(){
   google.script.run.withSuccessHandler(r=>{if(r?.active===true){aide=true;aideEtape=state.etape+1;cloche();}}).withFailureHandler(()=>{}).etatAide(COURS);
   setInterval(relit,15000);document.addEventListener('visibilitychange',relit);
  }
- if(SUIVI){window.PAS_A_PAS={cours:COURS,envoie};window.PasAPasSequence?.suivre(window.PAS_A_PAS);}
+ if(SUIVI){window.PAS_A_PAS={cours:COURS,envoie,plafond:recoitPlafond};window.PasAPasSequence?.suivre(window.PAS_A_PAS);}
 }
 if(typeof document!=='undefined')demarre();
 if(typeof module!=='undefined')Object.assign(module.exports,{regle,reponseCourte});
