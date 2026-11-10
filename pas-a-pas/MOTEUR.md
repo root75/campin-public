@@ -33,6 +33,7 @@ est aussi servie par Apps Script, où une adresse relative ne mène nulle part.
   titre:'…', min:5,            // durée indicative, affichée ⏱
   veux:'Le but en une phrase.',
   avant:'<aside class="repere">…</aside>',       // facultatif : HTML AVANT les cases (un exemple analysé, un tableau à lire)
+  essai:{ q:'…', choix:[['libellé','retour'],…], apres:'<p>…</p>', suite:'👉 À toi' },   // facultatif : À LA PLACE des cases, une question d'essai sur `avant` (avec « Je ne sais pas »), puis l'analyse ; rien n'est noté
   gestes:['Une action par ligne, à l’impératif, avec le chemin de clics.', '…'],  // une case par geste
   vois:'Ce qui est à l’écran quand c’est fait.',   // encadré « ✅ À vérifier »
   stop:true,                   // facultatif : 🛑 ne continue pas avant d'avoir vérifié
