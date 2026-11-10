@@ -78,6 +78,9 @@ const soldes = (prix, pct) => {
         juste:faux+" gardait "+pct+" % du prix au lieu d'en enlever "+pct+" %. Aucune ligne rouge : c'est à toi de comparer avec le résultat attendu." } };
 };
 
+/* La phrase libre du bloc « La règle de toute la leçon » : la même pour les trois versions, pour la corriger ensemble. */
+const PHRASE_REGLE = "pourquoi faut-il lire le message avant de toucher au code ?";
+
 const BLOCS = [
   { partie:"A — Se remettre en route", titre:"Le quiz « Python — je révise »", min:8, stop:true,
     bulle:"Re-bonjour ! On se remet en route avec un petit quiz.",
@@ -101,7 +104,7 @@ const BLOCS = [
             c:["Il affiche la valeur rangée dans score.","Il affiche le mot score.","Il range une valeur dans score.","Il efface score."],
             p:[null,"Pour afficher le mot, il faut des guillemets : print(\"score\").","Ranger, c'est le = : à droite on calcule, à gauche on range.","print n'efface rien : il montre."] } } ] },
 
-  { partie:"B — Lire les messages d'erreur", titre:"La règle de toute la leçon", min:2,
+  { partie:"B — Lire les messages d'erreur", titre:"La règle de toute la leçon", min:4,
     bulle:"Aujourd'hui, tu deviens réparateur de programmes.",
     veux:"Réparer un programme en lisant, pas en changeant au hasard.",
     fais:CASES("Lis l'encadré ci-dessous.",
@@ -109,9 +112,24 @@ const BLOCS = [
     vois:"Tu sais nommer les trois sortes d'erreurs.",
     extra:`<div class="encart"><p>Trois sortes d'erreurs : <b>SyntaxError</b> (l'écriture est cassée), une erreur <b>pendant l'exécution</b> (NameError : un nom inconnu), et l'erreur <b>de logique</b> (pas de ligne rouge, mais le résultat est faux).</p></div>`,
     coince:["Perdu dans un programme : bouton ↺ Code de départ, sous le cadre."],
-    q:{ type:"qcm", q:"Devant un programme qui ne marche pas, je commence par :",
-        c:["Lire le message et trouver la ligne fautive.","Changer des caractères au hasard.","Tout effacer et recommencer.","Cliquer sur ↺ Code de départ."],
-        p:[null,"Au hasard, ça finit parfois par marcher, mais tu ne sauras pas pourquoi. Le message dit où chercher.","Tu perdrais ce qui est juste : souvent, un seul caractère est faux.","↺ Code de départ, c'est quand tu t'es perdu : ça remet le programme cassé du départ."] } },
+    /* Essai du texte à trous (10/11/2026) : trois versions corrigées par la fiche, puis la même phrase
+       libre pour tous, non jugée, lue au tableau pour la correction ensemble. */
+    q:{ type:"trous", q:"Complète la règle avec les mots de la banque.",
+        texte:"Devant un programme qui ne marche pas, je commence par ___ le message. Il me dit quelle ___ est fautive. Ensuite seulement, je ___ le code.",
+        mots:["lire","ligne","corrige"], pieges:["effacer","couleur","recopie"],
+        phrase:PHRASE_REGLE,
+        juste:"Lire, trouver la ligne, corriger : dans cet ordre, pour chaque programme cassé de la leçon." },
+    variantes:[
+      { q:{ type:"trous", q:"Complète les trois sortes d'erreurs avec les mots de la banque.",
+            texte:"SyntaxError : l'___ de la ligne est cassée. NameError : Python ne connaît pas ce ___. Erreur de logique : pas de ligne rouge, mais le ___ est faux.",
+            mots:["écriture","nom","résultat"], pieges:["adresse","fichier","message"],
+            phrase:PHRASE_REGLE,
+            juste:"L'écriture, le nom, le résultat : trois sortes d'erreurs, trois endroits où chercher." } },
+      { q:{ type:"trous", q:"Complète l'explication avec les mots de la banque.",
+            texte:"Une erreur de ___ n'affiche aucune ligne rouge : le programme s'exécute, mais le résultat est ___. Pour la trouver, je ___ ce qui s'affiche avec ce que j'attendais.",
+            mots:["logique","faux","compare"], pieges:["syntaxe","rouge","supprime"],
+            phrase:PHRASE_REGLE,
+            juste:"Sans ligne rouge, c'est toi qui cherches : tu compares le résultat affiché avec le résultat attendu." } } ] },
 
   { partie:"B — Lire les messages d'erreur", titre:"L'additionneur", min:5,
     bulle:"Une faute d'écriture : un seul caractère à trouver.",
