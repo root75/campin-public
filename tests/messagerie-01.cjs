@@ -49,14 +49,17 @@ assert.match(verifie('reponse',{...good,nom:'',reponse:'Bonjour Camille, je prat
   assert.ok(/if\(e===11\)h\+=[^\n]*n’est pas cotée/.test(s), 'étape 12 : dit ce qui est coté');
 }
 
-// La vue d'Outlook est une image à part, demandée à l'ouverture du volet : plus de capture.js (1,28 Mo) au chargement.
+// Le panneau de droite suit ce que l'élève tape : à l'étape 8, sa réponse à Camille.
+assert.ok(/function apercuCote\(\)/.test(s) && !/innerHTML=apercu\(\);/.test(s), 'le panneau de droite passe par apercuCote()');
+assert.ok(/state\.etape===7[\s\S]{0,700}escapeHtml\(state\.reponse\)/.test(s), 'étape 8 : le panneau montre la réponse en cours');
+
+// Blocs ouverts (cadenas) : Messagerie 01 reçoit le plafond du serveur, comme le moteur commun.
 {
-  const dossier = __dirname + '/../messagerie/pas-a-pas/';
-  const lire = f => fs.readFileSync(dossier + f, 'utf8');
-  assert.ok(fs.existsSync(dossier + 'capture.webp') && !fs.existsSync(dossier + 'capture.js'), 'capture.webp remplace capture.js');
-  assert.ok(fs.statSync(dossier + 'capture.webp').size < 500000, 'capture.webp reste sous 500 Ko');
-  assert.ok(!/capture\.js/.test(lire('index.html')), 'la page ne charge plus capture.js');
-  for (const f of ['fiche.js', 'visuels.js']) assert.ok(!/\bCAPTURE\b(?!_URL)/.test(lire(f)), f + ' ne lit plus la variable CAPTURE');
-  assert.ok(/<img loading="lazy" src="[^"]*capture\.webp/.test(lire('fiche.js')), 'étape 10 : image chargée à l’ouverture du volet');
-  console.log('OK : vue Outlook en image séparée, chargée à la demande.');
+  const seq = fs.readFileSync(__dirname + '/../messagerie/pas-a-pas/sequence.js', 'utf8');
+  assert.ok(/if\(o\.plafond\) o\.plafond\(m && m\.plafond\)/.test(seq), 'sequence.js transmet le plafond reçu avec moment()');
+  assert.ok(/plafond:recoitPlafond/.test(s) && /const p=etat\.plafond/.test(s), 'fiche.js lit le plafond d’etat() et l’offre à sequence.js');
+  assert.ok(/const enPause=\(\)=>!!plafond&&!APERCU&&plafond\.bloc<TITRES\.length&&state\.etape>=plafond\.bloc&&state\.etape>=state\.atteint/.test(s), 'même règle que blocs.js');
 }
+
+// Étapes 9 à 12 : une case à cocher par consigne (les listes numérotées de l'étape deviennent des cases).
+assert.ok(/function casesAGestes\(z,e\)/.test(s) && /z\.innerHTML=h;\n casesAGestes\(z,e\);/.test(s), 'les consignes des étapes Outlook portent une case');

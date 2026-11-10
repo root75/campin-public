@@ -49,6 +49,7 @@
 
     function recoit(m){
       courant=m;
+      if(o.plafond) o.plafond(m && m.plafond);   // fiche.js : la classe s'arrête après une étape (cadenas)
       if(!m || m.type === "fin" || m.type === "atelier"){
         document.getElementById('collectif').hidden=true;document.getElementById('individuel').hidden=false;document.getElementById('revoir-collectif').hidden=false;
         if(cle){ cle = ""; zone.hidden = true; document.body.classList.remove("en-sequence"); scrollTo(0, 0); }
