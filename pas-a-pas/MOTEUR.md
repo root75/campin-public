@@ -52,6 +52,10 @@ est aussi servie par Apps Script, où une adresse relative ne mène nulle part.
 | `ordre`, `ligne`, `trace`, `code`, `ordre-gestes` | Python et logigrammes (voir les fiches Python) | page |
 | `rapport`, `enquete`, `mixte` | déclare une étape, écrit un court raisonnement (Labo 07) | non corrigé |
 
+`code`, `ordre`, `trace` et `ligne` (Python dans la page, Pyodide) sont dans [`python-editeur.js`](python-editeur.js), commun aux
+fiches Python : la page le charge **avant** sa fiche et avant `blocs.js`. La fiche peut déclarer `const PYTHON_INPUT = true`
+(`input( )` lit les réponses de `q.essais`) et `const ERREURS_FICHE = {…}` (explications d'erreurs du cours).
+
 **Variantes — règle anti-recopie : trois versions du même type, chacune avec sa bonne réponse.**
 Deux façons de faire :
 
