@@ -81,6 +81,44 @@ function chargeSeances(){
 }
 const erreur = err => {let note=$("erreur-tableau");if(!note){note=txt("p");note.id="erreur-tableau";note.setAttribute("role","alert");document.querySelector("header").after(note);}note.textContent="Échec de l’action : "+(err.message||String(err));};
 
+/* Bloquer la classe après un bloc (plafonnerSeance dans Code.gs) : les fiches s'arrêtent là et
+   affichent le message, sans rechargement. Passer à un autre moment de la séquence débloque. */
+const MESSAGES_PLAFOND = ["On attend la correction ensemble.", "On reprend en séquence collective."];
+let clePlafond = "";
+function dessinePlafond(){
+  let z = $("plafond-seance");
+  if(!z){
+    z = txt("div"); z.id = "plafond-seance"; z.style.cssText = "display:flex;gap:8px;flex-wrap:wrap;align-items:center;width:100%";
+    const bloc = document.createElement("select"); bloc.id = "plafond-bloc"; bloc.setAttribute("aria-label","Bloquer la classe après le bloc");
+    const msg = document.createElement("input"); msg.id = "plafond-message"; msg.type = "text"; msg.maxLength = 200; msg.style.cssText = "flex:1;min-width:16rem;font:inherit;padding:6px 10px";
+    msg.setAttribute("aria-label","Mon message aux élèves"); msg.placeholder = "Mon message aux élèves";
+    const dl = document.createElement("select"); dl.id = "plafond-choix"; dl.setAttribute("aria-label","Message affiché aux élèves");
+    [...MESSAGES_PLAFOND, "Autre message…"].forEach((m,k)=>{ const o = txt("option",null,m); o.value = k<MESSAGES_PLAFOND.length ? m : ""; dl.append(o); });
+    dl.addEventListener("change",()=>{ msg.hidden = !!dl.value; if(dl.value) msg.value = dl.value; else { msg.value = ""; msg.focus(); } });
+    const go = txt("button","btn plein","Bloquer la classe"); go.type = "button"; go.id = "plafond-bloquer";
+    const fin = txt("button","btn vide","Débloquer"); fin.type = "button"; fin.id = "plafond-debloquer";
+    const etat = txt("strong"); etat.id = "plafond-etat"; etat.style.width = "100%";
+    const envoie = n => { const s = choisie(); go.disabled = fin.disabled = true;
+      serveur("plafonnerSeance", $("cours").value, s.debut, n, msg.value).then(l=>{ go.disabled = fin.disabled = false; remplitSeances(l, s.debut); })
+        .catch(e=>{ go.disabled = fin.disabled = false; erreur(e); }); };
+    go.addEventListener("click",()=>envoie(Number(bloc.value)));
+    fin.addEventListener("click",()=>envoie(0));
+    z.append(etat, bloc, dl, msg, go, fin); $("gestion-actions").append(z);
+  }
+  const i = Number($("seance").value), s = SEANCES[i] || {}, cours = $("cours").value;
+  z.hidden = !SUIVI || !enCours(s,i) || cours === "rat-de-ville-formatif";
+  if(z.hidden) return;
+  const n = NB_BLOCS[cours] || 1, cle = [cours, s.debut, s.plafond||0, s.messagePlafond||"", n].join("|");
+  if(cle === clePlafond) return;          // ne pas défaire ce que le professeur est en train de choisir
+  clePlafond = cle;
+  $("plafond-bloc").replaceChildren(...Array.from({length:Math.max(1,n-1)},(_,k)=>{ const o = txt("option",null,"Bloquer après le bloc "+(k+1)); o.value = k+1; return o; }));
+  $("plafond-bloc").value = String(Math.min(s.plafond || 1, Math.max(1,n-1)));
+  $("plafond-message").value = s.messagePlafond || MESSAGES_PLAFOND[0];
+  $("plafond-choix").value = MESSAGES_PLAFOND.includes($("plafond-message").value) ? $("plafond-message").value : "";
+  $("plafond-message").hidden = !!$("plafond-choix").value;
+  $("plafond-etat").textContent = s.plafond ? "🔒 Classe bloquée après le bloc "+s.plafond+" — « "+(s.messagePlafond || MESSAGES_PLAFOND[0])+" »" : "Classe libre (la séquence peut bloquer à la fin d’un atelier).";
+  $("plafond-debloquer").hidden = !s.plafond;
+}
 function dessine(d){
   ["messagerie-recommencer","python-plafond","guide-messagerie"].forEach(id=>{if($(id))$(id).hidden=true;});
   if(!$("filtre-aide")){
@@ -100,6 +138,7 @@ function dessine(d){
   $("guide-messagerie").hidden=$("cours").value!=='messagerie-1';
   if(!$("python-plafond")){const b=txt("button","btn vide","Ramener les élèves au maximum à l’étape 8");b.type='button';b.id='python-plafond';b.addEventListener('click',()=>{const s=choisie();if(!confirm('Les élèves ayant dépassé l’étape 8 devront la refaire. Continuer ?'))return;b.disabled=true;google.script.run.withSuccessHandler(r=>{$("maj").textContent=r.repris+' élèves remis à l’étape 8. Ils doivent recharger leur fiche.';b.disabled=false;charge();}).withFailureHandler(err=>{b.disabled=false;erreur(err);}).noter('python-1',{type:'prof-plafond',debut:s.debut});});$("gestion-actions").append(b);}
   $("python-plafond").hidden=!(SUIVI&&d.reprisesParSuivi&&d.peutReprendre&&$("cours").value==='python-1'&&/^3/.test(choisie().classe));
+  dessinePlafond();
   $("gestion-attente").hidden=!SUIVI||!!d.reprisesParSuivi;
   const n = NB_BLOCS[$("cours").value] || Math.max(1, ...d.eleves.map(e=>e.atteint+1));
   const el = d.eleves.slice().sort((a,b)=>
@@ -371,6 +410,7 @@ function allerA(i, phase, nouvelle){
   serveur("piloter", $("cours").value, i, phase || "", !!nouvelle, choisie().classe).then(e=>{
     if(!SEQ.etat || e.i !== SEQ.etat.i || nouvelle){ SEQ.depuis = Date.now(); SEQ.montre = false; SEQ.choisi = null; SEQ.rep = null; }
     SEQ.etat = e; ouvreProjection();
+    const s = choisie(); if(s.plafond){ delete s.plafond; delete s.messagePlafond; dessinePlafond(); }   // piloter() a levé le blocage
   }).catch(erreur);
 }
 function ouvreProjection(){
