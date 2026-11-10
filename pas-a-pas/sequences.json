@@ -528,6 +528,7 @@
     "preparation": [
       "Tableau professeur → Cours : python-2. Nouvelle séance → la classe → Démarrer seulement pour un nouveau départ.",
       "Ouvrir Python 02 — Lire et corriger les erreurs pour la classe. Vérifier le fichier 01_Les-vies_Nom.py et son emplacement réel.",
+      "Classroom : publier avant la séance le devoir « Python 02 — Les vies commenté », sur 5 points, sans pièce jointe (texte dans la fiche prof). Les élèves y rendent leur fichier au bloc 11.",
       "Préparer l'annonce d'évaluation uniquement si le contenu et la date sont fixés : au moins une semaine de délai. Aucune date n'est présumée ici."
     ],
     "moments": [
@@ -655,12 +656,12 @@
         "min": 13,
         "methode": "Travail autonome — fiches accessibles",
         "lignes": [
-          "Blocs 7 à 10 : ouvrir, provoquer deux erreurs, réparer et commenter.",
-          "Enregistre puis montre ton programme au professeur."
+          "Blocs 7 à 11 : ouvrir, provoquer deux erreurs, réparer, commenter, puis rendre dans Classroom.",
+          "Tes commentaires expliquent chaque ligne avec tes mots : le fichier est coté sur 5."
         ],
         "blocs": [
           7,
-          10
+          11
         ],
         "repere": "Contrôler réellement le fichier : le QCM ne prouve pas à lui seul la manipulation. Demander : « Montre la ligne changée ; pourquoi cette correction ? ». Commenter chaque ligne sert ici à verbaliser ; les commentaires n'apparaissent pas dans la sortie."
       },
@@ -670,14 +671,14 @@
         "min": 5,
         "methode": "Vérification individuelle puis bilan",
         "lignes": [
-          "Enregistre ton programme réparé et commenté.",
+          "Ton programme réparé et commenté est rendu dans Classroom.",
           "Une erreur : comment la repérer et expliquer sa cause ?"
         ],
         "questions": [
           "Quelle différence entre SyntaxError et NameError ?",
           "Un programme sans message rouge est-il forcément juste ?"
         ],
-        "repere": "Annoncer l'évaluation seulement si quoi et quand sont fixés, avec au moins une semaine de délai. Types, input et la date restent à décider ; ne rien inventer. Séance non cotée ; entraînements fait / non fait selon la décision de Vincent."
+        "repere": "Annoncer l'évaluation seulement si quoi et quand sont fixés, avec au moins une semaine de délai. Types, input et la date restent à décider ; ne rien inventer. Le fichier commenté rendu au bloc 11 est coté sur 5 (grille dans la fiche) ; entraînements fait / non fait."
       }
     ]
   },
