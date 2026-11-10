@@ -106,6 +106,15 @@ const COTE=(rappel=false)=>`<aside class="mission cote"><b>${rappel?'Avant d’e
 const CITATION={texte:'Ce que l’on conçoit bien s’énonce clairement,\nEt les mots pour le dire arrivent aisément.',auteur:'Nicolas Boileau',source:'L’Art poétique, chant I (1674)',lien:'Un bon mail aussi : je sais ce que je veux dire, puis je l’écris simplement.'};
 /* Pour ceux qui ont fini avant les autres : un ordre, une chose à la fois. */
 const FINI='<aside class="mission fini" id="fini-avant"><b>🏁 Tu as fini avant les autres ? Dans l’ordre :</b><ol><li>Donne ton avis, juste en dessous : trois phrases courtes.</li><li>Révise avec « Mon premier message — je révise » : <a href="https://root75.github.io/campin-public/messagerie/" target="_blank" rel="noopener">ouvrir la page ↗</a>. Réponds aux questions, puis retourne les cartes mémoire.</li><li>Si ton professeur te le propose, deviens <b>aidant</b> : va voir un camarade qui a sonné la cloche 🔔. Tu expliques avec des mots, tu ne touches pas sa souris.</li></ol></aside>';
+/* Le panneau de droite suit ce que l'élève tape. Étapes 1 à 7 : le mail d'entraînement. Étape 8 : sa réponse à Camille
+   (destinataire et objet repris de la conversation, comme avec « Répondre »). */
+function apercuCote(){
+ const rep=state.etape===7,titre=document.querySelector('.side h2'),barre=document.querySelector('.side .outlookbar');
+ if(titre)titre.textContent=rep?'Ma réponse se construit':'Mon mail se construit';
+ if(barre)barre.textContent='Messagerie d’entraînement · '+(rep?'Réponse':'Nouveau message');
+ if(!rep)return apercu();
+ return `<div class="email"><div class="ligne-mail"><b>À</b><span>${DEST}</span></div><div class="ligne-mail"><b>Objet</b><span>RE : ${escapeHtml(state.objet)}</span></div><div class="corps"><span class="tag">Corps de ma réponse</span><p>${escapeHtml(state.reponse)||'…'}</p></div></div>`;
+}
 const corps=d=>[d.salutation,d.message,d.fin,d.signature].join('\n\n');
 const erreurs=d=>['a','objet','salutation','message','fin','signature'].map(k=>({champ:k,texte:verifie(k,d)})).filter(x=>x.texte);
 /* La barre des étapes, comme dans les autres cours : une pastille numérotée par étape, le titre sur celle de l'étape
@@ -166,7 +175,7 @@ Camille</p></div></div><p><b>Utilise Répondre :</b> le destinataire et l’obje
  if(e===11&&state.atteint>=12)h+=FINI;
  h+='<div class="actions">'+(e>0?'<button type="button" class="secondaire" id="precedent">← Revenir</button>':'')+(e<=11?`<button type="button" id="suivant">${e===0?'Vérifier les deux parties de l’adresse':e===6?'Vérifier mon mail d’entraînement':'Vérifier cette étape'}</button>`:'<button type="button" id="revoir">Revoir mon entraînement</button>')+'</div>';
  z.innerHTML=h;
- for(const el of z.querySelectorAll('input,textarea')){el.value=state[el.id]||'';el.addEventListener('input',()=>{state[el.id]=el.value;sauve();document.getElementById('aperçu-courant').innerHTML=apercu();document.getElementById('retour').innerHTML='';document.getElementById('retour').className='';});}
+ for(const el of z.querySelectorAll('input,textarea')){el.value=state[el.id]||'';el.addEventListener('input',()=>{state[el.id]=el.value;sauve();document.getElementById('aperçu-courant').innerHTML=apercuCote();document.getElementById('retour').innerHTML='';document.getElementById('retour').className='';});}
  document.getElementById('ouvrir-reponse')?.addEventListener('click',()=>{document.getElementById('zone-reponse').hidden=false;document.getElementById('reponse').focus();});
  /* Étape 8 : une réponse déjà commencée se rouvre toute seule (retour sur l'étape, rechargement). */
  if(e===7&&state.reponse.trim())document.getElementById('zone-reponse').hidden=false;
@@ -201,7 +210,7 @@ Camille</p></div></div><p><b>Utilise Répondre :</b> le destinataire et l’obje
   const suite=document.createElement('p');suite.textContent=e===6?'Tu peux maintenant lire la réponse fictive de Camille et lui répondre.':(e>=8?'Continue après avoir effectué la manipulation dans Outlook.':'Continue pour voir le mail se construire.');feedback.append(suite);
   const b=document.createElement('button');b.type='button';b.textContent=e===6?'Lire la réponse de Camille →':'Continuer →';b.addEventListener('click',()=>{if(JSON.stringify({...state,atteint:0})!==JSON.stringify({...JSON.parse(empreinte),atteint:0}))return;if((e===6?erreurs(state):champs.map(k=>({texte:verifie(k)})).filter(x=>x.texte)).length)return;state.etape++;state.preuve='';sauve();render();});feedback.append(b);b.focus();
  });
- document.getElementById('aperçu-courant').innerHTML=apercu();
+ document.getElementById('aperçu-courant').innerHTML=apercuCote();
  window.majCloche?.();
 }
 function init(){

@@ -48,3 +48,7 @@ assert.match(verifie('reponse',{...good,nom:'',reponse:'Bonjour Camille, je prat
   assert.ok(/if\(e===10\)h\+=[^\n]*COTE\(true\)/.test(s), 'étape 11 : la grille rappelée avant Envoyer');
   assert.ok(/if\(e===11\)h\+=[^\n]*n’est pas cotée/.test(s), 'étape 12 : dit ce qui est coté');
 }
+
+// Le panneau de droite suit ce que l'élève tape : à l'étape 8, sa réponse à Camille.
+assert.ok(/function apercuCote\(\)/.test(s) && !/innerHTML=apercu\(\);/.test(s), 'le panneau de droite passe par apercuCote()');
+assert.ok(/state\.etape===7[\s\S]{0,700}escapeHtml\(state\.reponse\)/.test(s), 'étape 8 : le panneau montre la réponse en cours');
