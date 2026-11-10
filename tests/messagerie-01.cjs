@@ -39,14 +39,20 @@ assert.match(verifie('reponse',{...good,nom:'',reponse:'Bonjour Camille, je prat
   assert.ok(/n\.disabled=i>state\.atteint/.test(s), 'on ne saute pas une étape non validée');
 }
 
-// La grille du message coté : un tableau sur 5 à l'étape 10, rappelé à l'étape 11 avant l'envoi ; l'étape 12 dit qu'elle n'est pas cotée.
+// La grille du message coté : un tableau sur 5 à l'étape 10, rappelé à l'étape 11 avant l'envoi ; l'étape 12 a sa grille sur 5.
 {
   const grille = s.match(/const COTE=\(rappel=false\)=>`([\s\S]*?)<\/aside>`;/)[1];
   const points = [...grille.matchAll(/<td>(\d)<\/td>/g)].map(m => Number(m[1]));
   assert.equal(points.length, 5); assert.equal(points.reduce((a, x) => a + x, 0), 5, 'grille sur 5');
   assert.ok(/if\(e===9\)h\+=[^\n]*COTE\(\)/.test(s), 'étape 10 : la grille');
   assert.ok(/if\(e===10\)h\+=[^\n]*COTE\(true\)/.test(s), 'étape 11 : la grille rappelée avant Envoyer');
-  assert.ok(/if\(e===11\)h\+=[^\n]*n’est pas cotée/.test(s), 'étape 12 : dit ce qui est coté');
+  // L'étape 12 (la réponse, par Répondre à tous) est cotée sur 5 elle aussi, avec sa propre grille.
+  const reponse = s.match(/const COTE_REPONSE=\(\)=>`([\s\S]*?)<\/aside>`;/)[1];
+  const pts = [...reponse.matchAll(/<td>(\d)<\/td>/g)].map(m => Number(m[1]));
+  assert.equal(pts.length, 5); assert.equal(pts.reduce((a, x) => a + x, 0), 5, 'grille de la réponse sur 5');
+  assert.match(reponse, /Répondre à tous/); assert.match(reponse, /RE:/);
+  assert.ok(/if\(e===11\)h\+=[^\n]*COTE_REPONSE\(\)/.test(s), 'étape 12 : la grille de la réponse');
+  assert.ok(!/n’est pas cotée/.test(s), 'plus aucune mention « pas cotée » dans la fiche');
 }
 
 // Le panneau de droite suit ce que l'élève tape : à l'étape 8, sa réponse à Camille.
