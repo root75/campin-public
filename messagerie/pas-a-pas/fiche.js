@@ -107,6 +107,23 @@ const CITATION={texte:'Ce que l’on conçoit bien s’énonce clairement,\nEt l
 const FINI='<aside class="mission fini" id="fini-avant"><b>🏁 Tu as fini avant les autres ? Dans l’ordre :</b><ol><li>Donne ton avis, juste en dessous : trois phrases courtes.</li><li>Révise avec « Mon premier message — je révise » : <a href="https://root75.github.io/campin-public/messagerie/" target="_blank" rel="noopener">ouvrir la page ↗</a>. Réponds aux questions, puis retourne les cartes mémoire.</li><li>Si ton professeur te le propose, deviens <b>aidant</b> : va voir un camarade qui a sonné la cloche 🔔. Tu expliques avec des mots, tu ne touches pas sa souris.</li></ol></aside>';
 const corps=d=>[d.salutation,d.message,d.fin,d.signature].join('\n\n');
 const erreurs=d=>['a','objet','salutation','message','fin','signature'].map(k=>({champ:k,texte:verifie(k,d)})).filter(x=>x.texte);
+/* La barre des étapes, comme dans les autres cours : une pastille numérotée par étape, le titre sur celle de l'étape
+   affichée (les autres le donnent au survol), ✓ sur les étapes validées. Cliquable jusqu'à la première étape non
+   validée : on revient relire, puis on repart en avant. Sans la barre (ancienne page en cache), rien ne se passe. */
+function pastilles(e){
+ const b=document.getElementById('pastilles');if(!b)return;
+ for(const id of ['compteur','barre'])document.getElementById(id).hidden=true;
+ b.replaceChildren();
+ TITRES.forEach((t,i)=>{
+  const fait=i<state.atteint,n=document.createElement('button');n.type='button';
+  if(fait)n.className='fait';
+  n.textContent=(fait?'✓ ':'')+(i+1)+(i===e?'. '+t:'');n.title=(i+1)+'. '+t;
+  n.setAttribute('aria-label',n.title+(fait?' — validée':''));if(i===e)n.setAttribute('aria-current','step');
+  n.disabled=i>state.atteint;
+  n.addEventListener('click',()=>{if(i===e||i>state.atteint)return;state.etape=i;state.preuve='';sauve();render();scrollTo(0,0);});
+  b.append(n);
+ });
+}
 /* Reprise au bloc 8 sur un autre poste : le brouillon des blocs 1 à 7 (dont le prénom et le nom du bloc 6) n'est gardé que
    sur l'ordinateur d'origine. Sans lui, la signature ne peut pas être vérifiée : on redemande le nom ici, une fois. */
 let nomDemandeIci=false;
@@ -120,6 +137,7 @@ function render(){
  const e=state.etape;
  document.getElementById('compteur').textContent=`${e+1} / ${TITRES.length} — ${TITRES[e]}`;
  document.getElementById('barre').value=e+1;
+ pastilles(e);
  document.getElementById('choix-etape').value=e;for(const o of document.getElementById('choix-etape').options)o.disabled=Number(o.value)>state.atteint;
  const z=document.getElementById('contenu');
  const mission='<aside class="mission"><b>Ta mission d’entraînement</b><p>Écris à Camille pour lui demander quel sport ou quel loisir elle pratique.</p><p>Camille est fictive. Son adresse : <b>camille.martin@example.org</b>.</p></aside>';
