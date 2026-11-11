@@ -123,41 +123,56 @@ function bravo(t, grand){
   clearTimeout(minuterieBravo); minuterieBravo = setTimeout(()=>b.classList.remove("vu"), grand ? 3200 : 1800);
   const m = document.getElementById("mascotte"); if(m){ m.classList.remove("saute"); void m.offsetWidth; m.classList.add("saute"); }
 }
+/* Le menu des étapes, repris du Rat de ville : une pastille ronde par bloc (par groupe avec PARCOURS), qui se
+   remplit comme un camembert selon les cases cochées, ✓ sur fond vert une fois validée. Le nom est dans
+   l'infobulle (survol) ; celui de l'étape affichée reste écrit sous les pastilles. Cliquable jusqu'au premier
+   bloc non validé : on revient relire, puis on repart en avant.
+   PARCOURS : g.rond = ce qui s'écrit dans la pastille du groupe (sinon son numéro). */
+let partIci = 0;   // part des cases cochées dans le bloc affiché, de 0 à 1
 function barre(){
   const b = document.getElementById("progres"); b.replaceChildren();
-  if(typeof PARCOURS!=="undefined"){
-    PARCOURS.forEach((g,k)=>{const s=el("span");s.className=etat.atteint>=g.fin ? "fait" : (ici>=g.debut && ici<g.fin ? "ici" : "");s.title=g.titre;
-      if(MISSIONS) s.textContent = (etat.atteint>=g.fin ? "✓ " : "") + (g.court || String(k+1));
-      b.append(s);});
-    return;
-  }
-  /* Une pastille par bloc, cliquable jusqu'au premier bloc non validé : on revient relire un bloc
-     fait. Le nom s'écrit sur la pastille du bloc affiché ; les autres le donnent au survol. */
+  const groupes = typeof PARCOURS!=="undefined";
   styleBarre();
-  b.classList.add("nav"); b.removeAttribute("aria-hidden"); b.setAttribute("role","navigation"); b.setAttribute("aria-label","Mes blocs");
-  BLOCS.forEach((B,i)=>{
-    const fait = i<etat.atteint, ferme = !!plafond && !APERCU && !fait && i>=plafond.bloc;   // pas encore ouvert par le professeur
-    const n = txt("button", fait ? "fait" : ferme ? "ferme" : "", (fait ? "✓ " : ferme ? "🔒 " : "")+(i+1)+(i===ici ? ". "+B.titre : ""));
-    n.type = "button"; n.title = (i+1)+". "+B.titre+(ferme ? " — pas encore ouvert" : "");
+  b.classList.add("nav"); b.removeAttribute("aria-hidden"); b.setAttribute("role","navigation"); b.setAttribute("aria-label", groupes ? "Mes missions" : "Mes blocs");
+  let nomIci = "";
+  const rond = (signe, nom, debut, fin, cible) => {
+    const fait = etat.atteint>=fin, ferme = !!plafond && !APERCU && !fait && debut>=etat.atteint && debut>=plafond.bloc;   // pas encore ouvert par le professeur
+    let p = 0; for(let i=debut;i<fin;i++) p += i<etat.atteint ? 1 : i===ici ? partIci : 0;
+    const n = txt("button", fait ? "fait" : ferme ? "ferme" : "", fait ? "✓" : signe);
+    n.type = "button"; n.title = nom+(ferme ? " — pas encore ouvert" : "");
+    n.style.setProperty("--p", Math.round(100*p/(fin-debut)));
     n.setAttribute("aria-label", n.title+(fait ? " — validé" : ""));
-    if(i===ici) n.setAttribute("aria-current","step");
-    n.disabled = !APERCU && i>etat.atteint;   // le premier bloc fermé reste cliquable : il dit pourquoi
-    n.addEventListener("click",()=>{ if(ici===i) return; ici = i; affiche(); scrollTo(0,0); });
+    if(ici>=debut && ici<fin){ n.setAttribute("aria-current","step"); nomIci = nom; }
+    n.disabled = !APERCU && debut>etat.atteint;   // le premier bloc fermé reste cliquable : il dit pourquoi
+    n.addEventListener("click",()=>{ if(ici===cible) return; ici = cible; affiche(); scrollTo(0,0); });
     b.append(n);
-  });
+  };
+  if(groupes) PARCOURS.forEach((g,k)=>rond(g.rond || String(k+1), g.titre, g.debut, g.fin,
+    !APERCU && etat.atteint>g.debut && etat.atteint<g.fin ? etat.atteint : g.debut));   // groupe en cours : là où j'en suis
+  else BLOCS.forEach((B,i)=>rond(String(i+1), (i+1)+". "+B.titre, i, i+1, i));
+  if(nomIci) b.append(txt("p","nom-etape",nomIci));
 }
 function styleBarre(){
   if(document.getElementById("style-barre-blocs")) return;
   const st = el("style"); st.id = "style-barre-blocs";
-  st.textContent = ".progres.nav{flex-wrap:wrap;gap:6px}"
-    +".progres.nav button{font:inherit;font-weight:700;font-size:.9rem;min-width:2.5rem;min-height:2.3rem;padding:3px 11px;border-radius:1.2rem;border:2px solid var(--trait);background:var(--carte);color:var(--doux);cursor:pointer}"
-    +".progres.nav button.fait{background:var(--juste-pale);border-color:var(--juste);color:var(--encre)}"
-    +".progres.nav button[aria-current]{background:var(--encre-bouton);border-color:var(--encre-bouton);color:var(--carte)}"
+  st.textContent = ".progres.nav{flex-wrap:wrap;gap:8px;align-items:center}"
+    +".progres.nav button{font:inherit;font-weight:800;font-size:1.05rem;line-height:1;width:46px;height:46px;min-width:0;min-height:0;flex:none;padding:0;border-radius:50%;border:3px solid var(--encre-bouton);background:conic-gradient(var(--fromage) calc(var(--p,0)*1%),var(--carte) 0);color:var(--encre);position:relative;cursor:pointer;transition:transform .15s}"
+    +".progres.nav button:hover:not(:disabled){transform:scale(1.12);box-shadow:0 2px 6px #0003}"
+    +".progres.nav button[aria-current]{outline:3px solid var(--fromage);outline-offset:2px;transform:scale(1.1)}"
+    +".progres.nav button.fait{background:var(--juste);border-color:var(--juste);color:var(--carte)}"
     +".progres.nav button:disabled{opacity:.5;cursor:default}"
     +".progres.nav button.ferme{border-style:dashed}"
-    +".progres.nav button:focus-visible{outline:3px solid var(--fromage,#b7791f);outline-offset:2px}";
+    +".progres.nav button.ferme::after{content:'🔒';position:absolute;right:-8px;top:-10px;font-size:.85rem}"
+    +".progres.nav button:focus-visible{outline:3px solid var(--fromage,#b7791f);outline-offset:2px}"
+    +".progres.nav .nom-etape{flex:1 1 100%;margin:2px 0 0;font-weight:700;color:var(--encre)}";
   document.head.append(st);
 }
+/* Une case cochée ou décochée dans la consigne : le camembert du bloc affiché suit. */
+document.getElementById("bloc").addEventListener("change", e=>{
+  if(!e.target.matches || !e.target.matches("ol.etapes input[type=checkbox]")) return;
+  const c = [...document.querySelectorAll("#bloc ol.etapes input[type=checkbox]")];
+  partIci = c.filter(x=>x.checked).length/c.length; barre();
+});
 
 /* Les blocs ouverts : le professeur (ou le moment « atelier » de la séquence) ouvre la classe
    jusqu'à un bloc ; les suivants portent un cadenas dans la barre. Il arrive avec etat() au démarrage, puis avec moment() toutes les 5 s
@@ -199,7 +214,7 @@ function essaiHtml(E, fini){
   d.append(ch, r); return d;
 }
 function affiche(){
-  barre(); if(MISSIONS) bulle();
+  partIci = 0; barre(); if(MISSIONS) bulle();
   const z = document.getElementById("bloc"); z.replaceChildren();
   const liste = document.getElementById("coince-liste"); liste.replaceChildren();
   document.getElementById("coince").open = false;

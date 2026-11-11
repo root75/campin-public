@@ -15,12 +15,12 @@ const hache = s => {   // FNV-1a brassé, comme hache_() dans Code.gs
 };
 const tirage = (cle, n) => n<2 || !EMAIL ? 1 : 1 + hache(EMAIL.toLowerCase()+"|"+cle) % n;
 const PARCOURS = [
- {titre:'Préparer mon rapport', court:'Rapport', debut:0, fin:1, bulle:'Avant l’enquête : ton carnet d’enquêteur. Un seul document pour tout le labo.'},
- {titre:'Mission 1 — Observer ce qui tourne', court:'Mission 1', debut:1, fin:4, bulle:'Première mission : que fait le PC quand une application s’ouvre ?'},
- {titre:'Mission 2 — Retrouver ses données', court:'Mission 2', debut:4, fin:6, bulle:'Bien joué ! Maintenant, où vit ton fichier ?'},
- {titre:'Mission 3 — Dépanner', court:'Mission 3', debut:6, fin:7, bulle:'Quatre petites pannes à élucider, à deux.'},
- {titre:'Défi final individuel', court:'Défi', bouton:'Défi final →', debut:7, fin:9, bulle:'Dernier défi, seul : montre ta méthode d’enquêteur.'},
- {titre:'Remettre mon rapport', court:'Remise', bouton:'Remettre mon rapport →', debut:9, fin:10, bulle:'Dernier geste : remettre ton rapport, une seule fois.'}
+ {titre:'Préparer mon rapport', court:'Rapport', rond:'📄', debut:0, fin:1, bulle:'Avant l’enquête : ton carnet d’enquêteur. Un seul document pour tout le labo.'},
+ {titre:'Mission 1 — Observer ce qui tourne', court:'Mission 1', rond:'1', debut:1, fin:4, bulle:'Première mission : que fait le PC quand une application s’ouvre ?'},
+ {titre:'Mission 2 — Retrouver ses données', court:'Mission 2', rond:'2', debut:4, fin:6, bulle:'Bien joué ! Maintenant, où vit ton fichier ?'},
+ {titre:'Mission 3 — Dépanner', court:'Mission 3', rond:'3', debut:6, fin:7, bulle:'Quatre petites pannes à élucider, à deux.'},
+ {titre:'Défi final individuel', court:'Défi', rond:'⭐', bouton:'Défi final →', debut:7, fin:9, bulle:'Dernier défi, seul : montre ta méthode d’enquêteur.'},
+ {titre:'Remettre mon rapport', court:'Remise', rond:'📤', bouton:'Remettre mon rapport →', debut:9, fin:10, bulle:'Dernier geste : remettre ton rapport, une seule fois.'}
 ];
 const BLOCS = [
   {

@@ -95,7 +95,10 @@ serveur après un rechargement, éteinte quand le professeur la traite ; avant d
 et trois cases à cocher, **3 sonneries par heure au plus** — code commun [`cloche.js`](cloche.js), à charger
 avant `blocs.js` comme dans `modele/index.html`) ; bandeau « bravo » ; reprise de
 l'avancement depuis le serveur ; aperçu professeur `#bloc=N` avec le choix de la version de la preuve ;
-barre des blocs (une pastille par bloc, cliquable jusqu'au premier bloc non validé ; cours sans `PARCOURS`) ;
+menu des étapes, repris du Rat de ville (une pastille ronde par bloc, ou par groupe de `PARCOURS` ; elle se remplit
+comme un camembert selon les cases cochées, ✓ sur fond vert une fois validée ; le nom en infobulle, celui de l'étape
+affichée écrit sous les pastilles ; cliquable jusqu'au premier bloc non validé ; `rond:"📄"` dans un groupe de
+`PARCOURS` = ce qui s'écrit dans sa pastille, sinon son numéro) ;
 **blocs ouverts** : les blocs au-delà du dernier bloc ouvert portent un cadenas 🔒 dans la barre, sur ordre du tableau
 (rangée « Blocs ouverts », un clic sur le numéro du dernier bloc à ouvrir) ou du moment `atelier` de la séquence qui porte
 `"blocs": [premier, dernier]` — reçu avec `etat()` puis avec `moment()`, sans appel de plus ;
