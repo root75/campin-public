@@ -67,7 +67,7 @@ function trous(cle,T){
     const v=txt('button','btn vide','Je vérifie');v.type='button';v.disabled=!plein;
     v.addEventListener('click',()=>{m.faux=V.mots.map((x,i)=>m.choix[i]===x?-1:i).filter(i=>i>=0);m.ok=!m.faux.length;peint();});
     retour.textContent=m.ok?T.bravo:m.faux.length?(m.faux.length===1?'Un mot n’est pas à sa place : le trou rouge. Je clique dessus pour le vider.':m.faux.length+' mots ne sont pas à leur place : les trous rouges. Je clique dessus pour les vider.'):'Je clique sur un mot : il va dans le premier trou vide. Je clique sur un trou pour le vider.';
-    boite.replaceChildren(txt('h3',null,T.titre),txt('p',null,T.intro),p,banque,...(m.ok?[]:[v]),retour);boite.classList.toggle('reussi',m.ok);
+    boite.replaceChildren(...(T.titre?[txt('h3',null,T.titre)]:[]),...(T.intro?[txt('p',null,T.intro)]:[]),p,banque,...(m.ok?[]:[v]),retour);boite.classList.toggle('reussi',m.ok);
   };
   peint();return boite;
 }
