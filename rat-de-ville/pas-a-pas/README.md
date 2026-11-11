@@ -1,6 +1,6 @@
 # Suivi du formatif « Le rat de ville »
 
-Entrée du catalogue : `rat-de-ville-formatif`, 7 étapes sur deux périodes (9 jusqu’au 6/11).
+Entrée du catalogue : `rat-de-ville-formatif`, 9 étapes sur deux périodes (7 du 6/11 au 11/11 ; voir la fin de ce fichier).
 Les 45 petites cases (une action ou une vérification par case) déclarent les actions terminées ; elles ne corrigent pas la copie.
 Navigation libre, copie par groupes de quatre vers (strophes séparées à l’étape 3) ; grille complète et colonne « Moi » en étape finale (bouton 📋). Plus de repère collectif depuis le 4/11 (voir LIVRAISON-RAT.md).
 À l’étape 8, chaque partie du bloc-notes dispose d’une explication à déplier :
@@ -148,3 +148,17 @@ banque de mots avec pièges, trois variantes, une tirée au hasard à l’ouvert
 corrigé **dans la page** : ni enregistré, ni coté, il ne bloque pas la case. Pas de case en plus :
 `cases` de `pas-a-pas/cours.json` et `Code.gs` ne changent pas. L’écriture reste dans Docs.
 Fiche prof : `campin-pedagogique/cours/s1-fmttn/sequences/03-eval-bilan-mise-en-forme/PROF-rat-de-ville.md`.
+
+## Le bloc-notes en trois étapes (11 novembre 2026)
+
+Demande de Vincent : puces, gestes et phrase dans une seule étape, c’était trop, et six gestes à
+écrire seul aussi. L’ancienne étape 8 devient trois étapes — **9 étapes, 53 cases** :
+- **id 8** « Mon bloc-notes : la liste à puces » (2 cases) ;
+- **id 10** « Mes gestes : la liste numérotée » (8 cases) : « Mes gestes », puis six gestes, un par
+  case, chacun avec sa phrase à trous (une seule variante : le geste est le même pour tous ; la
+  banque est mélangée) à recopier dans Docs, puis Liste numérotée ;
+- **id 11** « Ma phrase : j’explique » (2 cases) : texte à trous (trois variantes), puis la phrase dans Docs.
+
+L’id 9 (remise) ne change pas. Les anciennes clés `8.3` et `8.4` du Journal ne sont plus lues : un
+élève qui les avait cochées retrouve les étapes 10 et 11 à faire. `cases` de `pas-a-pas/cours.json`
+suit ; pas de redéploiement de `Code.gs`. Animations : `etape8`, `etape10`, `etape11` dans `demos.js`.
