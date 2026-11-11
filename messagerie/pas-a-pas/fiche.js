@@ -130,12 +130,13 @@ function casesAGestes(z,e){
   [...ol.children].forEach(li=>{
    const k=n++,lab=document.createElement('label'),cb=document.createElement('input'),sp=document.createElement('span');
    cb.type='checkbox';cb.checked=faites.includes(k);sp.append(...li.childNodes);lab.append(cb,sp);li.append(lab);
-   cb.addEventListener('change',()=>{const i=faites.indexOf(k);if(cb.checked&&i<0)faites.push(k);else if(!cb.checked&&i>=0)faites.splice(i,1);sauve();});
+   cb.addEventListener('change',()=>{const i=faites.indexOf(k);if(cb.checked&&i<0)faites.push(k);else if(!cb.checked&&i>=0)faites.splice(i,1);sauve();camembert();});
   });
  });
 }
-/* La barre des étapes, comme dans les autres cours : une pastille numérotée par étape, le titre sur celle de l'étape
-   affichée (les autres le donnent au survol), ✓ sur les étapes validées. Cliquable jusqu'à la première étape non
+/* Le menu des étapes, comme dans les autres cours (repris du Rat de ville) : une pastille ronde par étape, qui se
+   remplit comme un camembert selon les cases cochées ; le nom en infobulle, celui de l'étape affichée écrit dessous ;
+   ✓ sur les étapes validées. Cliquable jusqu'à la première étape non
    validée : on revient relire, puis on repart en avant. Sans la barre (ancienne page en cache), rien ne se passe. */
 /* Blocs ouverts (cadenas), comme dans le moteur commun : le professeur ouvre la classe jusqu'à une étape (tableau ▸
    rangée « Blocs ouverts »). Les étapes suivantes portent un cadenas ; l'élève qui y arrive lit le message et peut
@@ -146,7 +147,7 @@ function recoitPlafond(p){
  p=p&&Number(p.bloc)>0?{bloc:Number(p.bloc),message:String(p.message||'')}:null;
  if(JSON.stringify(p)===JSON.stringify(plafond))return;
  const avant=enPause();plafond=p;
- if(avant||enPause())render();else pastilles(state.etape);
+ if(avant||enPause())render();else{pastilles(state.etape);camembert();}
 }
 function pastilles(e){
  const b=document.getElementById('pastilles');if(!b)return;
@@ -155,12 +156,18 @@ function pastilles(e){
  TITRES.forEach((t,i)=>{
   const fait=i<state.atteint,ferme=!!plafond&&!APERCU&&!fait&&i>=plafond.bloc,n=document.createElement('button');n.type='button';
   if(fait)n.className='fait';else if(ferme)n.className='ferme';
-  n.textContent=(fait?'✓ ':ferme?'🔒 ':'')+(i+1)+(i===e?'. '+t:'');n.title=(i+1)+'. '+t+(ferme?' — pas encore ouverte':'');
+  n.textContent=fait?'✓':String(i+1);n.title=(i+1)+'. '+t+(ferme?' — pas encore ouverte':'');
   n.setAttribute('aria-label',n.title+(fait?' — validée':''));if(i===e)n.setAttribute('aria-current','step');
   n.disabled=i>state.atteint;
   n.addEventListener('click',()=>{if(i===e||i>state.atteint)return;state.etape=i;state.preuve='';sauve();render();scrollTo(0,0);});
   b.append(n);
  });
+ const nom=document.createElement('p');nom.className='nom-etape';nom.textContent=(e+1)+'. '+TITRES[e];b.append(nom);
+}
+/* Le camembert de l'étape affichée : la part de ses cases cochées (étapes 9 à 12). */
+function camembert(){
+ const n=document.querySelector('#pastilles button[aria-current]'),c=[...document.querySelectorAll('#contenu ol.etapes input[type=checkbox]')];
+ if(n)n.style.setProperty('--p',c.length?Math.round(100*c.filter(x=>x.checked).length/c.length):0);
 }
 /* Reprise au bloc 8 sur un autre poste : le brouillon des blocs 1 à 7 (dont le prénom et le nom du bloc 6) n'est gardé que
    sur l'ordinateur d'origine. Sans lui, la signature ne peut pas être vérifiée : on redemande le nom ici, une fois. */
@@ -208,7 +215,7 @@ Camille</p></div></div><p><b>Utilise Répondre :</b> le destinataire et l’obje
  if(e===11&&state.atteint>=12)h+=FINI;
  h+='<div class="actions">'+(e>0?'<button type="button" class="secondaire" id="precedent">← Revenir</button>':'')+(e<=11?`<button type="button" id="suivant">${e===0?'Vérifier les deux parties de l’adresse':e===6?'Vérifier mon mail d’entraînement':'Vérifier cette étape'}</button>`:'<button type="button" id="revoir">Revoir mon entraînement</button>')+'</div>';
  z.innerHTML=h;
- casesAGestes(z,e);
+ casesAGestes(z,e);camembert();
  for(const el of z.querySelectorAll('input,textarea')){el.value=state[el.id]||'';el.addEventListener('input',()=>{state[el.id]=el.value;sauve();document.getElementById('aperçu-courant').innerHTML=apercuCote();document.getElementById('retour').innerHTML='';document.getElementById('retour').className='';});}
  document.getElementById('ouvrir-reponse')?.addEventListener('click',()=>{document.getElementById('zone-reponse').hidden=false;document.getElementById('reponse').focus();});
  /* Étape 8 : une réponse déjà commencée se rouvre toute seule (retour sur l'étape, rechargement). */
