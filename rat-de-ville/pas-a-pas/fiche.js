@@ -97,7 +97,7 @@ function dessine(){
   if(b.consigne)z.append(txt('p','note',b.consigne));
   const ul=txt('ul','cases');b.actions.forEach((t,j)=>{
     const cle=b.id+'.'+(j+1),li=txt('li'),lab=txt('label'),cb=txt('input');cb.type='checkbox';cb.dataset.cle=cle;cb.checked=!!etat.cases[cle];
-    cb.addEventListener('change',()=>sauve({type:'case',etape:b.id,cle,fait:cb.checked}));const sp=txt('span');((b.icones&&b.icones[j])||[]).forEach(ico=>{const im=txt('img','ico');im.src=ICONES+ico+'.png';im.alt='';sp.append(im);});sp.append(t);lab.append(cb,sp);li.append(lab);
+    cb.addEventListener('change',()=>sauve({type:'case',etape:b.id,cle,fait:cb.checked}));const sp=txt('span');((b.icones&&b.icones[j])||[]).forEach(ico=>{const im=txt('img','ico');im.src=ICONES+ico+'.png';im.alt='';sp.append(im);});t.split(/\[\[(.+?)\]\]/).forEach((bout,k)=>{if(!bout.trim())return;if(k%2){const e=txt('span','a-ecrire',bout);e.setAttribute('aria-label','À écrire exactement : '+bout);sp.append(e);}else sp.append(bout);});lab.append(cb,sp);li.append(lab);
     const dc=demoCase(i,j);if(dc)li.append(dc);
     const image=b.images&&b.images[j];if(image){const im=txt('img','extrait');im.src=BASE+image;im.alt='Extrait de la fable à recopier';li.append(im);}
     const tr=b.trous&&b.trous[j];if(tr)li.append(trous(cle,tr));
