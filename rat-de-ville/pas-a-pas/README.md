@@ -138,3 +138,13 @@ pas et ne demande rien. Détails et déploiement : `campin-pedagogique/outils/pa
 Depuis le même jour, le panneau et le compte sont du **code commun** : `pas-a-pas/cloche.js`, aussi
 utilisé par `blocs.js` (Python 1 à 3, Labo 07, Messagerie 2) et Messagerie 01. Le serveur applique la
 même règle à tous les cours (`verifieCloche_` dans Code.gs).
+
+## Texte à trous à l’étape « Mon bloc-notes » (11 novembre 2026)
+
+Constat de Vincent : les élèves butent sur « Mes gestes » et sur la phrase (ils écrivent « j’ai mis
+l’auteur », pas ce qu’ils ont sélectionné ni le bouton). Sous ces deux cases, un texte à trous
+d’entraînement (champ `trous` de l’étape 8 dans `contenu.js`, fonction `trous()` de `fiche.js`) :
+banque de mots avec pièges, trois variantes, une tirée au hasard à l’ouverture de la page. Il est
+corrigé **dans la page** : ni enregistré, ni coté, il ne bloque pas la case. Pas de case en plus :
+`cases` de `pas-a-pas/cours.json` et `Code.gs` ne changent pas. L’écriture reste dans Docs.
+Fiche prof : `campin-pedagogique/cours/s1-fmttn/sequences/03-eval-bilan-mise-en-forme/PROF-rat-de-ville.md`.

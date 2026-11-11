@@ -49,6 +49,20 @@ body{background:radial-gradient(circle at 10% 0,var(--fromage-pale),transparent 
 @keyframes coche{50%{transform:scale(1.3)}}
 .cases .ico{width:24px;height:24px;object-fit:contain;vertical-align:middle;margin-right:6px;background:#fff;border-radius:5px;padding:2px}
 .cases details{margin:10px 0 0 42px}
+.trous-bloc{margin:10px 0 0 42px;padding:12px 14px;border-radius:12px;background:var(--carte);border:2px dashed var(--encre-bouton);display:grid;gap:8px}
+.trous-bloc.reussi{border-style:solid;border-color:var(--vert)}
+.trous-bloc.reussi [role=status]{font-weight:700;color:var(--juste);font-size:1rem}
+.trous-bloc h3{margin:0;font-size:1rem}.trous-bloc p{margin:0}
+.trous{line-height:2.5}
+.trous .trou{font:inherit;font-weight:700;min-width:5.5rem;min-height:2.2rem;margin:0 3px;padding:2px 10px;border-radius:8px;border:2px dashed var(--doux);background:var(--papier);color:var(--encre);cursor:pointer}
+.trous .trou.plein{border-style:solid;border-color:var(--encre-bouton);background:var(--carte)}
+.trous .trou.faux{border-style:solid;border-color:var(--faux);background:var(--faux-pale)}
+.trous .trou.juste{border-style:solid;border-color:var(--juste);background:var(--juste-pale);cursor:default}
+.banque{display:flex;flex-wrap:wrap;gap:8px}
+.banque button{font:inherit;font-weight:700;min-height:2.4rem;padding:4px 12px;border-radius:999px;border:2px solid var(--encre-bouton);background:var(--carte);color:var(--encre);cursor:pointer}
+.banque button:disabled{opacity:.35;cursor:default}
+.banque button:focus-visible,.trous .trou:focus-visible{outline:3px solid var(--fromage);outline-offset:2px}
+@media(max-width:520px){.trous-bloc{margin-left:0}}
 .apercu-document{background:var(--carte);border:1px solid var(--trait);padding:12px;margin-top:10px;border-radius:8px}.apercu-document .exemple-titre{text-align:center;font-weight:bold}.apercu-document .exemple-strophe{text-align:center}.apercu-document .exemple-auteur{text-align:right;font-style:italic;text-decoration:underline}
 .repere-polices{margin-top:10px}.repere-polices caption{text-align:left;font-weight:bold}
 /* Démo animée */
@@ -182,11 +196,11 @@ table{border-collapse:collapse;width:100%}th,td{border:1px solid var(--trait);pa
 <section id="grille" hidden><p>Grille WBE « Création de contenus », la même que pour le Bilan. Attendu : « produire, éditer et enrichir un contenu numérique en choisissant un outil adapté à son intention, en mettant en forme un document […] ». ★ = critère incontournable. « Moi » = ma lettre avant la correction.</p><p>Coté en formatif : mes quatre lettres et ma couleur me disent quoi travailler avant le Bilan. Le suivi ne calcule aucune cote.</p><div class="defile"><table><thead><tr><th>Critère et attendu</th><th>Moi</th><th>A — dépasse</th><th>B — atteint</th><th>C — proche</th><th>D — loin</th></tr></thead><tbody id="criteres"></tbody></table></div><ul><li>Bleu — attendu dépassé : A au critère 2 ou 3, et au moins B partout ailleurs.</li><li>Vert — attendu atteint : B aux critères 2 et 3, et au moins C aux critères 1 et 4.</li><li>Jaune — presque atteint : un des critères ★ reste à C.</li><li>Orange — pas encore atteint : les critères ★ ne sont pas atteints.</li></ul></section>
 <footer class="note">FMTTN S1 — M. Louviaux — Formatif — Le rat de ville · <a href="https://root75.github.io/campin-public/rat-de-ville/" target="_blank" rel="noopener">Je révise</a></footer>
 </div>
-<script defer src="https://root75.github.io/campin-public/rat-de-ville/pas-a-pas/contenu.js?v=lecteur-20261106"></script>
+<script defer src="https://root75.github.io/campin-public/rat-de-ville/pas-a-pas/contenu.js?v=trous-20261111"></script>
 <script defer src="https://root75.github.io/campin-public/pas-a-pas/demo-lecteur.js?v=numeros-20261109"></script>
 <script defer src="https://root75.github.io/campin-public/rat-de-ville/pas-a-pas/demos.js?v=lecteur-20261106"></script>
 <script defer src="https://root75.github.io/campin-public/pas-a-pas/phrase-fin.js?v=20261106"></script>
 <script defer src="https://root75.github.io/campin-public/pas-a-pas/humeur-avis.js?v=20261104"></script>
 <script defer src="https://root75.github.io/campin-public/pas-a-pas/cloche.js?v=cloche-20261109"></script>
-<script defer src="https://root75.github.io/campin-public/rat-de-ville/pas-a-pas/fiche.js?v=cloche-commune-20261109"></script>
+<script defer src="https://root75.github.io/campin-public/rat-de-ville/pas-a-pas/fiche.js?v=trous-20261111"></script>
 </body></html>
