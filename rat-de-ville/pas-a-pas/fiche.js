@@ -18,7 +18,7 @@ async function envoieHumeurAvis(evt){const r=SUIVI?await appel(evt):demo(evt);if
 function humeurDuJour(){if(typeof HumeurAvis==='undefined')return;HumeurAvis.humeur($('humeur'),{valeur:etat.humeur,suivi:!!SUIVI,envoie:v=>envoieHumeurAvis({type:'humeur',reponse:v})});}
 function commandes(){document.querySelectorAll('#travail input,#travail select,#aide-btn').forEach(n=>n.disabled=!pret||occupe);
   /* Changer d'étape ne dépend pas du serveur : pastilles et boutons d'étape restent actifs pendant un enregistrement. */
-  document.querySelectorAll('#etapes button,#travail button').forEach(n=>n.disabled=!pret);}
+  document.querySelectorAll('#etapes button,#travail button').forEach(n=>{if(!n.closest('.trous-bloc'))n.disabled=!pret;});}
 /* Aller à une étape : affichage immédiat, puis la place est enregistrée dès que le serveur est libre. */
 let positionVoulue=null;
 function va(id){if(!pret)return;positionVoulue=id;etat.position=id;vueGrille=false;dessine();if(!occupe)sauve({type:'position',etape:id});}
@@ -46,6 +46,30 @@ async function sauve(evt){
   }catch(e){if(evt.type==='position'){etat.position=positionVoulue!=null?positionVoulue:evt.etape;positionVoulue=null;}
     $('sauvegarde').textContent=evt.type==='aide'&&/sonneries/.test(e.message||'')?'Cloche non sonnée. '+e.message.replace(/^(Exception|Error): /,''):'Non enregistré. Réessaie la case ou le déplacement. '+(e.message||'Connexion indisponible.');}
   finally{occupe=false;dessine();if(positionVoulue!=null)sauve({type:'position',etape:positionVoulue});}
+}
+/* Texte à trous d'entraînement (étape « Mon bloc-notes ») : corrigé dans la page, jamais enregistré, ne bloque rien.
+   Une variante tirée au hasard par ouverture de la page ; la mémoire survit aux redessins. */
+const TROUS={};
+function trous(cle,T){
+  const m=TROUS[cle]=TROUS[cle]||{v:Math.floor(Math.random()*T.variantes.length),choix:[],ok:false,faux:[]};
+  const V=T.variantes[m.v],boite=txt('div','trous-bloc'),p=txt('p','trous'),banque=txt('div','banque'),retour=txt('p','note');
+  const mots=(m.ordre=m.ordre||V.mots.concat(V.pieges).sort(()=>Math.random()-.5));
+  retour.setAttribute('role','status');
+  const peint=()=>{
+    p.replaceChildren();
+    V.texte.split('___').forEach((bout,k,tous)=>{p.append(bout);if(k===tous.length-1)return;
+      const t=txt('button','trou'+(m.choix[k]?' plein':'')+(m.ok?' juste':m.faux.includes(k)?' faux':''),m.choix[k]||'…');t.type='button';
+      t.setAttribute('aria-label','Trou '+(k+1)+(m.choix[k]?' : '+m.choix[k]+'. Cliquer pour le vider.':', vide'));
+      t.disabled=m.ok;t.addEventListener('click',()=>{m.choix[k]=null;m.faux=[];peint();});p.append(t);});
+    banque.replaceChildren(...mots.map(mot=>{const n=txt('button','mot-banque',mot);n.type='button';n.disabled=m.ok||m.choix.includes(mot);
+      n.addEventListener('click',()=>{const k=V.mots.findIndex((_,i)=>!m.choix[i]);if(k<0)return;m.choix[k]=mot;m.faux=[];peint();});return n;}));
+    const plein=V.mots.every((_,i)=>m.choix[i]);
+    const v=txt('button','btn vide','Je vérifie');v.type='button';v.disabled=!plein;
+    v.addEventListener('click',()=>{m.faux=V.mots.map((x,i)=>m.choix[i]===x?-1:i).filter(i=>i>=0);m.ok=!m.faux.length;peint();});
+    retour.textContent=m.ok?T.bravo:m.faux.length?(m.faux.length===1?'Un mot n’est pas à sa place : le trou rouge. Je clique dessus pour le vider.':m.faux.length+' mots ne sont pas à leur place : les trous rouges. Je clique dessus pour les vider.'):'Je clique sur un mot : il va dans le premier trou vide. Je clique sur un trou pour le vider.';
+    boite.replaceChildren(txt('h3',null,T.titre),txt('p',null,T.intro),p,banque,...(m.ok?[]:[v]),retour);boite.classList.toggle('reussi',m.ok);
+  };
+  peint();return boite;
 }
 function dessine(){
   const i=Math.max(0,place(etat.position)),b=ETAPES_RAT[i];arreteAutres();
@@ -76,6 +100,7 @@ function dessine(){
     cb.addEventListener('change',()=>sauve({type:'case',etape:b.id,cle,fait:cb.checked}));const sp=txt('span');((b.icones&&b.icones[j])||[]).forEach(ico=>{const im=txt('img','ico');im.src=ICONES+ico+'.png';im.alt='';sp.append(im);});sp.append(t);lab.append(cb,sp);li.append(lab);
     const dc=demoCase(i,j);if(dc)li.append(dc);
     const image=b.images&&b.images[j];if(image){const im=txt('img','extrait');im.src=BASE+image;im.alt='Extrait de la fable à recopier';li.append(im);}
+    const tr=b.trous&&b.trous[j];if(tr)li.append(trous(cle,tr));
     const aide=b.aides && b.aides[j];
     if(aide){const d=txt('details');d.append(txt('summary',null,aide.titre),txt('p',null,aide.explication),txt('blockquote',null,aide.exemple),txt('p','note',aide.rappel));if(aide.image){const im=txt('img','capture');im.src=BASE+aide.image;im.alt='Menu Format ▸ Texte ▸ Minuscules/majuscules ▸ MAJUSCULES dans Docs';d.append(im);}li.append(d);}
     ul.append(li);

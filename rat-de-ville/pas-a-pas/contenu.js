@@ -154,6 +154,34 @@ const ETAPES_RAT = [
       "J’écris une phrase qui répond à : Comment je change la police d’une seule strophe sans toucher aux autres ?"
     ],
     "icones": { "1": ["puces"], "2": ["numeros"] },
+    "trous": {
+      "2": {
+        "titre": "D’abord, je m’entraîne ici : un geste complet",
+        "intro": "Un geste complet dit deux choses : ce que j’ai sélectionné, puis le bouton utilisé. Je complète avec les mots de la banque.",
+        "bravo": "Juste ! Dans Docs, j’écris mes gestes sur ce modèle : « J’ai sélectionné …, puis j’ai cliqué sur … »",
+        "variantes": [
+          { "texte": "J’ai ___ le titre, puis j’ai cliqué sur le bouton ___ . Ensuite, j’ai sélectionné l’auteur, puis j’ai cliqué sur le bouton ___ .",
+            "mots": ["sélectionné", "Centrer", "Aligner à droite"], "pieges": ["recopié", "Liste à puces", "la barre d’espace"] },
+          { "texte": "J’ai ___ la strophe 3, puis j’ai choisi la ___ Arial et la ___ 12.",
+            "mots": ["sélectionné", "police", "taille"], "pieges": ["recopié", "couleur", "marge"] },
+          { "texte": "J’ai sélectionné ___ , puis j’ai cliqué sur ___ et sur Souligner. Pour le titre, j’ai cliqué sur ___ .",
+            "mots": ["l’auteur", "Italique", "Gras"], "pieges": ["tout le texte", "Liste numérotée", "la barre d’espace"] }
+        ]
+      },
+      "3": {
+        "titre": "D’abord, je m’entraîne ici : pourquoi sélectionner",
+        "intro": "Je complète l’explication avec les mots de la banque. Ensuite, j’écris ma phrase à moi dans Docs.",
+        "bravo": "Juste ! Dans Docs, j’écris ma phrase avec mes mots. Elle commence par : « Pour changer une seule strophe, je… »",
+        "variantes": [
+          { "texte": "Docs modifie seulement le texte ___ . Donc je sélectionne d’abord ___ , puis je choisis la ___ .",
+            "mots": ["sélectionné", "la strophe", "police"], "pieges": ["recopié", "tout le document", "marge"] },
+          { "texte": "Si je sélectionne ___ avec Ctrl + A, toutes les strophes changent. Pour en changer une seule, je sélectionne ___ cette strophe, puis je choisis la police et la ___ .",
+            "mots": ["tout le texte", "seulement", "taille"], "pieges": ["le titre", "aussi", "couleur"] },
+          { "texte": "Avant d’ouvrir le menu des polices, je ___ la strophe. Les autres strophes ne changent pas, parce qu’elles ne sont pas ___ . Si elles ont changé quand même : ___ .",
+            "mots": ["sélectionne", "sélectionnées", "Ctrl + Z"], "pieges": ["recopie", "centrées", "Ctrl + S"] }
+        ]
+      }
+    },
     "aides": {
       "1": {
         "titre": "Qu’écrire dans la liste à puces ?",
@@ -165,7 +193,7 @@ const ETAPES_RAT = [
         "titre": "Que signifie « Mes gestes » ?",
         "explication": "Je raconte comment j’ai mis mon document en forme. Pour chaque geste, je précise ce que j’ai sélectionné et le bouton, le menu ou le raccourci utilisé. Sous « Mes gestes », j’écris un geste par ligne, je sélectionne les lignes, puis je clique sur Liste numérotée (Ctrl + Shift + 7).",
         "exemple": "Exemple d’un geste : « J’ai sélectionné le titre, puis cliqué sur le bouton Centrer (Ctrl + Shift + E). »",
-        "rappel": "J’écris au moins six gestes que j’ai réellement faits, dans l’ordre où je les ai faits. Ma liste doit correspondre à mon document."
+        "rappel": "J’écris au moins six gestes que j’ai réellement faits, dans l’ordre où je les ai faits. Ma liste doit correspondre à mon document. « J’ai écrit le texte » ou « J’ai mis l’auteur » ne sont pas des gestes de mise en forme : il manque ce que j’ai sélectionné et le bouton."
       },
       "3": {
         "titre": "Qu’expliquer dans ma phrase ?",
