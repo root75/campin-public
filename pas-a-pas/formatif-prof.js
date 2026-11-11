@@ -33,7 +33,7 @@
     eleves.forEach(e=>{
       const tr=txt('tr',e.aide?'aide':''),td=t=>{const n=txt('td',null,t);tr.append(n);return n;};const n1=td(nom(e.email));n1.title=e.email;n1.className='nom';n1.append(caseRecompense(e));td(e.classe);const cases=td(e.cochees+' / '+ETAPES_RAT.reduce((n,x)=>n+x.actions.length,0)+' cases');
       const detail=txt('details'),sum=txt('summary',null,'Détail des actions');detail.append(sum);
-      ETAPES_RAT.forEach((etape,i)=>{const z=txt('p',null,(i+1)+'. '+etape.titre);detail.append(z);const ul=txt('ul');etape.actions.forEach((a,j)=>ul.append(txt('li',null,(e.cases[etape.id+'.'+(j+1)]?'☑ ':'☐ ')+a)));detail.append(ul);});cases.append(detail);
+      ETAPES_RAT.forEach((etape,i)=>{const z=txt('p',null,(i+1)+'. '+etape.titre);detail.append(z);const ul=txt('ul');etape.actions.forEach((a,j)=>ul.append(txt('li',null,(e.cases[etape.id+'.'+(j+1)]?'☑ ':'☐ ')+a.replace(/\[\[(.+?)\]\]/g,'« $1 »'))));detail.append(ul);});cases.append(detail);
       td().append(lienBloc(e.position,numero(e.position)+' / '+ETAPES_RAT.length));td(e.atteint+' / '+ETAPES_RAT.length);td([1,2,3,4].map(i=>e.moi[i]||'—').join(' · '));
       const etat=td(e.aide?'🔔 Je bloque · étape '+numero(e.aide.bloc)+' · '+ilya(d.maintenant-e.aide.depuis):e.fini?'Tout déclaré terminé — copie à vérifier':'En cours');
       if(e.aide){etat.append(document.createElement('br'),boutonCloche(e));}

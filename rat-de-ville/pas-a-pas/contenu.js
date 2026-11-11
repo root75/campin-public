@@ -22,7 +22,7 @@ const ETAPES_RAT = [
     },
     "actions": [
       "Menu Google (la gaufre) ▸ Docs ▸ Créer un document ▸ Vierge.",
-      "Je clique sur « Document sans titre » et je tape : AAAAMMJJ Le rat de ville – Prénom Nom. AAAAMMJJ : année, mois, jour de la date d’aujourd’hui.",
+      "Je clique sur « Document sans titre » et je tape : [[AAAAMMJJ Le rat de ville – Prénom Nom]] AAAAMMJJ : année, mois, jour de la date d’aujourd’hui.",
       "Je place mon document à côté du cours : je clique sur l’onglet du cours, puis clic droit sur l’onglet de mon document ▸ Ajouter l’onglet à une nouvelle vue fractionnée. Le cours et mon document s’affichent côte à côte dans la même fenêtre."
     ]
   },
@@ -45,7 +45,7 @@ const ETAPES_RAT = [
       "Je recopie les vers 17 à 20.",
       "Je recopie les vers 21 à 24.",
       "Je recopie les vers 25 à 28.",
-      "Je tape l’auteur : Jean de La Fontaine."
+      "Je tape l’auteur : [[Jean de La Fontaine]]"
     ],
     "images": { "0": "fable/titre.png", "1": "fable/strophe-1.png", "2": "fable/strophe-2.png", "3": "fable/strophe-3.png", "4": "fable/strophe-4.png", "5": "fable/strophe-5.png", "6": "fable/strophe-6.png", "7": "fable/strophe-7.png", "8": "fable/auteur.png" },
     "aides": {
@@ -151,7 +151,7 @@ const ETAPES_RAT = [
       ]
     },
     "actions": [
-      "Sous la fable, je laisse deux lignes vides et j’écris : Mon bloc-notes.",
+      "Sous la fable, je laisse deux lignes vides et j’écris : [[Mon bloc-notes]]",
       "Trois choses que l’on trouve au festin du rat de ville, en liste à puces (Ctrl + Shift + 8)."
     ],
     "icones": {
@@ -178,7 +178,7 @@ const ETAPES_RAT = [
       "8": ["etape10", [0]]
     },
     "actions": [
-      "Sous mes puces, sur une nouvelle ligne, j’écris : Mes gestes.",
+      "Sous mes puces, sur une nouvelle ligne, j’écris : [[Mes gestes]]",
       "Geste 1 : je complète la phrase, puis je l’écris dans Docs, sur une nouvelle ligne.",
       "Geste 2 : je complète la phrase, puis je l’écris dans Docs, sur une nouvelle ligne.",
       "Geste 3 : je complète la phrase, puis je l’écris dans Docs, sur une nouvelle ligne.",
@@ -381,7 +381,7 @@ const ETAPES_RAT = [
     },
     "actions": [
       "Je clique sur Vérifier l’orthographe (Ctrl + Alt + X) et je corrige.",
-      "Je vérifie le nom : AAAAMMJJ Le rat de ville – Prénom Nom.",
+      "Je vérifie le nom : [[AAAAMMJJ Le rat de ville – Prénom Nom]]",
       "Je vérifie que la fable est complète : titre, 28 vers, auteur.",
       "Je vérifie qu’il y a une majuscule au début de chaque vers.",
       "Je vérifie qu’il y a 7 strophes, séparées par une ligne vide.",

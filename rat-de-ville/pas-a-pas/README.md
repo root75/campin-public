@@ -162,3 +162,12 @@ Demande de Vincent : puces, gestes et phrase dans une seule étape, c’était t
 L’id 9 (remise) ne change pas. Les anciennes clés `8.3` et `8.4` du Journal ne sont plus lues : un
 élève qui les avait cochées retrouve les étapes 10 et 11 à faire. `cases` de `pas-a-pas/cours.json`
 suit ; pas de redéploiement de `Code.gs`. Animations : `etape8`, `etape10`, `etape11` dans `demos.js`.
+
+## Le texte à écrire dans un encadré (11 novembre 2026)
+
+Demande de Vincent : ce que l’élève tape tel quel (« Mon bloc-notes », « Mes gestes », le nom du
+document, l’auteur) s’affiche à la ligne, dans un encadré. Dans une action de `contenu.js`, on
+l’écrit entre doubles crochets : `"j’écris : [[Mon bloc-notes]]"` ; `fiche.js` en fait un
+`span.a-ecrire`. Le point final de la phrase n’est pas dans l’encadré : l’élève ne le recopie pas.
+Le tableau du professeur (`pas-a-pas/formatif-prof.js`) affiche le même texte entre guillemets.
+
