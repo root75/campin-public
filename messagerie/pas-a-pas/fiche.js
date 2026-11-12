@@ -300,11 +300,14 @@ async function valideServeur(e){
  if(dejaFaux.get(e)===reponse)throw new Error('Modifie ta réponse avant de la vérifier à nouveau.');
  if(SUIVI){const actuel=await rpc('preuve',COURS,e+1);if(actuel?.q!==q.q)throw new Error('Le serveur utilise encore les anciens contrôles. Attends quelques minutes puis recharge ; ta réponse est conservée.');const r=await rpc('verifier',COURS,e+1,reponse,1);if(!r?.juste){dejaFaux.set(e,reponse);throw new Error(r?.texte||'La réponse n’a pas été validée.');}dejaValide.set(e,reponse);}
 }
+/* Le suivi peut caler quelques secondes (verrou du Journal, 12/11/2026) : on redemande etat() deux fois avant d'abandonner. */
+async function etatSuivi(){let err;for(const d of [0,2000,5000]){if(d)await new Promise(ok=>setTimeout(ok,d));try{return await rpc('etat',COURS);}catch(e){err=e;}}throw err;}
 async function demarre(){
  const status=document.getElementById('suivi-status');
+ let quoi='les contrôles';
  try{
   const r=await fetch('https://root75.github.io/campin-public/messagerie/pas-a-pas/preuves.json?v=20261105b');if(!r.ok)throw Error();preuves=await r.json();
-  if(SUIVI){const etat=await rpc('etat',COURS);identite=':'+etat.email;classeScolaire=String(etat.classe||'').trim();repriseServeur=Number(etat.reprise)||0;atteintServeur=Math.min(12,Number(etat.atteint)||0);{const p=etat.plafond;plafond=p&&Number(p.bloc)>0?{bloc:Number(p.bloc),message:String(p.message||'')}:null;}humeurServeur=etat.humeur||'';avisServeur=etat.avis||null;status.textContent='Suivi professeur connecté. Les preuves courtes et demandes d’aide sont enregistrées.';await envoie({etape:0,type:'ouvert'});
+  if(SUIVI){quoi='le suivi du professeur';const etat=await etatSuivi();identite=':'+etat.email;classeScolaire=String(etat.classe||'').trim();repriseServeur=Number(etat.reprise)||0;atteintServeur=Math.min(12,Number(etat.atteint)||0);{const p=etat.plafond;plafond=p&&Number(p.bloc)>0?{bloc:Number(p.bloc),message:String(p.message||'')}:null;}humeurServeur=etat.humeur||'';avisServeur=etat.avis||null;status.textContent='Suivi professeur connecté. Les preuves courtes et demandes d’aide sont enregistrées.';envoie({etape:0,type:'ouvert'}).catch(()=>{});
    await Promise.all([7,8,9,10,11].map(async e=>{try{const a=await rpc('preuve',COURS,e+1);const v=preuves.blocs[e].find(x=>x.q===a?.q);if(v)questionsEleve[e]=v;}catch(_){}}));}
   else status.innerHTML='Entraînement libre : aucun résultat ni appel à l’aide transmis au professeur. Pour la séance suivie, <a href="https://script.google.com/a/macros/arcampin.be/s/AKfycbyOPTaq-L1PuittB1rkkiL9OOtShFc2WpiD8H_pH_INaw9ePWenCzhlIPlHu4zBOgLk/exec">ouvre ta séance scolaire</a>.';
   try{const saved=JSON.parse(stockage()?.getItem(CLE+identite)||'null');if(saved&&Number.isInteger(saved.etape)&&saved.etape>=0&&saved.etape<12){if(!SUIVI||Number(saved.reprise||0)===repriseServeur)Object.assign(state,saved);
@@ -316,7 +319,7 @@ async function demarre(){
   if(!APERCU&&state.atteint>0){document.getElementById('collectif').hidden=true;document.getElementById('individuel').hidden=false;document.getElementById('revoir-collectif').hidden=false;}
   if(APERCU){Object.assign(state,INITIAL);state.atteint=12;state.etape=Math.min(11,Math.max(0,Number(location.hash.slice(6))-1));document.getElementById('collectif').hidden=true;document.getElementById('individuel').hidden=false;document.getElementById('revoir-collectif').hidden=false;status.textContent='Aperçu du professeur : navigation libre, aucun résultat enregistré.';}
   init();humeurDuJour();if(state.atteint>=12||avisServeur)avisFin();document.body.dataset.pret='1';
- }catch(e){status.textContent='Impossible de charger les contrôles ou le suivi. Recharge la page ; aucun résultat n’est annoncé comme enregistré.';init();}
+ }catch(e){status.textContent='Impossible de charger '+quoi+'. Recharge la page (F5) ; aucun résultat n’est annoncé comme enregistré.';init();}
  document.getElementById('demarrer-individuel').onclick=()=>{document.getElementById('collectif').hidden=true;document.getElementById('individuel').hidden=false;document.getElementById('revoir-collectif').hidden=false;};
  document.getElementById('revoir-collectif').onclick=()=>{document.getElementById('collectif').hidden=false;document.getElementById('individuel').hidden=true;};
  /* La cloche 🔔 : protocole d'aide (relire, voisin), puis je sonne et je continue.
