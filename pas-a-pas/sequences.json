@@ -987,16 +987,56 @@
         "type": "ecran",
         "titre": "Mise en commun 1 — Variation et cause",
         "min": 10,
-        "methode": "Collectif oral, sans réponse individuelle projetée",
+        "methode": "Collectif oral sur deux relevés fictifs, projetés ; aucun relevé d’élève à l’écran",
         "lignes": [
-          "Compare deux relevés fictifs fournis par le professeur.",
-          "Une variation suffit-elle à prouver une cause unique ?"
+          "Deux PC, le même essai : que conclure ?",
+          "Lis en silence, puis à deux : qu’est-ce qui est pareil ? Qu’est-ce qui diffère ?"
         ],
         "questions": [
-          "Qu’avez-vous vraiment observé ?",
-          "Quelle autre cause reste possible ?"
+          "Qu’avez-vous vraiment observé ? Répondez avec un chiffre.",
+          "Ce qui est pareil sur les deux PC : que fait le calcul ? que fait l’image de GIMP ?",
+          "Sur le PC B, le processeur reste vers 35 % après l’arrêt du calcul : quelle autre cause est possible ?",
+          "Une variation suffit-elle à prouver une cause unique ?"
         ],
-        "repere": "Après la discussion : écran suivant, la synthèse. Observation des ressources = prolongement, sans compétence de 3e artificiellement attribuée."
+        "repere": "Déroulé (10 min) : 1 min de lecture en silence, 2 min à deux, puis les questions dans l’ordre, en faisant répondre avec un chiffre. Attendus : sur les deux PC, le calcul fait monter le processeur près de 100 %, et l’image de GIMP ajoute environ 6 points de mémoire, rendus à la fin de tâche : même effet, même si les points de départ diffèrent. Sur le PC B, le processeur ne redescend pas : un autre logiciel travaille (mise à jour, synchronisation OneDrive, onglets de Chrome) ; on ne peut pas tout attribuer au Banc d’essai. Le vérifier : Processus, trier la colonne Processeur. Sa mémoire de départ plus haute vient d’autres logiciels ouverts, pas de GIMP. Conclusion attendue : une variation montre un effet, pas une cause unique ; il faut comparer avant / pendant / après, et regarder qui travaille. Ne projeter aucun relevé d’élève. Après la discussion : écran suivant, la synthèse. Observation des ressources = prolongement, sans compétence de 3e artificiellement attribuée.",
+        "trace": [
+          [
+            "Moment",
+            "PC A · processeur",
+            "PC A · mémoire",
+            "PC B · processeur",
+            "PC B · mémoire"
+          ],
+          [
+            "Avant",
+            "5 %",
+            "38 %",
+            "22 %",
+            "61 %"
+          ],
+          [
+            "Pendant le calcul",
+            "97 %",
+            "44 %",
+            "100 %",
+            "67 %"
+          ],
+          [
+            "Après 1 min",
+            "6 %",
+            "44 %",
+            "35 %",
+            "67 %"
+          ],
+          [
+            "Après fin de tâche",
+            "5 %",
+            "38 %",
+            "33 %",
+            "61 %"
+          ]
+        ],
+        "exemple": "Relevés fictifs (avant → pendant le calcul → après 1 min → après fin de tâche). PC A : processeur 5 → 97 → 6 → 5 %, mémoire 38 → 44 → 44 → 38 %. PC B : processeur 22 → 100 → 35 → 33 %, mémoire 61 → 67 → 67 → 61 %."
       },
       {
         "type": "ecran",
@@ -1033,16 +1073,40 @@
         "type": "ecran",
         "titre": "Mise en commun 2 — Visible et disponible",
         "min": 10,
-        "methode": "Collectif oral, sans réponse individuelle projetée",
+        "methode": "Collectif oral sur trois cas fictifs, projetés",
         "lignes": [
-          "Un fichier visible dans l’Explorateur est-il toujours lisible sans réseau ?",
-          "Compare les cas fictifs : nuage, coche verte, statut inconnu."
+          "Visible dans l’Explorateur = lisible sans réseau ?",
+          "Pour chaque fichier fictif : oui, non, ou on ne sait pas ? Quel indice ?"
         ],
         "questions": [
+          "Plan.docx, Notes.docx, Exposé.docx : lisible sans réseau, oui, non, on ne sait pas ? Quel indice ?",
           "Local et synchronisé s’excluent-ils ?",
           "Quel indice manque si le statut n’est pas affiché ?"
         ],
-        "repere": "Après la discussion : écran suivant, la synthèse. Aucun changement des réglages OneDrive."
+        "repere": "Attendus : Plan.docx, non — le nuage bleu dit « en ligne seulement ». Notes.docx, oui — la coche verte dit « disponible sur ce PC », et il reste synchronisé : local et synchronisé ne s’excluent pas. Exposé.docx, on ne peut pas conclure : il faut afficher la colonne Statut (Afficher ▸ Détails) ou vérifier le chemin. Aucun changement des réglages OneDrive. Après la discussion : écran suivant, la synthèse.",
+        "trace": [
+          [
+            "Fichier",
+            "Statut affiché",
+            "Lisible sans réseau ?"
+          ],
+          [
+            "Plan.docx",
+            "☁ nuage bleu",
+            "?"
+          ],
+          [
+            "Notes.docx",
+            "✓ coche verte, cercle blanc",
+            "?"
+          ],
+          [
+            "Exposé.docx",
+            "(rien d’affiché)",
+            "?"
+          ]
+        ],
+        "exemple": "Plan.docx : nuage bleu. Notes.docx : coche verte sur cercle blanc. Exposé.docx : aucun statut affiché."
       },
       {
         "type": "ecran",
@@ -1087,7 +1151,8 @@
           "Pourquoi ne fallait-il pas arrêter le PC ?",
           "Quel indice montre que le fichier existe encore ?"
         ],
-        "repere": "Ouvrir la synthèse de la mission 3. Faire justifier un test à l’oral sur cas fictif. Ne pas demander un deuxième incident rédigé."
+        "repere": "Ouvrir la synthèse de la mission 3. Faire justifier un test à l’oral sur cas fictif. Ne pas demander un deuxième incident rédigé. Attendu pour le cas de Léo : cliquer dans la zone de texte de Bloc-notes et retaper ; si le texte apparaît, c’était la fenêtre active. Si rien, regarder si les touches marchent ailleurs (barre de recherche). On ne débranche rien, on n’éteint rien.",
+        "exemple": "Cas fictif : Léo tape son texte, rien n’apparaît dans Bloc-notes. Hypothèse 1 : le clavier est débranché. Hypothèse 2 : une autre fenêtre est active. Quel test, sans risque, départage les deux ?"
       },
       {
         "type": "ecran",
