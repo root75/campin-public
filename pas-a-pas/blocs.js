@@ -371,10 +371,16 @@ function affiche(){
     go.addEventListener("click",()=>{ go.remove(); preuve(pr,B); });
     pr.append(go);
   }
+  /* q.colle (12/11/2026) : la question et sa zone de réponse juste sous les cases, sans « À vérifier » ni encadrés
+     entre les deux : « à ton avis… » et « mon hypothèse » se lisent d'un seul tenant. Le reste du bloc suit. */
+  if(B.q.colle && MISSIONS && !B.essai){
+    const faire = z.querySelector(".faire");
+    if(faire) faire.after(pr);
+  }
   remplitRappels(document.body);   // le bloc, et la page autour (fenêtre « Mon rapport »)
   document.body.dataset.pret = "1";
   if(!fait && SUIVI && !APERCU && B._n>1) pr.append(txt("p","note","Ton voisin a peut-être une autre version que toi : c'est normal, chacun a la sienne."));
-  z.append(pr);
+  if(!pr.parentNode) z.append(pr);   // déjà placé sous les cases (q.colle)
 
   const nav = el("div","actions");
   const avant = txt("button","btn vide",groupe ? "← Étape précédente" : "← Bloc précédent"); avant.type="button"; avant.disabled = ici===0;
@@ -566,7 +572,7 @@ function trous(zone, Q, reussi, rate){
 function preuve(pr, B, apres){
   const Q = B.q;
   const v = r => (B._n>1 ? "v"+B._v+":" : "") + (r==null ? "" : r);   // le Journal note la version
-  if(Q.type!=="mixte") pr.append(txt("div","etiquette", ["code","ordre"].includes(Q.type) ? "Mon programme" : Q.type==="trous" ? "J’explique" : Q.type==="rapport" ? "Mon rapport individuel" : typeof PARCOURS!=="undefined" ? "Je vérifie mon raisonnement" : "Je prouve que j’ai fait le bloc"));
+  if(Q.type!=="mixte") pr.append(txt("div","etiquette", Q.etiquette ? Q.etiquette : ["code","ordre"].includes(Q.type) ? "Mon programme" : Q.type==="trous" ? "J’explique" : Q.type==="rapport" ? "Mon rapport individuel" : typeof PARCOURS!=="undefined" ? "Je vérifie mon raisonnement" : "Je prouve que j’ai fait le bloc"));
   pr.append(txt("p","question",Q.q));
   if(Q.serveur && Q.aide) pr.append(txt("p","note",Q.aide));
   const retour = el("div","retour"); retour.hidden = true;
