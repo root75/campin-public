@@ -12,7 +12,7 @@ L’aperçu libre ne transmet ni ne conserve de réponse ; hors Apps Script, seu
 reste sur ce navigateur. En classe, passer par Mes cours, avec le compte de l’école.
 
 Rapport : `pas-a-pas/trame-rapport.txt` donne un plan sans mise en forme, copiable depuis
-« Mon rapport : trame et critères » et depuis l’étape 1 « Préparer mon rapport » (bouton 📋 Copier la trame). La grille critériée complète /10 (descripteurs et points) est
+« Mon rapport : trame et critères » et depuis l’étape 1 « Préparer mon rapport » (bouton 📋 Copier la trame). La grille critériée complète /20 (descripteurs et points) est
 accessible dans ce même dialogue et copiée en fin de rapport avec la trame. L’élève crée un seul document Google Docs, le met en page et y saisit
 des preuves courtes : tableau et capture légendée, une phrase de disponibilité, un seul incident
 en quatre lignes et une décision finale en deux phrases. Les trois autres incidents sont
@@ -27,8 +27,8 @@ avancer seuls la mission. Ils ne collectent pas les preuves du document. Le site
 ni les pièces jointes, ni le statut Classroom. Un bloc vert ne vaut ni réussite, ni remise, ni note.
 Les preuves ne sont pas recopiées sur le site. Aucun nouveau Forms ni collecte de fichier ajouté.
 
-L’enseignant corrige le rapport, ses gestes et les hypothèses initiales privées : enquête /7,
-document et remise /3. Les brouillons d’hypothèses non envoyées ne sont pas sauvegardés ; le rapport
+L’enseignant corrige le rapport, ses gestes et les hypothèses initiales privées : enquête /14,
+document et remise /6. Les brouillons d’hypothèses non envoyées ne sont pas sauvegardés ; le rapport
 se conserve dans le Drive scolaire et doit indiquer qu’il est enregistré avant de quitter le poste.
 Le bouton de suivi attend la confirmation du serveur et permet de réessayer en cas d’échec.
 Pour continuer une enquête, conserver la même séance et le même document. La checklist de remise

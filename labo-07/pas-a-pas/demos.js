@@ -9,7 +9,7 @@ const Demo = (() => {
   const NOM = 'LABO07_CoulissesPC_Prenom_Nom';
   const FICHIER = '2026-10-09_OneDrive.docx';
   // Vues communes à tous les cours (pas-a-pas/demos-communs.js) : Chrome, gaufre, bureau Windows, devoir Classroom.
-  const devoir = DemosCommuns.devoir({ titre: 'Labo 07 — Dans les coulisses du PC', meta: ['M. Louviaux · 10 points'], fichier: NOM, autre: 'Le document qui obéit' });
+  const devoir = DemosCommuns.devoir({ titre: 'Labo 07 — Dans les coulisses du PC', meta: ['M. Louviaux · 20 points'], fichier: NOM, autre: 'Le document qui obéit' });
   const BUREAU = { vue: 'win-bureau', taches: [['📝', 'ico-notes']] };   // le Bloc-notes du cas d'essai, dans la barre des tâches
 
   /* Les animations, par clé. */
@@ -101,6 +101,13 @@ const Demo = (() => {
       { ecran: 'moniteur', eteint: 1, cible: 'bouton', legende: 'Test sans risque : le bouton du MONITEUR, montré par le professeur. Je ne touche pas au PC.' },
       { ecran: 'moniteur', cible: 'ecran', ok: 1, legende: 'Les mêmes fenêtres réapparaissent : le PC était resté allumé.' }
     ] },
+    joindre: { titre: 'Joindre mon rapport au devoir, sans le rendre', images: [
+      devoir({ cible: 'ajouter', legende: 'Classroom ▸ ma classe ▸ Travaux et devoirs ▸ Labo 07 ▸ + Ajouter ou créer.' }),
+      devoir({ menu: 1, cible: 'gdrive', legende: 'Je choisis Google Drive.' }),
+      devoir({ picker: 1, cible: 'fichier', legende: 'Je clique sur ' + NOM + '…' }),
+      devoir({ picker: 2, cible: 'inserer', legende: '… puis sur le bouton bleu, en bas à droite.' }),
+      devoir({ joint: 1, cible: 'piece', ok: 1, legende: 'Mon rapport est joint ; le devoir reste « Attribué ». Je ne clique PAS sur Rendre : ce sera à la fin du labo.' })
+    ] },
     remise: { titre: 'Joindre mon rapport et le remettre', images: [
       { ecran: 'docs', lignes: ['Dans les coulisses du PC', '1 — Observer ce qui tourne', '…'], cible: 'enregistre', legende: 'Dans Docs : « Enregistré ». Je relis ma grille en fin de rapport.' },
       devoir({ cible: 'ajouter', legende: 'Classroom ▸ ma classe ▸ Travaux et devoirs ▸ Labo 07 ▸ + Ajouter ou créer.' }),
@@ -109,7 +116,8 @@ const Demo = (() => {
       devoir({ picker: 2, cible: 'inserer', legende: '… puis sur le bouton bleu, en bas à droite.' }),
       devoir({ joint: 1, cible: 'rendre', legende: 'Joindre ne suffit pas : Rendre le devoir.' }),
       devoir({ joint: 1, confirme: 1, cible: 'confirmer', legende: '« Rendre le devoir ? » : je confirme, Rendre le devoir une deuxième fois.' }),
-      devoir({ joint: 1, remis: 1, cible: 'statut', ok: 1, legende: '« Remis » : c’est envoyé. Remise unique, à la toute fin de l’enquête.' })
+      devoir({ joint: 1, remis: 1, cible: 'statut', ok: 1, legende: '« Remis » : c’est envoyé. Remise unique, à la toute fin de l’enquête.' }),
+      devoir({ joint: 1, cible: 'piece', legende: 'Mon rapport est déjà joint depuis l’étape 1 : je clique dessus pour vérifier que c’est le bon.' })
     ] }
   };
   /* Quelle image va sous quelle case : champ `demos` de chaque bloc, dans fiche.js (moteur commun blocs.js). */
