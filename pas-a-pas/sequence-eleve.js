@@ -47,6 +47,7 @@
     const mes = {};   // ce que l'élève a envoyé, par moment de cette séquence
 
     function recoit(m){
+      if(window.Recompense) Recompense.montre(m);   // « Je m'occupe » ouvert : bandeau en bas (recompense.js)
       if(o.plafond) o.plafond(m && m.plafond);   // blocs.js : la classe s'arrête après un bloc
       if(!m || m.type === "fin" || m.type === "atelier"){
         if(cle){ cle = ""; zone.hidden = true; document.body.classList.remove("en-sequence"); scrollTo(0, 0); }

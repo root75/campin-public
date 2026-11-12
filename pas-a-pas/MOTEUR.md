@@ -105,6 +105,9 @@ affichée écrit sous les pastilles ; cliquable jusqu'au premier bloc non valid�
 **blocs ouverts** : les blocs au-delà du dernier bloc ouvert portent un cadenas 🔒 dans la barre, sur ordre du tableau
 (rangée « Blocs ouverts », un clic sur le numéro du dernier bloc à ouvrir) ou du moment `atelier` de la séquence qui porte
 `"blocs": [premier, dernier]` — reçu avec `etat()` puis avec `moment()`, sans appel de plus ;
+bandeau **« 🎁 Je m'occupe est ouvert pour toi jusqu'à HH:MM ▸ »** en bas de la fiche quand le professeur a coché 🎁 au
+tableau, même pendant une séquence projetée — reçu avec `moment()`, affiché par le code commun [`recompense.js`](recompense.js),
+à charger comme dans `modele/index.html` ;
 brouillon d'une rédaction gardé sur le poste ; programme validé (question `code`) gardé sur le poste et
 relu quand on revient sur le bloc : code de départ, essais ratés (programme, message de Python, explication), programme validé, lignes changées en gras,
 explication `juste` ; erreurs envoyées au tableau (« Où le groupe bute »).
