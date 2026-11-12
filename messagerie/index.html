@@ -129,15 +129,16 @@ footer{font-size:.9rem;color:var(--doux);text-align:center}
   </nav>
 
   <section class="panneau" id="p-resume" role="tabpanel" aria-labelledby="t-resume">
-    <h2>L'essentiel en 5 lignes</h2>
+    <h2>L'essentiel en 6 lignes</h2>
     <ol class="resume">
       <li><span>Un e-mail, c'est une lettre : <strong>À</strong> = l'adresse sur l'enveloppe, <strong>l'objet</strong> = de quoi ça parle.</span></li>
       <li><span>Un message bien écrit : <strong>Bonjour…</strong>, mon texte, une formule pour finir, <strong>ma signature</strong> (prénom, nom, classe).</span></li>
       <li><span><strong>Boîte de réception</strong> = ce que je reçois. <strong>Éléments envoyés</strong> = ce que j'ai envoyé.</span></li>
       <li><span><strong>Brouillons</strong> = ce que j'ai commencé sans l'envoyer.</span></li>
       <li><span>Un message envoyé ne se reprend pas : je relis <strong>avant</strong> <span class="touche">Envoyer</span>.</span></li>
+      <li><span>Un mot souligné en rouge : <strong>clic DROIT</strong> dessus (le bouton de droite de la souris) ▸ la bonne orthographe. Puis <span class="touche">Envoyer</span>.</span></li>
     </ol>
-    <p class="note">Ensuite : le quiz (5 questions, tirées parmi 15 : il change à chaque fois), puis les 15 cartes pour réviser.</p>
+    <p class="note">Ensuite : le quiz (6 questions, tirées parmi 18 : il change à chaque fois), puis les 18 cartes pour réviser.</p>
     <div class="actions"><button class="btn plein" type="button" data-aller="quiz">Commencer le quiz</button></div>
   </section>
 
@@ -239,7 +240,12 @@ const QUIZ = [
        "Les réglages de la vue sont dans l'onglet Afficher, pas Fichier.",
        "L'onglet Aide sert à chercher de l'aide, pas à régler la vue."],
     h:"Je veux changer ce que j'affiche…",
-    e:"Onglet Afficher : tout ce qui change la vue. Le réglage reste pour les prochaines fois." }
+    e:"Onglet Afficher : tout ce qui change la vue. Le réglage reste pour les prochaines fois." },
+  { q:"Un mot de mon message est souligné en rouge. Que fais-je ?",
+    c:["Clic droit dessus ▸ je choisis la bonne orthographe.", "Je l'envoie tel quel : ce n'est pas grave.", "Je supprime tout le message.", "Clic gauche dessus, deux fois."],
+    p:[null, "Le rouge signale une faute probable : je la corrige avant d'envoyer.", "Inutile : je corrige seulement le mot souligné.", "Le clic gauche place le curseur ; c'est le clic DROIT qui ouvre les propositions."],
+    h:"Le bouton de DROITE de la souris…",
+    e:"Clic DROIT sur le mot souligné : Outlook propose la bonne orthographe, je clique dessus." }
 ];
 /* Règle du 05/11/2026 : trois variantes du même type par question, réponses distinctes.
    QUIZ[i] est la variante 1 ; VARIANTES[i] les deux autres. Le quiz en tire une au hasard à chaque passage. */
@@ -293,7 +299,17 @@ const VARIANTES = [
       c:["Afficher ▸ Disposition ▸ Volet de lecture ▸ Masquer", "Accueil ▸ Volet de lecture ▸ Masquer", "Fichier ▸ Volet de lecture ▸ Masquer", "Aide ▸ Disposition ▸ Masquer"],
       p:[null, "Accueil sert à écrire et ranger les messages, pas à changer la vue.", "Les réglages de la vue sont dans l'onglet Afficher, pas Fichier.", "L'onglet Aide sert à chercher de l'aide."],
       h:"Je veux changer ce que j'affiche…",
-      e:"Onglet Afficher : tout ce qui change la vue. Le réglage reste pour les prochaines fois." } ]
+      e:"Onglet Afficher : tout ce qui change la vue. Le réglage reste pour les prochaines fois." } ],
+  [ { q:"Mon prénom est souligné en rouge dans ma signature. Que fais-je ?",
+      c:["Je le laisse : un prénom n'est pas dans le dictionnaire, il est juste.", "Je change mon prénom.", "J'efface ma signature.", "Je n'envoie pas le message."],
+      p:[null, "Ton prénom est juste : le correcteur ne connaît pas tous les prénoms.", "La signature est obligatoire : ton professeur doit savoir qui écrit.", "Ce soulignement-là n'est pas une faute."],
+      h:"Le correcteur connaît-il tous les prénoms ?",
+      e:"Un prénom, un nom propre peuvent être soulignés : je vérifie, et je les laisse s'ils sont justes." },
+    { q:"Quand corriger les mots soulignés en rouge ?",
+      c:["Avant de cliquer sur Envoyer.", "Après l'envoi, dans Éléments envoyés.", "Jamais : le destinataire corrigera.", "Seulement si mon professeur me le demande."],
+      p:[null, "Un message envoyé ne se reprend pas : trop tard pour corriger.", "Un message plein de fautes est difficile à lire, et peu poli.", "Je relis toujours, sans attendre qu'on me le demande."],
+      h:"Un message envoyé ne se reprend pas…",
+      e:"Je relis et je corrige les mots soulignés AVANT Envoyer." } ]
 ];
 const TOUTES = QUIZ.map((q,i)=>[q, ...VARIANTES[i]]);
 const CARTES = TOUTES.flat();
