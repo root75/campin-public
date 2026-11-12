@@ -52,13 +52,13 @@ Conclusion finale justifiée — /4
 Machine / système / application / fichier — /2
 2 : quatre rôles distingués à l’oral dans le cas ; 1 : distinction partielle ; 0 : confusion persistante.
 
-Identification et nom du fichier — /2
-1 : prénom/nom, classe/date présents ; 1 : nom LABO07_CoulissesPC_Prenom_Nom respecté.
+Mise en page — /2
+1 : titre du document centré, en gras, plus grand ; 1 : les quatre parties dans le même style Titre 1.
 
-Mise en page et tableau — /2
-1 : titre du document mis en forme (centré, gras, plus grand) et quatre parties dans le même style Titre 1 ; 1 : vrai tableau 3×5, lisible, lignes et unités identifiées.
+Tableau et capture — /2
+1 : vrai tableau 3×5, lisible, en-têtes avec % ; 1 : capture utile, lisible, pas étirée, légende juste dessous.
 
-Capture et remise — /2
-1 : capture utile, lisible, proportionnée, avec légende explicative ; 1 : bon document joint, remise confirmée dans Classroom.
+Identification et remise — /2
+1 : prénom, nom, classe, date et fichier nommé LABO07_CoulissesPC_Prenom_Nom ; 1 : bon document joint, statut « Remis » dans Classroom.
 
 Total /20. Non observé faute de temps ou poste indisponible : à compléter, pas zéro. La vitesse et l’utilisation d’un indice ne sont pas pénalisées.

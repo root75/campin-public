@@ -906,7 +906,7 @@
       "L’élève crée un rapport Google Docs à partir de la trame en texte brut avant les premières mesures. Il garde ce même document pendant tout le travail et ne le remet qu’une fois terminé.",
       "Prévoir un fichier déjà enregistré dans le dossier OneDrive scolaire de l’Explorateur, par exemple celui du Labo 06 ; un fichier de démonstration sans donnée privée si nécessaire. La mission ne dépend pas d’une autre séquence obligatoirement réalisée juste avant.",
       "Correction : hypothèses initiales aux étapes internes 2, 6 et 9 du Journal privé ; preuves écrites courtes dans le rapport joint à Classroom, incidents d’entraînement vérifiés à deux et geste final vérifié individuellement par le professeur. Les autres blocs enregistrent uniquement « rapport:… », une déclaration d’avancement, sans lecture du document ni contrôle de remise.",
-      "Grille : enquête /14, document et remise /6. Identification et nom ; mise en page (titre du document, parties en Titre 1) et vrai tableau ; capture ciblée et légendée, bon document joint et remise confirmée. Aucun calcul automatique de note.",
+      "Grille : enquête /14, document et remise /6. Mise en page (titre du document, quatre parties en Titre 1) ; vrai tableau et capture légendée ; identification, nom du fichier et remise confirmée. Aucun calcul automatique de note.",
       "Compte scolaire : Mes cours ▸ classes et cours ouverts ▸ cocher labo-07 uniquement pour la classe concernée. Nouvelle séance au premier lancement ; conserver la séance pour les continuations.",
       "Vérifier sur un PC élève : Gestionnaire des tâches et ses totaux, Performances (processeur, mémoire, disque), GIMP (ouvert pour les élèves, temps d’ouverture, image 10000 × 10000), Banc d’essai labo-07/essai-charge.html (processeur près de 100 % pendant le calcul), Terminer la tâche sur GIMP, Calculatrice, Bloc-notes, fenêtres, chemin et Statut du fichier OneDrive. Seul arrêt de processus : GIMP, quand la fiche le demande ; aucune suppression ni changement de réglage.",
       "Projection : utiliser uniquement Lancer la séquence. Ne jamais projeter tableau nominatif, Journal, humeur, avis ou copies. Un vote initial recueille des choix ; seuls les effectifs agrégés sont projetés. Aucun texte libre d’élève n’est affiché.",
@@ -984,21 +984,43 @@
         "repere": "Guidage dégressif (fiche prof, « Conduite ») : cet atelier ferme la classe après le bloc 5, jusqu’à la mise en commun 1 ; les ateliers suivants laissent tout ouvert jusqu’à la remise. Le plafond est un filet, pas un rythme imposé."
       },
       {
+        "type": "mots",
+        "titre": "Mise en commun 1 — Vos relevés",
+        "min": 3,
+        "methode": "Individuel sur le poste, réponses sans nom au tableau",
+        "question": "Qu’est-ce qui a changé sur ton PC ? Un relevé, avec son chiffre.",
+        "max": 2,
+        "repere": "Exemples attendus : « processeur 97 % », « mémoire +6 % », « mémoire 44 % ». Laisser 2 min, puis « Montrer les mots ». Un mot hors sujet : × pour le masquer (il reste dans le Journal). Les réponses s’affichent sans nom ; ne jamais ouvrir le Journal au projecteur."
+      },
+      {
+        "type": "tri",
+        "titre": "Mise en commun 1 — Qu’est-ce qui a fait varier ?",
+        "min": 5,
+        "methode": "Collectif : chaque réponse rangée est justifiée",
+        "colonnes": [
+          "Le calcul (processeur)",
+          "On hésite",
+          "L’image de GIMP (mémoire)"
+        ],
+        "repere": "Prendre une réponse, demander « dans quelle colonne, et pourquoi ? » ; ranger seulement si la justification tient. « On hésite » accueille un relevé sans moment (avant ? pendant ?) ou une valeur inattendue : c’est la question de l’écran suivant. Attendu : le processeur monte pendant le calcul et redescend après ; la mémoire monte avec l’image de GIMP et redescend à la fin de tâche.",
+        "source": 4
+      },
+      {
         "type": "ecran",
-        "titre": "Mise en commun 1 — Variation et cause",
-        "min": 10,
-        "methode": "Collectif oral sur deux relevés fictifs, projetés ; aucun relevé d’élève à l’écran",
+        "titre": "Mise en commun 1 — Deux PC, le même essai",
+        "min": 5,
+        "methode": "Collectif oral sur deux relevés fictifs, après les vôtres",
         "lignes": [
           "Deux PC, le même essai : que conclure ?",
           "Lis en silence, puis à deux : qu’est-ce qui est pareil ? Qu’est-ce qui diffère ?"
         ],
         "questions": [
-          "Qu’avez-vous vraiment observé ? Répondez avec un chiffre.",
+          "Vos relevés ressemblent-ils à ceux du PC A ou du PC B ?",
           "Ce qui est pareil sur les deux PC : que fait le calcul ? que fait l’image de GIMP ?",
           "Sur le PC B, le processeur reste vers 35 % après l’arrêt du calcul : quelle autre cause est possible ?",
           "Une variation suffit-elle à prouver une cause unique ?"
         ],
-        "repere": "Déroulé (10 min) : 1 min de lecture en silence, 2 min à deux, puis les questions dans l’ordre, en faisant répondre avec un chiffre. Attendus : sur les deux PC, le calcul fait monter le processeur près de 100 %, et l’image de GIMP ajoute environ 6 points de mémoire, rendus à la fin de tâche : même effet, même si les points de départ diffèrent. Sur le PC B, le processeur ne redescend pas : un autre logiciel travaille (mise à jour, synchronisation OneDrive, onglets de Chrome) ; on ne peut pas tout attribuer au Banc d’essai. Le vérifier : Processus, trier la colonne Processeur. Sa mémoire de départ plus haute vient d’autres logiciels ouverts, pas de GIMP. Conclusion attendue : une variation montre un effet, pas une cause unique ; il faut comparer avant / pendant / après, et regarder qui travaille. Ne projeter aucun relevé d’élève. Après la discussion : écran suivant, la synthèse. Observation des ressources = prolongement, sans compétence de 3e artificiellement attribuée.",
+        "repere": "Déroulé (5 min) : 1 min de lecture en silence, puis les questions dans l’ordre, en faisant répondre avec un chiffre. Attendus : sur les deux PC, le calcul fait monter le processeur près de 100 %, et l’image de GIMP ajoute environ 6 points de mémoire, rendus à la fin de tâche : même effet, même si les points de départ diffèrent. Sur le PC B, le processeur ne redescend pas : un autre logiciel travaille (mise à jour, synchronisation OneDrive, onglets de Chrome) ; on ne peut pas tout attribuer au Banc d’essai. Le vérifier : Processus, trier la colonne Processeur. Sa mémoire de départ plus haute vient d’autres logiciels ouverts, pas de GIMP. Conclusion attendue : une variation montre un effet, pas une cause unique ; il faut comparer avant / pendant / après, et regarder qui travaille. Après la discussion : écran suivant, la synthèse. Observation des ressources = prolongement, sans compétence de 3e artificiellement attribuée.",
         "trace": [
           [
             "Moment",
@@ -1070,10 +1092,32 @@
         "repere": "Le chemin à relever est celui du fichier dans OneDrive sur ce poste. Le rapport Docs est un document en ligne distinct ; Google Drive n’est pas un lecteur installé sur les PC de l’école."
       },
       {
+        "type": "mots",
+        "titre": "Mise en commun 2 — Vos statuts",
+        "min": 3,
+        "methode": "Individuel sur le poste, réponses sans nom au tableau",
+        "question": "Ton fichier serait-il lisible sans réseau ? Ta réponse et ton indice.",
+        "max": 1,
+        "repere": "Exemples attendus : « oui, coche verte », « non, nuage bleu », « je ne sais pas, pas de statut ». Laisser 2 min, puis « Montrer les mots ». Un mot hors sujet : × pour le masquer (il reste dans le Journal). Les réponses s’affichent sans nom ; ne jamais ouvrir le Journal au projecteur."
+      },
+      {
+        "type": "tri",
+        "titre": "Mise en commun 2 — Lisible sans réseau ?",
+        "min": 5,
+        "methode": "Collectif : chaque réponse rangée est justifiée",
+        "colonnes": [
+          "Oui",
+          "On ne sait pas",
+          "Non, réseau nécessaire"
+        ],
+        "repere": "Pour chaque réponse : quel indice ? « Oui » seulement avec une coche verte (cercle à bord vert ou disque vert plein) ; nuage bleu : « Non » ; deux flèches, croix rouge, statut non affiché ou « synchronisé » sans icône : « On ne sait pas ». Une réponse sans indice reste dans la réserve : demander l’indice à la classe. Aucun changement des réglages OneDrive.",
+        "source": 9
+      },
+      {
         "type": "ecran",
-        "titre": "Mise en commun 2 — Visible et disponible",
-        "min": 10,
-        "methode": "Collectif oral sur trois cas fictifs, projetés",
+        "titre": "Mise en commun 2 — Trois fichiers à trancher",
+        "min": 5,
+        "methode": "Collectif oral sur trois cas fictifs, après vos statuts",
         "lignes": [
           "Visible dans l’Explorateur = lisible sans réseau ?",
           "Pour chaque fichier fictif : oui, non, ou on ne sait pas ? Quel indice ?"
@@ -1139,10 +1183,32 @@
         "repere": "Montrer une seule fois au groupe le bouton du moniteur externe. Les binômes vérifient les trois incidents non rédigés avec les critères annoncés ; le professeur intervient sur blocage persistant ou désaccord. Pas de passage obligatoire après chaque essai."
       },
       {
+        "type": "mots",
+        "titre": "Mise en commun 3 — Vos tests",
+        "min": 3,
+        "methode": "Individuel sur le poste, réponses sans nom au tableau",
+        "question": "Un test sans danger que tu as fait, en quelques mots.",
+        "max": 2,
+        "repere": "Exemples attendus : « Alt + Tab », « clic dans la fenêtre », « bouton de l’écran », « rouvrir le dossier ». Laisser 2 min, puis « Montrer les mots ». Un mot hors sujet : × pour le masquer (il reste dans le Journal). Les réponses s’affichent sans nom ; ne jamais ouvrir le Journal au projecteur."
+      },
+      {
+        "type": "tri",
+        "titre": "Mise en commun 3 — Ce test est-il sans risque ?",
+        "min": 5,
+        "methode": "Collectif : chaque réponse rangée est justifiée",
+        "colonnes": [
+          "Sans risque, réversible",
+          "On hésite",
+          "À éviter"
+        ],
+        "repere": "Pour chaque test : que vérifie-t-il, et peut-on revenir en arrière ? « À éviter » : arrêter le PC, débrancher, supprimer, terminer une tâche au hasard. Faire dire quel indice le test a donné. Ne pas demander un deuxième incident rédigé.",
+        "source": 14
+      },
+      {
         "type": "ecran",
-        "titre": "Mise en commun 3 — Pourquoi ce test ?",
-        "min": 10,
-        "methode": "Collectif oral, sans réponse individuelle projetée",
+        "titre": "Mise en commun 3 — Le cas de Léo",
+        "min": 5,
+        "methode": "Collectif oral sur un cas fictif, après vos tests",
         "lignes": [
           "Explique un test qui départage deux hypothèses.",
           "Un test sans danger, puis une preuve pour conclure."
