@@ -181,7 +181,7 @@
   "messagerie-2": {
     "rappel": "https://root75.github.io/campin-public/messagerie-2/rappel/",
     "titre": "Messagerie 02 — Ouvrir sans risque, répondre, transférer",
-    "objectif": "Poser la règle de la pièce jointe (qui l’envoie, quel fichier) avant le travail dans Outlook. Collectif court, environ 10 min : Messagerie 01 a montré que le collectif déborde (44 min avant le travail autonome le 03/11). Répondre, Répondre à tous, Transférer et Joindre sont travaillés aux blocs 2 et 7.",
+    "objectif": "Poser la règle de la pièce jointe (qui l’envoie, quel fichier) avant le travail dans Outlook. Collectif court, environ 10 min : Messagerie 01 a montré que le collectif déborde (44 min avant le travail autonome). Répondre, Répondre à tous, Transférer et Joindre sont travaillés aux blocs 2 et 7.",
     "moments": [
       {
         "type": "ecran",
