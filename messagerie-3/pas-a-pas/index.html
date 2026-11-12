@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<!-- Messagerie 03 — page faite à partir de pas-a-pas/modele/index.html (moteur pas-a-pas/blocs.js, mode d'emploi pas-a-pas/MOTEUR.md). -->
+<script>
+/* Une erreur JavaScript s'affiche en haut de la page : sur un téléphone ou un poste d'élève, pas de console. */
+addEventListener("error", e => {
+  if(e.target && e.target.tagName === "LINK") return;   // une police qui manque n'empêche rien
+  const p = document.createElement("p");
+  p.style.cssText = "background:#f8e3e0;color:#b23a2e;border-left:5px solid #b23a2e;padding:8px 12px;margin:8px 0;font:14px/1.4 Arial,sans-serif";
+  p.textContent = "⚠ Erreur dans la page : " + (e.message || (e.target && e.target.src ? "chargement de " + e.target.src : "inconnue")) + (e.lineno ? " (ligne " + e.lineno + ")" : "");
+  if(e.lineno){   // les lignes telles que la page les a reçues : ce que le serveur a pu y changer
+    const pre = document.createElement("pre");
+    pre.style.cssText = "white-space:pre-wrap;word-break:break-all;margin:6px 0 0;font:12px/1.35 monospace";
+    pre.textContent = document.documentElement.outerHTML.split("\n").slice(Math.max(0, e.lineno-4), e.lineno+2)
+      .map((l,i) => (Math.max(0, e.lineno-4)+i+1) + "│" + l).join("\n");
+    p.append(pre);
+  }
+  (document.body || document.documentElement).prepend(p);
+}, true);
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Messagerie 03 — Bien communiquer en ligne — pas à pas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,600;0,800;1,600&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
+<link rel="stylesheet" href="https://root75.github.io/campin-public/pas-a-pas/fiche.css?v=moteur-20261109">
+<link rel="stylesheet" href="https://root75.github.io/campin-public/assets/navigation.css">
+<link rel="stylesheet" href="https://root75.github.io/campin-public/pas-a-pas/python-missions.css?v=numeros-20261109">
+<style>
+.mini-mail{display:grid;gap:2px;overflow-wrap:anywhere}.repere.exemple{display:grid;gap:8px}.repere.exemple .mini-mail{background:var(--carte);border:1px solid var(--trait);border-radius:10px;padding:8px 12px}.avant{display:grid;gap:10px}.mini-mail .texte{font-style:italic}
+table.lettre{border-collapse:collapse;width:100%;font-size:1rem}table.lettre th,table.lettre td{border:1px solid var(--trait);padding:6px 8px;text-align:left;vertical-align:top}
+.reel{background:#fff4d6;border-left:5px solid #c27c0e;padding:10px 14px;border-radius:8px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.repere.regle,.repere.cote{background:#fff4d6;border-left-color:#c27c0e}.repere.cote ol{margin:6px 0 0;padding-left:1.3rem}
+</style>
+</head>
+<body>
+<nav class="campin-navigation" aria-label="Navigation du site">
+  <details class="campin-menu">
+    <summary>☰ Menu</summary>
+    <div class="campin-menu-liens">
+      <a href="https://root75.github.io/campin-public/cours/" target="_top">Mes cours</a>
+      <a href="https://root75.github.io/campin-public/revisions/" target="_top">Révisions et entraînements</a>
+      <a href="https://root75.github.io/campin-public/se-connecter/#rendre" target="_top">Rendre un devoir</a>
+      <a href="https://root75.github.io/campin-public/" target="_top">Accueil</a>
+    </div>
+  </details>
+</nav>
+
+<div class="page">
+  <header class="entete"><span class="mascotte" id="mascotte" aria-hidden="true" style="font-size:64px;line-height:1">🛡️</span><div>
+    <div class="surtitre">Numérique · La messagerie · Messagerie 03</div>
+    <h1>Messagerie 03 — Bien communiquer en ligne</h1>
+    <p class="bulle" id="bulle">Aujourd’hui : le bon outil, les pièges à éviter, la copie cachée, et un poste bien fermé.</p>
+  </div></header>
+  <p class="qui" id="qui"></p>
+
+  <section class="humeur" id="humeur" hidden aria-label="Humeur du jour"></section>
+
+  <div class="progres" id="progres" aria-hidden="true"></div>
+
+  <main class="panneau" id="bloc" aria-live="polite"></main>
+
+  <details class="coince" id="coince">
+    <summary>Ça coince ?</summary>
+    <ul id="coince-liste"></ul>
+    <p class="protocole">Toujours bloqué ? Relis le bloc → demande au voisin (il explique, il ne touche pas ta souris) → sonne la cloche 🔔, en haut à droite, et continue ce qui reste possible.</p>
+  </details>
+
+  <section id="aide" aria-label="Demander de l’aide"><button id="aide-btn" type="button" aria-label="J'attends de l'aide" title="Tu as relu « Ça coince ? » et demandé au voisin ? Sonne.">🔔<span class="mot">J'attends de l'aide</span></button><p id="aide-texte">Tu as relu « Ça coince ? » et demandé au voisin ? Sonne.</p></section>
+  <div id="bravo" role="status" aria-live="polite"></div>
+
+  <div class="actions">
+    <button class="btn vide" type="button" id="memo-btn">📌 Les repères</button>
+  </div>
+
+  <footer><span id="pied"></span><span class="auteur">M. Louviaux</span></footer>
+</div>
+
+<dialog id="memo">
+  <h3>📌 Les repères</h3>
+  <div class="encart" style="margin-top:10px">
+    <table><tr><th>À l’écran</th><th>Ce que ça veut dire</th></tr><tr><td><b>Gras</b> dans la liste</td><td>un message non lu</td></tr><tr><td>Courrier indésirable</td><td>le dossier des spams : je n’y ouvre rien</td></tr><tr><td>Cc</td><td>une copie que tout le monde voit</td></tr><tr><td>Cci</td><td>une copie cachée : les autres ne voient pas l’adresse</td></tr></table></div><div class="encart" style="margin-top:10px"><table><tr><th>Je quitte mon poste</th><th>Le chemin</th></tr><tr><td>🔒 Une pause</td><td>Ctrl + Alt + Delete ▸ Verrouiller</td></tr><tr><td>🚪 La fin de l’heure</td><td>Touche Windows ⊞ ▸ mon prénom ▸ Se déconnecter</td></tr></table><p class="note">Un message qui demande mon mot de passe : je ne clique pas, je le signale.</p>
+  </div>
+  <form method="dialog" class="actions" style="margin-top:14px"><button class="btn plein">Fermer</button></form>
+</dialog>
+
+<!-- Ordre : sequence-eleve (différé), fiche.js (les données), phrase-fin, blocs.js (le moteur). -->
+<script defer src="https://root75.github.io/campin-public/pas-a-pas/sequence-eleve.js?v=ecrans-20261105"></script>
+<script src="https://root75.github.io/campin-public/messagerie-3/pas-a-pas/fiche.js?v=20261112"></script>
+<script src="https://root75.github.io/campin-public/pas-a-pas/phrase-fin.js?v=20261106"></script>
+<script src="https://root75.github.io/campin-public/pas-a-pas/cloche.js?v=cloche-20261109"></script>
+<script src="https://root75.github.io/campin-public/pas-a-pas/blocs.js?v=cases-20261112"></script>
+</body>
+</html>

@@ -12,8 +12,15 @@
       "id": "messagerie-2",
       "titre": "Messagerie 02 — Je réponds, je joins, je transfère",
       "chemin": "messagerie-2/pas-a-pas/",
-      "etapes": 10,
+      "etapes": 11,
       "preuves": "messagerie-2/pas-a-pas/preuves.json"
+    },
+    {
+      "id": "messagerie-3",
+      "titre": "Messagerie 03 — Bien communiquer en ligne",
+      "chemin": "messagerie-3/pas-a-pas/",
+      "etapes": 9,
+      "preuves": "messagerie-3/pas-a-pas/preuves.json"
     },
     {
       "id": "python-1",

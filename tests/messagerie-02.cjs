@@ -42,7 +42,7 @@ proofs.blocs.forEach((l,i)=>{
 });
 // Viser « j'ai compris », pas « j'ai fini » (10/11/2026) : plus aucun QCM ; les étapes 1 et 2 s'expliquent (texte à trous + phrase).
 assert.ok(proofs.blocs.every(l=>l.every(v=>v.type!=='qcm')),'aucun QCM');
-assert.deepEqual(proofs.blocs.map(l=>l[0].type),['trous','trous','saisie','saisie','saisie','saisie','saisie','saisie','saisie','saisie']);
+assert.deepEqual(proofs.blocs.map(l=>l[0].type),['trous','trous','saisie','saisie','saisie','saisie','saisie','saisie','saisie','saisie','saisie']);
 // Chaque saisie accepte ce qu'un élève écrit vraiment (plusieurs façons), et refuse les réponses des deux autres variantes.
 const BONS={
   4:[['Word','word','Word dans le navigateur','Microsoft Word'],['Enregistré sur OneDrive','enregistre sur onedrive'],['Pièces jointes','OneDrive › Pièces jointes','pieces jointes']],
@@ -50,9 +50,10 @@ const BONS={
   6:[['RE:','RE','re :','Re:'],['À','A','la ligne À','dans la ligne À','le champ À'],['au-dessus','Au-dessus du message','au dessus','avant le message','en haut']],
   7:[['Joindre','joindre','Joindre une copie'],['Ma fiche a completer.docx','Ma fiche à compléter.docx'],['Pièces jointes','Fichiers ▸ Pièces jointes','pieces jointes']],
   9:[['Éléments envoyés','elements envoyes','Éléments envoyés.'],['Brouillons','brouillon','dans Brouillons'],['le trombone','trombone','Un trombone']],
-  10:[['TR:','TR','tr :'],['Ma fiche a completer.docx'],['Cc','CC','la ligne Cc','dans Cc']]
+  10:[['TR:','TR','tr :'],['Ma fiche a completer.docx'],['Cc','CC','la ligne Cc','dans Cc']],
+  11:[['ana.dubois@arcampin.be','Ana.Dubois@arcampin.be'],['Enregistrer','enregistrer','sur Enregistrer','le bouton Enregistrer'],['Contacts','contacts','Contact','l’application Contacts','dans Contacts']]
 };
-const MAUVAIS={6:[null,['Cc','Objet'],['en dessous','sous le message','au-dessous','en bas']],7:[['Partager le lien','Joindre le lien'],null,null],10:[['RE:'],null,['À','Objet']],9:[null,['Éléments envoyés'],null]};
+const MAUVAIS={6:[null,['Cc','Objet'],['en dessous','sous le message','au-dessous','en bas']],7:[['Partager le lien','Joindre le lien'],null,null],10:[['RE:'],null,['À','Objet']],9:[null,['Éléments envoyés'],null],11:[['ana.dubois@arcampin.com','ana dubois@arcampin.be','ana.dubois@gmail.com'],['Annuler','Nouveau contact'],['Courrier','Calendrier']]};
 for(const [n,listes] of Object.entries(BONS)){
   const l=proofs.blocs[n-1];
   listes.forEach((bons,k)=>{
