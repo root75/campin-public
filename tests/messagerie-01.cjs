@@ -90,5 +90,5 @@ assert.ok(/function casesAGestes\(z,e\)/.test(s) && /z\.innerHTML=h;\n casesAGes
 /* Étape 9 → 10 (12/11/2026) : la question du professeur est recopiée, puis rappelée ; « n'envoie pas » en avertissement. */
 assert.notEqual(verifie('questionProf',{...good,questionProf:''}),'','étape 9 : la question recopiée est demandée');
 assert.equal(verifie('questionProf',{...good,questionProf:'Quel est ton sport préféré ?'}),'','étape 9 : une question recopiée passe');
-assert.ok(/rappel-question/.test(s)&&/class=\\"attention\\">⚠️/.test(s),'étape 10 : rappel de la question et avertissement ⚠️');
+assert.ok(/rappel-question/.test(s)&&/class="attention">⚠️/.test(s),'étape 10 : rappel de la question et avertissement ⚠️');
 assert.ok(/DEMOS_ETAPES=\{9:\{'6':\['nouveau'\]\}\}/.test(s),'étape 10 : démo Nouveau message sous la case Objet');
