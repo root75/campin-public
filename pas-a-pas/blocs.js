@@ -259,7 +259,7 @@ function pause(z){
   nav.append(avant);
   /* Les prolongements vivent hors du fil des blocs (<details id="plus-loin"> de la page) : l'attente y mène. */
   const loin = document.getElementById("plus-loin");
-  if(loin){ const b = txt("button","btn vide","⚡ En attendant : un prolongement"); b.type = "button";
+  if(loin){ loin.hidden = false; const b = txt("button","btn vide","⚡ En attendant : un prolongement"); b.type = "button";
     b.addEventListener("click",()=>{ loin.open = true; loin.scrollIntoView({ behavior:"smooth", block:"start" }); }); nav.append(b); }
   z.append(nav);
   document.body.dataset.pret = "1";
@@ -289,6 +289,8 @@ function affiche(){
   const liste = document.getElementById("coince-liste"); liste.replaceChildren();
   document.getElementById("coince").open = false;
   if(typeof DemoLecteur!=="undefined" && DemoLecteur.arrete) DemoLecteur.arrete();
+  /* Les prolongements (#plus-loin) ne s'affichent que lorsqu'on attend (cadenas) ou qu'on a fini (Vincent, 12/11/2026). */
+  const loin = document.getElementById("plus-loin"); if(loin){ loin.hidden = true; loin.open = false; }
   if(enPause()){ pause(z); return; }
   if(ici >= BLOCS.length){ fin(z); return; }
   const B = blocVu(ici);
@@ -816,6 +818,7 @@ function redaction(zone, Q, reussi, rate, juge){
 function citation(c){ return typeof PhraseFin!=="undefined" ? PhraseFin.figure(c) : null; }
 
 function fin(z){
+  const loin = document.getElementById("plus-loin"); if(loin) loin.hidden = false;
   z.append(txt("h2",null,FIN.titre), txt("p",null,FIN.texte));
   if(FIN.revision){
     const revision=el("div","encart"),lien=txt("a","btn vide",FIN.revision.titre);

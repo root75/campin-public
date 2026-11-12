@@ -50,9 +50,13 @@ assert.ok((page.match(/class="attention"/g)||[]).length>=6,'les interdictions de
 
 // Les prolongements vivent hors du fil des blocs, dans <details id="plus-loin">.
 assert.ok(!/Prolongement/.test(JSON.stringify(F.BLOCS)),'plus de prolongement dans les blocs');ok();
-const loin=page.slice(page.indexOf('<details id="plus-loin">'),page.indexOf('</details>',page.indexOf('<details id="plus-loin">')));
+const loin=page.slice(page.indexOf('<details id="plus-loin" hidden>'),page.indexOf('</details>',page.indexOf('<details id="plus-loin" hidden>')));
 assert.ok(loin.length>100&&/Après la mission 1/.test(loin)&&/Après la mission 3/.test(loin));ok();
 assert.ok(page.indexOf('id="plus-loin"')>page.indexOf('id="bloc"'),'sous le bloc, pas dedans');ok();
+// Caché pendant le travail ; le moteur l'affiche à l'écran du cadenas et à la fin.
+assert.ok(/<details id="plus-loin" hidden>/.test(page));ok();
+// Le Banc d'essai, toujours à portée de clic en tête de fiche (reprise en cours de mission).
+assert.ok(/<div class="actions">[^\n]*essai-charge\.html[^\n]*Banc d’essai/.test(page),'Banc d’essai en tête');ok();
 
 // Rappels : chaque information rappelée a été demandée plus tôt, par un champ qui existe.
 const champs={};F.BLOCS.forEach((B,i)=>{const q=B.q.type==='enquete'?B.q:null;if(q)champs[i+1]=q.champs.map(c=>c.cle);});
