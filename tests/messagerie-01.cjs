@@ -27,6 +27,12 @@ assert.match(verifie('reponse',{...good,reponse:'bonjour camille, je pratique le
 (async()=>{vm.runInContext('preuves='+JSON.stringify(proofs)+';Object.assign(state,'+JSON.stringify(good)+');',x);await vm.runInContext('valideServeur(0)',x);assert.ok(s.includes('dejaValide.get(e)===reponse'));assert.ok(s.includes('document.getElementById(\'suivant\').disabled)return'));assert.ok(s.includes("actuel?.q!==q.q"));console.log('OK : validations des champs, 12 preuves locales/serveur, réponses incorrectes rejetées.');})().catch(e=>{console.error(e);process.exitCode=1});
 
 // Reprise au bloc 8 sur un autre poste : sans brouillon local, le prénom et le nom se redemandent au bloc 8.
+/* Étape 8 (12/11/2026) : tous les critères manquants sont donnés ensemble, pas un par un. */
+{const crit=vm.runInContext('criteresReponse',x);
+ const tous=crit({...good,reponse:'bonjour, je pratique le dessin tous les mercredis après-midi.'}).filter(c=>c.err);
+ assert.equal(tous.length,4,'étape 8 : salutation, fin, signature et classe signalées en même temps');
+ assert.equal(crit(good).filter(c=>c.err).length,0,'étape 8 : une bonne réponse coche les cinq critères');
+ assert.ok(/criteresReponse\(\)\.filter\(c=>c\.err\)/.test(s),'étape 8 : Vérifier affiche toute la liste');}
 assert.ok(/nomSiManquant\(\)\+champ\('reponse'/.test(s), 'bloc 8 : la case prénom et nom apparaît quand le brouillon manque');
 assert.match(verifie('reponse',{...good,nom:'',reponse:'Bonjour Camille, je pratique le dessin le mercredi. Bonne journée, Lina Dupont, 2B'}),/juste au-dessus de ta réponse/);
 
