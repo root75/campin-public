@@ -140,7 +140,7 @@ const FIN = {
   titre:'Bravo : tu sais ouvrir, répondre, joindre et transférer',
   bulle:'Parcours terminé !',
   texte:'Ton professeur a reçu ta réponse (cotée sur 5) et ton transfert en copie. Ton voisin est dans tes contacts.',
-  revision:{titre:'Je réponds et je joins — je révise ↗', texte:'Un quiz de 5 questions et 15 cartes pour réviser.', url:'https://root75.github.io/campin-public/messagerie-2/'},
+  revision:{titre:'Je réponds et je joins — je révise ↗', texte:'Un quiz de 6 questions, 18 cartes, et ta fiche de révision à imprimer.', url:'https://root75.github.io/campin-public/messagerie-2/'},
   citation:{texte:'Verba volant, scripta manent.', auteur:'Proverbe latin', source:'« Les paroles s’envolent, les écrits restent. »', lien:'Un mail envoyé reste : on le relit avant de cliquer sur Envoyer.'},
   plus:'Ajoute un deuxième camarade dans tes contacts, comme au bloc 11. Si ton professeur te le propose, deviens aidant : va voir un camarade qui a sonné la cloche 🔔, explique avec des mots, ne touche pas sa souris.',
   lien:'<a href="https://root75.github.io/campin-public/messagerie-2/" target="_blank" rel="noopener">la page « Je réponds et je joins »</a>'

@@ -206,7 +206,7 @@ function dessine(d){
     const td = (cls,t) => { const c=txt("td",cls,t); tr.append(c); return c; };
     const n1 = td("nom", nom(e.email)); n1.title = e.email;
     if(d._classes){ const c = txt("span","qui"," · "+e.classe); c.style.cssText = "color:var(--doux);font-weight:400"; n1.append(c); }
-    if(SUIVI&&(e._d||d).reprisesParSuivi&&(e._d||d).peutReprendre){const cours=$("cours").value,seance=e._seance||choisie();const r=txt("button","btn vide","Recommencer");r.type="button";r.setAttribute("aria-label","Faire recommencer "+nom(e.email));r.addEventListener("click",()=>{if(!confirm("Faire recommencer ce cours à "+nom(e.email)+" ? L’historique est conservé."))return;r.disabled=true;google.script.run.withSuccessHandler(()=>{charge();}).withFailureHandler(err=>{r.disabled=false;erreur(err);}).noter(cours,{type:'prof-reprise',email:e.email,debut:seance.debut});});n1.append(r);}
+    if(SUIVI&&(e._d||d).reprisesParSuivi&&(e._d||d).peutReprendre){const cours=$("cours").value,seance=e._seance||choisie();const r=txt("button","btn vide","Recommencer");r.type="button";r.setAttribute("aria-label","Faire recommencer "+nom(e.email));r.addEventListener("click",()=>{choisirEtape(nom(e.email),NB_BLOCS[cours]||n,e.atteint).then(bloc=>{if(!bloc)return;r.disabled=true;google.script.run.withSuccessHandler(()=>{charge();}).withFailureHandler(err=>{r.disabled=false;erreur(err);}).noter(cours,{type:'prof-reprise',email:e.email,debut:seance.debut,bloc:bloc});});});n1.append(r);}
     n1.append(caseRecompense(e));
     const h = td("hum", e.humeur ? e.humeur.split(" ")[0] : ""); if(e.humeur) h.title = e.humeur;
     const b = txt("div","barre");
@@ -861,3 +861,25 @@ else ouvreVueProf(Object.fromEntries(new URLSearchParams(location.search)));
 
 
 
+
+/* « Recommencer » : une petite fenêtre demande à quelle étape l'élève reprend. Les étapes d'avant restent validées ;
+   celle-ci et les suivantes sont à refaire. Rend le numéro choisi, ou 0 si on annule. */
+function choisirEtape(qui, n, atteint){
+  let d = document.getElementById("dlg-reprise");
+  if(!d){
+    d = document.createElement("dialog"); d.id = "dlg-reprise";
+    d.innerHTML = '<form method="dialog"><h2>Faire recommencer</h2><p id="dlg-reprise-qui"></p>'
+      +'<label>Reprendre à l’étape <select id="dlg-reprise-etape" aria-label="Étape de reprise"></select></label>'
+      +'<p class="astuce" id="dlg-reprise-effet"></p>'
+      +'<div class="reglages"><button class="btn" value="ok">Recommencer</button><button class="btn vide" value="annuler" formnovalidate>Annuler</button></div></form>';
+    document.body.append(d);
+  }
+  const sel = d.querySelector("#dlg-reprise-etape"), effet = d.querySelector("#dlg-reprise-effet");
+  sel.replaceChildren(...Array.from({length:n},(_,i)=>{ const o = txt("option",null,"Étape "+(i+1)+(i+1<=atteint ? " ✓" : "")); o.value = i+1; return o; }));
+  sel.value = "1";
+  const dit = () => { const k = Number(sel.value);
+    effet.textContent = (k>1 ? "Les étapes 1 à "+(k-1)+" restent validées. " : "")+"L’étape "+k+" et les suivantes sont à refaire. L’historique est conservé."; };
+  sel.onchange = dit; dit();
+  d.querySelector("#dlg-reprise-qui").textContent = qui+" : jusqu’ici, "+Math.min(atteint,n)+" étape(s) validée(s) sur "+n+".";
+  return new Promise(ok => { d.onclose = () => ok(d.returnValue==="ok" ? Number(sel.value) : 0); d.returnValue = ""; d.showModal(); });
+}
