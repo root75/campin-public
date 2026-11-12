@@ -53,10 +53,10 @@ Machine / système / application / fichier — /2
 2 : quatre rôles distingués à l’oral dans le cas ; 1 : distinction partielle ; 0 : confusion persistante.
 
 Identification et nom du fichier — /2
-1 : titre, prénom/nom, classe/date présents ; 1 : nom LABO07_CoulissesPC_Prenom_Nom respecté.
+1 : prénom/nom, classe/date présents ; 1 : nom LABO07_CoulissesPC_Prenom_Nom respecté.
 
-Titres et tableau — /2
-1 : même style de titre pour les quatre parties ; 1 : vrai tableau 3×5, lisible, lignes et unités identifiées.
+Mise en page et tableau — /2
+1 : titre du document mis en forme (centré, gras, plus grand) et quatre parties dans le même style Titre 1 ; 1 : vrai tableau 3×5, lisible, lignes et unités identifiées.
 
 Capture et remise — /2
 1 : capture utile, lisible, proportionnée, avec légende explicative ; 1 : bon document joint, remise confirmée dans Classroom.

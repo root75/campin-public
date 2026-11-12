@@ -596,7 +596,7 @@ const BLOCS = [
       "etiquette": "Mon hypothèse et mon test",
       "colle": true
     },
-    "extra": "<p class=\"attention\">⚠️ Ne coupe pas le réseau et ne ferme pas Windows : ce ne sont pas des tests sans risque.</p><p class=\"encart\">Proposition de travail quotidien /20 : enquête /14 (hypothèse 2, test 4, preuve 2, conclusion 4, distinction 2) · document et remise /6 (identification et nom 2, styles et tableau 2, capture légendée et remise vérifiée 2). Les aides restent accessibles ; leur utilisation n’est pas une pénalité de vitesse.</p>"
+    "extra": "<p class=\"attention\">⚠️ Ne coupe pas le réseau et ne ferme pas Windows : ce ne sont pas des tests sans risque.</p><p class=\"encart\">Proposition de travail quotidien /20 : enquête /14 (hypothèse 2, test 4, preuve 2, conclusion 4, distinction 2) · document et remise /6 (identification et nom 2, mise en page et tableau 2, capture légendée et remise vérifiée 2). Les aides restent accessibles ; leur utilisation n’est pas une pénalité de vitesse.</p>"
   },
   {
     "partie": "Final — Situation individuelle nouvelle",
@@ -638,7 +638,7 @@ const BLOCS = [
     "titre": "Remettre mon rapport dans Classroom",
     "min": 5,
     "veux": "Remettre une seule fois mon rapport terminé, puis vérifier qu’il est bien arrivé.",
-    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\"><span>Relis ton rapport : remplace chaque « [à compléter] » et efface les indications entre crochets.</span></label></li><li><label><input type=\"checkbox\"><span>Vérifie les trois exigences (/6) : titre visible, prénom, nom, classe et date, fichier nommé <b><span data-rappel=\"rapport\">LABO07_CoulissesPC_Prenom_Nom</span></b> ; même style pour les quatre titres de partie et un vrai tableau de 3 colonnes et 5 lignes, avec % dans les en-têtes ; capture ciblée, lisible, pas étirée, légende juste dessous.</span></label></li><li><label><input type=\"checkbox\"><span>Ouvre <a href=\"https://classroom.google.com/\" target=\"_blank\" rel=\"noopener\">Classroom</a> avec ton compte scolaire ▸ le cours d’informatique de ta classe ▸ Travaux et devoirs ▸ Labo 07 — Dans les coulisses du PC ▸ Afficher les instructions.</span></label><p class=\"attention\">⚠️ Ne poste pas ton rapport dans le flux du cours : il est joint au devoir, dans « Vos devoirs ».</p></li><li><label><input type=\"checkbox\"><span>Dans « Vos devoirs », ton rapport est déjà joint depuis l’étape 1 : clique dessus pour vérifier que c’est le bon, et qu’il est complet. Pas joint ? Ajouter ou créer ▸ Google Drive ▸ <b><span data-rappel=\"rapport\">LABO07_CoulissesPC_Prenom_Nom</span></b> ▸ le bouton bleu.</span></label></li><li><label><input type=\"checkbox\"><span>Clique sur Rendre le devoir ▸ confirme : Rendre le devoir.</span></label></li><li><label><input type=\"checkbox\"><span>Vérifie que le devoir affiche « Remis ».</span></label></li></ol>",
+    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\"><span>Relis ton rapport : remplace chaque « [à compléter] » et efface les indications entre crochets.</span></label></li><li><label><input type=\"checkbox\"><span>Vérifie les trois exigences (/6) : prénom, nom, classe et date, fichier nommé <b><span data-rappel=\"rapport\">LABO07_CoulissesPC_Prenom_Nom</span></b> ; titre du document centré, en gras, plus grand, les quatre parties en Titre 1 et un vrai tableau de 3 colonnes et 5 lignes, avec % dans les en-têtes ; capture ciblée, lisible, pas étirée, légende juste dessous.</span></label></li><li><label><input type=\"checkbox\"><span>Ouvre <a href=\"https://classroom.google.com/\" target=\"_blank\" rel=\"noopener\">Classroom</a> avec ton compte scolaire ▸ le cours d’informatique de ta classe ▸ Travaux et devoirs ▸ Labo 07 — Dans les coulisses du PC ▸ Afficher les instructions.</span></label><p class=\"attention\">⚠️ Ne poste pas ton rapport dans le flux du cours : il est joint au devoir, dans « Vos devoirs ».</p></li><li><label><input type=\"checkbox\"><span>Dans « Vos devoirs », ton rapport est déjà joint depuis l’étape 1 : clique dessus pour vérifier que c’est le bon, et qu’il est complet. Pas joint ? Ajouter ou créer ▸ Google Drive ▸ <b><span data-rappel=\"rapport\">LABO07_CoulissesPC_Prenom_Nom</span></b> ▸ le bouton bleu.</span></label></li><li><label><input type=\"checkbox\"><span>Clique sur Rendre le devoir ▸ confirme : Rendre le devoir.</span></label></li><li><label><input type=\"checkbox\"><span>Vérifie que le devoir affiche « Remis ».</span></label></li></ol>",
     "vois": "Dans Classroom, le devoir affiche « Remis » et la pièce jointe est mon rapport complet.",
     "coince": [
       "Le devoir n’apparaît pas ? Le professeur ne l’a peut-être pas encore publié. Ne crée pas de deuxième document, ne poste rien dans le flux : sonne la cloche 🔔 et attends.",
@@ -689,7 +689,7 @@ const BLOCS = [
         "Le devoir affiche « Remis »."
       ]
     },
-    "extra": "<p class=\"note\">Ces trois vérifications valent 6 points sur 20 : identification et nom /2, titres et tableau /2, capture et remise /2.</p>"
+    "extra": "<p class=\"note\">Ces trois vérifications valent 6 points sur 20 : identification et nom /2, mise en page et tableau /2, capture et remise /2.</p>"
   }
 ];
 
