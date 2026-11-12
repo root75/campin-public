@@ -1,5 +1,5 @@
 {
- "_lisezmoi": "Messagerie 03 (version 2026-11-12). Une liste par étape, variante 1 d’abord. Trois variantes par étape, tirées par élève côté serveur (règle anti-recopie), chacune avec sa bonne réponse. Étapes 1, 3, 5, 7, 9 : texte à trous (mots = le bon mot de chaque trou dans l’ordre, pieges = les intrus) ; phrase libre non jugée aux étapes 1, 5 et 9, la même pour les trois variantes. Étapes 2 et 6 : saisie de ce que l’élève lit sur SON écran (regle sur la réponse sans accents, sans majuscules et sans points). Étapes 4 et 8 : QCM, c[0] la bonne, p[k] explique le piège k.",
+ "_lisezmoi": "Messagerie 03 (version 2026-11-12, libellés du clic droit relevés à l’écran le 12/11). Une liste par étape, variante 1 d’abord. Trois variantes par étape, tirées par élève côté serveur (règle anti-recopie), chacune avec sa bonne réponse. Étapes 1, 3, 5, 7, 9 : texte à trous (mots = le bon mot de chaque trou dans l’ordre, pieges = les intrus) ; phrase libre non jugée aux étapes 1, 5 et 9, la même pour les trois variantes. Étapes 2 et 6 : saisie de ce que l’élève lit sur SON écran (regle sur la réponse sans accents, sans majuscules et sans points). Étapes 4 et 8 : QCM, c[0] la bonne, p[k] explique le piège k.",
  "blocs": [
   [
    {
@@ -66,11 +66,11 @@
    },
    {
     "type": "saisie",
-    "q": "Regarde la liste : comment est écrit l’objet d’un message non lu ? Écris le mot.",
+    "q": "Regarde la liste : de quelle couleur est la barre, à gauche d’un message non lu ? Écris la couleur.",
     "regle": {
-     "motif": "^(en )?gras$"
+     "motif": "^(en )?bleue?$"
     },
-    "faux": "Compare un message lu et un message non lu : l’objet du non lu est plus épais.",
+    "faux": "Compare un message lu et un message non lu : le non lu a une barre de couleur tout à gauche.",
     "aide": "Compare un message lu et un message non lu, dans la liste."
    },
    {
@@ -103,7 +103,7 @@
    {
     "type": "trous",
     "q": "Complète avec les mots de la banque.",
-    "texte": "Un message douteux dans ma Boîte de réception : je ne clique sur aucun ___. Clic droit ▸ Signaler ▸ ___ comme courrier indésirable.",
+    "texte": "Un message douteux dans ma Boîte de réception : je ne clique sur aucun ___. Clic droit ▸ ___ du courrier indésirable.",
     "mots": [
      "lien",
      "Signaler"

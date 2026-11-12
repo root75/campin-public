@@ -6,7 +6,7 @@
 const COURS = 'messagerie-3';
 const VERSION_PARCOURS = 'v1';
 const PRESENTATION = 'missions';
-const PREUVES = 'https://root75.github.io/campin-public/messagerie-3/pas-a-pas/preuves.json?v=20261112';
+const PREUVES = 'https://root75.github.io/campin-public/messagerie-3/pas-a-pas/preuves.json?v=droit-20261112';
 const HORS_SUIVI = 'Entraînement libre : rien n’est transmis au professeur. En classe, ouvre Mes cours avec ton compte scolaire.';
 
 /* Un message d'exemple « De : … · Objet : … · Texte : … » affiché comme dans une boîte. */
@@ -17,6 +17,9 @@ function carteMail(t){
 }
 
 const REEL = '<p class="reel"><span>Ici, <b>tout est réel</b> : tu travailles dans Outlook. Garde deux onglets : cette fiche et Courrier.</span> <a class="btn vide" href="https://outlook.cloud.microsoft/mail/" target="_blank" rel="noopener">Ouvrir Courrier ↗</a></p>';
+/* Le clic droit, mis en évidence partout : beaucoup d'élèves confondent les deux boutons de la souris. */
+const DROIT = '<span class="droit">🖱️ clic <b>DROIT</b></span>';
+const AIDE_DROIT = 'Le clic DROIT : le bouton de DROITE de la souris, sous ton majeur. Le menu s’ouvre à côté du pointeur. Sur un pavé tactile : appuie avec deux doigts.';
 const OUVRIR = 'Ouvre Courrier : le bouton ci-dessus, ou barre de favoris ▸ <b>Favoris du domaine arcampin.com</b> ▸ <b>Microsoft 365</b> ▸ <b>Courrier</b>.';
 
 const BLOCS = [
@@ -30,21 +33,23 @@ const BLOCS = [
  {partie:'B — Ma boîte de réception', titre:'Lu ou non lu ?', min:5,
   veux:'Repérer les messages que je n’ai pas encore lus, et garder un message à lire plus tard.',
   avant:REEL,
-  gestes:[OUVRIR,'À gauche, clique sur <b>Boîte de réception</b>.','Regarde la liste : un message <b>non lu</b> a son objet écrit en <b>gras</b>.','Clic droit sur un message que tu as déjà lu ▸ <b>Marquer comme non lu</b>.','Regarde : son objet repasse en gras.','Clic droit sur le même message ▸ <b>Marquer comme lu</b>.'],
+  gestes:[OUVRIR,'À gauche, clique sur <b>Boîte de réception</b>.','Regarde la liste : un message <b>non lu</b> est en <b>gras</b>, avec une <b>barre bleue</b> à gauche.',DROIT+' sur un message que tu as déjà lu ▸ <b>Marquer comme non lu</b>.','Regarde : il repasse en gras, avec la barre bleue.',DROIT+' sur le même message ▸ <b>Marquer comme lu</b>.'],
+  demos:{'4':['nonlu']},
   vois:'Je sais rendre un message non lu, puis lu.',
-  coince:['Je ne vois pas « Marquer comme non lu » : fais le clic droit sur le message lui-même, dans la liste, pas dans le volet de lecture.','Tous mes messages sont en gras : tu ne les as pas encore ouverts. Ouvre-en un, puis recommence.'],
+  coince:[AIDE_DROIT,'Je ne vois pas « Marquer comme non lu » : fais le clic droit sur le message lui-même, dans la liste, pas dans le volet de lecture.','Tous mes messages sont en gras : tu ne les as pas encore ouverts. Ouvre-en un, puis recommence.'],
   q:{serveur:true}},
  {partie:'B — Ma boîte de réception', titre:'Le spam et le courrier indésirable', min:5,
   veux:'Savoir où Outlook range les messages douteux, et ne pas me faire avoir.',
-  avant:'<aside class="repere"><h3>📮 Le spam</h3><p>Un <b>spam</b>, c’est un message envoyé à des milliers de personnes : publicité, faux cadeau, arnaque. Outlook le range souvent tout seul dans le dossier <b>Courrier indésirable</b>.</p><p>Un spam est arrivé dans ta Boîte de réception ? Clic droit dessus ▸ <b>Signaler</b> ▸ <b>Signaler comme courrier indésirable</b>.</p></aside>',
-  gestes:['Dans Courrier, à gauche, clique sur <b>Courrier indésirable</b>.','Regarde la liste. Vide ? Tant mieux. Des messages ? N’en ouvre aucun.','Ne clique sur aucun lien, n’ouvre aucune pièce jointe de ce dossier.','Retourne dans <b>Boîte de réception</b>.'],
+  avant:'<aside class="repere"><h3>📮 Le spam</h3><p>Un <b>spam</b>, c’est un message envoyé à des milliers de personnes : publicité, faux cadeau, arnaque. Outlook le range souvent tout seul dans le dossier <b>Courrier indésirable</b>.</p><p>Un spam est arrivé dans ta Boîte de réception ? '+DROIT+' dessus ▸ <b>Signaler du courrier indésirable</b>.</p></aside>',
+  gestes:['Dans Courrier, à gauche, clique sur <b>Courrier indésirable</b>.','Regarde la liste. Vide ? Tant mieux. Des messages ? N’en ouvre aucun.','Ne clique sur aucun lien, n’ouvre aucune pièce jointe de ce dossier.','Ouvre l’animation ci-dessous : où est « Signaler du courrier indésirable » dans le menu du '+DROIT+' ? Ne signale pas un vrai message.','Retourne dans <b>Boîte de réception</b>.'],
+  demos:{'4':['signaler']},
   vois:'Je sais où est le dossier Courrier indésirable, et je n’y ai rien ouvert.',
-  coince:['Je ne vois pas Courrier indésirable : dans la colonne des dossiers, à gauche, sous Éléments supprimés. Si la colonne est repliée, clique sur les trois traits ☰ en haut à gauche.','Un message de mon professeur est dans Courrier indésirable : ne fais rien, montre-le-lui à la fin du cours.'],
+  coince:[AIDE_DROIT,'Je ne vois pas Courrier indésirable : dans la colonne des dossiers, à gauche, sous Éléments supprimés. Si la colonne est repliée, clique sur les trois traits ☰ en haut à gauche.','Un message de mon professeur est dans Courrier indésirable : ne fais rien, montre-le-lui à la fin du cours.'],
   q:{serveur:true}},
  {partie:'B — Ma boîte de réception', titre:'Le message qui veut mon mot de passe', min:5,
   veux:'Reconnaître un message piège qui veut voler mon compte : on l’appelle l’hameçonnage.',
   avant:'<aside class="repere exemple"><h3>👀 Un exemple</h3>'+carteMail('De : Microsoft Sécurité <securite@micros0ft-compte.com> · Objet : Ton compte sera bloqué ce soir ! · Texte : Clique ici et tape ton mot de passe pour garder ton compte.')+'<p>Lis l’<b>adresse</b> lettre par lettre. Puis lis ce que le message te <b>demande</b>.</p></aside>',
-  essai:{q:'Ce message vient-il vraiment de Microsoft ?', choix:[['Oui, c’est écrit Microsoft','Attention : n’importe qui peut écrire « Microsoft » comme nom. Regarde l’adresse.'],['Non, c’est un piège','Bien vu.'],['Je ne sais pas','Normal : voici comment on décide.']], apres:'<p><b>① L’adresse :</b> micros<b>0</b>ft, avec un <b>zéro</b> à la place du o. Ce n’est pas Microsoft.</p><p><b>② La demande :</b> ton mot de passe, et vite. Personne de sérieux ne demande ton mot de passe par message.</p><p><b>Donc :</b> je ne clique pas, je le signale (clic droit ▸ Signaler ▸ Signaler l’hameçonnage), et je le montre à mon professeur.</p>', suite:'👉 À toi'},
+  essai:{q:'Ce message vient-il vraiment de Microsoft ?', choix:[['Oui, c’est écrit Microsoft','Attention : n’importe qui peut écrire « Microsoft » comme nom. Regarde l’adresse.'],['Non, c’est un piège','Bien vu.'],['Je ne sais pas','Normal : voici comment on décide.']], apres:'<p><b>① L’adresse :</b> micros<b>0</b>ft, avec un <b>zéro</b> à la place du o. Ce n’est pas Microsoft.</p><p><b>② La demande :</b> ton mot de passe, et vite. Personne de sérieux ne demande ton mot de passe par message.</p><p><b>Donc :</b> je ne clique pas, je le signale ('+DROIT+' ▸ <b>Signaler un hameçonnage</b>), et je le montre à mon professeur.</p>', suite:'👉 À toi'},
   vois:'Je sais dire pourquoi un message est un piège : l’adresse, la demande, l’urgence.',
   coince:['L’hameçonnage, c’est comme la pêche : le message est l’hameçon, ton mot de passe est le poisson.','J’ai déjà cliqué et tapé mon mot de passe : préviens ton professeur tout de suite, il faut le changer.'],
   q:{serveur:true}},
@@ -78,7 +83,7 @@ const BLOCS = [
   q:{serveur:true}},
  {partie:'D — Je quitte mon poste', titre:'Et sur l’ordinateur de quelqu’un d’autre ?', min:5,
   veux:'Ne laisser aucune trace de mon compte sur un ordinateur partagé : chez un ami, à la bibliothèque.',
-  avant:'<aside class="repere"><h3>🏫 À l’école</h3><p>Ton profil Chrome est à toi. <b>Ne te déconnecte pas d’Outlook</b> : tu serais déconnecté de tout (Drive, Word…). En fin d’heure, tu te déconnectes de <b>Windows</b>.</p></aside><aside class="repere"><h3>🏠 Sur l’ordinateur de quelqu’un d’autre</h3><ul><li>Chrome propose d’enregistrer ton mot de passe ? Clique sur <b>Jamais</b>.</li><li>Avant de partir : dans Courrier, clique sur <b>le rond de ton compte</b>, en haut à droite ▸ <b>Se déconnecter</b>.</li><li>Puis ferme <b>toutes</b> les fenêtres de Chrome.</li></ul></aside>',
+  avant:'<aside class="repere"><h3>🏫 À l’école</h3><p>Ton profil Chrome est à toi. <b>Ne te déconnecte pas d’Outlook</b> : tu serais déconnecté de tout (Drive, Word…). En fin d’heure, tu te déconnectes de <b>Windows</b>.</p></aside><aside class="repere"><h3>🏠 Sur l’ordinateur de quelqu’un d’autre</h3><ul><li>Chrome propose d’enregistrer ton mot de passe ? Clique sur <b>Jamais</b>.</li><li>Avant de partir : dans Courrier, clique sur <b>le rond de ton compte</b> (tes initiales), en haut à droite ▸ <b>Se déconnecter</b>.</li><li>Puis ferme <b>toutes</b> les fenêtres de Chrome.</li></ul></aside>',
   essai:{q:'À la bibliothèque, tu as lu tes courriels. Tu fermes juste l’onglet et tu pars. Ton compte est-il protégé ?', choix:[['Oui, l’onglet est fermé','Non : le compte reste souvent connecté. Le suivant rouvre Courrier… et lit tes messages.'],['Non','Bien vu : il faut se déconnecter avant de partir.'],['Je ne sais pas','Normal : relis le deuxième encadré.']], apres:'<p>Fermer un onglet ne déconnecte pas. Sur un ordinateur partagé : <b>Se déconnecter</b>, puis fermer Chrome.</p>', suite:'👉 À toi'},
   vois:'Je sais ce que je fais avant de quitter l’ordinateur de quelqu’un d’autre.',
   coince:['Le rond de ton compte : en haut à droite de Courrier, avec tes initiales ou ta photo.'],

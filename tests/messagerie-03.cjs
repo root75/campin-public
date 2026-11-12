@@ -56,10 +56,10 @@ assert.deepEqual(proofs.blocs.map(l=>l[0].type),['trous','saisie','trous','qcm',
 
 // Chaque saisie accepte ce qu'un élève écrit vraiment, et refuse les réponses des deux autres variantes.
 const BONS={
-  2:[['Marquer','marquer'],['gras','en gras','Gras'],['Boîte de réception','boite de reception','la boîte de réception','dans la Boîte de réception']],
+  2:[['Marquer','marquer'],['bleu','bleue','en bleu','Bleu'],['Boîte de réception','boite de reception','la boîte de réception','dans la Boîte de réception']],
   6:[['Cci','CCI','la ligne Cci','dans Cci','sur la ligne Cci'],['ana.dubois@arcampin.be','Ana.Dubois@arcampin.be'],['non','Non','non, il ne la voit pas']]
 };
-const MAUVAIS={2:[['Supprimer','Marquer comme lu'],['italique','souligné','rouge'],['Courrier indésirable','Éléments envoyés']],6:[['Cc','À'],['ana.dubois@arcampin.com','ana.dubois@gmail.com','ana dubois@arcampin.be'],['oui','oui il la voit']]};
+const MAUVAIS={2:[['Supprimer','Marquer comme lu'],['gras','rouge','vert'],['Courrier indésirable','Éléments envoyés']],6:[['Cc','À'],['ana.dubois@arcampin.com','ana.dubois@gmail.com','ana dubois@arcampin.be'],['oui','oui il la voit']]};
 for(const [n,listes] of Object.entries(BONS)){
   const l=proofs.blocs[n-1];
   listes.forEach((bons,k)=>{
