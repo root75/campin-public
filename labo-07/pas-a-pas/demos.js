@@ -19,12 +19,10 @@ const Demo = (() => {
       { ecran: 'docs', lignes: [''], menu: { sous: 'm-edition', items: ['Couper', 'Copier', 'Coller', 'Coller sans mise en forme'], hi: 'Coller sans mise en forme' }, cible: 'item-Coller sans mise en forme', legende: 'Trame copiée : je clique dans la page ▸ Édition ▸ Coller sans mise en forme (Ctrl + Shift + V).' },
       { ecran: 'docs', lignes: ['Dans les coulisses du PC', 'Prénom Nom · 3F · date', '1 — Observer ce qui tourne', '…'], cible: 'enregistre', ok: 1, legende: 'La trame est là, sans mise en forme. « Enregistré » : Docs garde tout seul.' }
     ] },
-    cote: { titre: 'Mettre le cours et mon rapport côte à côte', images: [
-      { ecran: 'chrome', cible: 'ch-cours', legende: 'Deux onglets ouverts : le cours et mon rapport.' },
-      { ecran: 'chrome', menu: 1, cible: 'ch-doc', legende: 'Clic droit sur l’onglet de mon rapport.' },
-      { ecran: 'chrome', menu: 1, cible: 'item-split', legende: 'Je choisis « Ajouter l’onglet à une nouvelle vue fractionnée ».' },
-      { ecran: 'chrome', split: 1, cible: 'vol-doc', ok: 1, legende: 'Le cours à gauche, mon rapport à droite. Je clique dans le rapport pour écrire.' }
-    ] },
+    cote: DemosCommuns.vueFractionnee({ titre: 'Mettre le cours et mon rapport côte à côte', cours: '🔎 Mes cours – Labo 07', // pas-a-pas/demos-communs.js
+      coursTitre: '🔎 Mission 1', coursLignes: ['☐ Clic droit sur ⊞ Démarrer…'],
+      doc: '📄 ' + NOM, quoi: 'mon rapport', docLignes: ['1 — Observer ce qui tourne'], adresse: 'script.google.com/…',
+      fin: 'Le cours à gauche, mon rapport à droite. Je clique dans le rapport pour écrire.' }),
     gestionnaire: { titre: 'Ouvrir le Gestionnaire et lire les totaux', images: [
       { ecran: 'bureau', cible: 'demarrer', legende: 'Clic droit sur l’icône ⊞ Démarrer, en bas.' },
       { ecran: 'bureau', clicdroit: 1, cible: 'item-gest', legende: 'Je choisis « Gestionnaire des tâches » (ou Ctrl + Shift + Esc).' },
@@ -155,6 +153,7 @@ const Demo = (() => {
   }
 
   function ecran(f) {
+    const commun = DemosCommuns.ecran(f); if (commun) return commun;
     if (f.ecran === 'docs') return docs(f);
     const e = el('div', 'md md-' + f.ecran);
     if (f.ecran === 'gaufre') {
@@ -245,17 +244,6 @@ const Demo = (() => {
       if (!f.eteint) ec.append(el('span', null, '📝 Bloc-notes · 📁 Explorateur · 🌐 Mes cours'));
       m.append(ec, c(el('span', 'md-moni-bouton' + (f.eteint ? '' : ' on'), '⏻'), 'bouton'));
       e.append(m, el('div', 'md-moni-pied'), el('div', 'md-moni-pc', 'PC (unité centrale) : on n’y touche pas'));
-    }
-    if (f.ecran === 'chrome') {
-      const ong = el('div', 'md-ch-onglets');
-      const tc = c(el('span', 'md-ch-onglet actif', '🔎 Mes cours – Labo 07'), 'ch-cours');
-      const td = c(el('span', 'md-ch-onglet' + (f.split ? ' actif' : ''), '📄 ' + NOM), 'ch-doc');
-      if (f.split) { const duo = el('span', 'md-ch-duo'); duo.append(tc, td); ong.append(duo); } else ong.append(tc, td);
-      const cours = el('div', 'md-ch-vol'); cours.append(el('b', null, '🔎 Mission 1'), el('span', null, '☐ Clic droit sur ⊞ Démarrer…'), el('span', 'md-ch-barre'), el('span', 'md-ch-barre court'));
-      const corps = el('div', 'md-ch-corps' + (f.split ? ' split' : '')); corps.append(cours);
-      if (f.split) { const d = c(el('div', 'md-ch-vol md-ch-doc'), 'vol-doc'); d.append(el('b', null, '📄 ' + NOM), el('span', null, '1 — Observer ce qui tourne'), el('span', 'md-ch-barre')); corps.append(d); }
-      e.append(ong, el('div', 'md-ch-adresse', f.split ? 'Vue fractionnée : deux onglets dans la même fenêtre' : 'script.google.com/…'), corps);
-      if (f.menu) { const m = el('div', 'md-ch-menu'); [['Nouvel onglet à droite', ''], ['Ajouter l’onglet à une nouvelle vue fractionnée', 'item-split'], ['Ajouter l’onglet au groupe', ''], ['Fermer', '']].forEach(([t, id]) => m.append(c(el('div', 'md-item' + (id ? ' hi' : ''), t), id))); e.append(m); }
     }
     if (f.ecran === 'classroom') {
       const sujet = el('div', 'md-cr-sujet');

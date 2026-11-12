@@ -26,7 +26,7 @@ addEventListener("error", e => {
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,600;0,800;1,600&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
 <link rel="stylesheet" href="https://root75.github.io/campin-public/pas-a-pas/fiche.css?v=moteur-20261109">
 <link rel="stylesheet" href="https://root75.github.io/campin-public/assets/navigation.css">
-<link rel="stylesheet" href="https://root75.github.io/campin-public/pas-a-pas/python-missions.css?v=numeros-20261109">
+<link rel="stylesheet" href="https://root75.github.io/campin-public/pas-a-pas/python-missions.css?v=socle-20261112">
 <style>
 .mini-mail{display:grid;gap:2px;overflow-wrap:anywhere}.repere.exemple{display:grid;gap:8px}.repere.exemple .mini-mail{background:var(--carte);border:1px solid var(--trait);border-radius:10px;padding:8px 12px}.avant{display:grid;gap:10px}.mini-mail .texte{font-style:italic}
 .cote{margin-top:6px;border:1px solid var(--trait);border-radius:10px;padding:4px 10px;background:var(--carte)}.cote>summary{cursor:pointer;font-weight:700;color:var(--encre-bouton)}.cote ol{margin:6px 0;padding-left:1.3rem}
@@ -37,10 +37,6 @@ addEventListener("error", e => {
 .sim-retour{grid-column:1/-1;margin:0;padding:8px 10px;background:#fff8e6;border-top:1px solid #e1dfdd}.sim-retour.ok{background:var(--juste-pale)}.sim-retour.ko{background:var(--faux-pale)}
 .droit{display:inline-block;background:#fff1e6;border:2px solid #e8590c;border-radius:8px;padding:0 6px;white-space:nowrap}.droit b{color:#c2410c;letter-spacing:.04em}
 .demo-case{margin:10px 0 0 34px;border:1px solid var(--trait);border-radius:12px;padding:6px 10px;background:var(--carte)}.demo-case>summary{cursor:pointer;font-weight:700;color:var(--encre-bouton)}
-.md-outlook{display:grid;grid-template-columns:34% 1fr;min-height:270px}.md-dossiers{background:#f3f2f1;padding:10px 8px;display:grid;align-content:start;gap:4px}.md-dossier{padding:5px 8px;border-radius:6px}.md-dossier.on{background:#e1dfdd;font-weight:700}
-.md-liste{padding:8px;display:grid;align-content:start;gap:6px}.md-msg{display:grid;padding:6px 8px 6px 12px;border-bottom:1px solid #e1dfdd;border-left:4px solid transparent}.md-msg .md-de{font-weight:400}.md-msg.nonlu{border-left-color:#0f6cbd}.md-msg.nonlu .md-de,.md-msg.nonlu .md-objet{font-weight:700}.md-msg.nonlu .md-objet{color:#0f6cbd}
-.md-menu{position:absolute;left:40%;top:6px;width:min(58%,250px);background:#fff;border:1px solid #c8c6c4;border-radius:8px;box-shadow:0 6px 18px #0003;padding:4px 0;font-size:12px;z-index:3}.md-menu hr{border:0;border-top:1px solid #e1dfdd;margin:2px 0}.md-item{padding:2px 12px}.md-item.hi{background:#edebe9;font-weight:700}
-.md-souris{position:absolute;right:10px;bottom:10px;display:grid;justify-items:center;gap:2px;z-index:4;background:#fff8;border-radius:10px;padding:4px}.md-souris b{color:#c2410c;font-size:15px;letter-spacing:.06em}
 
 table.lettre{border-collapse:collapse;width:100%;font-size:1rem}table.lettre th,table.lettre td{border:1px solid var(--trait);padding:6px 8px;text-align:left;vertical-align:top}
 .reel{background:#fff4d6;border-left:5px solid #c27c0e;padding:10px 14px;border-radius:8px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
@@ -100,11 +96,12 @@ table.lettre{border-collapse:collapse;width:100%;font-size:1rem}table.lettre th,
 
 <!-- Ordre : sequence-eleve (différé), fiche.js (les données), phrase-fin, blocs.js (le moteur). -->
 <script defer src="https://root75.github.io/campin-public/pas-a-pas/sequence-eleve.js?v=ecrans-20261105"></script>
-<script src="https://root75.github.io/campin-public/pas-a-pas/demo-lecteur.js?v=numeros-20261109"></script>
-<script src="https://root75.github.io/campin-public/messagerie-3/pas-a-pas/demos.js?v=droit-20261112"></script>
-<script src="https://root75.github.io/campin-public/messagerie-3/pas-a-pas/fiche.js?v=revision-20261112"></script>
+<script src="https://root75.github.io/campin-public/pas-a-pas/demo-lecteur.js?v=sous-cases-20261112"></script>
+<script src="https://root75.github.io/campin-public/pas-a-pas/demos-communs.js?v=20261112"></script>
+<script src="https://root75.github.io/campin-public/messagerie-3/pas-a-pas/demos.js?v=cci-20261112"></script>
+<script src="https://root75.github.io/campin-public/messagerie-3/pas-a-pas/fiche.js?v=cci-20261112"></script>
 <script src="https://root75.github.io/campin-public/pas-a-pas/phrase-fin.js?v=20261106"></script>
 <script src="https://root75.github.io/campin-public/pas-a-pas/cloche.js?v=cloche-20261109"></script>
-<script src="https://root75.github.io/campin-public/pas-a-pas/blocs.js?v=cases-20261112"></script>
+<script src="https://root75.github.io/campin-public/pas-a-pas/blocs.js?v=sous-cases-20261112"></script>
 </body>
 </html>

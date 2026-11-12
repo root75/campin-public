@@ -128,5 +128,44 @@ const DemoLecteur = (() => {
     o.details.addEventListener('toggle', () => { if (!o.details.open && enCours) enCours.stop(); });
   }
 
-  return { el, c, sousAncre, lecteur, volet };
+  /* « 👀 Regarde comment faire » sous les cases — commun à tous les moteurs (blocs.js, Messagerie 01…).
+       z : la zone du bloc affiché ; demos : { "3": ["gestionnaire", [4]], "incident 2.4": ["fenetres", [3]] } ;
+       cree : le cree du lecteur du cours (Demo.cree) ; consigne : où sont les cases (le .faire du bloc par défaut).
+     Clé "N" = N-ième case (li de ol.etapes, à partir de 1) de la consigne ; clé "classe K.N" = N-ième case du K-ième élément .classe du bloc (cartes, encarts, volets).
+     Valeur = [clé de l'animation, numéros des images]. Une seule animation ouverte : celle de la première case
+     de la consigne à l'arrivée ; cocher une case ouvre celle de la case suivante qui en a une, dans la même liste.
+     arrete() : arrêter l'animation ouverte (à chaque changement de bloc). */
+  let ouverte = null;
+  function arrete() { if (ouverte) ouverte.stop(); ouverte = null; }
+  function sousCases(z, demos, cree, consigne = z.querySelector('.faire')) {
+    const cases = racine => [...racine.querySelectorAll(':scope ol.etapes > li')];
+    const volets = [];
+    Object.entries(demos).forEach(([ref, [cle, images]]) => {
+      const m = ref.match(/^(?:([\w-]+) (\d+)\.)?(\d+)$/); if (!m) return;
+      const racine = m[1] ? z.querySelectorAll('.' + m[1])[m[2] - 1] : consigne;
+      const li = racine && cases(racine)[m[3] - 1]; if (!li) return;
+      const d = el('details', 'demo-case'); d.dataset.demo = cle; let box = null;
+      d.append(el('summary', null, '👀 Regarde comment faire'));
+      d.addEventListener('toggle', () => {
+        if (d.open) {
+          volets.forEach(x => { if (x !== d && x.open) x.open = false; });
+          if (!box) { box = cree(cle, true, images); if (box) d.append(box); } else box.joue();
+          ouverte = box;
+        } else if (box) { box.stop(); if (ouverte === box) ouverte = null; }
+      });
+      li.append(d); volets.push(d);
+      const cb = li.querySelector(':scope > label input[type=checkbox]');
+      if (cb) cb.addEventListener('change', () => {
+        if (!cb.checked) return;
+        d.open = false;
+        const liste = li.parentElement, suivant = volets.find(x => x.closest('ol') === liste && !x.closest('li').querySelector(':scope > label input').checked
+          && (li.compareDocumentPosition(x) & Node.DOCUMENT_POSITION_FOLLOWING));
+        if (suivant) suivant.open = true;
+      });
+    });
+    const premier = consigne && volets.find(x => consigne.contains(x) && !x.parentElement.closest('details')) || null;
+    if (premier) premier.open = true;
+  }
+
+  return { el, c, sousAncre, lecteur, volet, sousCases, arrete };
 })();

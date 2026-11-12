@@ -82,12 +82,10 @@ const Demo = (() => {
       { ecran: 'drive', cible: 'recents', legende: 'Je clique sur « Récents », à gauche.' },
       { ecran: 'drive', cible: 'fichier', ok: 1, legende: 'Double-clic sur mon document : il s’ouvre.' }
     ] },
-    cote: { titre: 'Le cours et mon document côte à côte', images: [ // Le cours et mon document côte à côte : vue fractionnée de Chrome
-      { ecran: 'chrome', cible: 'ch-cours', legende: 'Je clique sur l’onglet du cours.' },
-      { ecran: 'chrome', menu: 1, cible: 'ch-doc', legende: 'Clic droit sur l’onglet de mon document.' },
-      { ecran: 'chrome', menu: 1, cible: 'item-split', legende: 'Je choisis « Ajouter l’onglet à une nouvelle vue fractionnée ».' },
-      { ecran: 'chrome', split: 1, cible: 'vol-doc', ok: 1, legende: 'Le cours à gauche, mon document à droite. Je clique dans mon document pour écrire.' }
-    ] }
+    cote: DemosCommuns.vueFractionnee({ titre: 'Le cours et mon document côte à côte', cours: '🐭 Mes cours – Le rat de ville', // pas-a-pas/demos-communs.js
+      coursTitre: '🐭 Le rat de ville', coursLignes: ['☐ Menu Google ▸ Docs…', '☐ Je clique sur « Document sans titre »…'],
+      doc: '📄 ' + NOM, quoi: 'mon document', docLignes: FABLE_MAJ.slice(0, 3), adresse: 'root75.github.io/campin-public/…',
+      fin: 'Le cours à gauche, mon document à droite. Je clique dans mon document pour écrire.' })
   };
 
   const { el, c } = DemoLecteur;
@@ -167,25 +165,12 @@ const Demo = (() => {
         dlg.append(pied); e.append(dlg);
       }
     }
-    if (f.ecran === 'chrome') {
-      const ong = el('div', 'md-ch-onglets');
-      const tc = c(el('span', 'md-ch-onglet actif', '🐭 Mes cours – Le rat de ville'), 'ch-cours');
-      const td = c(el('span', 'md-ch-onglet' + (f.split ? ' actif' : ''), '📄 ' + NOM), 'ch-doc');
-      if (f.split) { const duo = el('span', 'md-ch-duo'); duo.append(tc, td); ong.append(duo); } else ong.append(tc, td);
-      ong.append(el('span', 'md-ch-plus', '+'));
-      const cours = el('div', 'md-ch-vol md-ch-cours'); cours.append(el('b', null, '🐭 Le rat de ville'), el('span', 'md-ch-case', '☐ Menu Google ▸ Docs…'), el('span', 'md-ch-case', '☐ Je clique sur « Document sans titre »…'), el('span', 'md-ch-barre'), el('span', 'md-ch-barre court'));
-      const corps = el('div', 'md-ch-corps' + (f.split ? ' split' : ''));
-      corps.append(cours);
-      if (f.split) { const d = c(el('div', 'md-ch-vol md-ch-doc'), 'vol-doc'); d.append(el('b', null, '📄 ' + NOM)); FABLE_MAJ.slice(0, 3).forEach(v => d.append(el('span', null, v))); corps.append(d); }
-      e.append(ong, el('div', 'md-ch-adresse', f.split ? 'Vue fractionnée : deux onglets dans la même fenêtre' : 'root75.github.io/campin-public/…'), corps);
-      if (f.menu) { const m = el('div', 'md-ch-menu'); [['Nouvel onglet à droite', ''], ['Ajouter l’onglet à une nouvelle vue fractionnée', 'item-split'], ['Ajouter l’onglet au groupe', ''], ['Fermer', '']].forEach(([t, id]) => m.append(c(el('div', 'md-item' + (id ? ' hi' : ''), t), id))); e.append(m); }
-    }
     return e;
   }
 
   /* Le lecteur est commun (pas-a-pas/demo-lecteur.js). Ici : le menu déroulant de Docs se place
      sous son ancre (menu.sous, sinon le menu Format). */
-  const ecran = f => f.ecran === 'docs' ? ecranDocs(f) : ecranAutre(f);
+  const ecran = f => DemosCommuns.ecran(f) || (f.ecran === 'docs' ? ecranDocs(f) : ecranAutre(f));
   const Lect = DemoLecteur.lecteur({ demos: DEMOS, ecran, place: (e, f) => {
     const m = e.querySelector('.md-menu'), ancre = m && e.querySelector('[data-c="' + (f.menu.sous || 'm-format') + '"]');
     if (ancre) DemoLecteur.sousAncre(e, m, ancre, 170);

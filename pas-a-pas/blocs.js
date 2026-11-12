@@ -243,7 +243,7 @@ function affiche(){
   const z = document.getElementById("bloc"); z.replaceChildren();
   const liste = document.getElementById("coince-liste"); liste.replaceChildren();
   document.getElementById("coince").open = false;
-  if(demoCase) demoCase.stop(), demoCase = null;
+  if(typeof DemoLecteur!=="undefined" && DemoLecteur.arrete) DemoLecteur.arrete();
   if(enPause()){ pause(z); return; }
   if(ici >= BLOCS.length){ fin(z); return; }
   const B = blocVu(ici);
@@ -402,44 +402,12 @@ function relecture(pr, B){
   if(Q.juste){ const r = el("div","retour juste"); r.append(txt("strong",null,"L’explication"), txt("p",null,Q.juste)); pr.append(r); }
 }
 
-/* « Regarde comment faire » sous chaque case — commun à tous les cours sur ce moteur.
-   La fiche décrit seulement les données, dans le bloc :
-     demos: { "3": ["gestionnaire", [4]], "incident 2.4": ["fenetres", [3]] }
-   Clé "N" = N-ième case de la consigne (à partir de 1) ; clé "classe K.N" = N-ième case du K-ième
-   élément .classe du bloc (cartes, encarts). Valeur = [clé de l'animation, numéros des images].
-   Il suffit que Demo.cree(cle, auto, images) existe : DemoLecteur.lecteur(…).cree (pas-a-pas/demo-lecteur.js).
-   Une seule animation ouverte : celle de la première case à l'arrivée ; cocher une case ouvre celle
-   de la case suivante qui en a une, dans la même liste. */
-let demoCase = null;
+/* « Regarde comment faire » sous chaque case : le volet est commun à tous les moteurs (DemoLecteur.sousCases,
+   pas-a-pas/demo-lecteur.js). La fiche décrit seulement les données, dans le bloc :
+     demos: { "3": ["gestionnaire", [4]], "incident 2.4": ["fenetres", [3]] } */
 function demosSousCases(z, B){
-  if(!B.demos || typeof Demo==="undefined" || !Demo.cree) return;
-  const cases = (racine) => [...racine.querySelectorAll(":scope ol.etapes > li")];
-  const volets = [];
-  Object.entries(B.demos).forEach(([ref, [cle, images]])=>{
-    const m = ref.match(/^(?:([\w-]+) (\d+)\.)?(\d+)$/); if(!m) return;
-    const racine = m[1] ? z.querySelectorAll("."+m[1])[m[2]-1] : z.querySelector(".faire");
-    const li = racine && cases(racine)[m[3]-1]; if(!li) return;
-    const d = el("details","demo-case"); d.dataset.demo = cle; let box = null;
-    d.append(txt("summary",null,"👀 Regarde comment faire"));
-    d.addEventListener("toggle",()=>{
-      if(d.open){
-        volets.forEach(x=>{ if(x!==d && x.open) x.open = false; });
-        if(!box){ box = Demo.cree(cle, true, images); if(box) d.append(box); } else box.joue();
-        demoCase = box;
-      } else if(box){ box.stop(); if(demoCase===box) demoCase = null; }
-    });
-    li.append(d); volets.push(d);
-    const cb = li.querySelector(":scope > label input[type=checkbox]");
-    if(cb) cb.addEventListener("change",()=>{
-      if(!cb.checked) return;
-      d.open = false;
-      const liste = li.parentElement, suivant = volets.find(x=>x.closest("ol")===liste && !x.closest("li").querySelector(":scope > label input").checked
-        && (li.compareDocumentPosition(x) & Node.DOCUMENT_POSITION_FOLLOWING));
-      if(suivant) suivant.open = true;
-    });
-  });
-  const premier = volets.find(x=>z.querySelector(".faire") && z.querySelector(".faire").contains(x)) || null;
-  if(premier) premier.open = true;
+  if(!B.demos || typeof Demo==="undefined" || !Demo.cree || typeof DemoLecteur==="undefined" || !DemoLecteur.sousCases) return;
+  DemoLecteur.sousCases(z, B.demos, Demo.cree);
 }
 
 /* Texte à trous — « Explique avec tes mots », en deux temps (Vincent, 10/11/2026).

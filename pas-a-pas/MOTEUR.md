@@ -106,6 +106,22 @@ brouillon d'une rédaction gardé sur le poste ; programme validé (question `co
 relu quand on revient sur le bloc : code de départ, essais ratés (programme, message de Python, explication), programme validé, lignes changées en gras,
 explication `juste` ; erreurs envoyées au tableau (« Où le groupe bute »).
 
+## Les animations « 👀 Regarde comment faire »
+
+Un maximum de code en commun : changer une vue la change dans tous les cours (Vincent, 12/11/2026).
+
+| Fichier | Ce qu'il porte |
+|---|---|
+| [`demo-lecteur.js`](demo-lecteur.js) | le lecteur (◀ ▶, numéros, Revoir), le volet « Toutes les animations », le volet sous la case (`sousCases`) |
+| [`demo-lecteur.css`](demo-lecteur.css) | son style ; importé par `python-missions.css` |
+| [`demos-communs.js`](demos-communs.js) | les vues : Chrome (vue fractionnée, onglets), Outlook (liste, message lu, rédaction, sélecteur OneDrive, ruban), la souris DROIT — style compris |
+| `<cours>/pas-a-pas/demos.js` | seulement les listes d'images du cours : `{ vue: 'ol-redac', …, cible, legende }` |
+
+Charger dans l'ordre : `demo-lecteur.js`, `demos-communs.js`, puis le `demos.js` du cours. Dans un bloc,
+`demos: { "4": ["cci"], "cote 1.2": ["cote"] }` met un volet sous la 4e case, et sous la 2e case du 1er
+élément `.cote` (une liste `ol.etapes` dans `avant`). Une vue qui manque s'écrit dans `demos-communs.js`,
+jamais dans le cours ; la liste des vues et de leurs options est en tête de ce fichier.
+
 ## Vérifier avant de publier
 
 ```bash
