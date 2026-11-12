@@ -116,7 +116,7 @@ footer{font-size:.9rem;color:var(--doux);text-align:center}
 
 <div class="page">
   <header>
-    <div class="surtitre">Activités Info · 2e · la messagerie</div>
+    <div class="surtitre">Numérique · la messagerie</div>
     <h1>Mon premier message <em>je révise</em></h1>
     <p class="consigne">Pour t'entraîner après la leçon 1 de messagerie. Rien n'est coté.</p>
   </header>
@@ -136,7 +136,7 @@ footer{font-size:.9rem;color:var(--doux);text-align:center}
       <li><span><strong>Boîte de réception</strong> = ce que je reçois. <strong>Éléments envoyés</strong> = ce que j'ai envoyé.</span></li>
       <li><span><strong>Brouillons</strong> = ce que j'ai commencé sans l'envoyer.</span></li>
       <li><span>Un message envoyé ne se reprend pas : je relis <strong>avant</strong> <span class="touche">Envoyer</span>.</span></li>
-      <li><span>Un mot souligné en rouge : <strong>clic DROIT</strong> dessus (le bouton de droite de la souris) ▸ la bonne orthographe. Puis <span class="touche">Envoyer</span>.</span></li>
+      <li><span>Un mot souligné en rouge : <strong>clic DROIT</strong> dessus (le bouton de droite de la souris) ▸ <strong>Orthographe</strong> ▸ le bon mot. La grammaire : onglet <strong>Options</strong> ▸ <strong>Éditeur</strong>.</span></li>
     </ol>
     <p class="note">Ensuite : le quiz (6 questions, tirées parmi 18 : il change à chaque fois), puis les 18 cartes pour réviser.</p>
     <div class="actions"><button class="btn plein" type="button" data-aller="quiz">Commencer le quiz</button></div>
@@ -242,10 +242,10 @@ const QUIZ = [
     h:"Je veux changer ce que j'affiche…",
     e:"Onglet Afficher : tout ce qui change la vue. Le réglage reste pour les prochaines fois." },
   { q:"Un mot de mon message est souligné en rouge. Que fais-je ?",
-    c:["Clic droit dessus ▸ je choisis la bonne orthographe.", "Je l'envoie tel quel : ce n'est pas grave.", "Je supprime tout le message.", "Clic gauche dessus, deux fois."],
+    c:["Clic droit dessus ▸ Orthographe ▸ je choisis le bon mot.", "Je l'envoie tel quel : ce n'est pas grave.", "Je supprime tout le message.", "Clic gauche dessus, deux fois."],
     p:[null, "Le rouge signale une faute probable : je la corrige avant d'envoyer.", "Inutile : je corrige seulement le mot souligné.", "Le clic gauche place le curseur ; c'est le clic DROIT qui ouvre les propositions."],
     h:"Le bouton de DROITE de la souris…",
-    e:"Clic DROIT sur le mot souligné : Outlook propose la bonne orthographe, je clique dessus." }
+    e:"Clic DROIT sur le mot souligné ▸ Orthographe : Outlook propose le bon mot, je clique dessus." }
 ];
 /* Règle du 05/11/2026 : trois variantes du même type par question, réponses distinctes.
    QUIZ[i] est la variante 1 ; VARIANTES[i] les deux autres. Le quiz en tire une au hasard à chaque passage. */
@@ -431,7 +431,7 @@ onglets.forEach(o=>document.getElementById("t-"+o).addEventListener("click",()=>
 document.querySelectorAll("[data-aller]").forEach(b=>b.addEventListener("click",()=>montre(b.dataset.aller)));
 if(onglets.includes(location.hash.slice(1))) montre(location.hash.slice(1));
 </script>
-<script src="https://root75.github.io/campin-public/assets/fiche-revision.js" data-pied="Activités Info — M. Louviaux — Messagerie 01" data-adresse="louviaux.com"></script>
+<script src="https://root75.github.io/campin-public/assets/fiche-revision.js" data-pied="Numérique — M. Louviaux — Messagerie 01" data-adresse="louviaux.com"></script>
 
 </body>
 </html>
