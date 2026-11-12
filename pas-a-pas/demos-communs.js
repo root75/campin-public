@@ -8,10 +8,22 @@
      const DEMOS = { …, cote: DemosCommuns.vueFractionnee({ … }) };
      const ecran = f => DemosCommuns.ecran(f) || ecranDuCours(f);
    et, pour montrer le bouton DROIT de la souris sur une maquette du cours : DemosCommuns.souris(e).
+   Une page qui n'existe que dans un cours garde la fenêtre commune : DemosCommuns.chrome({ onglets, adresse,
+   contenu: [nœuds] }) ; un bureau Windows à compléter (une fenêtre ouverte) : DemosCommuns.bureau(f), puis
+   remplir son .md-win-fond.
 
    Les vues (champ `vue` de l'image) :
      ch-fractionnee  Chrome, vue fractionnée (créée par vueFractionnee)
      ch-onglets      Chrome : des onglets et une page (onglets: [[texte, id, actif]], titre, bord: 'word')
+     ch-nouvel       Chrome : un nouvel onglet, Google et le rond du profil (connecte: lettre du prénom ;
+                     menu = menu du profil, nom = prénom du profil de l'école)
+     g-gaufre        Google : la gaufre ⋮⋮⋮ en haut à droite (menu = les applications ouvertes)
+     win-bureau      Windows 11 : bureau et barre des tâches (taches: [[icône, id]] en plus ; demarrer, saisie,
+                     resultat: [nom, id, icône] — sans icône, le logo de Chrome ; clicdroit: ligne surlignée
+                     du menu du clic droit sur Démarrer, droit = la souris DROIT)
+     cr-devoir       Classroom : la page d'un devoir et « Vos devoirs » (créée par devoir) : menu « Ajouter ou
+                     créer », picker 1 / 2 (Google Drive, fichier pas encore / déjà choisi), joint, piece (nom
+                     de la pièce jointe, sinon o.fichier), confirme (« Rendre le devoir ? »), remis, note
      ol-liste        Outlook : dossiers et messages (messages, nonlu: n°, parti: n°, menu + hi = clic droit, droit)
      ol-lu           Outlook : un message ouvert et la carte du fichier joint (objet, de, fichier, texte, survol, menu + hi)
      ol-redac        Outlook : la rédaction (ruban, a: [noms], objet, cci: [noms], tape, props: [[texte, id, hi]],
@@ -23,6 +35,9 @@
    Vue fractionnée de Chrome (le cours et le document côte à côte, dans la même fenêtre) : Rat de ville,
    Labo 07, Messagerie 03. Menu de l'onglet : « Ajouter l'onglet à une nouvelle vue fractionnée » relevé
    à l'écran ; les trois autres lignes sont celles des maquettes du Rat et du Labo 07.
+   Chrome, Windows et Classroom : libellés relevés avec un compte élève de test le 08/11/2026
+   (memoire/ref_docs_eleves.md). Non relevés : le bouton du sélecteur Google Drive (bouton bleu sans texte),
+   les applications de la gaufre, le menu du clic droit sur Démarrer (celui du Labo 07).
    Outlook web de l'école : libellés relevés le 20/10/2026 et le 12/11/2026 (memoire/seq_activites_info_04_messagerie.md).
    Une ligne de menu non relevée est une barre grise, sans texte inventé. Rien n'est enregistré. */
 const DemosCommuns = (() => {
@@ -35,7 +50,57 @@ const DemosCommuns = (() => {
 .md-ch-onglet.actif{background:#fff}
 .md-ch-duo{display:flex;gap:2px;max-width:85%;outline:2px solid #1a73e8;border-radius:8px 8px 0 0}.md-ch-duo .md-ch-onglet{max-width:50%}
 .md-ch-plus{padding:2px 8px;color:#5f6368}
-.md-ch-adresse{margin:6px 8px;background:#f1f3f4;border-radius:14px;padding:3px 12px;font-size:11px;color:#5f6368;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.md-ch-outils{display:flex;align-items:center;gap:8px;padding:6px 8px}
+.md-ch-adresse{flex:1;min-width:0;background:#f1f3f4;border-radius:14px;padding:3px 12px;font-size:11px;color:#5f6368;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.md-ch-points{font-size:16px;color:#5f6368;padding:0 2px}
+.md-profil{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:#e8eaed;font-size:15px;flex:none}.md-profil.ecole{background:#1e8e3e;color:#fff;font-weight:700}
+.md-ch-corps.page{gap:10px;padding:10px 16px;align-content:start}
+.md-ch-corps.nouvel{justify-items:center;gap:12px;padding:28px 10px}
+.md-google{font-size:26px;font-weight:700;color:#4285f4;padding:20px 24px}.md-ch-corps .md-google{padding:0}
+.md-recherche{width:70%;height:30px;border:1px solid #dadce0;border-radius:16px}
+.md-pmenu{position:absolute;right:8px;top:72px;width:230px;background:#fff;border:1px solid #c9d3db;border-radius:10px;box-shadow:0 4px 14px #0003;padding:6px 0;z-index:3}
+.md-pmenu .md-item,.md-cr-menu .md-item,.md-win-menu .md-item{padding:5px 14px;font-size:13px}.md-pmenu .md-item.hi,.md-cr-menu .md-item.hi,.md-win-menu .md-item.hi{background:#e8f0fe;font-weight:700}
+.md-pmenu-titre{font-weight:700;padding:4px 14px 6px;border-bottom:1px solid #eee}
+.md-pmenu-carte{margin:4px 8px 6px;padding:8px;border-radius:8px;background:#f1f3f4;font-size:11px;color:#5f6368}
+.md-pmenu-sep{border-top:1px solid #eee;margin:4px 0}
+.md-logo-chrome{display:inline-block;width:22px;height:22px;border-radius:50%;background:radial-gradient(circle,#4285f4 0 30%,#fff 31% 42%,transparent 43%),conic-gradient(from -60deg,#db4437 0 120deg,#f4b400 0 240deg,#0f9d58 0)}
+.md-logo-edge{display:inline-block;width:22px;height:22px;border-radius:50% 50% 50% 20%;background:radial-gradient(circle at 65% 70%,#fff 0 18%,transparent 19%),linear-gradient(140deg,#37c6f4 0,#0c59a4 55%,#50c35f 100%)}
+.md-g-gaufre .md-google{padding:30px}
+.md-gaufre-ico{position:absolute;right:16px;top:16px;font-size:18px;letter-spacing:-3px;padding:4px 8px}
+.md-apps{position:absolute;right:14px;top:52px;display:grid;grid-template-columns:repeat(2,84px);gap:8px;background:#fff;border:1px solid #c9d3db;border-radius:12px;padding:10px;box-shadow:0 4px 14px #0003}
+.md-app{text-align:center;padding:10px 4px;border-radius:8px;background:#f1f3f4;font-weight:700;font-size:12px}
+.md-app-docs{color:#1a73e8}.md-app-drive{color:#188038}.md-app-classroom{color:#137333}.md-app-agenda{color:#1967d2}
+.md-win-bureau{background:linear-gradient(160deg,#cfe0f1,#e8eff7)}
+.md-win-fond{position:absolute;inset:0 0 42px;padding:14px;display:grid;place-items:start center}
+.md-win-barre{position:absolute;left:0;right:0;bottom:0;height:42px;background:#eef2f6ee;border-top:1px solid #c9d3db;display:flex;justify-content:center;align-items:center;gap:10px;border-radius:0 0 10px 10px}
+.md-win-ico{width:32px;height:32px;display:grid;place-items:center;border-radius:6px;font-size:17px}.md-win-start{color:#0067c0;font-size:20px;font-weight:700}
+.md-win-cherche{background:#fff;border:1px solid #c9d3db;border-radius:14px;padding:3px 12px;font-size:12px;color:#5f6368;white-space:nowrap}
+.md-win-start-menu{position:absolute;left:50%;transform:translateX(-50%);bottom:50px;width:min(330px,88%);background:#f3f3f3ee;border:1px solid #c9d3db;border-radius:10px;padding:12px;display:grid;gap:8px;box-shadow:0 6px 20px #0003;z-index:3;box-sizing:border-box}
+.md-win-recherche{background:#fff;border:1px solid #c9d3db;border-bottom:2px solid #0067c0;border-radius:16px;padding:6px 12px;min-height:20px}
+.md-win-meilleur{font-weight:700;font-size:12px}
+.md-win-res{display:flex;align-items:center;gap:10px;background:#fff;border-radius:8px;padding:8px}.md-win-res .md-logo-chrome{width:30px;height:30px}.md-win-res small{display:block;color:#5f6368}
+.md-win-app{width:30px;height:30px;border-radius:6px;background:#e8eaed;display:grid;place-items:center;font-weight:700;font-size:13px}
+.md-win-epingles{display:flex;gap:10px;flex-wrap:wrap}.md-win-epingles span{display:grid;justify-items:center;gap:2px;font-size:11px;background:#fff;border-radius:6px;padding:6px 8px;min-width:44px}
+.md-win-menu{position:absolute;left:calc(50% - 75px);bottom:46px;background:#fff;border:1px solid #c9d3db;border-radius:8px;box-shadow:0 4px 14px #0003;padding:4px 0;z-index:3;min-width:190px}
+.md-cr-devoir{display:grid;grid-template-columns:1fr minmax(170px,210px);gap:14px;padding:14px;align-items:start;align-content:start;min-height:320px}
+.md-cr-sujet{display:grid;gap:4px;align-content:start}.md-cr-icone{width:34px;height:34px;border-radius:50%;background:#1e8e3e;display:grid;place-items:center;font-size:16px}
+.md-cr-titre{font-size:17px;color:#137333}.md-cr-meta{color:#5f6368;font-size:12px}
+.md-cr-consigne{height:60px;margin-top:6px;background:repeating-linear-gradient(#fff 0 10px,#e8eaed 10px 18px)}
+.md-cr-lien{color:#1a73e8;font-weight:700;margin-top:6px;width:max-content}
+.md-cr-droite{display:grid;gap:10px;align-content:start}
+.md-cr-carte{border:1px solid #dadce0;border-radius:8px;padding:12px;display:grid;gap:8px;box-shadow:0 1px 3px #0002;position:relative}
+.md-cr-tete{display:flex;justify-content:space-between;align-items:center;gap:6px}.md-cr-statut{color:#137333;font-size:12px}.md-cr-statut.remis{font-weight:700}.md-cr-statut.note{font-weight:700;font-size:14px;color:#1f1f1f}
+.md-cr-ajouter,.md-cr-btn{border:1px solid #dadce0;border-radius:4px;padding:6px 10px;text-align:center;color:#1a73e8;font-weight:700}
+.md-cr-plein{background:#1a73e8;border-color:#1a73e8;color:#fff}.md-cr-plein.eteint{background:#c5d6f2;border-color:#c5d6f2}.md-cr-sans{min-width:60px}
+.md-cr-piece{border:1px solid #dadce0;border-radius:4px;padding:6px;font-size:12px;overflow-wrap:anywhere}
+.md-cr-menu{position:absolute;left:12px;right:12px;top:72px;max-height:240px;overflow:hidden;background:#fff;border:1px solid #c9d3db;border-radius:8px;box-shadow:0 4px 14px #0003;padding:4px 0;z-index:3}
+.md-cr-sous{padding:6px 14px 2px;font-size:11px;font-weight:700;color:#5f6368;border-top:1px solid #eee;margin-top:4px}
+.md-cr-prive{gap:4px}.md-cr-prive small{color:#1967d2}.md-cr-msg{font-size:12px;background:#f1f3f4;border-radius:6px;padding:6px}
+.md-cr-picker,.md-cr-dialogue{position:absolute;inset:18px 6%;background:#fff;border-radius:8px;box-shadow:0 6px 24px #0005;padding:12px;display:grid;gap:8px;align-content:start;z-index:4}
+.md-cr-dialogue{inset:40px 14%}.md-cr-dialogue small{color:#5f6368}
+.md-cr-ptitre{font-weight:700}.md-cr-fichiers{display:grid;gap:4px}.md-cr-f{padding:6px 8px;border-radius:6px;overflow-wrap:anywhere}.md-cr-f.choisi{background:#e8f0fe;outline:2px solid #1a73e8}.md-cr-f.autre{opacity:.6}
+.md-cr-ppied{display:flex;justify-content:flex-end;gap:8px}
+@media(max-width:560px){.md-cr-devoir{grid-template-columns:1fr;min-height:430px}.md-cr-picker,.md-cr-dialogue{inset:10px 3%}}
 .md-ch-corps{display:grid;gap:6px;padding:8px;min-height:170px}.md-ch-corps.split{grid-template-columns:1fr 1fr}
 .md-ch-vol{border:1px solid #dadce0;border-radius:8px;padding:10px;display:grid;gap:6px;align-content:start;overflow:hidden}
 .md-ch-doc{background:#f8fafd}.md-ch-doc span{font-size:11px}
@@ -92,23 +157,40 @@ const DemosCommuns = (() => {
     ] };
   }
 
-  function chrome(f) {
-    const o = f.o, e = el('div', 'md md-chrome');
-    const ong = el('div', 'md-ch-onglets');
+  /* ——— Chrome : la fenêtre (onglets, barre d'adresse, rond du profil, ⋮) ———
+     o : onglets [[texte, id, actif]] ou nœuds déjà construits, adresse, profil (texte du rond, sinon pas de rond),
+         ecole (rond vert du profil de l'école), corps (classe en plus du corps), contenu [nœuds]. */
+  function fenetre(o) {
+    const e = el('div', 'md md-chrome'), ong = el('div', 'md-ch-onglets');
+    o.onglets.forEach(x => {
+      if (x instanceof Node) { ong.append(x); return; }
+      const [t, id, actif] = x, s = el('span', 'md-ch-onglet' + (actif ? ' actif' : ''), t); ong.append(id ? c(s, id) : s);
+    });
+    ong.append(el('span', 'md-ch-plus', '+'));
+    const outils = el('div', 'md-ch-outils'); outils.append(el('span', 'md-ch-adresse', o.adresse || ''));
+    if (o.profil) outils.append(c(el('span', 'md-profil' + (o.ecole ? ' ecole' : ''), o.profil), 'profil'));
+    outils.append(el('span', 'md-ch-points', '⋮'));
+    const corps = el('div', 'md-ch-corps' + (o.corps ? ' ' + o.corps : '')); (o.contenu || []).forEach(n => corps.append(n));
+    e.append(ong, outils, corps);
+    return e;
+  }
+
+  function fractionnee(f) {
+    const o = f.o;
     const tc = c(el('span', 'md-ch-onglet actif', o.cours), 'ch-cours');
     const td = c(el('span', 'md-ch-onglet' + (f.split ? ' actif' : ''), o.doc), 'ch-doc');
-    if (f.split) { const duo = el('span', 'md-ch-duo'); duo.append(tc, td); ong.append(duo); } else ong.append(tc, td);
-    ong.append(el('span', 'md-ch-plus', '+'));
+    let onglets = [tc, td];
+    if (f.split) { const duo = el('span', 'md-ch-duo'); duo.append(tc, td); onglets = [duo]; }
     const cours = el('div', 'md-ch-vol md-ch-cours'); cours.append(el('b', null, o.coursTitre));
     (o.coursLignes || []).forEach(t => cours.append(el('span', 'md-ch-case', t)));
     cours.append(el('span', 'md-ch-barre'), el('span', 'md-ch-barre court'));
-    const corps = el('div', 'md-ch-corps' + (f.split ? ' split' : '')); corps.append(cours);
+    const contenu = [cours];
     if (f.split) {
       const d = c(el('div', 'md-ch-vol md-ch-doc'), 'vol-doc'); d.append(el('b', null, o.doc));
       (o.docLignes || []).forEach(t => d.append(el('span', null, t))); d.append(el('span', 'md-ch-barre'));
-      corps.append(d);
+      contenu.push(d);
     }
-    e.append(ong, el('div', 'md-ch-adresse', f.split ? 'Vue fractionnée : deux onglets dans la même fenêtre' : o.adresse), corps);
+    const e = fenetre({ onglets, adresse: f.split ? 'Vue fractionnée : deux onglets dans la même fenêtre' : o.adresse, corps: f.split ? 'split' : '', contenu });
     if (f.menu) {
       const m = el('div', 'md-ch-menu');
       [['Nouvel onglet à droite', ''], ['Ajouter l’onglet à une nouvelle vue fractionnée', 'item-split'], ['Ajouter l’onglet au groupe', ''], ['Fermer', '']]
@@ -121,13 +203,123 @@ const DemosCommuns = (() => {
 
   /* ——— Chrome : des onglets et une page ——— */
   function onglets(f) {
-    const e = el('div', 'md md-chrome'), ong = el('div', 'md-ch-onglets');
-    f.onglets.forEach(([t, id, actif]) => { const o = el('span', 'md-ch-onglet' + (actif ? ' actif' : ''), t); ong.append(id ? c(o, id) : o); });
-    ong.append(el('span', 'md-ch-plus', '+'));
     const page = el('div', 'md-ch-vol' + (f.bord ? ' md-ch-' + f.bord : '')); page.append(el('b', null, f.titre));
     (f.lignes || []).forEach(t => page.append(el('span', null, t))); page.append(el('span', 'md-ch-barre'), el('span', 'md-ch-barre'), el('span', 'md-ch-barre court'));
-    const corps = el('div', 'md-ch-corps'); corps.append(page);
-    e.append(ong, corps);
+    return fenetre({ onglets: f.onglets, adresse: f.adresse, contenu: [page] });
+  }
+
+  /* ——— Chrome : un nouvel onglet, et le menu du rond du profil (relevé le 08/11/2026) ——— */
+  function nouvel(f) {
+    const e = fenetre({ onglets: [['Nouvel onglet', '', 1]], adresse: 'Demandez à Google ou saisissez une URL', profil: f.connecte || '👤', ecole: !!f.connecte,
+      corps: 'nouvel', contenu: [el('div', 'md-google', 'Google'), el('div', 'md-recherche')] });
+    if (f.menu) {
+      const m = el('div', 'md-pmenu');
+      m.append(el('div', 'md-pmenu-carte', 'Connectez-vous pour accéder à vos mots de passe, vos favoris et plus'),
+        el('div', 'md-pmenu-titre', 'Autres profils Chrome'),
+        c(el('div', 'md-item', '🟢 ' + (f.nom || 'Prénom') + ' (arcampin.be)'), 'p-ecole'),
+        el('div', 'md-item', '👤 Personne 1'),
+        el('div', 'md-pmenu-sep'),
+        c(el('div', 'md-item hi', '➕ Ajouter un profil Chrome'), 'p-ajouter'),
+        el('div', 'md-item', 'Ouvrir le profil invité'),
+        el('div', 'md-item', 'Gérer les profils Chrome'));
+      e.append(m);
+    }
+    return e;
+  }
+
+  /* ——— Google : la gaufre ⋮⋮⋮ (« 9 points »), en haut à droite ——— */
+  const APPS = [['Drive', 'app-drive'], ['Docs', 'app-docs'], ['Classroom', 'app-classroom'], ['Agenda', 'app-agenda']];
+  function gaufre(f) {
+    const e = el('div', 'md md-g-gaufre');
+    e.append(el('div', 'md-google', 'Google'), c(el('span', 'md-gaufre-ico', '⋮⋮⋮'), 'gaufre'));
+    if (f.menu) { const g = el('div', 'md-apps'); APPS.forEach(([t, id]) => g.append(c(el('span', 'md-app md-app-' + t.toLowerCase(), t), id))); e.append(g); }
+    return e;
+  }
+
+  /* ——— Windows 11 : le bureau, la barre des tâches, Démarrer ———
+     Démarrer ▸ « chrome » ▸ « Meilleure correspondance » ▸ Google Chrome, Application : relevé le 08/11/2026. */
+  const logo = n => el('span', 'md-logo-' + n);
+  const MENU_WINX = ['Applications installées', 'Gestion de l’ordinateur', 'Gestionnaire des tâches', 'Paramètres', 'Explorateur de fichiers', 'Rechercher'];
+  function bureau(f) {
+    const e = el('div', 'md md-win-bureau'), b = el('div', 'md-win-barre');
+    const ch = c(el('span', 'md-win-ico'), 'ico-chrome'); ch.append(logo('chrome')); ch.title = 'Google Chrome';
+    b.append(c(el('span', 'md-win-ico md-win-start', '⊞'), 'demarrer'), el('span', 'md-win-cherche', '🔍 Rechercher'), c(el('span', 'md-win-ico', '📁'), 'explorateur'), ch);
+    (f.taches || []).forEach(([t, id]) => b.append(c(el('span', 'md-win-ico', t), id)));
+    e.append(el('div', 'md-win-fond'), b);
+    if (f.demarrer) {
+      const m = el('div', 'md-win-start-menu');
+      m.append(c(el('div', 'md-win-recherche', '🔍 ' + (f.saisie || '')), 'recherche'));
+      if (f.resultat) {
+        const [nom, id, ico] = f.resultat, r = c(el('div', 'md-win-res'), id), t = el('span');
+        t.append(el('b', null, nom), el('small', null, 'Application'));
+        r.append(ico ? el('span', 'md-win-app', ico) : logo('chrome'), t);
+        m.append(el('div', 'md-win-meilleur', 'Meilleure correspondance'), r);
+      } else {
+        const g = el('div', 'md-win-epingles'), ed = el('span'); ed.append(logo('edge'), el('small', null, 'Edge')); g.append(ed);
+        ['Word', 'Excel', 'Outlook'].forEach(t => g.append(el('span', null, t)));
+        m.append(el('div', 'md-win-meilleur', 'Épinglé'), g);
+      }
+      e.append(m);
+    }
+    if (f.clicdroit) {
+      const m = el('div', 'md-win-menu');
+      MENU_WINX.forEach(t => m.append(c(el('div', 'md-item' + (t === f.clicdroit ? ' hi' : ''), t), 'item-' + t)));
+      e.append(m);
+    }
+    if (f.droit) souris(e);
+    return e;
+  }
+
+  /* ——— Classroom : la page d'un devoir, « Vos devoirs » à droite (relevé le 08/11/2026) ———
+     Sans pièce jointe « Marquer comme terminé », avec « Rendre le devoir » ▸ « Rendre le devoir ? » ▸ « Remis »
+     + « Annuler l'envoi ». Il n'existe aucun bouton « Remettre ». Le bouton du sélecteur Drive n'est pas relevé.
+     o : titre, meta [lignes sous le titre], instructions (lien « Afficher les instructions »), fichier (le
+         fichier de l'élève), autre (un second fichier dans Drive), prive (carte « Commentaires privés »),
+         note (« 8/10 ») et message (du professeur, sous Commentaires privés) quand l'image a note: 1.
+     Dans le demos.js du cours : const rendre = DemosCommuns.devoir({ … }); puis rendre({ joint: 1, cible, legende }). */
+  const devoir = o => etat => ({ vue: 'cr-devoir', o, ...etat });
+  function crDevoir(f) {
+    const o = f.o, nomPiece = '📄 ' + (f.piece || o.fichier), e = el('div', 'md md-cr-devoir');
+    const sujet = el('div', 'md-cr-sujet');
+    sujet.append(el('div', 'md-cr-icone', '📋'), el('div', 'md-cr-titre', o.titre));
+    (o.meta || ['M. Louviaux']).forEach(t => sujet.append(el('div', 'md-cr-meta', t)));
+    sujet.append(o.instructions ? c(el('span', 'md-cr-lien', 'Afficher les instructions'), 'instructions') : el('div', 'md-cr-consigne'));
+    if (o.prive) sujet.append(el('div', 'md-cr-meta', '👥 Commentaires ajoutés au cours'));
+    const carte = el('div', 'md-cr-carte'), tete = el('div', 'md-cr-tete');
+    tete.append(el('b', null, 'Vos devoirs'), c(el('span', 'md-cr-statut' + (f.note ? ' note' : f.remis ? ' remis' : ''), f.note ? o.note : f.remis ? 'Remis' : 'Attribué'), 'statut'));
+    carte.append(tete);
+    if (f.joint) carte.append(c(el('div', 'md-cr-piece', nomPiece), 'piece'));
+    if (!f.remis) carte.append(c(el('span', 'md-cr-ajouter', '+ Ajouter ou créer'), 'ajouter'));
+    if (f.menu) {
+      const m = el('div', 'md-cr-menu');
+      [['🟢 Google Drive', 'gdrive'], ['🔗 Lien', ''], ['📎 Fichier', '']].forEach(([t, id]) => m.append(id ? c(el('div', 'md-item hi', t), id) : el('div', 'md-item', t)));
+      m.append(el('div', 'md-cr-sous', 'Créer'));
+      ['Docs', 'Slides', 'Sheets', 'Drawings', 'Vids'].forEach(t => m.append(el('div', 'md-item', t)));
+      carte.append(m);
+    }
+    if (!f.note) carte.append(f.remis ? el('span', 'md-cr-btn', 'Annuler l’envoi') : c(el('span', 'md-cr-btn md-cr-plein', f.joint ? 'Rendre le devoir' : 'Marquer comme terminé'), 'rendre'));
+    const droite = el('div', 'md-cr-droite'); droite.append(carte);
+    if (o.prive) {
+      const prive = c(el('div', 'md-cr-carte md-cr-prive'), 'prive'); prive.append(el('b', null, 'Commentaires privés'));
+      if (f.note && o.message) prive.append(el('div', 'md-cr-msg', o.message));
+      prive.append(el('small', null, 'Ajouter un commentaire pour…'));
+      droite.append(prive);
+    }
+    e.append(sujet, droite);
+    if (f.picker) {
+      const p = el('div', 'md-cr-picker'), liste = el('div', 'md-cr-fichiers');
+      liste.append(c(el('div', 'md-cr-f' + (f.picker === 2 ? ' choisi' : ''), '📄 ' + o.fichier), 'fichier'));
+      if (o.autre) liste.append(el('div', 'md-cr-f autre', '📄 ' + o.autre));
+      const pied = el('div', 'md-cr-ppied');
+      pied.append(el('span', 'md-cr-btn', 'Annuler'), c(el('span', 'md-cr-btn md-cr-plein md-cr-sans' + (f.picker === 2 ? '' : ' eteint'), ' '), 'inserer'));
+      p.append(el('div', 'md-cr-ptitre', 'Google Drive'), liste, pied); e.append(p);
+    }
+    if (f.confirme) {
+      const dlg = el('div', 'md-cr-dialogue'), pied = el('div', 'md-cr-ppied');
+      pied.append(el('span', 'md-cr-btn', 'Annuler'), c(el('span', 'md-cr-btn md-cr-plein', 'Rendre le devoir'), 'confirmer'));
+      dlg.append(el('b', null, 'Rendre le devoir ?'), el('small', null, '1 pièce jointe sera envoyée pour « ' + o.titre + ' ».'), el('div', 'md-cr-piece', nomPiece), pied);
+      e.append(dlg);
+    }
     return e;
   }
 
@@ -241,10 +433,10 @@ const DemosCommuns = (() => {
   }
 
   /* La maquette d'une image commune, ou null : le cours dessine alors la sienne. */
-  const VUES = { 'ch-fractionnee': chrome, 'ch-onglets': onglets, 'ol-liste': liste, 'ol-lu': lu, 'ol-redac': redac, 'ol-selecteur': selecteur, 'ol-accueil': accueil };
+  const VUES = { 'ch-fractionnee': fractionnee, 'ch-onglets': onglets, 'ch-nouvel': nouvel, 'g-gaufre': gaufre, 'win-bureau': bureau, 'cr-devoir': crDevoir, 'ol-liste': liste, 'ol-lu': lu, 'ol-redac': redac, 'ol-selecteur': selecteur, 'ol-accueil': accueil };
   function ecran(f) {
     return VUES[f.vue] ? VUES[f.vue](f) : null;
   }
 
-  return { vueFractionnee, ecran, souris };
+  return { vueFractionnee, devoir, ecran, souris, chrome: fenetre, bureau };
 })();

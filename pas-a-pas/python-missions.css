@@ -51,16 +51,6 @@ details.coince{border-radius:16px}
 /* Mini-maquettes (toujours claires, comme le vrai Windows et le vrai Thonny) */
 .md-menu{position:absolute;background:#fff;border:1px solid #c9d3db;border-radius:8px;box-shadow:0 4px 14px #0003;padding:4px 0;z-index:3;min-width:150px}
 .md-item{padding:4px 14px;font-size:12px;display:flex;justify-content:space-between;gap:16px}.md-item.hi{background:#e8f0fe;font-weight:700}.md-item small{color:#5f6368}
-.md-bureau{background:linear-gradient(160deg,#3b7dd8,#9cc5f0)}
-.md-taches{position:absolute;left:0;right:0;bottom:0;height:40px;background:#eef2f6ee;display:flex;justify-content:center;align-items:center;gap:8px}
-.md-tache{min-width:30px;height:30px;display:grid;place-items:center;border-radius:6px;font-size:16px;padding:0 4px}
-.md-win{color:#0067c0;font-size:20px}.md-cherche{background:#fff;border-radius:15px;font-size:11px;color:#5f6368;padding:0 12px}
-.md-demarrer{position:absolute;left:50%;bottom:48px;transform:translateX(-50%);width:min(300px,86%);background:#f3f3f3f0;border-radius:10px;box-shadow:0 6px 20px #0004;padding:12px;display:grid;gap:8px}
-.md-dm-champ{background:#fff;border:1px solid #c9d3db;border-bottom:2px solid #0067c0;border-radius:6px;padding:5px 10px}
-.md-dm-titre{font-weight:700;font-size:12px}
-.md-dm-app{display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:10px;background:#fff;border-radius:8px;padding:8px}
-.md-dm-app .md-dm-ico{grid-row:span 2;width:30px;height:30px;border-radius:6px;background:#5a8f3c;color:#fff;font-weight:700;display:grid;place-items:center}
-.md-dm-app small{color:#5f6368}
 .md-ex-titre,.md-th-titre,.md-dlg-titre{background:#eef2f6;padding:5px 10px;font-size:12px;border-bottom:1px solid #dfe5ea;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .md-ex-cmd{display:flex;gap:12px;align-items:center;padding:6px 10px;border-bottom:1px solid #e3e8ec;flex-wrap:wrap}
 .md-ex-nouveau{background:#0067c0;color:#fff;border-radius:6px;padding:3px 10px;font-weight:700}
@@ -105,17 +95,9 @@ details.coince{border-radius:16px}
 .md-th-code.com{background:#b9dcc2}
 .md-th-err{color:#b3261e;white-space:pre-wrap;overflow-wrap:anywhere}.md-th-der{font-weight:700}
 .md-th-masque{background:#e3a922;color:transparent;border-radius:3px;margin-right:1px}
-/* Chrome : deux onglets, la fiche et la page « je révise » */
-.md-chrome{font-size:12px}
-.md-ch-onglets{display:flex;align-items:end;gap:4px;background:#dee3ea;padding:6px 8px 0}
-.md-ch-onglet{background:#cfd6df;border-radius:8px 8px 0 0;padding:4px 10px;font-size:11px;max-width:42%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.md-ch-onglet.actif{background:#fff}
-.md-ch-plus{padding:2px 8px;color:#5f6368}
-.md-ch-adresse{margin:6px 8px;background:#f1f3f4;border-radius:14px;padding:3px 12px;font-size:11px;color:#5f6368;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.md-ch-page{display:grid;gap:10px;padding:10px 16px;align-content:start}
+/* Chrome : la page « je révise » dans la fenêtre commune (fenêtre, bureau Windows : pas-a-pas/demos-communs.js) */
 .md-ch-texte{margin:0}
 .md-ch-lien{color:#1a73e8;text-decoration:underline;font-weight:700}
-.md-ch-barre{height:8px;background:#e3e8ec;border-radius:4px}.md-ch-barre.court{width:60%}
 .md-ch-sous{display:flex;gap:6px}.md-ch-sous span{padding:4px 12px;border-radius:14px;border:1px solid #c9d3db}.md-ch-sous span.actif{background:#1d5a73;color:#fff;border-color:#1d5a73}
 .md-ch-bouton{justify-self:start;background:#1d5a73;color:#fff;font-weight:700;border-radius:8px;padding:6px 14px}
 @media (max-width:600px){#aide-btn{width:48px;height:48px;font-size:1.4rem}.mascotte{width:70px;height:70px}.demo-scene{min-height:300px}}

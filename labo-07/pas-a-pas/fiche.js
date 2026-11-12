@@ -327,7 +327,7 @@ const BLOCS = [
     "titre": "Remettre mon rapport dans Classroom",
     "min": 5,
     "veux": "Remettre une seule fois mon rapport terminé, puis vérifier qu’il est bien arrivé.",
-    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\">Relis ton rapport : remplace chaque « [à compléter] » et efface les indications entre crochets.</label></li><li><label><input type=\"checkbox\"><span>Vérifie l’identification : titre visible, prénom, nom, classe, date ; fichier nommé <b>LABO07_CoulissesPC_Prenom_Nom</b>.</span></label></li><li><label><input type=\"checkbox\">Vérifie les titres et le tableau : même style pour les quatre titres de partie ; vrai tableau de trois colonnes et quatre lignes, avec % dans les en-têtes.</label></li><li><label><input type=\"checkbox\">Vérifie la capture : ciblée, lisible, pas étirée, avec sa légende juste dessous.</label></li><li><label><input type=\"checkbox\"><span>Ouvre <a href=\"https://classroom.google.com/\" target=\"_blank\" rel=\"noopener\">Classroom</a> avec ton compte scolaire ▸ Informatique — 3F ▸ Travaux et devoirs ▸ Labo 07 — Dans les coulisses du PC ▸ Afficher les instructions.</span></label></li><li><label><input type=\"checkbox\">Dans « Vos devoirs », clique sur Ajouter ou créer ▸ Google Drive.</label></li><li><label><input type=\"checkbox\"><span>Sélectionne <b>LABO07_CoulissesPC_Prenom_Nom</b> ▸ Ajouter.</span></label></li><li><label><input type=\"checkbox\">Clique sur la pièce jointe pour vérifier que c’est ton rapport complet.</label></li><li><label><input type=\"checkbox\">Clique sur Rendre le devoir ▸ confirme : Rendre le devoir.</label></li><li><label><input type=\"checkbox\">Vérifie que le devoir affiche « Remis ».</label></li></ol>",
+    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\">Relis ton rapport : remplace chaque « [à compléter] » et efface les indications entre crochets.</label></li><li><label><input type=\"checkbox\"><span>Vérifie l’identification : titre visible, prénom, nom, classe, date ; fichier nommé <b>LABO07_CoulissesPC_Prenom_Nom</b>.</span></label></li><li><label><input type=\"checkbox\">Vérifie les titres et le tableau : même style pour les quatre titres de partie ; vrai tableau de trois colonnes et quatre lignes, avec % dans les en-têtes.</label></li><li><label><input type=\"checkbox\">Vérifie la capture : ciblée, lisible, pas étirée, avec sa légende juste dessous.</label></li><li><label><input type=\"checkbox\"><span>Ouvre <a href=\"https://classroom.google.com/\" target=\"_blank\" rel=\"noopener\">Classroom</a> avec ton compte scolaire ▸ Informatique — 3F ▸ Travaux et devoirs ▸ Labo 07 — Dans les coulisses du PC ▸ Afficher les instructions.</span></label></li><li><label><input type=\"checkbox\">Dans « Vos devoirs », clique sur Ajouter ou créer ▸ Google Drive.</label></li><li><label><input type=\"checkbox\"><span>Sélectionne <b>LABO07_CoulissesPC_Prenom_Nom</b> ▸ le bouton bleu, en bas à droite.</span></label></li><li><label><input type=\"checkbox\">Clique sur la pièce jointe pour vérifier que c’est ton rapport complet.</label></li><li><label><input type=\"checkbox\">Clique sur Rendre le devoir ▸ confirme : Rendre le devoir.</label></li><li><label><input type=\"checkbox\">Vérifie que le devoir affiche « Remis ».</label></li></ol>",
     "vois": "Dans Classroom, le devoir affiche « Remis » et la pièce jointe est mon rapport complet.",
     "coince": [
       "Le devoir n’apparaît pas ? Le professeur ne l’a peut-être pas encore publié. Ne crée pas de deuxième document, ne poste rien dans le flux : sonne la cloche 🔔 et attends.",
@@ -337,9 +337,9 @@ const BLOCS = [
       "1": ["remise", [0]],
       "5": ["remise", [1]],
       "6": ["remise", [2]],
-      "7": ["remise", [3]],
-      "9": ["remise", [4, 5]],
-      "10": ["remise", [6]]
+      "7": ["remise", [3, 4]],
+      "9": ["remise", [5, 6]],
+      "10": ["remise", [7]]
     },
     "indices": true,
     "q": {

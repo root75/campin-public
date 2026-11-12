@@ -114,8 +114,8 @@ Un maximum de code en commun : changer une vue la change dans tous les cours (Vi
 |---|---|
 | [`demo-lecteur.js`](demo-lecteur.js) | le lecteur (◀ ▶, numéros, Revoir), le volet « Toutes les animations », le volet sous la case (`sousCases`) |
 | [`demo-lecteur.css`](demo-lecteur.css) | son style ; importé par `python-missions.css` |
-| [`demos-communs.js`](demos-communs.js) | les vues : Chrome (vue fractionnée, onglets), Outlook (liste, message lu, rédaction, sélecteur OneDrive, ruban), la souris DROIT — style compris |
-| `<cours>/pas-a-pas/demos.js` | seulement les listes d'images du cours : `{ vue: 'ol-redac', …, cible, legende }` |
+| [`demos-communs.js`](demos-communs.js) | les vues : Chrome (fenêtre, vue fractionnée, onglets, nouvel onglet et profil), la gaufre Google, Windows (bureau, Démarrer, clic droit sur Démarrer), Classroom (la page d'un devoir : joindre, rendre, Remis, note), Outlook (liste, message lu, rédaction, sélecteur OneDrive, ruban), la souris DROIT — style compris |
+| `<cours>/pas-a-pas/demos.js` | seulement les listes d'images du cours : `{ vue: 'ol-redac', …, cible, legende }` ; un devoir Classroom : `const rendre = DemosCommuns.devoir({ titre, fichier, … })`, puis `rendre({ joint: 1, cible, legende })` |
 
 Charger dans l'ordre : `demo-lecteur.js`, `demos-communs.js`, puis le `demos.js` du cours. Dans un bloc,
 `demos: { "4": ["cci"], "cote 1.2": ["cote"] }` met un volet sous la 4e case, et sous la 2e case du 1er
