@@ -15,31 +15,31 @@
   const css = `
 #fiche-papier{display:none}
 .fp-note{font-size:.95rem;margin:0}
-@page{size:A4;margin:13mm 14mm 16mm;
+@page{size:A4;margin:10mm 13mm 14mm;
   @bottom-left{content:"${pied.replace(/"/g, "'")}";font:8pt Calibri,Arial,sans-serif;color:#666;border-top:.5pt solid #999;padding-top:2mm;vertical-align:top}
   @bottom-right{content:"Page " counter(page) " / " counter(pages);font:8pt Calibri,Arial,sans-serif;color:#666;border-top:.5pt solid #999;padding-top:2mm;vertical-align:top}}
 @media print{
   html,body{background:#fff!important;color:#000!important;padding:0!important;margin:0!important}
   body>*:not(#fiche-papier){display:none!important}
-  #fiche-papier{display:block;font:10.5pt/1.35 "Atkinson Hyperlegible","Segoe UI",Arial,sans-serif;color:#000}
+  #fiche-papier{display:block;font:10pt/1.28 "Atkinson Hyperlegible","Segoe UI",Arial,sans-serif;color:#000}
   #fiche-papier *{box-sizing:border-box}
-  .fp-champs{display:flex;gap:8mm;font-size:10pt;margin-bottom:4mm}
+  .fp-champs{display:flex;gap:8mm;font-size:10pt;margin-bottom:2.5mm}
   .fp-champs span{flex:1;border-bottom:.5pt solid #000;padding-bottom:1mm}
   .fp-champs span:first-child{flex:2}
   .fp-sur{font-size:8.5pt;letter-spacing:.06em;text-transform:uppercase;color:#444}
-  #fiche-papier h1{font:800 20pt/1.1 "Alegreya",Georgia,serif;margin:0 0 4mm}
-  #fiche-papier h2{font:800 12.5pt/1.2 "Alegreya",Georgia,serif;margin:4.5mm 0 1.5mm;break-after:avoid}
+  #fiche-papier h1{font:800 17pt/1.1 "Alegreya",Georgia,serif;margin:0 0 2mm}
+  #fiche-papier h2{font:800 11.5pt/1.2 "Alegreya",Georgia,serif;margin:3mm 0 1mm;break-after:avoid}
   #fiche-papier ol{margin:0;padding-left:6mm}
-  #fiche-papier li{margin:0 0 1.2mm;break-inside:avoid}
+  #fiche-papier li{margin:0 0 .7mm;break-inside:avoid}
   #fiche-papier .touche{border:.6pt solid #000;border-radius:3px;padding:0 .3em;font-weight:700;white-space:nowrap}
-  .fp-cadre{border:.8pt solid #000;border-radius:3mm;padding:2.5mm 4mm}
+  .fp-cadre{border:.8pt solid #000;border-radius:3mm;padding:2mm 4mm}
   .fp-test li{margin-bottom:0}
-  .fp-ligne{display:block;border-bottom:.5pt dotted #000;height:7.5mm}
+  .fp-ligne{display:block;border-bottom:.5pt dotted #000;height:6.5mm}
   .fp-consigne{font-size:9.5pt;margin:0 0 1.5mm}
-  .fp-reponses{margin-top:5mm;border-top:.5pt dashed #000;padding-top:2mm;font-size:8.5pt;transform:rotate(180deg);break-inside:avoid}
+  .fp-reponses{margin-top:3mm;border-top:.5pt dashed #000;padding-top:2mm;font-size:8.5pt;transform:rotate(180deg);break-inside:avoid}
   .fp-reponses ol{padding-left:5mm}
   .fp-reponses li{margin:0}
-  .fp-enligne{font-size:9pt;margin:3mm 0 0}
+  .fp-enligne{font-size:9pt;margin:2mm 0 0}
 }`;
   document.head.append(el("style", null, css));
 
