@@ -23,7 +23,7 @@ addEventListener("error", e => {
 <title>Labo 07 — Dans les coulisses du PC</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,600;0,800;1,600&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
-<link rel="stylesheet" href="https://root75.github.io/campin-public/pas-a-pas/fiche.css?v=moteur-20261109">
+<link rel="stylesheet" href="https://root75.github.io/campin-public/pas-a-pas/fiche.css?v=rappels-20261112">
 <style>
 .outil-trame{margin:10px 0;display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center}
 /* ===== Style « missions », repris du Rat de ville (4/11) ===== */
@@ -95,7 +95,7 @@ details.coince{border-radius:16px}
 
 <div class="page">
   <header class="entete"><svg class="mascotte" id="mascotte" viewBox="0 0 120 120" aria-hidden="true"><ellipse cx="60" cy="108" rx="34" ry="7" fill="#0001"/><rect x="14" y="16" width="92" height="66" rx="10" fill="#1d5a73"/><rect x="22" y="24" width="76" height="50" rx="5" fill="#e8f4fb"/><circle cx="47" cy="45" r="6" fill="#1f2a33"/><circle cx="73" cy="45" r="6" fill="#1f2a33"/><circle cx="49" cy="43" r="2" fill="#fff"/><circle cx="75" cy="43" r="2" fill="#fff"/><path d="M50 58q10 8 20 0" fill="none" stroke="#1f2a33" stroke-width="3" stroke-linecap="round"/><circle cx="38" cy="56" r="4" fill="#f2a7b5"/><circle cx="82" cy="56" r="4" fill="#f2a7b5"/><rect x="52" y="82" width="16" height="12" fill="#5b6873"/><rect x="34" y="94" width="52" height="8" rx="4" fill="#5b6873"/><circle cx="96" cy="88" r="13" fill="none" stroke="#e3a922" stroke-width="5"/><path d="M105 97l10 10" stroke="#e3a922" stroke-width="6" stroke-linecap="round"/></svg><div>
-    <div class="surtitre">Informatique et laboratoire · 3F · Labo 07</div>
+    <div class="surtitre">Informatique et laboratoire · 3e · Labo 07</div>
     <h1>Dans les coulisses du PC <em>une enquête</em></h1>
     <p class="bulle" id="bulle">Salut ! On mène l’enquête, mission par mission.</p>
   </div></header>
@@ -113,6 +113,24 @@ details.coince{border-radius:16px}
 
   <main class="panneau" id="bloc" aria-live="polite"></main>
 
+  <details id="plus-loin">
+    <summary>⚡ Fini avant les autres ? Les prolongements</summary>
+    <p class="note">Hors du parcours : rien à enregistrer, rien à ajouter au rapport. Seulement quand la mission est terminée.</p>
+    <h3>Après la mission 1</h3>
+    <p>Rouvre GIMP, crée une petite image (Fichier ▸ Nouvelle image ▸ Valider) et trace un trait avec l’outil Pinceau 🖌 (touche P). Ferme ensuite GIMP par le ×, en haut à droite de sa fenêtre. Que te demande-t-il ? Pourquoi Terminer la tâche ne l’a-t-il pas demandé ?</p>
+    <p>Sur le Banc d’essai, clique sur Figer sans fin : la page ne répond plus. Arrête seulement cet onglet : Chrome ▸ ⋮ ▸ Plus d’outils ▸ Gestionnaire de tâches (ou Shift + Esc) ▸ « Onglet : Banc d’essai — Labo 07 » ▸ Arrêter le processus. Pourquoi ne pas utiliser Terminer la tâche de Windows sur Google Chrome ?</p>
+    <p class="attention">⚠️ Dans le Gestionnaire des tâches de Windows, ne termine pas Google Chrome.</p>
+    <h3>Après la mission 2</h3>
+    <p>Sans ouvrir les fichiers, cherche dans le même dossier un autre statut. Explique ce qui pourrait différer sans réseau. S’il n’y en a pas, compare les cas fictifs « nuage » et « coche verte ».</p>
+    <p class="attention">⚠️ Ne clique ni sur Libérer de l’espace, ni sur Toujours conserver ; ne touche pas aux réglages OneDrive.</p>
+    <h3>Après la mission 3</h3>
+    <p>Invente un incident sans risque, avec deux fenêtres d’essai. Écris deux hypothèses et un test qui les départage. Fais-le lire au professeur avant toute mise en scène.</p>
+    <p class="attention">⚠️ Ne manipule ni le poste ni le travail d’un voisin.</p>
+    <h3>Après le passage du professeur, au défi final</h3>
+    <p>Dans le même scénario, remplace le nuage par une coche verte : quelle partie de ton raisonnement change ? Quelle conclusion sur une panne matérielle resterait impossible avec ces seuls indices ?</p>
+    <p class="note">L’observation des ressources est un prolongement, sans nouvelle compétence de 3e attribuée.</p>
+  </details>
+
   <details class="coince" id="coince">
     <summary>Ça coince ?</summary>
     <ul id="coince-liste"></ul>
@@ -128,7 +146,7 @@ details.coince{border-radius:16px}
 
 <dialog id="memo">
   <h3>🔎 Ma méthode d’enquête</h3>
-  <div class="encart" style="margin-top:10px"><p>Hypothèse → test sans risque → manipulation personnelle → preuve relevée → conclusion.</p><p>Réponds seul avant de comparer à deux. Ton voisin explique sans toucher ta souris.</p><p>Observation seulement : aucun arrêt de processus, aucune suppression, aucun changement de configuration ou de synchronisation.</p><p>Enregistre les hypothèses initiales sur le site avant de manipuler. Écris les observations et conclusions uniquement dans ton rapport Docs. La capture va dans ce même document. Le site ne lit pas le rapport et ne vérifie pas la remise Classroom.</p><p>Proposition de travail quotidien /10 : enquête /7 (hypothèse 1, test 2, preuve 1, conclusion 2, distinction 1) ; document et remise /3 (identification et nom 1, titres et tableau 1, capture légendée et remise vérifiée 1).</p></div>
+  <div class="encart" style="margin-top:10px"><p>Hypothèse → test sans risque → manipulation personnelle → preuve relevée → conclusion.</p><p>Réponds seul avant de comparer à deux. Ton voisin explique sans toucher ta souris.</p><p class="attention">⚠️ Un seul arrêt de tâche : GIMP, quand la case le demande. Aucune suppression, aucun changement de réglage ni de synchronisation.</p><p>Enregistre les hypothèses initiales sur le site avant de manipuler. Écris les observations et conclusions uniquement dans ton rapport Docs. La capture va dans ce même document. Le site ne lit pas le rapport et ne vérifie pas la remise Classroom.</p><p>Proposition de travail quotidien /10 : enquête /7 (hypothèse 1, test 2, preuve 1, conclusion 2, distinction 1) ; document et remise /3 (identification et nom 1, titres et tableau 1, capture légendée et remise vérifiée 1).</p></div>
   <form method="dialog" class="actions" style="margin-top:14px"><button class="btn plein">Fermer</button></form>
 </dialog>
 
@@ -154,7 +172,7 @@ details.coince{border-radius:16px}
   <h3>2. Trois exigences de présentation et de remise — /3</h3>
   <ul>
     <li><b>Identification et nom — /1 :</b> titre visible, prénom, nom, classe, date ; fichier correctement nommé.</li>
-    <li><b>Titres et tableau — /1 :</b> même style pour les quatre titres de partie ; vrai tableau lisible de trois colonnes et quatre lignes pour les mesures, avec % dans les en-têtes.</li>
+    <li><b>Titres et tableau — /1 :</b> même style pour les quatre titres de partie ; vrai tableau lisible de trois colonnes et cinq lignes pour les mesures, avec % dans les en-têtes.</li>
     <li><b>Capture et remise — /1 :</b> capture ciblée, lisible, proportionnée et légendée ; le bon document est joint, sa remise est confirmée.</li>
   </ul>
   <details id="grille-criteree">
@@ -180,10 +198,10 @@ details.coince{border-radius:16px}
   <details><summary>Un geste à retrouver : titre, tableau ou image</summary>
     <ul>
       <li>Titres : sélectionne une ligne de partie ▸ liste « Normal » de la barre d’outils ▸ Titre 1 ; applique le même style aux quatre parties.</li>
-      <li>Tableau : clique sous « Deux applications identifiées » ▸ Insertion ▸ Tableau ▸ 3 colonnes × 4 lignes ; complète les en-têtes et les trois relevés. Ne simule pas les colonnes avec des espaces.</li>
+      <li>Tableau : clique sur la ligne « [Insérer un vrai tableau…] » ▸ Insertion ▸ Tableau ▸ 3 colonnes × 5 lignes ; complète les en-têtes et les quatre relevés.<p class="attention">⚠️ Ne fais pas les colonnes avec des espaces.</p></li>
       <li>Capture : après le dernier relevé, ⊞ Démarrer ▸ Outil Capture d’écran ▸ Nouveau (ou Windows + Shift + S), puis sélectionne la zone utile.</li>
       <li>Dans le rapport, clique à l’emplacement de l’image ▸ Édition ▸ Coller (Ctrl + V). Si le presse-papiers échoue, enregistre la capture dans l’Outil Capture d’écran, puis Docs ▸ Insertion ▸ Image ▸ Importer depuis l’ordinateur.</li>
-      <li>Image : redimensionne par un coin, sans étirer ; garde-la à l’intérieur de la page. Écris une légende juste dessous. N’affiche ni travail d’un voisin ni donnée personnelle inutile.</li>
+      <li>Image : redimensionne par un coin, sans étirer ; garde-la à l’intérieur de la page. Écris une légende juste dessous.<p class="attention">⚠️ Ne montre ni le travail d’un voisin ni une donnée personnelle inutile.</p></li>
     </ul>
   </details>
   <details id="relecture-pairs"><summary>Avant le défi final — relire à deux avec trois critères</summary>
@@ -197,9 +215,9 @@ details.coince{border-radius:16px}
     <p>Le site ne collecte pas cette relecture. Le défi final est réalisé seul, sans correction par le binôme avant sa remise ; le professeur garde la responsabilité de la note.</p>
   </details>
   <h3>3. À la fin de l’heure de cours</h3>
-  <p>Vérifie l’indication d’enregistrement dans Docs. Garde le nom du document et le bloc de reprise. <b>Ne remets pas le devoir à chaque cours</b> : complète le même rapport jusqu’à la fin.</p>
+  <p>Vérifie l’indication « Enregistré » dans Docs. Au cours suivant, rouvre <b><span data-rappel="rapport">ton rapport</span></b> par la gaufre ⋮⋮⋮ ▸ Docs, dans la liste de tes documents. Mes cours te remet tout seul à ton étape.</p><p class="attention">⚠️ Ne remets pas le devoir à chaque cours : complète le même rapport jusqu’à la fin.</p>
   <h3>4. Remettre une seule fois — quand le rapport est terminé</h3>
-  <p>Les gestes sont dans la dernière étape du parcours, <b>« Remettre mon rapport »</b>. Si tu ne trouves pas le devoir dans Classroom, clique sur « J'attends de l'aide » ; ne crée pas un deuxième document et ne poste pas ton travail dans le flux.</p>
+  <p>Les gestes sont dans la dernière étape du parcours, <b>« Remettre mon rapport »</b>. Si tu ne trouves pas le devoir dans Classroom, sonne la cloche 🔔 « J'attends de l'aide ».</p><p class="attention">⚠️ Ne crée pas un deuxième document et ne poste pas ton travail dans le flux.</p>
   <p class="note">Les cases sont une aide personnelle. Le site ne lit ni les fichiers joints ni le statut Classroom. Seule la vérification dans Classroom confirme la remise.</p>
   <p><b>Proposition de travail quotidien /10 :</b> enquête /7 : hypothèse 1, test 2, preuve 1, conclusion 2, distinction 1 ; document et remise /3.</p>
   <form method="dialog" class="actions"><button class="btn plein">Revenir à l’enquête</button></form>
@@ -210,12 +228,12 @@ details.coince{border-radius:16px}
 <script defer src="https://root75.github.io/campin-public/pas-a-pas/sequence-eleve.js?v=occupe-20261112"></script>
 <script src="https://root75.github.io/campin-public/pas-a-pas/demo-lecteur.js?v=sous-cases-20261112"></script>
 <script src="https://root75.github.io/campin-public/pas-a-pas/demos-communs.js?v=classroom-20261112"></script>
-<script src="https://root75.github.io/campin-public/labo-07/pas-a-pas/demos.js?v=classroom-20261112"></script>
-<script src="https://root75.github.io/campin-public/labo-07/pas-a-pas/fiche.js?v=classroom-20261112"></script>
+<script src="https://root75.github.io/campin-public/labo-07/pas-a-pas/demos.js?v=degressif-20261112"></script>
+<script src="https://root75.github.io/campin-public/labo-07/pas-a-pas/fiche.js?v=degressif-20261112"></script>
 <script src="https://root75.github.io/campin-public/labo-07/pas-a-pas/rapport.js?v=rapport-20261106"></script>
 <script src="https://root75.github.io/campin-public/pas-a-pas/phrase-fin.js?v=20261106"></script>
 <script src="https://root75.github.io/campin-public/pas-a-pas/cloche.js?v=cloche-20261109"></script>
-<script src="https://root75.github.io/campin-public/pas-a-pas/blocs.js?v=suivi-20261112"></script>
+<script src="https://root75.github.io/campin-public/pas-a-pas/blocs.js?v=rappels-20261112"></script>
 
 </body>
 </html>

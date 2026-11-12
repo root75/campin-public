@@ -62,6 +62,21 @@ annonce la question (« Clique sur ✅ C'est vérifié : … »).
 | `ordre`, `ligne`, `trace`, `code`, `ordre-gestes` | Python et logigrammes (voir les fiches Python) | page |
 | `rapport`, `enquete`, `mixte` | déclare une étape, écrit un court raisonnement (Labo 07) | non corrigé |
 
+`enquete` : chaque champ affiche « ✓ écrit / ✗ encore vide » pendant la frappe, et un envoi incomplet nomme **tous** les
+champs vides d'un coup (jamais un manque à la fois) ; ces refus ne sont pas écrits au Journal. `rapport` : `liste:[…]`
+(facultatif) = une case par point à vérifier dans le document ; un enregistrement incomplet nomme tous les points
+non cochés. Sans `liste`, la seule `confirmation`.
+
+**Rappels, au lieu de « retiens »** (12/11/2026). Une réponse `enquete` enregistrée est gardée sur le poste, sous
+l'adresse de l'élève. `rappel:[{ de:'2:H', titre:'Ton hypothèse de départ' }]` dans un bloc = un encadré 🔁 sous le
+but ; `<span data-rappel="5:F">ton fichier</span>` dans un texte = le champ F du bloc 5 ; `data-rappel="nom"` =
+`RAPPELS.nom()` de la fiche (calculé de `EMAIL`, par exemple le nom d'un fichier). Sans valeur (autre poste, aperçu),
+le texte d'origine reste : il doit se lire tel quel.
+
+**Un « ne fais pas » = un encadré** `<p class="attention">⚠️ …</p>`, dans la case du geste qu'il concerne (après le
+`</label>`) ou sous les cases ; jamais dans le texte d'une case à cocher. **Les prolongements** vont hors du fil, dans
+`<details id="plus-loin">` de la page ; l'écran du cadenas (blocs ouverts) propose d'y aller.
+
 `code`, `ordre`, `trace` et `ligne` (Python dans la page, Pyodide) sont dans [`python-editeur.js`](python-editeur.js), commun aux
 fiches Python : la page le charge **avant** sa fiche et avant `blocs.js`. La fiche peut déclarer `const PYTHON_INPUT = true`
 (`input( )` lit les réponses de `q.essais`) et `const ERREURS_FICHE = {…}` (explications d'erreurs du cours).

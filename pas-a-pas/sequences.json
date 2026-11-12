@@ -980,7 +980,8 @@
         "blocs": [
           1,
           4
-        ]
+        ],
+        "repere": "Guidage dégressif (fiche prof, « Conduite ») : cet atelier ferme la classe après le bloc 4, jusqu’à la mise en commun 1 ; les ateliers suivants laissent tout ouvert jusqu’à la remise. Le plafond est un filet, pas un rythme imposé."
       },
       {
         "type": "ecran",
@@ -1024,7 +1025,7 @@
         ],
         "blocs": [
           5,
-          6
+          10
         ],
         "repere": "Le chemin à relever est celui du fichier dans OneDrive sur ce poste. Le rapport Docs est un document en ligne distinct ; Google Drive n’est pas un lecteur installé sur les PC de l’école."
       },
@@ -1069,7 +1070,7 @@
         ],
         "blocs": [
           7,
-          7
+          10
         ],
         "repere": "Montrer une seule fois au groupe le bouton du moniteur externe. Les binômes vérifient les trois incidents non rédigés avec les critères annoncés ; le professeur intervient sur blocage persistant ou désaccord. Pas de passage obligatoire après chaque essai."
       },
@@ -1115,7 +1116,7 @@
         ],
         "blocs": [
           7,
-          7
+          10
         ],
         "repere": "Les élèves gardent leur souris. Aucun nouveau paragraphe, note ou partage de document demandé. Le site ne recueille pas cette relecture. La partie finale reste individuelle ; aucune correction entre pairs avant sa remise."
       },
@@ -1131,7 +1132,7 @@
         ],
         "blocs": [
           8,
-          9
+          10
         ],
         "repere": "Travail quotidien /10 : enquête /7, document/remise /3. Hypothèse et test sur le site (étape interne 8), preuve et décision courtes dans le rapport. Observer le geste et faire justifier oralement ; aucune validation orale collectée par le site."
       },

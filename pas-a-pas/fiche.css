@@ -148,3 +148,18 @@ dialog{max-height:90vh;overflow-y:auto}#rapport{display:none;width:min(95vw,48re
 .modele{border:1px dashed var(--trait);border-radius:10px;padding:10px 14px;background:var(--papier)}.modele pre{white-space:pre-wrap;overflow-wrap:anywhere;margin:6px 0 0;font:1rem/1.5 ui-monospace,Consolas,monospace}
 form.redaction{display:grid;gap:12px}form.redaction label{display:grid;gap:4px;font-weight:700}form.redaction input,form.redaction textarea{width:100%;box-sizing:border-box;font:inherit;padding:10px;border:2px solid var(--trait);border-radius:8px}form.redaction .note{font-weight:400}
 .retour ul{margin:6px 0 0;padding-left:1.2rem}
+/* ⚠️ Un « ne fais pas » = un encadré à lui seul, à côté du geste qu'il concerne (12/11/2026). */
+.attention{background:var(--fromage-pale);border:2px solid var(--fromage);border-radius:10px;padding:8px 12px;margin:8px 0 0;font-weight:700}
+ol.etapes li>.attention{margin-left:42px}
+/* 🔁 Rappel d'une réponse donnée plus tôt (B.rappel, data-rappel) */
+.repere.rappel{border-left-color:var(--fromage)}.repere.rappel q{font-style:italic}
+.rappele{background:var(--fromage-pale);border-radius:4px;padding:0 4px;font-weight:700;overflow-wrap:anywhere}
+/* Contrôle pendant la frappe, et tous les manques d'un coup */
+form.bilan .etat-champ{display:block;font-weight:400;color:var(--faux)}form.bilan .etat-champ.ok{color:var(--juste)}
+form.bilan label.manque textarea,form.bilan label.manque input{outline:3px solid var(--faux);outline-offset:2px}
+form.bilan label.manque{color:var(--faux)}
+/* ⚡ Prolongements, hors du fil des blocs */
+#plus-loin{border:2px dashed var(--fromage);border-radius:16px;padding:10px 16px;background:var(--carte)}#plus-loin summary{cursor:pointer;font-weight:700}#plus-loin h3{margin:12px 0 4px;font-size:1rem}
+/* Déclaration à liste (q.liste) : une case par point, alignée sur son texte */
+form.bilan label:has(>input[type=checkbox]){display:flex;gap:10px;align-items:flex-start}
+form.bilan label>input[type=checkbox]{width:24px;height:24px;flex:none;margin:1px 0 0;accent-color:var(--juste)}
