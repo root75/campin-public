@@ -902,11 +902,11 @@
       "Observation des ressources : prolongement. OneDrive : réactivation du Labo 06."
     ],
     "preparation": [
-      "Préparer un seul devoir Classroom « Labo 07 — Dans les coulisses du PC », /10, avec remise d’un document personnel à la fin du parcours. La préparation ne crée ni ne publie ce devoir. Ne pas distribuer de copie déjà mise en page.",
+      "Préparer un seul devoir Classroom « Labo 07 — Dans les coulisses du PC », /20, avec remise d’un document personnel à la fin du parcours. La préparation ne crée ni ne publie ce devoir. Ne pas distribuer de copie déjà mise en page.",
       "L’élève crée un rapport Google Docs à partir de la trame en texte brut avant les premières mesures. Il garde ce même document pendant tout le travail et ne le remet qu’une fois terminé.",
       "Prévoir un fichier déjà enregistré dans le dossier OneDrive scolaire de l’Explorateur, par exemple celui du Labo 06 ; un fichier de démonstration sans donnée privée si nécessaire. La mission ne dépend pas d’une autre séquence obligatoirement réalisée juste avant.",
       "Correction : hypothèses initiales aux étapes internes 2, 6 et 9 du Journal privé ; preuves écrites courtes dans le rapport joint à Classroom, incidents d’entraînement vérifiés à deux et geste final vérifié individuellement par le professeur. Les autres blocs enregistrent uniquement « rapport:… », une déclaration d’avancement, sans lecture du document ni contrôle de remise.",
-      "Grille : enquête /7, document et remise /3. Identification et nom ; styles de titres et vrai tableau ; capture ciblée et légendée, bon document joint et remise confirmée. Aucun calcul automatique de note.",
+      "Grille : enquête /14, document et remise /6. Identification et nom ; styles de titres et vrai tableau ; capture ciblée et légendée, bon document joint et remise confirmée. Aucun calcul automatique de note.",
       "Compte scolaire : Mes cours ▸ classes et cours ouverts ▸ cocher labo-07 uniquement pour la classe concernée. Nouvelle séance au premier lancement ; conserver la séance pour les continuations.",
       "Vérifier sur un PC élève : Gestionnaire des tâches et ses totaux, Performances (processeur, mémoire, disque), GIMP (ouvert pour les élèves, temps d’ouverture, image 10000 × 10000), Banc d’essai labo-07/essai-charge.html (processeur près de 100 % pendant le calcul), Terminer la tâche sur GIMP, Calculatrice, Bloc-notes, fenêtres, chemin et Statut du fichier OneDrive. Seul arrêt de processus : GIMP, quand la fiche le demande ; aucune suppression ni changement de réglage.",
       "Projection : utiliser uniquement Lancer la séquence. Ne jamais projeter tableau nominatif, Journal, humeur, avis ou copies. Un vote initial recueille des choix ; seuls les effectifs agrégés sont projetés. Aucun texte libre d’élève n’est affiché.",
@@ -1134,7 +1134,7 @@
           9,
           11
         ],
-        "repere": "Travail quotidien /10 : enquête /7, document/remise /3. Hypothèse et test sur le site (étape interne 9), preuve et décision courtes dans le rapport. Observer le geste et faire justifier oralement ; aucune validation orale collectée par le site."
+        "repere": "Travail quotidien /20 : enquête /14, document/remise /6. Hypothèse et test sur le site (étape interne 9), preuve et décision courtes dans le rapport. Observer le geste et faire justifier oralement ; aucune validation orale collectée par le site."
       },
       {
         "type": "ecran",

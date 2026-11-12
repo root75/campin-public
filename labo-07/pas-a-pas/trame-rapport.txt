@@ -34,31 +34,31 @@ Preuve observée sur mon poste (distinguer le nuage donné dans le scénario si 
 Ma décision justifiée pour le scénario : [deux phrases maximum]
 Je montre ma manipulation et distingue machine, Windows, application et fichier à l’oral au professeur, sans autre paragraphe à écrire.
 
-Grille critériée — Travail quotidien /10
-Enquête finale /7 ; document et remise /3.
+Grille critériée — Travail quotidien /20
+Enquête finale /14 ; document et remise /6.
 
-Hypothèse initiale (site, défi final) — /1
-1 : plausible et testable ; 0,5 : plausible mais imprécise ; 0 : absente ou hors sujet.
+Hypothèse initiale (site, défi final) — /2
+2 : plausible et testable ; 1 : plausible mais imprécise ; 0 : absente ou hors sujet.
 
-Choix et réalisation du test — /2
-2 : pertinent, réversible, personnel ; 1 : pertinent mais incomplet ou encore guidé ; 0 : absent ou dangereux non corrigé.
+Choix et réalisation du test — /4
+4 : pertinent, réversible, personnel ; 2 : pertinent mais incomplet ou encore guidé ; 0 : absent ou dangereux non corrigé.
 
-Preuve dans le rapport — /1
-1 : indice précis, réel et distingué du cas donné ; 0,5 : partiel ; 0 : inexploitable.
+Preuve dans le rapport — /2
+2 : indice précis, réel et distingué du cas donné ; 1 : partiel ; 0 : inexploitable.
 
-Conclusion finale justifiée — /2
-2 : décision correcte liée à la preuve et au nuage donné, arrêt de Windows écarté avec raison ; 1 : décision pertinente mais justification partielle ; 0 : sans lien ou erronée.
+Conclusion finale justifiée — /4
+4 : décision correcte liée à la preuve et au nuage donné, arrêt de Windows écarté avec raison ; 2 : décision pertinente mais justification partielle ; 0 : sans lien ou erronée.
 
-Machine / système / application / fichier — /1
-1 : quatre rôles distingués à l’oral dans le cas ; 0,5 : distinction partielle ; 0 : confusion persistante.
+Machine / système / application / fichier — /2
+2 : quatre rôles distingués à l’oral dans le cas ; 1 : distinction partielle ; 0 : confusion persistante.
 
-Identification et nom du fichier — /1
-0,5 : titre, prénom/nom, classe/date présents ; 0,5 : nom LABO07_CoulissesPC_Prenom_Nom respecté.
+Identification et nom du fichier — /2
+1 : titre, prénom/nom, classe/date présents ; 1 : nom LABO07_CoulissesPC_Prenom_Nom respecté.
 
-Titres et tableau — /1
-0,5 : même style de titre pour les quatre parties ; 0,5 : vrai tableau 3×5, lisible, lignes et unités identifiées.
+Titres et tableau — /2
+1 : même style de titre pour les quatre parties ; 1 : vrai tableau 3×5, lisible, lignes et unités identifiées.
 
-Capture et remise — /1
-0,5 : capture utile, lisible, proportionnée, avec légende explicative ; 0,5 : bon document joint, remise confirmée dans Classroom.
+Capture et remise — /2
+1 : capture utile, lisible, proportionnée, avec légende explicative ; 1 : bon document joint, remise confirmée dans Classroom.
 
-Total /10. Non observé faute de temps ou poste indisponible : à compléter, pas zéro. La vitesse et l’utilisation d’un indice ne sont pas pénalisées.
+Total /20. Non observé faute de temps ou poste indisponible : à compléter, pas zéro. La vitesse et l’utilisation d’un indice ne sont pas pénalisées.

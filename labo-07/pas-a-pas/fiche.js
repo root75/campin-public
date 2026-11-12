@@ -38,11 +38,11 @@ const BLOCS = [
     "titre": "Créer mon rapport et le placer à côté du cours",
     "min": 8,
     "veux": "Préparer le document où j’écrirai mes preuves, avant toute mesure.",
-    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\"><span>Dans Chrome, clique sur la gaufre ⋮⋮⋮, en haut à droite ▸ Docs ▸ + Document vierge. Ou ouvre <a href=\"https://docs.google.com/\" target=\"_blank\" rel=\"noopener\">Google Docs</a>. Compte de l’école.</span></label></li><li><label><input type=\"checkbox\"><span>Clique sur « Document sans titre », en haut à gauche ▸ tape <b><span data-rappel=\"rapport\">LABO07_CoulissesPC_Prenom_Nom</span></b> (ton prénom et ton nom, sans accents) ▸ Enter.</span></label></li><li><label><input type=\"checkbox\"><span>Reviens sur l’onglet du cours ▸ clique sur le bouton 📋 Copier la trame, juste en dessous.</span></label></li></ol><p class=\"outil-trame\"><button class=\"btn plein\" type=\"button\" data-copier-trame>📋 Copier la trame</button> <span class=\"note trame-statut\" role=\"status\"></span><a class=\"note\" href=\"https://root75.github.io/campin-public/labo-07/pas-a-pas/trame-rapport.txt\" target=\"_blank\" rel=\"noopener\">Trame en texte brut</a></p><ol class=\"etapes\"><li><label><input type=\"checkbox\"><span>Dans ton document, clique dans la page ▸ Édition ▸ Coller sans mise en forme (Ctrl + Shift + V).</span></label></li><li><label><input type=\"checkbox\"><span>Complète ton prénom, ton nom, ta classe et la date, en haut du document.</span></label></li><li><label><input type=\"checkbox\"><span>Clic droit sur l’onglet du rapport ▸ Ajouter l’onglet à une nouvelle vue fractionnée. Le cours à gauche, le rapport à droite.</span></label></li><li><label><input type=\"checkbox\"><span>Vérifie en haut du document l’indication « Enregistré dans Drive ».</span></label></li></ol>",
-    "vois": "Mon document s’appelle LABO07_CoulissesPC_Prenom_Nom, contient la trame et mon identification, et s’affiche à côté du cours.",
+    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\"><span>Dans Chrome, clique sur la gaufre ⋮⋮⋮, en haut à droite ▸ Docs ▸ + Document vierge. Ou ouvre <a href=\"https://docs.google.com/\" target=\"_blank\" rel=\"noopener\">Google Docs</a>. Compte de l’école.</span></label></li><li><label><input type=\"checkbox\"><span>Clique sur « Document sans titre », en haut à gauche ▸ tape <b><span data-rappel=\"rapport\">LABO07_CoulissesPC_Prenom_Nom</span></b> (ton prénom et ton nom, sans accents) ▸ Enter.</span></label></li><li><label><input type=\"checkbox\"><span>Reviens sur l’onglet du cours ▸ clique sur le bouton 📋 Copier la trame, juste en dessous.</span></label></li></ol><p class=\"outil-trame\"><button class=\"btn plein\" type=\"button\" data-copier-trame>📋 Copier la trame</button> <span class=\"note trame-statut\" role=\"status\"></span><a class=\"note\" href=\"https://root75.github.io/campin-public/labo-07/pas-a-pas/trame-rapport.txt\" target=\"_blank\" rel=\"noopener\">Trame en texte brut</a></p><ol class=\"etapes\"><li><label><input type=\"checkbox\"><span>Dans ton document, clique dans la page ▸ Édition ▸ Coller sans mise en forme (Ctrl + Shift + V).</span></label></li><li><label><input type=\"checkbox\"><span>Complète ton prénom, ton nom, ta classe et la date, en haut du document ▸ vérifie l’indication « Enregistré dans Drive », en haut.</span></label></li><li><label><input type=\"checkbox\"><span>Joins ton rapport au devoir, sans le rendre : ouvre <a href=\"https://classroom.google.com/\" target=\"_blank\" rel=\"noopener\">Classroom</a> avec ton compte scolaire ▸ le cours d’informatique de ta classe ▸ Travaux et devoirs ▸ Labo 07 — Dans les coulisses du PC ▸ Afficher les instructions ▸ dans « Vos devoirs », Ajouter ou créer ▸ Google Drive ▸ <b><span data-rappel=\"rapport\">LABO07_CoulissesPC_Prenom_Nom</span></b> ▸ le bouton bleu, en bas à droite.</span></label><p class=\"attention\">⚠️ Ne clique pas sur « Rendre le devoir » : tu le rendras une seule fois, à la fin du labo.</p></li><li><label><input type=\"checkbox\"><span>Reviens sur l’onglet du rapport ▸ clic droit sur cet onglet ▸ Ajouter l’onglet à une nouvelle vue fractionnée. Le cours à gauche, le rapport à droite.</span></label></li></ol>",
+    "vois": "Mon document s’appelle LABO07_CoulissesPC_Prenom_Nom, contient la trame et mon identification, est joint au devoir Labo 07 (encore « Attribué », pas rendu) et s’affiche à côté du cours.",
     "coince": [
       "La copie ne marche pas ? Clique sur le lien « Trame en texte brut » ▸ Ctrl + A ▸ Ctrl + C. Puis, dans ton document : Ctrl + Shift + V.",
-      "Pas de « vue fractionnée » dans le menu ? Garde deux onglets et passe de l’un à l’autre en cliquant sur leur titre. Docs ouvre un autre compte ? Clique sur la photo ronde, en haut à droite ▸ choisis ton compte de l’école."
+      "Pas de « vue fractionnée » dans le menu ? Garde deux onglets et passe de l’un à l’autre en cliquant sur leur titre. Docs ouvre un autre compte ? Clique sur la photo ronde, en haut à droite ▸ choisis ton compte de l’école. Le devoir Labo 07 n’apparaît pas dans Classroom ? Il n’est peut-être pas encore publié : continue, et joins ton rapport dès qu’il apparaît."
     ],
     "demos": {
       "1": [
@@ -66,19 +66,29 @@ const BLOCS = [
           5
         ]
       ],
+      "5": [
+        "rapport",
+        [
+          6
+        ]
+      ],
       "6": [
+        "joindre",
+        [
+          0,
+          1,
+          2,
+          3,
+          4
+        ]
+      ],
+      "7": [
         "cote",
         [
           0,
           1,
           2,
           3
-        ]
-      ],
-      "7": [
-        "rapport",
-        [
-          6
         ]
       ]
     },
@@ -91,11 +101,12 @@ const BLOCS = [
       "juste": "Ton rapport est prêt. Garde-le ouvert : tu y écriras à chaque mission.",
       "liste": [
         "Mon document porte le nom demandé : LABO07_CoulissesPC_, puis mon prénom et mon nom.",
-        "La trame est collée, et mon prénom, mon nom, ma classe et la date sont complétés.",
-        "Le rapport s’affiche à côté du cours, et Docs indique « Enregistré »."
+        "La trame est collée, mon identification complétée, et Docs indique « Enregistré ».",
+        "Mon rapport est joint au devoir Labo 07, qui affiche encore « Attribué » : je ne l’ai pas rendu.",
+        "Le rapport s’affiche à côté du cours."
       ]
     },
-    "extra": "<p class=\"attention\">⚠️ Un seul document pour tout le labo. Au cours suivant, ne crée pas de deuxième document : rouvre <b><span data-rappel=\"rapport\">LABO07_CoulissesPC_Prenom_Nom</span></b> par la gaufre ⋮⋮⋮ ▸ Docs, dans la liste de tes documents.</p>"
+    "extra": "<p class=\"attention\">⚠️ Un seul document pour tout le labo. Au cours suivant, ne crée pas de deuxième document : rouvre <b><span data-rappel=\"rapport\">LABO07_CoulissesPC_Prenom_Nom</span></b> par Classroom ▸ Labo 07 ▸ Vos devoirs, où il est joint (ou par la gaufre ⋮⋮⋮ ▸ Docs).</p>"
   },
   {
     "partie": "1 — Observer ce qui tourne",
@@ -584,7 +595,7 @@ const BLOCS = [
       "etiquette": "Mon hypothèse et mon test",
       "colle": true
     },
-    "extra": "<p class=\"attention\">⚠️ Ne coupe pas le réseau et ne ferme pas Windows : ce ne sont pas des tests sans risque.</p><p class=\"encart\">Proposition de travail quotidien /10 : enquête /7 (hypothèse 1, test 2, preuve 1, conclusion 2, distinction 1) · document et remise /3 (identification et nom 1, styles et tableau 1, capture légendée et remise vérifiée 1). Les aides restent accessibles ; leur utilisation n’est pas une pénalité de vitesse.</p>"
+    "extra": "<p class=\"attention\">⚠️ Ne coupe pas le réseau et ne ferme pas Windows : ce ne sont pas des tests sans risque.</p><p class=\"encart\">Proposition de travail quotidien /20 : enquête /14 (hypothèse 2, test 4, preuve 2, conclusion 4, distinction 2) · document et remise /6 (identification et nom 2, styles et tableau 2, capture légendée et remise vérifiée 2). Les aides restent accessibles ; leur utilisation n’est pas une pénalité de vitesse.</p>"
   },
   {
     "partie": "Final — Situation individuelle nouvelle",
@@ -626,7 +637,7 @@ const BLOCS = [
     "titre": "Remettre mon rapport dans Classroom",
     "min": 5,
     "veux": "Remettre une seule fois mon rapport terminé, puis vérifier qu’il est bien arrivé.",
-    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\"><span>Relis ton rapport : remplace chaque « [à compléter] » et efface les indications entre crochets.</span></label></li><li><label><input type=\"checkbox\"><span>Vérifie les trois exigences (/3) : titre visible, prénom, nom, classe et date, fichier nommé <b><span data-rappel=\"rapport\">LABO07_CoulissesPC_Prenom_Nom</span></b> ; même style pour les quatre titres de partie et un vrai tableau de 3 colonnes et 5 lignes, avec % dans les en-têtes ; capture ciblée, lisible, pas étirée, légende juste dessous.</span></label></li><li><label><input type=\"checkbox\"><span>Ouvre <a href=\"https://classroom.google.com/\" target=\"_blank\" rel=\"noopener\">Classroom</a> avec ton compte scolaire ▸ le cours d’informatique de ta classe ▸ Travaux et devoirs ▸ Labo 07 — Dans les coulisses du PC ▸ Afficher les instructions.</span></label><p class=\"attention\">⚠️ Ne poste pas ton rapport dans le flux du cours : il se joint au devoir, dans « Vos devoirs ».</p></li><li><label><input type=\"checkbox\"><span>Dans « Vos devoirs » ▸ Ajouter ou créer ▸ Google Drive ▸ sélectionne <b><span data-rappel=\"rapport\">LABO07_CoulissesPC_Prenom_Nom</span></b> ▸ le bouton bleu, en bas à droite.</span></label></li><li><label><input type=\"checkbox\"><span>Clique sur la pièce jointe pour vérifier que c’est ton rapport complet.</span></label></li><li><label><input type=\"checkbox\"><span>Clique sur Rendre le devoir ▸ confirme : Rendre le devoir.</span></label></li><li><label><input type=\"checkbox\"><span>Vérifie que le devoir affiche « Remis ».</span></label></li></ol>",
+    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\"><span>Relis ton rapport : remplace chaque « [à compléter] » et efface les indications entre crochets.</span></label></li><li><label><input type=\"checkbox\"><span>Vérifie les trois exigences (/6) : titre visible, prénom, nom, classe et date, fichier nommé <b><span data-rappel=\"rapport\">LABO07_CoulissesPC_Prenom_Nom</span></b> ; même style pour les quatre titres de partie et un vrai tableau de 3 colonnes et 5 lignes, avec % dans les en-têtes ; capture ciblée, lisible, pas étirée, légende juste dessous.</span></label></li><li><label><input type=\"checkbox\"><span>Ouvre <a href=\"https://classroom.google.com/\" target=\"_blank\" rel=\"noopener\">Classroom</a> avec ton compte scolaire ▸ le cours d’informatique de ta classe ▸ Travaux et devoirs ▸ Labo 07 — Dans les coulisses du PC ▸ Afficher les instructions.</span></label><p class=\"attention\">⚠️ Ne poste pas ton rapport dans le flux du cours : il est joint au devoir, dans « Vos devoirs ».</p></li><li><label><input type=\"checkbox\"><span>Dans « Vos devoirs », ton rapport est déjà joint depuis l’étape 1 : clique dessus pour vérifier que c’est le bon, et qu’il est complet. Pas joint ? Ajouter ou créer ▸ Google Drive ▸ <b><span data-rappel=\"rapport\">LABO07_CoulissesPC_Prenom_Nom</span></b> ▸ le bouton bleu.</span></label></li><li><label><input type=\"checkbox\"><span>Clique sur Rendre le devoir ▸ confirme : Rendre le devoir.</span></label></li><li><label><input type=\"checkbox\"><span>Vérifie que le devoir affiche « Remis ».</span></label></li></ol>",
     "vois": "Dans Classroom, le devoir affiche « Remis » et la pièce jointe est mon rapport complet.",
     "coince": [
       "Le devoir n’apparaît pas ? Le professeur ne l’a peut-être pas encore publié. Ne crée pas de deuxième document, ne poste rien dans le flux : sonne la cloche 🔔 et attends.",
@@ -648,19 +659,17 @@ const BLOCS = [
       "4": [
         "remise",
         [
-          2,
-          3,
-          4
+          8
         ]
       ],
-      "6": [
+      "5": [
         "remise",
         [
           5,
           6
         ]
       ],
-      "7": [
+      "6": [
         "remise",
         [
           7
@@ -679,7 +688,7 @@ const BLOCS = [
         "Le devoir affiche « Remis »."
       ]
     },
-    "extra": "<p class=\"note\">Ces trois vérifications valent 3 points sur 10 : identification et nom /1, titres et tableau /1, capture et remise /1.</p>"
+    "extra": "<p class=\"note\">Ces trois vérifications valent 6 points sur 20 : identification et nom /2, titres et tableau /2, capture et remise /2.</p>"
   }
 ];
 
