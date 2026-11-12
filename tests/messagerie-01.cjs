@@ -67,9 +67,17 @@ assert.ok(/state\.etape===7[\s\S]{0,700}escapeHtml\(state\.reponse\)/.test(s), '
 
 // Blocs ouverts (cadenas) : Messagerie 01 reçoit le plafond du serveur, comme le moteur commun.
 {
-  const seq = fs.readFileSync(__dirname + '/../messagerie/pas-a-pas/sequence.js', 'utf8');
-  assert.ok(/if\(o\.plafond\) o\.plafond\(m && m\.plafond\)/.test(seq), 'sequence.js transmet le plafond reçu avec moment()');
-  assert.ok(/plafond:recoitPlafond/.test(s) && /const p=etat\.plafond/.test(s), 'fiche.js lit le plafond d’etat() et l’offre à sequence.js');
+  const seq = fs.readFileSync(__dirname + '/../pas-a-pas/sequence-eleve.js', 'utf8');
+  assert.ok(/if\(o\.plafond\) o\.plafond\(m && m\.plafond\)/.test(seq), 'sequence-eleve.js transmet le plafond reçu avec moment()');
+  assert.ok(/plafond:recoitPlafond/.test(s) && /const p=etat\.plafond/.test(s), 'fiche.js lit le plafond d’etat() et l’offre à sequence-eleve.js');
+  // Mode séquence commun (12/11/2026) : plus de copie propre au cours, les trois écrans propres sont dans la fiche.
+  assert.ok(!fs.existsSync(__dirname + '/../messagerie/pas-a-pas/sequence.js'), 'plus de sequence.js propre à la Messagerie 01');
+  const page = fs.readFileSync(__dirname + '/../messagerie/pas-a-pas/index.html', 'utf8');
+  assert.ok(/pas-a-pas\/sequence-eleve\.js/.test(page) && !/messagerie\/pas-a-pas\/sequence\.js/.test(page), 'la page charge le mode séquence commun');
+  const seqData = JSON.parse(fs.readFileSync(__dirname + '/../pas-a-pas/sequences.json', 'utf8'))['messagerie-1'];
+  const titres = seqData.moments.map(x => x.titre);
+  for (const t of ['Avant d’écrire : observe le mail', 'Une adresse en trois parties', 'Quelle adresse pose problème ?'])
+    assert.ok(titres.includes(t) && s.includes("'" + t + "':"), 'écran propre « ' + t + ' » : titre présent dans sequences.json et dans ECRANS_SEQUENCE');
   assert.ok(/const enPause=\(\)=>!!plafond&&!APERCU&&plafond\.bloc<TITRES\.length&&state\.etape>=plafond\.bloc&&state\.etape>=state\.atteint/.test(s), 'même règle que blocs.js');
 }
 

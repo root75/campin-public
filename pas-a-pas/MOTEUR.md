@@ -3,7 +3,9 @@
 Un cours = **des données**. L'affichage, les preuves, le suivi professeur, la cloche 🔔, la reprise sur
 un autre poste, l'humeur, l'avis et la phrase de fin sont faits par le moteur commun
 [`blocs.js`](blocs.js). Utilisé par Python 1, 2 et 3, le Labo 07 et la Messagerie 02.
-(La Messagerie 01 et le Rat de ville ont encore leur propre moteur.)
+(La Messagerie 01 et le Rat de ville ont encore leur propre moteur de fiche ; la Messagerie 01 utilise
+le mode séquence commun [`sequence-eleve.js`](sequence-eleve.js) depuis le 12/11/2026, avec ses trois écrans propres
+dans sa fiche : voir les champs facultatifs de `PAS_A_PAS` en tête de ce fichier.)
 
 ## Les quatre fichiers d'un cours
 
