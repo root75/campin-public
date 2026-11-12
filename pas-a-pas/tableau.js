@@ -589,7 +589,7 @@ function scene(){
   if(!mailVisuel && (m.type === "ecran" || m.type === "fin" || m.type === "atelier")){
     (m.lignes||[]).forEach((l,k)=>box.append(txt(k ? "p" : "h2", k ? "moyen" : "grand", l)));
     if(m.paires){ const g = txt("div","paires"); m.paires.forEach(([a,b])=>{ const c = txt("div","paire"); c.append(txt("b",null,a), txt("span",null,b)); g.append(c); }); box.append(g); }
-    if(m.exemple) box.append(txt("p","exemple", m.exemple));
+    if(m.exemple && !m.trace) box.append(txt("p","exemple", m.exemple));   // avec un tableau (trace), l'exemple est la version texte des postes élèves
   }
   if(m.code) box.append(txt("pre","programme-projete",m.code));
   if(m.trace) box.append(tableTrace(m.trace));
