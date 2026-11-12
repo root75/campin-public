@@ -26,7 +26,8 @@
                      de la pièce jointe, sinon o.fichier), confirme (« Rendre le devoir ? »), remis, note
      ol-liste        Outlook : dossiers et messages (messages, nonlu: n°, parti: n°, menu + hi = clic droit, droit)
      ol-lu           Outlook : un message ouvert et la carte du fichier joint (objet, de, fichier, texte, survol, menu + hi)
-     ol-redac        Outlook : la rédaction (ruban, a: [noms], objet, cci: [noms], tape, props: [[texte, id, hi]],
+     ol-redac        Outlook : la rédaction (ruban, a: [noms], cc: [noms], objet, cci: [noms], tape, props: [[texte, id, hi]],
+                     dans: ligne de la saisie 'a' | 'cc' | 'cci' (défaut 'cci'),
                      jointe: nom du fichier, menu: 'joindre' + hi)
      ol-selecteur    Outlook : le sélecteur OneDrive (fichier, coche, menu + hi = Partager le lien ▾)
      ol-accueil      Outlook : l'onglet Accueil et son ruban, simplifié ou agrandi (grand, bulle = infobulle de la flèche)
@@ -382,13 +383,16 @@ const DemosCommuns = (() => {
       return l;
     };
     // « Cci » est tout à droite de la ligne À, jusqu'à ce qu'on l'ajoute.
-    e.append(haut, ligne('ligne-a', 'À', f.a, f.cci ? null : c(el('span', 'ol-r-cci', 'Cci'), 'cci')), ligne('ligne-cc', 'Cc', []));
-    if (f.cci) {
-      const l = ligne('ligne-cci', 'Cci', f.cci);
+    // tape / props : la saisie en cours et les propositions d'Outlook, dans la ligne `dans` ('a', 'cc' ou 'cci' ; 'cci' par défaut).
+    const dans = f.dans || 'cci';
+    const saisie = (l, id) => {
+      if (id !== dans) return l;
       if (f.tape) l.querySelector('.ol-r-puces').append(el('span', 'ol-r-tape', f.tape));
-      if (f.props) { const m = el('div', 'ol-menu ol-menu-sous'); f.props.forEach(([t, id, hi]) => { const p = el('div', 'ol-item' + (hi ? ' hi' : ''), t); m.append(id ? c(p, id) : p); }); l.append(m); }
-      e.append(l);
-    }
+      if (f.props) { const m = el('div', 'ol-menu ol-menu-sous'); f.props.forEach(([t, pid, hi]) => { const p = el('div', 'ol-item' + (hi ? ' hi' : ''), t); m.append(pid ? c(p, pid) : p); }); l.append(m); }
+      return l;
+    };
+    e.append(haut, saisie(ligne('ligne-a', 'À', f.a, f.cci ? null : c(el('span', 'ol-r-cci', 'Cci'), 'cci')), 'a'), saisie(ligne('ligne-cc', 'Cc', f.cc), 'cc'));
+    if (f.cci) e.append(saisie(ligne('ligne-cci', 'Cci', f.cci), 'cci'));
     e.append(c(el('div', 'ol-r-objet' + (f.objet ? '' : ' vide'), f.objet || 'Ajouter un objet'), 'objet'));
     if (f.jointe) e.append(fichier(f.jointe, 'piece'));
     e.append(el('div', 'ol-r-corps'));
