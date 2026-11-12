@@ -13,7 +13,7 @@ const place=id=>ETAPES_RAT.findIndex(e=>e.id===Number(id));
 const numero=id=>place(id)>=0?place(id)+1:id;
 /* Étapes terminées : toujours calculées ici, depuis les cases ; le serveur ne fait que les garder. */
 function prepare(r){r.cases=r.cases||{};r.etapes=ETAPES_RAT.map(e=>e.actions.every((_,j)=>r.cases[e.id+'.'+(j+1)]));return r;}
-function appel(evt){return new Promise((ok,ko)=>google.script.run.withSuccessHandler(r=>ok(prepare(r))).withFailureHandler(ko).suiviFormatif(COURS,evt));}
+function appel(evt){return new Promise((ok,ko)=>google.script.run.withSuccessHandler(r=>{if(window.Recompense)Recompense.montre(r);ok(prepare(r));}).withFailureHandler(ko).suiviFormatif(COURS,evt));}
 async function envoieHumeurAvis(evt){const r=SUIVI?await appel(evt):demo(evt);if(!occupe)etat=r;return r;}
 function humeurDuJour(){if(typeof HumeurAvis==='undefined')return;HumeurAvis.humeur($('humeur'),{valeur:etat.humeur,suivi:!!SUIVI,envoie:v=>envoieHumeurAvis({type:'humeur',reponse:v})});}
 function commandes(){document.querySelectorAll('#travail input,#travail select,#aide-btn').forEach(n=>n.disabled=!pret||occupe);
