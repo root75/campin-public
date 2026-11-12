@@ -370,8 +370,69 @@ async function demarre(){
   google.script.run.withSuccessHandler(r=>{if(r?.active===true){aide=true;aideEtape=state.etape+1;cloche();}}).withFailureHandler(()=>{}).etatAide(COURS);
   setInterval(relit,15000);document.addEventListener('visibilitychange',relit);
  }
- if(SUIVI){window.PAS_A_PAS={cours:COURS,envoie,plafond:recoitPlafond};window.PasAPasSequence?.suivre(window.PAS_A_PAS);}
+ if(SUIVI){window.PAS_A_PAS={cours:COURS,envoie,plafond:recoitPlafond,classe:'messagerie-scene',contenus:true,ecrans:ECRANS_SEQUENCE,
+  horsSequence:()=>{document.getElementById('collectif').hidden=true;document.getElementById('individuel').hidden=false;document.getElementById('revoir-collectif').hidden=false;}};
+  window.PasAPasSequence?.suivre(window.PAS_A_PAS);}
 }
+/* Mode séquence : le moteur commun pas-a-pas/sequence-eleve.js (depuis le 12/11/2026 ; avant, une copie à part).
+   Trois moments ont leur écran propre au cours, rangés ici par titre du moment (sequences.json). */
+const ECRANS_SEQUENCE={
+ 'Avant d’écrire : observe le mail':(zone,m,moi,{el,support})=>{
+  if(!support||!window.MessagerieVisuels)return false;   // sinon : les lignes du moment, écran commun
+  zone.append(el('h2','sq-grand','Comment est construit cet email ?'),el('p','sq-note','ENSEMBLE — explore les parties, puis réponds au professeur.'),MessagerieVisuels.email());return true;},
+ 'Une adresse en trois parties':(zone,m,moi,{el,envoie,redessine,support})=>{
+  if(!support){zone.append(el('p','sq-note','Chargement de la question…'));return true;}
+  const ferme=m.phase==='clos'||m.phase==='corrige';
+  zone.append(el('h2','sq-grand',m.question),el('p','sq-note',m.phase==='corrige'?'ENSEMBLE — compare ta réponse à la correction et explique.':ferme?'ENSEMBLE — prépare ton explication et attends la correction.':'À TOI D’ÉCRIRE — propose ta réponse. Nous vérifierons ensemble.'));
+  if(window.MessagerieVisuels)zone.append(MessagerieVisuels.adresse({corrige:m.phase==='corrige'}));
+  else for(const ligne of support.lignes||[])zone.append(el('p',null,ligne));
+  if(m.phase==='corrige'){
+   if(!window.MessagerieVisuels)for(const ligne of support.correction||[])zone.append(el('p',null,ligne));
+   if(moi.reponse){const juste=moi.reponse.trim().toLowerCase()==='arcampin.be';
+    zone.append(el('p','sq-res','Ta réponse : '+moi.reponse),el('p',juste?'sq-res juste':'sq-res faux',juste?'Ta réponse correspond au domaine complet.':'À corriger : le domaine complet est arcampin.be. Explique la différence.'));}
+   return true;}
+  if(ferme){if(moi.reponse)zone.append(el('p','sq-res','Ta réponse envoyée : '+moi.reponse));return true;}
+  const f=el('form','sq-champs'),label=el('label',null,'Le domaine de mon adresse scolaire'),c=el('input'),b=el('button','sq-btn',moi.reponse?'Modifier ma réponse':'Envoyer ma réponse'),statut=el('p','sq-note',moi.reponse?'Réponse enregistrée. Elle sera vérifiée avec le professeur.':'');
+  c.type='text';c.maxLength=30;c.autocomplete='off';c.spellcheck=false;c.id='sq-domaine';label.htmlFor=c.id;c.value=moi.brouillon??moi.reponse??'';c.addEventListener('input',()=>moi.brouillon=c.value);statut.setAttribute('role','status');b.type='submit';
+  f.append(label,c,b,statut);zone.append(f);
+  f.addEventListener('submit',async e=>{
+   e.preventDefault();if(b.disabled)return;
+   const reponse=c.value.trim();if(!reponse){c.focus();return;}
+   if(reponse===moi.reponse)return;
+   b.disabled=true;c.disabled=true;statut.textContent='Enregistrement…';
+   try{await envoie({etape:m.n,type:'motcle',reponse});moi.reponse=reponse;redessine();}
+   catch(_){b.disabled=false;c.disabled=false;statut.textContent='Envoi non confirmé. Garde ta réponse et réessaie.';}
+  });
+  return true;},
+ 'Quelle adresse pose problème ?':(zone,m,moi,{el,envoie,redessine,support})=>{
+  const ouvert=m.phase==='ouvert';
+  zone.append(el('h2','sq-grand',m.question),el('p','sq-note',ouvert?'À TOI DE TE POSITIONNER — coche toutes les adresses à écarter. La correction viendra avec le professeur.':m.phase==='clos'?'CHOIX FERMÉS — prépare ton explication orale.':'ENSEMBLE — lis la correction et explique le problème.'));
+  const form=el('form','sq-adresses'),cases=[];zone.append(form);
+  m.situations.forEach((adresse,k)=>{
+   const ligne=el('div','sq-sit'),label=el('label','sq-case'),c=el('input');c.type='checkbox';c.checked=moi[k]===1;c.disabled=!ouvert||!!moi.soumis;c.setAttribute('aria-label','Écarter '+adresse);
+   label.append(c,el('code',null,adresse));ligne.append(label);cases.push(c);
+   if(m.bonnes){
+    ligne.append(el('p','sq-res',m.bonnes[k]===1?'À écarter':'À utiliser'));
+    const explication=support?.situations?.[k]?.explication;
+    if(explication)ligne.append(el('p','sq-note',explication));
+    if(moi.soumis)ligne.append(el('p','sq-note',moi[k]===m.bonnes[k]?'Ton choix correspond à la correction.':'Ton choix était différent : explique ce que tu corriges.'));
+   }
+   form.append(ligne);
+  });
+  const statut=el('p','sq-note',m.phase==='corrige'?'Correction collective affichée : prépare ton explication.':moi.soumis?'Choix enregistrés. Attends le signal du professeur.':'');statut.setAttribute('role','status');form.append(statut);
+  if(!ouvert)return true;
+  const b=el('button','sq-btn',moi.soumis?'Modifier mes choix':'Envoyer mes choix');b.type='submit';form.append(b);
+  form.addEventListener('submit',async e=>{
+   e.preventDefault();if(b.disabled)return;
+   if(moi.soumis){moi.soumis=false;redessine();return;}
+   b.disabled=true;cases.forEach(c=>c.disabled=true);statut.textContent='Enregistrement…';
+   const choix=cases.map(c=>c.checked?1:0);
+   if(moi.derniersChoix===choix.join(':')){moi.soumis=true;redessine();return;}
+   try{await Promise.all(choix.map((j,k)=>envoie({etape:m.n,type:'vote',reponse:k+':'+j})));choix.forEach((j,k)=>moi[k]=j);moi.derniersChoix=choix.join(':');moi.soumis=true;redessine();}
+   catch(_){b.disabled=false;cases.forEach(c=>c.disabled=false);statut.textContent='Envoi non confirmé. Garde tes choix et réessaie.';}
+  });
+  return true;}
+};
 if(typeof document!=='undefined')demarre();
 if(typeof module!=='undefined')Object.assign(module.exports,{regle,reponseCourte});
 

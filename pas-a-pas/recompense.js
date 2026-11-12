@@ -1,6 +1,6 @@
 /* « Je m'occupe » ouvert par le professeur (tableau ▸ case 🎁, une heure) : un bandeau en bas de la fiche,
    visible même pendant une séance ou une séquence projetée. Commun à tous les moteurs : blocs.js (par
-   sequence-eleve.js), Messagerie 01 (messagerie/pas-a-pas/sequence.js) et le Rat de ville (fiche.js).
+   sequence-eleve.js, Messagerie 01 comprise) et le Rat de ville (fiche.js).
    AUCUN appel au serveur ici : la fiche passe la réponse qu'elle reçoit déjà — moment() toutes les 5 s,
    ou suiviFormatif() pour le Rat de ville —, qui porte { recompense, occupe } quand 🎁 est ouvert (Code.gs,
    recompenseEleve_). Sans ces champs, le bandeau s'en va (case décochée).

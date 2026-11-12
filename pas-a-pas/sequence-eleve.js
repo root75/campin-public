@@ -5,11 +5,21 @@
    la fiche redevient la fiche.
    Utilisation, dans la fiche : <script defer src=".../sequence-eleve.js"> dans la page, et en fin
    du script de la fiche  window.PAS_A_PAS = { cours: COURS, envoie };  (envoie = celle de la fiche).
-   Chargé en différé, il démarre après la fiche et ne peut jamais l'empêcher de s'afficher. */
+   Chargé en différé, il démarre après la fiche et ne peut jamais l'empêcher de s'afficher.
+   Champs facultatifs de PAS_A_PAS (Messagerie 01, 12/11/2026) :
+   - plafond(p)    : la classe s'arrête après un bloc (blocs.js, ou la fiche) ;
+   - classe        : une classe CSS de plus sur la zone #seq ;
+   - contenus:true : lit sequences.json pour ce cours ; un écran ou un tri sans texte reçu du serveur montre
+                     alors ses lignes, et la correction d'un vote ajoute l'explication de chaque situation ;
+   - ecrans        : { "<titre du moment>": (zone, m, moi, outils) => true } — un écran propre au cours, dessiné à
+                     la place de l'écran commun (rendre false pour garder l'écran commun) ;
+                     outils = { el, envoie, redessine, support } (support = le moment de sequences.json, ou null) ;
+   - horsSequence(): appelé au premier appel au serveur sans moment en cours, puis à chaque sortie de séquence.
+   envoie peut rendre une promesse : un envoi refusé s'affiche (« non confirmé ») au lieu d'un faux ✓. */
 (function(){
   const RYTHME = 5000;
   const css = `
-.en-sequence .page > :not(header):not(#seq){display:none!important}
+.en-sequence .page > :not(header):not(#seq):not(.aide-fixe){display:none!important}
 #seq{background:var(--carte);border:1px solid var(--trait);border-radius:14px;padding:28px clamp(16px,4vw,32px);display:grid;gap:18px;text-align:center}
 #seq .sq-sur{font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;color:var(--doux);font-weight:700;margin:0}
 #seq .sq-grand{font-family:var(--display);font-weight:800;font-size:clamp(2rem,6vw,2.8rem);line-height:1.1;margin:0}
@@ -36,23 +46,36 @@
 
   const el = (tag, cls, t) => { const n = document.createElement(tag); if(cls) n.className = cls; if(t != null) n.textContent = t; return n; };
 
+  let deja = false;
   function suivre(o){
+    if(deja) return;   // la fiche peut l'appeler elle-même, et ce fichier aussi en se chargeant
     if(typeof google === "undefined" || !google.script || !google.script.run) return;
+    deja = true;
     const style = el("style"); style.textContent = css; document.head.append(style);
-    const zone = el("section"); zone.id = "seq"; zone.hidden = true; zone.setAttribute("aria-live", "polite");
+    const zone = el("section"); zone.id = "seq"; if(o.classe) zone.classList.add(o.classe); zone.hidden = true; zone.setAttribute("aria-live", "polite");
     const page = document.querySelector(".page"), tete = page.querySelector("header");
     tete ? tete.after(zone) : page.prepend(zone);
 
-    let cle = "";
+    let cle = "", courant = null, hors = null, contenus = null;
     const mes = {};   // ce que l'élève a envoyé, par moment de cette séquence
+    const envoie = evt => Promise.resolve(o.envoie(evt));
+    const support = m => (contenus && contenus.moments || []).find(x => x.titre === m.titre) || null;
+    const redessine = () => dessine(courant);
+    if(o.contenus) fetch("https://root75.github.io/campin-public/pas-a-pas/sequences.json?v=seq-20261112")
+      .then(r => { if(!r.ok) throw Error(); return r.json(); })
+      .then(d => { contenus = d[o.cours] || null; cle = ""; }).catch(() => {});   // cle vide : redessiner au prochain appel
 
     function recoit(m){
+      courant = m;
       if(window.Recompense) Recompense.montre(m);   // « Je m'occupe » ouvert : bandeau en bas (recompense.js)
-      if(o.plafond) o.plafond(m && m.plafond);   // blocs.js : la classe s'arrête après un bloc
+      if(o.plafond) o.plafond(m && m.plafond);   // la classe s'arrête après un bloc
       if(!m || m.type === "fin" || m.type === "atelier"){
+        if(hors !== true && o.horsSequence) o.horsSequence();
+        hors = true;
         if(cle){ cle = ""; zone.hidden = true; document.body.classList.remove("en-sequence"); scrollTo(0, 0); }
         return;
       }
+      hors = false;
       const k = m.lance + ":" + m.n + ":" + m.phase;
       if(k === cle) return;            // rien n'a changé : on ne touche pas à ce qu'il tape
       cle = k; zone.hidden = false; document.body.classList.add("en-sequence");
@@ -60,10 +83,23 @@
     }
 
     function dessine(m){
+      if(!m || m.type === "fin" || m.type === "atelier") return;
       const id = m.lance + ":" + m.n, moi = mes[id] || (mes[id] = {});
       zone.replaceChildren(el("p", "sq-sur", m.titre));
+      const propre = o.ecrans && o.ecrans[m.titre];
+      if(propre && propre(zone, m, moi, { el, envoie, redessine, support: support(m) })) return;
       if(m.type === "mots") return mots(m, moi);
       if(m.type === "vote") return vote(m, moi);
+      const s = support(m);
+      if(s && !m.lignes && !m.questions){   // contenus:true : le texte de l'écran, lu dans sequences.json
+        zone.append(el("h2", "sq-grand", m.titre), el("p", "sq-note", "ENSEMBLE — OBSERVE ET RÉPONDS AU PROFESSEUR"));
+        (s.lignes || []).forEach(l => zone.append(el("p", null, l)));
+        (s.paires || []).forEach(p => zone.append(el("p", null, Array.isArray(p) ? p.join(" — ") : JSON.stringify(p))));
+        if(s.exemple) zone.append(el("p", null, s.exemple));
+        if(m.type === "tri") zone.append(el("p", null, "Classement collectif : " + (s.colonnes || []).map(x => typeof x === "string" ? x : x.titre || x.nom || "").join(" / ")),
+          el("p", "sq-note", "Propose oralement où placer les mots et explique pourquoi. Le déplacement des mots est visible au tableau."));
+        return;
+      }
       zone.append(el("p", "sq-oeil", "👀"), el("h2", "sq-grand", "Regarde le tableau"),
         el("p", "sq-note", m.type === "tri" ? "On range vos mots ensemble. Prépare-toi à dire pourquoi." : "Rien à taper pour le moment."));
       // Écran collectif recopié sur le poste (cours avec « ecransSurPostes ») : à relire de près.
@@ -82,7 +118,7 @@
       if(moi.mots && !moi.modifier){
         zone.append(el("p", "sq-res juste", "✓ Envoyé : " + moi.mots.join(" · ")), el("p", "sq-note", "Regarde le tableau."));
         const b = el("button", "sq-btn vide", "Modifier mes mots"); b.type = "button";
-        b.addEventListener("click", () => { moi.modifier = true; dessine(m); });
+        b.addEventListener("click", () => { moi.modifier = true; redessine(); });
         return zone.append(b);
       }
       const f = el("form", "sq-champs");
@@ -98,9 +134,9 @@
         e.preventDefault();
         const l = champs.map(c => c.value.replace(/\|/g, " ").replace(/\s+/g, " ").trim()).filter(Boolean);
         if(!l.length){ champs[0].focus(); return; }
-        moi.mots = l; moi.modifier = false;
-        o.envoie({ etape: m.n, type: "motcle", reponse: l.join(" | ") });
-        dessine(m);
+        moi.mots = l; moi.modifier = false; b.disabled = true;
+        envoie({ etape: m.n, type: "motcle", reponse: l.join(" | ") }).then(redessine)
+          .catch(() => { delete moi.mots; moi.modifier = true; b.disabled = false; b.textContent = "Envoi non confirmé — réessayer"; });
       });
       champs[0].focus();
     }
@@ -110,6 +146,8 @@
       const ouvert = m.phase === "ouvert";
       zone.append(el("p", "sq-note", ouvert ? "Un clic par situation. Tu peux changer d'avis tant que le vote est ouvert."
         : m.phase === "clos" ? "Le vote est clos. Regarde le tableau." : "Regarde le tableau : on corrige ensemble."));
+      if(moi.enCours || moi.erreur) zone.append(el("p", "sq-note", moi.enCours ? "Enregistrement du choix…" : moi.erreur));
+      const sup = support(m);
       m.situations.forEach((s, k) => {
         const d = el("div", "sq-sit"), c = el("div", "sq-choix");
         if(o.cours.startsWith("python-")){
@@ -117,8 +155,14 @@
           d.append(el("p", null, "Programme " + (k+1)), pre, c);
         } else d.append(el("p", null, (k+1) + ". " + s), c);
         m.choix.forEach((t, j) => {
-          const b = el("button", "sq-btn vide" + (moi[k] === j ? " pris" : ""), t); b.type = "button"; b.disabled = !ouvert;
-          b.addEventListener("click", () => { moi[k] = j; o.envoie({ etape: m.n, type: "vote", reponse: k + ":" + j }); dessine(m); });
+          const b = el("button", "sq-btn vide" + (moi[k] === j ? " pris" : ""), t); b.type = "button"; b.disabled = !ouvert || !!moi.enCours;
+          b.addEventListener("click", () => {   // un seul envoi à la fois ; le ✓ attend la réponse du serveur
+            if(moi.enCours || moi[k] === j) return;
+            moi.enCours = true; redessine();
+            envoie({ etape: m.n, type: "vote", reponse: k + ":" + j })
+              .then(() => { moi[k] = j; moi.erreur = ""; }, () => { moi.erreur = "Choix non confirmé. Réessaie avant de continuer."; })
+              .then(() => { moi.enCours = false; redessine(); });
+          });
           c.append(b);
         });
         if(m.bonnes){
@@ -126,6 +170,8 @@
           d.append(moi[k] == null ? el("p", "sq-res", "Bonne réponse : " + m.choix[bon])
             : moi[k] === bon ? el("p", "sq-res juste", "✓ Juste : " + m.choix[bon])
             : el("p", "sq-res faux", "✗ La bonne réponse : " + m.choix[bon]));
+          const ex = sup && sup.situations && sup.situations[k] && sup.situations[k].explication;
+          if(ex) d.append(el("p", "sq-note", ex));
         }
         zone.append(d);
       });
