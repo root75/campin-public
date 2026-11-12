@@ -151,7 +151,7 @@ const FIN = {
   titre:'Bravo : tu sais communiquer en ligne sans risque',
   bulle:'Parcours terminé !',
   texte:'Le bon outil, une boîte bien rangée, les pièges repérés, la copie cachée, la nétiquette, un poste fermé derrière toi.',
-  revision:{titre:'Bien communiquer en ligne — je révise ↗', texte:'Un quiz de 5 questions et 15 cartes pour réviser.', url:'https://root75.github.io/campin-public/messagerie-3/'},
+  revision:{titre:'Bien communiquer en ligne — je révise ↗', texte:'Un quiz de 5 questions, 15 cartes, et ta fiche de révision à imprimer.', url:'https://root75.github.io/campin-public/messagerie-3/'},
   citation:{texte:'Il faut tourner sa langue sept fois dans sa bouche avant de parler.', auteur:'Proverbe français', source:'Proverbe', lien:'Un message aussi : je le relis avant de l’envoyer.'},
   plus:'À la fin de l’heure : touche Windows ⊞ ▸ ton nom (en bas à gauche du menu) ▸ Se déconnecter. En attendant, si ton professeur te le propose, deviens aidant : va voir un camarade qui a sonné la cloche 🔔, explique avec des mots, ne touche pas sa souris.',
   lien:'<a href="https://root75.github.io/campin-public/messagerie-3/" target="_blank" rel="noopener">la page « Bien communiquer en ligne »</a>'
