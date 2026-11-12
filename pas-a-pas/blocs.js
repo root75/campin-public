@@ -871,7 +871,9 @@ if(APERCU){
   quandPret(affiche);
 } else if(SUIVI){
   pied.textContent = "Ton avancement est visible par ton professeur.";
-  google.script.run.withSuccessHandler(s=>{
+  /* Le suivi peut caler quelques secondes (verrou du Journal, 12/11/2026) : etat() est redemandé deux fois
+     (après 2 s, puis 5 s) avant d'afficher la fiche sans la reprise du serveur. */
+  const chargeEtat = essai => google.script.run.withSuccessHandler(s=>{
     if(s && s.email){ emailMoteur = s.email; if(typeof EMAIL!=="undefined") EMAIL = s.email; }
     if(s && s.classe) classeMoteur = String(s.classe).trim();
     if(s && s.email){ qui.textContent = "Connecté : "; qui.append(txt("strong",null,s.email)); if(s.classe) qui.append(" · "+s.classe); }
@@ -882,7 +884,12 @@ if(APERCU){
     if(s && s.atteint){ etat.atteint = s.atteint; etat.fini = s.atteint >= BLOCS.length; ici = Math.min(s.atteint, BLOCS.length); }
     const demarre = () => { affiche(); envoie({ etape:Math.min(ici,BLOCS.length-1)+1, type:"ouvert" }); restaureAide(); };
     if(typeof PREUVES==="undefined") demarre(); else pretPreuves.then(variantesServeur).then(demarre);
-  }).withFailureHandler(()=>{ humeur(); quandPret(affiche); }).etat(COURS);
+  }).withFailureHandler(()=>{
+    if(essai < 2){ qui.textContent = "Connexion au suivi du professeur…"; setTimeout(()=>chargeEtat(essai+1), [2000,5000][essai]); return; }
+    qui.textContent = "Le suivi du professeur ne répond pas : recharge la page (F5) dans un moment.";
+    humeur(); quandPret(affiche);
+  }).etat(COURS);
+  chargeEtat(0);
   window.PAS_A_PAS = { cours: COURS, envoie, plafond: recoitPlafond };   // lu par sequence-eleve.js (chargé en différé : il ne bloque jamais la fiche)
 } else {
   qui.textContent = typeof HORS_SUIVI!=="undefined" ? HORS_SUIVI : "Garde deux fenêtres : cette fiche, et Thonny quand elle le demande.";
