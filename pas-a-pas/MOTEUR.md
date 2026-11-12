@@ -96,7 +96,7 @@ et trois cases à cocher, **3 sonneries par heure au plus** — code commun [`cl
 avant `blocs.js` comme dans `modele/index.html`) ; bandeau « bravo » ; reprise de
 l'avancement depuis le serveur ; aperçu professeur `#bloc=N` avec le choix de la version de la preuve ;
 menu des étapes, repris du Rat de ville (une pastille ronde par bloc, ou par groupe de `PARCOURS` ; elle se remplit
-comme un camembert selon les cases cochées, ✓ sur fond vert une fois validée ; le nom en infobulle, celui de l'étape
+comme un camembert selon les cases cochées — cases gardées sur le poste, sous l'adresse de l'élève, sans appel au serveur, ✓ sur fond vert une fois validée ; le nom en infobulle, celui de l'étape
 affichée écrit sous les pastilles ; cliquable jusqu'au premier bloc non validé ; `rond:"📄"` dans un groupe de
 `PARCOURS` = ce qui s'écrit dans sa pastille, sinon son numéro) ;
 **blocs ouverts** : les blocs au-delà du dernier bloc ouvert portent un cadenas 🔒 dans la barre, sur ordre du tableau

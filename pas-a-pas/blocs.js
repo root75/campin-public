@@ -137,7 +137,7 @@ function barre(){
   let nomIci = "";
   const rond = (signe, nom, debut, fin, cible) => {
     const fait = etat.atteint>=fin, ferme = !!plafond && !APERCU && !fait && debut>=etat.atteint && debut>=plafond.bloc;   // pas encore ouvert par le professeur
-    let p = 0; for(let i=debut;i<fin;i++) p += i<etat.atteint ? 1 : i===ici ? partIci : 0;
+    let p = 0; for(let i=debut;i<fin;i++) p += i<etat.atteint ? 1 : i===ici ? partIci : partCases(i);
     const n = txt("button", fait ? "fait" : ferme ? "ferme" : "", fait ? "✓" : signe);
     n.type = "button"; n.title = nom+(ferme ? " — pas encore ouvert" : "");
     n.style.setProperty("--p", Math.round(100*p/(fin-debut)));
@@ -167,12 +167,36 @@ function styleBarre(){
     +".progres.nav .nom-etape{flex:1 1 100%;margin:2px 0 0;font-weight:700;color:var(--encre)}";
   document.head.append(st);
 }
-/* Une case cochée ou décochée dans la consigne : le camembert du bloc affiché suit. */
+/* Les cases cochées de la consigne, gardées sur le poste et rangées sous l'adresse de l'élève, comme le
+   programme validé : aucun appel au serveur (un appel par case ralentissait la classe, mesure du 10/11/2026).
+   Le camembert survit au changement de bloc et au rechargement ; un autre élève sur le même poste ne voit pas
+   ces cases. Sur un autre poste, les blocs validés reviennent du serveur, pas les cases du bloc en cours.
+   Format : { "i": { n: nombre de cases, c: [rangs cochés] } }, i = rang du bloc à partir de 0. */
+const cleCases = () => CLE+":"+(emailMoteur||"")+":cases";
+let casesGardees = null, casesDe = null;
+function lisCases(){
+  if(casesDe!==cleCases()){ casesDe = cleCases(); casesGardees = {};
+    if(!APERCU) try{ casesGardees = JSON.parse(localStorage.getItem(casesDe)) || {}; }catch(e){} }
+  return casesGardees;
+}
+const partCases = i => { const g = lisCases()[i]; return g && g.n ? Math.min(1, g.c.length/g.n) : 0; };
+const casesIci = () => [...document.querySelectorAll("#bloc ol.etapes input[type=checkbox]")];
+/* Une case cochée ou décochée dans la consigne : le camembert du bloc affiché suit, et la case est gardée. */
 document.getElementById("bloc").addEventListener("change", e=>{
   if(!e.target.matches || !e.target.matches("ol.etapes input[type=checkbox]")) return;
-  const c = [...document.querySelectorAll("#bloc ol.etapes input[type=checkbox]")];
-  partIci = c.filter(x=>x.checked).length/c.length; barre();
+  const c = casesIci(), g = lisCases();
+  partIci = c.filter(x=>x.checked).length/c.length;
+  if(ici<BLOCS.length) g[ici] = { n:c.length, c:c.map((x,k)=>x.checked ? k : -1).filter(k=>k>=0) };
+  if(!APERCU) try{ localStorage.setItem(casesDe, JSON.stringify(g)); }catch(e){}
+  barre();
 });
+/* À l'affichage d'un bloc : on recoche ses cases gardées. L'événement « change » rejoue ce qu'une coche fait
+   (animation de la case suivante, camembert). */
+function recocheCases(){
+  const g = lisCases()[ici], c = casesIci();
+  if(!g || !c.length || g.n!==c.length) return;   // la consigne a changé : on ne recoche rien
+  g.c.forEach(k=>{ const x = c[k]; if(x && !x.checked){ x.checked = true; x.dispatchEvent(new Event("change",{bubbles:true})); } });
+}
 
 /* Les blocs ouverts : le professeur (ou le moment « atelier » de la séquence) ouvre la classe
    jusqu'à un bloc ; les suivants portent un cadenas dans la barre. Il arrive avec etat() au démarrage, puis avec moment() toutes les 5 s
@@ -215,6 +239,7 @@ function essaiHtml(E, fini){
 }
 function affiche(){
   partIci = 0; barre(); if(MISSIONS) bulle();
+  queueMicrotask(recocheCases);   // une fois le bloc construit, ses animations comprises
   const z = document.getElementById("bloc"); z.replaceChildren();
   const liste = document.getElementById("coince-liste"); liste.replaceChildren();
   document.getElementById("coince").open = false;
@@ -761,7 +786,7 @@ function fin(z){
   nav.append(avant);
   if(!SUIVI){
     const zero = txt("button","btn vide","Recommencer à zéro"); zero.type="button";
-    zero.addEventListener("click",()=>{ etat = { atteint:0, erreurs:0 }; ecrit(etat); oublieProgrammes(); ici=0; humeur(); affiche(); });
+    zero.addEventListener("click",()=>{ etat = { atteint:0, erreurs:0 }; ecrit(etat); oublieProgrammes(); try{ localStorage.removeItem(cleCases()); }catch(e){} casesDe = null; ici=0; humeur(); affiche(); });
     nav.append(zero);
   }
   z.append(bilan(), plus, nav);
