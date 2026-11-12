@@ -1,0 +1,23 @@
+/* Le socle des animations « 👀 Regarde comment faire » : le lecteur (pas-a-pas/demo-lecteur.js), le volet sous la
+   case, l'écran maquetté .md, la cible visée et le clic. Commun à tous les cours ; importé par python-missions.css,
+   lié directement par les pages qui ne chargent pas ce dernier (Messagerie 01). Les vues elles-mêmes : demos-communs.js. */
+:root{--ciel:#e8f4fb}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--ciel:#17303d}}
+:root[data-theme="dark"]{--ciel:#17303d}
+.demo{background:var(--ciel,#e8f4fb);border-radius:16px;padding:12px;display:grid;gap:8px}
+.demo-bloc{display:grid;gap:6px}
+.demo-titre{font-weight:800;font-size:1.05rem;margin:0}
+.demo-scene{position:relative;min-height:260px;overflow:hidden;border-radius:12px}
+.demo-curseur{position:absolute;left:0;top:0;transform:translate(60px,60px);transition:transform .7s cubic-bezier(.3,.7,.3,1);z-index:5;pointer-events:none}
+.demo-legende{font-weight:700;margin:0;min-height:2.6em}
+.demo.demo-ok .demo-legende::after{content:"  ⭐";}
+.demo-ctrl{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.demo-b{border:2px solid var(--encre-bouton,#1d5a73);background:var(--carte,#fff);color:var(--encre-bouton,#1d5a73);border-radius:20px;padding:4px 12px;font-weight:700;cursor:pointer}
+.demo-jouer{margin-left:auto}
+.demo-points{display:flex;flex-wrap:wrap;gap:4px}.demo-points button{min-width:26px;height:26px;padding:0 4px;border-radius:13px;border:2px solid #b9c9d4;background:#fff;color:#1f1f1f;font:inherit;font-size:.8rem;font-weight:700;line-height:1;cursor:pointer}.demo-points button:hover{border-color:var(--encre-bouton,#1d5a73)}.demo-points button.on{background:var(--encre-bouton,#1d5a73);border-color:var(--encre-bouton,#1d5a73);color:#fff}
+.demo-cote{border:2px dashed var(--fromage,#e3a922);border-radius:14px;padding:8px 12px}.demo-cote summary{cursor:pointer;font-weight:700}.demo-cote .demo{margin-top:8px}
+.md{background:#fff;color:#1f1f1f;font-family:"Segoe UI",Arial,sans-serif;font-size:13px;border:1px solid #c9d3db;border-radius:10px;min-height:260px;position:relative;overflow:hidden}
+.md-vise{outline:3px solid var(--fromage,#e3a922);outline-offset:2px;border-radius:4px}
+.md-clic{animation:clic .5s ease}
+@keyframes clic{40%{transform:scale(.92);background:#ffe9a8}}
+.demo-case>summary{cursor:pointer;font-weight:700;color:var(--encre-bouton,#1d5a73)}

@@ -19,7 +19,7 @@ function carteMail(t){
 /* Le clic droit, mis en évidence partout : beaucoup d'élèves confondent les deux boutons de la souris. */
 const DROIT = '<span class="droit">🖱️ clic <b>DROIT</b></span>';
 const AIDE_DROIT = 'Le clic DROIT : le bouton de DROITE de la souris, sous ton majeur. Le menu s’ouvre à côté du pointeur. Sur un pavé tactile : appuie avec deux doigts.';
-const REEL = '<p class="reel"><span>Ici, <b>tout est réel</b> : tu travailles dans Outlook. Garde deux onglets : cette fiche et Courrier.</span> <a class="btn vide" href="https://outlook.cloud.microsoft/mail/" target="_blank" rel="noopener">Ouvrir Courrier ↗</a></p><details class="cote"><summary>🪟 Mettre le cours et Courrier côte à côte</summary><ol><li>Clique sur l’onglet de <b>ce cours</b>, en haut de Chrome.</li><li>'+DROIT+' sur l’onglet de <b>Courrier</b> ▸ <b>Ajouter l’onglet à une nouvelle vue fractionnée</b>.</li><li>Le cours et Courrier s’affichent côte à côte, dans la même fenêtre. Clique dans Courrier pour y travailler.</li></ol></details>';
+const REEL = '<p class="reel"><span>Ici, <b>tout est réel</b> : tu travailles dans Outlook. Garde deux onglets : cette fiche et Courrier.</span> <a class="btn vide" href="https://outlook.cloud.microsoft/mail/" target="_blank" rel="noopener">Ouvrir Courrier ↗</a></p><details class="cote"><summary>🪟 Mettre le cours et Courrier côte à côte</summary><ol class="etapes"><li>Clique sur l’onglet de <b>ce cours</b>, en haut de Chrome.</li><li>'+DROIT+' sur l’onglet de <b>Courrier</b> ▸ <b>Ajouter l’onglet à une nouvelle vue fractionnée</b>.</li><li>Le cours et Courrier s’affichent côte à côte, dans la même fenêtre. Clique dans Courrier pour y travailler.</li></ol></details>';
 const OUVRIR = 'Ouvre Courrier : le bouton ci-dessus, ou barre de favoris ▸ <b>Favoris du domaine arcampin.com</b> ▸ <b>Microsoft 365</b> ▸ <b>Courrier</b>.';
 
 /* Le simulateur de l'étape 3 : une Boîte de réception où l'élève fait LUI-MÊME le clic DROIT ▸ Signaler du courrier
@@ -84,7 +84,7 @@ const BLOCS = [
   veux:'Repérer les messages que je n’ai pas encore lus, et garder un message à lire plus tard.',
   avant:REEL,
   gestes:[OUVRIR,'À gauche, clique sur <b>Boîte de réception</b>.','Regarde la liste : un message <b>non lu</b> est en <b>gras</b>, avec une <b>barre bleue</b> à gauche.',DROIT+' sur un message que tu as déjà lu ▸ <b>Marquer comme non lu</b>.','Regarde : il repasse en gras, avec la barre bleue.',DROIT+' sur le même message ▸ <b>Marquer comme lu</b>.'],
-  demos:{'4':['nonlu']},
+  demos:{'4':['nonlu'],'cote 1.2':['cote']},
   vois:'Je sais rendre un message non lu, puis lu.',
   coince:[AIDE_DROIT,'Sans la souris : onglet <b>Accueil</b> ▸ bouton <b>Lu / non lu</b> (l’enveloppe), dans le ruban agrandi. Le ruban tient sur une ligne ? Petite flèche ˅ tout en bas à droite du ruban.','Je ne vois pas « Marquer comme non lu » : fais le clic droit sur le message lui-même, dans la liste, pas dans le volet de lecture.','Tous mes messages sont en gras : tu ne les as pas encore ouverts. Ouvre-en un, puis recommence.'],
   q:{serveur:true}},
@@ -116,6 +116,7 @@ const BLOCS = [
   avant:REEL,
   gestes:[OUVRIR,'Clique sur le bouton bleu <b>Nouveau message</b> (touche N).','Dans <b>À</b>, tape ton propre nom ▸ clique sur la ligne qui finit par <b>@arcampin.be</b>.','Au bout de la ligne À, à droite, clique sur <b>Cci</b> : une nouvelle ligne apparaît.','Dans <b>Cci</b>, tape le nom d’un camarade ▸ sa ligne en @arcampin.be. Puis un deuxième camarade.','Dans <b>Ajouter un objet</b>, tape : Essai de copie cachée. <b>N’envoie pas encore.</b>'],
   vois:'Mon adresse dans À, mes deux camarades dans Cci, l’objet « Essai de copie cachée ».',
+  demos:{'4':['cci'],'cote 1.2':['cote']},
   coince:['Je ne vois pas Cci : il est au bout de la ligne À, à droite. Clique dans la ligne À d’abord.','Outlook propose plusieurs lignes : choisis celle qui finit par @arcampin.be. Pas « Externe », pas @arcampin.com.'],
   q:{serveur:true}},
  {partie:'C — Écrire à plusieurs', titre:'Envoyer et vérifier avec un camarade', min:4,

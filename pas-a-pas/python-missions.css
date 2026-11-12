@@ -1,5 +1,6 @@
 /* Style « missions » et démos animées des fiches Python (python-1, python-2) : cloche, mascotte,
    bulle, cases, bravo, mini-maquettes Windows / Thonny / Chrome. Lu par les deux index.html. */
+@import url("demo-lecteur.css?v=20261112");
 /* ===== Style « missions », repris du Labo 07 et du Rat de ville (05/11/2026) ===== */
 :root{--vert:#2fa36b;--soleil:#ffcf3f;--ciel:#e8f4fb}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--ciel:#17303d}}
@@ -45,24 +46,9 @@ ol.etapes span{min-width:0;overflow-wrap:anywhere}
 #bravo.grand{font-size:1.25rem;background:linear-gradient(90deg,var(--fromage),#e8742a)}
 details.coince{border-radius:16px}
 /* Démo animée « Regarde comment faire » (demos.js) */
-.demo{background:var(--ciel);border-radius:16px;padding:12px;display:grid;gap:8px}
-.demo-bloc{display:grid;gap:6px}
-.demo-titre{font-weight:800;font-size:1.05rem;margin:0}
-.demo-scene{position:relative;min-height:260px;overflow:hidden;border-radius:12px}
-.demo-curseur{position:absolute;left:0;top:0;transform:translate(60px,60px);transition:transform .7s cubic-bezier(.3,.7,.3,1);z-index:5;pointer-events:none}
-.demo-legende{font-weight:700;margin:0;min-height:2.6em}
-.demo.demo-ok .demo-legende::after{content:"  ⭐";}
-.demo-ctrl{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.demo-b{border:2px solid var(--encre-bouton);background:var(--carte);color:var(--encre-bouton);border-radius:20px;padding:4px 12px;font-weight:700;cursor:pointer}
-.demo-jouer{margin-left:auto}
-.demo-points{display:flex;flex-wrap:wrap;gap:4px}.demo-points button{min-width:26px;height:26px;padding:0 4px;border-radius:13px;border:2px solid #b9c9d4;background:#fff;color:#1f1f1f;font:inherit;font-size:.8rem;font-weight:700;line-height:1;cursor:pointer}.demo-points button:hover{border-color:var(--encre-bouton)}.demo-points button.on{background:var(--encre-bouton);border-color:var(--encre-bouton);color:#fff}
-.demo-cote{border:2px dashed var(--fromage);border-radius:14px;padding:8px 12px}.demo-cote summary{cursor:pointer;font-weight:700}.demo-cote .demo{margin-top:8px}
+/* Démo animée « Regarde comment faire » : le socle du lecteur est dans demo-lecteur.css (importé en tête). */
 .tutos-liste{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}.tutos-liste .btn[aria-pressed="true"]{background:var(--encre-bouton);color:var(--carte)}
 /* Mini-maquettes (toujours claires, comme le vrai Windows et le vrai Thonny) */
-.md{background:#fff;color:#1f1f1f;font-family:"Segoe UI",Arial,sans-serif;font-size:13px;border:1px solid #c9d3db;border-radius:10px;min-height:260px;position:relative;overflow:hidden}
-.md-vise{outline:3px solid var(--fromage);outline-offset:2px;border-radius:4px}
-.md-clic{animation:clic .5s ease}
-@keyframes clic{40%{transform:scale(.92);background:#ffe9a8}}
 .md-menu{position:absolute;background:#fff;border:1px solid #c9d3db;border-radius:8px;box-shadow:0 4px 14px #0003;padding:4px 0;z-index:3;min-width:150px}
 .md-item{padding:4px 14px;font-size:12px;display:flex;justify-content:space-between;gap:16px}.md-item.hi{background:#e8f0fe;font-weight:700}.md-item small{color:#5f6368}
 .md-bureau{background:linear-gradient(160deg,#3b7dd8,#9cc5f0)}

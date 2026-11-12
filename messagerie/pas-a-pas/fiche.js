@@ -178,8 +178,12 @@ function nomSiManquant(){
 }
 function champ(k,label,help,area=false){return `<label for="${k}">${label}</label>${help?`<p class="aide-champ" id="aide-${k}">${help}</p>`:''}<${area?'textarea':'input'} id="${k}" name="${k}" ${area?'rows="4"':'type="text"'} maxlength="${['message','reponse'].includes(k)?700:120}" ${help?`aria-describedby="aide-${k}"`:''}>${area?escapeHtml(state[k]):''}${area?'</textarea>':''}`;}
 function apercu(d=state){return `<div class="email"><div class="ligne-mail"><b>À</b><span>${escapeHtml(d.a)||'…'}</span></div><div class="ligne-mail"><b>Objet</b><span>${escapeHtml(d.objet)||'…'}</span></div><div class="corps"><span class="tag">Corps du message</span><p>${escapeHtml(corps(d))||'…'}</p></div></div>`;}
+/* « 👀 Regarde comment faire » sous une case : étape (à partir de 0) ▸ { "n° de la case": [clé de l'animation] }.
+   Le volet et ses règles sont communs (DemoLecteur.sousCases) ; les animations : messagerie/pas-a-pas/demos.js. */
+const DEMOS_ETAPES={8:{'1':['ruban']}};
 function render(){
  const e=state.etape;
+ if(typeof DemoLecteur!=='undefined'&&DemoLecteur.arrete)DemoLecteur.arrete();
  document.getElementById('compteur').textContent=`${e+1} / ${TITRES.length} — ${TITRES[e]}`;
  document.getElementById('barre').value=e+1;
  pastilles(e);
@@ -216,6 +220,7 @@ Camille</p></div></div><p><b>Utilise Répondre :</b> le destinataire et l’obje
  h+='<div class="actions">'+(e>0?'<button type="button" class="secondaire" id="precedent">← Revenir</button>':'')+(e<=11?`<button type="button" id="suivant">${e===0?'Vérifier les deux parties de l’adresse':e===6?'Vérifier mon mail d’entraînement':'Vérifier cette étape'}</button>`:'<button type="button" id="revoir">Revoir mon entraînement</button>')+'</div>';
  z.innerHTML=h;
  casesAGestes(z,e);camembert();
+ if(DEMOS_ETAPES[e]&&typeof Demo!=='undefined'&&DemoLecteur.sousCases)DemoLecteur.sousCases(z,DEMOS_ETAPES[e],Demo.cree,z);
  for(const el of z.querySelectorAll('input,textarea')){el.value=state[el.id]||'';el.addEventListener('input',()=>{state[el.id]=el.value;sauve();document.getElementById('aperçu-courant').innerHTML=apercuCote();document.getElementById('retour').innerHTML='';document.getElementById('retour').className='';});}
  document.getElementById('ouvrir-reponse')?.addEventListener('click',()=>{document.getElementById('zone-reponse').hidden=false;document.getElementById('reponse').focus();});
  /* Étape 8 : une réponse déjà commencée se rouvre toute seule (retour sur l'étape, rechargement). */
