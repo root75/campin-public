@@ -178,9 +178,9 @@ body:not(.vue-onglet) #panneau-classes{display:none!important}
       <select id="cours" aria-label="Cours"></select>
       <a class="btn vide" id="voir-cours" target="_blank" rel="noopener" hidden>👁 Voir le cours</a>
       <select id="seance" aria-label="Séance"></select>
-      <button class="btn" type="button" id="nouvelle">Nouvelle séance</button>
+      <button class="btn" type="button" id="nouvelle" title="Reprend la séance de la classe (même avancement des élèves) ou la crée la première fois">Ouvrir pour une classe…</button>
       <button class="btn vide" type="button" id="terminer" hidden>Terminer la séance</button>
-      <button class="btn" type="button" id="reprendre-seance" hidden>Reprendre la séance</button>
+      <button class="btn" type="button" id="reprendre-seance" hidden>Rouvrir la séance</button>
       <span class="seq-etat" id="seq-etat" hidden></span>
       <span class="maj" id="maj"></span>
     </div>
@@ -262,14 +262,18 @@ body:not(.vue-onglet) #panneau-classes{display:none!important}
 
 <dialog id="dlg">
   <form method="dialog" id="dlg-form">
-    <h2>Nouvelle séance</h2>
-    <p>Le tableau affiche la nouvelle séance de cette classe. Les autres classes gardent la leur. Pour Le rat de ville, les cases des périodes précédentes restent conservées. Les séances passées restent dans la liste et dans la feuille.</p>
-    <label>Classe <select id="dlg-classe" required aria-label="Classe de la nouvelle séance"><option value="">Choisir une classe</option></select></label>
-    <div class="reglages"><button class="btn" value="ok">Démarrer</button><button class="btn vide" value="annuler" formnovalidate>Annuler</button></div>
+    <h2>Ouvrir le cours</h2>
+    <p>Coche la classe — ou les deux, quand vous les prenez ensemble. Une classe qui a déjà commencé ce cours cette année <b>reprend où elle en était</b> : même avancement, même suivi. La première fois, la séance est créée.</p>
+    <fieldset id="dlg-classes" class="reglages" style="border:0;padding:0;margin:8px 0"><legend>Classes</legend></fieldset>
+    <div class="reglages"><button class="btn" value="ok">Ouvrir</button><button class="btn vide" value="annuler" formnovalidate>Annuler</button></div>
+    <details style="margin-top:12px"><summary>Recommencer à zéro…</summary>
+      <p class="astuce">Rare : refaire tout le cours avec la classe cochée. Ses élèves <b>repartent du bloc 1</b> et le tableau est vide. Rien n'est effacé : l'ancienne séance reste dans la liste et dans la feuille.</p>
+      <button class="btn vide" value="zero">Recommencer à zéro</button>
+    </details>
   </form>
 </dialog>
 
-<script defer src="https://root75.github.io/campin-public/messagerie/pas-a-pas/visuels.js?v=20261103"></script><script defer src="https://root75.github.io/campin-public/pas-a-pas/tableau.js?v=trace-20261112"></script>
+<script defer src="https://root75.github.io/campin-public/messagerie/pas-a-pas/visuels.js?v=20261103"></script><script defer src="https://root75.github.io/campin-public/pas-a-pas/tableau.js?v=ouvrir-20261112"></script>
 <script defer src="https://root75.github.io/campin-public/pas-a-pas/python-couleurs.js"></script>
 <script defer src="https://root75.github.io/campin-public/rat-de-ville/pas-a-pas/contenu.js?v=sonnerie-20261106"></script>
 <script defer src="https://root75.github.io/campin-public/pas-a-pas/formatif-prof.js?v=encadre-20261111"></script>

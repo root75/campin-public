@@ -371,16 +371,20 @@ function demoSeances(){
   return [{classe:"1C", debut:t-40*60000, fin:null}, {classe:"1B", debut:t-2*h, fin:t-40*60000}, {classe:"2F", debut:t-26*h, fin:t-2*h}];
 }
 
-/* Nouvelle séance : demande la classe, la démarre côté serveur, recharge la liste. */
+/* Ouvrir le cours pour une ou plusieurs classes (deux classes prises ensemble) : la séance de cette année de
+   chaque classe est reprise, même avancement et même suivi ; la première fois, elle est créée (ouvrirSeances).
+   « Recommencer à zéro », rare, crée une nouvelle séance : les élèves repartent du bloc 1 (nouvelleSeance). */
 $("nouvelle").addEventListener("click", async()=>{
   const bouton=$("nouvelle");bouton.disabled=true;
   try{
     if(!CL)await chargeClasses();
     const noms=Object.keys(CL?.classes||{}).sort((a,b)=>a.localeCompare(b,'fr',{numeric:true}));
     if(!noms.length){erreur(Error('La liste des classes est vide ou indisponible. Vérifie le panneau Classes et cours.'));return;}
-    const choix=$("dlg-classe");
-    choix.replaceChildren(...[["","Choisir une classe"],...noms.map(n=>[n,n])].map(([valeur,texte])=>{const o=txt('option',null,texte);o.value=valeur;return o;}));
-    choix.value='';$("dlg").showModal();choix.focus();
+    const zone=$("dlg-classes");
+    zone.replaceChildren(txt("legend",null,"Classes"),...noms.map(n=>{
+      const lab=txt("label","filtre-aide"),cb=txt("input");
+      cb.type="checkbox";cb.name="classe";cb.value=n;lab.append(cb,txt("span",null,n));return lab;}));
+    $("dlg").returnValue="";$("dlg").showModal();zone.querySelector("input").focus();
   }finally{bouton.disabled=false;}
 });
 /* Terminer : la séance en cours s'arrête, les élèves ne sont plus envoyés sur ce cours. Rien n'est effacé. */
@@ -389,6 +393,7 @@ function etatTerminer(){
   $("terminer").hidden=!enCours(s,i);
   /* Reprendre : la plus récente DE SA CLASSE, expirée (3 h) ou terminée, redevient la séance de ses élèves, même suivi. */
   $("reprendre-seance").hidden=!(s.debut && derniere(s,i) && s.active===false);
+  $("reprendre-seance").textContent="Rouvrir pour "+(s.classe||"la classe");
 }
 $("seance").addEventListener("change", ()=>{etatTerminer();chargeSequence();});
 $("terminer").addEventListener("click", ()=>{
@@ -405,11 +410,37 @@ $("reprendre-seance").addEventListener("click", ()=>{
   const b=$("reprendre-seance");b.disabled=true;
   google.script.run.withSuccessHandler(l=>{b.disabled=false;remplitSeances(l,s.debut);$("maj").textContent="Séance reprise.";}).withFailureHandler(e=>{b.disabled=false;erreur(e);}).reprendreSeance($("cours").value, s.debut);
 });
-$("dlg").addEventListener("close", ()=>{
-  const classe = $("dlg-classe").value.trim();
-  if($("dlg").returnValue !== "ok" || !classe) return;
-  if(!SUIVI){ const l = demoSeances(); l[0].fin = Date.now(); remplitSeances([{classe, debut:Date.now(), fin:null}, ...l]); return; }
-  google.script.run.withSuccessHandler(remplitSeances).withFailureHandler(erreur).nouvelleSeance($("cours").value, classe);
+$("dlg").addEventListener("close", async()=>{
+  const quoi=$("dlg").returnValue, cours=$("cours").value;
+  const choix=[...$("dlg-classes").querySelectorAll("input:checked")].map(c=>c.value);
+  if(quoi!=="ok"&&quoi!=="zero")return;
+  if(!choix.length){erreur(Error("Coche au moins une classe."));return;}
+  const zero=quoi==="zero", qui=choix.join(" et ");
+  if(zero&&!confirm("Recommencer à zéro pour "+qui+" ? Les élèves repartent du bloc 1. Rien n'est effacé : l'ancienne séance reste dans la liste."))return;
+  /* La première classe cochée est la séance affichée ; les autres s'ajoutent à « Voir aussi ». */
+  const affiche=liste=>{
+    if(choix.length>1){classesVues=classesVues.filter(c=>!choix.includes(c)).concat(choix.slice(1));
+      try{localStorage.setItem("tableau:classes-vues",JSON.stringify(classesVues));}catch(e){}contexteAffiche="";}
+    const s=liste.find((x,k)=>x.classe===choix[0]&&derniere(x,k));
+    remplitSeances(liste,s?s.debut:undefined);
+    $("maj").textContent=(zero?"Nouvelle séance : ":"Cours ouvert : ")+qui+".";
+  };
+  if(!SUIVI){
+    let l=SEANCES.map((x,k)=>Object.assign({},x,{derniere:derniere(x,k)}));
+    choix.forEach((c,n)=>{const i=l.findIndex(x=>x.classe===c&&x.derniere);
+      if(!zero&&i>=0){l[i]=Object.assign({},l[i],{active:true});return;}
+      const t=Date.now()-n;l=[{classe:c,debut:t,fin:null,derniere:true},...l.map(x=>x.classe===c&&x.derniere?Object.assign({},x,{derniere:false,fin:t}):x)];});
+    affiche(l);return;
+  }
+  const b=$("nouvelle");b.disabled=true;
+  try{
+    let l;
+    if(zero)for(const c of choix)l=await serveur("nouvelleSeance",cours,c);
+    else l=await serveur("ouvrirSeances",cours,choix);
+    affiche(l);
+  }catch(e){
+    erreur(/ouvrirSeances/.test(String(e&&e.message||e))?Error("le serveur Apps Script n'est pas à jour : redéploie Code.gs (branche main), puis recharge le tableau."):e);
+  }finally{b.disabled=false;}
 });
 
 /* ===== Mode séquence =====
@@ -461,7 +492,7 @@ function dessineEtatSeq(){
     b("Reprendre le cours collectif", "", ()=>serveur("reprendreSequence", $("cours").value, choisie().classe).then(e=>{ SEQ.etat = e; ouvreProjection(); }).catch(erreur));
     b("Arrêter", "vide", ()=>serveur("arreterSequence", $("cours").value, choisie().classe).then(()=>{ SEQ.etat = null; dessineEtatSeq(); }).catch(erreur));
   } else if(SEANCES.length) b("Lancer le cours collectif", "", ()=>allerA(0, "", true));
-  else z.append(txt("span","maj","Pour lancer avec la classe : Nouvelle séance."));
+  else z.append(txt("span","maj","Pour lancer avec la classe : Ouvrir pour une classe…"));
   b("Répéter sans les élèves", "vide", repeter);
 }
 /* Voir la projection avant le cours : rien ne part au serveur, la séquence réelle de la classe n'est pas touchée. */
