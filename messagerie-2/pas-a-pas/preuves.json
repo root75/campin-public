@@ -1,5 +1,5 @@
 {
- "_lisezmoi": "Messagerie 02 (version 2026-11-10). Une liste par étape, variante 1 d’abord. Viser « j’ai compris », pas « j’ai fini » : plus de QCM. Étapes 1 et 2 : texte à trous (texte avec ___, mots = le bon mot de chaque trou dans l’ordre, pieges = les intrus) puis phrase libre non jugée (phrase), la même pour les trois variantes. Étapes 3 à 7, 9 et 10 : saisie de ce que l’élève lit sur SON écran (regle : egal, motif, sauf, sur la réponse sans accents ni majuscules). Trois variantes par étape, tirées par élève côté serveur (règle anti-recopie). Étape 8 : brouillon guidé de la réponse, une seule règle ; le vrai contrôle est la réponse reçue par le professeur (cotée /5).",
+ "_lisezmoi": "Messagerie 02 (version 2026-11-10). Une liste par étape, variante 1 d’abord. Viser « j’ai compris », pas « j’ai fini » : plus de QCM. Étapes 1 et 2 : texte à trous (texte avec ___, mots = le bon mot de chaque trou dans l’ordre, pieges = les intrus) puis phrase libre non jugée (phrase), la même pour les trois variantes. Étapes 3 à 7, 9, 10 et 11 : saisie de ce que l’élève lit sur SON écran (regle : egal, motif, sauf, sur la réponse sans accents ni majuscules). Trois variantes par étape, tirées par élève côté serveur (règle anti-recopie). Étape 8 : brouillon guidé de la réponse, une seule règle ; le vrai contrôle est la réponse reçue par le professeur (cotée /5).",
  "blocs": [
   [
    {
@@ -336,6 +336,35 @@
     },
     "faux": "Ton professeur reçoit une copie : regarde sous la ligne À, quelle ligne sert aux copies ?",
     "aide": "Ton professeur reçoit une copie : quelle ligne sert aux copies ?"
+   }
+  ],
+  [
+   {
+    "type": "saisie",
+    "q": "Ouvre la fiche du contact que tu viens d’ajouter. Recopie son adresse e-mail.",
+    "regle": {
+     "motif": "^[a-z0-9_'-]+@arcampinbe$"
+    },
+    "faux": "Recopie l’adresse en entier, comme sur la fiche : prenom.nom@arcampin.be, sans espace.",
+    "aide": "Clique sur ton voisin dans la liste de tes contacts : son adresse est sur sa fiche."
+   },
+   {
+    "type": "saisie",
+    "q": "Sur quel bouton as-tu cliqué pour garder la fiche de ton nouveau contact ? Écris son nom.",
+    "regle": {
+     "motif": "^(sur )?(le bouton )?enregistrer$"
+    },
+    "faux": "Regarde en bas de la fiche du contact : le bouton à côté d’Annuler.",
+    "aide": "Le bouton à côté d’Annuler, en bas de la fiche."
+   },
+   {
+    "type": "saisie",
+    "q": "Dans quelle application d’Outlook as-tu ajouté ton voisin ? Écris son nom.",
+    "regle": {
+     "motif": "^(l.?|dans )?(application |icone )?contacts?$"
+    },
+    "faux": "Passe la souris sur les icônes de la colonne de gauche : laquelle garde les adresses ?",
+    "aide": "Passe la souris sur les icônes de la colonne de gauche."
    }
   ]
  ]

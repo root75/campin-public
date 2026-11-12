@@ -116,7 +116,7 @@ footer{font-size:.9rem;color:var(--doux);text-align:center}
 
 <div class="page">
   <header>
-    <div class="surtitre">Activités Info · 2e · la messagerie</div>
+    <div class="surtitre">Numérique · la messagerie</div>
     <h1>Je réponds et je joins <em>je révise</em></h1>
     <p class="consigne">Pour t'entraîner après la leçon 2 de messagerie. Rien n'est coté.</p>
   </header>
@@ -129,15 +129,16 @@ footer{font-size:.9rem;color:var(--doux);text-align:center}
   </nav>
 
   <section class="panneau" id="p-resume" role="tabpanel" aria-labelledby="t-resume">
-    <h2>L'essentiel en 5 lignes</h2>
+    <h2>L'essentiel en 6 lignes</h2>
     <ol class="resume">
       <li><span>Avant d'ouvrir une pièce jointe, je regarde <strong>qui</strong> l'envoie et <strong>quel fichier</strong> c'est.</span></li>
       <li><span>Pour compléter une fiche reçue : flèche <span class="touche">▾</span> de la carte du fichier ▸ <strong>Modifier dans le navigateur</strong>. Elle est rangée dans <strong>OneDrive › Pièces jointes</strong>.</span></li>
       <li><span><strong>Répondre</strong> = à celui qui m'a écrit. <strong>Répondre à tous</strong> = à tous ceux qui ont reçu le message.</span></li>
       <li><span><strong>Transférer</strong> = faire suivre le message, avec sa pièce jointe (objet « TR: »).</span></li>
       <li><span>Joindre un fichier : onglet <strong>Message</strong> ▸ le trombone <span class="touche">📎</span> <strong>Joindre un fichier</strong>.</span></li>
+      <li><span>Retrouver une adresse sans la retaper : icône <strong>Contacts</strong> ▸ <strong>Nouveau contact</strong> ▸ prénom, nom, adresse ▸ <strong>Enregistrer</strong>.</span></li>
     </ol>
-    <p class="note">Ensuite : le quiz (5 questions, tirées parmi 15 : il change à chaque fois), puis les 15 cartes pour réviser.</p>
+    <p class="note">Ensuite : le quiz (6 questions, tirées parmi 18 : il change à chaque fois), puis les 18 cartes pour réviser.</p>
     <div class="actions"><button class="btn plein" type="button" data-aller="quiz">Commencer le quiz</button></div>
   </section>
 
@@ -173,7 +174,7 @@ footer{font-size:.9rem;color:var(--doux);text-align:center}
       <div class="bloc fini">
         <h3>J'ai fini</h3>
         <div id="depassement"></div>
-        <p class="note">Défi : ajoute ton voisin dans tes <strong>Contacts</strong> : colonne de gauche ▸ Contacts ▸ <strong>Nouveau contact</strong> ▸ prénom, nom, adresse ▸ Enregistrer.</p>
+        <p class="note">Défi : ajoute un deuxième camarade dans tes <strong>Contacts</strong>, puis écris-lui un message en tapant seulement son nom dans À.</p>
       </div>
     </div>
   </section>
@@ -233,7 +234,12 @@ const QUIZ = [
        "Afficher change la vue, pas le contenu du message.",
        "Si tu envoies sans joindre, ta fiche ne part pas."],
     h:"Le trombone, comme celui qui attache une feuille à une lettre.",
-    e:"Joindre un fichier ▸ OneDrive ▸ ta fiche ▸ Joindre : sa carte apparaît sous l'objet." }
+    e:"Joindre un fichier ▸ OneDrive ▸ ta fiche ▸ Joindre : sa carte apparaît sous l'objet." },
+  { q:"Je veux retrouver l'adresse de mon voisin sans la retaper chaque fois. Que fais-je ?",
+    c:["Je l'ajoute à mes contacts : Contacts ▸ Nouveau contact ▸ Enregistrer.", "Je la recopie sur une feuille.", "Je lui demande de m'écrire chaque fois en premier.", "Je l'ajoute dans Brouillons."],
+    p:[null, "Une feuille se perd ; Outlook garde tes contacts pour toi.", "Pas pratique : avec un contact, tu tapes son nom et Outlook trouve l'adresse.", "Brouillons garde des messages pas envoyés, pas des adresses."],
+    h:"Mon carnet d'adresses, dans Outlook.",
+    e:"Un contact enregistré : je tape son nom dans la ligne À, Outlook trouve son adresse." }
 ];
 /* Règle du 05/11/2026 : trois variantes du même type par question, réponses distinctes.
    QUIZ[i] est la variante 1 ; VARIANTES[i] les deux autres. Le quiz en tire une au hasard à chaque passage. */
@@ -287,7 +293,17 @@ const VARIANTES = [
       c:["Onglet Afficher ▸ Disposition.", "Onglet Accueil ▸ Nouveau message.", "Onglet Message ▸ le trombone Joindre un fichier.", "Le bouton Envoyer."],
       p:[null, "Ça ouvre un nouveau message vide.", "Le trombone joint un fichier, il ne change pas la vue.", "Envoyer fait partir un message."],
       h:"Je veux changer ce que j'affiche…",
-      e:"Onglet Afficher ▸ Disposition ▸ Volet de lecture : le réglage reste pour les prochaines fois." } ]
+      e:"Onglet Afficher ▸ Disposition ▸ Volet de lecture : le réglage reste pour les prochaines fois." } ],
+  [ { q:"Où sont mes contacts dans Outlook ?",
+      c:["Icône Contacts, dans la colonne d'icônes à gauche.", "Dans Éléments envoyés.", "Onglet Afficher ▸ Disposition.", "Dans Courrier indésirable."],
+      p:[null, "Éléments envoyés garde les messages que j'ai envoyés.", "Afficher change la vue, il ne montre pas les contacts.", "Courrier indésirable garde les spams."],
+      h:"Une colonne d'icônes, tout à gauche…",
+      e:"Colonne d'icônes à gauche ▸ Contacts : mon carnet d'adresses." },
+    { q:"J'ai rempli Prénom, Nom de famille et Adresse e-mail de mon nouveau contact. Que fais-je ?",
+      c:["Je clique sur Enregistrer.", "Je clique sur Annuler.", "Je ferme Outlook.", "Je clique sur Envoyer."],
+      p:[null, "Annuler efface ce que tu as rempli.", "Sans Enregistrer, le contact n'est pas gardé.", "Il n'y a rien à envoyer : un contact s'enregistre."],
+      h:"Pour garder la fiche…",
+      e:"Enregistrer : mon voisin est dans mes contacts." } ]
 ];
 const TOUTES = QUIZ.map((q,i)=>[q, ...VARIANTES[i]]);
 const CARTES = TOUTES.flat();
@@ -412,7 +428,7 @@ onglets.forEach(o=>document.getElementById("t-"+o).addEventListener("click",()=>
 document.querySelectorAll("[data-aller]").forEach(b=>b.addEventListener("click",()=>montre(b.dataset.aller)));
 if(onglets.includes(location.hash.slice(1))) montre(location.hash.slice(1));
 </script>
-<script src="https://root75.github.io/campin-public/assets/fiche-revision.js" data-pied="Activités Info — M. Louviaux — Messagerie 02" data-adresse="louviaux.com"></script>
+<script src="https://root75.github.io/campin-public/assets/fiche-revision.js" data-pied="Numérique — M. Louviaux — Messagerie 02" data-adresse="louviaux.com"></script>
 
 </body>
 </html>

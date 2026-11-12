@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bien communiquer en ligne — je révise</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,600;0,800;1,600&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
+<style>
+/* Page d'entraînement : bandeau titre, onglets, une carte de travail centrée (largeur de lecture). */
+:root{
+  --papier:#f3f5f7; --carte:#ffffff; --encre:#1f2a33; --doux:#5b6873;
+  --trait:#d5dce2; --encre-bouton:#1d5a73; --fromage:#e3a922; --fromage-pale:#fbf0d4;
+  --juste:#1f7a4d; --juste-pale:#e2f3ea; --faux:#b23a2e; --faux-pale:#f8e3e0;
+  --display:"Alegreya", Georgia, "Times New Roman", serif;
+  --texte:"Atkinson Hyperlegible", "Segoe UI", Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --papier:#141a1f; --carte:#1d252c; --encre:#e8edf1; --doux:#a3b0ba;
+  --trait:#33404a; --encre-bouton:#7cc3de; --fromage:#e9b84a; --fromage-pale:#3a3120;
+  --juste:#6fd0a0; --juste-pale:#183427; --faux:#f08b7f; --faux-pale:#3d2120; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --papier:#141a1f; --carte:#1d252c; --encre:#e8edf1; --doux:#a3b0ba;
+  --trait:#33404a; --encre-bouton:#7cc3de; --fromage:#e9b84a; --fromage-pale:#3a3120;
+  --juste:#6fd0a0; --juste-pale:#183427; --faux:#f08b7f; --faux-pale:#3d2120; color-scheme:dark }
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--papier);color:var(--encre);font-family:var(--texte);font-size:1.125rem;line-height:1.55;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:0 48px}
+.page{max-width:44rem;margin:0 auto;display:grid;gap:20px}
+header{padding-top:28px;display:grid;gap:4px}
+.surtitre{font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;color:var(--doux);font-weight:700}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(2rem,7vw,2.8rem);line-height:1.05;margin:0;text-wrap:balance}
+h1 em{font-style:italic;font-weight:600;color:var(--doux)}
+.consigne{margin:6px 0 0;color:var(--doux);font-size:1rem}
+
+nav{display:flex;flex-wrap:wrap;gap:8px}
+nav button{font:inherit;font-size:1rem;font-weight:700;padding:10px 16px;border-radius:999px;border:2px solid var(--trait);
+  background:var(--carte);color:var(--encre);cursor:pointer}
+nav button[aria-selected="true"]{background:var(--encre-bouton);border-color:var(--encre-bouton);color:var(--carte)}
+button:focus-visible{outline:3px solid var(--fromage);outline-offset:2px}
+
+.panneau{background:var(--carte);border:1px solid var(--trait);border-radius:14px;padding:22px clamp(16px,4vw,28px);display:grid;gap:16px;min-width:0}
+h2{font-family:var(--display);font-weight:800;font-size:1.6rem;margin:0;line-height:1.15}
+h3{font-family:var(--display);font-weight:600;font-size:1.25rem;margin:0}
+p{margin:0}
+
+/* Les boutons de la barre Docs, en petites touches */
+.touche{display:inline-flex;align-items:center;justify-content:center;min-width:1.7em;padding:0 .4em;height:1.6em;
+  border:1px solid var(--trait);border-bottom-width:3px;border-radius:6px;background:var(--papier);
+  font-family:var(--texte);font-size:.95em;font-weight:700;line-height:1;white-space:nowrap;vertical-align:.08em}
+.touche.i{font-style:italic}.touche.u{text-decoration:underline}
+
+ol.resume{margin:0;padding:0;list-style:none;display:grid;gap:12px;counter-reset:r}
+ol.resume li{display:grid;grid-template-columns:2rem 1fr;gap:10px;align-items:start}
+ol.resume li::before{counter-increment:r;content:counter(r);font-family:var(--display);font-weight:800;font-size:1.4rem;
+  color:var(--encre-bouton);line-height:1.1;text-align:right}
+.note{font-size:.95rem;color:var(--doux)}
+
+.progres{display:flex;gap:6px}
+.progres span{flex:1;height:6px;border-radius:3px;background:var(--trait)}
+.progres span.fait{background:var(--encre-bouton)}
+.progres span.ok{background:var(--juste)}
+.progres span.ko{background:var(--faux)}
+.numero{font-size:.9rem;font-weight:700;color:var(--doux);letter-spacing:.04em;text-transform:uppercase}
+.question{font-size:1.2rem;font-weight:700;margin:0}
+.choix{display:grid;gap:10px}
+.choix button{font:inherit;text-align:left;padding:12px 14px;border-radius:10px;border:2px solid var(--trait);
+  background:var(--carte);color:var(--encre);cursor:pointer;display:grid;grid-template-columns:1.8rem 1fr;gap:8px;align-items:start}
+.choix button:hover:not(:disabled){border-color:var(--encre-bouton)}
+.choix button .lettre{font-weight:700;color:var(--doux)}
+.choix button:disabled{cursor:default}
+.choix button.juste{border-color:var(--juste);background:var(--juste-pale)}
+.choix button.faux{border-color:var(--faux);background:var(--faux-pale)}
+.choix button.estompe{opacity:.55}
+
+.indice{background:var(--fromage-pale);border-left:5px solid var(--fromage);border-radius:6px;padding:10px 14px;font-size:1rem}
+.retour{border-radius:10px;padding:12px 14px;display:grid;gap:6px;font-size:1rem}
+.retour.juste{background:var(--juste-pale)} .retour.faux{background:var(--faux-pale)}
+.retour strong{font-size:1.05rem}
+.actions{display:flex;flex-wrap:wrap;gap:10px}
+.btn{font:inherit;font-weight:700;font-size:1rem;padding:10px 18px;border-radius:10px;cursor:pointer;border:2px solid var(--encre-bouton)}
+.btn.plein{background:var(--encre-bouton);color:var(--carte)}
+.btn.vide{background:transparent;color:var(--encre-bouton)}
+.btn:disabled{opacity:.4;cursor:default}
+
+.score{font-family:var(--display);font-weight:800;font-size:3.2rem;line-height:1;color:var(--encre-bouton)}
+
+/* Cartes mémoire */
+.carte-memoire{perspective:1200px;min-height:18rem}
+.carte-memoire .tourne{position:relative;width:100%;min-height:18rem;transition:transform .45s ease;transform-style:preserve-3d;cursor:pointer;border:0;padding:0;background:none;font:inherit;color:inherit;text-align:left;display:block}
+.carte-memoire .tourne.verso{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;border-radius:14px;padding:20px;display:grid;align-content:center;gap:10px;
+  border:2px solid var(--trait);background:var(--papier)}
+.face.dos{transform:rotateY(180deg);background:var(--fromage-pale);border-color:var(--fromage)}
+.face .etiquette{font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:var(--doux)}
+.face .grand{font-size:1.2rem;font-weight:700}
+.compteur{font-variant-numeric:tabular-nums;color:var(--doux);font-weight:700;align-self:center}
+
+.deux{display:grid;gap:16px}
+.bloc{border:1px solid var(--trait);border-radius:12px;padding:16px;display:grid;gap:12px;min-width:0}
+.bloc.coince{border-top:5px solid var(--encre-bouton)}
+.bloc.fini{border-top:5px solid var(--fromage)}
+.etapes{margin:0;padding-left:1.4rem;display:grid;gap:4px}
+
+footer{font-size:.9rem;color:var(--doux);text-align:center}
+@media (prefers-reduced-motion: reduce){.carte-memoire .tourne{transition:none}}
+</style>
+<link rel="stylesheet" href="https://root75.github.io/campin-public/assets/navigation.css">
+</head>
+<body>
+<nav class="campin-navigation" aria-label="Navigation du site"><a href="https://root75.github.io/campin-public/" target="_top"><span aria-hidden="true">⌂</span> Accueil</a></nav>
+
+
+<div class="page">
+  <header>
+    <div class="surtitre">Numérique · la messagerie</div>
+    <h1>Bien communiquer en ligne <em>je révise</em></h1>
+    <p class="consigne">Pour t'entraîner après Messagerie 03. Rien n'est coté.</p>
+  </header>
+
+  <nav role="tablist" aria-label="Parties de la page">
+    <button role="tab" id="t-resume" aria-controls="p-resume" aria-selected="true">L'essentiel</button>
+    <button role="tab" id="t-quiz" aria-controls="p-quiz" aria-selected="false">Quiz</button>
+    <button role="tab" id="t-cartes" aria-controls="p-cartes" aria-selected="false">Cartes</button>
+    <button role="tab" id="t-plus" aria-controls="p-plus" aria-selected="false">Ça coince ? · J'ai fini</button>
+  </nav>
+
+  <section class="panneau" id="p-resume" role="tabpanel" aria-labelledby="t-resume">
+    <h2>L'essentiel en 6 lignes</h2>
+    <ol class="resume">
+      <li><span>Un professeur, l'école : un <strong>courriel</strong> (Outlook, Gmail). Des amis, vite : une <strong>messagerie instantanée</strong> (WhatsApp, Messenger).</span></li>
+      <li><span>Un message <strong>non lu</strong> est en gras, avec une barre bleue. <strong>Clic DROIT</strong> (le bouton de droite de la souris) ▸ <strong>Marquer comme non lu</strong>.</span></li>
+      <li><span>Un <strong>spam</strong> va dans <strong>Courrier indésirable</strong>. Un message qui veut mon mot de passe : clic DROIT ▸ <strong>Signaler un hameçonnage</strong>.</span></li>
+      <li><span><strong>Cc</strong> : tout le monde voit l'adresse. <strong>Cci</strong> : copie cachée, personne ne la voit.</span></li>
+      <li><span>La <strong>nétiquette</strong> : je salue, je signe, pas de MAJUSCULES (c'est crier), les émoticônes pour les amis.</span></li>
+      <li><span>Une pause : <span class="touche">Ctrl + Alt + Delete</span> ▸ <strong>Verrouiller</strong>. Fin de l'heure : touche Windows ▸ mon nom ▸ <strong>Se déconnecter</strong>.</span></li>
+    </ol>
+    <p class="note">Ensuite : le quiz (6 questions, tirées parmi 18 : il change à chaque fois), puis les 18 cartes pour réviser.</p>
+    <div class="actions"><button class="btn plein" type="button" data-aller="quiz">Commencer le quiz</button></div>
+  </section>
+
+  <section class="panneau" id="p-quiz" role="tabpanel" aria-labelledby="t-quiz" hidden>
+    <div id="quiz"></div>
+  </section>
+
+  <section class="panneau" id="p-cartes" role="tabpanel" aria-labelledby="t-cartes" hidden>
+    <h2>Cartes mémoire</h2>
+    <p class="note">Lis la question, réponds dans ta tête, puis clique sur la carte pour la retourner.</p>
+    <div class="carte-memoire">
+      <button class="tourne" id="carte" type="button" aria-live="polite">
+        <div class="face"><span class="etiquette">Question</span><span class="grand" id="carte-q"></span></div>
+        <div class="face dos"><span class="etiquette">Réponse</span><span class="grand" id="carte-r"></span><span id="carte-e"></span></div>
+      </button>
+    </div>
+    <div class="actions">
+      <button class="btn vide" type="button" id="carte-avant">← Précédente</button>
+      <button class="btn plein" type="button" id="carte-retourne">Retourner</button>
+      <button class="btn vide" type="button" id="carte-apres">Suivante →</button>
+      <span class="compteur" id="carte-n"></span>
+    </div>
+  </section>
+
+  <section class="panneau" id="p-plus" role="tabpanel" aria-labelledby="t-plus" hidden>
+    <div class="deux">
+      <div class="bloc coince">
+        <h3>Ça coince ?</h3>
+        <p>Retiens quatre gestes :</p>
+        <ol class="etapes"><li>Avant d'écrire : courriel ou messagerie instantanée ?</li><li>Un message douteux : je ne clique sur rien, <strong>clic DROIT</strong> ▸ Signaler.</li><li>Beaucoup de destinataires : mon adresse dans À, les autres dans <strong>Cci</strong>.</li><li>Je quitte mon poste : je verrouille (pause) ou je me déconnecte (fin de l'heure).</li></ol>
+        <div id="consolidation"></div>
+      </div>
+      <div class="bloc fini">
+        <h3>J'ai fini</h3>
+        <div id="depassement"></div>
+        <p class="note">Défi : explique à ton voisin la différence entre Cc et Cci, avec un exemple de ta vie.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>Ton score reste sur cet ordinateur. Aucune donnée n'est envoyée.</footer>
+</div>
+
+<script>
+/* Bonne réponse TOUJOURS en première position : l'ordre est mélangé à l'affichage.
+   p = ce qu'on dit à l'élève qui choisit ce piège. */
+const QUIZ = [
+  { q:"Je veux envoyer mon devoir à mon professeur. Quel outil ?",
+    c:["Un courriel, avec Outlook.", "Un message WhatsApp.", "Un message Snapchat.", "Un commentaire sous une vidéo."],
+    p:[null, "On n'écrit pas à un professeur sur une messagerie instantanée.", "Snapchat sert aux amis, et les messages disparaissent.", "Un commentaire est public : tout le monde le lit."],
+    h:"Un professeur, l'école…",
+    e:"Un professeur, l'école, un document : le courriel." },
+  { q:"Comment reconnais-tu un message non lu dans Outlook ?",
+    c:["Il est en gras, avec une barre bleue à gauche.", "Il est barré.", "Il est en italique.", "Il est dans Brouillons."],
+    p:[null, "Barré, il ne l'est jamais dans la liste.", "L'italique ne marque pas un message non lu.", "Brouillons garde les messages que j'écris, pas ceux que je reçois."],
+    h:"Regarde l'épaisseur des lettres…",
+    e:"Non lu : gras et barre bleue. Lu : écriture normale." },
+  { q:"Un message te demande ton mot de passe pour « vérifier ton compte ». Que fais-tu ?",
+    c:["Je ne clique pas, je le signale et je le montre à mon professeur.", "Je donne mon mot de passe.", "Je clique sur le lien pour voir.", "Je le transfère à mes amis."],
+    p:[null, "Personne de sérieux ne demande ton mot de passe par message.", "Le lien mène à une fausse page qui vole ce que tu tapes.", "Tu enverrais le piège à tes amis."],
+    h:"Qui demande un mot de passe par message ?",
+    e:"Hameçonnage : je ne clique pas, je signale, je préviens." },
+  { q:"Tu écris à 30 parents qui ne se connaissent pas. Où mets-tu leurs adresses ?",
+    c:["Dans Cci.", "Dans Cc.", "Dans À.", "Dans l'objet."],
+    p:[null, "En Cc, chacun verrait les 29 autres adresses.", "En À, chacun verrait toutes les adresses.", "L'objet dit de quoi parle le message, pas à qui."],
+    h:"Les adresses doivent rester cachées…",
+    e:"Beaucoup de destinataires : mon adresse dans À, les autres dans Cci." },
+  { q:"Tu vas aux toilettes pendant le cours. Que fais-tu de ton poste ?",
+    c:["Ctrl + Alt + Delete ▸ Verrouiller.", "Touche Windows ▸ mon nom ▸ Se déconnecter.", "Je laisse tout ouvert.", "J'éteins l'ordinateur."],
+    p:[null, "Se déconnecter ferme ton travail : pour une pause, verrouiller suffit.", "Quelques minutes suffisent pour qu'un autre utilise ton compte.", "Éteindre ferme tout ton travail."],
+    h:"Une pause courte…",
+    e:"Une pause : je verrouille. Mon travail reste ouvert, mon compte est protégé." }
+];
+/* Règle du 05/11/2026 : trois variantes du même type par question, réponses distinctes.
+   QUIZ[i] est la variante 1 ; VARIANTES[i] les deux autres. Le quiz en tire une au hasard à chaque passage. */
+const VARIANTES = [
+  [ { q:"Je propose à trois amis de se voir ce soir. Quel outil convient le mieux ?",
+    c:["Un groupe de messagerie instantanée.", "Un courriel, avec mon professeur en Cc.", "Un courrier papier.", "Le Drive de l'école."],
+    p:[null, "Ton professeur n'a pas à recevoir ça.", "Trop lent pour ce soir.", "Le Drive range des fichiers, il ne sert pas à discuter."],
+    h:"Des amis, une réponse rapide…",
+    e:"Une conversation rapide entre amis : une messagerie instantanée." },
+    { q:"Laquelle est une messagerie instantanée ?",
+    c:["WhatsApp", "Outlook", "Gmail", "Word"],
+    p:[null, "Outlook est une application de courriel.", "Gmail est une application de courriel.", "Word est un traitement de texte."],
+    h:"Une conversation rapide, par téléphone…",
+    e:"Messageries instantanées : WhatsApp, Messenger, Snapchat. Courriel : Outlook, Gmail." } ],
+  [ { q:"Tu veux garder un message pour le relire plus tard. Que fais-tu ?",
+    c:["Clic DROIT dessus ▸ Marquer comme non lu.", "Je le supprime.", "Clic DROIT dessus ▸ Bloquer.", "Je le transfère à toute la classe."],
+    p:[null, "Il disparaîtrait de ta Boîte de réception.", "Bloquer empêche l'expéditeur de t'écrire : ce n'est pas le but.", "Toute la classe le recevrait."],
+    h:"Le bouton de DROITE de la souris…",
+    e:"Marquer comme non lu : il redevient gras, je le repère plus tard." },
+    { q:"Où Outlook range-t-il les spams ?",
+    c:["Dans Courrier indésirable.", "Dans Brouillons.", "Dans Éléments envoyés.", "Dans Boîte de réception, en haut."],
+    p:[null, "Brouillons garde mes messages pas envoyés.", "Éléments envoyés garde ce que j'ai envoyé.", "Outlook les sort de la Boîte de réception quand il les reconnaît."],
+    h:"Indésirable…",
+    e:"Les spams vont dans Courrier indésirable : je n'y ouvre rien." } ],
+  [ { q:"Quel indice trahit « securite@micros0ft-compte.com » ?",
+    c:["Le zéro à la place du o dans micros0ft.", "Le mot « securite ».", "Le « .com » à la fin.", "L'adresse est trop longue."],
+    p:[null, "N'importe qui peut écrire « securite » : ce n'est pas une preuve.", "Beaucoup d'adresses vraies finissent par .com.", "La longueur ne prouve rien : lis lettre par lettre."],
+    h:"Lis l'adresse lettre par lettre…",
+    e:"Une seule lettre changée, et ce n'est plus Microsoft." },
+    { q:"Clic DROIT sur un message piège qui veut ton mot de passe. Que choisis-tu dans le menu ?",
+    c:["Signaler un hameçonnage", "Répondre", "Transférer", "Épingler"],
+    p:[null, "Répondre montre que ton adresse fonctionne : encore plus de pièges.", "Tu enverrais le piège à quelqu'un d'autre.", "Épingler le garde en haut de ta liste : le contraire du but."],
+    h:"Hameçonnage : la pêche au mot de passe…",
+    e:"Clic DROIT ▸ Signaler un hameçonnage : Outlook le retire et prévient Microsoft." } ],
+  [ { q:"Qui voit l'adresse d'une personne mise en Cc ?",
+    c:["Tous les destinataires.", "Personne.", "Seulement moi.", "Seulement mon professeur."],
+    p:[null, "Personne, c'est le Cci : la copie cachée.", "Les destinataires aussi la voient.", "Tous les destinataires la voient, pas seulement ton professeur."],
+    h:"Cc = copie visible…",
+    e:"Cc : tout le monde voit l'adresse. Cci : personne ne la voit." },
+    { q:"Que veut dire Cci ?",
+    c:["Copie carbone invisible.", "Courriel confidentiel important.", "Copie corrigée intégrale.", "Contact caché inconnu."],
+    p:[null, "Ce n'est pas une question d'importance.", "Rien n'est corrigé.", "La personne en Cci est connue de celui qui écrit."],
+    h:"Une copie… que les autres ne voient pas.",
+    e:"Cci : copie carbone invisible. En anglais : Bcc." } ],
+  [ { q:"L'heure de cours est finie. Que fais-tu ?",
+    c:["Touche Windows ▸ mon nom ▸ Se déconnecter.", "Ctrl + Alt + Delete ▸ Verrouiller.", "Je ferme seulement Chrome.", "Je laisse tout ouvert pour l'élève suivant."],
+    p:[null, "Verrouillé, le poste est bloqué pour l'élève suivant.", "Ta session Windows resterait ouverte.", "L'élève suivant arriverait dans ta session, en ton nom."],
+    h:"Je pars pour de bon…",
+    e:"Fin de l'heure : je me déconnecte de Windows." },
+    { q:"Tu as lu tes courriels à la bibliothèque. Avant de partir ?",
+    c:["Le rond de mon compte ▸ Se déconnecter, puis je ferme Chrome.", "Je ferme seulement l'onglet.", "Je laisse ouvert : la bibliothèque est surveillée.", "J'éteins l'écran."],
+    p:[null, "Fermer l'onglet ne déconnecte pas : le suivant rouvre Courrier.", "Le suivant lirait tes messages.", "L'écran éteint, l'ordinateur reste connecté à ton compte."],
+    h:"Un ordinateur qui n'est pas le mien…",
+    e:"Sur un ordinateur partagé : Se déconnecter, puis fermer Chrome." } ]
+];
+const TOUTES = QUIZ.map((q,i)=>[q, ...VARIANTES[i]]);
+const CARTES = TOUTES.flat();
+let tirage = [];
+const tire = () => { tirage = TOUTES.map(v => v[Math.floor(Math.random()*v.length)]); };
+tire();
+
+const CONSOLIDATION = { q:"Un message écrit TOUT EN MAJUSCULES, ça veut dire…",
+    c:["Qu'on crie.", "Qu'on est poli.", "Que c'est gentil et important.", "Rien de spécial."],
+    p:[null, "Les majuscules partout ne rendent pas un message plus poli.", "Le lecteur a l'impression qu'on lui crie dessus.", "À l'écran, les majuscules partout se lisent comme un cri."],
+    h:"La nétiquette…",
+    e:"TOUT EN MAJUSCULES, c'est crier. J'écris en minuscules, avec une majuscule au début." };
+const DEPASSEMENT = { q:"Dans TON profil Chrome de l'école, Chrome propose d'enregistrer ton mot de passe. Que fais-tu ?",
+    c:["J'enregistre : Chrome le garde pour moi, ma session le protège.","Je le note sur une feuille collée à l'écran.","Je le donne à mon voisin pour qu'il s'en souvienne.","Je change de mot de passe à chaque cours."],
+    p:[null,"Une feuille collée à l'écran, tout le monde la lit.","Un mot de passe ne se prête jamais, même à un ami.","Tu finirais par l'oublier : Chrome le garde pour toi."],
+    h:"C'est MON profil, protégé par ma session…",
+    e:"Dans mon profil Chrome, j'enregistre mon mot de passe. Sur l'ordinateur d'un autre, je me déconnecte avant de partir." };
+
+const LETTRES = "ABCD";
+const melange = a => { const b=a.slice(); for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];} return b; };
+const el = (tag, cls, txt) => { const n=document.createElement(tag); if(cls) n.className=cls; if(txt!=null) n.textContent=txt; return n; };
+
+/* Une question : rend la carte, appelle fin(juste) quand l'élève a répondu. */
+function question(cible, Q, fin){
+  cible.replaceChildren();
+  cible.append(el("p","question",Q.q));
+  const ind = el("div","indice","Indice : "+Q.h); ind.hidden = true;
+  const liste = el("div","choix"); const retour = el("div","retour"); retour.hidden = true;
+  const ordre = melange([0,1,2,3]); const boutons = [];
+  ordre.forEach((k,pos)=>{
+    const b = el("button"); b.type="button";
+    b.append(el("span","lettre",LETTRES[pos]), el("span",null,Q.c[k]));
+    b.addEventListener("click",()=>{
+      boutons.forEach(x=>x.disabled=true);
+      const juste = k===0;
+      boutons.forEach(x=>{ if(x.dataset.k==="0") x.classList.add("juste"); else if(x!==b) x.classList.add("estompe"); });
+      if(!juste) b.classList.add("faux");
+      retour.className = "retour "+(juste?"juste":"faux");
+      retour.replaceChildren(el("strong",null, juste?"Oui, c'est ça.":"Pas tout à fait."));
+      if(!juste) retour.append(el("p",null,Q.p[k]));
+      retour.append(el("p",null,Q.e)); retour.hidden=false; btnInd.disabled=true;
+      fin && fin(juste);
+    });
+    b.dataset.k = k; boutons.push(b); liste.append(b);
+  });
+  const btnInd = el("button","btn vide","Un indice"); btnInd.type="button";
+  btnInd.addEventListener("click",()=>{ ind.hidden=false; btnInd.disabled=true; });
+  const act = el("div","actions"); act.append(btnInd);
+  cible.append(liste, ind, retour, act);
+  return act;
+}
+
+/* Le quiz : une question à la fois, score à la fin */
+const zoneQuiz = document.getElementById("quiz");
+let n=0, resultats=[];
+function barre(){ const b=el("div","progres"); QUIZ.forEach((_,i)=>{ const s=el("span"); if(i<resultats.length) s.className=resultats[i]?"ok":"ko"; else if(i===n) s.className="fait"; b.append(s); }); return b; }
+function afficheQuiz(){
+  zoneQuiz.replaceChildren();
+  const wrap = el("div"); wrap.style.display="grid"; wrap.style.gap="14px";
+  zoneQuiz.append(wrap);
+  if(n>=QUIZ.length){
+    const s = resultats.filter(Boolean).length;
+    wrap.append(barre(), el("h2",null,"Ton score"), el("div","score",s+" / "+QUIZ.length),
+      el("p",null, s===QUIZ.length ? "Tout juste. Passe à « J'ai fini » pour un défi." :
+                   s>=3 ? "Bien. Relis les cartes des questions ratées, puis recommence." :
+                          "Relis « L'essentiel », regarde « Ça coince ? », puis recommence."));
+    const act = el("div","actions");
+    const r = el("button","btn plein","Recommencer"); r.type="button"; r.addEventListener("click",()=>{n=0;resultats=[];tire();afficheQuiz();});
+    const c = el("button","btn vide","Réviser avec les cartes"); c.type="button"; c.addEventListener("click",()=>montre("cartes"));
+    act.append(r,c); wrap.append(act); return;
+  }
+  wrap.append(barre(), el("div","numero","Question "+(n+1)+" sur "+QUIZ.length));
+  const zq = el("div"); zq.style.display="grid"; zq.style.gap="14px"; wrap.append(zq);
+  const act = question(zq, tirage[n], juste=>{
+    resultats.push(juste);
+    const suiv = el("button","btn plein", n+1<QUIZ.length?"Question suivante":"Voir mon score"); suiv.type="button";
+    suiv.addEventListener("click",()=>{ n++; afficheQuiz(); });
+    act.append(suiv); suiv.focus();
+  });
+}
+afficheQuiz();
+
+/* Consolidation et dépassement : une question chacun, avec « Recommencer » */
+function seule(id, Q){
+  const z=document.getElementById(id); z.style.display="grid"; z.style.gap="12px";
+  const go=()=>{ const act=question(z,Q,()=>{ const r=el("button","btn vide","Recommencer"); r.type="button"; r.addEventListener("click",go); act.append(r); }); };
+  go();
+}
+seule("consolidation", CONSOLIDATION);
+seule("depassement", DEPASSEMENT);
+
+/* Cartes mémoire : toutes les variantes du quiz */
+let ic=0; const carte=document.getElementById("carte");
+function afficheCarte(){
+  carte.classList.remove("verso");
+  const Q=CARTES[ic];
+  document.getElementById("carte-q").textContent=Q.q;
+  document.getElementById("carte-r").textContent=Q.c[0];
+  document.getElementById("carte-e").textContent=Q.e;
+  document.getElementById("carte-n").textContent=(ic+1)+" / "+CARTES.length;
+  document.getElementById("carte-avant").disabled = ic===0;
+  document.getElementById("carte-apres").disabled = ic===CARTES.length-1;
+}
+const retourne=()=>carte.classList.toggle("verso");
+carte.addEventListener("click",retourne);
+document.getElementById("carte-retourne").addEventListener("click",retourne);
+document.getElementById("carte-avant").addEventListener("click",()=>{ if(ic>0){ic--;afficheCarte();} });
+document.getElementById("carte-apres").addEventListener("click",()=>{ if(ic<CARTES.length-1){ic++;afficheCarte();} });
+afficheCarte();
+
+/* Onglets */
+const onglets=["resume","quiz","cartes","plus"];
+function montre(nom){
+  onglets.forEach(o=>{
+    document.getElementById("t-"+o).setAttribute("aria-selected", o===nom?"true":"false");
+    document.getElementById("p-"+o).hidden = o!==nom;
+  });
+}
+onglets.forEach(o=>document.getElementById("t-"+o).addEventListener("click",()=>montre(o)));
+document.querySelectorAll("[data-aller]").forEach(b=>b.addEventListener("click",()=>montre(b.dataset.aller)));
+if(onglets.includes(location.hash.slice(1))) montre(location.hash.slice(1));
+</script>
+<script src="https://root75.github.io/campin-public/assets/fiche-revision.js" data-pied="Numérique — M. Louviaux — Messagerie 03" data-adresse="louviaux.com"></script>
+
+</body>
+</html>

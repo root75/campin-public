@@ -1,0 +1,457 @@
+{
+ "_lisezmoi": "Messagerie 03 (version 2026-11-12, libellés du clic droit relevés à l’écran le 12/11). Une liste par étape, variante 1 d’abord. Trois variantes par étape, tirées par élève côté serveur (règle anti-recopie), chacune avec sa bonne réponse. Étapes 1, 3, 5, 8, 10 : texte à trous (mots = le bon mot de chaque trou dans l’ordre, pieges = les intrus) ; phrase libre non jugée aux étapes 1, 5 et 10, la même pour les trois variantes. Étapes 2, 6 et 7 : saisie de ce que l’élève lit sur SON écran (regle sur la réponse sans accents, sans majuscules et sans points). Étapes 4 et 9 : QCM, c[0] la bonne, p[k] explique le piège k.",
+ "blocs": [
+  [
+   {
+    "type": "trous",
+    "q": "Complète avec les mots de la banque.",
+    "texte": "Pour envoyer mon devoir à mon professeur, j’écris un ___ avec Outlook. Pour proposer à mes amis de se voir ce soir, j’écris dans un ___ de messagerie instantanée.",
+    "mots": [
+     "courriel",
+     "groupe"
+    ],
+    "pieges": [
+     "SMS",
+     "dossier"
+    ],
+    "phrase": "quand choisis-tu un courriel plutôt qu’une messagerie instantanée ?",
+    "juste": "Un professeur, l’école : courriel. Des amis, vite : messagerie instantanée.",
+    "faux": "",
+    "aide": "Relis la ligne « Pour » du tableau."
+   },
+   {
+    "type": "trous",
+    "q": "Complète avec les mots de la banque.",
+    "texte": "___ et Gmail sont des applications de courriel. WhatsApp et ___ sont des messageries instantanées.",
+    "mots": [
+     "Outlook",
+     "Messenger"
+    ],
+    "pieges": [
+     "Word",
+     "Drive"
+    ],
+    "phrase": "quand choisis-tu un courriel plutôt qu’une messagerie instantanée ?",
+    "juste": "Courriel : Outlook, Gmail. Messagerie instantanée : WhatsApp, Messenger, Snapchat.",
+    "faux": "",
+    "aide": "Relis la ligne « Exemples » du tableau."
+   },
+   {
+    "type": "trous",
+    "q": "Complète avec les mots de la banque.",
+    "texte": "Un courriel a une ___ et un objet. C’est l’outil pour écrire à un ___ ou à l’école.",
+    "mots": [
+     "adresse",
+     "professeur"
+    ],
+    "pieges": [
+     "photo",
+     "jeu"
+    ],
+    "phrase": "quand choisis-tu un courriel plutôt qu’une messagerie instantanée ?",
+    "juste": "Adresse et objet : c’est un courriel, l’outil pour l’école.",
+    "faux": "",
+    "aide": "Relis les lignes « Il faut » et « Pour » du tableau."
+   }
+  ],
+  [
+   {
+    "type": "saisie",
+    "q": "Clic droit sur un message déjà lu : quel est le premier mot de la ligne qui le rend non lu ? Écris ce mot.",
+    "regle": {
+     "motif": "^marquer$"
+    },
+    "faux": "Fais le clic droit sur un message déjà lu, dans la liste : lis le premier mot de la ligne « … comme non lu ».",
+    "aide": "Fais le clic droit sur un message de la liste."
+   },
+   {
+    "type": "saisie",
+    "q": "Regarde la liste : de quelle couleur est la barre, à gauche d’un message non lu ? Écris la couleur.",
+    "regle": {
+     "motif": "^(en )?bleue?$"
+    },
+    "faux": "Compare un message lu et un message non lu : le non lu a une barre de couleur tout à gauche.",
+    "aide": "Compare un message lu et un message non lu, dans la liste."
+   },
+   {
+    "type": "saisie",
+    "q": "Dans quel dossier arrivent les nouveaux messages ? Écris son nom, comme à gauche de l’écran.",
+    "regle": {
+     "motif": "^(la |dans (la )?)?boite de reception$"
+    },
+    "faux": "Regarde la colonne des dossiers, à gauche : le premier dossier sous Favoris.",
+    "aide": "Regarde la colonne des dossiers, à gauche de Courrier."
+   }
+  ],
+  [
+   {
+    "type": "trous",
+    "q": "Complète avec les mots de la banque.",
+    "texte": "Un ___ est un message envoyé à des milliers de personnes : publicité, faux cadeau. Outlook le range dans le dossier Courrier ___.",
+    "mots": [
+     "spam",
+     "indésirable"
+    ],
+    "pieges": [
+     "brouillon",
+     "envoyé"
+    ],
+    "juste": "Un spam va dans Courrier indésirable : je ne l’ouvre pas.",
+    "faux": "",
+    "aide": "Relis l’encadré « Le spam »."
+   },
+   {
+    "type": "trous",
+    "q": "Complète avec les mots de la banque.",
+    "texte": "Un message douteux dans ma Boîte de réception : je ne clique sur aucun ___. Clic droit ▸ ___ du courrier indésirable.",
+    "mots": [
+     "lien",
+     "Signaler"
+    ],
+    "pieges": [
+     "dossier",
+     "Transférer"
+    ],
+    "juste": "Je ne clique sur rien, je signale.",
+    "faux": "",
+    "aide": "Relis l’encadré « Le spam », dernière phrase."
+   },
+   {
+    "type": "trous",
+    "q": "Complète avec les mots de la banque.",
+    "texte": "Un spam ne vient pas d’une personne que je ___. Il veut souvent me ___ quelque chose.",
+    "mots": [
+     "connais",
+     "vendre"
+    ],
+    "pieges": [
+     "aime",
+     "prêter"
+    ],
+    "juste": "Un inconnu qui veut vendre : un spam.",
+    "faux": "",
+    "aide": "Relis l’encadré : publicité, faux cadeau, arnaque."
+   }
+  ],
+  [
+   {
+    "type": "qcm",
+    "q": "« Ton compte sera bloqué ce soir : clique ici et tape ton mot de passe. » Que fais-tu ?",
+    "c": [
+     "Je ne clique pas, je le signale et je le montre à mon professeur.",
+     "Je clique vite pour ne pas perdre mon compte.",
+     "Je réponds en donnant mon mot de passe.",
+     "Je le transfère à mes amis pour les prévenir."
+    ],
+    "p": [
+     null,
+     "L’urgence est le piège : on veut te faire agir sans réfléchir.",
+     "Personne de sérieux ne demande ton mot de passe par message.",
+     "Tu enverrais le piège à tes amis : ne transfère pas, signale."
+    ],
+    "juste": "Je ne clique sur rien et je signale."
+   },
+   {
+    "type": "qcm",
+    "q": "À quel indice vois-tu que « securite@micros0ft-compte.com » n’est pas Microsoft ?",
+    "c": [
+     "Le zéro à la place du o dans micros0ft.",
+     "Le mot « securite ».",
+     "Le « .com » à la fin.",
+     "L’adresse est trop longue."
+    ],
+    "p": [
+     null,
+     "N’importe qui peut écrire « securite » dans une adresse : ce n’est pas une preuve.",
+     "Beaucoup d’adresses vraies finissent par .com.",
+     "La longueur ne prouve rien : lis lettre par lettre."
+    ],
+    "juste": "Une lettre changée : ce n’est plus la bonne adresse."
+   },
+   {
+    "type": "qcm",
+    "q": "Qui peut te demander ton mot de passe par message ?",
+    "c": [
+     "Personne.",
+     "Ton professeur.",
+     "Le secrétariat de l’école.",
+     "Microsoft."
+    ],
+    "p": [
+     null,
+     "Même ton professeur ne te le demande pas par message.",
+     "L’école ne te demande jamais ton mot de passe par message.",
+     "Microsoft ne demande jamais ton mot de passe par message : c’est un piège."
+    ],
+    "juste": "Personne : un message qui demande ton mot de passe est un piège."
+   }
+  ],
+  [
+   {
+    "type": "trous",
+    "q": "Complète avec les mots de la banque.",
+    "texte": "En ___, tous les destinataires voient l’adresse. En ___, les autres ne la voient pas.",
+    "mots": [
+     "Cc",
+     "Cci"
+    ],
+    "pieges": [
+     "Objet",
+     "Brouillon"
+    ],
+    "phrase": "pourquoi mettre beaucoup de destinataires en Cci plutôt qu’en Cc ?",
+    "juste": "Cc : copie visible. Cci : copie cachée.",
+    "faux": "",
+    "aide": "Relis la colonne « Qui la voit ? » du tableau."
+   },
+   {
+    "type": "trous",
+    "q": "Complète avec les mots de la banque.",
+    "texte": "J’écris à toute une liste sans montrer les adresses : je mets mon adresse dans la ligne ___ et les autres dans la ligne ___.",
+    "mots": [
+     "À",
+     "Cci"
+    ],
+    "pieges": [
+     "Objet",
+     "Signature"
+    ],
+    "phrase": "pourquoi mettre beaucoup de destinataires en Cci plutôt qu’en Cc ?",
+    "juste": "Mon adresse dans À, les autres dans Cci : personne ne voit les adresses des autres.",
+    "faux": "",
+    "aide": "Relis la dernière ligne du tableau."
+   },
+   {
+    "type": "trous",
+    "q": "Complète avec les mots de la banque.",
+    "texte": "Cci veut dire « copie carbone ___ ». La personne en Cci ___ le message, mais les autres ne voient pas son adresse.",
+    "mots": [
+     "invisible",
+     "reçoit"
+    ],
+    "pieges": [
+     "importante",
+     "efface"
+    ],
+    "phrase": "pourquoi mettre beaucoup de destinataires en Cci plutôt qu’en Cc ?",
+    "juste": "Copie cachée : elle reçoit, mais on ne la voit pas.",
+    "faux": "",
+    "aide": "Relis la ligne Cci du tableau."
+   }
+  ],
+  [
+   {
+    "type": "saisie",
+    "q": "Dans ton message, sur quelle ligne as-tu mis ta propre adresse ? Écris le nom de la ligne.",
+    "regle": {
+     "motif": "^(dans |sur )?(la )?(ligne |champ )?a$"
+    },
+    "faux": "Regarde ton message : la première ligne, tout en haut, porte ton adresse.",
+    "aide": "Regarde les lignes de ton message, tout en haut."
+   },
+   {
+    "type": "saisie",
+    "q": "Combien de camarades as-tu mis dans la ligne Cci ? Écris le nombre en chiffres.",
+    "regle": {
+     "motif": "^2$|^deux$"
+    },
+    "faux": "Compte les noms dans la ligne Cci de ton message.",
+    "aide": "Compte les noms de la ligne Cci."
+   },
+   {
+    "type": "saisie",
+    "q": "Recopie l’objet de ton message.",
+    "regle": {
+     "motif": "^essai de copie cachee$"
+    },
+    "faux": "Recopie exactement la ligne de l’objet : Essai de copie cachée.",
+    "aide": "Regarde la ligne de l’objet, sous Cci."
+   }
+  ],
+  [
+   {
+    "type": "saisie",
+    "q": "Dans Éléments envoyés, ouvre ton message. Sur quelle ligne sont les adresses de tes deux camarades ? Écris le nom de la ligne.",
+    "regle": {
+     "motif": "^(dans |sur )?(la )?(ligne |champ )?cci$"
+    },
+    "faux": "Ouvre ton message dans Éléments envoyés : sous la ligne À, quelle ligne porte tes camarades ?",
+    "aide": "Ouvre ton message dans Éléments envoyés."
+   },
+   {
+    "type": "saisie",
+    "q": "Dans Éléments envoyés, ouvre ton message. Quelle adresse est dans la ligne À ? Recopie-la.",
+    "regle": {
+     "motif": "^[a-z0-9_'-]+@arcampinbe$"
+    },
+    "faux": "Recopie l’adresse de la ligne À en entier : prenom.nom@arcampin.be, sans espace.",
+    "aide": "Ouvre ton message dans Éléments envoyés."
+   },
+   {
+    "type": "saisie",
+    "q": "Demande à un de tes deux camarades d’ouvrir ton message chez lui. Voit-il l’adresse de l’autre camarade ? Écris oui ou non.",
+    "regle": {
+     "motif": "^non\\b"
+    },
+    "faux": "Regardez ensemble le message chez lui : la ligne Cci n’apparaît pas pour lui.",
+    "aide": "Demande à ton camarade d’ouvrir ton message."
+   }
+  ],
+  [
+   {
+    "type": "trous",
+    "q": "Complète avec les mots de la banque.",
+    "texte": "Écrire tout en ___, c’est crier. Un message poli commence par une ___.",
+    "mots": [
+     "majuscules",
+     "salutation"
+    ],
+    "pieges": [
+     "minuscules",
+     "pièce jointe"
+    ],
+    "juste": "Pas de majuscules partout, et toujours une salutation.",
+    "faux": "",
+    "aide": "Relis les deux premières règles de l’encadré."
+   },
+   {
+    "type": "trous",
+    "q": "Complète avec les mots de la banque.",
+    "texte": "Un petit visage 🙂 s’appelle une ___. Je l’utilise avec mes ___, pas dans un courriel à un professeur.",
+    "mots": [
+     "émoticône",
+     "amis"
+    ],
+    "pieges": [
+     "pièce jointe",
+     "professeurs"
+    ],
+    "juste": "Les émoticônes : avec les amis seulement.",
+    "faux": "",
+    "aide": "Relis la règle des émoticônes."
+   },
+   {
+    "type": "trous",
+    "q": "Complète avec les mots de la banque.",
+    "texte": "La ___, ce sont les règles de politesse d’internet. Avant d’envoyer, je ___ mon message.",
+    "mots": [
+     "nétiquette",
+     "relis"
+    ],
+    "pieges": [
+     "messagerie",
+     "supprime"
+    ],
+    "juste": "Nétiquette : politesse en ligne, et je relis avant d’envoyer.",
+    "faux": "",
+    "aide": "Relis le titre de l’encadré et la règle « relis »."
+   }
+  ],
+  [
+   {
+    "type": "qcm",
+    "q": "Tu vas aux toilettes pendant le cours. Que fais-tu de ton poste ?",
+    "c": [
+     "Je le verrouille : Ctrl + Alt + Delete ▸ Verrouiller.",
+     "Je me déconnecte : touche Windows ▸ mon nom ▸ Se déconnecter.",
+     "Je laisse tout ouvert, je reviens vite.",
+     "J’éteins l’ordinateur."
+    ],
+    "p": [
+     null,
+     "Se déconnecter ferme tout ton travail : pour une pause, verrouiller suffit.",
+     "Quelques minutes suffisent pour qu’un autre utilise ton compte.",
+     "Éteindre ferme tout ton travail : pour une pause, verrouiller suffit."
+    ],
+    "juste": "Une pause : je verrouille, mon travail reste ouvert."
+   },
+   {
+    "type": "qcm",
+    "q": "La sonnerie : l’heure de cours est finie. Que fais-tu ?",
+    "c": [
+     "Je me déconnecte : touche Windows ▸ mon nom ▸ Se déconnecter.",
+     "Je verrouille : Ctrl + Alt + Delete ▸ Verrouiller.",
+     "Je ferme seulement Chrome.",
+     "Je laisse tout ouvert pour l’élève suivant."
+    ],
+    "p": [
+     null,
+     "Verrouiller, c’est pour une pause : l’élève suivant ne pourrait plus utiliser le poste.",
+     "Ta session Windows reste ouverte : l’élève suivant arriverait chez toi.",
+     "L’élève suivant arriverait dans ta session : tes courriels, ton Drive, en ton nom."
+    ],
+    "juste": "Fin de l’heure : je me déconnecte de Windows."
+   },
+   {
+    "type": "qcm",
+    "q": "Pourquoi se déconnecter à la fin de l’heure ?",
+    "c": [
+     "Pour que l’élève suivant ne puisse pas utiliser mon compte.",
+     "Pour que l’ordinateur aille plus vite.",
+     "Pour effacer mes fichiers.",
+     "Parce que l’ordinateur s’éteint tout seul."
+    ],
+    "p": [
+     null,
+     "La vitesse n’est pas la raison : c’est ton compte qui compte.",
+     "Se déconnecter n’efface rien : tes fichiers restent dans ton Drive et ton OneDrive.",
+     "L’ordinateur ne s’éteint pas tout seul : ta session resterait ouverte."
+    ],
+    "juste": "Ma session, c’est mon nom : je la ferme."
+   }
+  ],
+  [
+   {
+    "type": "trous",
+    "q": "Complète avec les mots de la banque.",
+    "texte": "Sur l’ordinateur d’un ami, avant de partir : je clique sur le rond de mon ___, en haut à droite ▸ Se ___.",
+    "mots": [
+     "compte",
+     "déconnecter"
+    ],
+    "pieges": [
+     "professeur",
+     "verrouiller"
+    ],
+    "phrase": "pourquoi se déconnecter sur un ordinateur qui n’est pas le tien ?",
+    "juste": "Le rond de mon compte ▸ Se déconnecter, puis je ferme Chrome.",
+    "faux": "",
+    "aide": "Relis le deuxième encadré."
+   },
+   {
+    "type": "trous",
+    "q": "Complète avec les mots de la banque.",
+    "texte": "Dans mon profil Chrome, j’___ mon mot de passe : Chrome le garde pour moi. Sur l’ordinateur d’un ami, avant de partir, je me ___.",
+    "mots": [
+     "enregistre",
+     "déconnecte"
+    ],
+    "pieges": [
+     "oublie",
+     "cache"
+    ],
+    "phrase": "pourquoi se déconnecter sur un ordinateur qui n’est pas le tien ?",
+    "juste": "Mon profil : Chrome garde mon mot de passe. L’ordinateur d’un autre : je me déconnecte.",
+    "faux": "",
+    "aide": "Relis les deux encadrés."
+   },
+   {
+    "type": "trous",
+    "q": "Complète avec les mots de la banque.",
+    "texte": "À l’école, je ne me déconnecte pas d’Outlook dans mon profil Chrome : je serais déconnecté de ___. En fin d’heure, je me déconnecte de ___.",
+    "mots": [
+     "tout",
+     "Windows"
+    ],
+    "pieges": [
+     "rien",
+     "Outlook"
+    ],
+    "phrase": "pourquoi se déconnecter sur un ordinateur qui n’est pas le tien ?",
+    "juste": "À l’école : je garde Outlook, je me déconnecte de Windows.",
+    "faux": "",
+    "aide": "Relis le premier encadré."
+   }
+  ]
+ ]
+}

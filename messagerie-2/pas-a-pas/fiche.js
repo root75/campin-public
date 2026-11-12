@@ -3,7 +3,7 @@
 const COURS = 'messagerie-2';
 const VERSION_PARCOURS = 'v1';
 const PRESENTATION = 'missions';
-const PREUVES = 'https://root75.github.io/campin-public/messagerie-2/pas-a-pas/preuves.json?v=20261110';
+const PREUVES = 'https://root75.github.io/campin-public/messagerie-2/pas-a-pas/preuves.json?v=20261112';
 const HORS_SUIVI = 'Entraînement libre : rien n’est transmis au professeur. En classe, ouvre Mes cours avec ton compte scolaire.';
 
 /* ===== La réponse au professeur (bloc 8), contrôlée ligne par ligne ===== */
@@ -127,16 +127,22 @@ const BLOCS = [
   gestes:['À gauche, <b>Boîte de réception</b> ▸ ouvre le message « Ta fiche à compléter ».','Clique sur <b>↪ Transférer</b> (touche Shift+F) : sous le message, ou l’icône en haut à droite du message.','Dans <b>À</b>, tape le nom de ton voisin ▸ clique sur la ligne qui finit par <b>@arcampin.be</b>.','Dans <b>Cc</b>, '+PROF+' ▸ clique sur la ligne qui finit par <b>@arcampin.be</b>.','Au-dessus du message, écris : « Bonjour » et le prénom de ton voisin, puis « Voici la fiche que nous avons reçue. », puis ton prénom.','Clique sur <b>Envoyer</b>.'],
   vois:'Avant d’envoyer : l’objet commence par <b>TR:</b> et la carte de la fiche est là.',
   coince:['Le nom de mon voisin ne s’affiche pas : tape son adresse en entier, prenom.nom@arcampin.be, vérifiée avec lui.','Outlook propose plusieurs lignes pour mon professeur : choisis celle qui finit par @arcampin.be. Pas « Externe », pas @arcampin.com.'],
+  q:{serveur:true}},
+ {partie:'E — Mon carnet d’adresses', titre:'Ajouter mon voisin à mes contacts', min:5,
+  veux:'Retrouver une adresse sans la retaper : je l’enregistre dans mes contacts, mon carnet d’adresses.',
+  gestes:['Dans Courrier, colonne d’icônes tout à gauche, clique sur l’icône <b>Contacts</b>.','Une fenêtre « Bienvenue » s’ouvre ? Clique sur <b>Ignorer</b>.','Clique sur <b>Nouveau contact</b>.','Remplis <b>Prénom</b> et <b>Nom de famille</b> : ceux de ton voisin.','Dans <b>Adresse e-mail professionnelle</b>, tape son adresse : prenom.nom@arcampin.be, vérifiée avec lui.','Clique sur <b>Enregistrer</b>.'],
+  vois:'Mon voisin est dans la liste de mes contacts, avec son adresse en @arcampin.be.',
+  coince:['Je ne trouve pas l’icône Contacts : passe la souris sur les icônes de gauche, leur nom s’affiche.','Mon voisin n’a pas encore son adresse en tête : elle est en haut à droite de son Courrier, en cliquant sur le rond de son compte.'],
   q:{serveur:true}}
 ];
 
 const FIN = {
   titre:'Bravo : tu sais ouvrir, répondre, joindre et transférer',
   bulle:'Parcours terminé !',
-  texte:'Ton professeur a reçu ta réponse (cotée sur 5) et ton transfert en copie.',
+  texte:'Ton professeur a reçu ta réponse (cotée sur 5) et ton transfert en copie. Ton voisin est dans tes contacts.',
   revision:{titre:'Je réponds et je joins — je révise ↗', texte:'Un quiz de 5 questions et 15 cartes pour réviser.', url:'https://root75.github.io/campin-public/messagerie-2/'},
   citation:{texte:'Verba volant, scripta manent.', auteur:'Proverbe latin', source:'« Les paroles s’envolent, les écrits restent. »', lien:'Un mail envoyé reste : on le relit avant de cliquer sur Envoyer.'},
-  plus:'Ajoute ton voisin dans tes contacts : Outlook ▸ colonne de gauche ▸ icône Contacts (fenêtre de bienvenue ? ▸ Ignorer) ▸ Nouveau contact ▸ Prénom, Nom de famille, Adresse e-mail professionnelle ▸ Enregistrer. Si ton professeur te le propose, deviens aidant : va voir un camarade qui a sonné la cloche 🔔, explique avec des mots, ne touche pas sa souris.',
+  plus:'Ajoute un deuxième camarade dans tes contacts, comme au bloc 11. Si ton professeur te le propose, deviens aidant : va voir un camarade qui a sonné la cloche 🔔, explique avec des mots, ne touche pas sa souris.',
   lien:'<a href="https://root75.github.io/campin-public/messagerie-2/" target="_blank" rel="noopener">la page « Je réponds et je joins »</a>'
 };
 
