@@ -80,6 +80,13 @@ const Demo = (() => {
       doc(base(), { cible: 'enregistre', legende: 'Je regarde : « Enregistré ». Docs garde tout seul.' }),
       doc(base(), { cible: 'onglet', ok: 1, legende: 'Je ferme l’onglet. Je ne remets PAS encore.' })
     ] },
+    deconnecter: { titre: 'À la sonnerie : je me déconnecte de Windows', images: [ // encadré « À la sonnerie », geste 2 (pas-a-pas/demos-communs.js, vues win-*)
+      { vue: 'win-bureau', cible: 'demarrer', legende: 'J’appuie sur la touche Windows ⊞ (ou je clique sur ⊞, en bas de l’écran).' },
+      { vue: 'win-bureau', demarrer: 1, compte: 'Prénom Nom', cible: 'nom', legende: 'En bas à gauche du menu, je clique sur mon nom.' },
+      { vue: 'win-bureau', demarrer: 1, compte: 'Prénom Nom', panneau: 1, cible: 'deconnecter', legende: 'En haut à droite du panneau : Se déconnecter.' },
+      { vue: 'win-bureau', demarrer: 1, compte: 'Prénom Nom', alim: 1, cible: 'alimentation', legende: '⚠️ Pas le bouton ⏻ : il propose Verrouiller, Arrêter, Redémarrer. Pas « Se déconnecter ».' },
+      { vue: 'win-cad', hi: 'Se déconnecter', cible: 'item-Se déconnecter', ok: 1, legende: 'Autre chemin : Ctrl + Alt + Delete ▸ Se déconnecter.' }
+    ] },
     retrouver: { titre: 'Je reprends : je retrouve mon document dans Drive', images: [ // Je reprends : je retrouve mon document dans Drive (encadré « Je reprends »)
       { vue: 'g-gaufre', menu: 1, cible: 'app-drive', legende: 'Gaufre ▸ Drive.' },
       { ecran: 'drive', cible: 'recents', legende: 'Je clique sur « Récents », à gauche.' },
