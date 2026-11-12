@@ -20,13 +20,16 @@
      g-gaufre        Google : la gaufre ⋮⋮⋮ en haut à droite (menu = les applications ouvertes)
      win-bureau      Windows 11 : bureau et barre des tâches (taches: [[icône, id]] en plus ; demarrer, saisie,
                      resultat: [nom, id, icône] — sans icône, le logo de Chrome ; clicdroit: ligne surlignée
-                     du menu du clic droit sur Démarrer, droit = la souris DROIT)
+                     du menu du clic droit sur Démarrer, droit = la souris DROIT ; compte: nom affiché en bas à gauche
+                     du menu Démarrer, avec ⏻ à droite ; panneau: le panneau du nom ; alim: le menu de ⏻)
+     win-cad         Windows : l'écran de Ctrl + Alt + Delete (hi = libellé surligné)
      cr-devoir       Classroom : la page d'un devoir et « Vos devoirs » (créée par devoir) : menu « Ajouter ou
                      créer », picker 1 / 2 (Google Drive, fichier pas encore / déjà choisi), joint, piece (nom
                      de la pièce jointe, sinon o.fichier), confirme (« Rendre le devoir ? »), remis, note
      ol-liste        Outlook : dossiers et messages (messages, nonlu: n°, parti: n°, menu + hi = clic droit, droit)
      ol-lu           Outlook : un message ouvert et la carte du fichier joint (objet, de, fichier, texte, survol, menu + hi)
-     ol-redac        Outlook : la rédaction (ruban, a: [noms], objet, cci: [noms], tape, props: [[texte, id, hi]],
+     ol-redac        Outlook : la rédaction (ruban, a: [noms], cc: [noms], objet, cci: [noms], tape, props: [[texte, id, hi]],
+                     dans: ligne de la saisie 'a' | 'cc' | 'cci' (défaut 'cci'),
                      jointe: nom du fichier, menu: 'joindre' + hi)
      ol-selecteur    Outlook : le sélecteur OneDrive (fichier, coche, menu + hi = Partager le lien ▾)
      ol-accueil      Outlook : l'onglet Accueil et son ruban, simplifié ou agrandi (grand, bulle = infobulle de la flèche)
@@ -38,6 +41,10 @@
    Chrome, Windows et Classroom : libellés relevés avec un compte élève de test le 08/11/2026
    (memoire/ref_docs_eleves.md). Non relevés : le bouton du sélecteur Google Drive (bouton bleu sans texte),
    les applications de la gaufre, le menu du clic droit sur Démarrer (celui du Labo 07).
+   Windows, poste de l'école, relevés le 12/11/2026 : menu Démarrer ▸ son nom (en bas à gauche) ▸ panneau
+   (établissement, Se déconnecter en haut à droite, ⋯, le nom, l'adresse, Gérer mon compte) ; ⏻ ▸ Verrouiller ·
+   Arrêter · Redémarrer ; Ctrl + Alt + Delete ▸ Verrouiller · Changer d'utilisateur · Se déconnecter · Modifier un
+   mot de passe · Gestionnaire des tâches · Annuler. Le nom de l'établissement n'est pas recopié : barre grise.
    Outlook web de l'école : libellés relevés le 20/10/2026 et le 12/11/2026 (memoire/seq_activites_info_04_messagerie.md).
    Une ligne de menu non relevée est une barre grise, sans texte inventé. Rien n'est enregistré. */
 const DemosCommuns = (() => {
@@ -81,6 +88,18 @@ const DemosCommuns = (() => {
 .md-win-res{display:flex;align-items:center;gap:10px;background:#fff;border-radius:8px;padding:8px}.md-win-res .md-logo-chrome{width:30px;height:30px}.md-win-res small{display:block;color:#5f6368}
 .md-win-app{width:30px;height:30px;border-radius:6px;background:#e8eaed;display:grid;place-items:center;font-weight:700;font-size:13px}
 .md-win-epingles{display:flex;gap:10px;flex-wrap:wrap}.md-win-epingles span{display:grid;justify-items:center;gap:2px;font-size:11px;background:#fff;border-radius:6px;padding:6px 8px;min-width:44px}
+.md-win-pied{display:flex;justify-content:space-between;align-items:center;border-top:1px solid #d6dbe0;margin:2px -12px -12px;padding:8px 14px;background:#e9ecef;border-radius:0 0 10px 10px}
+.md-win-nom{display:flex;align-items:center;gap:8px;font-size:12px;padding:2px 6px;border-radius:6px}.md-win-nom .md-profil{width:24px;height:24px;font-size:12px}
+.md-win-alim{font-size:16px;padding:2px 8px;border-radius:6px}
+.md-win-panneau{background:#fff;border:1px solid #c9d3db;border-radius:8px;padding:10px;display:grid;gap:6px;box-shadow:0 4px 14px #0002;font-size:12px}
+.md-win-panneau-haut{display:flex;align-items:center;gap:8px}.md-win-panneau-haut i{flex:1;height:8px;background:#dfe3e7;border-radius:4px}
+.md-win-deco{color:#0067c0;font-weight:600;padding:2px 6px;border-radius:6px}
+.md-win-qui{display:flex;align-items:center;gap:10px}.md-win-qui .md-profil{width:36px;height:36px}.md-win-qui small{display:block;color:#5f6368}
+.md-win-gerer{color:#0067c0}
+.md-win-menu.md-win-alim-menu{right:max(6%,calc(50% - 165px));bottom:104px;left:auto;min-width:150px}
+.md-win-cad{background:#0b3d6e;color:#fff;display:grid;place-items:center;align-content:center;gap:4px;min-height:250px}
+.md-win-cad .md-item{padding:4px 14px;font-size:14px;border-radius:4px}.md-win-cad .md-item.hi{background:#ffffff33;font-weight:700}
+.md-win-cad-annuler{margin-top:10px;background:#ffffff26;border:1px solid #ffffff80;border-radius:4px;padding:4px 22px;font-size:13px}
 .md-win-menu{position:absolute;left:calc(50% - 75px);bottom:46px;background:#fff;border:1px solid #c9d3db;border-radius:8px;box-shadow:0 4px 14px #0003;padding:4px 0;z-index:3;min-width:190px}
 .md-cr-devoir{display:grid;grid-template-columns:1fr minmax(170px,210px);gap:14px;padding:14px;align-items:start;align-content:start;min-height:320px}
 .md-cr-sujet{display:grid;gap:4px;align-content:start}.md-cr-icone{width:34px;height:34px;border-radius:50%;background:#1e8e3e;display:grid;place-items:center;font-size:16px}
@@ -248,8 +267,9 @@ const DemosCommuns = (() => {
     e.append(el('div', 'md-win-fond'), b);
     if (f.demarrer) {
       const m = el('div', 'md-win-start-menu');
-      m.append(c(el('div', 'md-win-recherche', '🔍 ' + (f.saisie || '')), 'recherche'));
-      if (f.resultat) {
+      if (!f.panneau) m.append(c(el('div', 'md-win-recherche', '🔍 ' + (f.saisie || '')), 'recherche'));
+      if (f.panneau) { /* le panneau du nom remplace le haut du menu, pour tenir dans le cadre */ }
+      else if (f.resultat) {
         const [nom, id, ico] = f.resultat, r = c(el('div', 'md-win-res'), id), t = el('span');
         t.append(el('b', null, nom), el('small', null, 'Application'));
         r.append(ico ? el('span', 'md-win-app', ico) : logo('chrome'), t);
@@ -259,7 +279,25 @@ const DemosCommuns = (() => {
         ['Word', 'Excel', 'Outlook'].forEach(t => g.append(el('span', null, t)));
         m.append(el('div', 'md-win-meilleur', 'Épinglé'), g);
       }
+      if (f.panneau) {
+        const p = c(el('div', 'md-win-panneau'), 'panneau'), haut = el('div', 'md-win-panneau-haut'), qui = el('div', 'md-win-qui'), t = el('span');
+        haut.append(el('i'), c(el('span', 'md-win-deco', 'Se déconnecter'), 'deconnecter'), el('span', null, '⋯'));
+        t.append(el('b', null, f.compte), el('small', null, 'prenom.nom@…'), c(el('small', 'md-win-gerer', 'Gérer mon compte'), 'gerer'));
+        qui.append(el('span', 'md-profil ecole', f.compte[0]), t);
+        p.append(haut, qui); m.append(p);
+      }
+      if (f.compte) {
+        const pied = el('div', 'md-win-pied'), n = c(el('span', 'md-win-nom'), 'nom');
+        n.append(el('span', 'md-profil ecole', f.compte[0]), el('span', null, f.compte));
+        pied.append(n, c(el('span', 'md-win-alim', '⏻'), 'alimentation'));
+        m.append(pied);
+      }
       e.append(m);
+      if (f.alim) {
+        const a = el('div', 'md-win-menu md-win-alim-menu');
+        ['Verrouiller', 'Arrêter', 'Redémarrer'].forEach(t => a.append(c(el('div', 'md-item' + (t === f.alim ? ' hi' : ''), t), 'item-' + t)));
+        e.append(a);
+      }
     }
     if (f.clicdroit) {
       const m = el('div', 'md-win-menu');
@@ -267,6 +305,15 @@ const DemosCommuns = (() => {
       e.append(m);
     }
     if (f.droit) souris(e);
+    return e;
+  }
+
+  /* ——— Windows : l'écran de Ctrl + Alt + Delete (relevé le 12/11/2026) ——— */
+  function cad(f) {
+    const e = el('div', 'md md-win-cad');
+    ['Verrouiller', 'Changer d’utilisateur', 'Se déconnecter', 'Modifier un mot de passe', 'Gestionnaire des tâches']
+      .forEach(t => e.append(c(el('div', 'md-item' + (t === f.hi ? ' hi' : ''), t), 'item-' + t)));
+    e.append(c(el('span', 'md-win-cad-annuler', 'Annuler'), 'annuler'));
     return e;
   }
 
@@ -382,13 +429,16 @@ const DemosCommuns = (() => {
       return l;
     };
     // « Cci » est tout à droite de la ligne À, jusqu'à ce qu'on l'ajoute.
-    e.append(haut, ligne('ligne-a', 'À', f.a, f.cci ? null : c(el('span', 'ol-r-cci', 'Cci'), 'cci')), ligne('ligne-cc', 'Cc', []));
-    if (f.cci) {
-      const l = ligne('ligne-cci', 'Cci', f.cci);
+    // tape / props : la saisie en cours et les propositions d'Outlook, dans la ligne `dans` ('a', 'cc' ou 'cci' ; 'cci' par défaut).
+    const dans = f.dans || 'cci';
+    const saisie = (l, id) => {
+      if (id !== dans) return l;
       if (f.tape) l.querySelector('.ol-r-puces').append(el('span', 'ol-r-tape', f.tape));
-      if (f.props) { const m = el('div', 'ol-menu ol-menu-sous'); f.props.forEach(([t, id, hi]) => { const p = el('div', 'ol-item' + (hi ? ' hi' : ''), t); m.append(id ? c(p, id) : p); }); l.append(m); }
-      e.append(l);
-    }
+      if (f.props) { const m = el('div', 'ol-menu ol-menu-sous'); f.props.forEach(([t, pid, hi]) => { const p = el('div', 'ol-item' + (hi ? ' hi' : ''), t); m.append(pid ? c(p, pid) : p); }); l.append(m); }
+      return l;
+    };
+    e.append(haut, saisie(ligne('ligne-a', 'À', f.a, f.cci ? null : c(el('span', 'ol-r-cci', 'Cci'), 'cci')), 'a'), saisie(ligne('ligne-cc', 'Cc', f.cc), 'cc'));
+    if (f.cci) e.append(saisie(ligne('ligne-cci', 'Cci', f.cci), 'cci'));
     e.append(c(el('div', 'ol-r-objet' + (f.objet ? '' : ' vide'), f.objet || 'Ajouter un objet'), 'objet'));
     if (f.jointe) e.append(fichier(f.jointe, 'piece'));
     e.append(el('div', 'ol-r-corps'));
@@ -433,7 +483,7 @@ const DemosCommuns = (() => {
   }
 
   /* La maquette d'une image commune, ou null : le cours dessine alors la sienne. */
-  const VUES = { 'ch-fractionnee': fractionnee, 'ch-onglets': onglets, 'ch-nouvel': nouvel, 'g-gaufre': gaufre, 'win-bureau': bureau, 'cr-devoir': crDevoir, 'ol-liste': liste, 'ol-lu': lu, 'ol-redac': redac, 'ol-selecteur': selecteur, 'ol-accueil': accueil };
+  const VUES = { 'ch-fractionnee': fractionnee, 'ch-onglets': onglets, 'ch-nouvel': nouvel, 'g-gaufre': gaufre, 'win-bureau': bureau, 'win-cad': cad, 'cr-devoir': crDevoir, 'ol-liste': liste, 'ol-lu': lu, 'ol-redac': redac, 'ol-selecteur': selecteur, 'ol-accueil': accueil };
   function ecran(f) {
     return VUES[f.vue] ? VUES[f.vue](f) : null;
   }
