@@ -130,7 +130,7 @@ const BLOCS = [
   q:{serveur:true}},
  {partie:'E — Mon carnet d’adresses', titre:'Ajouter mon voisin à mes contacts', min:5,
   veux:'Retrouver une adresse sans la retaper : je l’enregistre dans mes contacts, mon carnet d’adresses.',
-  gestes:['Dans Courrier, colonne d’icônes tout à gauche, clique sur l’icône <b>Contacts</b>.','Une fenêtre « Bienvenue » s’ouvre ? Clique sur <b>Ignorer</b>.','Clique sur <b>Nouveau contact</b>.','Remplis <b>Prénom</b> et <b>Nom de famille</b> : ceux de ton voisin.','Dans <b>Adresse e-mail professionnelle</b>, tape son adresse : prenom.nom@arcampin.be, vérifiée avec lui.','Clique sur <b>Enregistrer</b>.','Retourne dans <b>Courrier</b> : icône Courrier, tout en haut de la même colonne.'],
+  gestes:['Dans Courrier, colonne d’icônes tout à gauche, clique sur l’icône <b>Contacts</b>.','Une fenêtre « Bienvenue » s’ouvre ? Clique sur <b>Ignorer</b>.','Clique sur <b>Nouveau contact</b>.','Remplis <b>Prénom</b> et <b>Nom de famille</b> : ceux de ton voisin.','Dans <b>Adresse e-mail professionnelle</b>, tape son adresse : prenom.nom@arcampin.be, vérifiée avec lui.','Clique sur <b>Enregistrer</b>.'],
   vois:'Mon voisin est dans la liste de mes contacts, avec son adresse en @arcampin.be.',
   coince:['Je ne trouve pas l’icône Contacts : passe la souris sur les icônes de gauche, leur nom s’affiche.','Mon voisin n’a pas encore son adresse en tête : elle est en haut à droite de son Courrier, en cliquant sur le rond de son compte.'],
   q:{serveur:true}}

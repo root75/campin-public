@@ -17,6 +17,8 @@ F.BLOCS.forEach((B,i)=>{
   for(const k of ['partie','titre','min','veux','vois'])assert.ok(B[k],k+' '+(i+1));
   assert.ok(B.essai?(B.avant&&B.essai.q&&B.essai.choix.length>=2):(B.gestes&&B.gestes.length>=2),'essai sur un exemple, ou des cases '+(i+1));
   assert.ok(B.coince&&B.coince.length>=1,'Ça coince ? '+(i+1));
+  // Des blocs courts (Vincent, 12/11/2026) : plutôt un bloc de plus qu'une page chargée de cases.
+  assert.ok(!B.gestes||B.gestes.length<=6,'6 cases au plus, bloc '+(i+1)+' : '+(B.gestes||[]).length);
 });
 const cat=JSON.parse(fs.readFileSync(__dirname+'/../pas-a-pas/cours.json')).cours.find(c=>c.id==='messagerie-3');
 assert.ok(cat&&cat.etapes===F.BLOCS.length&&cat.preuves==='messagerie-3/pas-a-pas/preuves.json','catalogue');
@@ -52,14 +54,15 @@ proofs.blocs.forEach((l,i)=>{
     }else assert.ok(v.type==='saisie'&&v.faux&&v.aide,'faux/aide '+(i+1)+'.'+(k+1));
   });
 });
-assert.deepEqual(proofs.blocs.map(l=>l[0].type),['trous','saisie','trous','qcm','trous','saisie','trous','qcm','trous']);
+assert.deepEqual(proofs.blocs.map(l=>l[0].type),['trous','saisie','trous','qcm','trous','saisie','saisie','trous','qcm','trous']);
 
 // Chaque saisie accepte ce qu'un élève écrit vraiment, et refuse les réponses des deux autres variantes.
 const BONS={
   2:[['Marquer','marquer'],['bleu','bleue','en bleu','Bleu'],['Boîte de réception','boite de reception','la boîte de réception','dans la Boîte de réception']],
-  6:[['Cci','CCI','la ligne Cci','dans Cci','sur la ligne Cci'],['ana.dubois@arcampin.be','Ana.Dubois@arcampin.be'],['non','Non','non, il ne la voit pas']]
+  6:[['À','A','la ligne À','dans la ligne À'],['2','deux'],['Essai de copie cachée','essai de copie cachee','Essai de copie cachée.']],
+  7:[['Cci','CCI','la ligne Cci','dans Cci','sur la ligne Cci'],['ana.dubois@arcampin.be','Ana.Dubois@arcampin.be'],['non','Non','non, il ne la voit pas']]
 };
-const MAUVAIS={2:[['Supprimer','Marquer comme lu'],['gras','rouge','vert'],['Courrier indésirable','Éléments envoyés']],6:[['Cc','À'],['ana.dubois@arcampin.com','ana.dubois@gmail.com','ana dubois@arcampin.be'],['oui','oui il la voit']]};
+const MAUVAIS={2:[['Supprimer','Marquer comme lu'],['gras','rouge','vert'],['Courrier indésirable','Éléments envoyés']],6:[['Cc','Cci','Objet'],['3','1','trois'],['Copie cachée','Essai']],7:[['Cc','À'],['ana.dubois@arcampin.com','ana.dubois@gmail.com','ana dubois@arcampin.be'],['oui','oui il la voit']]};
 for(const [n,listes] of Object.entries(BONS)){
   const l=proofs.blocs[n-1];
   listes.forEach((bons,k)=>{

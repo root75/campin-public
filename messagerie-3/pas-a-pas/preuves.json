@@ -1,5 +1,5 @@
 {
- "_lisezmoi": "Messagerie 03 (version 2026-11-12, libellés du clic droit relevés à l’écran le 12/11). Une liste par étape, variante 1 d’abord. Trois variantes par étape, tirées par élève côté serveur (règle anti-recopie), chacune avec sa bonne réponse. Étapes 1, 3, 5, 7, 9 : texte à trous (mots = le bon mot de chaque trou dans l’ordre, pieges = les intrus) ; phrase libre non jugée aux étapes 1, 5 et 9, la même pour les trois variantes. Étapes 2 et 6 : saisie de ce que l’élève lit sur SON écran (regle sur la réponse sans accents, sans majuscules et sans points). Étapes 4 et 8 : QCM, c[0] la bonne, p[k] explique le piège k.",
+ "_lisezmoi": "Messagerie 03 (version 2026-11-12, libellés du clic droit relevés à l’écran le 12/11). Une liste par étape, variante 1 d’abord. Trois variantes par étape, tirées par élève côté serveur (règle anti-recopie), chacune avec sa bonne réponse. Étapes 1, 3, 5, 8, 10 : texte à trous (mots = le bon mot de chaque trou dans l’ordre, pieges = les intrus) ; phrase libre non jugée aux étapes 1, 5 et 10, la même pour les trois variantes. Étapes 2, 6 et 7 : saisie de ce que l’élève lit sur SON écran (regle sur la réponse sans accents, sans majuscules et sans points). Étapes 4 et 9 : QCM, c[0] la bonne, p[k] explique le piège k.",
  "blocs": [
   [
    {
@@ -237,6 +237,35 @@
     "juste": "Copie cachée : elle reçoit, mais on ne la voit pas.",
     "faux": "",
     "aide": "Relis la ligne Cci du tableau."
+   }
+  ],
+  [
+   {
+    "type": "saisie",
+    "q": "Dans ton message, sur quelle ligne as-tu mis ta propre adresse ? Écris le nom de la ligne.",
+    "regle": {
+     "motif": "^(dans |sur )?(la )?(ligne |champ )?a$"
+    },
+    "faux": "Regarde ton message : la première ligne, tout en haut, porte ton adresse.",
+    "aide": "Regarde les lignes de ton message, tout en haut."
+   },
+   {
+    "type": "saisie",
+    "q": "Combien de camarades as-tu mis dans la ligne Cci ? Écris le nombre en chiffres.",
+    "regle": {
+     "motif": "^2$|^deux$"
+    },
+    "faux": "Compte les noms dans la ligne Cci de ton message.",
+    "aide": "Compte les noms de la ligne Cci."
+   },
+   {
+    "type": "saisie",
+    "q": "Recopie l’objet de ton message.",
+    "regle": {
+     "motif": "^essai de copie cachee$"
+    },
+    "faux": "Recopie exactement la ligne de l’objet : Essai de copie cachée.",
+    "aide": "Regarde la ligne de l’objet, sous Cci."
    }
   ],
   [

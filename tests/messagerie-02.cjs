@@ -11,6 +11,7 @@ vm.runInContext(moteur.slice(moteur.indexOf('const norm ='),moteur.indexOf('cons
 F.regle=x.regleMoteur;
 assert.equal(F.BLOCS.length,proofs.blocs.length,'un bloc par liste de preuves');
 F.BLOCS.forEach((B,i)=>{assert.ok(B.q&&B.q.serveur,'bloc '+(i+1)+' corrigé par le serveur');for(const k of ['partie','titre','min','veux','vois'])assert.ok(B[k],k+' '+(i+1));assert.ok(B.essai?(B.avant&&B.essai.q&&B.essai.choix.length>=3&&B.essai.choix.some(c=>/sais pas/.test(c[0]))):(B.gestes||[]).length>=3,'gestes ou essai '+(i+1));assert.ok(B.coince.length,'coince '+(i+1));});
+F.BLOCS.forEach((B,i)=>assert.ok(!B.gestes||B.gestes.length<=6,'6 cases au plus, bloc '+(i+1)));   // des blocs courts (12/11/2026)
 assert.equal(F.BLOCS[7].q.type,'redaction');assert.equal(typeof F.BLOCS[7].q.controle,'function');
 const cat=JSON.parse(fs.readFileSync(__dirname+'/../pas-a-pas/cours.json')).cours.find(c=>c.id==='messagerie-2');
 assert.ok(cat&&cat.etapes===F.BLOCS.length&&cat.preuves==='messagerie-2/pas-a-pas/preuves.json','catalogue');

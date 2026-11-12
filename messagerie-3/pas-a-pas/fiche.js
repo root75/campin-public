@@ -6,7 +6,7 @@
 const COURS = 'messagerie-3';
 const VERSION_PARCOURS = 'v1';
 const PRESENTATION = 'missions';
-const PREUVES = 'https://root75.github.io/campin-public/messagerie-3/pas-a-pas/preuves.json?v=profil-20261112';
+const PREUVES = 'https://root75.github.io/campin-public/messagerie-3/pas-a-pas/preuves.json?v=court-20261112';
 const HORS_SUIVI = 'Entraînement libre : rien n’est transmis au professeur. En classe, ouvre Mes cours avec ton compte scolaire.';
 
 /* Un message d'exemple « De : … · Objet : … · Texte : … » affiché comme dans une boîte. */
@@ -60,12 +60,18 @@ const BLOCS = [
   vois:'Je sais dire qui voit les adresses en Cc et en Cci.',
   coince:['« Cci » veut dire « copie carbone invisible ». En anglais : Bcc.'],
   q:{serveur:true}},
- {partie:'C — Écrire à plusieurs', titre:'Envoyer un message en copie cachée', min:8,
-  veux:'Envoyer un vrai message à deux camarades, sans qu’ils voient l’adresse l’un de l’autre.',
+ {partie:'C — Écrire à plusieurs', titre:'Écrire un message en copie cachée', min:5,
+  veux:'Préparer un vrai message pour deux camarades, sans qu’ils voient l’adresse l’un de l’autre.',
   avant:REEL,
-  gestes:[OUVRIR,'Clique sur le bouton bleu <b>Nouveau message</b> (touche N).','Dans <b>À</b>, tape ton propre nom ▸ clique sur la ligne qui finit par <b>@arcampin.be</b>.','Au bout de la ligne À, à droite, clique sur <b>Cci</b> : une nouvelle ligne apparaît.','Dans <b>Cci</b>, tape le nom d’un camarade ▸ sa ligne en @arcampin.be. Puis un deuxième camarade.','Dans <b>Ajouter un objet</b>, tape : Essai de copie cachée.','Dans le corps : « Bonjour, ceci est un essai de copie cachée. », puis ton prénom.','Clique sur <b>Envoyer</b>.','À gauche, <b>Éléments envoyés</b> ▸ ouvre ton message.','Demande à un de tes deux camarades d’ouvrir ton message chez lui : voit-il l’adresse de l’autre ?'],
+  gestes:[OUVRIR,'Clique sur le bouton bleu <b>Nouveau message</b> (touche N).','Dans <b>À</b>, tape ton propre nom ▸ clique sur la ligne qui finit par <b>@arcampin.be</b>.','Au bout de la ligne À, à droite, clique sur <b>Cci</b> : une nouvelle ligne apparaît.','Dans <b>Cci</b>, tape le nom d’un camarade ▸ sa ligne en @arcampin.be. Puis un deuxième camarade.','Dans <b>Ajouter un objet</b>, tape : Essai de copie cachée. <b>N’envoie pas encore.</b>'],
+  vois:'Mon adresse dans À, mes deux camarades dans Cci, l’objet « Essai de copie cachée ».',
+  coince:['Je ne vois pas Cci : il est au bout de la ligne À, à droite. Clique dans la ligne À d’abord.','Outlook propose plusieurs lignes : choisis celle qui finit par @arcampin.be. Pas « Externe », pas @arcampin.com.'],
+  q:{serveur:true}},
+ {partie:'C — Écrire à plusieurs', titre:'Envoyer et vérifier avec un camarade', min:4,
+  veux:'Envoyer mon message, puis vérifier avec un camarade que la copie cachée a marché.',
+  gestes:['Dans le corps : « Bonjour, ceci est un essai de copie cachée. », puis ton prénom.','Clique sur <b>Envoyer</b>.','À gauche, <b>Éléments envoyés</b> ▸ ouvre ton message.','Demande à un de tes deux camarades d’ouvrir ton message chez lui : voit-il l’adresse de l’autre ?'],
   vois:'Mon message est dans Éléments envoyés : mon adresse dans À, mes deux camarades dans Cci.', stop:true,
-  coince:['Je ne vois pas Cci : il est au bout de la ligne À, à droite. Clique dans la ligne À d’abord.','Mon camarade n’a rien reçu : vérifie ensemble son adresse, lettre par lettre, dans ton message envoyé.','Outlook propose plusieurs lignes : choisis celle qui finit par @arcampin.be. Pas « Externe », pas @arcampin.com.'],
+  coince:['Mon camarade n’a rien reçu : vérifie ensemble son adresse, lettre par lettre, dans ton message envoyé.','Mon message est dans Brouillons : il n’est pas parti. Ouvre-le, puis Envoyer.'],
   q:{serveur:true}},
  {partie:'C — Écrire à plusieurs', titre:'La nétiquette et les émoticônes', min:5,
   veux:'Connaître les règles de politesse d’internet : la nétiquette.',
