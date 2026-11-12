@@ -392,19 +392,19 @@
    {
     "type": "trous",
     "q": "Complète avec les mots de la banque.",
-    "texte": "À la bibliothèque, Chrome propose d’enregistrer mon mot de passe : je clique sur ___. Sinon, le suivant pourrait ___ dans ma messagerie.",
+    "texte": "Dans mon profil Chrome, j’___ mon mot de passe : Chrome le garde pour moi. Sur l’ordinateur d’un ami, avant de partir, je me ___.",
     "mots": [
-     "Jamais",
-     "entrer"
+     "enregistre",
+     "déconnecte"
     ],
     "pieges": [
-     "Enregistrer",
-     "dormir"
+     "oublie",
+     "cache"
     ],
     "phrase": "pourquoi se déconnecter sur un ordinateur qui n’est pas le tien ?",
-    "juste": "Jamais : mon mot de passe ne reste pas sur un ordinateur partagé.",
+    "juste": "Mon profil : Chrome garde mon mot de passe. L’ordinateur d’un autre : je me déconnecte.",
     "faux": "",
-    "aide": "Relis le deuxième encadré, première ligne."
+    "aide": "Relis les deux encadrés."
    },
    {
     "type": "trous",

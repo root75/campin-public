@@ -277,11 +277,11 @@ const CONSOLIDATION = { q:"Un message écrit TOUT EN MAJUSCULES, ça veut dire�
     p:[null, "Les majuscules partout ne rendent pas un message plus poli.", "Le lecteur a l'impression qu'on lui crie dessus.", "À l'écran, les majuscules partout se lisent comme un cri."],
     h:"La nétiquette…",
     e:"TOUT EN MAJUSCULES, c'est crier. J'écris en minuscules, avec une majuscule au début." };
-const DEPASSEMENT = { q:"Chrome propose d'enregistrer ton mot de passe sur l'ordinateur d'un ami. Tu cliques sur…",
-    c:["Jamais", "Enregistrer", "Rien, je laisse la fenêtre ouverte.", "Enregistrer, et je l'effacerai plus tard."],
-    p:[null, "Ton mot de passe resterait sur son ordinateur.", "La question revient, et un autre pourrait cliquer sur Enregistrer.", "Tu risques d'oublier : il resterait enregistré."],
-    h:"Ce n'est pas mon ordinateur…",
-    e:"Sur un ordinateur partagé : Jamais. Mon mot de passe ne reste que dans ma tête." };
+const DEPASSEMENT = { q:"Dans TON profil Chrome de l'école, Chrome propose d'enregistrer ton mot de passe. Que fais-tu ?",
+    c:["J'enregistre : Chrome le garde pour moi, ma session le protège.","Je le note sur une feuille collée à l'écran.","Je le donne à mon voisin pour qu'il s'en souvienne.","Je change de mot de passe à chaque cours."],
+    p:[null,"Une feuille collée à l'écran, tout le monde la lit.","Un mot de passe ne se prête jamais, même à un ami.","Tu finirais par l'oublier : Chrome le garde pour toi."],
+    h:"C'est MON profil, protégé par ma session…",
+    e:"Dans mon profil Chrome, j'enregistre mon mot de passe. Sur l'ordinateur d'un autre, je me déconnecte avant de partir." };
 
 const LETTRES = "ABCD";
 const melange = a => { const b=a.slice(); for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];} return b; };
