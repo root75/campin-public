@@ -13,7 +13,7 @@ const place=id=>ETAPES_RAT.findIndex(e=>e.id===Number(id));
 const numero=id=>place(id)>=0?place(id)+1:id;
 /* Étapes terminées : toujours calculées ici, depuis les cases ; le serveur ne fait que les garder. */
 function prepare(r){r.cases=r.cases||{};r.etapes=ETAPES_RAT.map(e=>e.actions.every((_,j)=>r.cases[e.id+'.'+(j+1)]));return r;}
-function appel(evt){return new Promise((ok,ko)=>google.script.run.withSuccessHandler(r=>ok(prepare(r))).withFailureHandler(ko).suiviFormatif(COURS,evt));}
+function appel(evt){return new Promise((ok,ko)=>google.script.run.withSuccessHandler(r=>{if(window.Recompense)Recompense.montre(r);ok(prepare(r));}).withFailureHandler(ko).suiviFormatif(COURS,evt));}
 async function envoieHumeurAvis(evt){const r=SUIVI?await appel(evt):demo(evt);if(!occupe)etat=r;return r;}
 function humeurDuJour(){if(typeof HumeurAvis==='undefined')return;HumeurAvis.humeur($('humeur'),{valeur:etat.humeur,suivi:!!SUIVI,envoie:v=>envoieHumeurAvis({type:'humeur',reponse:v})});}
 function commandes(){document.querySelectorAll('#travail input,#travail select,#aide-btn').forEach(n=>n.disabled=!pret||occupe);
@@ -199,7 +199,10 @@ function demoAutre(cle){
 }
 function sonnerie(){
   const a=txt('aside','repere sonnerie');
-  a.append(txt('h3',null,'🔔 À la sonnerie, où que j’en sois'),txt('p',null,'Je ferme l’onglet de mon document. Je ne remets PAS : Docs l’enregistre tout seul.'),demoAutre('fermer'));
+  const ferme=txt('p');ferme.innerHTML='<b>1. Je ferme l’onglet de mon document.</b> Je ne remets PAS : Docs l’enregistre tout seul.';
+  const deco=txt('p');deco.innerHTML='<b>2. Je me déconnecte de Windows :</b> touche Windows ⊞ ▸ clic sur <b>mon nom</b>, en bas à gauche du menu ▸ <b>Se déconnecter</b> (ou <b>Ctrl + Alt + Delete</b> ▸ <b>Se déconnecter</b>). Sinon, l’élève suivant arrive dans <b>ma</b> session : mon Drive, mes documents, en mon nom.';
+  const piege=txt('p','note','Le bouton ⏻ du menu propose Verrouiller, Arrêter, Redémarrer : pas « Se déconnecter ». Je n’éteins pas l’ordinateur.');
+  a.append(txt('h3',null,'🔔 À la sonnerie, où que j’en sois'),ferme,demoAutre('fermer'),deco,piege,demoAutre('deconnecter'));
   const b=txt('button','lien','▶ Je reviens après la sonnerie : je reprends mon document');b.type='button';
   b.addEventListener('click',()=>{repriseVue=true;dessine();scrollTo(0,0);});a.append(b);return a;
 }
@@ -218,7 +221,7 @@ function aReprendre(){const k=ETAPES_RAT.findIndex((_,j)=>!etat.etapes[j]);retur
 /* Volet « Toutes les animations » (pas-a-pas/demo-lecteur.js) : retrouver n'importe quel tuto sans changer d'étape. */
 (function(){const liste=$('tutos-liste'),vue=$('tutos-vue');if(!liste||typeof Demo==='undefined')return;
   DemoLecteur.volet({details:$('tutos'),liste,vue,titre:true,cree:Demo.cree,
-    entrees:ETAPES_RAT.map((e,i)=>['etape'+e.id,(i+1)+'. '+e.titre]).concat([['retrouver','Je retrouve mon document (reprise)'],['cote','Le cours et mon document côte à côte'],['fermer','À la sonnerie : je ferme sans remettre']])});})();
+    entrees:ETAPES_RAT.map((e,i)=>['etape'+e.id,(i+1)+'. '+e.titre]).concat([['retrouver','Je retrouve mon document (reprise)'],['cote','Le cours et mon document côte à côte'],['fermer','À la sonnerie : je ferme sans remettre'],['deconnecter','À la sonnerie : je me déconnecte de Windows']])});})();
 /* Cloche : avertissement avant de sonner et 3 sonneries par heure, code commun pas-a-pas/cloche.js.
    Le compte vient du serveur (etat.cloches) ; se débloquer ne demande rien et ne compte pas. */
 $('aide-btn').addEventListener('click',()=>{

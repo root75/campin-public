@@ -49,6 +49,7 @@
 
     function recoit(m){
       courant=m;
+      if(window.Recompense) Recompense.montre(m);   // « Je m'occupe » ouvert : bandeau en bas (pas-a-pas/recompense.js)
       if(o.plafond) o.plafond(m && m.plafond);   // fiche.js : la classe s'arrête après une étape (cadenas)
       if(!m || m.type === "fin" || m.type === "atelier"){
         document.getElementById('collectif').hidden=true;document.getElementById('individuel').hidden=false;document.getElementById('revoir-collectif').hidden=false;
