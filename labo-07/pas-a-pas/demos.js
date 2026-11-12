@@ -21,7 +21,7 @@ const Demo = (() => {
       { ecran: 'docs', nom: 'Document sans titre', lignes: [''], cible: 'nom', legende: 'Je clique sur « Document sans titre », en haut à gauche.' },
       { ecran: 'docs', lignes: [''], cible: 'nom', legende: 'Je tape LABO07_CoulissesPC_Prenom_Nom, sans accents, puis Enter.' },
       { ecran: 'docs', lignes: [''], menu: { sous: 'm-edition', items: ['Couper', 'Copier', 'Coller', 'Coller sans mise en forme'], hi: 'Coller sans mise en forme' }, cible: 'item-Coller sans mise en forme', legende: 'Trame copiée : je clique dans la page ▸ Édition ▸ Coller sans mise en forme (Ctrl + Shift + V).' },
-      { ecran: 'docs', lignes: ['Dans les coulisses du PC', 'Prénom Nom · 3F · date', '1 — Observer ce qui tourne', '…'], cible: 'enregistre', ok: 1, legende: 'La trame est là, sans mise en forme. « Enregistré » : Docs garde tout seul.' }
+      { ecran: 'docs', lignes: ['Dans les coulisses du PC', 'Prénom Nom · classe · date', '1 — Observer ce qui tourne', '…'], cible: 'enregistre', ok: 1, legende: 'La trame est là, sans mise en forme. « Enregistré » : Docs garde tout seul.' }
     ] },
     cote: DemosCommuns.vueFractionnee({ titre: 'Mettre le cours et mon rapport côte à côte', cours: '🔎 Mes cours – Labo 07', // pas-a-pas/demos-communs.js
       coursTitre: '🔎 Mission 1', coursLignes: ['☐ Clic droit sur ⊞ Démarrer…'],
@@ -79,8 +79,16 @@ const Demo = (() => {
       { ecran: 'explo', dossier: 1, cible: 'dossier', legende: 'J’ouvre le dossier de mon fichier, par exemple Documents ▸ Informatique.' },
       { ecran: 'explo', dossier: 1, choisi: 1, cible: 'fichier', legende: 'Un SEUL clic sur le fichier : je le sélectionne sans l’ouvrir.' },
       { ecran: 'explo', dossier: 1, choisi: 1, chemin: 1, cible: 'chemin', legende: 'Ctrl + L : la barre d’adresse affiche le chemin complet. Je le recopie.' },
-      { ecran: 'explo', dossier: 1, choisi: 1, cible: 'statut', legende: 'Affichage ▸ Détails : la colonne Statut montre l’icône du fichier.' },
+      { ecran: 'explo', dossier: 1, choisi: 1, cible: 'statut', legende: 'Afficher ▸ Détails : la colonne Statut montre l’icône du fichier.' },
       { ecran: 'icones', cible: 'ico-nuage', ok: 1, legende: 'Nuage = en ligne seulement · coche verte bordée = disponible ici · disque vert plein = toujours conservé.' }
+    ] },
+    calculatrice: { titre: 'Ouvrir la Calculatrice', images: [
+      { ...BUREAU, cible: 'demarrer', legende: 'Je clique sur ⊞ Démarrer, en bas de l’écran.' },
+      { ...BUREAU, demarrer: 1, saisie: 'calculatrice', resultat: ['Calculatrice', 'app-calc', '🧮'], cible: 'app-calc', ok: 1, legende: 'Je tape Calculatrice ▸ je clique sur l’application.' }
+    ] },
+    blocnotes: { titre: 'Ouvrir Bloc-notes, puis une seconde fenêtre', images: [
+      { ...BUREAU, demarrer: 1, saisie: 'bloc-notes', resultat: ['Bloc-notes', 'app-notes', '📝'], cible: 'app-notes', legende: '⊞ Démarrer ▸ je tape Bloc-notes ▸ je clique sur l’application.' },
+      { ...BUREAU, ecran: 'bureau', notes: 1, cible: 'zone-notes', ok: 1, legende: 'Bloc-notes est ouvert. Pour une seconde fenêtre : Fichier ▸ Nouvelle fenêtre (Ctrl + Shift + N).' }
     ] },
     fenetres: { titre: 'Une fenêtre a disparu : la retrouver', images: [
       { ...BUREAU, ecran: 'bureau', notes: 1, cible: 'reduire', legende: 'Cas d’essai : je clique sur — Réduire. La fenêtre disparaît, le logiciel tourne encore.' },

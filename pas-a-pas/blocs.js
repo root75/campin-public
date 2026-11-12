@@ -190,6 +190,46 @@ document.getElementById("bloc").addEventListener("change", e=>{
   if(!APERCU) try{ localStorage.setItem(casesDe, JSON.stringify(g)); }catch(e){}
   barre();
 });
+/* Rappels (Vincent, 12/11/2026) : une information demandée plus tôt revient d'elle-même, au lieu d'un « retiens ».
+   - Une réponse « enquete » enregistrée est gardée sur le poste, sous l'adresse de l'élève, comme les cases :
+     { "5": { H:"…", F:"…" } }, 5 = numéro du bloc (à partir de 1), H, F = les clés des champs.
+   - Dans le texte d'un bloc (ou de la page) : <span data-rappel="5:F">le fichier choisi</span> affiche le champ F
+     du bloc 5 ; <span data-rappel="nom">…</span> affiche RAPPELS.nom() de la fiche (calculé de l'adresse, par exemple).
+     Sans valeur (autre poste, aperçu, fiche hors suivi), le texte d'origine reste : il doit se lire tel quel.
+   - B.rappel = [{ de:"2:H", titre:"Ton hypothèse de départ" }] : un encadré 🔁 sous le but du bloc. */
+const cleReponses = () => CLE+":"+(emailMoteur||"")+":reponses";
+const reponsesGardees = () => { if(APERCU) return {}; try{ return JSON.parse(localStorage.getItem(cleReponses())) || {}; }catch(e){ return {}; } };
+function gardeReponse(bloc, valeurs){
+  if(APERCU) return;
+  const r = reponsesGardees(); r[bloc] = valeurs;
+  try{ localStorage.setItem(cleReponses(), JSON.stringify(r)); }catch(e){}
+}
+function rappelDe(ref){
+  const [b, c] = String(ref).split(":");
+  if(c===undefined){
+    const f = typeof RAPPELS!=="undefined" && RAPPELS[b];
+    try{ return f ? String(f() || "") : ""; }catch(e){ return ""; }
+  }
+  const r = reponsesGardees()[b];
+  return r && r[c] ? String(r[c]) : "";
+}
+function remplitRappels(racine){
+  racine.querySelectorAll("[data-rappel]").forEach(s=>{
+    if(!("origine" in s.dataset)) s.dataset.origine = s.textContent;
+    const v = rappelDe(s.dataset.rappel);
+    s.textContent = v || s.dataset.origine; s.classList.toggle("rappele", !!v);
+  });
+}
+function encadreRappel(B){
+  if(!B.rappel || !B.rappel.length) return null;
+  const a = el("aside","repere rappel"); a.append(txt("h3",null,"🔁 Ce que tu as écrit plus tôt"));
+  B.rappel.forEach(r=>{
+    const v = rappelDe(r.de), p = el("p");
+    p.append(txt("b",null,r.titre+" : "), v ? txt("q",null,v) : txt("span","note",r.sinon || "écrite sur un autre poste. Relis-la dans ta mémoire, ou demande au professeur : il la voit au tableau."));
+    a.append(p);
+  });
+  return a;
+}
 /* À l'affichage d'un bloc : on recoche ses cases gardées. L'événement « change » rejoue ce qu'une coche fait
    (animation de la case suivante, camembert). */
 function recocheCases(){
@@ -216,7 +256,12 @@ function pause(z){
     txt("p","note","Le professeur ouvre la suite : le cadenas 🔒 disparaîtra tout seul, sans recharger la page."));
   const nav = el("div","actions"), avant = txt("button","btn vide","← Bloc précédent"); avant.type = "button";
   avant.addEventListener("click",()=>{ ici = Math.min(ici, BLOCS.length)-1; affiche(); });
-  nav.append(avant); z.append(nav);
+  nav.append(avant);
+  /* Les prolongements vivent hors du fil des blocs (<details id="plus-loin"> de la page) : l'attente y mène. */
+  const loin = document.getElementById("plus-loin");
+  if(loin){ const b = txt("button","btn vide","⚡ En attendant : un prolongement"); b.type = "button";
+    b.addEventListener("click",()=>{ loin.open = true; loin.scrollIntoView({ behavior:"smooth", block:"start" }); }); nav.append(b); }
+  z.append(nav);
   document.body.dataset.pret = "1";
 }
 
@@ -268,6 +313,7 @@ function affiche(){
     /* Présentation « missions » (Labo 07) : le but en une phrase, les cases, puis ce qu'on vérifie.
        Pas d'étiquettes répétées à chaque bloc. */
     z.append(el("p","but",B.veux));
+    const rappel = encadreRappel(B); if(rappel) z.append(rappel);
     /* B.avant = ce qu'il faut avoir sous les yeux AVANT de cocher (un exemple analysé, un tableau à lire) : les
        cases ne demandent jamais de lire ce qui n'est pas encore à l'écran, comme la question de preuve. */
     if(B.avant) z.append(el("div","avant",B.avant));
@@ -325,6 +371,7 @@ function affiche(){
     go.addEventListener("click",()=>{ go.remove(); preuve(pr,B); });
     pr.append(go);
   }
+  remplitRappels(document.body);   // le bloc, et la page autour (fenêtre « Mon rapport »)
   document.body.dataset.pret = "1";
   if(!fait && SUIVI && !APERCU && B._n>1) pr.append(txt("p","note","Ton voisin a peut-être une autre version que toi : c'est normal, chacun a la sienne."));
   z.append(pr);
@@ -597,15 +644,26 @@ function preuve(pr, B, apres){
   }
   if(Q.type==="rapport"){
     // Déclaration d’avancement uniquement : aucun document ni fichier n’est lu par le site.
-    const f=el("form","bilan"), label=el("label"), cb=el("input");
-    cb.type="checkbox";cb.required=true;
-    label.append(cb,txt("span",null,Q.confirmation));
+    // Q.liste (facultatif) = ce que l'élève vérifie dans son document, une case par point ; sinon la seule Q.confirmation.
+    // Un essai d'enregistrer avec des cases vides les nomme TOUTES d'un coup (12/11/2026) : jamais un manque à la fois.
+    const f=el("form","bilan"), items=Q.liste && Q.liste.length ? Q.liste : [Q.confirmation];
+    const cbs=items.map(t=>{ const label=el("label"), cb=el("input"); cb.type="checkbox"; label.append(cb,txt("span",null,t)); f.append(label); return cb; });
     const note=txt("p","note","Le site enregistre seulement cette déclaration. Il ne lit pas ton document et ne vérifie ni la pièce jointe ni la remise Classroom.");
+    const manque=el("div","retour faux manques"); manque.hidden=true;
     const ok=txt("button","btn plein","Enregistrer cette étape");ok.type="submit";
-    f.append(label,note,ok);zone.append(f);
+    f.append(manque,note,ok);zone.append(f);
+    f.addEventListener("change",()=>{ if(!manque.hidden && cbs.every(c=>c.checked)) manque.hidden=true; });
     f.addEventListener("submit",e=>{
-      e.preventDefault();if(!cb.checked)return;ok.disabled=true;
-      const fini=()=>{note.textContent="";cb.disabled=true;reussi(Q.trace);};
+      e.preventDefault();
+      const vides=cbs.map((c,k)=>c.checked ? null : items[k]).filter(x=>x!==null);
+      cbs.forEach(c=>c.closest("label").classList.toggle("manque",!c.checked));
+      if(vides.length){
+        const ul=el("ul"); vides.forEach(t=>ul.append(txt("li",null,t)));
+        manque.replaceChildren(txt("strong",null,vides.length===1 ? (items.length===1 ? "Coche la case quand c’est fait." : "Il reste un point à vérifier :") : "Il reste "+vides.length+" points à vérifier :"), ...(items.length>1 ? [ul] : []));
+        manque.hidden=false; return;
+      }
+      ok.disabled=true;
+      const fini=()=>{note.textContent="";cbs.forEach(c=>c.disabled=true);reussi(Q.trace);};
       if(!SUIVI || APERCU){fini();return;}
       note.textContent="Enregistrement en cours…";
       google.script.run.withSuccessHandler(fini).withFailureHandler(()=>{
@@ -616,22 +674,36 @@ function preuve(pr, B, apres){
   }
   if(Q.type==="enquete"){
     // Réutilise noter() et le Journal (200 caractères). « juste » = étape faite, jamais une cote.
-    const f=el("form","bilan"), champs=Q.champs.map(c=>{
-      const label=el("label"), ta=el("textarea"); ta.rows=2; ta.maxLength=c.max;
-      ta.required=true; ta.minLength=3; ta.placeholder=c.exemple || "";
-      label.append(txt("span",null,c.nom),ta,txt("small","note","Maximum "+c.max+" caractères."));
-      f.append(label); return ta;
+    // Chaque champ dit, pendant la frappe, s'il est rempli ; un envoi incomplet nomme TOUS les manques d'un coup
+    // (12/11/2026, après l'étape 8 de Messagerie 01 : un manque à la fois fait buter de correction en correction).
+    const MIN=3, propre=t=>t.value.trim().replace(/\s+/g," ");
+    const f=el("form","bilan"), etats=[], champs=Q.champs.map(c=>{
+      const label=el("label"), ta=el("textarea"), signe=txt("small","etat-champ",""); ta.rows=2; ta.maxLength=c.max; ta.placeholder=c.exemple || "";
+      const suit=()=>{ const n=propre(ta).length; signe.textContent=(n>=MIN ? "✓ écrit" : "✗ encore vide")+" · "+n+" / "+c.max+" caractères"; signe.classList.toggle("ok",n>=MIN); if(n>=MIN) label.classList.remove("manque"); };
+      ta.addEventListener("input",suit); suit();
+      label.append(txt("span",null,c.nom),ta,signe);
+      f.append(label); etats.push(label); return ta;
     });
     const ok=txt("button","btn plein",SUIVI && !APERCU ? "Enregistrer ma réponse" : "Garder pour cet essai"); ok.type="submit";
+    const manque=el("div","retour faux manques"); manque.hidden=true;
     const statut=txt("p","note","La fiche vérifie seulement que les champs sont remplis. Le professeur examine ton raisonnement.");
-    f.append(statut,ok); zone.append(f);
+    f.append(manque,statut,ok); zone.append(f);
+    f.addEventListener("input",()=>{ if(!manque.hidden && champs.every(t=>propre(t).length>=MIN)) manque.hidden=true; });
     f.addEventListener("submit",e=>{
       e.preventDefault();
-      if(champs.some(t=>t.value.trim().length<3)){statut.textContent="Écris une réponse dans chaque champ.";return;}
-      const r=champs.map((t,i)=>Q.champs[i].cle+":"+t.value.trim().replace(/\s+/g," ")).join(" | ");
-      if(r.length>200){statut.textContent="Raccourcis ta réponse : 200 caractères au total.";return;}
+      const r=champs.map((t,i)=>Q.champs[i].cle+":"+propre(t)).join(" | ");
+      const manques=champs.map((t,i)=>propre(t).length<MIN ? "« "+Q.champs[i].nom+" » : encore vide." : null).filter(Boolean);
+      if(r.length>200) manques.push("Trop long : "+r.length+" caractères au total, 200 au plus. Raccourcis "+(champs.length>1 ? "un des champs." : "ta réponse."));
+      etats.forEach((l,i)=>l.classList.toggle("manque",propre(champs[i]).length<MIN));
+      if(manques.length){
+        const ul=el("ul"); manques.forEach(t=>ul.append(txt("li",null,t)));
+        manque.replaceChildren(txt("strong",null,manques.length===1 ? "Il manque une chose :" : "Il manque "+manques.length+" choses :"), ul);
+        manque.hidden=false; return;
+      }
       ok.disabled=true;
-      const fini=()=>{ statut.textContent=""; champs.forEach(t=>t.disabled=true); reussi(r); };
+      const fini=()=>{ statut.textContent=""; champs.forEach(t=>t.disabled=true);
+        gardeReponse(ici+1, Object.fromEntries(Q.champs.map((c,i)=>[c.cle, propre(champs[i])])));   // rappelée plus loin (data-rappel)
+        reussi(r); };
       if(!SUIVI || APERCU){fini();return;}
       statut.textContent="Enregistrement en cours…";
       google.script.run.withSuccessHandler(fini).withFailureHandler(()=>{

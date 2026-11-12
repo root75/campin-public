@@ -1,7 +1,7 @@
 /* Préparer le rapport, trois missions, un défi final, remettre le rapport. Dix étapes internes réutilisent le suivi existant.
  * Trois hypothèses sur le site ; tableau/capture et écrits courts dans le rapport ; entraide guidée et contrôle individuel final par le professeur. */
 const COURS = 'labo-07';
-const VERSION_PARCOURS = 'missions-4';   // 06/11/2026 : « Préparer » et « Remettre mon rapport » ajoutées, mission 1 en trois étapes
+const VERSION_PARCOURS = 'missions-5';   // 12/11/2026 : cases regroupées en gestes (les cases gardées sur le poste repartent de zéro) ; 06/11 : « Préparer » et « Remettre », mission 1 en trois étapes
 const PRESENTATION = 'missions';   // blocs.js : cloche en haut à droite, bulle, bravo, sans « Je veux / Je fais / Je vois »
 const HORS_SUIVI = 'Essai local : aucune réponse envoyée. En classe, ouvre Mes cours avec ton compte scolaire.';
 let EMAIL = '';
@@ -14,6 +14,16 @@ const hache = s => {   // FNV-1a brassé, comme hache_() dans Code.gs
   return h >>> 0;
 };
 const tirage = (cle, n) => n<2 || !EMAIL ? 1 : 1 + hache(EMAIL.toLowerCase()+"|"+cle) % n;
+/* Rappels (blocs.js, data-rappel) : le nom exact du rapport, tiré de l'adresse scolaire prenom.nom@…, déjà sans accents.
+   Sans adresse (essai local, aperçu), le texte de la fiche reste : LABO07_CoulissesPC_Prenom_Nom. */
+const RAPPELS = {
+  rapport: () => {
+    const m = /^([a-z-]+)\.([a-z-]+)@/i.exec(EMAIL || '');
+    if(!m) return '';
+    const maj = t => t.split('-').map(x => x.charAt(0).toUpperCase() + x.slice(1).toLowerCase()).join('-');
+    return 'LABO07_CoulissesPC_' + maj(m[1]) + '_' + maj(m[2]);
+  }
+};
 const PARCOURS = [
  {titre:'Préparer mon rapport', court:'Rapport', rond:'📄', debut:0, fin:1, bulle:'Avant l’enquête : ton carnet d’enquêteur. Un seul document pour tout le labo.'},
  {titre:'Mission 1 — Observer ce qui tourne', court:'Mission 1', rond:'1', debut:1, fin:4, bulle:'Première mission : que fait le PC quand une application s’ouvre ?'},
@@ -28,20 +38,49 @@ const BLOCS = [
     "titre": "Créer mon rapport et le placer à côté du cours",
     "min": 8,
     "veux": "Préparer le document où j’écrirai mes preuves, avant toute mesure.",
-    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\"><span>Dans Chrome, clique sur la gaufre ⋮⋮⋮, en haut à droite ▸ Docs. Ou ouvre <a href=\"https://docs.google.com/\" target=\"_blank\" rel=\"noopener\">Google Docs</a>. Compte de l’école.</span></label></li><li><label><input type=\"checkbox\">Clique sur + Document vierge.</label></li><li><label><input type=\"checkbox\">Clique sur « Document sans titre », en haut à gauche.</label></li><li><label><input type=\"checkbox\"><span>Tape <b>LABO07_CoulissesPC_Prenom_Nom</b>, avec ton prénom et ton nom sans accents, puis Enter.</span></label></li><li><label><input type=\"checkbox\">Reviens sur l’onglet du cours. Clique sur le bouton 📋 Copier la trame, juste en dessous.</label></li></ol><p class=\"outil-trame\"><button class=\"btn plein\" type=\"button\" data-copier-trame>📋 Copier la trame</button> <span class=\"note trame-statut\" role=\"status\"></span><a class=\"note\" href=\"https://root75.github.io/campin-public/labo-07/pas-a-pas/trame-rapport.txt\" target=\"_blank\" rel=\"noopener\">Trame en texte brut</a></p><ol class=\"etapes\"><li><label><input type=\"checkbox\">Dans ton document, clique dans la page ▸ Édition ▸ Coller sans mise en forme (Ctrl + Shift + V).</label></li><li><label><input type=\"checkbox\">Complète ton prénom, ton nom et la date en haut du document.</label></li><li><label><input type=\"checkbox\">Clic droit sur l’onglet du rapport ▸ Ajouter l’onglet à une nouvelle vue fractionnée. Le cours à gauche, le rapport à droite.</label></li><li><label><input type=\"checkbox\">Vérifie en haut du document l’indication « Enregistré dans Drive ».</label></li></ol>",
+    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\"><span>Dans Chrome, clique sur la gaufre ⋮⋮⋮, en haut à droite ▸ Docs ▸ + Document vierge. Ou ouvre <a href=\"https://docs.google.com/\" target=\"_blank\" rel=\"noopener\">Google Docs</a>. Compte de l’école.</span></label></li><li><label><input type=\"checkbox\"><span>Clique sur « Document sans titre », en haut à gauche ▸ tape <b><span data-rappel=\"rapport\">LABO07_CoulissesPC_Prenom_Nom</span></b> (ton prénom et ton nom, sans accents) ▸ Enter.</span></label></li><li><label><input type=\"checkbox\"><span>Reviens sur l’onglet du cours ▸ clique sur le bouton 📋 Copier la trame, juste en dessous.</span></label></li></ol><p class=\"outil-trame\"><button class=\"btn plein\" type=\"button\" data-copier-trame>📋 Copier la trame</button> <span class=\"note trame-statut\" role=\"status\"></span><a class=\"note\" href=\"https://root75.github.io/campin-public/labo-07/pas-a-pas/trame-rapport.txt\" target=\"_blank\" rel=\"noopener\">Trame en texte brut</a></p><ol class=\"etapes\"><li><label><input type=\"checkbox\"><span>Dans ton document, clique dans la page ▸ Édition ▸ Coller sans mise en forme (Ctrl + Shift + V).</span></label></li><li><label><input type=\"checkbox\"><span>Complète ton prénom, ton nom, ta classe et la date, en haut du document.</span></label></li><li><label><input type=\"checkbox\"><span>Clic droit sur l’onglet du rapport ▸ Ajouter l’onglet à une nouvelle vue fractionnée. Le cours à gauche, le rapport à droite.</span></label></li><li><label><input type=\"checkbox\"><span>Vérifie en haut du document l’indication « Enregistré dans Drive ».</span></label></li></ol>",
     "vois": "Mon document s’appelle LABO07_CoulissesPC_Prenom_Nom, contient la trame et mon identification, et s’affiche à côté du cours.",
     "coince": [
       "La copie ne marche pas ? Clique sur le lien « Trame en texte brut » ▸ Ctrl + A ▸ Ctrl + C. Puis, dans ton document : Ctrl + Shift + V.",
       "Pas de « vue fractionnée » dans le menu ? Garde deux onglets et passe de l’un à l’autre en cliquant sur leur titre. Docs ouvre un autre compte ? Clique sur la photo ronde, en haut à droite ▸ choisis ton compte de l’école."
     ],
     "demos": {
-      "1": ["rapport", [0, 1]],
-      "2": ["rapport", [2]],
-      "3": ["rapport", [3]],
-      "4": ["rapport", [4]],
-      "6": ["rapport", [5]],
-      "8": ["cote", [0, 1, 2, 3]],
-      "9": ["rapport", [6]]
+      "1": [
+        "rapport",
+        [
+          0,
+          1,
+          2
+        ]
+      ],
+      "2": [
+        "rapport",
+        [
+          3,
+          4
+        ]
+      ],
+      "4": [
+        "rapport",
+        [
+          5
+        ]
+      ],
+      "6": [
+        "cote",
+        [
+          0,
+          1,
+          2,
+          3
+        ]
+      ],
+      "7": [
+        "rapport",
+        [
+          6
+        ]
+      ]
     },
     "indices": true,
     "q": {
@@ -49,27 +88,49 @@ const BLOCS = [
       "q": "Ton document est créé, nommé, avec la trame et ton identification.",
       "confirmation": "J’ai créé mon rapport LABO07_CoulissesPC_Prenom_Nom, collé la trame et complété mon identification.",
       "trace": "rapport:0 — Préparer mon rapport",
-      "juste": "Ton rapport est prêt. Garde-le ouvert : tu y écriras à chaque mission."
+      "juste": "Ton rapport est prêt. Garde-le ouvert : tu y écriras à chaque mission.",
+      "liste": [
+        "Mon document porte le nom demandé : LABO07_CoulissesPC_, puis mon prénom et mon nom.",
+        "La trame est collée, et mon prénom, mon nom, ma classe et la date sont complétés.",
+        "Le rapport s’affiche à côté du cours, et Docs indique « Enregistré »."
+      ]
     },
-    "extra": "<p class=\"stop\">Un seul document pour tout le labo. Au cours suivant, ne crée pas de deuxième document : rouvre celui-ci depuis ton Drive scolaire.</p>"
+    "extra": "<p class=\"attention\">⚠️ Un seul document pour tout le labo. Au cours suivant, ne crée pas de deuxième document : rouvre <b><span data-rappel=\"rapport\">LABO07_CoulissesPC_Prenom_Nom</span></b> par la gaufre ⋮⋮⋮ ▸ Docs, dans la liste de tes documents.</p>"
   },
   {
     "partie": "1 — Observer ce qui tourne",
     "titre": "Défi : une application ouverte, qu’est-ce qui change ?",
     "min": 12,
     "veux": "Relever les caractéristiques de mon PC, puis prévoir ce que feront le processeur et la mémoire pendant un gros calcul, avec une grande image ouverte dans GIMP, et quand j’arrêterai GIMP.",
-    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\">Vérifie que ton rapport est ouvert à droite du cours.</label></li><li><label><input type=\"checkbox\">Fais un clic droit sur l’icône ⊞ Démarrer ▸ Gestionnaire des tâches (ou Ctrl + Shift + Esc).</label></li><li><label><input type=\"checkbox\">Tu vois seulement une courte liste de noms, sans colonnes ? Clique sur ⌄ Plus de détails, en bas à gauche. Tu vois déjà les colonnes et le menu à gauche : coche cette case, rien à faire.</label></li><li><label><input type=\"checkbox\">À gauche, clique sur 📈 Performances, puis sur Processeur : lis son nom, en haut à droite, et le nombre de Cœurs, sous le graphique.</label></li><li><label><input type=\"checkbox\">Clique sur Mémoire : lis la quantité totale, en haut à droite (par exemple 16,0 Go).</label></li><li><label><input type=\"checkbox\">Clique sur Disque 0 (C:) : lis sa Capacité, sous le graphique.</label></li><li><label><input type=\"checkbox\">Dans ton rapport, partie 1, complète la ligne « Mon PC » avec ces quatre informations.</label></li><li><label><input type=\"checkbox\">Tu vas observer deux choses : le processeur (il calcule) et la mémoire (elle garde ce que les logiciels ouverts utilisent).</label></li><li><label><input type=\"checkbox\">À ton avis, que feront le processeur et la mémoire pendant un gros calcul ? Quand GIMP gardera une grande image ouverte ? Et quand tu arrêteras GIMP ?</label></li><li><label><input type=\"checkbox\">Écris ta réponse dans « Mon hypothèse », sous les cases. GIMP reste fermé tant que ce n’est pas écrit.</label></li></ol>",
+    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\"><span>Ouvre le Gestionnaire des tâches : clic droit sur l’icône ⊞ Démarrer ▸ Gestionnaire des tâches (ou Ctrl + Shift + Esc).</span></label></li><li><label><input type=\"checkbox\"><span>Petite fenêtre, sans colonnes ? Clique sur ⌄ Plus de détails, en bas à gauche. Les colonnes et le menu de gauche sont déjà là : coche, rien à faire.</span></label></li><li><label><input type=\"checkbox\"><span>À gauche, 📈 Performances ▸ clique tour à tour sur Processeur (son nom en haut à droite, le nombre de Cœurs sous le graphique), sur Mémoire (le total, en haut à droite) et sur Disque 0 (C:) (sa Capacité, sous le graphique).</span></label></li><li><label><input type=\"checkbox\"><span>Dans ton rapport, partie 1, complète la ligne « Mon PC » avec ces quatre informations.</span></label></li><li><label><input type=\"checkbox\"><span>Réfléchis : le processeur calcule, la mémoire garde ce que les logiciels ouverts utilisent. Que feront-ils pendant un gros calcul ? Quand GIMP gardera une grande image ouverte ? Quand tu arrêteras GIMP ?</span></label></li><li><label><input type=\"checkbox\"><span>Écris ta réponse dans « Mon hypothèse », sous les cases ▸ Enregistrer ma réponse.</span></label><p class=\"attention\">⚠️ N’ouvre pas GIMP avant d’avoir enregistré ton hypothèse : la prévision vient avant l’observation.</p></li></ol>",
     "vois": "Mon rapport indique le processeur, les cœurs, la mémoire et le disque de mon PC ; mon hypothèse annonce un changement possible et ce qui me permettrait de le constater.",
     "coince": [
       "Pas de noms à gauche du Gestionnaire ? Clique sur ☰, en haut à gauche, ou agrandis la fenêtre. Tes valeurs diffèrent de celles du voisin ? Normal : chaque PC a les siennes. Une hypothèse est une idée à tester, pas une définition.",
-      "Commence par « Pendant un gros calcul, je pense que… ». Indique ce que tu comparerais avant, pendant le calcul et après l’arrêt. Pas encore de rapport ? Clique sur ← Étape précédente."
+      "Commence par « Pendant un gros calcul, je pense que… ». Indique ce que tu comparerais avant, pendant le calcul et après l’arrêt. Ton rapport n’est plus ouvert ? Gaufre ⋮⋮⋮ ▸ Docs ▸ ton rapport, dans la liste. Pas encore de rapport ? Clique sur la pastille 📄."
     ],
     "demos": {
-      "2": ["gestionnaire", [0, 1]],
-      "3": ["gestionnaire", [2]],
-      "4": ["performances", [0, 1]],
-      "5": ["performances", [2]],
-      "6": ["performances", [3]]
+      "1": [
+        "gestionnaire",
+        [
+          0,
+          1
+        ]
+      ],
+      "2": [
+        "gestionnaire",
+        [
+          2
+        ]
+      ],
+      "3": [
+        "performances",
+        [
+          0,
+          1,
+          2,
+          3
+        ]
+      ]
     },
     "indices": true,
     "q": {
@@ -84,34 +145,97 @@ const BLOCS = [
       ],
       "juste": "Cette réponse marque une étape faite. Elle ne constitue pas une correction ni une note."
     },
-    "extra": "<p class=\"stop\">Chacun manipule son propre PC. Première réponse seul ; comparaison à deux ensuite. Ici, on observe seulement : aucune fin de tâche, aucun réglage.</p>"
+    "extra": "<p class=\"note\">Chacun manipule son propre PC. Première réponse seul ; comparaison à deux ensuite.</p><p class=\"attention\">⚠️ Ici, on observe seulement : ne termine aucune tâche et ne change aucun réglage.</p>"
   },
   {
     "partie": "1 — Observer ce qui tourne",
     "titre": "Relever les mesures avant, pendant et après GIMP",
     "min": 20,
     "veux": "Relever le processeur et la mémoire avant, pendant un gros calcul avec une grande image ouverte dans GIMP, 1 minute après, puis après avoir arrêté GIMP.",
-    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\">Dans ton rapport, partie 1, clique sur la ligne « [Insérer un vrai tableau…] » ▸ menu Insertion ▸ Tableau ▸ glisse sur la grille jusqu’à 3 × 5. Tape les en-têtes Moment, Processeur (%), Mémoire (%), puis Avant, Pendant le calcul, Après 1 min, Après fin de tâche dans la première colonne. Efface la ligne entre crochets.</label></li><li><label><input type=\"checkbox\">Reviens au Gestionnaire des tâches par son icône dans la barre des tâches (ou Alt + Tab) ▸ à gauche, clique sur ☰ Processus. Repère deux applications dont tu reconnais le nom.</label></li><li><label><input type=\"checkbox\">Lis le total Processeur en % en haut de la colonne.</label></li><li><label><input type=\"checkbox\">Lis le total Mémoire en % en haut de la colonne.</label></li><li><label><input type=\"checkbox\">Dans le tableau du rapport, complète la ligne Avant.</label></li><li><label><input type=\"checkbox\">Clique sur ⊞ Démarrer ▸ tape GIMP ▸ clique sur l’application GIMP. Elle met 5 à 20 secondes à s’ouvrir : ne clique pas une deuxième fois. La fenêtre « Bienvenue dans GIMP » s’affiche : ferme-la par le × en haut à droite.</label></li><li><label><input type=\"checkbox\">Dans GIMP : menu Fichier ▸ Nouvelle image (ou Ctrl + N). Tape 10000 en Largeur et 10000 en Hauteur, unité px ▸ Valider.</label></li><li><label><input type=\"checkbox\">GIMP demande de confirmer la taille de l’image (plus de 900 Mo) : clique sur Valider. Attends que l’image grise apparaisse.</label></li><li><label><input type=\"checkbox\">Ouvre le <a href=\"https://root75.github.io/campin-public/labo-07/essai-charge.html\" target=\"_blank\" rel=\"noopener\">Banc d’essai</a> : il s’ouvre dans un nouvel onglet. Clique sur ▶ Lancer le calcul.</label></li><li><label><input type=\"checkbox\">Tout de suite, reviens au Gestionnaire (Alt + Tab) et lis les deux totaux pendant le calcul.</label></li><li><label><input type=\"checkbox\">Dans le tableau du rapport, complète la ligne Pendant le calcul.</label></li><li><label><input type=\"checkbox\">Reviens sur l’onglet Banc d’essai et clique sur ■ Arrêter. Laisse GIMP ouvert sans rien y faire et attends environ 1 minute.</label></li><li><label><input type=\"checkbox\">Lis les deux mêmes totaux et complète la ligne Après 1 min.</label></li><li><label><input type=\"checkbox\">GIMP encore ouvert, prends ta capture : Windows + Shift + S (ou ⊞ Démarrer ▸ Outil Capture d’écran ▸ Nouveau) ▸ rectangle autour des noms utiles et des colonnes Processeur / Mémoire. Tu la colleras à l’étape suivante.</label></li><li><label><input type=\"checkbox\">Dans Processus, clique une fois sur la ligne GNU Image Manipulation Program ▸ bouton ⊘ Terminer la tâche, en haut (ou touche Delete). GIMP se ferme sans rien demander : l’image n’est pas enregistrée.</label></li><li><label><input type=\"checkbox\">Attends 10 secondes, lis les deux totaux et complète la ligne Après fin de tâche.</label></li></ol>",
+    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\"><span>Dans ton rapport, partie 1, clique sur la ligne « [Insérer un vrai tableau…] » ▸ menu Insertion ▸ Tableau ▸ glisse sur la grille jusqu’à 3 × 5. Tape les en-têtes Moment, Processeur (%), Mémoire (%), puis Avant, Pendant le calcul, Après 1 min, Après fin de tâche dans la première colonne. Efface la ligne entre crochets.</span></label><p class=\"attention\">⚠️ Ne fais pas les colonnes avec des espaces : un vrai tableau, par Insertion ▸ Tableau.</p></li><li><label><input type=\"checkbox\"><span>Reviens au Gestionnaire des tâches par son icône dans la barre des tâches (ou Alt + Tab) ▸ à gauche, ☰ Processus ▸ repère deux applications dont tu reconnais le nom ▸ écris-les dans ton rapport, ligne « Deux applications identifiées ».</span></label></li><li><label><input type=\"checkbox\"><span>Lis les deux totaux, Processeur et Mémoire, en % en haut de leur colonne ▸ écris-les dans la ligne Avant du tableau.</span></label></li><li><label><input type=\"checkbox\"><span>Ouvre GIMP : ⊞ Démarrer ▸ tape GIMP ▸ clique sur l’application GIMP. Elle met 5 à 20 secondes à s’ouvrir. La fenêtre « Bienvenue dans GIMP » s’affiche : ferme-la par le ×, en haut à droite.</span></label><p class=\"attention\">⚠️ Ne clique pas une deuxième fois sur GIMP pendant qu’il s’ouvre : tu en lancerais deux.</p></li><li><label><input type=\"checkbox\"><span>Dans GIMP : Fichier ▸ Nouvelle image (ou Ctrl + N) ▸ 10000 en Largeur, 10000 en Hauteur, unité px ▸ Valider ▸ « Confirmer la taille de l’image » (plus de 900 Mo) ▸ Valider. Attends que l’image grise apparaisse.</span></label><p class=\"attention\">⚠️ Ne prends pas une image plus grande que 10000 × 10000 : le PC serait saturé.</p></li><li><label><input type=\"checkbox\"><span>Ouvre le <a href=\"https://root75.github.io/campin-public/labo-07/essai-charge.html\" target=\"_blank\" rel=\"noopener\">Banc d’essai</a> : il s’ouvre dans un nouvel onglet ▸ ▶ Lancer le calcul.</span></label></li><li><label><input type=\"checkbox\"><span>Tout de suite, Alt + Tab vers le Gestionnaire ▸ lis les deux totaux pendant le calcul ▸ écris-les dans la ligne Pendant le calcul.</span></label></li><li><label><input type=\"checkbox\"><span>Onglet Banc d’essai ▸ ■ Arrêter. Laisse GIMP ouvert sans rien y faire, attends environ 1 minute ▸ lis les deux totaux ▸ ligne Après 1 min.</span></label></li><li><label><input type=\"checkbox\"><span>GIMP encore ouvert, prends ta capture : Windows + Shift + S (ou ⊞ Démarrer ▸ Outil Capture d’écran ▸ Nouveau) ▸ rectangle autour des noms utiles et des colonnes Processeur / Mémoire. Tu la colleras à l’étape suivante.</span></label></li><li><label><input type=\"checkbox\"><span>Processus ▸ clique une fois sur la ligne GNU Image Manipulation Program ▸ bouton ⊘ Terminer la tâche, en haut (ou touche Delete). GIMP se ferme sans rien demander : l’image n’est pas enregistrée.</span></label><p class=\"attention\">⚠️ Termine seulement GIMP, et seulement ici. Terminer la tâche ferme de force : ce qui n’est pas enregistré est perdu. Ailleurs, on ne s’en sert que si le × ne répond plus.</p></li><li><label><input type=\"checkbox\"><span>Attends 10 secondes ▸ lis les deux totaux ▸ ligne Après fin de tâche.</span></label></li></ol>",
     "vois": "Mon tableau contient les quatre relevés : Avant, Pendant le calcul, Après 1 min, Après fin de tâche. Ma capture attend d’être collée.",
     "coince": [
       "Compare la même grandeur : le total Processeur avec le total Processeur, pas avec une ligne d’application. La mémoire en % n’est pas celle d’un seul logiciel en Mo.",
       "Le total Processeur ne monte pas ? Sur le Banc d’essai, vérifie que l’état affiche « … au travail ». GIMP refuse 10000 ? Vérifie que l’unité est px. Si l’accès est bloqué, note « accès refusé » et clique sur « J'attends de l'aide » : ne contourne pas la restriction."
     ],
     "demos": {
-      "1": ["tableau", [0, 1, 2, 3]],
-      "2": ["gestionnaire", [3]],
-      "3": ["gestionnaire", [4]],
-      "4": ["gestionnaire", [5]],
-      "6": ["gimp", [0, 1]],
-      "7": ["gimp", [2]],
-      "8": ["gimp", [3, 4]],
-      "9": ["banc", [0]],
-      "10": ["banc", [1, 2]],
-      "12": ["banc", [3]],
-      "13": ["banc", [4]],
-      "14": ["capture", [0, 1]],
-      "15": ["fintache", [0, 1]],
-      "16": ["fintache", [2]]
+      "1": [
+        "tableau",
+        [
+          0,
+          1,
+          2,
+          3
+        ]
+      ],
+      "2": [
+        "gestionnaire",
+        [
+          3
+        ]
+      ],
+      "3": [
+        "gestionnaire",
+        [
+          4,
+          5
+        ]
+      ],
+      "4": [
+        "gimp",
+        [
+          0,
+          1
+        ]
+      ],
+      "5": [
+        "gimp",
+        [
+          2,
+          3,
+          4
+        ]
+      ],
+      "6": [
+        "banc",
+        [
+          0
+        ]
+      ],
+      "7": [
+        "banc",
+        [
+          1,
+          2
+        ]
+      ],
+      "8": [
+        "banc",
+        [
+          3,
+          4
+        ]
+      ],
+      "9": [
+        "capture",
+        [
+          0,
+          1
+        ]
+      ],
+      "10": [
+        "fintache",
+        [
+          0,
+          1
+        ]
+      ],
+      "11": [
+        "fintache",
+        [
+          2
+        ]
+      ]
     },
     "indices": true,
     "q": {
@@ -119,25 +243,45 @@ const BLOCS = [
       "q": "Tes quatre relevés sont dans le tableau du rapport. Pas de phrase à écrire ici.",
       "confirmation": "J’ai relevé les deux totaux quatre fois, pris ma capture et complété le tableau de mon rapport.",
       "trace": "rapport:1 — Relevés de mesures",
-      "juste": "Le professeur examine les preuves et les gestes. Cette déclaration ne constitue ni une correction ni une remise."
+      "juste": "Le professeur examine les preuves et les gestes. Cette déclaration ne constitue ni une correction ni une remise.",
+      "liste": [
+        "La ligne « Deux applications identifiées » est complétée.",
+        "Mon tableau a ses quatre relevés : Avant, Pendant le calcul, Après 1 min, Après fin de tâche.",
+        "Ma capture est prise, GIMP encore ouvert : je la colle à l’étape suivante."
+      ]
     },
-    "extra": "<p class=\"stop\">Fin de tâche uniquement sur GIMP, et seulement quand la case le demande. Terminer la tâche ferme de force : ce qui n’est pas enregistré est perdu. On ne s’en sert que si le × ne répond plus. Sur le Banc d’essai, seulement ▶ Lancer le calcul et ■ Arrêter. Aucune autre tâche, aucun réglage.</p>"
+    "extra": "<p class=\"attention\">⚠️ Sur le Banc d’essai, seulement ▶ Lancer le calcul et ■ Arrêter : ne clique sur aucun autre bouton pendant les relevés.</p>"
   },
   {
     "partie": "1 — Observer ce qui tourne",
     "titre": "Capturer et conclure",
     "min": 8,
     "veux": "Montrer mes relevés par la capture, puis conclure prudemment.",
-    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\">Reviens dans ton rapport, sous le tableau, et colle ta capture : Édition ▸ Coller (Ctrl + V).</label></li><li><label><input type=\"checkbox\">Redimensionne par un coin pour garder les proportions et rester dans la page.</label></li><li><label><input type=\"checkbox\">Sous l’image, écris une légende qui explique ce qu’elle montre et sa limite.</label></li><li><label><input type=\"checkbox\">Dans le rapport, écris une conclusion de deux phrases : ce qui change dans tes relevés, puis une autre cause possible ou une limite.</label></li><li><label><input type=\"checkbox\">Après ta réponse personnelle, compare les observations avec un voisin.</label></li><li><label><input type=\"checkbox\">Participe à la mise en commun. Ensuite, le professeur affiche la synthèse sur ton écran.</label></li></ol>",
+    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\"><span>Reviens dans ton rapport, sous le tableau ▸ Édition ▸ Coller (Ctrl + V) : ta capture apparaît.</span></label></li><li><label><input type=\"checkbox\"><span>Redimensionne l’image par un coin, pour garder ses proportions et rester dans la page.</span></label><p class=\"attention\">⚠️ N’étire pas l’image par un côté : elle serait déformée.</p></li><li><label><input type=\"checkbox\"><span>Sous l’image, écris une légende : ce qu’elle montre, et sa limite.</span></label></li><li><label><input type=\"checkbox\"><span>Dans le rapport, écris une conclusion de deux phrases : ce qui change dans tes relevés, et si ton hypothèse de départ (rappelée au-dessus) est confirmée ; puis une autre cause possible ou une limite.</span></label></li><li><label><input type=\"checkbox\"><span>Après ta réponse personnelle, compare tes observations avec un voisin.</span></label></li><li><label><input type=\"checkbox\"><span>Participe à la mise en commun. Ensuite, le professeur affiche la synthèse sur ton écran.</span></label></li></ol>",
     "vois": "Mon rapport contient les caractéristiques de mon PC, les quatre relevés et une capture légendée ; ma conclusion distingue ce qui monte puis redescend, ce qui reste, et ce que la fin de tâche libère.",
     "coince": [
       "Le collage ne donne rien ? Windows a aussi enregistré ta capture : Docs ▸ Insertion ▸ Image ▸ Importer depuis l’ordinateur ▸ dossier Images ▸ Captures d’écran. Ta capture montre seulement les noms et les colonnes Processeur / Mémoire.",
       "Une conclusion prudente : « Pendant le calcul, le processeur… ; tant que GIMP garde l’image, la mémoire… ; après la fin de tâche, … ». Puis une limite : une autre tâche a pu travailler en même temps."
     ],
     "demos": {
-      "1": ["capture", [2]],
-      "2": ["capture", [3]],
-      "3": ["capture", [4]]
+      "1": [
+        "capture",
+        [
+          2
+        ]
+      ],
+      "2": [
+        "capture",
+        [
+          3
+        ]
+      ],
+      "3": [
+        "capture",
+        [
+          4
+        ]
+      ]
     },
     "indices": true,
     "q": {
@@ -165,18 +309,28 @@ const BLOCS = [
         "q": "Un tableau, une capture légendée et deux phrases de conclusion. Aucune recopie des hypothèses du site.",
         "confirmation": "J’ai réalisé les manipulations demandées et complété « 1 — Observer ce qui tourne » dans mon rapport.",
         "trace": "rapport:1 — Observer ce qui tourne",
-        "juste": "Le professeur examine les preuves et les gestes. Cette déclaration ne constitue ni une correction ni une remise."
+        "juste": "Le professeur examine les preuves et les gestes. Cette déclaration ne constitue ni une correction ni une remise.",
+        "liste": [
+          "La capture est collée sous le tableau, proportionnée, dans la page.",
+          "Sa légende est juste dessous.",
+          "Ma conclusion tient en deux phrases : ce qui change, puis une autre cause ou une limite."
+        ]
       }
     },
-    "extra": "<details class=\"encart\"><summary>Prolongement — si j’ai terminé</summary><p>Rouvre GIMP, crée une petite image (Fichier ▸ Nouvelle image ▸ Valider) et trace un trait avec l’outil Pinceau 🖌 (touche P). Ferme ensuite GIMP par le × en haut à droite de sa fenêtre. Que te demande-t-il ? Pourquoi Terminer la tâche ne l’a-t-il pas demandé ?</p><p>Sur le Banc d’essai, clique sur Figer sans fin… : la page ne répond plus. Arrête seulement cet onglet : Chrome ▸ ⋮ ▸ Plus d’outils ▸ Gestionnaire de tâches (ou Shift + Esc) ▸ « Onglet : Banc d’essai — Labo 07 » ▸ Arrêter le processus. Pourquoi ne pas utiliser Terminer la tâche de Windows sur Google Chrome ?</p><p>L’observation des ressources est un prolongement, sans nouvelle compétence de 3e attribuée.</p></details>"
+    "rappel": [
+      {
+        "de": "2:H",
+        "titre": "Ton hypothèse de départ"
+      }
+    ]
   },
   {
     "partie": "2 — Retrouver ses données",
     "titre": "Défi : mon fichier OneDrive est-il disponible sur ce PC ?",
     "min": 10,
     "veux": "Retrouver un fichier dans le dossier OneDrive scolaire de l’Explorateur et prévoir sa disponibilité sans changer son état.",
-    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\">Choisis un fichier que tu as déjà enregistré dans OneDrive, par exemple celui du Labo 06. Écris où tu penses le retrouver et s’il serait lisible sans réseau.</label></li><li><label><input type=\"checkbox\">Enregistre cette première réponse avant de chercher.</label></li></ol>",
-    "vois": "Je sépare ma prévision de la preuve que je vais chercher.",
+    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\"><span>Choisis un fichier que tu as déjà enregistré dans OneDrive, par exemple celui du Labo 06 ▸ écris son nom dans « Le fichier que je choisis ».</span></label></li><li><label><input type=\"checkbox\"><span>Écris où tu penses le retrouver, et s’il serait lisible sans réseau ▸ Enregistrer ma réponse.</span></label><p class=\"attention\">⚠️ Ne cherche pas le fichier avant d’avoir enregistré ta réponse : la prévision vient avant la preuve.</p></li></ol>",
+    "vois": "Je sépare ma prévision de la preuve que je vais chercher. Le nom du fichier revient tout seul aux étapes suivantes.",
     "coince": [
       "« Dans Word » donne une application, pas un emplacement. Cherche le dossier dans lequel le fichier avait été rangé.",
       "Sur ces PC Windows, les fichiers synchronisés se cherchent dans OneDrive, via le volet gauche de l’Explorateur. Ton ancien fichier peut être dans Documents ▸ Informatique. Observe le vrai chemin et le statut sur ton poste."
@@ -187,9 +341,14 @@ const BLOCS = [
       "q": "Avant de chercher, formule ton hypothèse.",
       "champs": [
         {
+          "cle": "F",
+          "nom": "Le fichier que je choisis (son nom)",
+          "max": 60
+        },
+        {
           "cle": "H",
-          "nom": "Emplacement supposé et disponibilité sans réseau",
-          "max": 150
+          "nom": "Où je pense le retrouver, et s’il serait lisible sans réseau",
+          "max": 120
         }
       ],
       "juste": "Cette réponse marque une étape faite. Elle ne constitue pas une correction ni une note."
@@ -201,20 +360,40 @@ const BLOCS = [
     "titre": "Retrouver, lire le statut et conclure",
     "min": 20,
     "veux": "Produire une preuve sur mon propre fichier, sans le supprimer ni modifier la synchronisation.",
-    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\">Clique sur l’icône 📁 Explorateur dans la barre des tâches (ou Windows + E).</label></li><li><label><input type=\"checkbox\">Dans le volet gauche, clique sur le nuage OneDrive scolaire, nommé avec ton compte ou le nom de l’école.</label></li><li><label><input type=\"checkbox\">Ouvre le dossier où tu avais enregistré ton fichier, par exemple Documents ▸ Informatique.</label></li><li><label><input type=\"checkbox\">Sélectionne une fois le fichier choisi, sans l’ouvrir.</label></li><li><label><input type=\"checkbox\">Clique dans la barre d’adresse pour lire le chemin complet (ou Ctrl + L).</label></li><li><label><input type=\"checkbox\">Dans ton rapport, partie 2, relève le chemin OneDrive et le nom du fichier ; tu peux remplacer ton nom personnel par [moi].</label></li><li><label><input type=\"checkbox\">Si nécessaire, clique sur Afficher ▸ Détails.</label></li><li><label><input type=\"checkbox\">Lis la colonne Statut ; si elle manque, clic droit sur un en-tête de colonne ▸ Statut, si proposé.</label></li><li><label><input type=\"checkbox\">Dans le rapport, relève le symbole ou le message exact ; si rien n’apparaît, écris « statut non affiché ».</label></li><li><label><input type=\"checkbox\">Dans le rapport, écris une seule phrase : serait-il disponible sans réseau, et quel indice le justifie ? Si tu ne peux pas conclure, dis ce qui manque.</label></li><li><label><input type=\"checkbox\">Après ta réponse personnelle, compare les statuts avec un voisin.</label></li><li><label><input type=\"checkbox\">Participe à la mise en commun. Ensuite, le professeur affiche la synthèse sur ton écran.</label></li></ol>",
+    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\"><span>Ouvre l’Explorateur : icône 📁 dans la barre des tâches (ou Windows + E) ▸ dans le volet gauche, le nuage OneDrive scolaire (ton compte ou le nom de l’école) ▸ le dossier de ton fichier, par exemple Documents ▸ Informatique.</span></label></li><li><label><input type=\"checkbox\"><span>Clique une seule fois sur <span data-rappel=\"5:F\">ton fichier de la mission 2</span> pour le sélectionner.</span></label><p class=\"attention\">⚠️ Ne l’ouvre pas (pas de double-clic) : l’ouvrir peut le télécharger et changer son statut.</p></li><li><label><input type=\"checkbox\"><span>Clique dans la barre d’adresse (ou Ctrl + L) ▸ lis le chemin complet ▸ dans ton rapport, partie 2, relève ce chemin et le nom du fichier. Tu peux remplacer ton nom personnel par [moi].</span></label></li><li><label><input type=\"checkbox\"><span>Si la colonne Statut n’est pas là : Afficher ▸ Détails (et si elle manque encore : clic droit sur un en-tête de colonne ▸ Statut) ▸ relève dans le rapport le symbole ou le message exact, ou « statut non affiché ».</span></label></li><li><label><input type=\"checkbox\"><span>Dans le rapport, écris une seule phrase : serait-il disponible sans réseau, et quel indice le justifie ? Compare avec ta prévision, rappelée au-dessus. Si tu ne peux pas conclure, dis ce qui manque.</span></label></li><li><label><input type=\"checkbox\"><span>Après ta réponse personnelle, compare les statuts avec un voisin ▸ participe à la mise en commun. Ensuite, le professeur affiche la synthèse sur ton écran.</span></label></li></ol>",
     "vois": "Mon relevé décrit ce poste : chemin, nom et statut. Une absence de statut reste une observation.",
     "coince": [
       "Le chemin permet de vérifier si le dossier se trouve dans OneDrive. Documents ne prouve pas à lui seul qu’il est synchronisé.",
       "Fichier introuvable : regarde le dossier scolaire OneDrive ▸ Documents ▸ Informatique. Après deux minutes, note ce que tu as essayé et clique sur « J'attends de l'aide ». Le professeur fournit un fichier de démonstration à observer personnellement ; précise « démo »."
     ],
     "demos": {
-      "1": ["onedrive", [0]],
-      "2": ["onedrive", [1]],
-      "3": ["onedrive", [2]],
-      "4": ["onedrive", [3]],
-      "5": ["onedrive", [4]],
-      "7": ["onedrive", [5]],
-      "8": ["onedrive", [6]]
+      "1": [
+        "onedrive",
+        [
+          0,
+          1,
+          2
+        ]
+      ],
+      "2": [
+        "onedrive",
+        [
+          3
+        ]
+      ],
+      "3": [
+        "onedrive",
+        [
+          4
+        ]
+      ],
+      "4": [
+        "onedrive",
+        [
+          5,
+          6
+        ]
+      ]
     },
     "indices": true,
     "q": {
@@ -222,28 +401,97 @@ const BLOCS = [
       "q": "Le nom du fichier, son chemin, son statut et une seule phrase de justification.",
       "confirmation": "J’ai réalisé les manipulations demandées et complété « 2 — Retrouver ses données » dans mon rapport.",
       "trace": "rapport:2 — Retrouver ses données",
-      "juste": "Le professeur examine les preuves et les gestes. Cette déclaration ne constitue ni une correction ni une remise."
+      "juste": "Le professeur examine les preuves et les gestes. Cette déclaration ne constitue ni une correction ni une remise.",
+      "liste": [
+        "Partie 2 : le nom du fichier et son chemin.",
+        "Le statut exact, ou « statut non affiché ».",
+        "Une phrase : disponible sans réseau ? et l’indice qui le justifie."
+      ]
     },
-    "extra": "<details class=\"encart\"><summary>Prolongement — si j’ai terminé</summary><p>Sans ouvrir les fichiers, cherche dans le même dossier un autre statut. Explique ce qui pourrait différer sans réseau. S’il n’y en a pas, compare les cas fictifs « nuage » et « coche verte ». Ne clique ni sur Libérer de l’espace, ni sur Toujours conserver ; ne touche pas aux réglages OneDrive.</p></details>"
+    "extra": "<p class=\"attention\">⚠️ Ne clique ni sur Libérer de l’espace, ni sur Toujours conserver, et ne change aucun réglage OneDrive : tu changerais le statut que tu observes.</p>",
+    "rappel": [
+      {
+        "de": "5:F",
+        "titre": "Le fichier que tu as choisi"
+      },
+      {
+        "de": "5:H",
+        "titre": "Ta prévision"
+      }
+    ]
   },
   {
     "partie": "3 — Dépanner",
     "titre": "Quatre incidents à tester, un seul à rédiger",
     "min": 12,
     "veux": "Dépanner personnellement quatre incidents ; écrire un seul cas et vérifier les trois autres à deux, chacun à son tour.",
-    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\">Choisis l’incident que tu expliqueras dans le rapport.</label></li><li><label><input type=\"checkbox\">Ouvre les quatre cartes ci-dessous et effectue personnellement chaque essai.</label></li><li><label><input type=\"checkbox\">Avant chaque test, formule ton hypothèse et choisis ton test : dans le rapport pour l’incident choisi, à l’oral pour les trois autres.</label></li><li><label><input type=\"checkbox\">Pour l’incident choisi, complète ensuite l’observation et la solution justifiée dans le rapport : quatre lignes courtes suffisent.</label></li><li><label><input type=\"checkbox\">Pour les trois autres incidents, explique ta propre hypothèse et ton test au binôme, puis montre ton geste et justifie ta conclusion. Il t’observe sans toucher ta souris ; inversez ensuite les rôles. Aucun texte supplémentaire dans le rapport.</label></li><li><label><input type=\"checkbox\">Après ta première proposition personnelle, écoute le retour du binôme et refais toi-même le geste à corriger si nécessaire.</label></li><li><label><input type=\"checkbox\">Participe à la mise en commun : quel test départageait deux explications ? Ensuite, le professeur affiche la synthèse sur ton écran.</label></li></ol>",
+    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\"><span>Choisis l’incident que tu expliqueras dans le rapport.</span></label></li><li><label><input type=\"checkbox\"><span>Ouvre les quatre cartes ci-dessous. Pour chacune, formule ton hypothèse et choisis ton test avant d’agir, puis fais l’essai toi-même.</span></label></li><li><label><input type=\"checkbox\"><span>Incident choisi : écris dans le rapport l’hypothèse, le test, l’observation et la solution justifiée, quatre lignes courtes.</span></label></li><li><label><input type=\"checkbox\"><span>Les trois autres : explique ton hypothèse et ton test au binôme, montre ton geste et justifie ta conclusion ; puis inversez les rôles. Rien de plus dans le rapport.</span></label><p class=\"attention\">⚠️ Le binôme ne touche ni ta souris ni ton clavier : il observe et il explique.</p></li><li><label><input type=\"checkbox\"><span>Écoute le retour du binôme, et refais toi-même le geste à corriger si nécessaire.</span></label></li><li><label><input type=\"checkbox\"><span>Participe à la mise en commun : quel test départageait deux explications ? Ensuite, le professeur affiche la synthèse sur ton écran.</span></label></li></ol>",
     "vois": "J’ai manipulé personnellement les quatre incidents. Un seul est rédigé ; pour les autres, nous avons alterné acteur et observateur, avec un retour oral précis.",
     "coince": [
       "Pour le cas écrit : hypothèse et test avant d’agir ; observation et solution après. Pour les autres, prépare les mêmes éléments à l’oral.",
       "Ouvre les indices de chaque carte, puis demande au binôme de montrer le critère qui bloque. Si le désaccord ou le blocage persiste, clique sur « J'attends de l'aide » et poursuis un autre essai possible. Un avis du binôme ne remplace pas la note du professeur."
     ],
     "demos": {
-      "incident 1.2": ["fenetres", [0]],
-      "incident 1.4": ["fenetres", [1, 2]],
-      "incident 2.4": ["fenetres", [3]],
-      "incident 4.2": ["moniteur", [0]],
-      "incident 4.3": ["moniteur", [1]],
-      "incident 4.5": ["moniteur", [2]]
+      "incident 1.1": [
+        "calculatrice",
+        [
+          0,
+          1
+        ]
+      ],
+      "incident 1.2": [
+        "fenetres",
+        [
+          0
+        ]
+      ],
+      "incident 1.4": [
+        "fenetres",
+        [
+          1,
+          2
+        ]
+      ],
+      "incident 2.1": [
+        "blocnotes",
+        [
+          0,
+          1
+        ]
+      ],
+      "incident 2.3": [
+        "fenetres",
+        [
+          3
+        ]
+      ],
+      "incident 3.1": [
+        "onedrive",
+        [
+          0,
+          1,
+          2,
+          3
+        ]
+      ],
+      "incident 4.2": [
+        "moniteur",
+        [
+          0
+        ]
+      ],
+      "incident 4.3": [
+        "moniteur",
+        [
+          1
+        ]
+      ],
+      "incident 4.5": [
+        "moniteur",
+        [
+          2
+        ]
+      ]
     },
     "indices": true,
     "q": {
@@ -265,17 +513,22 @@ const BLOCS = [
         "q": "Quatre essais personnels, un seul incident écrit. Les trois autres sont vérifiés à deux, puis chacun corrige son propre geste. Le professeur intervient si le blocage ou le désaccord persiste ; le défi final reste individuel.",
         "confirmation": "J’ai réalisé les manipulations demandées et complété « 3 — Un incident rédigé » dans mon rapport.",
         "trace": "rapport:3 — Un incident rédigé",
-        "juste": "Le professeur examine les preuves et les gestes. Cette déclaration ne constitue ni une correction ni une remise."
+        "juste": "Le professeur examine les preuves et les gestes. Cette déclaration ne constitue ni une correction ni une remise.",
+        "liste": [
+          "Les quatre incidents, manipulés moi-même.",
+          "Un seul incident écrit dans le rapport, en quatre lignes.",
+          "Les trois autres expliqués au binôme, puis les rôles inversés."
+        ]
       }
     },
-    "extra": "<details id=\"verification-pairs\"><summary>À deux — vérifier un geste sans le faire à la place</summary><ol class=\"etapes\"><li>Acteur : formule ta première hypothèse et choisis un test avant de demander de l’aide.</li><li>Observateur : écoute cette proposition, puis vérifie « test sans risque », « manipulation personnelle » et « conclusion appuyée sur un indice ».</li><li>Donne un retour oral précis : « Je vois… » pour un point réussi ; « Tu pourrais… » pour une correction.</li><li>L’acteur corrige lui-même ou refait le test. L’observateur ne touche ni sa souris ni son clavier.</li><li>Inversez les rôles : chacun manipule sur son propre poste. Si vous hésitez encore après les indices, cliquez sur « J'attends de l'aide » et poursuivez ce qui reste possible.</li></ol><p>Cette vérification aide à progresser ; elle ne donne pas de note et n’est pas collectée par le site.</p></details><div class=\"incidents\"><details class=\"incident\"><summary>Incident 1 : la fenêtre a disparu</summary><ol class=\"etapes\"><li><label><input type=\"checkbox\">Ouvre la Calculatrice par ⊞ Démarrer ▸ Calculatrice.</label></li><li><label><input type=\"checkbox\">Clique sur — Réduire, en haut à droite de la fenêtre.</label></li><li><label><input type=\"checkbox\">Formule une hypothèse et choisis ton test avant de le réaliser.</label></li><li><label><input type=\"checkbox\">Effectue ton test pour retrouver la fenêtre.</label></li><li><label><input type=\"checkbox\">Explique ce qui prouve qu’elle était fermée ou seulement masquée.</label></li></ol><details><summary>Indice 1</summary><p>Observe la barre des tâches : la fenêtre a disparu, mais l’application est-elle encore présente ?</p></details><details><summary>Indice 2</summary><p>Clique sur l’icône Calculatrice dans la barre des tâches, ou affiche les vignettes avec Alt + Tab et sélectionne Calculatrice.</p></details></details><details class=\"incident\"><summary>Incident 2 : je tape dans la mauvaise fenêtre</summary><ol class=\"etapes\"><li><label><input type=\"checkbox\">Ouvre Bloc-notes par ⊞ Démarrer ▸ Bloc-notes.</label></li><li><label><input type=\"checkbox\">Ouvre une seconde fenêtre par Fichier ▸ Nouvelle fenêtre (ou Ctrl + Shift + N, si disponible).</label></li><li><label><input type=\"checkbox\">Place les deux fenêtres côte à côte en les déplaçant par leur barre de titre.</label></li><li><label><input type=\"checkbox\">Clique dans la seconde fenêtre : comment écrire dans la première ?</label></li><li><label><input type=\"checkbox\">Formule une hypothèse et choisis ton test avant de le réaliser.</label></li><li><label><input type=\"checkbox\">Effectue ton test avec le seul mot « test » dans ces fenêtres d’essai.</label></li><li><label><input type=\"checkbox\">Explique quel indice montre où le texte est arrivé.</label></li></ol><details><summary>Indice 1</summary><p>Le pointeur de la souris et le curseur de saisie ne sont pas la même chose. Déplacer la souris ne suffit pas à activer une fenêtre.</p></details><details><summary>Indice 2</summary><p>Clique dans la zone de texte de la fenêtre voulue, ou sélectionne sa vignette avec Alt + Tab, puis clique dans sa zone de texte. Le curseur de saisie y apparaît. Si Nouvelle fenêtre manque, utilise l’Explorateur comme autre fenêtre et reviens au Bloc-notes.</p></details></details><details class=\"incident\"><summary>Incident 3 : le fichier serait-il « dans » l’application ?</summary><ol class=\"etapes\"><li><label><input type=\"checkbox\">Repère le fichier choisi dans la mission 2, dans le dossier OneDrive scolaire de l’Explorateur, sans l’ouvrir.</label></li><li><label><input type=\"checkbox\">Formule ton hypothèse : fermer l’application fera-t-il disparaître le fichier ?</label></li><li><label><input type=\"checkbox\">Choisis le test qui te permettra de vérifier, avant de le réaliser.</label></li><li><label><input type=\"checkbox\">Ferme seulement une fenêtre Bloc-notes d’essai par × ; si elle contient le seul mot « test », choisis Ne pas enregistrer.</label></li><li><label><input type=\"checkbox\">Retrouve ton fichier dans son dossier, sans le déplacer.</label></li><li><label><input type=\"checkbox\">Explique la différence entre le fichier et l’application.</label></li></ol><details><summary>Indice 1</summary><p>L’icône d’une application n’est pas ton document. Cherche le nom du fichier et son emplacement.</p></details><details><summary>Indice 2</summary><p>Le bouton × ferme une fenêtre. Reviens au dossier OneDrive choisi dans la mission 2 et vérifie si ton fichier est toujours là. Si c’est une démonstration, indique-le.</p></details></details><details class=\"incident\"><summary>Incident 4 : écran noir, PC arrêté ?</summary><ol class=\"etapes\"><li><label><input type=\"checkbox\">Repère le bouton ⏻ du moniteur externe montré au groupe par le professeur, distinct de celui du PC. Si aucun bouton n’a été identifié, utilise le cas simulé.</label></li><li><label><input type=\"checkbox\">Formule une hypothèse et choisis ton test avant de toucher au bouton.</label></li><li><label><input type=\"checkbox\">Sur un écran externe dont le bouton a été identifié pour le groupe, éteins seulement cet écran avec ce bouton.</label></li><li><label><input type=\"checkbox\">Rallume seulement l’écran avec le même bouton.</label></li><li><label><input type=\"checkbox\">Explique ce que le retour de la session et des fenêtres permet de conclure.</label></li><li><label><input type=\"checkbox\">Sur portable ou tout-en-un, utilise le cas simulé « écran externe éteint, puis mêmes fenêtres retrouvées » et précise que le cas est simulé.</label></li></ol><details><summary>Indice 1</summary><p>Un écran est un périphérique d’affichage. Un affichage noir peut avoir plusieurs causes.</p></details><details><summary>Indice 2</summary><p>Le seul test autorisé ici est le bouton de l’écran externe identifié par le professeur. Sur portable ou tout-en-un, ne touche pas à ⏻ : utilise le cas simulé « écran externe éteint, puis mêmes fenêtres retrouvées » et explique le test que tu choisirais.</p></details></details></div><details class=\"encart\"><summary>Prolongement — si j’ai terminé</summary><p>Invente un incident sans risque combinant deux fenêtres d’essai. Écris deux hypothèses et un test qui les départage. Fais-le lire au professeur avant toute mise en scène. Aucune manipulation sur le travail d’un voisin.</p></details>"
+    "extra": "<details id=\"verification-pairs\"><summary>À deux — vérifier un geste sans le faire à la place</summary><ol class=\"etapes\"><li>Acteur : formule ta première hypothèse et choisis un test avant de demander de l’aide.</li><li>Observateur : écoute cette proposition, puis vérifie « test sans risque », « manipulation personnelle » et « conclusion appuyée sur un indice ».</li><li>Donne un retour oral précis : « Je vois… » pour un point réussi ; « Tu pourrais… » pour une correction.</li><li>L’acteur corrige lui-même ou refait le test. L’observateur ne touche ni sa souris ni son clavier.</li><li>Inversez les rôles : chacun manipule sur son propre poste. Si vous hésitez encore après les indices, cliquez sur « J'attends de l'aide » et poursuivez ce qui reste possible.</li></ol><p>Cette vérification aide à progresser ; elle ne donne pas de note et n’est pas collectée par le site.</p></details><div class=\"incidents\"><details class=\"incident\"><summary>Incident 1 : la fenêtre a disparu</summary><ol class=\"etapes\"><li><label><input type=\"checkbox\">Ouvre la Calculatrice : ⊞ Démarrer ▸ tape Calculatrice ▸ clique sur l’application.</label></li><li><label><input type=\"checkbox\">Clique sur — Réduire, en haut à droite de la fenêtre.</label></li><li><label><input type=\"checkbox\">Formule une hypothèse et choisis ton test avant de le réaliser.</label></li><li><label><input type=\"checkbox\">Effectue ton test pour retrouver la fenêtre.</label></li><li><label><input type=\"checkbox\">Explique ce qui prouve qu’elle était fermée ou seulement masquée.</label></li></ol><details><summary>Indice 1</summary><p>Observe la barre des tâches : la fenêtre a disparu, mais l’application est-elle encore présente ?</p></details><details><summary>Indice 2</summary><p>Clique sur l’icône Calculatrice dans la barre des tâches, ou affiche les vignettes avec Alt + Tab et sélectionne Calculatrice.</p></details></details><details class=\"incident\"><summary>Incident 2 : je tape dans la mauvaise fenêtre</summary><ol class=\"etapes\"><li><label><input type=\"checkbox\">Ouvre Bloc-notes : ⊞ Démarrer ▸ tape Bloc-notes ▸ clique sur l’application ▸ dans Bloc-notes, Fichier ▸ Nouvelle fenêtre (ou Ctrl + Shift + N, si disponible).</label></li><li><label><input type=\"checkbox\">Place les deux fenêtres côte à côte en les déplaçant par leur barre de titre.</label></li><li><label><input type=\"checkbox\">Clique dans la seconde fenêtre : comment écrire dans la première ?</label></li><li><label><input type=\"checkbox\">Formule une hypothèse et choisis ton test avant de le réaliser.</label></li><li><label><input type=\"checkbox\">Effectue ton test avec le seul mot « test » dans ces fenêtres d’essai.</label></li><li><label><input type=\"checkbox\">Explique quel indice montre où le texte est arrivé.</label></li></ol><details><summary>Indice 1</summary><p>Le pointeur de la souris et le curseur de saisie ne sont pas la même chose. Déplacer la souris ne suffit pas à activer une fenêtre.</p></details><details><summary>Indice 2</summary><p>Clique dans la zone de texte de la fenêtre voulue, ou sélectionne sa vignette avec Alt + Tab, puis clique dans sa zone de texte. Le curseur de saisie y apparaît. Si Nouvelle fenêtre manque, utilise l’Explorateur comme autre fenêtre et reviens au Bloc-notes.</p></details></details><details class=\"incident\"><summary>Incident 3 : le fichier serait-il « dans » l’application ?</summary><ol class=\"etapes\"><li><label><input type=\"checkbox\"><span>Repère <span data-rappel=\"5:F\">ton fichier de la mission 2</span> dans son dossier OneDrive scolaire, dans l’Explorateur.</span></label><p class=\"attention\">⚠️ Ne l’ouvre pas : un double-clic peut le télécharger et changer son statut.</p></li><li><label><input type=\"checkbox\">Formule ton hypothèse : fermer l’application fera-t-il disparaître le fichier ?</label></li><li><label><input type=\"checkbox\">Choisis le test qui te permettra de vérifier, avant de le réaliser.</label></li><li><label><input type=\"checkbox\">Ferme seulement une fenêtre Bloc-notes d’essai par × ; si elle contient le seul mot « test », choisis Ne pas enregistrer.</label></li><li><label><input type=\"checkbox\">Retrouve ton fichier dans son dossier.</label><p class=\"attention\">⚠️ Ne déplace pas ton fichier, ne le renomme pas.</p></li><li><label><input type=\"checkbox\">Explique la différence entre le fichier et l’application.</label></li></ol><details><summary>Indice 1</summary><p>L’icône d’une application n’est pas ton document. Cherche le nom du fichier et son emplacement.</p></details><details><summary>Indice 2</summary><p>Le bouton × ferme une fenêtre. Reviens au dossier OneDrive choisi dans la mission 2 et vérifie si ton fichier est toujours là. Si c’est une démonstration, indique-le.</p></details></details><details class=\"incident\"><summary>Incident 4 : écran noir, PC arrêté ?</summary><ol class=\"etapes\"><li><label><input type=\"checkbox\">Repère le bouton ⏻ du moniteur externe montré au groupe par le professeur, distinct de celui du PC. Si aucun bouton n’a été identifié, utilise le cas simulé.</label></li><li><label><input type=\"checkbox\">Formule une hypothèse et choisis ton test avant de toucher au bouton.</label><p class=\"attention\">⚠️ Ne touche jamais au bouton ⏻ du PC : seulement à celui de l’écran externe, montré par le professeur.</p></li><li><label><input type=\"checkbox\">Sur un écran externe dont le bouton a été identifié pour le groupe, éteins seulement cet écran avec ce bouton.</label></li><li><label><input type=\"checkbox\">Rallume seulement l’écran avec le même bouton.</label></li><li><label><input type=\"checkbox\">Explique ce que le retour de la session et des fenêtres permet de conclure.</label></li><li><label><input type=\"checkbox\">Sur portable ou tout-en-un, utilise le cas simulé « écran externe éteint, puis mêmes fenêtres retrouvées » et précise que le cas est simulé.</label></li></ol><details><summary>Indice 1</summary><p>Un écran est un périphérique d’affichage. Un affichage noir peut avoir plusieurs causes.</p></details><details><summary>Indice 2</summary><p>Le seul test autorisé ici est le bouton de l’écran externe identifié par le professeur. Sur portable ou tout-en-un, utilise le cas simulé « écran externe éteint, puis mêmes fenêtres retrouvées » et explique le test que tu choisirais.</p></details></details></div>"
   },
   {
     "partie": "Final — Situation individuelle nouvelle",
     "titre": "Le dossier de secours",
     "min": 8,
     "veux": "Résoudre seul une situation nouvelle : après un changement de poste, peut-on lire le document sans réseau ?",
-    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\">Lis la situation : tu prépares une présentation sur un autre PC de l’école. L’Explorateur y montre le nom du document avec un nuage bleu. Une autre fenêtre recouvre l’Explorateur. Un camarade dit : « Le fichier est là, il marchera sans réseau ; ferme Windows pour le retrouver. »</label></li><li><label><input type=\"checkbox\">Écris ton hypothèse personnelle sur la disponibilité du contenu.</label></li><li><label><input type=\"checkbox\">Choisis un test sans risque pour retrouver la fenêtre et vérifier l’indice de disponibilité.</label></li><li><label><input type=\"checkbox\">Enregistre avant de tester. Ne coupe pas le réseau.</label></li></ol>",
+    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\">Lis la situation : tu prépares une présentation sur un autre PC de l’école. L’Explorateur y montre le nom du document avec un nuage bleu. Une autre fenêtre recouvre l’Explorateur. Un camarade dit : « Le fichier est là, il marchera sans réseau ; ferme Windows pour le retrouver. »</label></li><li><label><input type=\"checkbox\">Écris ton hypothèse personnelle sur la disponibilité du contenu.</label></li><li><label><input type=\"checkbox\">Choisis un test sans risque pour retrouver la fenêtre et vérifier l’indice de disponibilité.</label></li><li><label><input type=\"checkbox\">Clique sur Enregistrer ma réponse, avant de tester.</label><p class=\"attention\">⚠️ Ne coupe pas le réseau et ne ferme pas Windows : ce ne sont pas des tests sans risque.</p></li></ol>",
     "vois": "Mon hypothèse et mon test sont conservés avant l’observation.",
     "coince": [
       "Le scénario combine deux problèmes : retrouver une fenêtre et juger la disponibilité d’un contenu. Propose un test qui ne change pas l’état du fichier.",
@@ -306,7 +559,7 @@ const BLOCS = [
     "titre": "Montrer ma preuve et justifier ma décision",
     "min": 10,
     "veux": "Résoudre seul la nouvelle situation et justifier une décision en peu de mots.",
-    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\">Réalise le test de fenêtre sur ton poste, avec l’Explorateur recouvert par une fenêtre d’essai.</label></li><li><label><input type=\"checkbox\">Lis le chemin et le statut du fichier choisi, sans l’ouvrir.</label></li><li><label><input type=\"checkbox\">Dans le rapport, note en une ligne l’indice observé ; distingue ton poste réel du nuage donné dans le scénario.</label></li><li><label><input type=\"checkbox\">Dans le rapport, réponds au camarade en deux phrases maximum : ta décision et ce qui la justifie.</label></li><li><label><input type=\"checkbox\">Prépare ton geste et ton indice pour le contrôle individuel du professeur en circulation ; explique-lui machine, Windows, application et fichier. Tu peux relire et vérifier ta mise en page pendant l’attente.</label></li><li><label><input type=\"checkbox\">Participe à la synthèse finale. La remise du rapport est l’étape suivante.</label></li></ol>",
+    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\"><span>Réalise sur ton poste le test que tu as choisi (rappelé au-dessus) : l’Explorateur recouvert par une fenêtre d’essai, retrouve-le.</span></label></li><li><label><input type=\"checkbox\"><span>Lis le chemin et le statut de <span data-rappel=\"5:F\">ton fichier de la mission 2</span>.</span></label><p class=\"attention\">⚠️ Ne l’ouvre pas : l’ouvrir peut le télécharger et changer son statut.</p></li><li><label><input type=\"checkbox\"><span>Dans le rapport, note en une ligne l’indice observé ; distingue ton poste réel du nuage donné dans le scénario.</span></label></li><li><label><input type=\"checkbox\"><span>Dans le rapport, réponds au camarade en deux phrases au plus : ta décision, et ce qui la justifie.</span></label></li><li><label><input type=\"checkbox\"><span>Prépare ton geste et ton indice pour le contrôle individuel du professeur, en circulation ; explique-lui machine, Windows, application et fichier. En attendant, relis ta mise en page.</span></label></li><li><label><input type=\"checkbox\"><span>Participe à la synthèse finale. La remise du rapport est l’étape suivante.</span></label></li></ol>",
     "vois": "Une preuve en une ligne, une conclusion courte et une manipulation personnelle expliquée au professeur. La case du site ne remet pas le document.",
     "coince": [
       "Un nom de fichier visible ne suffit pas à prouver que son contenu est déjà téléchargé.",
@@ -318,28 +571,69 @@ const BLOCS = [
       "q": "Seul : une ligne de preuve, deux phrases de décision justifiée et une manipulation expliquée oralement au professeur.",
       "confirmation": "J’ai réalisé les manipulations demandées et complété « 4 — Défi final » dans mon rapport.",
       "trace": "rapport:4 — Défi final",
-      "juste": "Le professeur examine les preuves et les gestes. Cette déclaration ne constitue ni une correction ni une remise."
+      "juste": "Le professeur examine les preuves et les gestes. Cette déclaration ne constitue ni une correction ni une remise.",
+      "liste": [
+        "Une ligne : l’indice observé, mon poste réel distingué du nuage du scénario.",
+        "Deux phrases au plus : ma décision et ce qui la justifie.",
+        "Mon geste est prêt pour le contrôle du professeur."
+      ]
     },
-    "extra": "<details class=\"encart\"><summary>Prolongement après passage du professeur</summary><p>Dans le même scénario, remplace le nuage par une coche verte : quelle partie de ton raisonnement change ? Quelle conclusion sur une panne matérielle resterait impossible avec ces seuls indices ?</p></details>"
+    "rappel": [
+      {
+        "de": "8:H",
+        "titre": "Ton hypothèse"
+      },
+      {
+        "de": "8:T",
+        "titre": "Le test que tu as choisi"
+      }
+    ]
   },
   {
     "partie": "Remise — Mon rapport",
     "titre": "Remettre mon rapport dans Classroom",
     "min": 5,
     "veux": "Remettre une seule fois mon rapport terminé, puis vérifier qu’il est bien arrivé.",
-    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\">Relis ton rapport : remplace chaque « [à compléter] » et efface les indications entre crochets.</label></li><li><label><input type=\"checkbox\"><span>Vérifie l’identification : titre visible, prénom, nom, classe, date ; fichier nommé <b>LABO07_CoulissesPC_Prenom_Nom</b>.</span></label></li><li><label><input type=\"checkbox\">Vérifie les titres et le tableau : même style pour les quatre titres de partie ; vrai tableau de trois colonnes et quatre lignes, avec % dans les en-têtes.</label></li><li><label><input type=\"checkbox\">Vérifie la capture : ciblée, lisible, pas étirée, avec sa légende juste dessous.</label></li><li><label><input type=\"checkbox\"><span>Ouvre <a href=\"https://classroom.google.com/\" target=\"_blank\" rel=\"noopener\">Classroom</a> avec ton compte scolaire ▸ Informatique — 3F ▸ Travaux et devoirs ▸ Labo 07 — Dans les coulisses du PC ▸ Afficher les instructions.</span></label></li><li><label><input type=\"checkbox\">Dans « Vos devoirs », clique sur Ajouter ou créer ▸ Google Drive.</label></li><li><label><input type=\"checkbox\"><span>Sélectionne <b>LABO07_CoulissesPC_Prenom_Nom</b> ▸ le bouton bleu, en bas à droite.</span></label></li><li><label><input type=\"checkbox\">Clique sur la pièce jointe pour vérifier que c’est ton rapport complet.</label></li><li><label><input type=\"checkbox\">Clique sur Rendre le devoir ▸ confirme : Rendre le devoir.</label></li><li><label><input type=\"checkbox\">Vérifie que le devoir affiche « Remis ».</label></li></ol>",
+    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\"><span>Relis ton rapport : remplace chaque « [à compléter] » et efface les indications entre crochets.</span></label></li><li><label><input type=\"checkbox\"><span>Vérifie les trois exigences (/3) : titre visible, prénom, nom, classe et date, fichier nommé <b><span data-rappel=\"rapport\">LABO07_CoulissesPC_Prenom_Nom</span></b> ; même style pour les quatre titres de partie et un vrai tableau de 3 colonnes et 5 lignes, avec % dans les en-têtes ; capture ciblée, lisible, pas étirée, légende juste dessous.</span></label></li><li><label><input type=\"checkbox\"><span>Ouvre <a href=\"https://classroom.google.com/\" target=\"_blank\" rel=\"noopener\">Classroom</a> avec ton compte scolaire ▸ le cours d’informatique de ta classe ▸ Travaux et devoirs ▸ Labo 07 — Dans les coulisses du PC ▸ Afficher les instructions.</span></label><p class=\"attention\">⚠️ Ne poste pas ton rapport dans le flux du cours : il se joint au devoir, dans « Vos devoirs ».</p></li><li><label><input type=\"checkbox\"><span>Dans « Vos devoirs » ▸ Ajouter ou créer ▸ Google Drive ▸ sélectionne <b><span data-rappel=\"rapport\">LABO07_CoulissesPC_Prenom_Nom</span></b> ▸ le bouton bleu, en bas à droite.</span></label></li><li><label><input type=\"checkbox\"><span>Clique sur la pièce jointe pour vérifier que c’est ton rapport complet.</span></label></li><li><label><input type=\"checkbox\"><span>Clique sur Rendre le devoir ▸ confirme : Rendre le devoir.</span></label></li><li><label><input type=\"checkbox\"><span>Vérifie que le devoir affiche « Remis ».</span></label></li></ol>",
     "vois": "Dans Classroom, le devoir affiche « Remis » et la pièce jointe est mon rapport complet.",
     "coince": [
       "Le devoir n’apparaît pas ? Le professeur ne l’a peut-être pas encore publié. Ne crée pas de deuxième document, ne poste rien dans le flux : sonne la cloche 🔔 et attends.",
       "Ton rapport n’est pas dans la liste Google Drive ? Tape LABO07_CoulissesPC dans la barre de recherche de la fenêtre. Mauvais fichier joint ? Clique sur la croix ✕ à droite de la pièce jointe, puis recommence Ajouter ou créer ▸ Google Drive."
     ],
     "demos": {
-      "1": ["remise", [0]],
-      "5": ["remise", [1]],
-      "6": ["remise", [2]],
-      "7": ["remise", [3, 4]],
-      "9": ["remise", [5, 6]],
-      "10": ["remise", [7]]
+      "1": [
+        "remise",
+        [
+          0
+        ]
+      ],
+      "3": [
+        "remise",
+        [
+          1
+        ]
+      ],
+      "4": [
+        "remise",
+        [
+          2,
+          3,
+          4
+        ]
+      ],
+      "6": [
+        "remise",
+        [
+          5,
+          6
+        ]
+      ],
+      "7": [
+        "remise",
+        [
+          7
+        ]
+      ]
     },
     "indices": true,
     "q": {
@@ -347,7 +641,11 @@ const BLOCS = [
       "q": "Seul Classroom confirme la remise : ce site ne la voit pas.",
       "confirmation": "J’ai remis mon rapport dans Classroom et j’y vois « Remis ».",
       "trace": "rapport:5 — Remettre mon rapport",
-      "juste": "Cette case est un aide-mémoire. Le professeur vérifie la remise dans Classroom."
+      "juste": "Cette case est un aide-mémoire. Le professeur vérifie la remise dans Classroom.",
+      "liste": [
+        "La pièce jointe est mon rapport complet.",
+        "Le devoir affiche « Remis »."
+      ]
     },
     "extra": "<p class=\"note\">Ces trois vérifications valent 3 points sur 10 : identification et nom /1, titres et tableau /1, capture et remise /1.</p>"
   }
