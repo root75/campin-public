@@ -1,6 +1,6 @@
 # Labo 07 — version testable
 
-Contenu : `pas-a-pas/fiche.js` (préparer le rapport, trois missions, un défi final, remettre le rapport ; dix étapes internes pour le suivi, à reprendre selon les besoins).
+Contenu : `pas-a-pas/fiche.js` (préparer le rapport, trois missions, un défi final, remettre le rapport ; onze étapes internes pour le suivi, à reprendre selon les besoins).
 Moteur : `../pas-a-pas/blocs.js`, partagé avec Python 1 et Python 2.
 Conducteur professeur : clé `labo-07` dans `../pas-a-pas/sequences.json` ; accessible au tableau.
 Préparation, corrigé et activation : dépôt privé `campin-pedagogique/cours/3ttr-labo/sequences/07-coulisses-pc/PROF.md`.
@@ -19,8 +19,8 @@ en quatre lignes et une décision finale en deux phrases. Les trois autres incid
 manipulés et vérifiés en binôme, avec échange des rôles et correction par l’auteur, sans autre compte rendu. Le professeur garde le contrôle individuel du défi final. À la fin seulement, il joint ce document dans le
 nouveau devoir Classroom que le professeur devra préparer et publier lui-même.
 
-Collecte du site : API `noter()` et Journal existants. Les étapes internes **2, 5, 8** conservent les hypothèses
-initiales (et le test final) en texte court, ≤ 200 caractères. Les sept autres étapes enregistrent une déclaration `rapport:…`. Deux exercices préalables
+Collecte du site : API `noter()` et Journal existants. Les étapes internes **2, 6, 9** conservent les hypothèses
+initiales (et le test final) en texte court, ≤ 200 caractères. Les huit autres étapes enregistrent une déclaration `rapport:…`. Deux exercices préalables
 non cotés varient les méthodes : QCM de conclusion et cartes de gestes à remettre dans l’ordre.
 Leurs essais utilisent les événements existants (`faux`, `ouvert` préfixé `activité:`) sans faire
 avancer seuls la mission. Ils ne collectent pas les preuves du document. Le site ne lit ni Docs,
@@ -78,3 +78,8 @@ sans « Lis le défi ». Remise : les trois exigences sont trois cases. Synthès
 retirées de la fiche, affichées par le professeur en mode séquence (écrans « Synthèse 1 / 2 / 3 »,
 juste après chaque mise en commun). Mission 1 en trois étapes : hypothèse, « Relever les mesures »
 (12 cases), « Capturer et conclure » (8 cases, QCM) ; dix étapes internes. Essai : 175 contrôles.
+
+12/11/2026 (soir) : **onze étapes**. Les relevés sont coupés en deux blocs (mémoire avec GIMP, 5 cases ; processeur avec
+le Banc d'essai, capture et fin de tâche, 6 cases) ; dans les trois blocs d'hypothèse, la question et sa zone de réponse
+suivent directement les cases (`q.colle`). Cases regroupées en gestes, ⚠️ par interdiction, rappels, tous les manques
+d'un coup, prolongements hors du fil : voir `../pas-a-pas/MOTEUR.md`. Essais : `tests/labo-07.cjs`, et `essai-labo07.js` (dépôt privé).

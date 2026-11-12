@@ -73,6 +73,9 @@ but ; `<span data-rappel="5:F">ton fichier</span>` dans un texte = le champ F du
 `RAPPELS.nom()` de la fiche (calculé de `EMAIL`, par exemple le nom d'un fichier). Sans valeur (autre poste, aperçu),
 le texte d'origine reste : il doit se lire tel quel.
 
+`q.colle:true` (avec `q.etiquette`, le titre de la zone) : la question et sa zone de réponse viennent **juste sous les
+cases**, avant « ✅ À vérifier » et les encadrés — « à ton avis… » et la réponse se lisent d'un seul tenant.
+
 **Un « ne fais pas » = un encadré** `<p class="attention">⚠️ …</p>`, dans la case du geste qu'il concerne (après le
 `</label>`) ou sous les cases ; jamais dans le texte d'une case à cocher. **Les prolongements** vont hors du fil, dans
 `<details id="plus-loin">` de la page ; l'écran du cadenas (blocs ouverts) propose d'y aller.

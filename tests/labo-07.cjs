@@ -10,10 +10,11 @@ let n=0;const ok=()=>n++;
 
 assert.equal(F.COURS,'labo-07');
 // Les numéros de blocs ne bougent pas : le serveur compte les blocs validés (une séance en cours ne doit pas glisser).
-assert.equal(F.BLOCS.length,10);ok();
+assert.equal(F.BLOCS.length,11);ok();
 const cat=JSON.parse(fs.readFileSync(__dirname+'/../pas-a-pas/cours.json')).cours.find(c=>c.id==='labo-07');
-assert.ok(cat&&cat.etapes===10,'catalogue');ok();
-assert.equal(F.PARCOURS.at(-1).fin,10);ok();
+assert.ok(cat&&cat.etapes===11,'catalogue');ok();
+assert.equal(F.PARCOURS.at(-1).fin,11);ok();
+F.PARCOURS.forEach((g,k)=>k&&assert.equal(g.debut,F.PARCOURS[k-1].fin,'groupes jointifs'));ok();
 
 // Un cours ne dépend pas de l'année : ni nom de classe, ni date, ni jour. Touches en anglais.
 const texte=JSON.stringify(F.BLOCS)+JSON.stringify(F.FIN)+page+trame;
@@ -21,9 +22,12 @@ assert.ok(!/\b[123][A-H]\b/.test(texte.replace(/Ctrl \+ [A-Z]|Shift \+ [A-Z]|Win
 assert.ok(!/lundi|mardi|mercredi|jeudi|vendredi|novembre|décembre/i.test(texte),'pas de date ni de jour');ok();
 assert.ok(!/\b(Suppr|Échap|Entrée|Maj)\b/.test(texte+demos),'touches en anglais');ok();
 
-// Des gestes, pas un clic à la fois : 11 cases au plus (le bloc des relevés), 7 ailleurs.
+// Des gestes, pas un clic à la fois : 7 cases au plus (créer le rapport, le remettre), 6 ailleurs.
 const cases=h=>(String(h).match(/type="checkbox"/g)||[]).length;
-F.BLOCS.forEach((B,i)=>{assert.ok(cases(B.fais)<=(i===2?11:7),'cases du bloc '+(i+1)+' : '+cases(B.fais));});ok();
+F.BLOCS.forEach((B,i)=>{assert.ok(cases(B.fais)<=([0,10].includes(i)?7:6),'cases du bloc '+(i+1)+' : '+cases(B.fais));});ok();
+// Une hypothèse se lit d'un seul tenant : la question et sa zone de réponse juste sous les cases.
+F.BLOCS.forEach((B,i)=>{if(B.q.type==='enquete'){assert.ok(B.q.colle&&B.q.etiquette,'colle, bloc '+(i+1));assert.ok(!/« Mon hypothèse », sous les cases|Enregistre avant de tester/.test(B.fais));}});ok();
+assert.match(F.BLOCS[1].q.q,/À ton avis/);ok();
 
 // Chaque animation pointe une case qui existe, et une liste d'images du cours.
 const listes=new Set([...demos.matchAll(/^ {4}(\w+): /gm)].map(m=>m[1]));
@@ -75,10 +79,10 @@ Object.values(F.BLOCS).forEach((B,i)=>{if(B.q.type==='enquete'){const t=B.q.cham
 // Les déclarations nomment ce qu'il faut vérifier, point par point (tous les manques d'un coup).
 F.BLOCS.forEach((B,i)=>{const q=B.q.type==='mixte'?B.q.validation:B.q;if(q.type==='rapport')assert.ok(q.liste&&q.liste.length>=2,'liste du bloc '+(i+1));});ok();
 
-// Conducteur : guidage dégressif. La mission 1 ferme après le bloc 4 ; ensuite, tout est ouvert jusqu'à la remise.
+// Conducteur : guidage dégressif. La mission 1 ferme après le bloc 5 ; ensuite, tout est ouvert jusqu'à la remise.
 const seq=JSON.parse(fs.readFileSync(__dirname+'/../pas-a-pas/sequences.json'))['labo-07'];
 const ateliers=seq.moments.filter(m=>m.type==='atelier');
-assert.deepEqual(ateliers[0].blocs,[1,4]);
-ateliers.slice(1).forEach(m=>assert.equal(m.blocs[1],10,m.titre));ok();
+assert.deepEqual(ateliers[0].blocs,[1,5]);
+ateliers.slice(1).forEach(m=>assert.equal(m.blocs[1],11,m.titre));ok();
 
 console.log('Labo 07 : '+n+' contrôles réussis.');
