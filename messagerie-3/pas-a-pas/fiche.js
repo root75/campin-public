@@ -6,7 +6,7 @@
 const COURS = 'messagerie-3';
 const VERSION_PARCOURS = 'v1';
 const PRESENTATION = 'missions';
-const PREUVES = 'https://root75.github.io/campin-public/messagerie-3/pas-a-pas/preuves.json?v=nom-20261112';
+const PREUVES = 'https://root75.github.io/campin-public/messagerie-3/pas-a-pas/preuves.json?v=sim-20261112';
 const HORS_SUIVI = 'Entraînement libre : rien n’est transmis au professeur. En classe, ouvre Mes cours avec ton compte scolaire.';
 
 /* Un message d'exemple « De : … · Objet : … · Texte : … » affiché comme dans une boîte. */
@@ -16,11 +16,61 @@ function carteMail(t){
   return '<span class="mini-mail"><span><b>De :</b> '+echappe(m['De'])+'</span><span><b>Objet :</b> '+echappe(m['Objet'])+'</span>'+(m['Texte']?'<span class="texte">'+echappe(m['Texte'])+'</span>':'')+'</span>';
 }
 
-const REEL = '<p class="reel"><span>Ici, <b>tout est réel</b> : tu travailles dans Outlook. Garde deux onglets : cette fiche et Courrier.</span> <a class="btn vide" href="https://outlook.cloud.microsoft/mail/" target="_blank" rel="noopener">Ouvrir Courrier ↗</a></p>';
 /* Le clic droit, mis en évidence partout : beaucoup d'élèves confondent les deux boutons de la souris. */
 const DROIT = '<span class="droit">🖱️ clic <b>DROIT</b></span>';
 const AIDE_DROIT = 'Le clic DROIT : le bouton de DROITE de la souris, sous ton majeur. Le menu s’ouvre à côté du pointeur. Sur un pavé tactile : appuie avec deux doigts.';
+const REEL = '<p class="reel"><span>Ici, <b>tout est réel</b> : tu travailles dans Outlook. Garde deux onglets : cette fiche et Courrier.</span> <a class="btn vide" href="https://outlook.cloud.microsoft/mail/" target="_blank" rel="noopener">Ouvrir Courrier ↗</a></p><details class="cote"><summary>🪟 Mettre le cours et Courrier côte à côte</summary><ol><li>Clique sur l’onglet de <b>ce cours</b>, en haut de Chrome.</li><li>'+DROIT+' sur l’onglet de <b>Courrier</b> ▸ <b>Ajouter l’onglet à une nouvelle vue fractionnée</b>.</li><li>Le cours et Courrier s’affichent côte à côte, dans la même fenêtre. Clique dans Courrier pour y travailler.</li></ol></details>';
 const OUVRIR = 'Ouvre Courrier : le bouton ci-dessus, ou barre de favoris ▸ <b>Favoris du domaine arcampin.com</b> ▸ <b>Microsoft 365</b> ▸ <b>Courrier</b>.';
+
+/* Le simulateur de l'étape 3 : une Boîte de réception où l'élève fait LUI-MÊME le clic DROIT ▸ Signaler du courrier
+   indésirable sur le bon message. Rien ne part au serveur ; la preuve de l'étape porte sur ce qu'il a fait (Vincent, 12/11/2026 :
+   « il doit être actif, pas juste cocher »). Menu relevé à l'écran le 12/11. */
+const SIM_MSGS = [
+  {de:'Secrétariat Campin', adr:'secretariat@arcampin.be', objet:'Horaire de la semaine'},
+  {de:'Ton professeur', adr:'prof@arcampin.be', objet:'Ta fiche à compléter'},
+  {de:'Méga Promo', adr:'gagnant@mega-promo.biz', objet:'Une console gratuite pour toi !!!', spam:true},
+  {de:'Bibliothèque de l’école', adr:'bibliotheque@arcampin.be', objet:'Le livre que tu as réservé est arrivé'}
+];
+const SIM_MENU = ['Répondre','Répondre à tous','Transférer','—','Supprimer','Archiver','—','Marquer comme non lu','Épingler','—','Signaler du courrier indésirable','Signaler un hameçonnage','Bloquer'];
+const SIMULATEUR = '<div class="sim" data-sim aria-label="Simulateur : une Boîte de réception"><div class="sim-dossiers"><button type="button" class="sim-dos on" data-dos="reception">Boîte de réception <b data-n="reception"></b></button><button type="button" class="sim-dos" data-dos="indesirable">Courrier indésirable <b data-n="indesirable"></b></button></div><div class="sim-liste" data-liste></div><div class="sim-menu" data-menu hidden></div><p class="sim-retour" data-retour role="status">Trouve le message douteux, puis '+DROIT+' dessus.</p></div>';
+(function(){
+  if(typeof document==='undefined') return;   // tests sous Node
+  const etat = { indesirable:[], dossier:'reception', vise:null };
+  const esc = t => String(t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const dans = d => SIM_MSGS.map((m,k)=>k).filter(k => d==='indesirable' ? etat.indesirable.includes(k) : !etat.indesirable.includes(k));
+  function peint(sim){
+    sim.querySelector('[data-n="reception"]').textContent = dans('reception').length;
+    sim.querySelector('[data-n="indesirable"]').textContent = dans('indesirable').length;
+    sim.querySelectorAll('.sim-dos').forEach(b => b.classList.toggle('on', b.dataset.dos===etat.dossier));
+    const l = dans(etat.dossier);
+    sim.querySelector('[data-liste]').innerHTML = l.length ? l.map(k => '<div class="sim-msg" tabindex="0" data-k="'+k+'"><b>'+esc(SIM_MSGS[k].de)+'</b> <span class="sim-adr">&lt;'+esc(SIM_MSGS[k].adr)+'&gt;</span><span>'+esc(SIM_MSGS[k].objet)+'</span></div>').join('') : '<p class="sim-vide">Ce dossier est vide.</p>';
+  }
+  const dit = (sim, t, ok) => { const r = sim.querySelector('[data-retour]'); r.innerHTML = t; r.className = 'sim-retour'+(ok===true?' ok':ok===false?' ko':''); };
+  const ferme = sim => { sim.querySelector('[data-menu]').hidden = true; };
+  new MutationObserver(() => document.querySelectorAll('[data-sim]:not([data-pret])').forEach(sim => { sim.dataset.pret = 1; peint(sim); })).observe(document.body, {childList:true, subtree:true});
+  document.addEventListener('contextmenu', e => {
+    const m = e.target.closest && e.target.closest('.sim-msg'); if(!m) return;
+    e.preventDefault(); const sim = m.closest('[data-sim]'), menu = sim.querySelector('[data-menu]');
+    etat.vise = Number(m.dataset.k);
+    menu.innerHTML = SIM_MENU.map(t => t==='—' ? '<hr>' : '<button type="button" data-item="'+t+'">'+t+'</button>').join('');
+    const r = sim.getBoundingClientRect();
+    menu.hidden = false;   // affiché d'abord, pour connaître sa hauteur : le menu reste entier dans le simulateur
+    menu.style.left = Math.max(0, Math.min(e.clientX - r.left, r.width - menu.offsetWidth - 4)) + 'px';
+    menu.style.top = Math.max(0, Math.min(e.clientY - r.top, r.height - menu.offsetHeight - 4)) + 'px';
+  });
+  document.addEventListener('click', e => {
+    const sim = e.target.closest && e.target.closest('[data-sim]'); if(!sim) return;
+    const dos = e.target.closest('.sim-dos'), item = e.target.closest('[data-item]'), msg = e.target.closest('.sim-msg');
+    if(dos){ ferme(sim); etat.dossier = dos.dataset.dos; peint(sim); return; }
+    if(item){ ferme(sim); const k = etat.vise, m = SIM_MSGS[k], t = item.dataset.item;
+      if(t !== 'Signaler du courrier indésirable'){ dit(sim, 'Pas « '+esc(t)+' » : cherche <b>Signaler du courrier indésirable</b>, en bas du menu.', false); return; }
+      if(!m.spam){ dit(sim, 'Attention : ce message vient de <b>@arcampin.be</b>, l’école. Ce n’est pas un spam. Cherche l’autre.', false); return; }
+      etat.indesirable.push(k); peint(sim);
+      dit(sim, '✅ Signalé ! Le message est parti dans <b>Courrier indésirable</b>. Clique sur ce dossier pour le voir.', true); return; }
+    if(msg){ ferme(sim); dit(sim, 'C’est le clic <b>DROIT</b> qu’il faut : le bouton de <b>droite</b> de la souris. Sur un pavé tactile : deux doigts.', false); return; }
+    ferme(sim);
+  });
+})();
 
 const BLOCS = [
  {partie:'A — Le bon outil', titre:'Courriel ou messagerie instantanée ?', min:5,
@@ -41,9 +91,10 @@ const BLOCS = [
  {partie:'B — Ma boîte de réception', titre:'Le spam et le courrier indésirable', min:5,
   veux:'Savoir où Outlook range les messages douteux, et ne pas me faire avoir.',
   avant:'<aside class="repere"><h3>📮 Le spam</h3><p>Un <b>spam</b>, c’est un message envoyé à des milliers de personnes : publicité, faux cadeau, arnaque. Outlook le range souvent tout seul dans le dossier <b>Courrier indésirable</b>.</p><p>Un spam est arrivé dans ta Boîte de réception ? '+DROIT+' dessus ▸ <b>Signaler du courrier indésirable</b>.</p></aside>',
-  gestes:['Dans Courrier, à gauche, clique sur <b>Courrier indésirable</b>.','Regarde la liste. Vide ? Tant mieux. Des messages ? N’en ouvre aucun.','Ne clique sur aucun lien, n’ouvre aucune pièce jointe de ce dossier.','Ouvre l’animation ci-dessous : où est « Signaler du courrier indésirable » dans le menu du '+DROIT+' ? Ne signale pas un vrai message.','Retourne dans <b>Boîte de réception</b>.'],
+  gestes:['Dans Courrier, à gauche, clique sur <b>Courrier indésirable</b>. Regarde la liste, n’ouvre rien.','Retourne dans <b>Boîte de réception</b>.','Dans le simulateur ci-dessous, trouve le message douteux : lis l’adresse de chaque expéditeur.',DROIT+' sur ce message ▸ <b>Signaler du courrier indésirable</b>.','Clique sur le dossier <b>Courrier indésirable</b> du simulateur : ton message y est.'],
+  extra:SIMULATEUR,
   demos:{'4':['signaler']},
-  vois:'Je sais où est le dossier Courrier indésirable, et je n’y ai rien ouvert.',
+  vois:'Dans le simulateur, le message douteux est dans Courrier indésirable.',
   coince:[AIDE_DROIT,'Les mêmes boutons sont dans le ruban : onglet <b>Accueil</b> ▸ groupe Signaler ▸ <b>Signaler du courrier indésirable</b> ou <b>Signaler un hameçonnage</b>.','Je ne vois pas Courrier indésirable : dans la colonne des dossiers, à gauche, sous Éléments supprimés. Si la colonne est repliée, clique sur les trois traits ☰ en haut à gauche.','Un message de mon professeur est dans Courrier indésirable : ne fais rien, montre-le-lui à la fin du cours.'],
   q:{serveur:true}},
  {partie:'B — Ma boîte de réception', titre:'Le message qui veut mon mot de passe', min:5,

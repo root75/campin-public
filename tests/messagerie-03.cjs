@@ -54,15 +54,16 @@ proofs.blocs.forEach((l,i)=>{
     }else assert.ok(v.type==='saisie'&&v.faux&&v.aide,'faux/aide '+(i+1)+'.'+(k+1));
   });
 });
-assert.deepEqual(proofs.blocs.map(l=>l[0].type),['trous','saisie','trous','qcm','trous','saisie','saisie','trous','qcm','trous']);
+assert.deepEqual(proofs.blocs.map(l=>l[0].type),['trous','saisie','saisie','qcm','trous','saisie','saisie','trous','qcm','trous']);
 
 // Chaque saisie accepte ce qu'un élève écrit vraiment, et refuse les réponses des deux autres variantes.
 const BONS={
+  3:[['Une console gratuite pour toi !!!','une console gratuite pour toi'],['mega-promo.biz','@mega-promo.biz','Mega-promo.biz'],['3','trois']],
   2:[['Marquer','marquer'],['bleu','bleue','en bleu','Bleu'],['Boîte de réception','boite de reception','la boîte de réception','dans la Boîte de réception']],
   6:[['À','A','la ligne À','dans la ligne À'],['2','deux'],['Essai de copie cachée','essai de copie cachee','Essai de copie cachée.']],
   7:[['Cci','CCI','la ligne Cci','dans Cci','sur la ligne Cci'],['ana.dubois@arcampin.be','Ana.Dubois@arcampin.be'],['non','Non','non, il ne la voit pas']]
 };
-const MAUVAIS={2:[['Supprimer','Marquer comme lu'],['gras','rouge','vert'],['Courrier indésirable','Éléments envoyés']],6:[['Cc','Cci','Objet'],['3','1','trois'],['Copie cachée','Essai']],7:[['Cc','À'],['ana.dubois@arcampin.com','ana.dubois@gmail.com','ana dubois@arcampin.be'],['oui','oui il la voit']]};
+const MAUVAIS={3:[['Horaire de la semaine','Ta fiche à compléter'],['arcampin.be','prof@arcampin.be'],['4','2']],2:[['Supprimer','Marquer comme lu'],['gras','rouge','vert'],['Courrier indésirable','Éléments envoyés']],6:[['Cc','Cci','Objet'],['3','1','trois'],['Copie cachée','Essai']],7:[['Cc','À'],['ana.dubois@arcampin.com','ana.dubois@gmail.com','ana dubois@arcampin.be'],['oui','oui il la voit']]};
 for(const [n,listes] of Object.entries(BONS)){
   const l=proofs.blocs[n-1];
   listes.forEach((bons,k)=>{

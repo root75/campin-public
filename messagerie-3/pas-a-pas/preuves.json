@@ -1,5 +1,5 @@
 {
- "_lisezmoi": "Messagerie 03 (version 2026-11-12, libellés du clic droit relevés à l’écran le 12/11). Une liste par étape, variante 1 d’abord. Trois variantes par étape, tirées par élève côté serveur (règle anti-recopie), chacune avec sa bonne réponse. Étapes 1, 3, 5, 8, 10 : texte à trous (mots = le bon mot de chaque trou dans l’ordre, pieges = les intrus) ; phrase libre non jugée aux étapes 1, 5 et 10, la même pour les trois variantes. Étapes 2, 6 et 7 : saisie de ce que l’élève lit sur SON écran (regle sur la réponse sans accents, sans majuscules et sans points). Étapes 4 et 9 : QCM, c[0] la bonne, p[k] explique le piège k.",
+ "_lisezmoi": "Messagerie 03 (version 2026-11-12, libellés du clic droit relevés à l’écran le 12/11). Une liste par étape, variante 1 d’abord. Trois variantes par étape, tirées par élève côté serveur (règle anti-recopie), chacune avec sa bonne réponse. Étapes 1, 5, 8, 10 : texte à trous (mots = le bon mot de chaque trou dans l’ordre, pieges = les intrus) ; phrase libre non jugée aux étapes 1, 5 et 10, la même pour les trois variantes. Étapes 2, 3, 6 et 7 : saisie (l’étape 3 porte sur le simulateur de la page) de ce que l’élève lit sur SON écran (regle sur la réponse sans accents, sans majuscules et sans points). Étapes 4 et 9 : QCM, c[0] la bonne, p[k] explique le piège k.",
  "blocs": [
   [
    {
@@ -85,52 +85,33 @@
   ],
   [
    {
-    "type": "trous",
-    "q": "Complète avec les mots de la banque.",
-    "texte": "Un ___ est un message envoyé à des milliers de personnes : publicité, faux cadeau. Outlook le range dans le dossier Courrier ___.",
-    "mots": [
-     "spam",
-     "indésirable"
-    ],
-    "pieges": [
-     "brouillon",
-     "envoyé"
-    ],
-    "juste": "Un spam va dans Courrier indésirable : je ne l’ouvre pas.",
-    "faux": "",
-    "aide": "Relis l’encadré « Le spam »."
+    "type": "saisie",
+    "q": "Dans le simulateur, quel message as-tu signalé ? Recopie son objet.",
+    "regle": {
+     "contient": [
+      "console gratuite"
+     ]
+    },
+    "faux": "Recopie l’objet du message que tu as signalé : il est maintenant dans le dossier Courrier indésirable du simulateur.",
+    "aide": "Clique sur Courrier indésirable, dans le simulateur."
    },
    {
-    "type": "trous",
-    "q": "Complète avec les mots de la banque.",
-    "texte": "Un message douteux dans ma Boîte de réception : je ne clique sur aucun ___. Clic droit ▸ ___ du courrier indésirable.",
-    "mots": [
-     "lien",
-     "Signaler"
-    ],
-    "pieges": [
-     "dossier",
-     "Transférer"
-    ],
-    "juste": "Je ne clique sur rien, je signale.",
-    "faux": "",
-    "aide": "Relis l’encadré « Le spam », dernière phrase."
+    "type": "saisie",
+    "q": "Le message que tu as signalé venait de quelle adresse ? Recopie ce qui suit le @.",
+    "regle": {
+     "motif": "^@?mega-?promo ?biz$"
+    },
+    "faux": "Regarde l’adresse du message signalé, dans le dossier Courrier indésirable du simulateur : recopie la fin, après le @.",
+    "aide": "Clique sur Courrier indésirable, dans le simulateur."
    },
    {
-    "type": "trous",
-    "q": "Complète avec les mots de la banque.",
-    "texte": "Un spam ne vient pas d’une personne que je ___. Il veut souvent me ___ quelque chose.",
-    "mots": [
-     "connais",
-     "vendre"
-    ],
-    "pieges": [
-     "aime",
-     "prêter"
-    ],
-    "juste": "Un inconnu qui veut vendre : un spam.",
-    "faux": "",
-    "aide": "Relis l’encadré : publicité, faux cadeau, arnaque."
+    "type": "saisie",
+    "q": "Après ton signalement, combien de messages reste-t-il dans la Boîte de réception du simulateur ? Écris le nombre en chiffres.",
+    "regle": {
+     "motif": "^3$|^trois$"
+    },
+    "faux": "Regarde le nombre à côté de « Boîte de réception », dans le simulateur. As-tu bien signalé le message douteux ?",
+    "aide": "Le nombre est à côté de « Boîte de réception », dans le simulateur."
    }
   ],
   [
