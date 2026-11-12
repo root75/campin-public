@@ -1,5 +1,6 @@
 {
   "messagerie-1": {
+    "rappel": "https://root75.github.io/campin-public/messagerie/rappel/",
     "titre": "Messagerie 01 — Comprendre, écrire et répondre",
     "moments": [
       {
@@ -178,6 +179,7 @@
     "objectif": "Comprendre une adresse et la forme du mail avant de s’entraîner. Durées du collectif indicatives ; prévoir ensuite 25–35 min de simulation et 20–30 min d’échange Outlook, répartissables sur plusieurs séances."
   },
   "messagerie-2": {
+    "rappel": "https://root75.github.io/campin-public/messagerie-2/rappel/",
     "titre": "Messagerie 02 — Ouvrir sans risque, répondre, transférer",
     "objectif": "Poser la règle de la pièce jointe (qui l’envoie, quel fichier) avant le travail dans Outlook. Collectif court, environ 10 min : Messagerie 01 a montré que le collectif déborde (44 min avant le travail autonome le 03/11). Répondre, Répondre à tous, Transférer et Joindre sont travaillés aux blocs 2 et 7.",
     "moments": [
