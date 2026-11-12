@@ -1,5 +1,6 @@
 /* Démos animées « Regarde comment faire » : une mini-maquette de Docs (ou de Drive,
-   Classroom) rejoue chaque geste de l'étape. Aucune donnée élève ; rien n'est enregistré.
+   Classroom) rejoue chaque geste de l'étape. La gaufre, la vue fractionnée et le devoir Classroom sont
+   communs à tous les cours (pas-a-pas/demos-communs.js). Aucune donnée élève ; rien n'est enregistré.
    Une image = un état de l'écran + l'élément que la souris va cliquer + une légende.
    Ici, seulement les maquettes et les images. Le lecteur est commun (pas-a-pas/demo-lecteur.js) ;
    quelle image va sous quelle case : champ « demos » de chaque étape, dans contenu.js. */
@@ -12,6 +13,8 @@ const Demo = (() => {
   const NOM = '20261104 Le rat de ville – Prénom Nom';
   const L = (t, c = '') => ({ t, c });
   const doc = (lignes, o = {}) => Object.assign({ ecran: 'docs', nom: NOM, lignes }, o);
+  // La page du devoir dans Classroom : vue commune à tous les cours (pas-a-pas/demos-communs.js).
+  const devoir = DemosCommuns.devoir({ titre: '20261104 Le rat de ville', meta: ['M. Louviaux · Date limite : vendredi'], instructions: 1, fichier: NOM, autre: 'Mon portrait chinois' });
 
   // Le document de départ de la période 2 : titre, une strophe, l'auteur.
   const base = (t = '', s = '', a = '') => [L(TITRE, t), L(''), ...FABLE_MAJ.map(v => L(v, s)), L(''), L('Jean de La Fontaine', a)];
@@ -19,8 +22,8 @@ const Demo = (() => {
   /* Les animations, par clé : une par étape (etape + id de l’étape dans contenu.js), puis celles hors étape. */
   const DEMOS = {
     etape1: { titre: 'Je crée et je nomme', images: [
-      { ecran: 'gaufre', cible: 'gaufre', legende: 'Je clique sur la gaufre, en haut à droite.' },
-      { ecran: 'gaufre', menu: 1, cible: 'app-docs', legende: 'Je choisis Docs.' },
+      { vue: 'g-gaufre', cible: 'gaufre', legende: 'Je clique sur la gaufre, en haut à droite.' },
+      { vue: 'g-gaufre', menu: 1, cible: 'app-docs', legende: 'Je choisis Docs.' },
       { ecran: 'accueil', cible: 'vierge', legende: 'Je clique sur « Document vierge ».' },
       doc([L('')], { nom: 'Document sans titre', cible: 'nom', legende: 'Je clique sur « Document sans titre ».' }),
       doc([L('')], { nom: NOM, cible: 'nom', ok: 1, legende: 'Je tape la date à l’envers, le titre, mon prénom et mon nom.' })
@@ -64,21 +67,21 @@ const Demo = (() => {
     ] },
     etape9: { titre: 'Je m’évalue et je remets', images: [
       doc(base('centre gras capitales', 'centre garamond', 'droite italique souligne'), { cible: 'orthographe', legende: 'Vérifier l’orthographe (Ctrl + Alt + X).' }),
-      { ecran: 'classroom', cible: 'instructions', legende: 'Classroom ▸ ma classe ▸ Travaux et devoirs ▸ le devoir ▸ Afficher les instructions. Je relis ma grille.' },
-      { ecran: 'classroom', cible: 'ajouter', legende: 'À droite, dans « Vos devoirs » : + Ajouter ou créer.' },
-      { ecran: 'classroom', menu: 1, cible: 'gdrive', legende: 'Je choisis Google Drive.' },
-      { ecran: 'classroom', picker: 1, cible: 'fichier', legende: 'Je clique sur mon document : ' + NOM + '.' },
-      { ecran: 'classroom', picker: 2, cible: 'inserer', legende: 'Il est sélectionné : Ajouter.' },
-      { ecran: 'classroom', joint: 1, cible: 'remettre', legende: 'Mon document apparaît sous « Vos devoirs ». Joindre ne suffit pas : Rendre le devoir.' },
-      { ecran: 'classroom', joint: 1, confirme: 1, cible: 'confirmer', legende: '« Rendre le devoir ? » : je confirme, Rendre le devoir une deuxième fois.' },
-      { ecran: 'classroom', joint: 1, remis: 1, cible: 'statut', ok: 1, legende: '« Vos devoirs » affiche Remis : c’est rendu. Bravo !' }
+      devoir({ cible: 'instructions', legende: 'Classroom ▸ ma classe ▸ Travaux et devoirs ▸ le devoir ▸ Afficher les instructions. Je relis ma grille.' }),
+      devoir({ cible: 'ajouter', legende: 'À droite, dans « Vos devoirs » : + Ajouter ou créer.' }),
+      devoir({ menu: 1, cible: 'gdrive', legende: 'Je choisis Google Drive.' }),
+      devoir({ picker: 1, cible: 'fichier', legende: 'Je clique sur mon document : ' + NOM + '.' }),
+      devoir({ picker: 2, cible: 'inserer', legende: 'Il est sélectionné : je clique sur le bouton bleu, en bas à droite.' }),
+      devoir({ joint: 1, cible: 'rendre', legende: 'Mon document apparaît sous « Vos devoirs ». Joindre ne suffit pas : Rendre le devoir.' }),
+      devoir({ joint: 1, confirme: 1, cible: 'confirmer', legende: '« Rendre le devoir ? » : je confirme, Rendre le devoir une deuxième fois.' }),
+      devoir({ joint: 1, remis: 1, cible: 'statut', ok: 1, legende: '« Vos devoirs » affiche Remis : c’est rendu. Bravo !' })
     ] },
     fermer: { titre: 'À la sonnerie : je ferme sans remettre', images: [ // À la sonnerie : je ferme sans remettre (encadré sous chaque étape)
       doc(base(), { cible: 'enregistre', legende: 'Je regarde : « Enregistré ». Docs garde tout seul.' }),
       doc(base(), { cible: 'onglet', ok: 1, legende: 'Je ferme l’onglet. Je ne remets PAS encore.' })
     ] },
     retrouver: { titre: 'Je reprends : je retrouve mon document dans Drive', images: [ // Je reprends : je retrouve mon document dans Drive (encadré « Je reprends »)
-      { ecran: 'gaufre', menu: 1, cible: 'app-drive', legende: 'Gaufre ▸ Drive.' },
+      { vue: 'g-gaufre', menu: 1, cible: 'app-drive', legende: 'Gaufre ▸ Drive.' },
       { ecran: 'drive', cible: 'recents', legende: 'Je clique sur « Récents », à gauche.' },
       { ecran: 'drive', cible: 'fichier', ok: 1, legende: 'Double-clic sur mon document : il s’ouvre.' }
     ] },
@@ -121,49 +124,11 @@ const Demo = (() => {
   }
   function ecranAutre(f) {
     const e = el('div', 'md md-' + f.ecran);
-    if (f.ecran === 'gaufre') {
-      e.append(el('div', 'md-google', 'Google'), c(el('span', 'md-gaufre', '⋮⋮⋮'), 'gaufre'));
-      if (f.menu) { const g = el('div', 'md-apps'); [['Drive', 'app-drive'], ['Docs', 'app-docs'], ['Classroom', 'app-classroom'], ['Gmail', 'app-gmail']].forEach(([t, id]) => g.append(c(el('span', 'md-app md-app-' + t.toLowerCase(), t), id))); e.append(g); }
-    }
     if (f.ecran === 'accueil') e.append(el('div', 'md-titre', 'Docs — Créer un document'), c(el('div', 'md-vierge', '+ Document vierge'), 'vierge'));
     if (f.ecran === 'drive') {
       const g = el('div', 'md-col'); ['Mon Drive', 'Récents', 'Corbeille'].forEach(t => g.append(c(el('span', null, t), t === 'Récents' ? 'recents' : '')));
       const d = el('div', 'md-liste'); d.append(c(el('div', 'md-fichier', '📄 ' + NOM), 'fichier'), el('div', 'md-fichier autre', '📄 Mon portrait chinois'));
       e.append(g, d);
-    }
-    if (f.ecran === 'classroom') {
-      // Page d'un devoir : le sujet à gauche, la carte « Vos devoirs » à droite (comme dans Classroom).
-      const sujet = el('div', 'md-cr-sujet');
-      sujet.append(el('div', 'md-cr-icone', '📋'), el('div', 'md-cr-titre', '20261104 Le rat de ville'),
-        el('div', 'md-cr-meta', 'M. Louviaux · 4 nov.'), el('div', 'md-cr-meta', 'Date limite : 6 nov.'),
-        c(el('span', 'md-cr-lien', 'Afficher les instructions'), 'instructions'));
-      const carte = el('div', 'md-cr-carte'), tete = el('div', 'md-cr-tete');
-      tete.append(el('b', null, 'Vos devoirs'), c(el('span', 'md-cr-statut' + (f.remis ? ' remis' : ''), f.remis ? 'Remis' : 'Attribué'), 'statut'));
-      carte.append(tete);
-      if (f.joint) carte.append(el('div', 'md-cr-piece', '📄 ' + NOM));
-      if (!f.joint) carte.append(c(el('span', 'md-cr-ajouter', '+ Ajouter ou créer'), 'ajouter'));
-      if (f.menu) {
-        const m = el('div', 'md-cr-menu');
-        [['🟢 Google Drive', 'gdrive'], ['🔗 Lien', ''], ['📎 Fichier', '']].forEach(([t, id]) => m.append(c(el('div', 'md-item' + (id ? ' hi' : ''), t), id)));
-        m.append(el('div', 'md-cr-sep', 'Créer'), el('div', 'md-item', 'Docs'));
-        carte.append(m);
-      }
-      carte.append(f.remis ? el('span', 'md-cr-btn', 'Annuler l’envoi') : c(el('span', 'md-cr-btn md-cr-plein', f.joint ? 'Rendre le devoir' : 'Marquer comme terminé'), 'remettre'));
-      e.append(sujet, carte);
-      if (f.picker) {
-        const p = el('div', 'md-cr-picker'), liste = el('div', 'md-cr-fichiers');
-        p.append(el('div', 'md-cr-ptitre', 'Insérer des fichiers à l’aide de Google Drive'), el('div', 'md-cr-onglets', 'Récents   Mon Drive'));
-        const mien = c(el('div', 'md-cr-f' + (f.picker === 2 ? ' choisi' : ''), '📄 ' + NOM), 'fichier');
-        liste.append(mien, el('div', 'md-cr-f autre', '📄 Mon portrait chinois'));
-        const pied = el('div', 'md-cr-ppied'); pied.append(el('span', 'md-cr-btn', 'Annuler'), c(el('span', 'md-cr-btn md-cr-plein' + (f.picker === 2 ? '' : ' eteint'), 'Ajouter'), 'inserer'));
-        p.append(liste, pied); e.append(p);
-      }
-      if (f.confirme) {
-        const dlg = el('div', 'md-cr-dialogue');
-        dlg.append(el('b', null, 'Rendre le devoir ?'), el('p', null, '1 pièce jointe sera envoyée pour « 20261104 Le rat de ville ».'), el('div', 'md-cr-piece', '📄 ' + NOM));
-        const pied = el('div', 'md-cr-ppied'); pied.append(el('span', 'md-cr-btn', 'Annuler'), c(el('span', 'md-cr-btn md-cr-plein', 'Rendre le devoir'), 'confirmer'));
-        dlg.append(pied); e.append(dlg);
-      }
     }
     return e;
   }

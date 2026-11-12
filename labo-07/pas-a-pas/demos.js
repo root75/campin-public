@@ -1,18 +1,22 @@
 /* Labo 07 — démos animées « Regarde comment faire » : seulement les maquettes et les images.
    Le lecteur (scène, curseur, ◀ ▶) est commun : pas-a-pas/demo-lecteur.js, chargé avant ce fichier.
    Une image = un état de l'écran maquetté + l'élément que la souris vise + une légende.
-   Maquettes Windows (Démarrer, Gestionnaire des tâches et ses Performances, GIMP, Banc d’essai, capture, Explorateur OneDrive,
-   Alt + Tab, moniteur), Docs, Chrome et Classroom. Valeurs et noms fictifs ; rien n'est enregistré.
+   Maquettes Windows (Gestionnaire des tâches et ses Performances, GIMP, Banc d’essai, capture, Explorateur OneDrive,
+   Alt + Tab, moniteur) et Docs ; le bureau, Démarrer, Chrome, la gaufre et le devoir Classroom sont communs
+   (pas-a-pas/demos-communs.js). Valeurs et noms fictifs ; rien n'est enregistré.
    Le défi final n'a pas d'animation : il reste une situation à résoudre seul. */
 const Demo = (() => {
   const NOM = 'LABO07_CoulissesPC_Prenom_Nom';
   const FICHIER = '2026-10-09_OneDrive.docx';
+  // Vues communes à tous les cours (pas-a-pas/demos-communs.js) : Chrome, gaufre, bureau Windows, devoir Classroom.
+  const devoir = DemosCommuns.devoir({ titre: 'Labo 07 — Dans les coulisses du PC', meta: ['M. Louviaux · 10 points'], fichier: NOM, autre: 'Le document qui obéit' });
+  const BUREAU = { vue: 'win-bureau', taches: [['📝', 'ico-notes']] };   // le Bloc-notes du cas d'essai, dans la barre des tâches
 
   /* Les animations, par clé. */
   const DEMOS = {
     rapport: { titre: 'Créer et nommer mon rapport', images: [
-      { ecran: 'gaufre', cible: 'gaufre', legende: 'Dans Chrome, compte de l’école : je clique sur la gaufre ⋮⋮⋮, en haut à droite.' },
-      { ecran: 'gaufre', menu: 1, cible: 'app-docs', legende: 'Je choisis Docs.' },
+      { vue: 'g-gaufre', cible: 'gaufre', legende: 'Dans Chrome, compte de l’école : je clique sur la gaufre ⋮⋮⋮, en haut à droite.' },
+      { vue: 'g-gaufre', menu: 1, cible: 'app-docs', legende: 'Je choisis Docs.' },
       { ecran: 'accueil', cible: 'vierge', legende: 'Je clique sur « + Document vierge ».' },
       { ecran: 'docs', nom: 'Document sans titre', lignes: [''], cible: 'nom', legende: 'Je clique sur « Document sans titre », en haut à gauche.' },
       { ecran: 'docs', lignes: [''], cible: 'nom', legende: 'Je tape LABO07_CoulissesPC_Prenom_Nom, sans accents, puis Enter.' },
@@ -24,8 +28,8 @@ const Demo = (() => {
       doc: '📄 ' + NOM, quoi: 'mon rapport', docLignes: ['1 — Observer ce qui tourne'], adresse: 'script.google.com/…',
       fin: 'Le cours à gauche, mon rapport à droite. Je clique dans le rapport pour écrire.' }),
     gestionnaire: { titre: 'Ouvrir le Gestionnaire et lire les totaux', images: [
-      { ecran: 'bureau', cible: 'demarrer', legende: 'Clic droit sur l’icône ⊞ Démarrer, en bas.' },
-      { ecran: 'bureau', clicdroit: 1, cible: 'item-gest', legende: 'Je choisis « Gestionnaire des tâches » (ou Ctrl + Shift + Esc).' },
+      { ...BUREAU, droit: 1, cible: 'demarrer', legende: 'Clic droit sur l’icône ⊞ Démarrer, en bas.' },
+      { ...BUREAU, clicdroit: 'Gestionnaire des tâches', cible: 'item-Gestionnaire des tâches', legende: 'Je choisis « Gestionnaire des tâches » (ou Ctrl + Shift + Esc).' },
       { ecran: 'gestion', reduit: 1, cible: 'plus', legende: 'Seulement si la fenêtre est petite, sans colonnes : « Plus de détails », en bas à gauche. Sinon, rien à faire.' },
       { ecran: 'gestion', cible: 'processus', legende: 'À gauche : Processus.' },
       { ecran: 'gestion', cible: 'tot-cpu', legende: 'Le total Processeur se lit en haut de sa colonne.' },
@@ -38,8 +42,8 @@ const Demo = (() => {
       { ecran: 'gestion', perf: 'disque', cible: 'perf-bas', ok: 1, legende: 'Disque 0 (C:) : la Capacité, sous le graphique. Je note les quatre informations dans « Mon PC ».' }
     ] },
     gimp: { titre: 'Ouvrir GIMP et créer une grande image', images: [
-      { ecran: 'bureau', menu: 'gimp', cible: 'app-gimp', legende: '⊞ Démarrer ▸ je tape GIMP ▸ je clique UNE fois sur l’application.' },
-      { ecran: 'bureau', chargement: 1, cible: 'chargement', legende: 'GIMP met 5 à 20 secondes à s’ouvrir. Je ne clique pas une deuxième fois. « Bienvenue dans GIMP » : je ferme par le ×.' },
+      { ...BUREAU, demarrer: 1, saisie: 'gimp', resultat: ['GIMP', 'app-gimp', '🦊'], cible: 'app-gimp', legende: '⊞ Démarrer ▸ je tape GIMP ▸ je clique UNE fois sur l’application.' },
+      { ...BUREAU, ecran: 'bureau', chargement: 1, cible: 'chargement', legende: 'GIMP met 5 à 20 secondes à s’ouvrir. Je ne clique pas une deuxième fois. « Bienvenue dans GIMP » : je ferme par le ×.' },
       { ecran: 'gimp', dialogue: 'nouvelle', cible: 'valider', legende: 'Fichier ▸ Nouvelle image (Ctrl + N) : Largeur 10000, Hauteur 10000, unité px ▸ Valider.' },
       { ecran: 'gimp', dialogue: 'taille', cible: 'ok', legende: '« Confirmer la taille de l’image » : environ 932 Mo, plus que la taille prévue par GIMP. Je clique sur Valider.' },
       { ecran: 'gimp', image: 1, cible: 'toile', ok: 1, legende: 'L’image grise s’affiche. Je la laisse ouverte : GIMP la garde en mémoire.' }
@@ -70,7 +74,7 @@ const Demo = (() => {
       { ecran: 'docs', lignes: ['1 — Observer ce qui tourne'], table: 1, image: 1, legendeImg: 1, cible: 'legende-img', ok: 1, legende: 'Sous l’image, une légende : ce qu’elle montre, et sa limite.' }
     ] },
     onedrive: { titre: 'Retrouver mon fichier OneDrive et lire son statut', images: [
-      { ecran: 'bureau', cible: 'explorateur', legende: 'Icône 📁 Explorateur dans la barre des tâches (ou Windows + E).' },
+      { ...BUREAU, cible: 'explorateur', legende: 'Icône 📁 Explorateur dans la barre des tâches (ou Windows + E).' },
       { ecran: 'explo', cible: 'od', legende: 'Volet gauche : le nuage OneDrive de l’école.' },
       { ecran: 'explo', dossier: 1, cible: 'dossier', legende: 'J’ouvre le dossier de mon fichier, par exemple Documents ▸ Informatique.' },
       { ecran: 'explo', dossier: 1, choisi: 1, cible: 'fichier', legende: 'Un SEUL clic sur le fichier : je le sélectionne sans l’ouvrir.' },
@@ -79,10 +83,10 @@ const Demo = (() => {
       { ecran: 'icones', cible: 'ico-nuage', ok: 1, legende: 'Nuage = en ligne seulement · coche verte bordée = disponible ici · disque vert plein = toujours conservé.' }
     ] },
     fenetres: { titre: 'Une fenêtre a disparu : la retrouver', images: [
-      { ecran: 'bureau', notes: 1, cible: 'reduire', legende: 'Cas d’essai : je clique sur — Réduire. La fenêtre disparaît, le logiciel tourne encore.' },
-      { ecran: 'bureau', cible: 'ico-notes', legende: 'Je la retrouve par son icône dans la barre des tâches…' },
+      { ...BUREAU, ecran: 'bureau', notes: 1, cible: 'reduire', legende: 'Cas d’essai : je clique sur — Réduire. La fenêtre disparaît, le logiciel tourne encore.' },
+      { ...BUREAU, cible: 'ico-notes', legende: 'Je la retrouve par son icône dans la barre des tâches…' },
       { ecran: 'alttab', fenetres: ['Bloc-notes', 'Explorateur', 'Mes cours'], hi: 0, cible: 'fen-0', legende: '… ou Alt + Tab : je garde Alt enfoncé, Tab jusqu’à la bonne fenêtre.' },
-      { ecran: 'bureau', notes: 1, cible: 'zone-notes', ok: 1, legende: 'Le texte arrive dans la fenêtre ACTIVE : je clique d’abord dans la zone de texte.' }
+      { ...BUREAU, ecran: 'bureau', notes: 1, cible: 'zone-notes', ok: 1, legende: 'Le texte arrive dans la fenêtre ACTIVE : je clique d’abord dans la zone de texte.' }
     ] },
     moniteur: { titre: 'Écran noir : le moniteur ou le PC ?', images: [
       { ecran: 'moniteur', eteint: 1, cible: 'ecran', legende: 'Écran noir. Hypothèse : seul le moniteur est éteint, le PC tourne encore.' },
@@ -91,12 +95,13 @@ const Demo = (() => {
     ] },
     remise: { titre: 'Joindre mon rapport et le remettre', images: [
       { ecran: 'docs', lignes: ['Dans les coulisses du PC', '1 — Observer ce qui tourne', '…'], cible: 'enregistre', legende: 'Dans Docs : « Enregistré ». Je relis ma grille en fin de rapport.' },
-      { ecran: 'classroom', cible: 'ajouter', legende: 'Classroom ▸ Informatique — 3F ▸ Travaux et devoirs ▸ Labo 07 ▸ + Ajouter ou créer.' },
-      { ecran: 'classroom', menu: 1, cible: 'gdrive', legende: 'Je choisis Google Drive.' },
-      { ecran: 'classroom', picker: 2, cible: 'inserer', legende: 'Je clique sur ' + NOM + ', puis Ajouter.' },
-      { ecran: 'classroom', joint: 1, cible: 'remettre', legende: 'Joindre ne suffit pas : Rendre le devoir.' },
-      { ecran: 'classroom', joint: 1, confirme: 1, cible: 'confirmer', legende: '« Rendre le devoir ? » : je confirme, Rendre le devoir une deuxième fois.' },
-      { ecran: 'classroom', joint: 1, remis: 1, cible: 'statut', ok: 1, legende: '« Remis » : c’est envoyé. Remise unique, à la toute fin de l’enquête.' }
+      devoir({ cible: 'ajouter', legende: 'Classroom ▸ ma classe ▸ Travaux et devoirs ▸ Labo 07 ▸ + Ajouter ou créer.' }),
+      devoir({ menu: 1, cible: 'gdrive', legende: 'Je choisis Google Drive.' }),
+      devoir({ picker: 1, cible: 'fichier', legende: 'Je clique sur ' + NOM + '…' }),
+      devoir({ picker: 2, cible: 'inserer', legende: '… puis sur le bouton bleu, en bas à droite.' }),
+      devoir({ joint: 1, cible: 'rendre', legende: 'Joindre ne suffit pas : Rendre le devoir.' }),
+      devoir({ joint: 1, confirme: 1, cible: 'confirmer', legende: '« Rendre le devoir ? » : je confirme, Rendre le devoir une deuxième fois.' }),
+      devoir({ joint: 1, remis: 1, cible: 'statut', ok: 1, legende: '« Remis » : c’est envoyé. Remise unique, à la toute fin de l’enquête.' })
     ] }
   };
   /* Quelle image va sous quelle case : champ `demos` de chaque bloc, dans fiche.js (moteur commun blocs.js). */
@@ -140,35 +145,26 @@ const Demo = (() => {
     return e;
   }
 
-  function barreTaches(f) {
-    const b = el('div', 'md-win-barre');
-    b.append(c(el('span', 'md-win-ico md-win-start', '⊞'), 'demarrer'), c(el('span', 'md-win-ico', '📁'), 'explorateur'), el('span', 'md-win-ico', '🌐'));
-    if (f.notes !== undefined || f.ecran === 'bureau') b.append(c(el('span', 'md-win-ico', '📝'), 'ico-notes'));
-    return b;
-  }
   function fenetre(titre, corps, id) {
     const w = el('div', 'md-fen'); const t = el('div', 'md-fen-titre');
     t.append(el('span', null, titre), c(el('span', 'md-fen-btn', '—'), 'reduire'), el('span', 'md-fen-btn', '☐'), el('span', 'md-fen-btn', '✕'));
     w.append(t, corps); if (id) c(w, id); return w;
   }
 
+  /* Le bureau commun, et ce qu'il porte ici : la fenêtre du Bloc-notes, GIMP qui démarre. */
+  function bureau(f) {
+    const e = DemosCommuns.bureau(f), fond = e.querySelector('.md-win-fond');
+    if (f.notes) fond.append(fenetre('Sans titre – Bloc-notes', c(el('div', 'md-notes-zone', 'Mot d’essai|'), 'zone-notes')));
+    if (f.chargement) fond.append(c(el('div', 'md-win-charge', '⏳ GIMP démarre…'), 'chargement'));
+    return e;
+  }
+
   function ecran(f) {
+    if (f.ecran === 'bureau') return bureau(f);
     const commun = DemosCommuns.ecran(f); if (commun) return commun;
     if (f.ecran === 'docs') return docs(f);
     const e = el('div', 'md md-' + f.ecran);
-    if (f.ecran === 'gaufre') {
-      e.append(el('div', 'md-google', 'Google'), c(el('span', 'md-gaufre-ico', '⋮⋮⋮'), 'gaufre'));
-      if (f.menu) { const g = el('div', 'md-apps'); [['Drive', 'app-drive'], ['Docs', 'app-docs'], ['Classroom', 'app-classroom'], ['Gmail', 'app-gmail']].forEach(([t, id]) => g.append(c(el('span', 'md-app md-app-' + t.toLowerCase(), t), id))); e.append(g); }
-    }
     if (f.ecran === 'accueil') e.append(el('div', 'md-titre', 'Docs — Créer un document'), c(el('div', 'md-vierge', '+ Document vierge'), 'vierge'));
-    if (f.ecran === 'bureau') {
-      const fond = el('div', 'md-win-fond');
-      if (f.notes) { const z = c(el('div', 'md-notes-zone', 'Mot d’essai|'), 'zone-notes'); fond.append(fenetre('Sans titre – Bloc-notes', z)); }
-      if (f.chargement) fond.append(c(el('div', 'md-win-charge', '⏳ GIMP démarre…'), 'chargement'));
-      e.append(fond, barreTaches(f));
-      if (f.clicdroit) { const m = el('div', 'md-win-menu'); ['Applications installées', 'Gestion de l’ordinateur', 'Gestionnaire des tâches', 'Paramètres', 'Explorateur de fichiers', 'Rechercher'].forEach(t => m.append(c(el('div', 'md-item' + (t === 'Gestionnaire des tâches' ? ' hi' : ''), t), t === 'Gestionnaire des tâches' ? 'item-gest' : ''))); e.append(m); }
-      if (f.menu === 'gimp') { const m = el('div', 'md-win-start-menu'); m.append(el('div', 'md-win-recherche', '🔍 gimp'), el('div', 'md-win-meilleur', 'Meilleur résultat'), c(el('div', 'md-item hi', '🦊 GIMP — Application'), 'app-gimp')); e.append(m); }
-    }
     if (f.ecran === 'gestion') {
       const corps = el('div', 'md-tm');
       const nav = el('div', 'md-tm-nav'); nav.append(c(el('span', f.perf ? null : 'on', '☰ Processus'), 'processus'), c(el('span', f.perf ? 'on' : null, '📈 Performances'), 'performances'), el('span', null, '🕘 Historique'));
@@ -244,31 +240,6 @@ const Demo = (() => {
       if (!f.eteint) ec.append(el('span', null, '📝 Bloc-notes · 📁 Explorateur · 🌐 Mes cours'));
       m.append(ec, c(el('span', 'md-moni-bouton' + (f.eteint ? '' : ' on'), '⏻'), 'bouton'));
       e.append(m, el('div', 'md-moni-pied'), el('div', 'md-moni-pc', 'PC (unité centrale) : on n’y touche pas'));
-    }
-    if (f.ecran === 'classroom') {
-      const sujet = el('div', 'md-cr-sujet');
-      sujet.append(el('div', 'md-cr-icone', '📋'), el('div', 'md-cr-titre', 'Labo 07 — Dans les coulisses du PC'), el('div', 'md-cr-meta', 'M. Louviaux · 10 points'));
-      const carte = el('div', 'md-cr-carte'), tete = el('div', 'md-cr-tete');
-      tete.append(el('b', null, 'Vos devoirs'), c(el('span', 'md-cr-statut' + (f.remis ? ' remis' : ''), f.remis ? 'Remis' : 'Attribué'), 'statut'));
-      carte.append(tete);
-      if (f.joint) carte.append(el('div', 'md-cr-piece', '📄 ' + NOM));
-      else carte.append(c(el('span', 'md-cr-ajouter', '+ Ajouter ou créer'), 'ajouter'));
-      if (f.menu) { const m = el('div', 'md-cr-menu'); [['🟢 Google Drive', 'gdrive'], ['🔗 Lien', ''], ['📎 Fichier', '']].forEach(([t, id]) => m.append(c(el('div', 'md-item' + (id ? ' hi' : ''), t), id))); carte.append(m); }
-      carte.append(f.remis ? el('span', 'md-cr-btn', 'Annuler l’envoi') : c(el('span', 'md-cr-btn md-cr-plein', f.joint ? 'Rendre le devoir' : 'Marquer comme terminé'), 'remettre'));
-      e.append(sujet, carte);
-      if (f.picker) {
-        const p = el('div', 'md-cr-picker'), liste = el('div', 'md-cr-fichiers');
-        p.append(el('div', 'md-cr-ptitre', 'Insérer des fichiers à l’aide de Google Drive'));
-        liste.append(c(el('div', 'md-cr-f choisi', '📄 ' + NOM), 'fichier'), el('div', 'md-cr-f autre', '📄 Le document qui obéit'));
-        const pied = el('div', 'md-cr-ppied'); pied.append(el('span', 'md-cr-btn', 'Annuler'), c(el('span', 'md-cr-btn md-cr-plein', 'Ajouter'), 'inserer'));
-        p.append(liste, pied); e.append(p);
-      }
-      if (f.confirme) {
-        const dlg = el('div', 'md-cr-dialogue');
-        dlg.append(el('b', null, 'Rendre le devoir ?'), el('div', 'md-cr-piece', '📄 ' + NOM));
-        const pied = el('div', 'md-cr-ppied'); pied.append(el('span', 'md-cr-btn', 'Annuler'), c(el('span', 'md-cr-btn md-cr-plein', 'Rendre le devoir'), 'confirmer'));
-        dlg.append(pied); e.append(dlg);
-      }
     }
     return e;
   }

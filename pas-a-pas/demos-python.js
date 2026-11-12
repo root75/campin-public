@@ -4,7 +4,8 @@
    Les démos sont déclarées dans le fiche.js de chaque cours : const DEMOS_FICHE = { numéro de bloc
    (0 = bloc 1) : { titre, replie?, images:[…] } }. Une image = un écran + l'élément que la souris
    va cliquer (cible) + une légende. Ici, seulement les écrans : le lecteur est commun
-   (pas-a-pas/demo-lecteur.js). Chargé après fiche.js et demo-lecteur.js, avant blocs.js :
+   (pas-a-pas/demo-lecteur.js), le bureau Windows et la fenêtre de Chrome aussi (pas-a-pas/demos-communs.js).
+   Chargé après fiche.js, demo-lecteur.js et demos-communs.js, avant blocs.js :
    blocs.js appelle Demo.pour(i) en mode « missions ».
    Règle : une démo ne montre jamais la réponse d'une question de preuve (code caché par des barres
    grises, nom d'erreur masqué, indice arrêté avant la solution).
@@ -15,20 +16,8 @@ const Demo = (() => {
   const { el, c } = DemoLecteur;
 
   /* ===== Les écrans ===== */
-  function ecranBureau(f) {
-    const e = el('div', 'md md-bureau');
-    const barre = el('div', 'md-taches');
-    barre.append(c(el('span', 'md-tache md-win', '⊞'), 'demarrer'), el('span', 'md-tache md-cherche', '🔍 Rechercher'),
-      c(el('span', 'md-tache md-jaune', '📁'), 'dossier-jaune'), el('span', 'md-tache', '🌐'));
-    e.append(barre);
-    if (f.demarrer) {
-      const m = el('div', 'md-demarrer');
-      m.append(el('div', 'md-dm-champ', '🔍 Thonny'), el('div', 'md-dm-titre', 'Meilleur résultat'));
-      const r = c(el('div', 'md-dm-app'), 'app-thonny'); r.append(el('span', 'md-dm-ico', 'Th'), el('span', null, 'Thonny'), el('small', null, 'Application'));
-      m.append(r); e.append(m);
-    }
-    return e;
-  }
+  // Le bureau Windows et la fenêtre de Chrome sont communs à tous les cours : pas-a-pas/demos-communs.js.
+  const ecranBureau = f => DemosCommuns.bureau(f.demarrer ? { ...f, saisie: 'Thonny', resultat: ['Thonny', 'app-thonny', 'Th'] } : f);
   function ecranExplorateur(f) {
     const e = el('div', 'md md-explo');
     e.append(el('div', 'md-ex-titre', '📁 ' + f.lieu));
@@ -111,27 +100,20 @@ const Demo = (() => {
   }
   /* Chrome : la fiche et la page « Python — je révise ». page : 'fiche', 'revise' ou 'quiz'. */
   function ecranChrome(f) {
-    const e = el('div', 'md md-chrome');
-    const ong = el('div', 'md-ch-onglets');
-    ong.append(c(el('span', 'md-ch-onglet' + (f.page === 'fiche' ? ' actif' : ''), '🐍 ' + (f.fiche || 'Python 02 — pas à pas')), 'ch-fiche'));
-    if (f.page !== 'fiche' || f.deux) ong.append(c(el('span', 'md-ch-onglet' + (f.page !== 'fiche' ? ' actif' : ''), '🐍 Python — je révise'), 'ch-revise'));
-    ong.append(el('span', 'md-ch-plus', '+'));
-    e.append(ong, el('div', 'md-ch-adresse', f.page === 'fiche' ? 'script.google.com/…' : 'root75.github.io/campin-public/python-je-revise/'));
-    const corps = el('div', 'md-ch-page');
+    const onglets = [['🐍 ' + (f.fiche || 'Python 02 — pas à pas'), 'ch-fiche', f.page === 'fiche']];
+    if (f.page !== 'fiche' || f.deux) onglets.push(['🐍 Python — je révise', 'ch-revise', f.page !== 'fiche']);
+    const contenu = [];
     if (f.page === 'fiche') {
-      corps.append(el('b', null, '1. Le quiz « Python — je révise »'), el('span', 'md-ch-barre'));
-      const p = el('p', 'md-ch-texte'); p.append('Ouvre ', c(el('span', 'md-ch-lien', 'Python — je révise'), 'ch-lien'), ' : un nouvel onglet s’ouvre.'); corps.append(p);
-      corps.append(el('span', 'md-ch-barre court'));
+      const p = el('p', 'md-ch-texte'); p.append('Ouvre ', c(el('span', 'md-ch-lien', 'Python — je révise'), 'ch-lien'), ' : un nouvel onglet s’ouvre.');
+      contenu.push(el('b', null, '1. Le quiz « Python — je révise »'), el('span', 'md-ch-barre'), p, el('span', 'md-ch-barre court'));
     } else {
-      corps.append(el('b', null, 'Premiers pas en Python — je révise'));
       const o = el('div', 'md-ch-sous');
       [['L’essentiel', ''], ['Quiz', 'ch-quiz'], ['Cartes', '']].forEach(([t, id]) => o.append(c(el('span', (f.page === 'quiz' && id) ? 'actif' : '', t), id || 'x')));
-      corps.append(o);
-      if (f.page === 'quiz') corps.append(el('p', 'md-ch-texte', '5 questions. Rien n’est coté.'), c(el('span', 'md-ch-bouton', 'Commencer le quiz'), 'ch-commencer'));
-      else corps.append(el('span', 'md-ch-barre'), el('span', 'md-ch-barre court'));
+      contenu.push(el('b', null, 'Premiers pas en Python — je révise'), o);
+      if (f.page === 'quiz') contenu.push(el('p', 'md-ch-texte', '5 questions. Rien n’est coté.'), c(el('span', 'md-ch-bouton', 'Commencer le quiz'), 'ch-commencer'));
+      else contenu.push(el('span', 'md-ch-barre'), el('span', 'md-ch-barre court'));
     }
-    e.append(corps);
-    return e;
+    return DemosCommuns.chrome({ onglets, adresse: f.page === 'fiche' ? 'script.google.com/…' : 'root75.github.io/campin-public/python-je-revise/', corps: 'page', contenu });
   }
   function ecranVerres(f) {
     const e = el('div', 'md md-verres');

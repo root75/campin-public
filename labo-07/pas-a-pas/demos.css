@@ -42,38 +42,12 @@
 .md-grille{display:grid;grid-template-columns:repeat(5,14px);gap:2px;padding:6px 14px}.md-grille i{width:14px;height:14px;border:1px solid #c9d3db}.md-grille i.on{background:#c7dcfb;border-color:#1a73e8}
 .md-grille b{grid-column:1/-1;font-size:12px;padding-top:4px}
 
-/* Google, Chrome, Classroom */
-.md-google{font-size:22px;font-weight:700;padding:30px;color:#4285f4}
-.md-gaufre-ico{position:absolute;right:16px;top:16px;font-size:18px;letter-spacing:-3px;padding:4px 8px}
-.md-apps{position:absolute;right:14px;top:52px;display:grid;grid-template-columns:repeat(2,80px);gap:8px;background:#fff;border:1px solid #c9d3db;border-radius:12px;padding:10px;box-shadow:0 4px 14px #0003}
-.md-app{text-align:center;padding:10px 4px;border-radius:8px;background:#f1f3f4;font-weight:700;font-size:12px}
-.md-app-docs{color:#1a73e8}.md-app-drive{color:#188038}.md-app-classroom{color:#137333}
+/* Docs : créer un document (Chrome, la gaufre et le devoir Classroom : pas-a-pas/demos-communs.js) */
 .md-titre{font-size:16px;font-weight:700;padding:16px}
 .md-vierge{margin:0 16px;width:120px;height:140px;border:1px solid #c9d3db;border-radius:6px;display:grid;place-items:center;text-align:center;font-weight:700;color:#1a73e8}
-.md-classroom{display:grid;grid-template-columns:1fr minmax(170px,210px);gap:14px;padding:14px;align-items:start;align-content:start;min-height:320px}
-.md-cr-sujet{display:grid;gap:4px;align-content:start}.md-cr-icone{width:34px;height:34px;border-radius:50%;background:#1e8e3e;display:grid;place-items:center;font-size:16px}
-.md-cr-titre{font-size:17px;color:#137333}.md-cr-meta{color:#5f6368;font-size:12px}
-.md-cr-carte{border:1px solid #dadce0;border-radius:8px;padding:12px;display:grid;gap:8px;box-shadow:0 1px 3px #0002;position:relative}
-.md-cr-tete{display:flex;justify-content:space-between;align-items:center;gap:6px}.md-cr-statut{color:#137333;font-size:12px}.md-cr-statut.remis{font-weight:700}
-.md-cr-ajouter,.md-cr-btn{border:1px solid #dadce0;border-radius:4px;padding:6px 10px;text-align:center;color:#1a73e8;font-weight:700}
-.md-cr-plein{background:#1a73e8;border-color:#1a73e8;color:#fff}
-.md-cr-piece{border:1px solid #dadce0;border-radius:4px;padding:6px;font-size:12px;overflow-wrap:anywhere}
-.md-cr-menu{position:absolute;left:12px;right:12px;top:72px;background:#fff;border:1px solid #c9d3db;border-radius:8px;box-shadow:0 4px 14px #0003;padding:4px 0;z-index:3}
-.md-cr-picker,.md-cr-dialogue{position:absolute;inset:18px 6%;background:#fff;border-radius:8px;box-shadow:0 6px 24px #0005;padding:12px;display:grid;gap:8px;align-content:start;z-index:4}
-.md-cr-dialogue{inset:40px 14%}
-.md-cr-ptitre{font-weight:700}.md-cr-fichiers{display:grid;gap:4px}.md-cr-f{padding:6px 8px;border-radius:6px;overflow-wrap:anywhere}.md-cr-f.choisi{background:#e8f0fe;outline:2px solid #1a73e8}.md-cr-f.autre{opacity:.6}
-.md-cr-ppied{display:flex;justify-content:flex-end;gap:8px}
 
-/* Windows : bureau, barre des tâches, fenêtres */
-.md-bureau,.md-gestion,.md-explo,.md-alttab,.md-icones,.md-moniteur{background:#dfe9f3}
-.md-win-fond{position:absolute;inset:0 0 38px;padding:14px;display:grid;place-items:start center}
-.md-win-barre{position:absolute;left:0;right:0;bottom:0;height:38px;background:#eef2f6ee;border-top:1px solid #c9d3db;display:flex;justify-content:center;align-items:center;gap:8px;border-radius:0 0 10px 10px}
-.md-win-ico{width:30px;height:30px;display:grid;place-items:center;border-radius:6px;font-size:17px}
-.md-win-start{color:#0067c0;font-size:20px;font-weight:700}
-.md-win-menu{position:absolute;left:calc(50% - 75px);bottom:42px;background:#fff;border:1px solid #c9d3db;border-radius:8px;box-shadow:0 4px 14px #0003;padding:4px 0;z-index:3;min-width:190px}
-.md-win-start-menu{position:absolute;left:12%;right:12%;bottom:42px;background:#f7f9fb;border:1px solid #c9d3db;border-radius:10px;box-shadow:0 6px 20px #0003;padding:10px;display:grid;gap:6px;z-index:3}
-.md-win-recherche{background:#fff;border:1px solid #9aa7b1;border-radius:16px;padding:4px 12px}
-.md-win-meilleur{font-size:11px;color:#5f6368}
+/* Windows : fenêtres (bureau, barre des tâches et Démarrer : pas-a-pas/demos-communs.js) */
+.md-gestion,.md-explo,.md-alttab,.md-icones,.md-moniteur{background:#dfe9f3}
 .md-win-charge{margin-top:60px;background:#fff;border-radius:8px;padding:14px 22px;box-shadow:0 4px 14px #0002;font-weight:700}
 .md-fen{background:#fff;border:1px solid #9aa7b1;border-radius:8px;box-shadow:0 6px 18px #0003;width:min(92%,520px);overflow:hidden;margin:10px auto}
 .md-fen-titre{display:flex;align-items:center;gap:2px;background:#f3f3f3;padding:4px 6px 4px 10px;font-size:12px}
@@ -129,5 +103,5 @@
 .md-moni-bouton{position:absolute;right:14px;bottom:3px;color:#9aa7b1;font-size:13px;padding:0 4px;border-radius:4px}.md-moni-bouton.on{color:#4ade80}
 .md-moni-pied{width:80px;height:26px;margin:0 auto;background:#3b4148;clip-path:polygon(30% 0,70% 0,100% 100%,0 100%)}
 .md-moni-pc{text-align:center;font-size:11px;color:#5f6368;margin-top:6px}
-@media(max-width:560px){.demo-scene{min-height:320px}.md-classroom{grid-template-columns:1fr;min-height:430px}.md-tm{grid-template-columns:1fr}.md-tm-nav{display:none}.md-tm-perf{grid-template-columns:1fr}.md-tm-res{display:none}.md-ex{grid-template-columns:1fr}.md-ex-gauche{display:none}.md-icones{grid-template-columns:1fr}}
+@media(max-width:560px){.demo-scene{min-height:320px}.md-tm{grid-template-columns:1fr}.md-tm-nav{display:none}.md-tm-perf{grid-template-columns:1fr}.md-tm-res{display:none}.md-ex{grid-template-columns:1fr}.md-ex-gauche{display:none}.md-icones{grid-template-columns:1fr}}
 @media (prefers-reduced-motion:reduce){.demo-curseur{transition:none}}
