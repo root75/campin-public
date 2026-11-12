@@ -353,7 +353,7 @@
     "q": "Tu vas aux toilettes pendant le cours. Que fais-tu de ton poste ?",
     "c": [
      "Je le verrouille : Ctrl + Alt + Delete ▸ Verrouiller.",
-     "Je me déconnecte : touche Windows ▸ mon prénom ▸ Se déconnecter.",
+     "Je me déconnecte : touche Windows ▸ mon nom ▸ Se déconnecter.",
      "Je laisse tout ouvert, je reviens vite.",
      "J’éteins l’ordinateur."
     ],
@@ -369,7 +369,7 @@
     "type": "qcm",
     "q": "La sonnerie : l’heure de cours est finie. Que fais-tu ?",
     "c": [
-     "Je me déconnecte : touche Windows ▸ mon prénom ▸ Se déconnecter.",
+     "Je me déconnecte : touche Windows ▸ mon nom ▸ Se déconnecter.",
      "Je verrouille : Ctrl + Alt + Delete ▸ Verrouiller.",
      "Je ferme seulement Chrome.",
      "Je laisse tout ouvert pour l’élève suivant."

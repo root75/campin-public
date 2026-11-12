@@ -6,7 +6,7 @@
 const COURS = 'messagerie-3';
 const VERSION_PARCOURS = 'v1';
 const PRESENTATION = 'missions';
-const PREUVES = 'https://root75.github.io/campin-public/messagerie-3/pas-a-pas/preuves.json?v=court-20261112';
+const PREUVES = 'https://root75.github.io/campin-public/messagerie-3/pas-a-pas/preuves.json?v=nom-20261112';
 const HORS_SUIVI = 'Entraînement libre : rien n’est transmis au professeur. En classe, ouvre Mes cours avec ton compte scolaire.';
 
 /* Un message d'exemple « De : … · Objet : … · Texte : … » affiché comme dans une boîte. */
@@ -82,14 +82,14 @@ const BLOCS = [
   q:{serveur:true}},
  {partie:'D — Je quitte mon poste', titre:'Verrouiller ou se déconnecter ?', min:5,
   veux:'Que personne n’utilise mon compte quand je quitte mon ordinateur.',
-  avant:'<table class="lettre"><tr><th>Quand ?</th><th>Je fais</th><th>Le chemin</th></tr><tr><td>Une <b>pause</b> : je me lève quelques minutes</td><td>🔒 Je <b>verrouille</b></td><td><b>Ctrl + Alt + Delete</b> ▸ <b>Verrouiller</b> (ou touche Windows ⊞ + L)</td></tr><tr><td>La <b>fin de l’heure</b> de cours</td><td>🚪 Je me <b>déconnecte</b></td><td>Touche Windows ⊞ ▸ clic sur <b>mon prénom</b> ▸ <b>Se déconnecter</b> (ou <b>Ctrl + Alt + Delete</b> ▸ <b>Se déconnecter</b>)</td></tr></table><p>Sinon, l’élève suivant arrive dans <b>ma</b> session : mes courriels, mon Drive, en mon nom.</p>',
-  gestes:['Appuie en même temps sur <b>Ctrl + Alt + Delete</b>.','Clique sur <b>Verrouiller</b> : l’écran de verrouillage s’affiche.','Appuie sur une touche, tape ton mot de passe, puis <b>Enter</b>.','Tu retrouves cette fiche, ouverte : rien n’est perdu.','Retiens : à la fin de l’heure, touche Windows ⊞ ▸ ton prénom ▸ Se déconnecter. Puis clique sur ✅ C’est vérifié.'],
+  avant:'<table class="lettre"><tr><th>Quand ?</th><th>Je fais</th><th>Le chemin</th></tr><tr><td>Une <b>pause</b> : je me lève quelques minutes</td><td>🔒 Je <b>verrouille</b></td><td><b>Ctrl + Alt + Delete</b> ▸ <b>Verrouiller</b> (ou touche Windows ⊞ + L)</td></tr><tr><td>La <b>fin de l’heure</b> de cours</td><td>🚪 Je me <b>déconnecte</b></td><td>Touche Windows ⊞ ▸ clic sur <b>mon nom</b>, en bas à gauche du menu ▸ <b>Se déconnecter</b> (ou <b>Ctrl + Alt + Delete</b> ▸ <b>Se déconnecter</b>)</td></tr></table><p>Sinon, l’élève suivant arrive dans <b>ma</b> session : mes courriels, mon Drive, en mon nom.</p>',
+  gestes:['Appuie en même temps sur <b>Ctrl + Alt + Delete</b>.','Clique sur <b>Verrouiller</b> : l’écran de verrouillage s’affiche.','Appuie sur une touche, tape ton mot de passe, puis <b>Enter</b>.','Tu retrouves cette fiche, ouverte : rien n’est perdu.','Retiens : à la fin de l’heure, touche Windows ⊞ ▸ ton nom (en bas à gauche du menu) ▸ Se déconnecter. Puis clique sur ✅ C’est vérifié.'],
   vois:'Je sais verrouiller mon poste, puis le rouvrir avec mon mot de passe.',
   coince:['Ctrl + Alt + Delete : trois touches en même temps. Garde Ctrl et Alt enfoncées, puis appuie sur Delete.','Mon mot de passe ne passe pas : vérifie que Caps Lock est éteint.'],
   q:{serveur:true}},
  {partie:'D — Je quitte mon poste', titre:'Et sur l’ordinateur de quelqu’un d’autre ?', min:5,
   veux:'Ne laisser aucune trace de mon compte sur un ordinateur partagé : chez un ami, à la bibliothèque.',
-  avant:'<aside class="repere"><h3>🏫 À l’école</h3><p>Ton profil Chrome est à toi. Chrome propose d’enregistrer ton mot de passe ? <b>Enregistre-le</b> : Chrome le garde pour toi, et ta session Windows le protège. <b>Ne te déconnecte pas d’Outlook</b> : tu serais déconnecté de tout (Drive, Word…). En fin d’heure, tu te déconnectes de <b>Windows</b>.</p></aside><aside class="repere"><h3>🏠 Sur l’ordinateur de quelqu’un d’autre</h3><ul><li>Avant de partir : dans Courrier, clique sur <b>le rond de ton compte</b> (tes initiales), en haut à droite ▸ <b>Se déconnecter</b>, en haut à droite du panneau qui s’ouvre.</li><li>Puis ferme <b>toutes</b> les fenêtres de Chrome.</li></ul></aside>',
+  avant:'<aside class="repere"><h3>🏫 À l’école</h3><p>Ton profil Chrome est à toi. Chrome propose d’enregistrer ton mot de passe ? <b>Enregistre-le</b> : Chrome le garde pour toi, et ta session Windows le protège. <b>Ne te déconnecte pas d’Outlook</b> : tu serais déconnecté de tout (Drive, Word…). En fin d’heure, tu te déconnectes de <b>Windows</b>.</p></aside><aside class="repere"><h3>🏠 Sur l’ordinateur de quelqu’un d’autre</h3><ul><li>Avant de partir : dans Courrier, clique sur <b>le rond de ton compte</b> (tes initiales), en haut à droite ▸ <b>Se déconnecter</b>, en haut à droite du panneau qui s’ouvre.</li><li>Microsoft demande « <b>Rester connecté ?</b> » : clique sur <b>Non</b>.</li><li>Puis ferme <b>toutes</b> les fenêtres de Chrome.</li></ul></aside>',
   essai:{q:'À la bibliothèque, tu as lu tes courriels. Tu fermes juste l’onglet et tu pars. Ton compte est-il protégé ?', choix:[['Oui, l’onglet est fermé','Non : le compte reste souvent connecté. Le suivant rouvre Courrier… et lit tes messages.'],['Non','Bien vu : il faut se déconnecter avant de partir.'],['Je ne sais pas','Normal : relis le deuxième encadré.']], apres:'<p>Fermer un onglet ne déconnecte pas. Sur un ordinateur partagé : <b>Se déconnecter</b>, puis fermer Chrome.</p>', suite:'👉 À toi'},
   vois:'Je sais ce que je fais avant de quitter l’ordinateur de quelqu’un d’autre.',
   coince:['Le rond de ton compte : en haut à droite de Courrier, avec tes initiales ou ta photo.'],
@@ -102,7 +102,7 @@ const FIN = {
   texte:'Le bon outil, une boîte bien rangée, les pièges repérés, la copie cachée, la nétiquette, un poste fermé derrière toi.',
   revision:{titre:'Bien communiquer en ligne — je révise ↗', texte:'Un quiz de 5 questions et 15 cartes pour réviser.', url:'https://root75.github.io/campin-public/messagerie-3/'},
   citation:{texte:'Il faut tourner sa langue sept fois dans sa bouche avant de parler.', auteur:'Proverbe français', source:'Proverbe', lien:'Un message aussi : je le relis avant de l’envoyer.'},
-  plus:'À la fin de l’heure : touche Windows ⊞ ▸ ton prénom ▸ Se déconnecter. En attendant, si ton professeur te le propose, deviens aidant : va voir un camarade qui a sonné la cloche 🔔, explique avec des mots, ne touche pas sa souris.',
+  plus:'À la fin de l’heure : touche Windows ⊞ ▸ ton nom (en bas à gauche du menu) ▸ Se déconnecter. En attendant, si ton professeur te le propose, deviens aidant : va voir un camarade qui a sonné la cloche 🔔, explique avec des mots, ne touche pas sa souris.',
   lien:'<a href="https://root75.github.io/campin-public/messagerie-3/" target="_blank" rel="noopener">la page « Bien communiquer en ligne »</a>'
 };
 
