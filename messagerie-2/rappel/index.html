@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Messagerie 02 — avant de reprendre (à projeter)</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:wght@600;800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+/* Page à projeter par le professeur au début du cours qui reprend Messagerie 02 : une question par écran,
+   la réponse au clic. Indépendante du tableau et de la fiche : rien n'est envoyé, rien ne change pour les élèves. */
+:root{--papier:#f3f5f7;--carte:#fff;--encre:#1f2a33;--doux:#5b6873;--trait:#d5dce2;--encre-bouton:#1d5a73;--fromage:#e3a922;--fromage-pale:#fbf0d4;--juste:#1f7a4d;--juste-pale:#e2f3ea;--faux:#b23a2e;--faux-pale:#f8e3e0}
+*{box-sizing:border-box}[hidden]{display:none!important}
+html,body{height:100%}
+body{margin:0;background:radial-gradient(circle at 10% 0,var(--fromage-pale),transparent 40%),var(--papier);color:var(--encre);font-family:"Atkinson Hyperlegible","Segoe UI",Arial,sans-serif;display:grid;grid-template-rows:auto 1fr auto}
+header{padding:16px clamp(16px,4vw,48px) 0;display:flex;flex-wrap:wrap;gap:8px 20px;align-items:baseline;justify-content:space-between}
+.surtitre{font-size:clamp(.8rem,1.4vw,1.1rem);letter-spacing:.08em;text-transform:uppercase;color:var(--doux);font-weight:700}
+main{padding:clamp(8px,2vh,32px) clamp(16px,4vw,48px);display:grid;align-content:center;gap:clamp(8px,2vh,28px);max-width:75rem;width:100%;margin:0 auto}
+h1{font-family:"Alegreya",Georgia,serif;font-weight:800;font-size:clamp(1.7rem,min(5vw,7.5vh),4.2rem);line-height:1.05;margin:0;text-wrap:balance}
+.question{font-size:clamp(1.1rem,min(2.6vw,4vh),2.2rem);font-weight:700;margin:0;text-wrap:balance}
+.reponse{background:var(--carte);border-radius:22px;box-shadow:0 4px 0 var(--trait);padding:clamp(12px,min(2vw,2.6vh),28px);font-size:clamp(.95rem,min(2vw,3.1vh),1.8rem);line-height:1.3;display:grid;gap:clamp(6px,1.4vh,16px)}
+.reponse p,.reponse ul,.reponse ol{margin:0}.reponse li{margin:.2em 0}
+.reponse table{border-collapse:collapse;width:100%}
+.reponse th,.reponse td{border:2px solid var(--trait);padding:.18em .6em;text-align:left;vertical-align:top}
+.reponse th:last-child,.reponse td:last-child{text-align:center;width:5em;font-weight:700}
+.reponse table.texte th:last-child,.reponse table.texte td:last-child{width:auto;text-align:left;font-weight:400}
+.piege{background:var(--faux-pale);border-left:8px solid var(--faux);border-radius:10px;padding:.4em .7em;font-weight:700}
+.ok{background:var(--juste-pale);border-left:8px solid var(--juste);border-radius:10px;padding:.4em .7em;font-weight:700}
+.attente{font-size:clamp(1rem,2vw,1.5rem);color:var(--doux)}
+footer{padding:6px clamp(16px,4vw,48px) 10px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+button{font-weight:700;font-size:clamp(.9rem,1.4vw,1.15rem);font-family:inherit;padding:7px 16px;border-radius:12px;border:2px solid var(--encre-bouton);background:var(--carte);color:var(--encre-bouton);cursor:pointer}
+button.plein{background:var(--encre-bouton);color:var(--carte)}
+button:disabled{opacity:.35;cursor:default}
+button:focus-visible{outline:4px solid var(--fromage);outline-offset:3px}
+.points{display:flex;gap:8px;margin-left:auto}
+.points span{width:14px;height:14px;border-radius:50%;background:var(--trait)}.points span.ici{background:var(--encre-bouton)}
+.aide{flex-basis:100%;font-size:.8rem;color:var(--doux);margin:0}
+</style>
+</head>
+<body>
+<header><div class="surtitre">Activités Info · 2e · La messagerie · Messagerie 02</div><div class="surtitre" id="compteur"></div></header>
+<main id="ecran" aria-live="polite"></main>
+<footer>
+  <button type="button" id="avant">◀ Retour</button>
+  <button type="button" class="plein" id="suite">Suivant ▶</button>
+  <button type="button" id="plein-ecran">⛶ Plein écran</button>
+  <div class="points" id="points" aria-hidden="true"></div>
+  <p class="aide">Flèche → ou Espace : montrer la réponse, puis écran suivant. Flèche ← : retour. F : plein écran. Rien n'est envoyé aux élèves.</p>
+</footer>
+<script>
+/* Chaque écran : un titre, une question à poser à la classe, puis la réponse (HTML) montrée au clic.
+   Les libellés d'Outlook sont ceux relevés à l'écran (memoire/seq_activites_info_04_messagerie.md). */
+const ECRANS = [
+  { titre: "On reprend Messagerie 02",
+    question: "Cinq parties. Laquelle as-tu terminée ?",
+    reponse: `<table><tr><th>Partie</th><th>Étapes</th></tr>
+      <tr><td><b>A</b> — Le mail piège ; Répondre, Répondre à tous ou Transférer</td><td>1 – 2</td></tr>
+      <tr><td><b>B</b> — J’ouvre la pièce jointe sans risque</td><td>3 – 5</td></tr>
+      <tr><td><b>C</b> — Je réponds, je joins ma fiche, j’envoie : <b>cotée sur 5</b></td><td>6 – 9</td></tr>
+      <tr><td><b>D</b> — Je transfère au voisin, professeur en Cc</td><td>10</td></tr>
+      <tr><td><b>E</b> — J’ajoute mon voisin à mes contacts</td><td>11</td></tr></table>` },
+  { titre: "① Le mail piège",
+    question: "Avant d’ouvrir une pièce jointe, je regarde deux choses. Lesquelles ?",
+    reponse: `<p><b>QUI</b> l’envoie : une adresse qui finit par <b>@arcampin.be</b>, lettre par lettre.</p>
+      <p><b>QUEL</b> fichier : un fichier attendu, comme un <b>.docx</b>.</p>
+      <p class="piege">Un inconnu, une adresse mal écrite (arcampim.be), un .exe ou un .zip inattendu : je n’ouvre pas, je supprime.</p>` },
+  { titre: "① Quel bouton ?",
+    question: "Répondre, Répondre à tous, Transférer : qui reçoit mon message ?",
+    reponse: `<table class="texte"><tr><th>Bouton</th><th>Qui reçoit ?</th></tr>
+      <tr><td><b>↩ Répondre</b></td><td>l’expéditeur, seul</td></tr>
+      <tr><td><b>↩↩ Répondre à tous</b></td><td>l’expéditeur et tous les autres destinataires</td></tr>
+      <tr><td><b>↪ Transférer</b></td><td>la personne que je choisis ; la pièce jointe part avec</td></tr></table>` },
+  { titre: "② Ouvrir la pièce jointe",
+    question: "La fiche est arrivée. Comment l’ouvrir pour écrire dedans ?",
+    reponse: `<ol><li>Sur la carte du fichier, sous l’objet : la petite flèche <b>▾</b> ▸ <b>Modifier dans le navigateur</b>.</li>
+      <li><b>Word</b> s’ouvre dans un nouvel onglet. Il enregistre tout seul.</li>
+      <li>Outlook en garde une copie dans <b>OneDrive › Pièces jointes</b> : sous la carte, « Enregistré sur OneDrive ».</li></ol>
+      <p class="piege">Aperçu : on lit, on n’écrit pas.</p>` },
+  { titre: "③ Répondre et joindre",
+    question: "Ta fiche est complétée. Comment la renvoyer à ton professeur ?",
+    reponse: `<ol><li><b>↩ Répondre</b> : pas Répondre à tous.</li>
+      <li>Onglet <b>Message</b> ▸ <b>📎 Joindre un fichier</b> ▸ <b>OneDrive</b> ▸ coche ta fiche.</li>
+      <li>En bas : <b>▾</b> à côté de <b>Partager le lien</b> ▸ <b>Joindre</b>.</li>
+      <li>Écris au-dessus du message de ton professeur ▸ <b>Envoyer</b>.</li>
+      <li><b>Éléments envoyés</b> : ta réponse est là, avec le trombone 📎.</li></ol>
+      <p class="piege">Joindre, pas Partager le lien. Pas dans Récents ? Fichiers ▸ Pièces jointes.</p>` },
+  { titre: "③ Ta réponse est cotée sur 5",
+    question: "Quels sont les cinq points ?",
+    reponse: `<table><tr><th>Dans ta réponse</th><th>Points</th></tr>
+      <tr><td>L’objet commence par <b>RE:</b> : c’est une réponse</td><td>1</td></tr>
+      <tr><td>Ta fiche <b>complétée</b> est <b>jointe</b></td><td>1</td></tr>
+      <tr><td>« <b>Bonjour Monsieur,</b> » ou « <b>Bonjour Madame,</b> »</td><td>1</td></tr>
+      <tr><td>Des phrases complètes, majuscule et point, pas de SMS</td><td>1</td></tr>
+      <tr><td>Ton prénom, ton nom et ta classe</td><td>1</td></tr></table>
+      <p>La même grille est dans ta fiche, aux étapes 8 et 9.</p>` },
+  { titre: "④ Transférer, ⑤ Contacts",
+    question: "Tu transfères la fiche à ton voisin. Où mets-tu ton professeur ?",
+    reponse: `<p><b>↪ Transférer</b> ▸ <b>À</b> : ton voisin · <b>Cc</b> : ton professeur. L’objet commence par <b>TR:</b>, la fiche part avec.</p>
+      <p class="piege">Dans À et Cc, choisis la ligne qui finit par @arcampin.be : pas « Externe ».</p>
+      <p><b>Contacts</b> (icône à gauche) ▸ <b>Nouveau contact</b> ▸ Prénom, Nom de famille, Adresse e-mail professionnelle ▸ <b>Enregistrer</b>.</p>` },
+  { titre: "À toi",
+    question: "Rouvre ta fiche : tu reprends à l’étape où tu t’étais arrêté.",
+    reponse: `<ol><li>Les pastilles numérotées, en haut, montrent où tu en es.</li>
+      <li>Garde deux onglets : ta fiche et Courrier.</li>
+      <li>Ça coince ? Relis la consigne → demande à ton voisin (il explique, il ne touche pas ta souris) → sonne la cloche 🔔.</li></ol>` }
+];
+const $ = id => document.getElementById(id);
+let ici = 0, montre = false;
+function dessine(){
+  const e = ECRANS[ici], z = $("ecran"); z.replaceChildren();
+  const h = document.createElement("h1"); h.textContent = e.titre;
+  const q = document.createElement("p"); q.className = "question"; q.textContent = e.question;
+  z.append(h, q);
+  if(montre){ const r = document.createElement("div"); r.className = "reponse"; r.innerHTML = e.reponse; z.append(r); }
+  else { const a = document.createElement("p"); a.className = "attente"; a.textContent = "La classe répond d’abord. Puis → pour montrer."; z.append(a); }
+  $("compteur").textContent = "Début de l’heure · " + (ici+1) + " / " + ECRANS.length;
+  $("avant").disabled = ici===0 && !montre;
+  const fin = ici===ECRANS.length-1 && montre;
+  $("suite").disabled = fin; $("suite").textContent = montre ? "Suivant ▶" : "Montrer ▶";
+  $("points").replaceChildren(...ECRANS.map((_,k)=>{ const s = document.createElement("span"); if(k===ici) s.className = "ici"; return s; }));
+}
+function suite(){ if(!montre) montre = true; else if(ici<ECRANS.length-1){ ici++; montre = false; } dessine(); }
+function avant(){ if(montre) montre = false; else if(ici>0){ ici--; montre = true; } dessine(); }
+function pleinEcran(){ if(document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen?.().catch(()=>{}); }
+$("suite").addEventListener("click", suite); $("avant").addEventListener("click", avant); $("plein-ecran").addEventListener("click", pleinEcran);
+addEventListener("keydown", e => {
+  if(e.target.closest("button") && (e.key===" " || e.key==="Enter")) return;   // le bouton fait déjà son travail
+  if(["ArrowRight","PageDown"," ","Enter"].includes(e.key)){ e.preventDefault(); suite(); }
+  else if(["ArrowLeft","PageUp"].includes(e.key)){ e.preventDefault(); avant(); }
+  else if(e.key==="f" || e.key==="F") pleinEcran();
+});
+dessine();
+</script>
+</body>
+</html>

@@ -411,23 +411,26 @@ const cleSeq = quoi => "pas-a-pas-seq:" + $("cours").value + ":" + (SEQ.etat ? S
 const litSeq = (quoi, defaut) => { try { return JSON.parse(localStorage.getItem(cleSeq(quoi))) ?? defaut; } catch(e){ return defaut; } };
 const ecritSeq = (quoi, v) => { try { localStorage.setItem(cleSeq(quoi), JSON.stringify(v)); } catch(e){} };
 
-/* Un seul chemin vers le serveur ; sans Apps Script, une imitation pour l'aperçu. */
+/* Un seul chemin vers le serveur ; sans Apps Script, une imitation pour l'aperçu.
+   « Répéter sans les élèves » (SEQ.apercu) : le pilotage reste sur ce poste, même dans le tableau scolaire.
+   Aucune séance n'est nécessaire, rien n'est écrit, aucun poste élève ne change ; les réponses sont fictives. */
+const PILOTAGE = ["piloter", "reprendreSequence", "arreterSequence", "reponses"];
 function serveur(fn, ...args){
-  if(SUIVI) return new Promise((ok, ko) => google.script.run.withSuccessHandler(ok).withFailureHandler(ko)[fn](...args));
+  if(SUIVI && !(SEQ.apercu && PILOTAGE.includes(fn))) return new Promise((ok, ko) => google.script.run.withSuccessHandler(ok).withFailureHandler(ko)[fn](...args));
   return Promise.resolve(DEMO_SEQ[fn](...args));
 }
 let DEMO_CONTENU = null, DEMO_ETAT = null;
 const DEMO_SEQ = {
   sequence: () => fetch("sequences.json").then(r=>r.json()).then(j=>{ DEMO_CONTENU = j; return { sequence: j[$("cours").value] || null, etat: DEMO_ETAT }; }).catch(()=>({ sequence:null, etat:null })),
   piloter: (cours, i, phase, nouvelle) => {
-    const m = DEMO_CONTENU[cours].moments[i];
+    const m = SEQ.contenu.moments[i];
     DEMO_ETAT = { lance: nouvelle || !DEMO_ETAT ? Date.now() : DEMO_ETAT.lance, i, phase: phase || (m.type==="vote" ? "ouvert" : "") };
     return DEMO_ETAT;
   },
   reprendreSequence: () => DEMO_ETAT,
   arreterSequence: () => { DEMO_ETAT = null; return null; },
   reponses: (cours, i) => {
-    const m = DEMO_CONTENU[cours].moments[i], t = Math.floor((Date.now() - DEMO_ETAT.lance) / 4000);
+    const m = SEQ.contenu.moments[i], t = Math.floor((Date.now() - DEMO_ETAT.lance) / 4000);
     const mots = [["lent",5],["une lettre",4],["pour les profs",3],["sérieux",3],["on attend la réponse",2],["Outlook",2],["@",2],["avec un objet",1],["officiel",1],["long",1],["gratuit",1],["message",2]]
       .slice(0, Math.min(12, 3 + t)).map(([texte,n])=>({ cle:texte, texte, n }));
     return { maintenant: Date.now(), repondants: Math.min(21, 4 + 2*t), mots: m.type==="vote" ? [] : mots,
@@ -442,11 +445,23 @@ function dessineEtatSeq(){
   if(!SEQ.contenu){ z.hidden = true; return; }
   z.hidden = false;
   const b = (t, cls, f) => { const x = txt("button", "btn "+cls, t); x.type = "button"; x.addEventListener("click", f); z.append(x); };
+  if(SEQ.apercu){ z.append(txt("span","maj","Répétition en cours, sans les élèves")); return; }
   if(SEQ.etat){
     z.append(txt("span","maj","Cours collectif en cours · moment "+(SEQ.etat.i+1)+" / "+SEQ.contenu.moments.length));
     b("Reprendre le cours collectif", "", ()=>serveur("reprendreSequence", $("cours").value, choisie().classe).then(e=>{ SEQ.etat = e; ouvreProjection(); }).catch(erreur));
     b("Arrêter", "vide", ()=>serveur("arreterSequence", $("cours").value, choisie().classe).then(()=>{ SEQ.etat = null; dessineEtatSeq(); }).catch(erreur));
-  } else b("Lancer le cours collectif", "", ()=>allerA(0, "", true));
+  } else if(SEANCES.length) b("Lancer le cours collectif", "", ()=>allerA(0, "", true));
+  else z.append(txt("span","maj","Pour lancer avec la classe : Nouvelle séance."));
+  b("Répéter sans les élèves", "vide", repeter);
+}
+/* Voir la projection avant le cours : rien ne part au serveur, la séquence réelle de la classe n'est pas touchée. */
+function repeter(){
+  SEQ.reel = SEQ.etat; SEQ.apercu = true; SEQ.etat = null; SEQ.depuis = 0;
+  allerA(0, "", true);
+}
+function finRepetition(){
+  SEQ.apercu = false; SEQ.etat = SEQ.reel || null; SEQ.reel = null; SEQ.depuis = 0; SEQ.rep = null;
+  dessineEtatSeq();
 }
 function dessineConducteur(){
   const c = SEQ.contenu, panneau = $("conducteur");
@@ -456,6 +471,7 @@ function dessineConducteur(){
   const duree = c.moments.reduce((n,m)=>n+(m.min||0),0);
   $("conducteur-objectif").textContent = (c.objectif || "") + " · Environ " + duree + " min, à adapter au groupe.";
   const prep = $("conducteur-preparation"); prep.replaceChildren();
+  if(c.rappel){ const p = txt("p"), a = txt("a","btn vide","Rappel à projeter en début de cours ↗"); a.href = c.rappel; a.target = "_blank"; a.rel = "noopener"; p.append(a); prep.append(p); }
   if($("cours").value==="labo-07") prep.append(txt("p","astuce","Labo 07 : les blocs verts indiquent une hypothèse enregistrée (étapes internes 2, 5, 8) ou une étape déclarée faite. Les élèves voient six entrées (dix étapes) : préparer le rapport, trois missions, le défi final, remettre le rapport. Un seul incident est rédigé ; les trois autres sont vérifiés à deux ; le professeur garde le contrôle individuel final et intervient sur les blocages persistants. Preuves et conclusions dans le document Classroom : le site ne le lit pas et ne vérifie pas sa remise. Ne jamais projeter le Journal ou les copies."));
   (c.preparation || []).forEach(t=>prep.append(txt("p",null,t)));
   (c.competences || []).forEach(t=>prep.append(txt("p","astuce",t)));
@@ -500,7 +516,7 @@ function allerA(i, phase, nouvelle){
   serveur("piloter", $("cours").value, i, phase || "", !!nouvelle, choisie().classe).then(e=>{
     if(!SEQ.etat || e.i !== SEQ.etat.i || nouvelle){ SEQ.depuis = Date.now(); SEQ.montre = false; SEQ.choisi = null; SEQ.rep = null; }
     SEQ.etat = e; ouvreProjection();
-    const s = choisie(); if(s.plafond){ delete s.plafond; delete s.messagePlafond; dessinePlafond(); }   // piloter() a levé le blocage
+    const s = choisie(); if(!SEQ.apercu && s.plafond){ delete s.plafond; delete s.messagePlafond; dessinePlafond(); }   // piloter() a levé le blocage
   }).catch(erreur);
 }
 function ouvreProjection(){
@@ -514,6 +530,7 @@ function fermeProjection(){
   $("projection").hidden = true; document.body.style.overflow = "";
   clearInterval(SEQ.minuterie);
   if(document.fullscreenElement) document.exitFullscreen().catch(()=>{});
+  if(SEQ.apercu) finRepetition();
 }
 const momentCourant = () => SEQ.contenu.moments[SEQ.etat.i];
 /* Le moment dont on lit les réponses : le tri range les mots récoltés plus tôt. */
@@ -554,7 +571,7 @@ function scene(){
   const box = txt("div");
   if($("cours").value === "messagerie-1")box.classList.add("messagerie-scene");
   box.append(txt("p","sur", m.titre));
-  $("seq-ou").replaceChildren(txt("b",null,(SEQ.etat.i+1)+" / "+n+" · "+m.titre), " — "+(m.methode||""));
+  $("seq-ou").replaceChildren(...(SEQ.apercu ? [txt("b","apercu-marque","Répétition — rien n’est envoyé, réponses fictives · ")] : []), txt("b",null,(SEQ.etat.i+1)+" / "+n+" · "+m.titre), " — "+(m.methode||""));
   $("seq-prec").disabled = SEQ.etat.i === 0;
   $("seq-suiv").disabled = SEQ.etat.i === n-1;
   const mailVisuel = $("cours").value === "messagerie-1" && m.titre === "Avant d’écrire : observe le mail" && window.MessagerieVisuels;

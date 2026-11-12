@@ -18,6 +18,9 @@ Les styles communs sont dans [`fiche.css`](fiche.css) (puis [`python-missions.cs
 la page les charge par leur adresse absolue et ne garde dans son `<style>` que ce qui lui est propre (`tests/styles-communs.cjs`).
 
 Puis, si le cours a un moment collectif : son conducteur dans [`sequences.json`](sequences.json).
+Champ facultatif `rappel` : l'adresse d'une page à projeter en début de cours ; le tableau en met le lien en haut du
+cours collectif. Le bouton « Répéter sans les élèves » du tableau joue le conducteur sur le seul poste du professeur,
+sans séance : rien n'est envoyé, les réponses sont fictives.
 Puis un test `tests/<cours>.cjs` (modèle : [`tests/messagerie-02.cjs`](../tests/messagerie-02.cjs)).
 **Aucun Code.gs à redéployer** pour un nouveau cours : publier, puis tableau ▸ « Actualiser le catalogue ».
 Les liens prof du cours (fiche professeur, dossier Drive) : une ligne dans l'onglet « Liens prof » de la
