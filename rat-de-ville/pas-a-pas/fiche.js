@@ -199,7 +199,10 @@ function demoAutre(cle){
 }
 function sonnerie(){
   const a=txt('aside','repere sonnerie');
-  a.append(txt('h3',null,'🔔 À la sonnerie, où que j’en sois'),txt('p',null,'Je ferme l’onglet de mon document. Je ne remets PAS : Docs l’enregistre tout seul.'),demoAutre('fermer'));
+  const ferme=txt('p');ferme.innerHTML='<b>1. Je ferme l’onglet de mon document.</b> Je ne remets PAS : Docs l’enregistre tout seul.';
+  const deco=txt('p');deco.innerHTML='<b>2. Je me déconnecte de Windows :</b> touche Windows ⊞ ▸ clic sur <b>mon nom</b>, en bas à gauche du menu ▸ <b>Se déconnecter</b> (ou <b>Ctrl + Alt + Delete</b> ▸ <b>Se déconnecter</b>). Sinon, l’élève suivant arrive dans <b>ma</b> session : mon Drive, mes documents, en mon nom.';
+  const piege=txt('p','note','Le bouton ⏻ du menu propose Verrouiller, Arrêter, Redémarrer : pas « Se déconnecter ». Je n’éteins pas l’ordinateur.');
+  a.append(txt('h3',null,'🔔 À la sonnerie, où que j’en sois'),ferme,demoAutre('fermer'),deco,piege);
   const b=txt('button','lien','▶ Je reviens après la sonnerie : je reprends mon document');b.type='button';
   b.addEventListener('click',()=>{repriseVue=true;dessine();scrollTo(0,0);});a.append(b);return a;
 }

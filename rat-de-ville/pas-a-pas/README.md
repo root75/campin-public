@@ -79,7 +79,8 @@ de la période 2, où que l'élève en soit : rappel sur les autres étapes, bou
 
 Fermer et rouvrir ne sont plus des étapes : les élèves ne les faisaient pas au même moment.
 - Sous chaque étape, l’encadré **🔔 À la sonnerie, où que j’en sois** (fermer l’onglet, ne pas
-  remettre, animation) et le lien « Je reviens après la sonnerie : je reprends mon document ».
+  remettre, animation, puis se déconnecter de Windows : touche Windows ▸ son nom ▸ Se déconnecter,
+  ajouté le 12/11/2026) et le lien « Je reviens après la sonnerie : je reprends mon document ».
 - En haut, l’encadré **▶ Je reprends mon travail** (Drive ▸ Récents, vue fractionnée, deux
   animations, bouton « C’est fait : je reprends à l’étape N »). Il s’affiche seul quand l’élève
   rouvre le cours avec déjà des cases cochées et plus de 5 minutes sans action. Pas de case.
