@@ -37,6 +37,7 @@ select{font:inherit;padding:6px 10px;border-radius:8px;border:2px solid var(--tr
 .classe{color:var(--encre-bouton)}
 .btn{font:inherit;font-weight:700;padding:6px 14px;border-radius:8px;cursor:pointer;border:2px solid var(--encre-bouton);background:var(--encre-bouton);color:var(--carte)}
 .btn.vide{background:transparent;color:var(--encre-bouton)}
+a.btn{text-decoration:none;display:inline-block}
 dialog{border:1px solid var(--trait);border-radius:14px;background:var(--carte);color:var(--encre);padding:20px;max-width:min(26rem,calc(100vw - 32px))}
 dialog::backdrop{background:rgb(0 0 0 / .45)}
 dialog form{display:grid;gap:12px}
@@ -175,6 +176,7 @@ body:not(.vue-onglet) #panneau-classes{display:none!important}
     <h1><span class="classe" id="titre-classe"></span>Pas à pas — tableau de bord</h1>
     <div class="reglages">
       <select id="cours" aria-label="Cours"></select>
+      <a class="btn vide" id="voir-cours" target="_blank" rel="noopener" hidden>👁 Voir le cours</a>
       <select id="seance" aria-label="Séance"></select>
       <button class="btn" type="button" id="nouvelle">Nouvelle séance</button>
       <button class="btn vide" type="button" id="terminer" hidden>Terminer la séance</button>
@@ -267,7 +269,7 @@ body:not(.vue-onglet) #panneau-classes{display:none!important}
   </form>
 </dialog>
 
-<script defer src="https://root75.github.io/campin-public/messagerie/pas-a-pas/visuels.js?v=20261103"></script><script defer src="https://root75.github.io/campin-public/pas-a-pas/tableau.js?v=repeter-20261112"></script>
+<script defer src="https://root75.github.io/campin-public/messagerie/pas-a-pas/visuels.js?v=20261103"></script><script defer src="https://root75.github.io/campin-public/pas-a-pas/tableau.js?v=voir-cours-20261112"></script>
 <script defer src="https://root75.github.io/campin-public/pas-a-pas/python-couleurs.js"></script>
 <script defer src="https://root75.github.io/campin-public/rat-de-ville/pas-a-pas/contenu.js?v=sonnerie-20261106"></script>
 <script defer src="https://root75.github.io/campin-public/pas-a-pas/formatif-prof.js?v=encadre-20261111"></script>

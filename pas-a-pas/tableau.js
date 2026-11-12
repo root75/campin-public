@@ -6,6 +6,16 @@ const lienBloc = (i, texte) => {
   const a = txt("a", null, texte); a.href = url + "#bloc=" + i; a.target = "_blank"; a.rel = "noopener";
   a.title = "Ouvrir le bloc " + i + " en aperçu (rien n'est enregistré)"; return a;
 };
+/* « 👁 Voir le cours » : le cours choisi, du bloc 1, en aperçu. Navigation libre, rien n'est enregistré.
+   Créé ici si le HTML encore en cache chez Apps Script ne l'a pas. */
+function majVoirCours(){
+  let a = $("voir-cours");
+  if(!a){ a = txt("a","btn vide","👁 Voir le cours"); a.id = "voir-cours"; a.target = "_blank"; a.rel = "noopener"; $("cours").after(a); }
+  const url = FICHES[$("cours").value];
+  a.hidden = !url; if(!url) return;
+  a.href = url + "#bloc=1";
+  a.title = "Ouvrir « " + (TITRES_COURS[$("cours").value] || $("cours").value) + " » en lecture seule : tous les blocs sont ouverts, rien n'est enregistré";
+}
 /* Mêmes listes que dans les fiches : l'humeur est enregistrée « emoji libellé ». */
 const HUMEURS = [["😄","Super"],["🙂","Bien"],["😐","Bof"],["🙁","Pas top"],["😣","Pas bien"]];
 const AVIS = [["plu","Ce qui m'a plu"],["progres","Ce qui m'a aidé à progresser"],["gene","Ce qui m'a gêné dans le cours en ligne"]];
@@ -798,12 +808,12 @@ function demarre(cours){
   const meme=cours.includes(avant);
   if(meme) $("cours").value=avant;
   if(!tableauDemarre){
-    $("cours").addEventListener("change",()=>{chargeRessourcesProf();chargeSeances();if(globalThis.FormatifProf)FormatifProf.charge();});
+    $("cours").addEventListener("change",()=>{majVoirCours();chargeRessourcesProf();chargeSeances();if(globalThis.FormatifProf)FormatifProf.charge();});
     $("seance").addEventListener("change",charge);
     setInterval(charge,RAFRAICHIR);tableauDemarre=true;
   }
   if(!meme || !$("seance").options.length) chargeSeances(); else charge();
-  chargeRessourcesProf();chargeSequence();chargeClasses();
+  majVoirCours();chargeRessourcesProf();chargeSequence();chargeClasses();
   if(globalThis.FormatifProf) FormatifProf.charge();
 }
 function appliqueCatalogue(data){
