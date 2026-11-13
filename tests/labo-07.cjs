@@ -25,6 +25,8 @@ assert.ok(!/\b(Suppr|Échap|Entrée|Maj)\b/.test(texte+demos),'touches en anglai
 // Des gestes, pas un clic à la fois : 7 cases au plus (créer le rapport, le remettre), 6 ailleurs.
 const cases=h=>(String(h).match(/type="checkbox"/g)||[]).length;
 F.BLOCS.forEach((B,i)=>{assert.ok(cases(B.fais)<=([0,10].includes(i)?7:6),'cases du bloc '+(i+1)+' : '+cases(B.fais));});ok();
+// Au moins un mot-clé en gras par case à cocher : l'œil accroche le geste avant de lire la phrase (Vincent, 13/11/2026).
+F.BLOCS.forEach((B,i)=>{const h=String(B.fais||'')+String(B.extra||'');for(const m of h.matchAll(/type="checkbox">([\s\S]*?)<\/li>/g))assert.ok(/<b>/.test(m[1]),'case sans mot en gras, bloc '+(i+1)+' : '+sans(m[1]).slice(0,60));});ok();
 // Une hypothèse se lit d'un seul tenant : la question et sa zone de réponse juste sous les cases.
 F.BLOCS.forEach((B,i)=>{if(B.q.type==='enquete'){assert.ok(B.q.colle&&B.q.etiquette,'colle, bloc '+(i+1));assert.ok(!/« Mon hypothèse », sous les cases|Enregistre avant de tester/.test(B.fais));}});ok();
 assert.match(F.BLOCS[1].q.q,/À ton avis/);ok();
