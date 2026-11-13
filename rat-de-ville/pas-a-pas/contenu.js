@@ -127,8 +127,8 @@ const ETAPES_RAT = [
       "1": ["etape7", [0, 1, 2, 3]]
     },
     "actions": [
-      "Je sélectionne seulement la strophe 1 : Garamond, taille 14.",
-      "Je sélectionne seulement la strophe 2 : Garamond, taille 14.",
+      "Je sélectionne seulement la strophe 1 : EB Garamond, taille 14.",
+      "Je sélectionne seulement la strophe 2 : EB Garamond, taille 14.",
       "Je sélectionne seulement la strophe 3 : Arial, taille 12.",
       "Je sélectionne seulement la strophe 4 : Arial, taille 12.",
       "Je sélectionne seulement la strophe 5 : Calibri, taille 10.",
@@ -277,7 +277,7 @@ const ETAPES_RAT = [
         "bravo": "Juste ! J’écris cette phrase dans Docs, sur une nouvelle ligne.",
         "variantes": [
           {
-            "texte": "J’ai sélectionné la strophe 1, puis j’ai choisi la ___ Garamond et la ___ 14.",
+            "texte": "J’ai sélectionné la strophe 1, puis j’ai choisi la ___ EB Garamond et la ___ 14.",
             "mots": [
               "police",
               "taille"

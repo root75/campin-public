@@ -92,7 +92,7 @@ function dessine(){
     const auteur=txt('p','exemple-auteur','Jean de La Fontaine');modele.append(titre,corps,auteur);observation.append(modele);
   }
   if(b.id===7){const tableau=txt('table','repere-polices');const legende=txt('caption',null,'Police et taille attendues');tableau.append(legende);
-    [['Strophes','Police','Taille'],['1 et 2','Garamond','14'],['3 et 4','Arial','12'],['5','Calibri','10'],['6 et 7','Arial Black','8']].forEach((ligne,k)=>{const tr=txt('tr');ligne.forEach(v=>tr.append(txt(k?'td':'th',null,v)));tableau.append(tr);});observation.append(tableau);}
+    [['Strophes','Police','Taille'],['1 et 2','EB Garamond','14'],['3 et 4','Arial','12'],['5','Calibri','10'],['6 et 7','Arial Black','8']].forEach((ligne,k)=>{const tr=txt('tr');ligne.forEach(v=>tr.append(txt(k?'td':'th',null,v)));tableau.append(tr);});observation.append(tableau);}
   z.append(observation,txt('p','agir','✋ À moi dans Docs ! Je fais, puis je coche.'),txt('p','note annuler','Je me suis trompé ? Tout de suite : ↶ Annuler (Ctrl + Z), la flèche tout à gauche de la barre d’outils.'));
   if(b.consigne)z.append(txt('p','note',b.consigne));
   const ul=txt('ul','cases');b.actions.forEach((t,j)=>{
