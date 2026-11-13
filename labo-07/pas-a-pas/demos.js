@@ -191,7 +191,7 @@ const Demo = (() => {
       }
     }
     if (f.aligner) {
-      // Relevé le 13/11/2026 : quatre icônes sans nom ; l'infobulle dit « Aligner au centre (Ctrl+Maj+E) ».
+      // Relevé le 13/11/2026 : quatre icônes sans nom ; l'infobulle dit « Aligner au centre » (Ctrl + Shift + E).
       const box = el('div', 'md-menu md-aligner-menu');
       [['⫷', 'Gauche'], ['≡', 'Centrer'], ['⫸', 'Droite'], ['☰', 'Justifier']].forEach(([i, t]) => box.append(c(el('span', 'md-item' + (t === 'Centrer' ? ' hi' : ''), i), 'al-' + t)));
       box.append(el('div', 'md-bulle', 'Aligner au centre (Ctrl + Shift + E)'));
