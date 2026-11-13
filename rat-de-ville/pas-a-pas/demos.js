@@ -52,15 +52,17 @@ const Demo = (() => {
     ] },
     etape7: { titre: 'Une police par strophe', images: [
       doc(base('centre gras capitales', 'sel centre', 'droite italique souligne'), { cible: 'L2', legende: 'Je sélectionne SEULEMENT la strophe 1.' }),
-      doc(base('centre gras capitales', 'sel centre', 'droite italique souligne'), { cible: 'item-Garamond', menu: { sous: 'police', items: ['Arial', 'Calibri', 'Garamond', 'Arial Black'], hi: 'Garamond' }, legende: 'Menu des polices ▸ Garamond.' }),
-      doc(base('centre gras capitales', 'sel centre garamond', 'droite italique souligne'), { police: 'Garamond', cible: 'taille', legende: 'Je clique dans la case du nombre, je tape 14, Enter.' }),
-      doc(base('centre gras capitales', 'centre garamond grand', 'droite italique souligne'), { police: 'Garamond', taille: '14', cible: 'L2', ok: 1, legende: 'Seule la strophe 1 a changé. À la suivante !' })
+      doc(base('centre gras capitales', 'sel centre', 'droite italique souligne'), { cible: 'item-EB Garamond', menu: { sous: 'police', items: ['Arial', 'Calibri', 'EB Garamond', 'Arial Black'], hi: 'EB Garamond' }, legende: 'Menu des polices ▸ EB Garamond.' }),
+      doc(base('centre gras capitales', 'sel centre garamond', 'droite italique souligne'), { police: 'EB Garamond', cible: 'taille', legende: 'Je clique dans la case du nombre, je tape 14, Enter.' }),
+      doc(base('centre gras capitales', 'centre garamond grand', 'droite italique souligne'), { police: 'EB Garamond', taille: '14', cible: 'L2', ok: 1, legende: 'Seule la strophe 1 a changé. À la suivante !' })
     ] },
     etape8: { titre: 'Mon bloc-notes : la liste à puces', images: [
       doc([L('Mon bloc-notes', 'gras'), L('le tapis', 'sel'), L('…', 'sel'), L('…', 'sel')], { cible: 'puces', legende: 'Je sélectionne mes 3 lignes ▸ Liste à puces (Ctrl + Shift + 8).' })
     ] },
     etape10: { titre: 'Mes gestes : la liste numérotée', images: [
-      doc([L('Mon bloc-notes', 'gras'), L('le tapis', 'puce'), L('…', 'puce'), L('…', 'puce'), L('Mes gestes', 'gras'), L('J’ai sélectionné le titre, puis Centrer.', 'sel'), L('…', 'sel')], { cible: 'numeros', legende: 'Je sélectionne mes six lignes ▸ Liste numérotée (Ctrl + Shift + 7).' })
+      doc([L('Mon bloc-notes', 'gras'), L('le tapis', 'puce'), L('…', 'puce'), L('…', 'puce'), L('Mes gestes', 'gras'), L('', 'sel')], { cible: 'numeros', legende: 'Sous « Mes gestes », Enter ▸ Liste numérotée (Ctrl + Shift + 7).' }),
+      doc([L('Mon bloc-notes', 'gras'), L('le tapis', 'puce'), L('…', 'puce'), L('…', 'puce'), L('Mes gestes', 'gras'), L('', 'num')], { cible: 'L5', legende: 'Le numéro 1 apparaît : j’écris mon geste 1 à côté.' }),
+      doc([L('Mon bloc-notes', 'gras'), L('le tapis', 'puce'), L('…', 'puce'), L('…', 'puce'), L('Mes gestes', 'gras'), L('J’ai sélectionné le titre, puis Centrer.', 'num'), L('', 'num')], { cible: 'L6', ok: 1, legende: 'Enter : le numéro 2 apparaît tout seul.' })
     ] },
     etape11: { titre: 'Ma phrase : j’explique', images: [
       doc([L('Mon bloc-notes', 'gras'), L('le tapis', 'puce'), L('…', 'puce'), L('…', 'puce'), L('Mes gestes', 'gras'), L('J’ai sélectionné le titre, puis Centrer.', 'num'), L('…', 'num'), L('Pour changer une seule strophe, je…')], { cible: 'L7', ok: 1, legende: 'Et ma phrase pour finir.' })

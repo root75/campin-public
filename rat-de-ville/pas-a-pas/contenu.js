@@ -127,8 +127,8 @@ const ETAPES_RAT = [
       "1": ["etape7", [0, 1, 2, 3]]
     },
     "actions": [
-      "Je sélectionne seulement la **strophe 1** : **Garamond, taille 14**.",
-      "Je sélectionne seulement la **strophe 2** : **Garamond, taille 14**.",
+      "Je sélectionne seulement la **strophe 1** : **EB Garamond, taille 14**.",
+      "Je sélectionne seulement la **strophe 2** : **EB Garamond, taille 14**.",
       "Je sélectionne seulement la **strophe 3** : **Arial, taille 12**.",
       "Je sélectionne seulement la **strophe 4** : **Arial, taille 12**.",
       "Je sélectionne seulement la **strophe 5** : **Calibri, taille 10**.",
@@ -175,26 +175,26 @@ const ETAPES_RAT = [
     "periode": 2,
     "consigne": "Je raconte six gestes de mise en forme, un par un. Un geste complet dit deux choses : ce que j’ai sélectionné, puis le bouton ou le menu utilisé.",
     "demos": {
-      "8": ["etape10", [0]]
+      "2": ["etape10", [0, 1, 2]]
     },
     "actions": [
       "Sous mes puces, sur une **nouvelle ligne**, j’écris : [[Mes gestes]]",
-      "**Geste 1** : je complète la phrase, puis je l’écris dans Docs, sur une nouvelle ligne.",
-      "**Geste 2** : je complète la phrase, puis je l’écris dans Docs, sur une nouvelle ligne.",
-      "**Geste 3** : je complète la phrase, puis je l’écris dans Docs, sur une nouvelle ligne.",
-      "**Geste 4** : je complète la phrase, puis je l’écris dans Docs, sur une nouvelle ligne.",
-      "**Geste 5** : je complète la phrase, puis je l’écris dans Docs, sur une nouvelle ligne.",
-      "**Geste 6** : je complète la phrase, puis je l’écris dans Docs, sur une nouvelle ligne.",
-      "Je sélectionne mes **six lignes**. Je clique sur **Liste numérotée** (Ctrl + Shift + 7)."
+      "Enter, puis je clique sur **Liste numérotée** (Ctrl + Shift + 7) : le numéro 1 apparaît.",
+      "**Geste 1** : je complète la phrase, puis je l’écris dans Docs, à côté du numéro 1. Enter.",
+      "**Geste 2** : je complète la phrase, puis je l’écris dans Docs, à côté du numéro 2. Enter.",
+      "**Geste 3** : je complète la phrase, puis je l’écris dans Docs, à côté du numéro 3. Enter.",
+      "**Geste 4** : je complète la phrase, puis je l’écris dans Docs, à côté du numéro 4. Enter.",
+      "**Geste 5** : je complète la phrase, puis je l’écris dans Docs, à côté du numéro 5. Enter.",
+      "**Geste 6** : je complète la phrase, puis je l’écris dans Docs, à côté du numéro 6."
     ],
     "icones": {
-      "7": [
+      "1": [
         "numeros"
       ]
     },
     "trous": {
-      "1": {
-        "bravo": "Juste ! J’écris cette phrase dans Docs, sur une nouvelle ligne.",
+      "2": {
+        "bravo": "Juste ! J’écris cette phrase dans Docs, à côté de son numéro.",
         "variantes": [
           {
             "texte": "J’ai ___ le titre, puis j’ai cliqué sur ___ .",
@@ -209,8 +209,8 @@ const ETAPES_RAT = [
           }
         ]
       },
-      "2": {
-        "bravo": "Juste ! J’écris cette phrase dans Docs, sur une nouvelle ligne.",
+      "3": {
+        "bravo": "Juste ! J’écris cette phrase dans Docs, à côté de son numéro.",
         "variantes": [
           {
             "texte": "J’ai gardé le titre ___ , puis j’ai cliqué sur ___ .",
@@ -225,8 +225,8 @@ const ETAPES_RAT = [
           }
         ]
       },
-      "3": {
-        "bravo": "Juste ! J’écris cette phrase dans Docs, sur une nouvelle ligne.",
+      "4": {
+        "bravo": "Juste ! J’écris cette phrase dans Docs, à côté de son numéro.",
         "variantes": [
           {
             "texte": "Pour mettre le titre en majuscules, j’ai ouvert le menu ___ ▸ Texte ▸ Minuscules/majuscules ▸ ___ .",
@@ -241,8 +241,8 @@ const ETAPES_RAT = [
           }
         ]
       },
-      "4": {
-        "bravo": "Juste ! J’écris cette phrase dans Docs, sur une nouvelle ligne.",
+      "5": {
+        "bravo": "Juste ! J’écris cette phrase dans Docs, à côté de son numéro.",
         "variantes": [
           {
             "texte": "J’ai sélectionné les 7 ___ , puis j’ai cliqué sur ___ .",
@@ -257,8 +257,8 @@ const ETAPES_RAT = [
           }
         ]
       },
-      "5": {
-        "bravo": "Juste ! J’écris cette phrase dans Docs, sur une nouvelle ligne.",
+      "6": {
+        "bravo": "Juste ! J’écris cette phrase dans Docs, à côté de son numéro.",
         "variantes": [
           {
             "texte": "J’ai sélectionné ___ , puis j’ai cliqué sur ___ .",
@@ -273,11 +273,11 @@ const ETAPES_RAT = [
           }
         ]
       },
-      "6": {
-        "bravo": "Juste ! J’écris cette phrase dans Docs, sur une nouvelle ligne.",
+      "7": {
+        "bravo": "Juste ! J’écris cette phrase dans Docs, à côté de son numéro.",
         "variantes": [
           {
-            "texte": "J’ai sélectionné la strophe 1, puis j’ai choisi la ___ Garamond et la ___ 14.",
+            "texte": "J’ai sélectionné la strophe 1, puis j’ai choisi la ___ EB Garamond et la ___ 14.",
             "mots": [
               "police",
               "taille"
@@ -293,7 +293,7 @@ const ETAPES_RAT = [
     "aides": {
       "0": {
         "titre": "Que signifie « Mes gestes » ?",
-        "explication": "Je raconte comment j’ai mis mon document en forme. Pour chaque geste, je précise ce que j’ai sélectionné et le bouton, le menu ou le raccourci utilisé. J’écris un geste par ligne. À la fin, je sélectionne les six lignes, puis je clique sur Liste numérotée (Ctrl + Shift + 7).",
+        "explication": "Je raconte comment j’ai mis mon document en forme. Pour chaque geste, je précise ce que j’ai sélectionné et le bouton, le menu ou le raccourci utilisé. Avant le premier geste, je clique sur Liste numérotée (Ctrl + Shift + 7) : j’écris chaque geste à côté de son numéro, et Enter fait apparaître le suivant.",
         "exemple": "Exemple d’un geste : « J’ai sélectionné le titre, puis j’ai cliqué sur Centrer. »",
         "rappel": "« J’ai écrit le texte » ou « J’ai mis l’auteur » ne sont pas des gestes de mise en forme : il manque ce que j’ai sélectionné et le bouton."
       }
