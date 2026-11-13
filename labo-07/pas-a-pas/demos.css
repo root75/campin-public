@@ -33,6 +33,12 @@
 .md-enreg{margin-left:auto;color:#5f6368;font-size:11px;white-space:nowrap}
 .md-menus{display:flex;gap:10px;padding:0 10px 4px 34px;font-size:12px;flex-wrap:wrap}
 .md-page{background:#fff;margin:6px auto 10px;width:88%;min-height:170px;box-shadow:0 1px 4px #0002;padding:12px 18px;box-sizing:border-box}
+.md-outils{display:flex;align-items:center;gap:10px;margin:0 10px;padding:3px 10px;background:#edf2fa;border-radius:14px;font-size:12px}
+.md-style{min-width:78px;padding:1px 6px;border-radius:4px;background:#fff}.md-aligner{padding:1px 6px}
+.md-styles{left:8%;top:96px;min-width:150px}.md-styles .md-st-Titre{font-size:18px}.md-styles .md-st-Sous-titre{font-size:15px;color:#666}.md-styles .md-st-Titre1{font-size:15px;font-weight:700}.md-styles .md-st-Titre2{font-size:13px;font-weight:700}
+.md-styles-sous{left:calc(8% + 160px);top:150px;min-width:200px}.md-styles-sous small{margin-left:14px;color:#5f6368}
+.md-aligner-menu{left:46%;top:96px;min-width:120px}
+.md-l.st-titre{font-size:20px}.md-l.st-sous{font-size:14px;color:#666}.md-l.st-t1{font-size:16px}.md-l.st-c{text-align:center}
 .md-l{margin:0;line-height:1.5;min-height:1.5em}.md-l.titre{font-weight:700;font-size:15px;color:#1d5a73}
 .md-table{border-collapse:collapse;margin:6px 0;font-size:12px}.md-table th,.md-table td{border:1px solid #9aa7b1;padding:2px 8px}.md-table th{background:#eef3f6}
 .md-image{position:relative;width:62%;margin:6px 0;padding:14px 8px;background:#f3f3f3;border:1px solid #c9d3db;font-size:11px}

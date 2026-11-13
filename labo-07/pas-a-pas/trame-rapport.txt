@@ -1,4 +1,5 @@
-Dans les coulisses du PC — Mon rapport d’enquête
+Dans les coulisses du PC
+Mon rapport d’enquête
 Prénom et nom : [à compléter]
 Classe : [à compléter]
 Date : [à compléter]
@@ -53,7 +54,7 @@ Machine / système / application / fichier — /2
 2 : quatre rôles distingués à l’oral dans le cas ; 1 : distinction partielle ; 0 : confusion persistante.
 
 Mise en page — /2
-1 : titre du document centré, en gras, plus grand ; 1 : les quatre parties dans le même style Titre 1.
+1 : titre en style Titre et sous-titre en style Sous-titre, tous deux centrés ; 1 : les quatre parties dans le même style Titre 1.
 
 Tableau et capture — /2
 1 : vrai tableau 3×5, lisible, en-têtes avec % ; 1 : capture utile, lisible, pas étirée, légende juste dessous.
