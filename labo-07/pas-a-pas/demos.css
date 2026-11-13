@@ -37,7 +37,8 @@
 .md-style{min-width:78px;padding:1px 6px;border-radius:4px;background:#fff}.md-aligner{padding:1px 6px}
 .md-styles{left:8%;top:96px;min-width:150px}.md-styles .md-st-Titre{font-size:18px}.md-styles .md-st-Sous-titre{font-size:15px;color:#666}.md-styles .md-st-Titre1{font-size:15px;font-weight:700}.md-styles .md-st-Titre2{font-size:13px;font-weight:700}
 .md-styles-sous{left:calc(8% + 160px);top:150px;min-width:200px}.md-styles-sous small{margin-left:14px;color:#5f6368}
-.md-aligner-menu{left:46%;top:96px;min-width:120px}
+.md-aligner-menu{left:46%;top:96px;min-width:0;display:flex;gap:2px;padding:4px}.md-aligner-menu .md-item{padding:2px 8px;font-size:15px;border-radius:4px}
+.md-bulle{position:absolute;left:0;top:calc(100% + 6px);background:#3c4043;color:#fff;font-size:11px;padding:3px 8px;border-radius:4px;white-space:nowrap}
 .md-l.st-titre{font-size:20px}.md-l.st-sous{font-size:14px;color:#666}.md-l.st-t1{font-size:16px}.md-l.st-c{text-align:center}
 .md-l{margin:0;line-height:1.5;min-height:1.5em}.md-l.titre{font-weight:700;font-size:15px;color:#1d5a73}
 .md-table{border-collapse:collapse;margin:6px 0;font-size:12px}.md-table th,.md-table td{border:1px solid #9aa7b1;padding:2px 8px}.md-table th{background:#eef3f6}

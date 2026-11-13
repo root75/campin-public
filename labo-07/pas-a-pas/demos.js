@@ -1,7 +1,7 @@
 /* Labo 07 — démos animées « Regarde comment faire » : seulement les maquettes et les images.
    Le lecteur (scène, curseur, ◀ ▶) est commun : pas-a-pas/demo-lecteur.js, chargé avant ce fichier.
    Une image = un état de l'écran maquetté + l'élément que la souris vise + une légende.
-   Maquettes Windows (Gestionnaire des tâches et ses Performances, GIMP, Banc d’essai, capture, Explorateur OneDrive,
+   Maquettes Windows (Gestionnaire des tâches et son onglet Performance, GIMP, Banc d’essai, capture, Explorateur OneDrive,
    Alt + Tab, moniteur) et Docs ; le bureau, Démarrer, Chrome, la gaufre et le devoir Classroom sont communs
    (pas-a-pas/demos-communs.js). Valeurs et noms fictifs ; rien n'est enregistré.
    Le défi final n'a pas d'animation : il reste une situation à résoudre seul. */
@@ -38,7 +38,7 @@ const Demo = (() => {
         { ...D, cible: 'L0', legende: 'Je clique dans la ligne « Dans les coulisses du PC ».' },
         { ...D, styles: { hi: 'Titre' }, cible: 'st-Titre', legende: 'Liste « Normal », à gauche de la barre d’outils ▸ Titre.' },
         { ...D, styles: { hi: 'Titre', sous: 1 }, cible: 'appliquer', legende: '▸ Appliquer le style Titre.' },
-        { ...D, st: { 0: 'titre' }, style: 'Titre', aligner: 1, cible: 'al-Centrer', legende: 'Je centre : icône Aligner ▸ Centrer (ou Ctrl + Shift + E).' },
+        { ...D, st: { 0: 'titre' }, style: 'Titre', aligner: 1, cible: 'al-Centrer', legende: 'Je centre : icône Aligner ▸ la 2e icône, « Aligner au centre » (ou Ctrl + Shift + E).' },
         { ...D, st: { 0: 'titre c' }, style: 'Sous-titre', styles: { hi: 'Sous-titre', sous: 1 }, cible: 'appliquer', legende: '« Mon rapport d’enquête » : même chemin, style Sous-titre ; puis je le centre aussi.' },
         { ...D, st: { 0: 'titre c', 1: 'sous c' }, style: 'Titre 1', styles: { hi: 'Titre 1', sous: 1, touche: 'Ctrl+Alt+1' }, cible: 'appliquer', legende: '« 1. Observer ce qui tourne » : style Titre 1 (ou Ctrl + Alt + 1).' },
         { ...D, st: { 0: 'titre c', 1: 'sous c', 3: 't1', 5: 't1' }, style: 'Titre 1', cible: 'L5', ok: 1, legende: 'Les quatre parties en Titre 1, de 1 à 4 : le même style partout.' }
@@ -57,7 +57,7 @@ const Demo = (() => {
       { ecran: 'gestion', cible: 'tot-mem', ok: 1, legende: 'Le total Mémoire aussi. Je note les deux, ligne Avant.' }
     ] },
     performances: { titre: 'Lire les caractéristiques de mon PC', images: [
-      { ecran: 'gestion', perf: 'cpu', cible: 'performances', legende: 'À gauche : 📈 Performances.' },
+      { ecran: 'gestion', perf: 'cpu', cible: 'performances', legende: 'À gauche : 📈 Performance.' },
       { ecran: 'gestion', perf: 'cpu', cible: 'perf-info', legende: 'Processeur : son nom en haut à droite, le nombre de cœurs sous le graphique. Exemple fictif.' },
       { ecran: 'gestion', perf: 'mem', cible: 'perf-info', legende: 'Mémoire : la quantité totale, en haut à droite. Ici 16,0 Go.' },
       { ecran: 'gestion', perf: 'disque', cible: 'perf-bas', ok: 1, legende: 'Disque 0 (C:) : la Capacité, sous le graphique. Je note les quatre informations dans « Mon PC ».' }
@@ -65,7 +65,7 @@ const Demo = (() => {
     gimp: { titre: 'Ouvrir GIMP et créer une grande image', images: [
       { ...BUREAU, demarrer: 1, saisie: 'gimp', resultat: ['GIMP', 'app-gimp', '🦊'], cible: 'app-gimp', legende: '⊞ Démarrer ▸ je tape GIMP ▸ je clique UNE fois sur l’application.' },
       { ...BUREAU, ecran: 'bureau', chargement: 1, cible: 'chargement', legende: 'GIMP met 5 à 20 secondes à s’ouvrir. Je ne clique pas une deuxième fois. « Bienvenue dans GIMP » : je ferme par le ×.' },
-      { ecran: 'gimp', dialogue: 'nouvelle', cible: 'valider', legende: 'Fichier ▸ Nouvelle image (Ctrl + N) : Largeur 10000, Hauteur 10000, unité px ▸ Valider.' },
+      { ecran: 'gimp', dialogue: 'nouvelle', cible: 'valider', legende: 'Fichier ▸ Nouvelle image (Ctrl + N) : Largeur 10000, Hauteur 10000, puis Tab : la ligne du dessous doit dire 10000 × 10000 pixels. Unité px ▸ Valider.' },
       { ecran: 'gimp', dialogue: 'taille', cible: 'ok', legende: '« Confirmer la taille de l’image » : environ 932 Mo, plus que la taille prévue par GIMP. Je clique sur Valider.' },
       { ecran: 'gimp', image: 1, cible: 'toile', ok: 1, legende: 'L’image grise s’affiche. Je la laisse ouverte : GIMP la garde en mémoire.' }
     ] },
@@ -191,8 +191,10 @@ const Demo = (() => {
       }
     }
     if (f.aligner) {
+      // Relevé le 13/11/2026 : quatre icônes sans nom ; l'infobulle dit « Aligner au centre (Ctrl+Maj+E) ».
       const box = el('div', 'md-menu md-aligner-menu');
-      [['⫷', 'Gauche'], ['≡', 'Centrer'], ['⫸', 'Droite'], ['☰', 'Justifier']].forEach(([i, t]) => box.append(c(el('div', 'md-item' + (t === 'Centrer' ? ' hi' : ''), i + ' ' + t), 'al-' + t)));
+      [['⫷', 'Gauche'], ['≡', 'Centrer'], ['⫸', 'Droite'], ['☰', 'Justifier']].forEach(([i, t]) => box.append(c(el('span', 'md-item' + (t === 'Centrer' ? ' hi' : ''), i), 'al-' + t)));
+      box.append(el('div', 'md-bulle', 'Aligner au centre (Ctrl + Shift + E)'));
       e.append(box);
     }
     if (f.menu) {
@@ -228,7 +230,7 @@ const Demo = (() => {
     if (f.ecran === 'accueil') e.append(el('div', 'md-titre', 'Docs — Créer un document'), c(el('div', 'md-vierge', '+ Document vierge'), 'vierge'));
     if (f.ecran === 'gestion') {
       const corps = el('div', 'md-tm');
-      const nav = el('div', 'md-tm-nav'); nav.append(c(el('span', f.perf ? null : 'on', '☰ Processus'), 'processus'), c(el('span', f.perf ? 'on' : null, '📈 Performances'), 'performances'), el('span', null, '🕘 Historique'));
+      const nav = el('div', 'md-tm-nav'); nav.append(c(el('span', f.perf ? null : 'on', '☰ Processus'), 'processus'), c(el('span', f.perf ? 'on' : null, '📈 Performance'), 'performances'), el('span', null, '🕘 Historique'));
       if (f.reduit) { corps.append(el('div', 'md-tm-petit', 'Google Chrome\nExplorateur Windows'), c(el('span', 'md-tm-plus', '⌄ Plus de détails'), 'plus')); }
       else if (f.perf) {
         const P = { cpu: ['Processeur', 'Intel(R) Core(TM) i5 (exemple)', 'Utilisation 5 % · Cœurs : 6'], mem: ['Mémoire', '16,0 Go', 'En cours d’utilisation 6,4 Go · Disponible 9,6 Go'], disque: ['Disque 0 (C:)', 'SSD (exemple)', 'Capacité : 477 Go'] };
