@@ -39,7 +39,7 @@ est aussi servie par Apps Script, où une adresse relative ne mène nulle part.
   veux:'Le but en une phrase.',
   avant:'<aside class="repere">…</aside>',       // facultatif : HTML AVANT les cases (un exemple analysé, un tableau à lire)
   essai:{ q:'…', choix:[['libellé','retour'],…], apres:'<p>…</p>', suite:'👉 À toi' },   // facultatif : À LA PLACE des cases, une question d'essai sur `avant` (avec « Je ne sais pas »), puis l'analyse ; rien n'est noté
-  gestes:['Une action par ligne, à l’impératif, avec le chemin de clics.', '…'],  // une case par geste
+  gestes:['Une action par ligne, à l’impératif, avec le <b>chemin de clics</b>.', '…'],  // une case par geste, au moins un mot-clé en <b>
   vois:'Ce qui est à l’écran quand c’est fait.',   // encadré « ✅ À vérifier »
   stop:true,                   // facultatif : 🛑 ne continue pas avant d'avoir vérifié
   extra:'<aside class="repere">…</aside>',          // facultatif : HTML sous les cases
@@ -52,6 +52,11 @@ est aussi servie par Apps Script, où une adresse relative ne mène nulle part.
 annonce la question (« Clique sur ✅ C'est vérifié : … »).
 
 `fais:'<ol class="etapes">…</ol>'` reste accepté à la place de `gestes` (fiches plus anciennes).
+
+Chaque case à cocher porte **au moins un mot-clé en gras** (`<b>`, ou `<b class="chemin">` pour un chemin de clics) :
+le geste ou l'objet de la case, pas un mot vide. L'œil accroche le geste avant de lire la phrase (Vincent, 13/11/2026).
+Pas de gras dans un attribut ni dans un `<span data-rappel>`, que le moteur remplace. Chaque test de cours (`tests/*.cjs`)
+le vérifie ; un test qui cherche une phrase de case telle quelle la compare sans balises.
 
 ## Les preuves
 

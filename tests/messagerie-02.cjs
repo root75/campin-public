@@ -112,3 +112,9 @@ console.log('OK : Messagerie 02 — '+proofs.blocs.length+' blocs ('+minutes+' m
 
 // Avec 29 élèves, la fiche n'envoie pas vers le professeur pour un mail piège : on n'ouvre pas, on supprime.
 assert.ok(!/montre[sz]? (le message )?à (mon|ton) professeur/.test(require('fs').readFileSync(__dirname+'/../messagerie-2/pas-a-pas/fiche.js','utf8')+require('fs').readFileSync(__dirname+'/../messagerie-2/pas-a-pas/preuves.json','utf8')),'pas de « je montre à mon professeur »');
+
+// Au moins un mot-clé en gras par case à cocher : l'œil accroche le geste avant de lire la phrase (Vincent, 13/11/2026).
+{const casesDe=(racine)=>{const vus=new Set(),cases=[];const lis=o=>{if(typeof o==='string'){for(const m of o.matchAll(/type="checkbox">(?:<span>)?([\s\S]*?)<\/label>/g))cases.push(m[1]);}else if(o&&typeof o==='object'&&!vus.has(o)){vus.add(o);if(Array.isArray(o.gestes))cases.push(...o.gestes);Object.values(o).forEach(lis);}};lis(racine);return cases;};
+const cases=casesDe(F.BLOCS);assert.ok(cases.length>=47,'Messagerie 02 : '+cases.length+' cases lues');
+cases.forEach(c=>assert.ok(/<b[\s>]/.test(c),'Messagerie 02, case sans mot en gras : '+c.replace(/<[^>]+>/g,'').slice(0,70)));
+console.log('OK Messagerie 02 : '+cases.length+' cases, chacune avec son mot-clé en gras.');}

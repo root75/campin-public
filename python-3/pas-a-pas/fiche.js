@@ -47,7 +47,7 @@ const colle = (a, b) => ({
           "Deux façons de réparer : enlever les guillemets, ou transformer chaque texte en nombre avec int( )."],
   q:{ type:"code", q:`Répare le programme : il doit afficher ${a+b}, pas ${a}${b}.`,
       depart:`a = "${a}"\nb = "${b}"\nprint(a + b)`,
-      test: r => r.erreur ? "Lis la ligne rouge. Un guillemet tout seul casse l'écriture : enlève-les par paires."
+      test: r => r.erreur ? "Lis la <b>ligne rouge</b>. Un guillemet tout seul casse l'écriture : enlève-les par paires."
                : !/\ba\b[\s\S]*\bb\b/.test(r.code.split("\n").slice(2).join("\n")) ? "Garde a et b dans le calcul : le programme doit marcher avec d'autres nombres."
                : SORTIE(r)===`${a}${b}` ? `Python affiche encore ${a}${b} : a et b sont toujours des textes.`
                : SORTIE(r)===String(a+b) ? true
@@ -61,7 +61,7 @@ const melangeTexte = (texte, nom, val) => ({
           `Dans print, la virgule sépare deux choses à afficher et met un espace entre elles : print("${texte} :", ${nom}).`],
   q:{ type:"code", q:`Répare le programme : il doit afficher ${texte} : ${val}`,
       depart:`${nom} = ${val}\nprint("${texte} : " + ${nom})`,
-      test: r => r.erreur ? (r.erreur.type==="TypeError" ? "Toujours TypeError : un texte + un nombre. Remplace le + par une virgule." : "Lis la ligne rouge : il manque un guillemet ou une parenthèse ?")
+      test: r => r.erreur ? (r.erreur.type==="TypeError" ? "Toujours TypeError : un texte + un nombre. Remplace le + par une virgule." : "Lis la <b>ligne rouge</b> : il manque un guillemet ou une parenthèse ?")
                : new RegExp("print\\([^\\n]*\\b"+val+"\\b").test(r.code) ? `Ne tape pas ${val} dans print : affiche la boîte ${nom}, pour que le programme marche avec un autre nombre.`
                : SORTIE(r).replace(/\s+/g," ")===`${texte} : ${val}` ? true
                : `Python affiche « ${SORTIE(r)} ». On attend : ${texte} : ${val}`,
@@ -85,7 +85,7 @@ const salue = mot => ({
   vois:`Quand on tape Léa, la console affiche ${mot} Léa.`,
   q:{ type:"code", q:`Complète le programme : il demande un prénom, puis affiche ${mot} et ce prénom.`,
       depart:`prenom = input("Ton prénom ? ")\n`, essais:[["Léa"],["Sam"]],
-      test: r => r.erreur ? (r.erreur.type==="NameError" ? "NameError : prenom s'écrit sans accent, exactement comme à la 1re ligne." : "Lis la ligne rouge : guillemets et parenthèses vont par paires.")
+      test: r => r.erreur ? (r.erreur.type==="NameError" ? "NameError : prenom s'écrit sans accent, exactement comme à la 1re ligne." : "Lis la <b>ligne rouge</b> : guillemets et parenthèses vont par paires.")
                : !/input\(/.test(r.code) ? "Garde la 1re ligne : c'est elle qui demande le prénom."
                : r.essais.every((e,i) => DERNIERE(e).replace(/\s+/g," ")===`${mot} ${["Léa","Sam"][i]}`) ? true
                : r.essais.some(e => DERNIERE(e)==="prenom" || /prenom$/.test(DERNIERE(e))) ? "La console affiche le mot prenom : sans guillemets, print affiche ce qu'il y a dans la boîte."
@@ -100,7 +100,7 @@ const echo = n => ({
   q:{ type:"code", q:`Répare le programme : il lit UNE ligne et l'affiche ${n} fois.`,
       depart: Array(n).fill("print(input())").join("\n"), essais:[["Echo"],["Hop"]],
       test: r => r.essais.some(e => e.erreur && e.erreur.type==="EOFError") ? `EOFError : il y a ${(r.code.match(/input\(/g)||[]).length} input( ), mais une seule ligne tapée. Garde un seul input( ) et range sa réponse dans une boîte.`
-               : r.erreur ? "Lis la ligne rouge : parenthèses et noms."
+               : r.erreur ? "Lis la <b>ligne rouge</b> : parenthèses et noms."
                : (r.code.match(/input\(/g)||[]).length!==1 ? "Un seul input( ) : c'est lui qui lit la ligne."
                : r.essais.every((e,i) => { const l = SORTIE(e).split("\n"), m = ["Echo","Hop"][i]; return l.length===n+1 && l.every(x => x.trim()===m); }) ? true
                : `Avec Echo, la console doit montrer Echo ${n+1} fois : la ligne tapée, puis ${n} fois le print.`,
@@ -124,7 +124,7 @@ const piegeCode = ({n,m}) => {
             "On peut convertir à la lecture, nombre = int(input(\"Un nombre ? \")), ou juste avant le calcul, int(nombre) * …"],
     q:{ type:"code", q:`Répare le programme : il doit afficher ${n*m} quand on tape ${n}.`,
         depart:`nombre = input("Un nombre ? ")\nprint(nombre * ${m})`, essais:[[String(n)],[String(autre)]],
-        test: r => r.erreur ? (r.erreur.type==="ValueError" ? "ValueError : int( ) a reçu autre chose qu'un nombre entier. Ne touche pas aux réponses tapées." : "Lis la ligne rouge : chaque parenthèse ouverte doit être fermée. int(input(\"…\")) en a DEUX à la fin.")
+        test: r => r.erreur ? (r.erreur.type==="ValueError" ? "ValueError : int( ) a reçu autre chose qu'un nombre entier. Ne touche pas aux réponses tapées." : "Lis la <b>ligne rouge</b> : chaque parenthèse ouverte doit être fermée. int(input(\"…\")) en a DEUX à la fin.")
                  : !/\bint\(/.test(r.code) ? "Utilise int( ) : c'est lui qui transforme le texte en nombre."
                  : DERNIERE(r.essais[0])===String(n).repeat(m) ? "Toujours recopié : int( ) doit entourer le texte tapé (ou la boîte nombre)."
                  : r.essais.every((e,i) => DERNIERE(e)===String([n,autre][i]*m)) ? true
@@ -172,7 +172,7 @@ const BLOCS = [
   { partie:"A — Se remettre en route", titre:"Quelle sorte d'erreur ?", min:3,
     bulle:"Re-bonjour ! D'abord, un rappel de la séance des erreurs.",
     veux:"Te rappeler les trois sortes d'erreurs de Python 02.",
-    fais:CASES("Lis le programme et ce qu'il est censé faire.", "Prédis la sorte d'erreur, puis réponds."),
+    fais:CASES("Lis le programme et <b>ce qu'il est censé faire</b>.", "Prédis la <b>sorte d'erreur</b>, puis réponds."),
     extra: CODE("score = 10\nprint(score"),
     coince:["SyntaxError : l'écriture est cassée. NameError : un nom inconnu. Logique : pas de ligne rouge, mais un résultat faux."],
     q:{ type:"qcm", q:"Quelle sorte d'erreur ?",
@@ -194,7 +194,7 @@ const BLOCS = [
   { partie:"B — Texte ou nombre ?", titre:"Deux sortes de valeurs", min:3,
     bulle:"Pour Python, \"3\" et 3, ce n'est pas du tout pareil.",
     veux:"Distinguer un texte d'un nombre.",
-    fais:CASES("Lis l'encadré.", "Prédis, puis réponds."),
+    fais:CASES("Lis l'<b>encadré</b>.", "<b>Prédis</b>, puis réponds."),
     extra:`<div class="encart"><table>
   <tr><th>On écrit</th><th>Python y voit</th><th>Son type</th></tr>
   <tr><td><code>"3"</code></td><td>un texte (avec des guillemets)</td><td><code>str</code></td></tr>
@@ -214,14 +214,14 @@ const BLOCS = [
   { partie:"B — Texte ou nombre ?", titre:"Le total qui colle", min:5,
     bulle:"Pas de ligne rouge… mais un total bizarre.",
     veux:"Réparer un calcul fait sur des textes.",
-    fais:CASES("Exécute le programme tel quel : "+EXECUTER, "Compare avec le résultat attendu.", "Répare, puis exécute à nouveau."),
+    fais:CASES("Exécute le programme tel quel : "+EXECUTER, "Compare avec le <b>résultat attendu</b>.", "<b>Répare</b>, puis exécute à nouveau."),
     ...colle(3, 4),
     variantes:[colle(6, 2), colle(5, 4)] },
 
   { partie:"B — Texte ou nombre ?", titre:"Texte fois nombre", min:3,
     bulle:"Et si on multiplie un texte ?",
     veux:"Prédire ce que fait * sur un texte.",
-    fais:CASES("Lis l'encadré.", "Prédis, puis réponds."),
+    fais:CASES("Lis l'<b>encadré</b>.", "<b>Prédis</b>, puis réponds."),
     extra:`<div class="encart"><p>Un texte multiplié par un nombre entier est <b>recopié</b> : <code>"hop" * 2</code> donne <b>hophop</b>.</p><p>Mais un texte <b>+</b> un nombre est refusé : <b>TypeError</b>.</p></div>`,
     coince:["* recopie le texte autant de fois que le nombre le dit, sans espace."],
     q:{ type:"qcm", q:`Prédis : que fait print("ha" * 3) ?`, c:["hahaha","ha3","ha ha ha","Une erreur TypeError"],
@@ -235,14 +235,14 @@ const BLOCS = [
   { partie:"B — Texte ou nombre ?", titre:"Texte + nombre : TypeError", min:5, stop:true,
     bulle:"Afficher un texte ET un nombre, sans erreur.",
     veux:"Afficher un texte et un nombre sur la même ligne.",
-    fais:CASES("Exécute le programme tel quel : "+EXECUTER, "Lis la ligne rouge : quel est le nom de l'erreur ?", "Répare avec une virgule, puis exécute à nouveau."),
+    fais:CASES("Exécute le programme tel quel : "+EXECUTER, "Lis la <b>ligne rouge</b> : quel est le nom de l'erreur ?", "Répare avec une <b>virgule</b>, puis exécute à nouveau."),
     ...melangeTexte("Vies", "vies", 3),
     variantes:[melangeTexte("Score", "score", 30), melangeTexte("Pièces", "pieces", 7)] },
 
   { partie:"B — Texte ou nombre ?", titre:"Les nombres à virgule", min:3,
     bulle:"Un dernier type : les nombres à virgule.",
     veux:"Prédire le type d'un calcul qui mélange entier et nombre à virgule.",
-    fais:CASES("Lis le programme ligne par ligne.", "Prédis les trois valeurs affichées, puis réponds."),
+    fais:CASES("Lis le programme <b>ligne par ligne</b>.", "Prédis les <b>trois valeurs affichées</b>, puis réponds."),
     coince:["En Python, la virgule d'un nombre s'écrit avec un POINT : 1.5.",
             "Un calcul avec un nombre à virgule donne un nombre à virgule, même quand le résultat tombe juste : 3.0."],
     ...flottant(1.5, 2),
@@ -251,7 +251,7 @@ const BLOCS = [
   { partie:"C — Le programme pose une question", titre:"input() : le programme attend", min:5,
     bulle:"Jusqu'ici, tes programmes parlaient. Maintenant, ils écoutent !",
     veux:"Écrire un programme qui demande quelque chose à la personne qui l'utilise.",
-    fais:CASES("Lis l'encadré.", "Complète le programme : une 2e ligne qui affiche le mot demandé et le prénom.", EXECUTER),
+    fais:CASES("Lis l'<b>encadré</b>.", "Complète le programme : une <b>2e ligne</b> qui affiche le mot demandé et le prénom.", EXECUTER),
     extra:`<div class="encart"><p><code>prenom = input("Ton prénom ? ")</code> affiche la question, <b>attend</b> qu'on tape une réponse et Enter, puis range la réponse dans la boîte <code>prenom</code>.</p>
   <p><b>Dans Thonny</b>, la console du bas attend : tu tapes ta réponse, puis Enter.<br><b>Dans cette page</b>, les réponses sont déjà tapées pour toi : la fiche essaie ton programme avec <b>Léa</b>, puis avec <b>Sam</b>.</p>
   <p>Dans la console, la ligne tapée reste affichée, comme dans Thonny.</p></div>`,
@@ -263,14 +263,14 @@ const BLOCS = [
   { partie:"C — Le programme pose une question", titre:"Echo", min:4,
     bulle:"Un programme qui demande trop…",
     veux:"Comprendre qu'un input( ) = une réponse à taper.",
-    fais:CASES("Exécute le programme tel quel : "+EXECUTER, "Lis le nom de l'erreur.", "Répare : un seul input( ), rangé dans une boîte.", EXECUTER),
+    fais:CASES("Exécute le programme tel quel : "+EXECUTER, "Lis le <b>nom de l'erreur</b>.", "Répare : <b>un seul input( )</b>, rangé dans une boîte.", EXECUTER),
     ...echo(2),
     variantes:[echo(3), echo(4)] },
 
   { partie:"C — Le programme pose une question", titre:"Le piège du nombre tapé", min:3, cle:"piege",
     bulle:"Attention, piège !",
     veux:"Découvrir ce que input( ) rend vraiment.",
-    fais:CASES("Lis le programme.", "Prédis ce qu'affiche la dernière ligne, puis réponds."),
+    fais:CASES("Lis le <b>programme</b>.", "Prédis ce qu'affiche la <b>dernière ligne</b>, puis réponds."),
     coince:["Ce qu'on tape au clavier, c'est toujours du texte, même des chiffres."],
     ...piegeQ(PIEGE_V[0]),
     variantes:[piegeQ(PIEGE_V[1]), piegeQ(PIEGE_V[2])] },
@@ -278,7 +278,7 @@ const BLOCS = [
   { partie:"C — Le programme pose une question", titre:"Réparer avec int()", min:5, stop:true, cle:"piege",
     bulle:"int( ) : du texte au nombre.",
     veux:"Transformer la réponse tapée en nombre.",
-    fais:CASES("Exécute le programme tel quel : "+EXECUTER, "Ajoute int( ) au bon endroit.", "Exécute : la fiche essaie deux nombres."),
+    fais:CASES("Exécute le programme tel quel : "+EXECUTER, "Ajoute <b>int( )</b> au bon endroit.", "<b>Exécute</b> : la fiche essaie deux nombres."),
     extra:`<div class="encart"><p><code>int("3")</code> transforme le texte <b>"3"</b> en nombre <b>3</b>. La forme la plus courante, à retenir :</p>${CODE('nombre = int(input("Un nombre ? "))')}
   <p><b>Dans Thonny</b>, <span class="chemin">menu Affichage ▸ Variables</span> le montre : sans int( ), la boîte contient <code>'3'</code>, <b>entre apostrophes</b> : c'est un texte. Avec int( ), elle contient <code>3</code>.</p></div>`,
     ...piegeCode(PIEGE_V[0]),
@@ -290,9 +290,9 @@ const BLOCS = [
     fais:CASES(`Appuie sur la touche <b>Windows</b> ⊞, tape <b>Thonny</b>, puis appuie sur <b>Enter</b>.`,
                `Dans Thonny : <span class="chemin">menu Fichier ▸ Nouveau</span> (ou <b>Ctrl + N</b>).`,
                `Puis <span class="chemin">menu Fichier ▸ Enregistrer sous…</span> (ou <b>Ctrl + Shift + S</b>).`,
-               `Dans la fenêtre qui s'ouvre : <span class="chemin">Documents ▸ double-clic sur Python</span>.`,
+               `Dans la fenêtre qui s'ouvre : <b class="chemin">Documents ▸ double-clic sur Python</b>.`,
                `Dans <span class="chemin">Nom du fichier</span>, tape <b>02_Le-score_Nom.py</b>, avec TON nom à la place de Nom.`,
-               `Clique sur <span class="chemin">Enregistrer</span>.`),
+               `Clique sur <b class="chemin">Enregistrer</b>.`),
     vois:"L'onglet, en haut de Thonny, affiche 02_Le-score_ et ton nom.",
     coince:["Thonny ne se lance pas : nouvel onglet (Ctrl + T) ▸ barre d’adresse ▸ https://cscircles.cemc.uwaterloo.ca/dev/console-fr/ ▸ Enter. Rien n’y est enregistré : sonne la cloche 🔔 ; le professeur organise la sauvegarde.",
             "Ton dossier Python n'est pas dans Documents : crée-le. Documents ▸ ⊕ Nouveau ▸ Dossier ▸ Python ▸ Enter.",
@@ -308,10 +308,10 @@ const BLOCS = [
   { partie:"D — « Le score », dans Thonny", titre:"Traduire « Le score »", min:8, cle:"score",
     bulle:"Le logigramme du score : à toi de le traduire, sans modèle.",
     veux:"Écrire en Python un logigramme qui lit, calcule et affiche.",
-    fais:CASES("Écris une ligne par forme du logigramme, dans la zone du haut de Thonny.",
-               `Pour « Lire pieces » : <code>pieces = int(input("Combien de pièces ? "))</code>.`,
+    fais:CASES("Écris <b>une ligne par forme</b> du logigramme, dans la zone du haut de Thonny.",
+               `Pour « <b>Lire pieces</b> » : <code>pieces = int(input("Combien de pièces ? "))</code>.`,
                `Enregistre : <span class="chemin">icône disquette « Enregistrer »</span> (ou <b>Ctrl + S</b>).`,
-               "N'exécute pas encore : prédis, ci-dessous.",
+               "N'exécute pas encore : <b>prédis</b>, ci-dessous.",
                `Puis <span class="chemin">icône ▶ verte</span> (ou <b>F5</b>) : clique dans la console du bas, tape ton nombre, puis <b>Enter</b>.`),
     vois:"Trois lignes de Python. La console pose la question, attend ta réponse, puis affiche le score.",
     extra: LOGIGRAMME_SCORE + `<div class="encart"><table>
@@ -337,7 +337,7 @@ const BLOCS = [
             "Le cadre affiche le nombre de pièces au lieu du score : print doit afficher la boîte score.",
             "Tu peux afficher print(score) ou print(\"Score :\", score) : les deux sont acceptés."],
     q:{ type:"code", q:"Colle ici ton programme « Le score ».", depart:"", essais:[["3"],["12"]],
-        test: r => r.erreur ? (r.erreur.type==="EOFError" ? "Un seul input( ) : le programme ne lit qu'un nombre de pièces." : "Lis la ligne rouge, corrige aussi dans Thonny, puis Ctrl + S.")
+        test: r => r.erreur ? (r.erreur.type==="EOFError" ? "Un seul input( ) : le programme ne lit qu'un nombre de pièces." : "Lis la <b>ligne rouge</b>, corrige aussi dans Thonny, puis Ctrl + S.")
                  : !/input\(/.test(r.code) ? "Le programme doit demander le nombre de pièces avec input( )."
                  : !/\bint\(/.test(r.code) ? "Il manque int( ) : sans lui, la réponse tapée reste un texte."
                  : r.essais.every((e,i) => { const d = DERNIERE(e).replace(/\s+/g," "); const v = [30,120][i]; return d===String(v) || d===`Score : ${v}` || d===`Score: ${v}`; }) ? true
@@ -349,9 +349,9 @@ const BLOCS = [
     veux:"Un programme commenté, vérifié par un camarade.",
     fais:CASES("Dans Thonny, au-dessus de chaque ligne, ajoute un commentaire <b>#</b> qui dit ce qu'elle fait.",
                `Enregistre (<b>Ctrl + S</b>), puis exécute (<b>F5</b>).`,
-               "Réponds seul à la question ci-dessous.",
-               "Échange de poste avec ton voisin : il lit tes commentaires, exécute ton programme avec un nombre de son choix, et te dit une chose réussie et une chose à corriger.",
-               "Corrige toi-même s'il y a lieu, puis Ctrl + S."),
+               "Réponds <b>seul</b> à la question ci-dessous.",
+               "<b>Échange de poste</b> avec ton voisin : il lit tes commentaires, exécute ton programme avec un nombre de son choix, et te dit une chose réussie et une chose à corriger.",
+               "<b>Corrige toi-même</b> s'il y a lieu, puis Ctrl + S."),
     vois:"Six lignes : trois commentaires, trois instructions. Ton voisin a testé avec SON nombre.",
     extra: CODE(`# on demande le nombre de pièces\npieces = int(input("Combien de pièces ? "))\n# …\n# …`),
     coince:["Le # est AltGr + 3.", "Le voisin regarde et parle ; c'est toi qui tapes sur ton clavier."],
@@ -369,14 +369,14 @@ const BLOCS = [
   { partie:"E — Rendre mon programme", titre:"Rendre « Le score » dans Classroom", min:4, stop:true, cle:"score",
     bulle:"Ton programme « Le score » part chez le professeur. Il est coté sur 5.",
     veux:"Rendre ton fichier 02_Le-score, commenté, dans Classroom, pour qu'il soit coté sur 5.",
-    fais:CASES(`Lis la grille ci-dessous : vérifie chaque ligne dans ton programme.`,
-               `Relis tes trois commentaires : ce sont TES mots, pas ceux de ton voisin, et pas la ligne recopiée.`,
+    fais:CASES(`Lis la <b>grille</b> ci-dessous : vérifie chaque ligne dans ton programme.`,
+               `Relis <b>tes trois commentaires</b> : ce sont TES mots, pas ceux de ton voisin, et pas la ligne recopiée.`,
                `Dans Thonny, enregistre une dernière fois : <span class="chemin">menu Fichier ▸ Enregistrer</span> (ou <b>Ctrl + S</b>).`,
                `Ouvre un nouvel onglet (<b>Ctrl + T</b>), tape <b>classroom.google.com</b>, puis appuie sur <b>Enter</b>.`,
                `Clique sur le cours de <b>Logique et programmation</b> ▸ onglet <span class="chemin">Travaux et devoirs</span> ▸ le devoir <b>Python 03 — Le score</b> ▸ <span class="chemin">Afficher le devoir</span>.`,
-               `À droite, dans <span class="chemin">Vos devoirs</span> : <span class="chemin">＋ Ajouter ou créer ▸ Fichier ▸ Parcourir</span>.`,
-               `Dans la fenêtre : <span class="chemin">Documents ▸ double-clic sur Python ▸ clic sur 02_Le-score_… ▸ Ouvrir</span>, puis <span class="chemin">Importer</span>.`,
-               `Ton fichier apparaît sous Vos devoirs : clique sur <span class="chemin">Rendre le devoir ▸ Rendre le devoir</span>.`),
+               `À droite, dans <span class="chemin">Vos devoirs</span> : <b class="chemin">＋ Ajouter ou créer ▸ Fichier ▸ Parcourir</b>.`,
+               `Dans la fenêtre : <span class="chemin">Documents ▸ double-clic sur Python ▸ clic sur 02_Le-score_… ▸ Ouvrir</span>, puis <b class="chemin">Importer</b>.`,
+               `Ton fichier apparaît sous Vos devoirs : clique sur <b class="chemin">Rendre le devoir ▸ Rendre le devoir</b>.`),
     vois:"Dans Classroom, le devoir affiche « Remis » et ton fichier 02_Le-score_… .py.",
     coince:["Pas de devoir « Python 03 — Le score » dans Travaux et devoirs : vérifie que tu es dans le cours de Logique et programmation. Toujours rien : sonne la cloche 🔔.",
             "Ton fichier n'est pas dans Documents ▸ Python : dans la fenêtre, tape 02_Le-score dans la case Rechercher, en haut à droite, puis Enter.",
@@ -392,15 +392,15 @@ const BLOCS = [
   { partie:"F — Défi", titre:"Les vies, version jeu", min:6, cle:"vies", variantes:[{},{}],
     bulle:"Ton fichier est rendu. Défi, pour finir : « Les vies » devient un vrai morceau de jeu.",
     veux:"Écrire seul un programme qui lit, calcule et affiche.",
-    fais:CASES("Le joueur commence avec {D} vies.",
-               "Le programme demande les dégâts reçus, puis affiche les vies qui restent.",
-               "Écris-le dans le cadre ci-dessous, sans modèle.", EXECUTER),
+    fais:CASES("Le joueur commence avec <b>{D} vies</b>.",
+               "Le programme demande les <b>dégâts reçus</b>, puis affiche les <b>vies qui restent</b>.",
+               "Écris-le dans le cadre ci-dessous, <b>sans modèle</b>.", EXECUTER),
     vois:"La fiche tape {K} : il reste {R} vies. Puis elle tape 1 : il en reste une de moins que {D}.",
     coince:["Même plan que « Le score » : une boîte de départ, un int(input(…)), un calcul, un print.",
             "Des noms sans accent : degats, pas dégâts.",
             "Toujours bloqué après ton voisin : relis ton programme « Les vies » de Python 01 et ajoute un int(input(…))."],
     q:{ type:"code", q:"Écris le programme « Les vies, version jeu ».", depart:"vies = {D}\n", essais:[["{K}"],["1"]],
-        test: r => r.erreur ? (r.erreur.type==="EOFError" ? "Un seul input( ) : on ne tape qu'une fois les dégâts." : r.erreur.type==="TypeError" ? "TypeError : texte et nombre mélangés. As-tu mis int( ) autour de input( ) ?" : "Lis la ligne rouge, corrige, puis exécute.")
+        test: r => r.erreur ? (r.erreur.type==="EOFError" ? "Un seul input( ) : on ne tape qu'une fois les dégâts." : r.erreur.type==="TypeError" ? "TypeError : texte et nombre mélangés. As-tu mis int( ) autour de input( ) ?" : "Lis la <b>ligne rouge</b>, corrige, puis exécute.")
                  : !/input\(/.test(r.code) ? "Le programme doit demander les dégâts avec input( )."
                  : r.essais.every((e,i) => (DERNIERE(e).match(/-?\d+/g)||[]).pop()===String([LV.r, LV.d-1][i])) ? true
                  : `Avec ${LV.k} de dégâts, ta dernière ligne est « ${DERNIERE(r.essais[0])} ». On attend ${LV.r}.`,
