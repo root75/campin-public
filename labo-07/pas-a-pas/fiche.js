@@ -120,35 +120,15 @@ const BLOCS = [
     "titre": "Défi : une application ouverte, qu’est-ce qui change ?",
     "min": 12,
     "veux": "Relever les caractéristiques de mon PC, puis prévoir ce que feront le processeur et la mémoire pendant un gros calcul, avec une grande image ouverte dans GIMP, et quand j’arrêterai GIMP.",
-    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\"><span>Ouvre le <b>Gestionnaire des tâches</b> : clic droit sur l’icône ⊞ Démarrer ▸ Gestionnaire des tâches (ou Ctrl + Shift + Esc).</span></label></li><li><label><input type=\"checkbox\"><span>Petite fenêtre, sans colonnes ? Clique sur ⌄ <b>Plus de détails</b>, en bas à gauche. Les colonnes et le menu de gauche sont déjà là : coche, rien à faire.</span></label></li><li><label><input type=\"checkbox\"><span>À gauche, 📈 <b>Performance</b> ▸ clique tour à tour sur Processeur (son nom en haut à droite, le nombre de Cœurs sous le graphique), sur Mémoire (le total, en haut à droite) et sur Disque 0 (C:) (sa Capacité, sous le graphique).</span></label></li><li><label><input type=\"checkbox\"><span>Dans ton rapport, partie 1, complète la ligne « <b>Mon PC</b> » avec ces quatre informations.</span></label></li></ol>",
+    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\"><span>Ouvre le <b>Gestionnaire des tâches</b> : clic droit sur l’icône ⊞ Démarrer ▸ Gestionnaire des tâches (ou Ctrl + Shift + Esc).</span></label></li><li><label><input type=\"checkbox\"><span>À gauche, 📈 <b>Performance</b> ▸ clique tour à tour sur Processeur (son nom en haut à droite, le nombre de Cœurs sous le graphique), sur Mémoire (le total, en haut à droite) et sur Disque 0 (C:) (sa Capacité, sous le graphique).</span></label></li><li><label><input type=\"checkbox\"><span>Dans ton rapport, partie 1, complète la ligne « <b>Mon PC</b> » avec ces quatre informations.</span></label></li></ol>",
     "vois": "Mon rapport indique le processeur, les cœurs, la mémoire et le disque de mon PC ; mon hypothèse annonce un changement possible et ce qui me permettrait de le constater.",
     "coince": [
-      "Pas de noms à gauche du Gestionnaire ? Clique sur ☰, en haut à gauche, ou agrandis la fenêtre. Tes valeurs diffèrent de celles du voisin ? Normal : chaque PC a les siennes. Une hypothèse est une idée à tester, pas une définition.",
+      "Le Gestionnaire s’ouvre en petite fenêtre, sans colonnes ? Clique sur ⌄ Plus de détails, en bas à gauche. Pas de noms à gauche du Gestionnaire ? Clique sur ☰, en haut à gauche, ou agrandis la fenêtre. Tes valeurs diffèrent de celles du voisin ? Normal : chaque PC a les siennes. Une hypothèse est une idée à tester, pas une définition.",
       "Commence par « Pendant un gros calcul, je pense que… ». Indique ce que tu comparerais avant, pendant le calcul et après l’arrêt. Ton rapport n’est plus ouvert ? Gaufre ⋮⋮⋮ ▸ Docs ▸ ton rapport, dans la liste. Pas encore de rapport ? Clique sur la pastille 📄."
     ],
     "demos": {
-      "1": [
-        "gestionnaire",
-        [
-          0,
-          1
-        ]
-      ],
-      "2": [
-        "gestionnaire",
-        [
-          2
-        ]
-      ],
-      "3": [
-        "performances",
-        [
-          0,
-          1,
-          2,
-          3
-        ]
-      ]
+      "1": ["gestionnaire", [0, 1]],
+      "2": ["performances", [0, 1, 2, 3]]
     },
     "indices": true,
     "q": {
@@ -191,14 +171,13 @@ const BLOCS = [
       "2": [
         "gestionnaire",
         [
-          3
+          2
         ]
       ],
       "3": [
         "gestionnaire",
         [
-          4,
-          5
+          3, 4
         ]
       ],
       "4": [
