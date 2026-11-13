@@ -101,6 +101,7 @@ const DemosCommuns = (() => {
 .md-win-cad .md-item{padding:4px 14px;font-size:14px;border-radius:4px}.md-win-cad .md-item.hi{background:#ffffff33;font-weight:700}
 .md-win-cad-annuler{margin-top:10px;background:#ffffff26;border:1px solid #ffffff80;border-radius:4px;padding:4px 22px;font-size:13px}
 .md-win-menu{position:absolute;left:calc(50% - 75px);bottom:46px;background:#fff;border:1px solid #c9d3db;border-radius:8px;box-shadow:0 4px 14px #0003;padding:4px 0;z-index:3;min-width:190px}
+.md-win-bureau.md-win-haut{min-height:440px}.md-win-winx{padding:3px 0}.md-win-winx .md-item{padding:2px 14px;font-size:12px;line-height:1.35}.md-win-filet{border-top:1px solid #d6dde3;margin:3px 0}
 .md-cr-devoir{display:grid;grid-template-columns:1fr minmax(170px,210px);gap:14px;padding:14px;align-items:start;align-content:start;min-height:320px}
 .md-cr-sujet{display:grid;gap:4px;align-content:start}.md-cr-icone{width:34px;height:34px;border-radius:50%;background:#1e8e3e;display:grid;place-items:center;font-size:16px}
 .md-cr-titre{font-size:17px;color:#137333}.md-cr-meta{color:#5f6368;font-size:12px}
@@ -258,7 +259,11 @@ const DemosCommuns = (() => {
   /* ——— Windows 11 : le bureau, la barre des tâches, Démarrer ———
      Démarrer ▸ « chrome » ▸ « Meilleure correspondance » ▸ Google Chrome, Application : relevé le 08/11/2026. */
   const logo = n => el('span', 'md-logo-' + n);
-  const MENU_WINX = ['Applications installées', 'Gestion de l’ordinateur', 'Gestionnaire des tâches', 'Paramètres', 'Explorateur de fichiers', 'Rechercher'];
+  /* Clic droit sur ⊞ Démarrer : relevé sur un PC de l'école le 13/11/2026 ('—' = filet de séparation). */
+  const MENU_WINX = ['Applications installées', 'Options d’alimentation', 'Observateur d’événements', 'Système',
+    'Gestionnaire de périphériques', 'Connexions réseau', 'Gestion des disques', 'Gestion de l’ordinateur', 'Terminal',
+    'Terminal (administrateur)', '—', 'Gestionnaire des tâches', 'Paramètres', 'Explorateur de fichiers', 'Rechercher',
+    'Exécuter', '—', 'Arrêter ou se déconnecter ›', 'Bureau'];
   function bureau(f) {
     const e = el('div', 'md md-win-bureau'), b = el('div', 'md-win-barre');
     const ch = c(el('span', 'md-win-ico'), 'ico-chrome'); ch.append(logo('chrome')); ch.title = 'Google Chrome';
@@ -300,9 +305,9 @@ const DemosCommuns = (() => {
       }
     }
     if (f.clicdroit) {
-      const m = el('div', 'md-win-menu');
-      MENU_WINX.forEach(t => m.append(c(el('div', 'md-item' + (t === f.clicdroit ? ' hi' : ''), t), 'item-' + t)));
-      e.append(m);
+      const m = el('div', 'md-win-menu md-win-winx');
+      MENU_WINX.forEach(t => m.append(t === '—' ? el('div', 'md-win-filet') : c(el('div', 'md-item' + (t === f.clicdroit ? ' hi' : ''), t), 'item-' + t)));
+      e.classList.add('md-win-haut'); e.append(m);
     }
     if (f.droit) souris(e);
     return e;
