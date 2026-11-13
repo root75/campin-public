@@ -52,9 +52,9 @@ const Demo = (() => {
     ] },
     etape7: { titre: 'Une police par strophe', images: [
       doc(base('centre gras capitales', 'sel centre', 'droite italique souligne'), { cible: 'L2', legende: 'Je sélectionne SEULEMENT la strophe 1.' }),
-      doc(base('centre gras capitales', 'sel centre', 'droite italique souligne'), { cible: 'item-Garamond', menu: { sous: 'police', items: ['Arial', 'Calibri', 'Garamond', 'Arial Black'], hi: 'Garamond' }, legende: 'Menu des polices ▸ Garamond.' }),
-      doc(base('centre gras capitales', 'sel centre garamond', 'droite italique souligne'), { police: 'Garamond', cible: 'taille', legende: 'Je clique dans la case du nombre, je tape 14, Enter.' }),
-      doc(base('centre gras capitales', 'centre garamond grand', 'droite italique souligne'), { police: 'Garamond', taille: '14', cible: 'L2', ok: 1, legende: 'Seule la strophe 1 a changé. À la suivante !' })
+      doc(base('centre gras capitales', 'sel centre', 'droite italique souligne'), { cible: 'item-EB Garamond', menu: { sous: 'police', items: ['Arial', 'Calibri', 'EB Garamond', 'Arial Black'], hi: 'EB Garamond' }, legende: 'Menu des polices ▸ EB Garamond.' }),
+      doc(base('centre gras capitales', 'sel centre garamond', 'droite italique souligne'), { police: 'EB Garamond', cible: 'taille', legende: 'Je clique dans la case du nombre, je tape 14, Enter.' }),
+      doc(base('centre gras capitales', 'centre garamond grand', 'droite italique souligne'), { police: 'EB Garamond', taille: '14', cible: 'L2', ok: 1, legende: 'Seule la strophe 1 a changé. À la suivante !' })
     ] },
     etape8: { titre: 'Mon bloc-notes : la liste à puces', images: [
       doc([L('Mon bloc-notes', 'gras'), L('le tapis', 'sel'), L('…', 'sel'), L('…', 'sel')], { cible: 'puces', legende: 'Je sélectionne mes 3 lignes ▸ Liste à puces (Ctrl + Shift + 8).' })

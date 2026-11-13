@@ -92,7 +92,7 @@ function dessine(){
     const auteur=txt('p','exemple-auteur','Jean de La Fontaine');modele.append(titre,corps,auteur);observation.append(modele);
   }
   if(b.id===7){const tableau=txt('table','repere-polices');const legende=txt('caption',null,'Police et taille attendues');tableau.append(legende);
-    [['Strophes','Police','Taille'],['1 et 2','Garamond','14'],['3 et 4','Arial','12'],['5','Calibri','10'],['6 et 7','Arial Black','8']].forEach((ligne,k)=>{const tr=txt('tr');ligne.forEach(v=>tr.append(txt(k?'td':'th',null,v)));tableau.append(tr);});observation.append(tableau);}
+    [['Strophes','Police','Taille'],['1 et 2','EB Garamond','14'],['3 et 4','Arial','12'],['5','Calibri','10'],['6 et 7','Arial Black','8']].forEach((ligne,k)=>{const tr=txt('tr');ligne.forEach(v=>tr.append(txt(k?'td':'th',null,v)));tableau.append(tr);});observation.append(tableau);}
   z.append(observation,txt('p','agir','✋ À moi dans Docs ! Je fais, puis je coche.'),txt('p','note annuler','Je me suis trompé ? Tout de suite : ↶ Annuler (Ctrl + Z), la flèche tout à gauche de la barre d’outils.'));
   if(b.consigne)z.append(txt('p','note',b.consigne));
   const ul=txt('ul','cases');b.actions.forEach((t,j)=>{
@@ -111,8 +111,9 @@ function dessine(){
     if(i+delta<0)continue;
     if(i+delta>=ETAPES_RAT.length){const n=txt('button','btn vide','Ma grille d’évaluation →');n.type='button';n.addEventListener('click',()=>{vueGrille=true;dessine();scrollTo(0,0);});nav.append(n);continue;}
     const n=txt('button','btn vide',label);n.type='button';n.addEventListener('click',()=>va(ETAPES_RAT[i+delta].id));nav.append(n);
-  }z.append(sonnerie(),nav,txt('p','note','Je peux continuer même si une case reste vide. Je coche quand j’ai terminé ; le professeur examine mon document.'));
+  }z.append(nav,txt('p','note','Je peux continuer même si une case reste vide. Je coche quand j’ai terminé ; le professeur examine mon document.'));
   if(typeof PhraseFin!=='undefined'&&ETAPES_RAT.every((_,j)=>etat.etapes&&etat.etapes[j])){const f=PhraseFin.figure(CITATION);if(f)z.append(f);}
+  z.append(sonnerie());
   cloche();coince();progression();commandes();
 }
 /* « Ça coince ? » : seulement les aides de l'étape affichée (et « Je me trompe »), sauf si l'élève demande tout. */
@@ -187,7 +188,7 @@ function demoCase(i,j){
   return d;
 }
 /* Fermer et rouvrir ne sont plus des étapes : chacun le fait à la sonnerie, où qu'il en soit.
-   « À la sonnerie » : sous chaque étape. « Je reprends » : en haut, à la réouverture du cours
+   « À la sonnerie » : tout en bas de chaque étape. « Je reprends » : en haut, à la réouverture du cours
    (déjà des cases cochées et plus de 5 min sans action), ou par le bouton de l'encadré. Pas de case. */
 let autresActifs=[];
 function arreteAutres(){autresActifs.forEach(x=>x.stop());autresActifs=[];}
