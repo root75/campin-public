@@ -30,7 +30,8 @@ const hache = s => {   // FNV-1a brassé, comme hache_() dans Code.gs
 };
 const tirage = (cle, n) => n<2 || !EMAIL ? 1 : 1 + hache(EMAIL.toLowerCase()+"|"+cle) % n;
 
-const CASES = (...l) => `<ol class="etapes">${l.map(x => `<li><label><input type="checkbox"><span>${x}</span></label></li>`).join("")}</ol>`;
+// Une case peut porter son « ne fais pas » : {geste:"…", attention:"⚠️ …"}, un encadré sous la case, jamais dans son texte.
+const CASES = (...l) => `<ol class="etapes">${l.map(x => typeof x === "string" ? `<li><label><input type="checkbox"><span>${x}</span></label></li>` : `<li><label><input type="checkbox"><span>${x.geste}</span></label><p class="attention">${x.attention}</p></li>`).join("")}</ol>`;
 const EXECUTER = `Clique sur <span class="chemin">▶ Exécuter</span> (ou <b>Ctrl + Enter</b>).`;
 const sansAccent = s => s.normalize("NFD").replace(/[̀-ͯ]/g,"");
 
@@ -311,7 +312,7 @@ const BLOCS = [
     fais:CASES("Écris <b>une ligne par forme</b> du logigramme, dans la zone du haut de Thonny.",
                `Pour « <b>Lire pieces</b> » : <code>pieces = int(input("Combien de pièces ? "))</code>.`,
                `Enregistre : <span class="chemin">icône disquette « Enregistrer »</span> (ou <b>Ctrl + S</b>).`,
-               "N'exécute pas encore : <b>prédis</b>, ci-dessous.",
+               { geste:"<b>Prédis</b> le résultat, ci-dessous.", attention:"⚠️ N'exécute pas encore : d'abord ta prédiction, ensuite F5." },
                `Puis <span class="chemin">icône ▶ verte</span> (ou <b>F5</b>) : clique dans la console du bas, tape ton nombre, puis <b>Enter</b>.`),
     vois:"Trois lignes de Python. La console pose la question, attend ta réponse, puis affiche le score.",
     extra: LOGIGRAMME_SCORE + `<div class="encart"><table>

@@ -40,6 +40,7 @@ est aussi servie par Apps Script, où une adresse relative ne mène nulle part.
   avant:'<aside class="repere">…</aside>',       // facultatif : HTML AVANT les cases (un exemple analysé, un tableau à lire)
   essai:{ q:'…', choix:[['libellé','retour'],…], apres:'<p>…</p>', suite:'👉 À toi' },   // facultatif : À LA PLACE des cases, une question d'essai sur `avant` (avec « Je ne sais pas »), puis l'analyse ; rien n'est noté
   gestes:['Une action par ligne, à l’impératif, avec le <b>chemin de clics</b>.', '…'],  // une case par geste, au moins un mot-clé en <b>
+          // un geste peut porter son « ne fais pas » : {geste:'…', attention:'⚠️ …'} (encadré sous la case, jamais dans son texte)
   vois:'Ce qui est à l’écran quand c’est fait.',   // encadré « ✅ À vérifier »
   stop:true,                   // facultatif : 🛑 ne continue pas avant d'avoir vérifié
   extra:'<aside class="repere">…</aside>',          // facultatif : HTML sous les cases
@@ -57,6 +58,8 @@ Chaque case à cocher porte **au moins un mot-clé en gras** (`<b>`, ou `<b clas
 le geste ou l'objet de la case, pas un mot vide. L'œil accroche le geste avant de lire la phrase (Vincent, 13/11/2026).
 Pas de gras dans un attribut ni dans un `<span data-rappel>`, que le moteur remplace. Chaque test de cours (`tests/*.cjs`)
 le vérifie ; un test qui cherche une phrase de case telle quelle la compare sans balises.
+Une interdiction n'est jamais une case : on ne coche pas « je n'ai pas fait ». Elle va dans l'encadré ⚠️ du geste
+(`{geste, attention}` dans `gestes`, ou dans `CASES` des fiches Python), et les tests de cours le vérifient aussi.
 
 ## Les preuves
 

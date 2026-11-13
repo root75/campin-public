@@ -106,5 +106,8 @@ assert.ok(/DEMOS_ETAPES=\{9:\{'6':\['nouveau'\]\}\}/.test(s),'étape 10 : démo 
 {const casesDe=()=>{const cases=[];for(const m of s.matchAll(/if\(e===(\d+)\)h\+=(.*)/g)){if(+m[1]<8)continue;
  const l=m[2].replace(/<aside[\s\S]*?<\/aside>/g,'').replace(/<details>[\s\S]*?<\/details>/g,'');
  for(const o of l.matchAll(/<ol[^>]*>([\s\S]*?)<\/ol>/g))o[1].split('<li>').slice(1).forEach(t=>cases.push(t));}return cases;};
-const cases=casesDe();assert.ok(cases.length>=26,'Messagerie 01 : '+cases.length+' cases lues');
-cases.forEach(c=>assert.ok(/<b[\s>]/.test(c),'Messagerie 01, case sans mot en gras : '+c.replace(/<[^>]+>/g,'').slice(0,70)));}
+const cases=casesDe();assert.ok(cases.length>=25,'Messagerie 01 : '+cases.length+' cases lues');
+cases.forEach(c=>assert.ok(/<b[\s>]/.test(c),'Messagerie 01, case sans mot en gras : '+c.replace(/<[^>]+>/g,'').slice(0,70)));
+// Un « ne fais pas » = un encadré ⚠️ à côté du geste, jamais dans le texte d'une case (règle du 12/11/2026, comme le Labo 07).
+const interdit=/(?:^|[.;:!?]\s+)(?:Ne|N[’'])\s?\S+ (?:pas|jamais|ni|aucun|rien)/,sansB=c=>c.replace(/<[^>]+>/g,'').replace(/\*\*/g,'').replace(/\s+/g,' ').trim();
+cases.forEach(c=>assert.ok(!interdit.test(sansB(c))&&!/^⚠|class="attention"/.test(sansB(c)+c),'Messagerie 01, une interdiction dans une case : '+sansB(c).slice(0,70)));}

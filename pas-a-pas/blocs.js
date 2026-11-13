@@ -265,8 +265,10 @@ function pause(z){
   document.body.dataset.pret = "1";
 }
 
-/* B.gestes = une liste de consignes (HTML permis) : une case à cocher par geste, à l'impératif. */
-const gestesHtml = l => !l ? "" : '<ol class="etapes">'+l.map(g=>'<li><label><input type="checkbox"><span>'+g+'</span></label></li>').join("")+'</ol>';
+/* B.gestes = une liste de consignes (HTML permis) : une case à cocher par geste, à l'impératif.
+   Un geste peut porter son « ne fais pas » : {geste:'…', attention:'⚠️ …'}, un encadré sous la case, jamais dans son texte. */
+const gestesHtml = l => !l ? "" : '<ol class="etapes">'+l.map(g=>{const [t,a]=typeof g==="string"?[g,""]:[g.geste,g.attention];
+  return '<li><label><input type="checkbox"><span>'+t+'</span></label>'+(a?'<p class="attention">'+a+'</p>':'')+'</li>';}).join("")+'</ol>';
 /* E = { q:"question", choix:[["libellé","retour"],…], apres:"<p>l'analyse</p>", suite:"libellé du bouton de preuve" } */
 function essaiHtml(E, fini){
   if(!document.getElementById("style-essai")){

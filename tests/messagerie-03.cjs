@@ -87,7 +87,10 @@ if(gs){
 console.log('OK : Messagerie 03 — '+proofs.blocs.length+' blocs ('+minutes+' min de travail), 3 variantes par preuve.');
 
 // Au moins un mot-clé en gras par case à cocher : l'œil accroche le geste avant de lire la phrase (Vincent, 13/11/2026).
-{const casesDe=(racine)=>{const vus=new Set(),cases=[];const lis=o=>{if(typeof o==='string'){for(const m of o.matchAll(/type="checkbox">(?:<span>)?([\s\S]*?)<\/label>/g))cases.push(m[1]);}else if(o&&typeof o==='object'&&!vus.has(o)){vus.add(o);if(Array.isArray(o.gestes))cases.push(...o.gestes);Object.values(o).forEach(lis);}};lis(racine);return cases;};
+{const casesDe=(racine)=>{const vus=new Set(),cases=[];const lis=o=>{if(typeof o==='string'){for(const m of o.matchAll(/type="checkbox">(?:<span>)?([\s\S]*?)<\/label>/g))cases.push(m[1]);}else if(o&&typeof o==='object'&&!vus.has(o)){vus.add(o);if(Array.isArray(o.gestes))cases.push(...o.gestes.map(g=>typeof g==='string'?g:g.geste));Object.values(o).forEach(lis);}};lis(racine);return cases;};
 const cases=casesDe(F.BLOCS);assert.ok(cases.length>=26,'Messagerie 03 : '+cases.length+' cases lues');
 cases.forEach(c=>assert.ok(/<b[\s>]/.test(c),'Messagerie 03, case sans mot en gras : '+c.replace(/<[^>]+>/g,'').slice(0,70)));
+// Un « ne fais pas » = un encadré ⚠️ à côté du geste, jamais dans le texte d'une case (règle du 12/11/2026, comme le Labo 07).
+const interdit=/(?:^|[.;:!?]\s+)(?:Ne|N[’'])\s?\S+ (?:pas|jamais|ni|aucun|rien)/,sansB=c=>c.replace(/<[^>]+>/g,'').replace(/\*\*/g,'').replace(/\s+/g,' ').trim();
+cases.forEach(c=>assert.ok(!interdit.test(sansB(c))&&!/^⚠|class="attention"/.test(sansB(c)+c),'Messagerie 03, une interdiction dans une case : '+sansB(c).slice(0,70)));
 console.log('OK Messagerie 03 : '+cases.length+' cases, chacune avec son mot-clé en gras.');}

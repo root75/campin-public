@@ -47,7 +47,8 @@ const LOGIGRAMME_VIES = `<figure class="logigramme"><svg viewBox="0 0 240 380" r
   </g></svg><figcaption>Le logigramme « Les vies » (LogProg 03)</figcaption></figure>`;
 
 /* Une case par action, à l'impératif (style « missions » du Labo 07 et du Rat de ville). */
-const CASES = (...l) => `<ol class="etapes">${l.map(x => `<li><label><input type="checkbox"><span>${x}</span></label></li>`).join("")}</ol>`;
+// Une case peut porter son « ne fais pas » : {geste:"…", attention:"⚠️ …"}, un encadré sous la case, jamais dans son texte.
+const CASES = (...l) => `<ol class="etapes">${l.map(x => typeof x === "string" ? `<li><label><input type="checkbox"><span>${x}</span></label></li>` : `<li><label><input type="checkbox"><span>${x.geste}</span></label><p class="attention">${x.attention}</p></li>`).join("")}</ol>`;
 const EXECUTER = `Clique sur <span class="chemin">▶ Exécuter</span> (ou <b>Ctrl + Enter</b>).`;
 
 /* Les exercices à nombres variables : une fonction rend la partie du bloc qui change. */
@@ -242,7 +243,7 @@ const BLOCS = [
     fais:CASES("Clique dans la <b>grande zone du haut</b> de Thonny, celle qui porte le nom de ton fichier.",
                "Écris <b>une ligne par forme</b> du logigramme, en suivant les flèches.",
                `Enregistre : <span class="chemin">icône disquette « Enregistrer »</span> (ou <b>Ctrl + S</b>).`,
-               "N'exécute pas encore : <b>prédis</b> d'abord le résultat, ci-dessous."),
+               { geste:"<b>Prédis</b> le résultat, ci-dessous.", attention:"⚠️ N'exécute pas encore : tu exécutes au bloc suivant, après ta prédiction." }),
     vois:"Trois lignes de Python, une par forme du milieu.",
     extra: LOGIGRAMME_VIES + `<div class="encart"><table>
   <tr><th>Dans le logigramme</th><th>En Python</th></tr>
