@@ -10,6 +10,14 @@ const Demo = (() => {
   const FICHIER = '2026-10-09_OneDrive.docx';
   // Vues communes à tous les cours (pas-a-pas/demos-communs.js) : Chrome, gaufre, bureau Windows, devoir Classroom.
   const devoir = DemosCommuns.devoir({ titre: 'Labo 07 — Dans les coulisses du PC', meta: ['M. Louviaux · 20 points'], fichier: NOM, autre: 'Le document qui obéit' });
+  // Classroom ▸ ta classe, à gauche ▸ Travaux et devoirs ▸ Afficher votre devoir ▸ le devoir (chemin de Vincent, 13/11/2026).
+  const DEV = 'Labo 07 — Dans les coulisses du PC';
+  const CLASSROOM = [
+    { vue: 'cr-gauche', devoir: DEV, cible: 'classe', legende: 'Classroom, compte de l’école : je clique sur ma classe, à gauche.' },
+    { vue: 'cr-classe', devoir: DEV, cible: 'onglet', legende: 'Je clique sur l’onglet Travaux et devoirs.' },
+    { vue: 'cr-travaux', devoir: DEV, date: '…', cible: 'afficher', legende: 'Je clique sur Afficher votre devoir.' },
+    { vue: 'cr-mes', devoir: DEV, date: '…', etat: 'Attribué', cible: 'note-1', legende: 'Labo 07 : je regarde la date limite et, à droite, son état. Je clique dessus.' }
+  ];
   const BUREAU = { vue: 'win-bureau', taches: [['📝', 'ico-notes']] };   // le Bloc-notes du cas d'essai, dans la barre des tâches
 
   /* Les animations, par clé. */
@@ -23,6 +31,19 @@ const Demo = (() => {
       { ecran: 'docs', lignes: [''], menu: { sous: 'm-edition', items: ['Couper', 'Copier', 'Coller', 'Coller sans mise en forme'], hi: 'Coller sans mise en forme' }, cible: 'item-Coller sans mise en forme', legende: 'Trame copiée : je clique dans la page ▸ Édition ▸ Coller sans mise en forme (Ctrl + Shift + V).' },
       { ecran: 'docs', lignes: ['Dans les coulisses du PC', 'Prénom Nom · classe · date', '1 — Observer ce qui tourne', '…'], cible: 'enregistre', ok: 1, legende: 'La trame est là, sans mise en forme. « Enregistré » : Docs garde tout seul.' }
     ] },
+    styles: (() => {
+      const LIG = ['Dans les coulisses du PC', 'Mon rapport d’enquête', 'Prénom et nom : …', '1. Observer ce qui tourne', '…', '2. Retrouver ses données'];
+      const D = { ecran: 'docs', outils: 1, lignes: LIG };
+      return { titre: 'Appliquer les styles Titre, Sous-titre et Titre 1', images: [
+        { ...D, cible: 'L0', legende: 'Je clique dans la ligne « Dans les coulisses du PC ».' },
+        { ...D, styles: { hi: 'Titre' }, cible: 'st-Titre', legende: 'Liste « Normal », à gauche de la barre d’outils ▸ Titre.' },
+        { ...D, styles: { hi: 'Titre', sous: 1 }, cible: 'appliquer', legende: '▸ Appliquer le style Titre.' },
+        { ...D, st: { 0: 'titre' }, style: 'Titre', aligner: 1, cible: 'al-Centrer', legende: 'Je centre : icône Aligner ▸ Centrer (ou Ctrl + Shift + E).' },
+        { ...D, st: { 0: 'titre c' }, style: 'Sous-titre', styles: { hi: 'Sous-titre', sous: 1 }, cible: 'appliquer', legende: '« Mon rapport d’enquête » : même chemin, style Sous-titre ; puis je le centre aussi.' },
+        { ...D, st: { 0: 'titre c', 1: 'sous c' }, style: 'Titre 1', styles: { hi: 'Titre 1', sous: 1, touche: 'Ctrl+Alt+1' }, cible: 'appliquer', legende: '« 1. Observer ce qui tourne » : style Titre 1 (ou Ctrl + Alt + 1).' },
+        { ...D, st: { 0: 'titre c', 1: 'sous c', 3: 't1', 5: 't1' }, style: 'Titre 1', cible: 'L5', ok: 1, legende: 'Les quatre parties en Titre 1, de 1 à 4 : le même style partout.' }
+      ] };
+    })(),
     cote: DemosCommuns.vueFractionnee({ titre: 'Mettre le cours et mon rapport côte à côte', cours: '🔎 Mes cours – Labo 07', // pas-a-pas/demos-communs.js
       coursTitre: '🔎 Mission 1', coursLignes: ['☐ Clic droit sur ⊞ Démarrer…'],
       doc: '📄 ' + NOM, quoi: 'mon rapport', docLignes: ['1 — Observer ce qui tourne'], adresse: 'script.google.com/…',
@@ -102,7 +123,8 @@ const Demo = (() => {
       { ecran: 'moniteur', cible: 'ecran', ok: 1, legende: 'Les mêmes fenêtres réapparaissent : le PC était resté allumé.' }
     ] },
     joindre: { titre: 'Joindre mon rapport au devoir, sans le rendre', images: [
-      devoir({ cible: 'ajouter', legende: 'Classroom ▸ ma classe ▸ Travaux et devoirs ▸ Labo 07 ▸ + Ajouter ou créer.' }),
+      ...CLASSROOM,
+      devoir({ cible: 'ajouter', legende: 'Le devoir s’ouvre. Dans « Vos devoirs » : + Ajouter ou créer.' }),
       devoir({ menu: 1, cible: 'gdrive', legende: 'Je choisis Google Drive.' }),
       devoir({ picker: 1, cible: 'fichier', legende: 'Je clique sur ' + NOM + '…' }),
       devoir({ picker: 2, cible: 'inserer', legende: '… puis sur le bouton bleu, en bas à droite.' }),
@@ -110,7 +132,8 @@ const Demo = (() => {
     ] },
     remise: { titre: 'Joindre mon rapport et le remettre', images: [
       { ecran: 'docs', lignes: ['Dans les coulisses du PC', '1 — Observer ce qui tourne', '…'], cible: 'enregistre', legende: 'Dans Docs : « Enregistré ». Je relis ma grille en fin de rapport.' },
-      devoir({ cible: 'ajouter', legende: 'Classroom ▸ ma classe ▸ Travaux et devoirs ▸ Labo 07 ▸ + Ajouter ou créer.' }),
+      ...CLASSROOM,
+      devoir({ cible: 'ajouter', legende: 'Le devoir s’ouvre. Dans « Vos devoirs » : + Ajouter ou créer.' }),
       devoir({ menu: 1, cible: 'gdrive', legende: 'Je choisis Google Drive.' }),
       devoir({ picker: 1, cible: 'fichier', legende: 'Je clique sur ' + NOM + '…' }),
       devoir({ picker: 2, cible: 'inserer', legende: '… puis sur le bouton bleu, en bas à droite.' }),
@@ -136,7 +159,13 @@ const Demo = (() => {
     const menus = el('div', 'md-menus');
     ['Fichier', 'Édition', 'Affichage', 'Insertion', 'Format', 'Outils'].forEach(m => menus.append(c(el('span', null, m), 'm-' + m.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''))));
     const page = c(el('div', 'md-page'), 'page');
-    (f.lignes || []).forEach((t, k) => page.append(c(el('p', 'md-l' + (/^\d —/.test(t) ? ' titre' : ''), t || ' '), 'L' + k)));
+    const st = f.st || {};   // styles Docs appliqués, par ligne : titre, sous, t1 ; « c » = centré
+    (f.lignes || []).forEach((t, k) => page.append(c(el('p', 'md-l' + (/^\d —/.test(t) ? ' titre' : '') + (st[k] ? ' ' + st[k].split(' ').map(x => 'st-' + x).join(' ') : ''), t || ' '), 'L' + k)));
+    let outils = null;
+    if (f.outils) {   // barre d'outils : la liste des styles et l'icône Aligner (relevées le 13/11/2026)
+      outils = el('div', 'md-outils');
+      outils.append(c(el('span', 'md-style', (f.style || 'Normal') + ' ▾'), 'style'), el('span', null, 'Arial ▾'), el('b', null, 'B'), el('i', null, 'I'), c(el('span', 'md-aligner', '≡ ▾'), 'aligner'));
+    }
     if (f.table) {
       const t = c(el('table', 'md-table'), 'table');
       [['Moment', 'Processeur (%)', 'Mémoire (%)'], ['Avant', '5', '40'], ['Pendant le calcul', '98', '46'], ['Après 1 min', '6', '46'], ['Après fin de tâche', '5', '41']]
@@ -149,7 +178,23 @@ const Demo = (() => {
       page.append(im);
       if (f.legendeImg) page.append(c(el('p', 'md-l md-leg', 'Capture du Gestionnaire 1 min après le calcul : GIMP garde l’image. D’autres logiciels tournent aussi.'), 'legende-img'));
     }
-    e.append(haut, menus, page);
+    e.append(haut, menus, ...(outils ? [outils] : []), page);
+    if (f.styles) {
+      const box = el('div', 'md-menu md-styles');
+      ['Normal', 'Titre', 'Sous-titre', 'Titre 1', 'Titre 2'].forEach(t => box.append(c(el('div', 'md-item md-st-' + t.replace(' ', ''), t + ' ▸'), 'st-' + t)));
+      box.querySelector('.md-st-' + f.styles.hi.replace(' ', '')).classList.add('hi');
+      e.append(box);
+      if (f.styles.sous) {
+        const sm = el('div', 'md-menu md-styles-sous'), a = c(el('div', 'md-item hi', 'Appliquer le style ' + f.styles.hi), 'appliquer');
+        if (f.styles.touche) a.append(el('small', null, f.styles.touche));
+        sm.append(a, el('div', 'md-item', 'Mettre à jour « ' + f.styles.hi + ' » …')); e.append(sm);
+      }
+    }
+    if (f.aligner) {
+      const box = el('div', 'md-menu md-aligner-menu');
+      [['⫷', 'Gauche'], ['≡', 'Centrer'], ['⫸', 'Droite'], ['☰', 'Justifier']].forEach(([i, t]) => box.append(c(el('div', 'md-item' + (t === 'Centrer' ? ' hi' : ''), i + ' ' + t), 'al-' + t)));
+      e.append(box);
+    }
     if (f.menu) {
       const m = menu(f.menu); e.append(m);
       if (f.grille) {

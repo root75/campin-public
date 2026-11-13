@@ -101,10 +101,34 @@ const DemosCommuns = (() => {
 .md-win-cad .md-item{padding:4px 14px;font-size:14px;border-radius:4px}.md-win-cad .md-item.hi{background:#ffffff33;font-weight:700}
 .md-win-cad-annuler{margin-top:10px;background:#ffffff26;border:1px solid #ffffff80;border-radius:4px;padding:4px 22px;font-size:13px}
 .md-win-menu{position:absolute;left:calc(50% - 75px);bottom:46px;background:#fff;border:1px solid #c9d3db;border-radius:8px;box-shadow:0 4px 14px #0003;padding:4px 0;z-index:3;min-width:190px}
+.md-win-bureau.md-win-haut{min-height:440px}.md-win-winx{padding:3px 0}.md-win-winx .md-item{padding:2px 14px;font-size:12px;line-height:1.35}.md-win-filet{border-top:1px solid #d6dde3;margin:3px 0}
 .md-cr-devoir{display:grid;grid-template-columns:1fr minmax(170px,210px);gap:14px;padding:14px;align-items:start;align-content:start;min-height:320px}
 .md-cr-sujet{display:grid;gap:4px;align-content:start}.md-cr-icone{width:34px;height:34px;border-radius:50%;background:#1e8e3e;display:grid;place-items:center;font-size:16px}
 .md-cr-titre{font-size:17px;color:#137333}.md-cr-meta{color:#5f6368;font-size:12px}
+.md-cr-haut{padding:10px 14px;border-bottom:1px solid #e0e0e0;font-size:15px;color:#3c4043}
+.md-cr-cours{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;padding:14px}
+.md-cr-cours-carte{border:1px solid #dadce0;border-radius:8px;overflow:hidden;min-height:96px}
+.md-cr-cours-tete{color:#fff;font-weight:700;padding:10px;min-height:38px}
+.md-cr-cours-carte small{display:block;padding:6px 10px;color:#5f6368}
+.md-cr-onglets{display:flex;gap:16px;justify-content:center;border-bottom:1px solid #e0e0e0;padding:6px 8px 0}
+.md-cr-onglets span{padding:4px 2px 6px;color:#5f6368}.md-cr-onglets span.on{color:#137333;border-bottom:3px solid #137333;font-weight:700}
+.md-cr-banniere{margin:12px;border-radius:8px;background:#1e8e3e;color:#fff;font-size:20px;font-weight:700;padding:30px 16px}
+.md-cr-flux{margin:0 12px;border:1px solid #dadce0;border-radius:8px;padding:10px;color:#5f6368}
+.md-cr-liste{display:grid;gap:8px;padding:12px 14px;justify-items:start}
+.md-cr-ligne{display:flex;justify-content:space-between;gap:10px;width:100%;box-sizing:border-box;border-bottom:1px solid #eee;padding:8px 4px}
+.md-cr-ligne.autre{color:#5f6368}
+.md-cr-date{color:#5f6368;font-size:12px;white-space:nowrap}
+.md-cr-cols{display:grid;grid-template-columns:130px 1fr;min-height:220px}
+.md-cr-nav{display:grid;gap:2px;align-content:start;padding:8px 6px;border-right:1px solid #e0e0e0}
+.md-cr-nav span{padding:6px 10px;border-radius:0 16px 16px 0;font-size:12px}.md-cr-nav span.on{background:#e6f4ea;color:#137333;font-weight:700}
+.md-cr-nav .md-cr-nav-titre{font-weight:700;color:#5f6368;padding-top:10px}
+.md-cr-ligne small{color:#5f6368}
+.md-cr-afficher{justify-self:end;border:1px solid #747775;border-radius:18px;padding:4px 12px;color:#1967d2;font-weight:700;font-size:12px}
+.md-cr-qui{display:flex;align-items:center;gap:8px;font-size:15px}
+.md-cr-filtre{border:2px solid #1967d2;border-radius:4px;padding:4px 10px;font-size:12px}
+.md-cr-etat{font-size:13px;white-space:nowrap}
 .md-cr-consigne{height:60px;margin-top:6px;background:repeating-linear-gradient(#fff 0 10px,#e8eaed 10px 18px)}
+.md-cr-detail{width:100%;box-sizing:border-box;padding:6px 8px;background:#f8f9fa;border-radius:6px;display:grid;gap:6px}.md-cr-detail small{color:#5f6368}.md-cr-detail .md-cr-consigne{height:24px;margin:0}
 .md-cr-lien{color:#1a73e8;font-weight:700;margin-top:6px;width:max-content}
 .md-cr-droite{display:grid;gap:10px;align-content:start}
 .md-cr-carte{border:1px solid #dadce0;border-radius:8px;padding:12px;display:grid;gap:8px;box-shadow:0 1px 3px #0002;position:relative}
@@ -258,7 +282,11 @@ const DemosCommuns = (() => {
   /* ——— Windows 11 : le bureau, la barre des tâches, Démarrer ———
      Démarrer ▸ « chrome » ▸ « Meilleure correspondance » ▸ Google Chrome, Application : relevé le 08/11/2026. */
   const logo = n => el('span', 'md-logo-' + n);
-  const MENU_WINX = ['Applications installées', 'Gestion de l’ordinateur', 'Gestionnaire des tâches', 'Paramètres', 'Explorateur de fichiers', 'Rechercher'];
+  /* Clic droit sur ⊞ Démarrer : relevé sur un PC de l'école le 13/11/2026 ('—' = filet de séparation). */
+  const MENU_WINX = ['Applications installées', 'Options d’alimentation', 'Observateur d’événements', 'Système',
+    'Gestionnaire de périphériques', 'Connexions réseau', 'Gestion des disques', 'Gestion de l’ordinateur', 'Terminal',
+    'Terminal (administrateur)', '—', 'Gestionnaire des tâches', 'Paramètres', 'Explorateur de fichiers', 'Rechercher',
+    'Exécuter', '—', 'Arrêter ou se déconnecter ›', 'Bureau'];
   function bureau(f) {
     const e = el('div', 'md md-win-bureau'), b = el('div', 'md-win-barre');
     const ch = c(el('span', 'md-win-ico'), 'ico-chrome'); ch.append(logo('chrome')); ch.title = 'Google Chrome';
@@ -300,9 +328,9 @@ const DemosCommuns = (() => {
       }
     }
     if (f.clicdroit) {
-      const m = el('div', 'md-win-menu');
-      MENU_WINX.forEach(t => m.append(c(el('div', 'md-item' + (t === f.clicdroit ? ' hi' : ''), t), 'item-' + t)));
-      e.append(m);
+      const m = el('div', 'md-win-menu md-win-winx');
+      MENU_WINX.forEach(t => m.append(t === '—' ? el('div', 'md-win-filet') : c(el('div', 'md-item' + (t === f.clicdroit ? ' hi' : ''), t), 'item-' + t)));
+      e.classList.add('md-win-haut'); e.append(m);
     }
     if (f.droit) souris(e);
     return e;
@@ -483,7 +511,66 @@ const DemosCommuns = (() => {
   }
 
   /* La maquette d'une image commune, ou null : le cours dessine alors la sienne. */
-  const VUES = { 'ch-fractionnee': fractionnee, 'ch-onglets': onglets, 'ch-nouvel': nouvel, 'g-gaufre': gaufre, 'win-bureau': bureau, 'win-cad': cad, 'cr-devoir': crDevoir, 'ol-liste': liste, 'ol-lu': lu, 'ol-redac': redac, 'ol-selecteur': selecteur, 'ol-accueil': accueil };
+
+  /* ——— Classroom : la classe, Travaux et devoirs, « Afficher votre devoir », « À faire » ———
+     Venues de Se connecter (13/11/2026). Points relevés par Vincent : ta classe à gauche ▸ onglet Travaux et devoirs ▸
+     « Afficher votre devoir » ; la date limite est à droite de chaque devoir.
+     f.devoir : le titre du devoir ; f.date : sa date limite ; f.etat : son état dans « Afficher votre devoir ». */
+  function crPage(f) {
+    const e = el('div', 'md md-' + f.vue), D = f.devoir || 'Mon devoir', date = f.date || 'vendredi';
+    if (f.vue === 'cr-classe' || f.vue === 'cr-travaux') {
+      const h = el('div', 'md-cr-haut'); h.append(el('span', null, '☰  Classroom › Informatique'));
+      const t = el('div', 'md-cr-onglets');
+      t.append(el('span', f.vue === 'cr-classe' ? 'on' : '', 'Flux'), c(el('span', f.vue === 'cr-travaux' ? 'on' : '', 'Travaux et devoirs'), 'onglet'), el('span', null, 'Personnes'));
+      e.append(h, t);
+      if (f.vue === 'cr-classe') {
+        e.append(el('div', 'md-cr-banniere', 'Informatique'), el('div', 'md-cr-flux', 'Annonces de M. Louviaux'));
+      } else {
+        const corps = el('div', 'md-cr-liste');
+        corps.append(c(el('span', 'md-cr-afficher', '👤 Afficher votre devoir'), 'afficher'));
+        const l = c(el('div', 'md-cr-ligne'), 'ligne'); l.append(el('span', null, '📋 ' + D), c(el('span', 'md-cr-date', 'Date limite : ' + date), 'date'));
+        corps.append(l);
+        if (f.deplie) {
+          const det = el('div', 'md-cr-detail');
+          det.append(el('small', null, 'Attribué'), el('div', 'md-cr-consigne'), c(el('span', 'md-cr-lien', 'Afficher les instructions'), 'instructions'));
+          corps.append(det);
+        }
+        const l2 = el('div', 'md-cr-ligne autre'); l2.append(el('span', null, '📋 Je range mon Drive'), el('span', 'md-cr-date', 'Aucune date limite'));
+        corps.append(l2);
+        e.append(corps);
+      }
+    }
+    if (f.vue === 'cr-mes') {
+      e.append(el('div', 'md-cr-haut', '☰  Classroom › Informatique'));
+      const corps = el('div', 'md-cr-liste'), qui = el('div', 'md-cr-qui');
+      qui.append(el('span', 'md-profil ecole', 'C'), el('b', null, 'Chloé Rémy'));
+      corps.append(qui, el('span', 'md-cr-filtre', 'Filtre de tâche : Tout ▾'));
+      [[D, 'Date limite : ' + date, f.etat || '8/10', 'note-1'], ['Je range mon Drive', 'Aucune date limite', 'Remis', ''], ['Exercices p. 12', 'lundi', 'Attribué', '']]
+        .forEach(([t, d, st, id]) => { const l = c(el('div', 'md-cr-ligne'), id); const g = el('span'); g.append(el('span', null, t), el('small', null, ' · ' + d)); l.append(g, el('b', 'md-cr-etat', st)); corps.append(l); });
+      e.append(corps);
+    }
+    if (f.vue === 'cr-gauche' || f.vue === 'cr-afaire') {
+      e.append(el('div', 'md-cr-haut', '☰  Classroom'));
+      const cols = el('div', 'md-cr-cols'), nav = el('div', 'md-cr-nav');
+      nav.append(el('span', null, '🏠 Accueil'), el('span', null, '📅 Agenda'), el('span', 'md-cr-nav-titre', 'Inscrit'),
+        c(el('span', f.vue === 'cr-afaire' ? 'on' : '', '☑ À faire'), 'a-faire'), c(el('span', null, 'Informatique'), 'classe'), el('span', null, '🗄 Cours archivés'));
+      const droite = el('div', 'md-cr-liste');
+      if (f.vue === 'cr-afaire') {
+        droite.append(el('b', null, 'À faire'));
+        const l = c(el('div', 'md-cr-ligne'), 'devoir'); const t = el('span'); t.append(el('span', null, '📋 ' + D), el('small', null, ' · Informatique')); l.append(t, el('span', 'md-cr-date', date));
+        const l2 = el('div', 'md-cr-ligne autre'); l2.append(el('span', null, '📋 Exercices p. 12'), el('span', 'md-cr-date', 'lundi'));
+        droite.append(l, l2);
+      } else {
+        const g = el('div', 'md-cr-cours');
+        [['Informatique', '#1e8e3e'], ['Français', '#1967d2']].forEach(([t, col]) => { const k = el('div', 'md-cr-cours-carte'); const h = el('div', 'md-cr-cours-tete', t); h.style.background = col; k.append(h); g.append(k); });
+        droite.append(g);
+      }
+      cols.append(nav, droite); e.append(cols);
+    }
+    return e;
+  }
+
+  const VUES = { 'cr-classe': crPage, 'cr-travaux': crPage, 'cr-mes': crPage, 'cr-gauche': crPage, 'cr-afaire': crPage, 'ch-fractionnee': fractionnee, 'ch-onglets': onglets, 'ch-nouvel': nouvel, 'g-gaufre': gaufre, 'win-bureau': bureau, 'win-cad': cad, 'cr-devoir': crDevoir, 'ol-liste': liste, 'ol-lu': lu, 'ol-redac': redac, 'ol-selecteur': selecteur, 'ol-accueil': accueil };
   function ecran(f) {
     return VUES[f.vue] ? VUES[f.vue](f) : null;
   }

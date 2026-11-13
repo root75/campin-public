@@ -33,8 +33,8 @@
       { vue: 'win-bureau', demarrer: 1, saisie: 'chrome', resultat: CHROME, cible: 'res-chrome', legende: '⊞ Démarrer ▸ tape chrome ▸ Google Chrome.' },
       { vue: 'ch-nouvel', menu: 1, nom: 'Chloé', cible: 'p-ecole', legende: 'Rond du profil, en haut à droite ▸ ton profil de l’école.' },
       { vue: 'g-gaufre', menu: 1, cible: 'app-classroom', legende: '9 points, en haut à droite ▸ Classroom.' },
-      { ecran: 'cr-gauche', cible: 'a-faire', legende: 'Menu de gauche ▸ À faire.' },
-      { ecran: 'cr-afaire', cible: 'devoir', legende: 'Clique sur le devoir.' },
+      { vue: 'cr-gauche', devoir: DEVOIR, cible: 'a-faire', legende: 'Menu de gauche ▸ À faire.' },
+      { vue: 'cr-afaire', devoir: DEVOIR, cible: 'devoir', legende: 'Clique sur le devoir.' },
       devoir({ joint: 1, piece: COPIE, cible: 'piece', legende: 'Ta copie est dans Vos devoirs : ouvre-la et travaille dedans.' }),
       devoir({ joint: 1, piece: COPIE, cible: 'rendre', legende: 'Fini ? Rendre le devoir.' }),
       devoir({ joint: 1, piece: COPIE, confirme: 1, cible: 'confirmer', legende: '« Rendre le devoir ? » : encore Rendre le devoir.' }),
@@ -81,8 +81,8 @@
       { ecran: 'touches', saisie: ADRESSE, cible: 'champ', ok: 1, legende: 'Termine par arcampin.be. Relis : un point, pas d’accent, .be.' }
     ] },
     note: { images: [
-      { ecran: 'cr-travaux', cible: 'afficher', legende: 'Ta classe ▸ Travaux et devoirs ▸ Afficher votre devoir, en haut à droite.' },
-      { ecran: 'cr-mes', cible: 'note-1', legende: 'Tous tes devoirs. À droite : Remis, ou tes points quand c’est corrigé.' },
+      { vue: 'cr-travaux', devoir: DEVOIR, cible: 'afficher', legende: 'Ta classe ▸ Travaux et devoirs ▸ Afficher votre devoir, en haut à droite.' },
+      { vue: 'cr-mes', devoir: DEVOIR, cible: 'note-1', legende: 'Tous tes devoirs. À droite : Remis, ou tes points quand c’est corrigé.' },
       devoir({ joint: 1, remis: 1, note: 1, cible: 'prive', legende: 'Clique sur le devoir : le message de M. Louviaux est sous Commentaires privés.' }),
       devoir({ joint: 1, remis: 1, note: 1, cible: 'piece', legende: 'Clique sur ton document pour l’ouvrir…' }),
       { ecran: 'doc-corrige', cible: 'commentaire', ok: 1, legende: '… les corrections sont des commentaires, dans la marge de droite.' }
@@ -185,55 +185,6 @@
       [['Informatique', 'M. Louviaux', '#1e8e3e', 'classe'], ['Français', '', '#1967d2', ''], ['Sciences', '', '#e37400', '']]
         .forEach(([t, p, col, id]) => { const k = c(el('div', 'md-cr-cours-carte'), id); const h = el('div', 'md-cr-cours-tete', t); h.style.background = col; k.append(h, el('small', null, p)); g.append(k); });
       e.append(g);
-    }
-    if (f.ecran === 'cr-classe' || f.ecran === 'cr-travaux') {
-      const h = el('div', 'md-cr-haut'); h.append(el('span', null, '☰  Classroom › Informatique'));
-      const t = el('div', 'md-cr-onglets');
-      t.append(el('span', f.ecran === 'cr-classe' ? 'on' : '', 'Flux'), c(el('span', f.ecran === 'cr-travaux' ? 'on' : '', 'Travaux et devoirs'), 'onglet'), el('span', null, 'Personnes'));
-      e.append(h, t);
-      if (f.ecran === 'cr-classe') {
-        e.append(el('div', 'md-cr-banniere', 'Informatique'), el('div', 'md-cr-flux', 'Annonces de M. Louviaux'));
-      } else {
-        const corps = el('div', 'md-cr-liste');
-        corps.append(c(el('span', 'md-cr-afficher', '👤 Afficher votre devoir'), 'afficher'));
-        const l = c(el('div', 'md-cr-ligne'), 'ligne'); l.append(el('span', null, '📋 ' + DEVOIR), c(el('span', 'md-cr-date', 'Date limite : vendredi'), 'date'));
-        corps.append(l);
-        if (f.deplie) {
-          const det = el('div', 'md-cr-detail');
-          det.append(el('small', null, 'Attribué'), el('div', 'md-cr-consigne'), c(el('span', 'md-cr-lien', 'Afficher les instructions'), 'instructions'));
-          corps.append(det);
-        }
-        const l2 = el('div', 'md-cr-ligne autre'); l2.append(el('span', null, '📋 Je range mon Drive'), el('span', 'md-cr-date', 'Aucune date limite'));
-        corps.append(l2);
-        e.append(corps);
-      }
-    }
-    if (f.ecran === 'cr-mes') {
-      e.append(el('div', 'md-cr-haut', '☰  Classroom › Informatique'));
-      const corps = el('div', 'md-cr-liste'), qui = el('div', 'md-cr-qui');
-      qui.append(el('span', 'md-profil ecole', 'C'), el('b', null, 'Chloé Rémy'));
-      corps.append(qui, el('span', 'md-cr-filtre', 'Filtre de tâche : Tout ▾'));
-      [[DEVOIR, 'Date limite : vendredi', '8/10', 'note-1'], ['Je range mon Drive', 'Aucune date limite', 'Remis', ''], ['Exercices p. 12', 'lundi', 'Attribué', '']]
-        .forEach(([t, d, st, id]) => { const l = c(el('div', 'md-cr-ligne'), id); const g = el('span'); g.append(el('span', null, t), el('small', null, ' · ' + d)); l.append(g, el('b', 'md-cr-etat', st)); corps.append(l); });
-      e.append(corps);
-    }
-    if (f.ecran === 'cr-gauche' || f.ecran === 'cr-afaire') {
-      e.append(el('div', 'md-cr-haut', '☰  Classroom'));
-      const cols = el('div', 'md-cr-cols'), nav = el('div', 'md-cr-nav');
-      nav.append(el('span', null, '🏠 Accueil'), el('span', null, '📅 Agenda'), el('span', 'md-cr-nav-titre', 'Inscrit'),
-        c(el('span', f.ecran === 'cr-afaire' ? 'on' : '', '☑ À faire'), 'a-faire'), el('span', null, 'Informatique'), el('span', null, '🗄 Cours archivés'));
-      const droite = el('div', 'md-cr-liste');
-      if (f.ecran === 'cr-afaire') {
-        droite.append(el('b', null, 'À faire'));
-        const l = c(el('div', 'md-cr-ligne'), 'devoir'); const t = el('span'); t.append(el('span', null, '📋 ' + DEVOIR), el('small', null, ' · Informatique')); l.append(t, el('span', 'md-cr-date', 'vendredi'));
-        const l2 = el('div', 'md-cr-ligne autre'); l2.append(el('span', null, '📋 Exercices p. 12'), el('span', 'md-cr-date', 'lundi'));
-        droite.append(l, l2);
-      } else {
-        const g = el('div', 'md-cr-cours');
-        [['Informatique', '#1e8e3e'], ['Français', '#1967d2']].forEach(([t, col]) => { const k = el('div', 'md-cr-cours-carte'); const h = el('div', 'md-cr-cours-tete', t); h.style.background = col; k.append(h); g.append(k); });
-        droite.append(g);
-      }
-      cols.append(nav, droite); e.append(cols);
     }
     if (f.ecran === 'doc-corrige') {
       const haut = el('div', 'md-doc-haut'); haut.append(el('span', 'md-doc-logo'), el('span', null, FICHIER));
