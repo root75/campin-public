@@ -111,8 +111,9 @@ function dessine(){
     if(i+delta<0)continue;
     if(i+delta>=ETAPES_RAT.length){const n=txt('button','btn vide','Ma grille d’évaluation →');n.type='button';n.addEventListener('click',()=>{vueGrille=true;dessine();scrollTo(0,0);});nav.append(n);continue;}
     const n=txt('button','btn vide',label);n.type='button';n.addEventListener('click',()=>va(ETAPES_RAT[i+delta].id));nav.append(n);
-  }z.append(sonnerie(),nav,txt('p','note','Je peux continuer même si une case reste vide. Je coche quand j’ai terminé ; le professeur examine mon document.'));
+  }z.append(nav,txt('p','note','Je peux continuer même si une case reste vide. Je coche quand j’ai terminé ; le professeur examine mon document.'));
   if(typeof PhraseFin!=='undefined'&&ETAPES_RAT.every((_,j)=>etat.etapes&&etat.etapes[j])){const f=PhraseFin.figure(CITATION);if(f)z.append(f);}
+  z.append(sonnerie());
   cloche();coince();progression();commandes();
 }
 /* « Ça coince ? » : seulement les aides de l'étape affichée (et « Je me trompe »), sauf si l'élève demande tout. */
@@ -187,7 +188,7 @@ function demoCase(i,j){
   return d;
 }
 /* Fermer et rouvrir ne sont plus des étapes : chacun le fait à la sonnerie, où qu'il en soit.
-   « À la sonnerie » : sous chaque étape. « Je reprends » : en haut, à la réouverture du cours
+   « À la sonnerie » : tout en bas de chaque étape. « Je reprends » : en haut, à la réouverture du cours
    (déjà des cases cochées et plus de 5 min sans action), ou par le bouton de l'encadré. Pas de case. */
 let autresActifs=[];
 function arreteAutres(){autresActifs.forEach(x=>x.stop());autresActifs=[];}
