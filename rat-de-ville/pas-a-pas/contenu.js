@@ -21,9 +21,9 @@ const ETAPES_RAT = [
       "3": ["cote", [0, 1, 2, 3]]
     },
     "actions": [
-      "Menu Google (la gaufre) ▸ Docs ▸ Créer un document ▸ Vierge.",
-      "Je clique sur « Document sans titre » et je tape : [[AAAAMMJJ Le rat de ville – Prénom Nom]] AAAAMMJJ : année, mois, jour de la date d’aujourd’hui.",
-      "Je place mon document à côté du cours : je clique sur l’onglet du cours, puis clic droit sur l’onglet de mon document ▸ Ajouter l’onglet à une nouvelle vue fractionnée. Le cours et mon document s’affichent côte à côte dans la même fenêtre."
+      "Menu Google (la gaufre) ▸ Docs ▸ **Créer un document** ▸ Vierge.",
+      "Je clique sur « **Document sans titre** » et je tape : [[AAAAMMJJ Le rat de ville – Prénom Nom]] AAAAMMJJ : année, mois, jour de la date d’aujourd’hui.",
+      "Je place mon document à côté du cours : je clique sur l’onglet du cours, puis clic droit sur l’onglet de mon document ▸ Ajouter l’onglet à une **nouvelle vue fractionnée**. Le cours et mon document s’affichent côte à côte dans la même fenêtre."
     ]
   },
   {
@@ -37,15 +37,15 @@ const ETAPES_RAT = [
       "2": ["etape2", [1, 2, 3]]
     },
     "actions": [
-      "Je tape le titre.",
-      "Je recopie les vers 1 à 4.",
-      "Je recopie les vers 5 à 8.",
-      "Je recopie les vers 9 à 12.",
-      "Je recopie les vers 13 à 16.",
-      "Je recopie les vers 17 à 20.",
-      "Je recopie les vers 21 à 24.",
-      "Je recopie les vers 25 à 28.",
-      "Je tape l’auteur : [[Jean de La Fontaine]]"
+      "Je tape le **titre**.",
+      "Je recopie les **vers 1 à 4**.",
+      "Je recopie les **vers 5 à 8**.",
+      "Je recopie les **vers 9 à 12**.",
+      "Je recopie les **vers 13 à 16**.",
+      "Je recopie les **vers 17 à 20**.",
+      "Je recopie les **vers 21 à 24**.",
+      "Je recopie les **vers 25 à 28**.",
+      "Je tape l’**auteur** : [[Jean de La Fontaine]]"
     ],
     "images": { "0": "fable/titre.png", "1": "fable/strophe-1.png", "2": "fable/strophe-2.png", "3": "fable/strophe-3.png", "4": "fable/strophe-4.png", "5": "fable/strophe-5.png", "6": "fable/strophe-6.png", "7": "fable/strophe-7.png", "8": "fable/auteur.png" },
     "aides": {
@@ -79,13 +79,13 @@ const ETAPES_RAT = [
       "2": ["etape3", [2]]
     },
     "actions": [
-      "Je mets une majuscule à la première lettre de chaque vers.",
-      "Je clique à la fin du vers 4 et j’appuie sur Enter : une ligne vide apparaît. Je fais pareil après les vers 8, 12, 16, 20 et 24 : j’obtiens 7 strophes."
+      "Je mets une **majuscule** à la première lettre de chaque vers.",
+      "Je clique **à la fin du vers 4** et j’appuie sur Enter : une ligne vide apparaît. Je fais pareil après les vers 8, 12, 16, 20 et 24 : j’obtiens 7 strophes."
     ],
     "aides": {
       "0": {
         "titre": "Comment mettre à en majuscule (À) ?",
-        "explication": "Je double-clique sur le à pour le sélectionner, seul. Puis Format ▸ Texte ▸ Minuscules/majuscules ▸ MAJUSCULES.",
+        "explication": "Je double-clique sur le à pour le sélectionner, seul. Puis Format ▸ Texte ▸ Minuscules/majuscules ▸ **MAJUSCULES**.",
         "exemple": "à la porte de la salle → À la porte de la salle",
         "rappel": "Deux vers commencent par à : le vers 4 et le vers 13. Pour les autres lettres, j’efface la minuscule et je tape la majuscule avec Shift.",
         "image": "capture-majuscules.png"
@@ -107,13 +107,13 @@ const ETAPES_RAT = [
       "7": ["etape6", [8]]
     },
     "actions": [
-      "Je sélectionne le titre. Je clique sur Centrer (Ctrl + Shift + E).",
-      "Le titre toujours sélectionné, je clique sur Gras (Ctrl + B).",
-      "Le titre toujours sélectionné : Format ▸ Texte ▸ Minuscules/majuscules ▸ MAJUSCULES.",
-      "Je sélectionne les 7 strophes. Je clique sur Centrer (Ctrl + Shift + E).",
-      "Je sélectionne l’auteur. Je clique sur Aligner à droite (Ctrl + Shift + R).",
-      "L’auteur toujours sélectionné, je clique sur Italique (Ctrl + I).",
-      "L’auteur toujours sélectionné, je clique sur Souligner (Ctrl + U)."
+      "Je sélectionne le **titre**. Je clique sur **Centrer** (Ctrl + Shift + E).",
+      "Le titre toujours sélectionné, je clique sur **Gras** (Ctrl + B).",
+      "Le titre toujours sélectionné : Format ▸ Texte ▸ Minuscules/majuscules ▸ **MAJUSCULES**.",
+      "Je sélectionne les **7 strophes**. Je clique sur **Centrer** (Ctrl + Shift + E).",
+      "Je sélectionne l’**auteur**. Je clique sur **Aligner à droite** (Ctrl + Shift + R).",
+      "L’auteur toujours sélectionné, je clique sur **Italique** (Ctrl + I).",
+      "L’auteur toujours sélectionné, je clique sur **Souligner** (Ctrl + U)."
     ],
     "icones": { "0": ["centrer"], "1": ["gras"], "3": ["centrer"], "4": ["droite"], "5": ["italique"], "6": ["souligne"] }
   },
@@ -127,13 +127,13 @@ const ETAPES_RAT = [
       "1": ["etape7", [0, 1, 2, 3]]
     },
     "actions": [
-      "Je sélectionne seulement la strophe 1 : EB Garamond, taille 14.",
-      "Je sélectionne seulement la strophe 2 : EB Garamond, taille 14.",
-      "Je sélectionne seulement la strophe 3 : Arial, taille 12.",
-      "Je sélectionne seulement la strophe 4 : Arial, taille 12.",
-      "Je sélectionne seulement la strophe 5 : Calibri, taille 10.",
-      "Je sélectionne seulement la strophe 6 : Arial Black, taille 8.",
-      "Je sélectionne seulement la strophe 7 : Arial Black, taille 8."
+      "Je sélectionne seulement la **strophe 1** : **EB Garamond, taille 14**.",
+      "Je sélectionne seulement la **strophe 2** : **EB Garamond, taille 14**.",
+      "Je sélectionne seulement la **strophe 3** : **Arial, taille 12**.",
+      "Je sélectionne seulement la **strophe 4** : **Arial, taille 12**.",
+      "Je sélectionne seulement la **strophe 5** : **Calibri, taille 10**.",
+      "Je sélectionne seulement la **strophe 6** : **Arial Black, taille 8**.",
+      "Je sélectionne seulement la **strophe 7** : **Arial Black, taille 8**."
     ],
     "icones": { "0": ["police","taille"], "1": ["police","taille"], "2": ["police","taille"], "3": ["police","taille"], "4": ["police","taille"], "5": ["police","taille"], "6": ["police","taille"] }
   },
@@ -151,8 +151,8 @@ const ETAPES_RAT = [
       ]
     },
     "actions": [
-      "Sous la fable, je laisse deux lignes vides et j’écris : [[Mon bloc-notes]]",
-      "Trois choses que l’on trouve au festin du rat de ville, en liste à puces (Ctrl + Shift + 8)."
+      "Sous la fable, je laisse **deux lignes vides** et j’écris : [[Mon bloc-notes]]",
+      "Trois choses que l’on trouve au festin du rat de ville, en **liste à puces** (Ctrl + Shift + 8)."
     ],
     "icones": {
       "1": [
@@ -178,14 +178,14 @@ const ETAPES_RAT = [
       "2": ["etape10", [0, 1, 2]]
     },
     "actions": [
-      "Sous mes puces, sur une nouvelle ligne, j’écris : [[Mes gestes]]",
-      "Enter, puis je clique sur Liste numérotée (Ctrl + Shift + 7) : le numéro 1 apparaît.",
-      "Geste 1 : je complète la phrase, puis je l’écris dans Docs, à côté du numéro 1. Enter.",
-      "Geste 2 : je complète la phrase, puis je l’écris dans Docs, à côté du numéro 2. Enter.",
-      "Geste 3 : je complète la phrase, puis je l’écris dans Docs, à côté du numéro 3. Enter.",
-      "Geste 4 : je complète la phrase, puis je l’écris dans Docs, à côté du numéro 4. Enter.",
-      "Geste 5 : je complète la phrase, puis je l’écris dans Docs, à côté du numéro 5. Enter.",
-      "Geste 6 : je complète la phrase, puis je l’écris dans Docs, à côté du numéro 6."
+      "Sous mes puces, sur une **nouvelle ligne**, j’écris : [[Mes gestes]]",
+      "Enter, puis je clique sur **Liste numérotée** (Ctrl + Shift + 7) : le numéro 1 apparaît.",
+      "**Geste 1** : je complète la phrase, puis je l’écris dans Docs, à côté du numéro 1. Enter.",
+      "**Geste 2** : je complète la phrase, puis je l’écris dans Docs, à côté du numéro 2. Enter.",
+      "**Geste 3** : je complète la phrase, puis je l’écris dans Docs, à côté du numéro 3. Enter.",
+      "**Geste 4** : je complète la phrase, puis je l’écris dans Docs, à côté du numéro 4. Enter.",
+      "**Geste 5** : je complète la phrase, puis je l’écris dans Docs, à côté du numéro 5. Enter.",
+      "**Geste 6** : je complète la phrase, puis je l’écris dans Docs, à côté du numéro 6."
     ],
     "icones": {
       "1": [
@@ -308,8 +308,8 @@ const ETAPES_RAT = [
       "2": ["etape11", [0]]
     },
     "actions": [
-      "Je complète l’explication ci-dessous.",
-      "Dans Docs, sous ma liste, j’écris une phrase avec mes mots qui répond à : Comment je change la police d’une seule strophe sans toucher aux autres ?"
+      "Je complète l’**explication** ci-dessous.",
+      "Dans Docs, sous ma liste, j’écris **une phrase avec mes mots** qui répond à : Comment je change la police d’une seule strophe sans toucher aux autres ?"
     ],
     "icones": {},
     "trous": {
@@ -380,19 +380,19 @@ const ETAPES_RAT = [
       "13": ["etape9", [1, 2, 3, 4, 5, 6, 7, 8]]
     },
     "actions": [
-      "Je clique sur Vérifier l’orthographe (Ctrl + Alt + X) et je corrige.",
-      "Je vérifie le nom : [[AAAAMMJJ Le rat de ville – Prénom Nom]]",
-      "Je vérifie que la fable est complète : titre, 28 vers, auteur.",
-      "Je vérifie qu’il y a une majuscule au début de chaque vers.",
-      "Je vérifie qu’il y a 7 strophes, séparées par une ligne vide.",
-      "Je vérifie le titre : centré, gras, en MAJUSCULES.",
-      "Je vérifie que les 7 strophes sont centrées.",
-      "Je vérifie l’auteur : à droite, en italique, souligné.",
-      "Je vérifie que chaque strophe a sa police et sa taille.",
-      "Je vérifie mon bloc-notes : une vraie liste à puces, une vraie liste numérotée de six gestes, ma phrase.",
-      "J’ouvre ma grille (bouton 📋, après l’étape 9) et je remplis la colonne « Moi » : A, B, C ou D pour chaque critère.",
-      "Je montre mon document à mon voisin. Il le compare aux cases 2 à 10 et me montre un écart, sans toucher la souris. Je corrige.",
-      "Classroom ▸ le devoir ▸ Vos devoirs ▸ Ajouter ou créer ▸ Google Drive ▸ mon document ▸ bouton bleu ▸ Rendre le devoir ▸ Rendre le devoir."
+      "Je clique sur **Vérifier l’orthographe** (Ctrl + Alt + X) et je corrige.",
+      "Je vérifie le **nom** : [[AAAAMMJJ Le rat de ville – Prénom Nom]]",
+      "Je vérifie que la fable est **complète** : titre, 28 vers, auteur.",
+      "Je vérifie qu’il y a une **majuscule** au début de chaque vers.",
+      "Je vérifie qu’il y a **7 strophes**, séparées par une ligne vide.",
+      "Je vérifie le **titre** : centré, gras, en MAJUSCULES.",
+      "Je vérifie que les 7 strophes sont **centrées**.",
+      "Je vérifie l’**auteur** : à droite, en italique, souligné.",
+      "Je vérifie que chaque strophe a sa **police** et sa **taille**.",
+      "Je vérifie mon **bloc-notes** : une vraie liste à puces, une vraie liste numérotée de six gestes, ma phrase.",
+      "J’ouvre ma **grille** (bouton 📋, après l’étape 9) et je remplis la colonne « Moi » : A, B, C ou D pour chaque critère.",
+      "Je **montre mon document à mon voisin**. Il le compare aux cases 2 à 10 et me montre un écart, sans toucher la souris. Je corrige.",
+      "Classroom ▸ le devoir ▸ Vos devoirs ▸ Ajouter ou créer ▸ **Google Drive** ▸ mon document ▸ bouton bleu ▸ **Rendre le devoir** ▸ Rendre le devoir."
     ],
     "icones": { "0": ["orthographe"] }
   }
