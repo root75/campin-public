@@ -1112,7 +1112,7 @@
   },
   "python-4": {
     "titre": "Python 04 — Si… alors, sinon",
-    "objectif": "L'élève est capable de traduire un losange de logigramme en if / else : comparer (>, >=, ==), écrire les deux-points et les lignes décalées, puis compléter « Le score » avec son bonus dans Thonny et le rendre, coté sur 5. Deux périodes environ : reprendre la même séance au cours suivant plutôt que couper un bloc.",
+    "objectif": "L'élève est capable de traduire un losange de logigramme en if / else : comparer (>, >=, ==), écrire les deux-points et les lignes décalées, puis compléter « Le score » avec son bonus dans Thonny et le rendre, coté sur 5. Le cours se découpe par sujet, pas par période : à la sonnerie, reprendre la même séance au même bloc au cours suivant.",
     "competences": [
       "S3M10.2 « Développer des algorithmes élémentaires en programmation structurée à l'aide de : séquences, structures alternatives, structures répétitives. »",
       "S3M10.5 « Traduire un algorithme dans un langage informatique structuré. »",
