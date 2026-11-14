@@ -62,7 +62,10 @@
     const envoie = evt => Promise.resolve(o.envoie(evt));
     const support = m => (contenus && contenus.moments || []).find(x => x.titre === m.titre) || null;
     const redessine = () => dessine(courant);
-    if(o.contenus) fetch("https://root75.github.io/campin-public/pas-a-pas/sequences.json?v=seq-20261114")
+    // Le « visuel » d'un moment (window.Visuels, chargé par la page) : remplace ses lignes et sa correction, qui en
+    // sont la version texte. null si le cours n'en déclare pas ou si le script n'est pas chargé.
+    const visuel = (m, s) => { const v = m.visuel || (s && s.visuel); return v && window.Visuels && Visuels[v] ? Visuels[v]({ corrige: m.phase === "corrige" }) : null; };
+    if(o.contenus) fetch("https://root75.github.io/campin-public/pas-a-pas/sequences.json?v=unifie-20261114")
       .then(r => { if(!r.ok) throw Error(); return r.json(); })
       .then(d => { contenus = d[o.cours] || null; cle = ""; }).catch(() => {});   // cle vide : redessiner au prochain appel
 
@@ -93,6 +96,8 @@
       if(m.type === "mots") return mots(m, moi);
       if(m.type === "vote") return vote(m, moi);
       const s = support(m);
+      const vis = visuel(m, s);
+      if(vis){ zone.append(el("h2", "sq-grand", (s && s.question) || m.question || m.titre), el("p", "sq-note", "ENSEMBLE — OBSERVE ET RÉPONDS AU PROFESSEUR"), vis); return; }
       if(s && !m.lignes && !m.questions){   // contenus:true : le texte de l'écran, lu dans sequences.json
         zone.append(el("h2", "sq-grand", m.titre), el("p", "sq-note", "ENSEMBLE — OBSERVE ET RÉPONDS AU PROFESSEUR"));
         (s.lignes || []).forEach(l => zone.append(el("p", null, l)));
@@ -143,16 +148,16 @@
       champs[0].focus();
     }
 
-    /* « On écrit ensemble » (saisie: 'texte') : une case par champ (À, Cc, Objet…), majuscules gardées.
-       Chaque case part au tableau précédée de son nom (« À : … ») : un champ inversé s'y voit aussi. */
+    /* Réponse écrite (saisie: 'texte') : une case par champ (À, Cc, Objet…), majuscules gardées. Avec plusieurs
+       cases, chacune part au tableau précédée de son nom (« À : … ») : un champ inversé s'y voit aussi. */
     function texte(m, moi){
-      const s = support(m) || {}, champs = m.champs || s.champs || ["Ta réponse"];
+      const s = support(m) || {}, champs = m.champs || s.champs || ["Ta réponse"], vis = visuel(m, s);
       zone.append(el("h2", "sq-grand", m.question));
-      (m.lignes || s.lignes || []).forEach(l => zone.append(el("p", "sq-situation", l)));
+      if(vis) zone.append(vis); else (m.lignes || s.lignes || []).forEach(l => zone.append(el("p", "sq-situation", l)));
       const envoyee = () => { const d = el("div", "sq-copie"); (moi.reponse || []).forEach(l => d.append(el("p", "sq-res", l))); return d; };
       if(m.phase === "corrige"){
         zone.append(el("p", "sq-note", "ENSEMBLE — compare ta réponse à la correction."));
-        const c = el("div", "sq-copie"); (m.correction || s.correction || []).forEach(l => c.append(el("p", null, l))); zone.append(c);
+        if(!vis){ const c = el("div", "sq-copie"); (m.correction || s.correction || []).forEach(l => c.append(el("p", null, l))); zone.append(c); }
         if(moi.reponse) zone.append(el("p", "sq-sous", "Ta réponse :"), envoyee());
         return;
       }
@@ -184,7 +189,7 @@
         const v = cases.map(c => c.value.replace(/\|/g, " ").replace(/\s+/g, " ").trim());
         const vide = v.findIndex(x => !x);
         if(vide >= 0){ statut.textContent = "Remplis aussi la case « " + champs[vide] + " »."; cases[vide].focus(); return; }
-        const lignes = v.map((x, k) => champs[k] + " : " + x);
+        const lignes = champs.length > 1 ? v.map((x, k) => champs[k] + " : " + x) : v;
         b.disabled = true; statut.textContent = "Envoi…";
         envoie({ etape: m.n, type: "motcle", reponse: lignes.join(" | ") })
           .then(() => { moi.reponse = lignes; moi.valeurs = v; moi.brouillon = []; moi.modifier = false; redessine(); })

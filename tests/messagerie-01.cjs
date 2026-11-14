@@ -76,8 +76,17 @@ assert.ok(/state\.etape===7[\s\S]{0,700}escapeHtml\(state\.reponse\)/.test(s), '
   assert.ok(/pas-a-pas\/sequence-eleve\.js/.test(page) && !/messagerie\/pas-a-pas\/sequence\.js/.test(page), 'la page charge le mode séquence commun');
   const seqData = JSON.parse(fs.readFileSync(__dirname + '/../pas-a-pas/sequences.json', 'utf8'))['messagerie-1'];
   const titres = seqData.moments.map(x => x.titre);
-  for (const t of ['Avant d’écrire : observe le mail', 'Une adresse en trois parties', 'Quelle adresse pose problème ?'])
-    assert.ok(titres.includes(t) && s.includes("'" + t + "':"), 'écran propre « ' + t + ' » : titre présent dans sequences.json et dans ECRANS_SEQUENCE');
+  assert.ok(titres.includes('Quelle adresse pose problème ?') && s.includes("'Quelle adresse pose problème ?':"), 'écran propre « Quelle adresse pose problème ? » : titre présent dans sequences.json et dans ECRANS_SEQUENCE');
+  // Depuis le 14/11 : « observe le mail » et « une adresse en trois parties » passent par le moteur commun, avec un visuel.
+  const mo = t => seqData.moments.find(x => x.titre === t);
+  assert.ok(mo('Avant d’écrire : observe le mail').visuel === 'email' && !s.includes("'Avant d’écrire : observe le mail':"), 'observe le mail : visuel « email », plus d’écran propre');
+  const dom = mo('Une adresse en trois parties');
+  assert.ok(dom.visuel === 'adresse' && dom.saisie === 'texte' && dom.champs.join() === 'Domaine' && !s.includes("'Une adresse en trois parties':"), 'le domaine : réponse écrite commune, visuel « adresse »');
+  const vis = fs.readFileSync(__dirname + '/../messagerie/pas-a-pas/visuels.js', 'utf8');
+  assert.ok(/window\.Visuels=Object\.assign\(window\.Visuels\|\|\{\},\{adresse,email\}\)/.test(vis) && !/MessagerieVisuels/.test(vis), 'visuels.js s’inscrit au registre commun Visuels');
+  for (const f of ['tableau.js', 'sequence-eleve.js'])
+    assert.ok(!/MessagerieVisuels|'domaine'|value *===? *["'](?!rat-de-ville-formatif)[a-z0-9-]+["']/.test(fs.readFileSync(__dirname + '/../pas-a-pas/' + f, 'utf8')),
+      f + ' : aucun test sur le nom d’un cours (sauf le formatif, qui a son moteur)');
   assert.ok(/const enPause=\(\)=>!!plafond&&!APERCU&&plafond\.bloc<TITRES\.length&&state\.etape>=plafond\.bloc&&state\.etape>=state\.atteint/.test(s), 'même règle que blocs.js');
 }
 

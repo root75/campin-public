@@ -375,35 +375,9 @@ async function demarre(){
   window.PasAPasSequence?.suivre(window.PAS_A_PAS);}
 }
 /* Mode séquence : le moteur commun pas-a-pas/sequence-eleve.js (depuis le 12/11/2026 ; avant, une copie à part).
-   Trois moments ont leur écran propre au cours, rangés ici par titre du moment (sequences.json). */
+   Un moment garde son écran propre au cours, rangé ici par titre du moment (sequences.json) ; « observe le mail » et
+   « une adresse en trois parties » passent par le moteur commun depuis le 14/11 (champ « visuel » du moment). */
 const ECRANS_SEQUENCE={
- 'Avant d’écrire : observe le mail':(zone,m,moi,{el,support})=>{
-  if(!support||!window.MessagerieVisuels)return false;   // sinon : les lignes du moment, écran commun
-  zone.append(el('h2','sq-grand','Comment est construit cet email ?'),el('p','sq-note','ENSEMBLE — explore les parties, puis réponds au professeur.'),MessagerieVisuels.email());return true;},
- 'Une adresse en trois parties':(zone,m,moi,{el,envoie,redessine,support})=>{
-  if(!support){zone.append(el('p','sq-note','Chargement de la question…'));return true;}
-  const ferme=m.phase==='clos'||m.phase==='corrige';
-  zone.append(el('h2','sq-grand',m.question),el('p','sq-note',m.phase==='corrige'?'ENSEMBLE — compare ta réponse à la correction et explique.':ferme?'ENSEMBLE — prépare ton explication et attends la correction.':'À TOI D’ÉCRIRE — propose ta réponse. Nous vérifierons ensemble.'));
-  if(window.MessagerieVisuels)zone.append(MessagerieVisuels.adresse({corrige:m.phase==='corrige'}));
-  else for(const ligne of support.lignes||[])zone.append(el('p',null,ligne));
-  if(m.phase==='corrige'){
-   if(!window.MessagerieVisuels)for(const ligne of support.correction||[])zone.append(el('p',null,ligne));
-   if(moi.reponse){const juste=moi.reponse.trim().toLowerCase()==='arcampin.be';
-    zone.append(el('p','sq-res','Ta réponse : '+moi.reponse),el('p',juste?'sq-res juste':'sq-res faux',juste?'Ta réponse correspond au domaine complet.':'À corriger : le domaine complet est arcampin.be. Explique la différence.'));}
-   return true;}
-  if(ferme){if(moi.reponse)zone.append(el('p','sq-res','Ta réponse envoyée : '+moi.reponse));return true;}
-  const f=el('form','sq-champs'),label=el('label',null,'Le domaine de mon adresse scolaire'),c=el('input'),b=el('button','sq-btn',moi.reponse?'Modifier ma réponse':'Envoyer ma réponse'),statut=el('p','sq-note',moi.reponse?'Réponse enregistrée. Elle sera vérifiée avec le professeur.':'');
-  c.type='text';c.maxLength=30;c.autocomplete='off';c.spellcheck=false;c.id='sq-domaine';label.htmlFor=c.id;c.value=moi.brouillon??moi.reponse??'';c.addEventListener('input',()=>moi.brouillon=c.value);statut.setAttribute('role','status');b.type='submit';
-  f.append(label,c,b,statut);zone.append(f);
-  f.addEventListener('submit',async e=>{
-   e.preventDefault();if(b.disabled)return;
-   const reponse=c.value.trim();if(!reponse){c.focus();return;}
-   if(reponse===moi.reponse)return;
-   b.disabled=true;c.disabled=true;statut.textContent='Enregistrement…';
-   try{await envoie({etape:m.n,type:'motcle',reponse});moi.reponse=reponse;redessine();}
-   catch(_){b.disabled=false;c.disabled=false;statut.textContent='Envoi non confirmé. Garde ta réponse et réessaie.';}
-  });
-  return true;},
  'Quelle adresse pose problème ?':(zone,m,moi,{el,envoie,redessine,support})=>{
   const ouvert=m.phase==='ouvert';
   zone.append(el('h2','sq-grand',m.question),el('p','sq-note',ouvert?'À TOI DE TE POSITIONNER — coche toutes les adresses à écarter. La correction viendra avec le professeur.':m.phase==='clos'?'CHOIX FERMÉS — prépare ton explication orale.':'ENSEMBLE — lis la correction et explique le problème.'));

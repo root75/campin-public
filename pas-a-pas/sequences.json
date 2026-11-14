@@ -19,7 +19,57 @@
         "min": 4,
         "methode": "Individuel, sur le poste",
         "question": "Un e-mail, c'est…",
-        "max": 3
+        "max": 3,
+        "exemples": [
+          [
+            "lent",
+            5
+          ],
+          [
+            "une lettre",
+            4
+          ],
+          [
+            "pour les profs",
+            3
+          ],
+          [
+            "sérieux",
+            3
+          ],
+          [
+            "on attend la réponse",
+            2
+          ],
+          [
+            "Outlook",
+            2
+          ],
+          [
+            "@",
+            2
+          ],
+          [
+            "avec un objet",
+            1
+          ],
+          [
+            "officiel",
+            1
+          ],
+          [
+            "long",
+            1
+          ],
+          [
+            "gratuit",
+            1
+          ],
+          [
+            "message",
+            2
+          ]
+        ]
       },
       {
         "type": "tri",
@@ -69,16 +119,37 @@
           "Avant @ : la partie locale. @ : le séparateur. Après @ : le domaine."
         ],
         "min": 5,
-        "saisie": "domaine",
+        "saisie": "texte",
         "question": "Quel est le domaine de ton adresse scolaire ?",
-        "max": 1,
         "methode": "Réponse écrite individuelle, comparaison anonyme, puis correction collective",
         "correction": [
           "Dans ton adresse scolaire, le domaine complet est arcampin.be : toute la partie après @, sans l’arobase.",
           ".be est l’extension : on l’appelle domaine de premier niveau, ou TLD (Top-Level Domain). Elle est associée à la Belgique.",
           "Dans arcampin.be, arcampin est le nom choisi et be est le domaine de premier niveau. .be seul n’est donc pas le domaine complet de ton adresse."
         ],
-        "repere": "Laisser chacun écrire sans donner la réponse. Montrer les réponses anonymes, demander de justifier, puis clore les réponses et afficher la correction. Faire distinguer arcampin.be, @arcampin.be et .be. Cette activité collective ne valide aucune étape du simulateur."
+        "repere": "Laisser chacun écrire sans donner la réponse. Montrer les réponses anonymes, demander de justifier, puis clore les réponses et afficher la correction. Faire distinguer arcampin.be, @arcampin.be et .be. Cette activité collective ne valide aucune étape du simulateur.",
+        "champs": [
+          "Domaine"
+        ],
+        "visuel": "adresse",
+        "exemples": [
+          [
+            "arcampin.be",
+            12
+          ],
+          [
+            "@arcampin.be",
+            4
+          ],
+          [
+            ".be",
+            3
+          ],
+          [
+            "arcampin",
+            2
+          ]
+        ]
       },
       {
         "type": "vote",
@@ -127,7 +198,9 @@
           "Bonjour Camille,\nQuel sport ou quel loisir pratiques-tu ?\nBonne journée,\nLina Dupont, 2B",
           "Que gardes-tu dans Objet ? Quelles parties composent le corps du message ?"
         ],
-        "min": 5
+        "min": 5,
+        "visuel": "email",
+        "question": "Comment est construit cet email ?"
       },
       {
         "type": "vote",
@@ -183,7 +256,33 @@
           "Cc : nora.petit@example.org — la personne qui reçoit une copie.",
           "L’adresse est recopiée exactement : pas d’espace, l’arobase @, le bon domaine."
         ],
-        "repere": "Laisser chacun taper sans donner la réponse. Afficher les réponses : les réponses identiques sont regroupées (×n). Faire trouver au tableau les adresses fausses (espace, @ oublié, autre domaine) et les champs inversés (Léo dans Cc). Clore, puis corriger ensemble. Rien n’est envoyé : aucune étape de la fiche n’est validée."
+        "repere": "Laisser chacun taper sans donner la réponse. Afficher les réponses : les réponses identiques sont regroupées (×n). Faire trouver au tableau les adresses fausses (espace, @ oublié, autre domaine) et les champs inversés (Léo dans Cc). Clore, puis corriger ensemble. Rien n’est envoyé : aucune étape de la fiche n’est validée.",
+        "exemples": [
+          [
+            "À : leo.dubois@example.org",
+            14
+          ],
+          [
+            "À : leo.dubois @example.org",
+            2
+          ],
+          [
+            "À : nora.petit@example.org",
+            2
+          ],
+          [
+            "Cc : nora.petit@example.org",
+            13
+          ],
+          [
+            "Cc : leo.dubois@example.org",
+            2
+          ],
+          [
+            "Cc : nora.petit@example.com",
+            1
+          ]
+        ]
       },
       {
         "type": "mots",
@@ -202,7 +301,25 @@
           "L’objet est court et annonce la question : par exemple « Heure de l’entraînement ».",
           "Pas « Bonjour », pas toute la question, jamais vide."
         ],
-        "repere": "Plusieurs objets sont justes : faire dire pour chacun s’il annonce la question. Faire écarter « Bonjour », l’objet vide et la question entière recopiée."
+        "repere": "Plusieurs objets sont justes : faire dire pour chacun s’il annonce la question. Faire écarter « Bonjour », l’objet vide et la question entière recopiée.",
+        "exemples": [
+          [
+            "Heure de l’entraînement",
+            8
+          ],
+          [
+            "Entraînement de foot",
+            5
+          ],
+          [
+            "Bonjour",
+            3
+          ],
+          [
+            "À quelle heure est l’entraînement de foot ?",
+            2
+          ]
+        ]
       },
       {
         "type": "mots",
@@ -224,7 +341,45 @@
           "Formule de fin : « Bonne journée, » ou « À bientôt, » — suivie d’une virgule.",
           "Signature : ton prénom, ton nom et ta classe."
         ],
-        "repere": "Les majuscules sont gardées au tableau : « bonjour léo, » et « Bonjour Léo, » restent deux réponses. Faire trouver « Bonjour, » sans prénom, la virgule oubliée, la minuscule, la signature sans nom ou sans classe. Les signatures affichent les prénoms et noms des élèves."
+        "repere": "Les majuscules sont gardées au tableau : « bonjour léo, » et « Bonjour Léo, » restent deux réponses. Faire trouver « Bonjour, » sans prénom, la virgule oubliée, la minuscule, la signature sans nom ou sans classe. Les signatures affichent les prénoms et noms des élèves.",
+        "exemples": [
+          [
+            "Salutation : Bonjour Léo,",
+            9
+          ],
+          [
+            "Salutation : Bonjour,",
+            4
+          ],
+          [
+            "Salutation : bonjour léo,",
+            3
+          ],
+          [
+            "Salutation : Bonjour Léo",
+            2
+          ],
+          [
+            "Formule de fin : Bonne journée,",
+            10
+          ],
+          [
+            "Formule de fin : À bientôt,",
+            5
+          ],
+          [
+            "Formule de fin : bonne journée",
+            2
+          ],
+          [
+            "Signature : Lina Dupont, 2B",
+            1
+          ],
+          [
+            "Signature : Inès",
+            1
+          ]
+        ]
       },
       {
         "type": "fin",
@@ -238,7 +393,8 @@
         ]
       }
     ],
-    "objectif": "Comprendre une adresse et la forme du mail avant de s’entraîner. Durées du collectif indicatives ; prévoir ensuite 25–35 min de simulation et 20–30 min d’échange Outlook, répartissables sur plusieurs séances."
+    "objectif": "Comprendre une adresse et la forme du mail avant de s’entraîner. Durées du collectif indicatives ; prévoir ensuite 25–35 min de simulation et 20–30 min d’échange Outlook, répartissables sur plusieurs séances.",
+    "classe": "messagerie-scene"
   },
   "messagerie-2": {
     "rappel": "https://root75.github.io/campin-public/messagerie-2/rappel/",
@@ -964,6 +1120,7 @@
       "Observation des ressources : prolongement. OneDrive : réactivation du Labo 06."
     ],
     "preparation": [
+      "Labo 07 : les blocs verts indiquent une hypothèse enregistrée (étapes internes 2, 6, 9) ou une étape déclarée faite. Les élèves voient six entrées (onze étapes) : préparer le rapport, trois missions, le défi final, remettre le rapport. Un seul incident est rédigé ; les trois autres sont vérifiés à deux ; le professeur garde le contrôle individuel final et intervient sur les blocages persistants. Preuves et conclusions dans le document Classroom : le site ne le lit pas et ne vérifie pas sa remise. Ne jamais projeter le Journal ou les copies.",
       "Préparer un seul devoir Classroom « Labo 07 — Dans les coulisses du PC », /20, avec remise d’un document personnel à la fin du parcours. La préparation ne crée ni ne publie ce devoir. Ne pas distribuer de copie déjà mise en page.",
       "L’élève crée un rapport Google Docs à partir de la trame en texte brut avant les premières mesures. Il garde ce même document pendant tout le travail et ne le remet qu’une fois terminé.",
       "Prévoir un fichier déjà enregistré dans le dossier OneDrive scolaire de l’Explorateur, par exemple celui du Labo 06 ; un fichier de démonstration sans donnée privée si nécessaire. La mission ne dépend pas d’une autre séquence obligatoirement réalisée juste avant.",

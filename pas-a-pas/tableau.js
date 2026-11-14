@@ -175,7 +175,7 @@ function dessinePlafond(){
   $("plafond-etat").textContent = dernier<n ? "🔒 Blocs 1 à "+dernier+" ouverts ; les suivants portent un cadenas sur les postes." : "Tous les blocs sont ouverts. Clique sur un numéro pour fermer les blocs suivants (l’atelier d’une séquence le fait aussi).";
 }
 function dessine(d){
-  ["messagerie-recommencer","python-plafond","guide-messagerie"].forEach(id=>{if($(id))$(id).hidden=true;});
+  if($("ramener-classe"))$("ramener-classe").hidden=true;
   if(!$("filtre-aide")){
     const label=txt("label","filtre-aide"),filtre=document.createElement("input");filtre.type="checkbox";filtre.id="filtre-aide";filtre.checked=seulementAide;
     label.append(filtre,txt("span",null,"Besoin d’aide seulement"));
@@ -187,12 +187,9 @@ function dessine(d){
     FormatifProf.presentation($("cours").value === 'rat-de-ville-formatif');
     if($("cours").value === 'rat-de-ville-formatif') { FormatifProf.dessine(d); syntheses(d, d.declaratif ? d.eleves : [], ETAPES_RAT.length, ETAPES_RAT.map(e=>e.id)); return; }
   }
-  if(!$("guide-messagerie")){const lien=txt("a","btn vide","Repères professeur — Messagerie 01");lien.id="guide-messagerie";lien.href='https://script.google.com/a/macros/arcampin.be/s/AKfycbyOPTaq-L1PuittB1rkkiL9OOtShFc2WpiD8H_pH_INaw9ePWenCzhlIPlHu4zBOgLk/exec?vue=guide-prof';lien.target='_blank';lien.rel='noopener';$("guide-actions").append(lien);}
-  if(!$("messagerie-recommencer")){const b=txt("button","btn vide","Recommencer Messagerie 01 pour tous");b.type='button';b.id='messagerie-recommencer';b.addEventListener('click',()=>{if(!confirm('Remettre tous les participants de Messagerie 01 au début ? L’historique est conservé.'))return;b.disabled=true;google.script.run.withSuccessHandler(r=>{b.disabled=false;$("maj").textContent=r.repris+' participants remis au début.';charge();}).withFailureHandler(err=>{b.disabled=false;erreur(err);}).noter('messagerie-1',{type:'prof-recommencer'});});$("gestion-actions").append(b);}
-  $("messagerie-recommencer").hidden=!(SUIVI&&d.reprisesParSuivi&&$("cours").value==='messagerie-1');
-  $("guide-messagerie").hidden=$("cours").value!=='messagerie-1';
-  if(!$("python-plafond")){const b=txt("button","btn vide","Ramener les élèves au maximum à l’étape 8");b.type='button';b.id='python-plafond';b.addEventListener('click',()=>{const s=choisie();if(!confirm('Les élèves ayant dépassé l’étape 8 devront la refaire. Continuer ?'))return;b.disabled=true;google.script.run.withSuccessHandler(r=>{$("maj").textContent=r.repris+' élèves remis à l’étape 8. Ils doivent recharger leur fiche.';b.disabled=false;charge();}).withFailureHandler(err=>{b.disabled=false;erreur(err);}).noter('python-1',{type:'prof-plafond',debut:s.debut});});$("gestion-actions").append(b);}
-  $("python-plafond").hidden=!(SUIVI&&d.reprisesParSuivi&&d.peutReprendre&&$("cours").value==='python-1'&&/^3/.test(choisie().classe));
+  // Pour tous les cours : la classe de la séance choisie revient à l'étape N (ceux qui l'ont dépassée la refont).
+  if(!$("ramener-classe")){const b=txt("button","btn vide","Ramener la classe à une étape…");b.type='button';b.id='ramener-classe';b.addEventListener('click',()=>{const s=choisie(),cours=$("cours").value;choisirEtape("Toute la classe "+s.classe,NB_BLOCS[cours]||1,null).then(bloc=>{if(!bloc)return;b.disabled=true;google.script.run.withSuccessHandler(r=>{b.disabled=false;$("maj").textContent=r.repris+' élève(s) ramené(s) à l’étape '+bloc+'. Ils rechargent leur fiche.';charge();}).withFailureHandler(err=>{b.disabled=false;erreur(err);}).noter(cours,{type:'prof-ramener',debut:s.debut,bloc});});});$("gestion-actions").append(b);}
+  $("ramener-classe").hidden=!(SUIVI&&d.reprisesParSuivi&&d.peutReprendre);
   dessinePlafond();
   $("gestion-attente").hidden=!SUIVI||!!d.reprisesParSuivi;
   const n = NB_BLOCS[$("cours").value] || Math.max(1, ...d.eleves.map(e=>e.atteint+1));
@@ -472,17 +469,10 @@ const DEMO_SEQ = {
   arreterSequence: () => { DEMO_ETAT = null; return null; },
   reponses: (cours, i) => {
     const m = SEQ.contenu.moments[i], t = Math.floor((Date.now() - DEMO_ETAT.lance) / 4000);
-    const mots = [["lent",5],["une lettre",4],["pour les profs",3],["sérieux",3],["on attend la réponse",2],["Outlook",2],["@",2],["avec un objet",1],["officiel",1],["long",1],["gratuit",1],["message",2]]
+    // Réponses fictives : celles du moment (« exemples » dans sequences.json), sinon des réponses neutres.
+    const mots = (m.exemples || [["réponse A",5],["réponse B",4],["réponse C",3],["réponse D",2],["réponse E",1]])
       .slice(0, Math.min(12, 3 + t)).map(([texte,n])=>({ cle:texte, texte, n }));
-    // « On écrit ensemble » : des réponses fictives par champ, justes et fausses, pour répéter la correction.
-    const parChamp = { "À":[["leo.dubois@example.org",14],["leo.dubois @example.org",2],["nora.petit@example.org",2]],
-      "Cc":[["nora.petit@example.org",13],["leo.dubois@example.org",2],["nora.petit@example.com",1]],
-      "Objet":[["Heure de l’entraînement",8],["Entraînement de foot",5],["Bonjour",3],["À quelle heure est l’entraînement de foot ?",2]],
-      "Salutation":[["Bonjour Léo,",9],["Bonjour,",4],["bonjour léo,",3],["Bonjour Léo",2]],
-      "Formule de fin":[["Bonne journée,",10],["À bientôt,",5],["bonne journée",2]],
-      "Signature":[["Lina Dupont, 2B",1],["Noah Martin, 2B",1],["Inès",1]] };
-    const texte = m.saisie === "texte" ? (m.champs||[]).flatMap(c=>(parChamp[c]||[]).map(([x,n])=>({ cle:c+" : "+x, texte:c+" : "+x, n }))) : null;
-    return { maintenant: Date.now(), repondants: Math.min(21, 4 + 2*t), mots: m.type==="vote" ? [] : texte || mots,
+    return { maintenant: Date.now(), repondants: Math.min(21, 4 + 2*t), mots: m.type==="vote" ? [] : mots,
       votes: m.type==="vote" ? m.situations.map((_,k)=>m.choix.map((_,j)=>j===(k % m.choix.length) ? 15 : 3)) : [] };
   }
 };
@@ -521,7 +511,6 @@ function dessineConducteur(){
   $("conducteur-objectif").textContent = (c.objectif || "") + " · Environ " + duree + " min, à adapter au groupe.";
   const prep = $("conducteur-preparation"); prep.replaceChildren();
   if(c.rappel){ const p = txt("p"), a = txt("a","btn vide","Rappel à projeter en début de cours ↗"); a.href = c.rappel; a.target = "_blank"; a.rel = "noopener"; p.append(a); prep.append(p); }
-  if($("cours").value==="labo-07") prep.append(txt("p","astuce","Labo 07 : les blocs verts indiquent une hypothèse enregistrée (étapes internes 2, 6, 9) ou une étape déclarée faite. Les élèves voient six entrées (onze étapes) : préparer le rapport, trois missions, le défi final, remettre le rapport. Un seul incident est rédigé ; les trois autres sont vérifiés à deux ; le professeur garde le contrôle individuel final et intervient sur les blocages persistants. Preuves et conclusions dans le document Classroom : le site ne le lit pas et ne vérifie pas sa remise. Ne jamais projeter le Journal ou les copies."));
   (c.preparation || []).forEach(t=>prep.append(txt("p",null,t)));
   (c.competences || []).forEach(t=>prep.append(txt("p","astuce",t)));
   const liste = $("conducteur-liste"); liste.replaceChildren();
@@ -606,7 +595,7 @@ function action(){
   if(m.type === "mots" && !SEQ.montre){ t = "Montrer les mots"; f = ()=>{ SEQ.montre = true; scene(); }; }
   if(m.type === "vote" && ph === "ouvert"){ t = "Clore le vote"; f = ()=>allerA(SEQ.etat.i, "clos"); }
   if(m.type === "vote" && ph === "clos"){ t = "Montrer la bonne réponse"; f = ()=>allerA(SEQ.etat.i, "corrige"); }
-  if(m.saisie){   // 'domaine' (Messagerie 01) ou 'texte' (« On écrit ensemble ») : afficher, clore, corriger
+  if(m.saisie){   // réponse écrite (saisie « texte ») : afficher, clore, corriger
     if(ph === 'corrige'){ t=''; f=null; }
     else if(ph === 'clos'){ t='Corriger ensemble'; f=()=>allerA(SEQ.etat.i,'corrige'); }
     else if(SEQ.montre){ t='Clore les réponses'; f=()=>allerA(SEQ.etat.i,'clos'); }
@@ -618,14 +607,16 @@ function action(){
 function scene(){
   const m = momentCourant(), n = SEQ.contenu.moments.length, r = SEQ.rep;
   const box = txt("div");
-  if($("cours").value === "messagerie-1")box.classList.add("messagerie-scene");
+  if(SEQ.contenu.classe) box.classList.add(SEQ.contenu.classe);   // l'habillage du cours (sequences.json)
+  // Un moment peut porter un « visuel » (Visuels[nom], chargé par la page) : il remplace ses lignes et sa correction,
+  // qui en sont la version texte, lue si le visuel n'est pas chargé.
+  const vis = m.visuel && window.Visuels && Visuels[m.visuel] ? Visuels[m.visuel]({ corrige: SEQ.etat.phase === "corrige" }) : null;
   box.append(txt("p","sur", m.titre));
   $("seq-ou").replaceChildren(...(SEQ.apercu ? [txt("b","apercu-marque","Répétition — rien n’est envoyé, réponses fictives · ")] : []), txt("b",null,(SEQ.etat.i+1)+" / "+n+" · "+m.titre), " — "+(m.methode||""));
   $("seq-prec").disabled = SEQ.etat.i === 0;
   $("seq-suiv").disabled = SEQ.etat.i === n-1;
-  const mailVisuel = $("cours").value === "messagerie-1" && m.titre === "Avant d’écrire : observe le mail" && window.MessagerieVisuels;
-  if(mailVisuel)box.append(txt('h2','grand','Comment est construit cet email ?'),txt('p','moyen','ENSEMBLE — explore les parties, puis explique leur rôle.'),MessagerieVisuels.email());
-  if(!mailVisuel && (m.type === "ecran" || m.type === "fin" || m.type === "atelier")){
+  if(vis && m.type === "ecran") box.append(...(m.question ? [txt("h2","grand",m.question)] : []), vis);
+  if(!vis && (m.type === "ecran" || m.type === "fin" || m.type === "atelier")){
     (m.lignes||[]).forEach((l,k)=>box.append(txt(k ? "p" : "h2", k ? "moyen" : "grand", l)));
     if(m.paires){ const g = txt("div","paires"); m.paires.forEach(([a,b])=>{ const c = txt("div","paire"); c.append(txt("b",null,a), txt("span",null,b)); g.append(c); }); box.append(g); }
     if(m.exemple && !m.trace) box.append(txt("p","exemple", m.exemple));   // avec un tableau (trace), l'exemple est la version texte des postes élèves
@@ -645,21 +636,15 @@ function scene(){
   }
   if(m.type === "mots"){
     box.append(txt("h2","grand", m.question));
-    if(m.saisie === 'domaine'){
-      if(window.MessagerieVisuels)box.append(MessagerieVisuels.adresse({corrige:SEQ.etat.phase==='corrige'}));
-      else (m.lignes||[]).forEach(l=>box.append(txt('p','moyen',l)));
-      box.append(txt('p','moyen',SEQ.etat.phase==='corrige'?'ENSEMBLE — vérifiez et expliquez.':SEQ.etat.phase==='clos'?'RÉPONSES FERMÉES — explique ton raisonnement.':'À TOI D’ÉCRIRE — réponds sur ton écran.'));
-      if(SEQ.etat.phase==='corrige'&&!window.MessagerieVisuels)(m.correction||[]).forEach(l=>box.append(txt('p','moyen',l)));
-    }
-    if(m.saisie === 'texte'){   // la situation, les champs à remplir, puis la correction
-      (m.lignes||[]).forEach(l=>box.append(txt('p','ecrire-situation',l)));
-      if(m.champs && m.champs.length) box.append(txt('p','ecrire-situation','À remplir : '+m.champs.join(' · ')));
+    if(m.saisie === 'texte'){   // la situation (ou son visuel), les champs à remplir, puis la correction
+      if(vis) box.append(vis); else (m.lignes||[]).forEach(l=>box.append(txt('p','ecrire-situation',l)));
+      if(m.champs && m.champs.length > 1) box.append(txt('p','ecrire-situation','À remplir : '+m.champs.join(' · ')));
       box.append(txt('p','moyen',SEQ.etat.phase==='corrige'?'ENSEMBLE — compare ta réponse à la correction.':SEQ.etat.phase==='clos'?'RÉPONSES FERMÉES — juste ou faux ? Explique avec la règle.':'À TOI D’ÉCRIRE — chacun seul, sur ton écran.'));
     }
     const masques = litSeq("masques", []);
     const mots = r ? r.mots.filter(x=>!masques.includes(x.cle)) : [];
     if(!SEQ.montre){
-      box.append(txt("div","compteur", r ? r.repondants : "…"), txt("p","moyen", (r && r.repondants === 1 ? "élève a" : "élèves ont") + (m.saisie === "domaine" ? " répondu. Écris le domaine sur ton poste." : m.saisie === "texte" ? " répondu. Écris ta réponse sur ton poste." : " répondu. Tape tes mots sur ton poste.")));
+      box.append(txt("div","compteur", r ? r.repondants : "…"), txt("p","moyen", (r && r.repondants === 1 ? "élève a" : "élèves ont") + (m.saisie === "texte" ? " répondu. Écris ta réponse sur ton poste." : " répondu. Tape tes mots sur ton poste.")));
     } else {
       const max = Math.max(1, ...mots.map(x=>x.n)), nu = txt("div","nuage");
       if(!mots.length) nu.append(txt("p","moyen","Pas encore de mot."));
@@ -673,7 +658,7 @@ function scene(){
       box.append(nu);
     }
     // « On écrit ensemble » corrigé : la correction sous les réponses, qui restent visibles pour la discussion.
-    if(m.saisie === 'texte' && SEQ.etat.phase === 'corrige'){ const c=txt('div','correction-texte'); (m.correction||[]).forEach(l=>c.append(txt('p',null,l))); box.append(c); }
+    if(m.saisie === 'texte' && SEQ.etat.phase === 'corrige' && !vis){ const c=txt('div','correction-texte'); (m.correction||[]).forEach(l=>c.append(txt('p',null,l))); box.append(c); }
   }
   if(m.type === "tri") box.append(tri(m, r));
   if(m.type === "vote") box.append(vote(m, r, SEQ.etat.phase));
@@ -875,7 +860,6 @@ function prepareOutils(){
  }
  if(!$("gestion-actions")){const d=txt("div");d.id="gestion-actions";$("gestion-menu").querySelector(".contenu-menu").append(d);}
  if(!$("gestion-attente")){const d=txt("p","astuce","Les commandes de reprise attendent la confirmation du serveur.");d.id="gestion-attente";d.hidden=true;$("gestion-menu").querySelector(".contenu-menu").append(d);}
- if(!$("guide-actions")){const d=txt("div");d.id="guide-actions";$("ressources-menu").querySelector(".contenu-menu").append(d);}
  if(!$("filtres-eleves")){const d=txt("div");d.id="filtres-eleves";$("lignes").closest("section").prepend(d);}
 }
 prepareOutils();
@@ -953,6 +937,7 @@ function choisirEtape(qui, n, atteint){
   const dit = () => { const k = Number(sel.value);
     effet.textContent = (k>1 ? "Les étapes 1 à "+(k-1)+" restent validées. " : "")+"L’étape "+k+" et les suivantes sont à refaire. L’historique est conservé."; };
   sel.onchange = dit; dit();
-  d.querySelector("#dlg-reprise-qui").textContent = qui+" : jusqu’ici, "+Math.min(atteint,n)+" étape(s) validée(s) sur "+n+".";
+  d.querySelector("#dlg-reprise-qui").textContent = atteint == null ? qui+" : ceux qui ont dépassé l’étape choisie la refont, les autres ne changent rien."
+    : qui+" : jusqu’ici, "+Math.min(atteint,n)+" étape(s) validée(s) sur "+n+".";
   return new Promise(ok => { d.onclose = () => ok(d.returnValue==="ok" ? Number(sel.value) : 0); d.returnValue = ""; d.showModal(); });
 }

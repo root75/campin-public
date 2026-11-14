@@ -83,7 +83,7 @@
     notice.append(el('h3',null,'Explore le mail'),el('p',null,'Sélectionne une partie colorée pour découvrir son rôle.'));
     legende.append(notice,el('p','mv-prompt','À l’oral : que garder dans Objet ? Où écrire la salutation et la signature ?'),capture());root.append(fenetre,legende);return root;
   }
-  window.MessagerieVisuels={adresse,email};
+  window.Visuels=Object.assign(window.Visuels||{},{adresse,email});   // appelés par le champ « visuel » d'un moment (sequences.json)
   document.querySelectorAll('[data-messagerie-visuel]').forEach(cible=>{
     const type=cible.dataset.messagerieVisuel;
     if(type==='adresse')cible.replaceChildren(adresse());
