@@ -904,7 +904,7 @@
   },
   "python-3": {
     "titre": "Python 03 — Texte, nombre et input()",
-    "objectif": "Distinguer texte et nombre, lire une réponse avec input(), la convertir avec int(), puis traduire le logigramme « Le score » (sans son losange) dans Thonny. Deux périodes environ : reprendre la même séance au cours suivant plutôt que couper un bloc.",
+    "objectif": "Distinguer texte et nombre, lire une réponse avec input(), la convertir avec int(), puis traduire le logigramme « Le score » (sans son losange) dans Thonny. Le cours se découpe par sujet, pas par période : à la sonnerie, reprendre la même séance au même bloc au cours suivant.",
     "competences": [
       "S3M10.5 « Traduire un algorithme dans un langage informatique structuré. »",
       "S3M10.3 « Reconnaître et manipuler des variables, des constantes et des types d'affectation. »",
