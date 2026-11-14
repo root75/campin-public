@@ -14,7 +14,7 @@ function charge(cours) {
 }
 const norm = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 let blocs = 0;
-for (const cours of ['python-1', 'python-2', 'python-3']) {
+for (const cours of ['python-1', 'python-2', 'python-3', 'python-4']) {
   const ctx = charge(cours);
   for (let n = 1; n <= ctx.N; n++) {
     if (ctx.bloc(n, 1).q.type !== 'trous') continue;

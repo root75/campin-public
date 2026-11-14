@@ -6,7 +6,7 @@ const commun = fs.readFileSync('pas-a-pas/python-editeur.js', 'utf8');
 const NOMS = ['chargePython', 'executePython', 'editeur', 'ordre', 'trace', 'ligneFautive', 'montre'];
 NOMS.forEach(n => assert.match(commun, new RegExp('function ' + n + '\\('), n + ' absent de python-editeur.js'));
 new Function(commun);   // syntaxe
-for (const cours of ['python-1', 'python-2', 'python-3']) {
+for (const cours of ['python-1', 'python-2', 'python-3', 'python-4']) {
   const fiche = fs.readFileSync(cours + '/pas-a-pas/fiche.js', 'utf8');
   NOMS.forEach(n => assert.doesNotMatch(fiche, new RegExp('function ' + n + '\\('), cours + ' recopie ' + n));
   assert.doesNotMatch(fiche, /const (MOTEUR|LANCEUR|ERREURS) =/, cours + ' redéclare le moteur Python');
