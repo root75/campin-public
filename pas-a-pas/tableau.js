@@ -474,7 +474,15 @@ const DEMO_SEQ = {
     const m = SEQ.contenu.moments[i], t = Math.floor((Date.now() - DEMO_ETAT.lance) / 4000);
     const mots = [["lent",5],["une lettre",4],["pour les profs",3],["sérieux",3],["on attend la réponse",2],["Outlook",2],["@",2],["avec un objet",1],["officiel",1],["long",1],["gratuit",1],["message",2]]
       .slice(0, Math.min(12, 3 + t)).map(([texte,n])=>({ cle:texte, texte, n }));
-    return { maintenant: Date.now(), repondants: Math.min(21, 4 + 2*t), mots: m.type==="vote" ? [] : mots,
+    // « On écrit ensemble » : des réponses fictives par champ, justes et fausses, pour répéter la correction.
+    const parChamp = { "À":[["leo.dubois@example.org",14],["leo.dubois @example.org",2],["nora.petit@example.org",2]],
+      "Cc":[["nora.petit@example.org",13],["leo.dubois@example.org",2],["nora.petit@example.com",1]],
+      "Objet":[["Heure de l’entraînement",8],["Entraînement de foot",5],["Bonjour",3],["À quelle heure est l’entraînement de foot ?",2]],
+      "Salutation":[["Bonjour Léo,",9],["Bonjour,",4],["bonjour léo,",3],["Bonjour Léo",2]],
+      "Formule de fin":[["Bonne journée,",10],["À bientôt,",5],["bonne journée",2]],
+      "Signature":[["Lina Dupont, 2B",1],["Noah Martin, 2B",1],["Inès",1]] };
+    const texte = m.saisie === "texte" ? (m.champs||[]).flatMap(c=>(parChamp[c]||[]).map(([x,n])=>({ cle:c+" : "+x, texte:c+" : "+x, n }))) : null;
+    return { maintenant: Date.now(), repondants: Math.min(21, 4 + 2*t), mots: m.type==="vote" ? [] : texte || mots,
       votes: m.type==="vote" ? m.situations.map((_,k)=>m.choix.map((_,j)=>j===(k % m.choix.length) ? 15 : 3)) : [] };
   }
 };
@@ -598,7 +606,7 @@ function action(){
   if(m.type === "mots" && !SEQ.montre){ t = "Montrer les mots"; f = ()=>{ SEQ.montre = true; scene(); }; }
   if(m.type === "vote" && ph === "ouvert"){ t = "Clore le vote"; f = ()=>allerA(SEQ.etat.i, "clos"); }
   if(m.type === "vote" && ph === "clos"){ t = "Montrer la bonne réponse"; f = ()=>allerA(SEQ.etat.i, "corrige"); }
-  if(m.saisie === 'domaine'){
+  if(m.saisie){   // 'domaine' (Messagerie 01) ou 'texte' (« On écrit ensemble ») : afficher, clore, corriger
     if(ph === 'corrige'){ t=''; f=null; }
     else if(ph === 'clos'){ t='Corriger ensemble'; f=()=>allerA(SEQ.etat.i,'corrige'); }
     else if(SEQ.montre){ t='Clore les réponses'; f=()=>allerA(SEQ.etat.i,'clos'); }
@@ -643,10 +651,15 @@ function scene(){
       box.append(txt('p','moyen',SEQ.etat.phase==='corrige'?'ENSEMBLE — vérifiez et expliquez.':SEQ.etat.phase==='clos'?'RÉPONSES FERMÉES — explique ton raisonnement.':'À TOI D’ÉCRIRE — réponds sur ton écran.'));
       if(SEQ.etat.phase==='corrige'&&!window.MessagerieVisuels)(m.correction||[]).forEach(l=>box.append(txt('p','moyen',l)));
     }
+    if(m.saisie === 'texte'){   // la situation, les champs à remplir, puis la correction
+      (m.lignes||[]).forEach(l=>box.append(txt('p','ecrire-situation',l)));
+      if(m.champs && m.champs.length) box.append(txt('p','ecrire-situation','À remplir : '+m.champs.join(' · ')));
+      box.append(txt('p','moyen',SEQ.etat.phase==='corrige'?'ENSEMBLE — compare ta réponse à la correction.':SEQ.etat.phase==='clos'?'RÉPONSES FERMÉES — juste ou faux ? Explique avec la règle.':'À TOI D’ÉCRIRE — chacun seul, sur ton écran.'));
+    }
     const masques = litSeq("masques", []);
     const mots = r ? r.mots.filter(x=>!masques.includes(x.cle)) : [];
     if(!SEQ.montre){
-      box.append(txt("div","compteur", r ? r.repondants : "…"), txt("p","moyen", (r && r.repondants === 1 ? "élève a" : "élèves ont") + (m.saisie === "domaine" ? " répondu. Écris le domaine sur ton poste." : " répondu. Tape tes mots sur ton poste.")));
+      box.append(txt("div","compteur", r ? r.repondants : "…"), txt("p","moyen", (r && r.repondants === 1 ? "élève a" : "élèves ont") + (m.saisie === "domaine" ? " répondu. Écris le domaine sur ton poste." : m.saisie === "texte" ? " répondu. Écris ta réponse sur ton poste." : " répondu. Tape tes mots sur ton poste.")));
     } else {
       const max = Math.max(1, ...mots.map(x=>x.n)), nu = txt("div","nuage");
       if(!mots.length) nu.append(txt("p","moyen","Pas encore de mot."));
@@ -659,6 +672,8 @@ function scene(){
       });
       box.append(nu);
     }
+    // « On écrit ensemble » corrigé : la correction sous les réponses, qui restent visibles pour la discussion.
+    if(m.saisie === 'texte' && SEQ.etat.phase === 'corrige'){ const c=txt('div','correction-texte'); (m.correction||[]).forEach(l=>c.append(txt('p',null,l))); box.append(c); }
   }
   if(m.type === "tri") box.append(tri(m, r));
   if(m.type === "vote") box.append(vote(m, r, SEQ.etat.phase));
