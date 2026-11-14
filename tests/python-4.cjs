@@ -75,6 +75,16 @@ for (let n = 1; n <= ctx.N; n++) {
       assert.equal(new Set(Q.c).size, Q.c.length, `${n}/${v}: choix distincts`);
       assert.equal(Q.p.length, Q.c.length, `${n}/${v}: un retour par choix`);
       reponses.add(Q.c[0]);
+    } else if (Q.type === 'ordre') {
+      const ok = lance(Q.lignes.join('\n'));
+      assert.equal(Q.test(ok), true, `${n}/${v}: les lignes dans l'ordre donné doivent passer`);
+      const l = Q.lignes.slice(); [l[2], l[4]] = [l[4], l[2]];   // les deux messages échangés de branche
+      assert.notEqual(Q.test(lance(l.join('\n'))), true, `${n}/${v}: messages sous la mauvaise branche`);
+      const fin = Q.lignes.slice(); fin.unshift(fin.pop()); fin.unshift(fin.splice(1, 1)[0]);   // la ligne « toujours » en tête, après la boîte
+      assert.notEqual(Q.test(lance(fin.join('\n'))), true, `${n}/${v}: la dernière ligne placée trop haut`);
+      reponses.add(Q.lignes.join('\n'));
+    } else if (Q.type === 'trous') {
+      reponses.add(Q.mots.join('|'));
     } else if (Q.type === 'saisie') {
       reponses.add(String(Q.q) + (b.extra || ''));
     } else if (Q.type === 'rapport') {
@@ -92,8 +102,6 @@ for (const n of [5, 8]) for (let v = 1; v <= 3; v++) {
   assert.ok(!SOLUTIONS[n](b).includes(modele.split('\n')[0]), `bloc ${n}/${v} : l'encadré recopie la réponse`);
 }
 /* Les prédictions : la bonne réponse est ce que Python affiche vraiment. */
-const choixDe = sortie => { const l = sortie.trim().split('\n').filter(Boolean);
-  return l.length === 2 ? 'Tu joues, puis Fin du tour' : l.length === 0 ? 'Rien du tout' : l[0] === 'Fin du tour' ? 'Fin du tour, seulement' : 'Tu joues, seulement'; };
 for (let v = 1; v <= 3; v++) {
   const b1 = ctx.bloc(1, v), t1 = b1.extra.match(/on tape <b>(\d+)<\/b>/)[1];
   assert.equal(derniere(lance(codeDe(b1), [t1])), b1.q.c[0], `bloc 1/${v}`);
@@ -102,10 +110,9 @@ for (let v = 1; v <= 3; v++) {
   const b3 = ctx.bloc(3, v), [, op, seuil] = html(b3.extra).match(/score (>=?) (\d+)/);
   const r3 = derniere(lance(`n = 0\nwhile not (n * 10 ${op} ${seuil}):\n    n += 1\nprint(n)`));
   assert.ok(b3.q.ok(r3) && !b3.q.ok(String(Number(r3) - 1)) && !b3.q.ok(String(Number(r3) + 1)), `bloc 3/${v}: ${r3}`);
-  const b4 = ctx.bloc(4, v);
-  assert.equal(derniere(lance(codeDe(b4))), b4.q.c[0], `bloc 4/${v}`);
-  const b6 = ctx.bloc(6, v);
-  assert.equal(choixDe(lance(codeDe(b6)).sortie), b6.q.c[0], `bloc 6/${v}`);
+  const b4 = ctx.bloc(4, v), x4 = Number(codeDe(b4).match(/x = (\d+)/)[1]), y4 = Number(codeDe(b4).match(/y = (\d+)/)[1]);
+  assert.equal(derniere(lance(codeDe(b4))), b4.q.mots[2], `bloc 4/${v} : le nombre à placer est ce que Python affiche`);
+  assert.equal(b4.q.mots[0], x4 >= y4 ? 'vraie' : 'fausse', `bloc 4/${v} : la 1re condition`);
   const b11 = ctx.bloc(11, v), n11 = b11.q.q.match(/taperas (\d+)/)[1];
   const r11 = derniere(lance(SOLUTION_BONUS, [n11]));
   assert.ok(b11.q.ok(r11), `bloc 11/${v}: ${n11} → ${r11}`);
@@ -116,7 +123,7 @@ for (let v = 1; v <= 3; v++) {
   const r13 = lance(modif, [tape]), apres = r13.sortie.trim().split('\n').slice(1).join('\n');
   assert.ok(!r13.erreur, `bloc 13/${v}: ${JSON.stringify(r13.erreur)}`);
   assert.equal(apres === '' ? 'Rien' : apres, b13.q.c[0], `bloc 13/${v}`);
-  console.log(`OK prédictions version ${v} : ${b1.q.c[0]} · ${b2.q.c[0]} · ${r3} · ${b4.q.c[0]} · ${b6.q.c[0]} · ${n11} → ${r11} · ${b13.q.c[0]}`);
+  console.log(`OK prédictions version ${v} : ${b1.q.c[0]} · ${b2.q.c[0]} · ${r3} · ${b4.q.mots.join('/')} · ${n11} → ${r11} · ${b13.q.c[0]}`);
 }
 
 /* Le bloc 12 refuse le >= (5 pièces → 150) et la ligne du bonus non décalée. */
@@ -146,6 +153,12 @@ for (let v = 1; v <= 3; v++) {
   assert.ok(b.fais.includes('Python 04 — Le bonus') && b.fais.includes('03_Le-bonus_') && b.fais.includes('Rendre le devoir ▸ Rendre le devoir'), `14/${v}: chemin de clics`);
 }
 console.log('OK Python 4 bloc 14 : rendu Classroom, grille sur 5, trois versions.');
+
+/* Des méthodes variées : pas plus de quatre preuves « prédis puis coche » sur quinze. */
+const types = Array.from({ length: ctx.N }, (_, i) => ctx.bloc(i + 1, 1).q.type);
+assert.ok(types.filter(t => t === 'qcm').length <= 4, 'trop de QCM : ' + types.join(' '));
+['code', 'qcm', 'saisie', 'trous', 'ordre', 'rapport'].forEach(t => assert.ok(types.includes(t), 'méthode absente : ' + t));
+console.log('OK méthodes : ' + types.join(' · '));
 
 /* Différenciation : un appui (indices) et un approfondissement (volet facultatif) dans les blocs d'écriture. */
 for (const n of [5, 8, 9, 11, 15]) {

@@ -117,15 +117,21 @@ const seuil = (op, s) => {
                         : `Avec ${rep} pièces, score = ${rep*10} : ${rep*10} >= ${s} est VRAI (égal suffit). Avec ${rep-1}, ${(rep-1)*10} est trop peu.` } };
 };
 
-/* C. Lire un si : le plus grand des deux (exemple de la leçon 6 de Cercles informatiques). */
-const plusGrand = (x, y) => ({
-  extra: CODE(`x = ${x}\ny = ${y}\nif x &gt;= y:\n    plus_grand = x\nif y &gt; x:\n    plus_grand = y\nprint(plus_grand)`),
-  q:{ type:"qcm", q:"Prédis : qu'affiche ce programme ?",
-      c:[String(Math.max(x,y)), String(Math.min(x,y)), "Une erreur NameError", `${x} ${y}`],
-      p:[null, `Fais la trace : x vaut ${x}, y vaut ${y}. Laquelle des deux conditions est vraie ?`,
-         "Une des deux conditions est vraie : plus_grand reçoit une valeur avant le print.",
-         "print n'affiche qu'une boîte : plus_grand."],
-      juste:`${Math.max(x,y)===x ? `x >= y est vrai (${x} >= ${y})` : `y > x est vrai (${y} > ${x})`} : seule la ligne décalée sous cette condition s'exécute.` } });
+/* C. Lire un si : le plus grand des deux (exemple de la leçon 6 de Cercles informatiques).
+   « Explique avec tes mots » : texte à trous corrigé par la fiche, puis la même phrase libre pour tous,
+   non jugée, lue au tableau (comme Python 02, bloc 2). */
+const PHRASE_DECALE = "à quoi sert le décalage de 4 espaces sous un if ?";
+const plusGrand = (x, y) => {
+  const vrai1 = x >= y, gagnant = vrai1 ? x : y, perdant = vrai1 ? y : x;
+  return {
+    extra: CODE(`x = ${x}\ny = ${y}\nif x &gt;= y:\n    plus_grand = x\nif y &gt; x:\n    plus_grand = y\nprint(plus_grand)`),
+    q:{ type:"trous", q:"Fais la trace, puis complète l'explication avec les mots de la banque.",
+        texte:`x vaut ${x} et y vaut ${y}. La condition x >= y est ___. ${vrai1 ? "La ligne sous ce 1er if" : "C'est donc la ligne sous le 2e if"} s'exécute : seule une ligne ___ dépend de son if. À la fin, print affiche ___.`,
+        mots:[vrai1 ? "vraie" : "fausse", "décalée", String(gagnant)],
+        pieges:[vrai1 ? "fausse" : "vraie", "collée", String(perdant)],
+        phrase:PHRASE_DECALE,
+        juste:`${vrai1 ? `${x} >= ${y} est vrai` : `${x} >= ${y} est faux, et ${y} > ${x} est vrai`} : seule la ligne décalée sous la condition vraie s'exécute. Le programme affiche ${gagnant}.` } };
+};
 
 /* C. Écrire un si : la super-potion. 5 potions → bonus ; 2 → pas de bonus ; 3 → pile le seuil, pas de bonus. */
 const POTION_V = [{m:20,b:50},{m:15,b:30},{m:25,b:40}];
@@ -155,19 +161,26 @@ const potion = ({m,b}) => {
         juste:`Le if ne laisse passer la ligne décalée que si energie > ${s}. Avec 3 potions, ${s} > ${s} est faux : pas de bonus.` } };
 };
 
-/* C. Le décalage : ce qui est sous le if, et ce qui n'y est pas. */
-const decale = (vies, finDecale) => {
-  const joue = vies > 0, fin = finDecale ? joue : true;
-  const dit = joue && fin ? "Tu joues, puis Fin du tour" : fin ? "Fin du tour, seulement" : joue ? "Tu joues, seulement" : "Rien du tout";
-  const tous = ["Tu joues, puis Fin du tour", "Fin du tour, seulement", "Rien du tout", "Tu joues, seulement"];
-  const c = [dit, ...tous.filter(x => x !== dit)];
+/* C. Le décalage : code mélangé (▲ ▼). Chaque ligne garde son décalage ; l'élève choisit l'ordre.
+   La fiche exécute : seul l'ordre qui met chaque message sous la bonne branche affiche ce qui est attendu. */
+const range_ = ({depart, cond, oui, non, fin, quand}) => {
+  const attendu = [cond.vrai ? oui : non, fin];
   return {
-    extra: CODE(`vies = ${vies}\nif vies &gt; 0:\n    print("Tu joues")\n${finDecale ? "    " : ""}print("Fin du tour")`),
-    q:{ type:"qcm", q:"Prédis : qu'affiche ce programme ?", c,
-        p:c.map((x,i) => i ? (finDecale ? `Regarde le début de la dernière ligne : elle est décalée, donc sous le if. vies > 0 est ${joue ? "vrai" : "faux"}.`
-                                         : `La dernière ligne est collée à gauche : elle n'est pas sous le if, elle s'exécute toujours. Et vies > 0 est ${joue ? "vrai" : "faux"}.`) : null),
-        juste: finDecale ? `Les DEUX print sont décalés : ils dépendent du if. vies > 0 est ${joue ? "vrai : les deux s'affichent" : "faux : aucun ne s'affiche"}.`
-                         : `Seul le 1er print est décalé : il dépend du if (vies > 0 est ${joue ? "vrai" : "faux"}). Le 2e est collé à gauche : il s'exécute toujours.` } };
+    vois:`La console affiche deux lignes : le message de la branche qui s'exécute, puis ${fin}.`,
+    extra:`<div class="encart"><p><b>Ce que le programme doit faire :</b> ${quand}, il affiche <b>${oui}</b> ; sinon, il affiche <b>${non}</b>. Dans tous les cas, ensuite, il affiche <b>${fin}</b>.</p>
+  <p>Regarde le <b>début de chaque ligne</b> : les lignes décalées vont juste sous un if ou un else.</p></div>`,
+    coince:["La 1re ligne crée la boîte : sans elle, la condition ne peut pas être testée (NameError).",
+            "else: vient juste après la ligne décalée du if, jamais avant le if.",
+            `Chaque message décalé va sous la branche qui lui correspond : ${oui} sous le if, ${non} sous le else. La ligne collée à gauche va tout en bas.`],
+    q:{ type:"ordre", q:"Remets les lignes dans l'ordre, puis exécute.",
+        lignes:[depart, cond.ligne, `    print("${oui}")`, "else:", `    print("${non}")`, `print("${fin}")`],
+        test: r => r.erreur ? (r.erreur.type==="NameError" ? "NameError : la boîte est utilisée avant d'être créée. Quelle ligne doit venir en premier ?"
+                             : r.erreur.type==="IndentationError" ? "IndentationError : une ligne décalée doit venir juste sous un if ou un else."
+                             : "SyntaxError : else doit suivre le if et sa ligne décalée.")
+                 : SORTIE(r)===attendu.join("\n") ? true
+                 : SORTIE(r).split("\n")[0]===fin ? `${fin} s'affiche en premier : cette ligne collée à gauche va tout en bas.`
+                 : `La console affiche « ${SORTIE(r).replace(/\n/g," / ")} ». Chaque message est-il sous la bonne branche ?`,
+        juste:`${cond.vrai ? "La condition est vraie : la branche du if" : "La condition est fausse : la branche du else"} s'exécute ; la dernière ligne, collée à gauche, s'exécute toujours.` } };
 };
 
 /* C. Réparer un si : deux erreurs par version (= au lieu de ==, deux-points, décalage). */
@@ -288,10 +301,10 @@ const BLOCS = [
     ...seuil(">", 50),
     variantes:[seuil(">=", 70), seuil(">", 30)] },
 
-  { partie:"C — Si… alors", titre:"Le plus grand des deux", min:4,
+  { partie:"C — Si… alors", titre:"Le plus grand des deux", min:5,
     bulle:"Lire un programme qui décide, avant d'en écrire un.",
-    veux:"Prédire ce que fait un programme avec deux if.",
-    fais:CASES("Fais la <b>trace</b> : que valent x et y ?", "Pour chaque <b>if</b> : la condition est-elle vraie ?", "<b>Prédis</b>, puis réponds."),
+    veux:"Expliquer quelles lignes d'un programme avec deux if s'exécutent.",
+    fais:CASES("Fais la <b>trace</b> : que valent x et y ?", "Pour chaque <b>if</b> : la condition est-elle vraie ?", "Complète l'<b>explication</b> avec les mots de la banque.", "Puis écris <b>ta phrase</b>, avec tes mots."),
     coince:["Une ligne décalée sous un if ne s'exécute que si la condition est vraie. Sinon, Python la saute.",
             "plus_grand reçoit une valeur dans UN des deux if, jamais dans les deux."],
     ...plusGrand(5, 2),
@@ -307,13 +320,16 @@ const BLOCS = [
     ...potion(POTION_V[0]),
     variantes:[potion(POTION_V[1]), potion(POTION_V[2])] },
 
-  { partie:"C — Si… alors", titre:"Ce qui est décalé", min:3,
-    bulle:"4 espaces au début d'une ligne… et tout change.",
-    veux:"Savoir quelles lignes dépendent du if.",
-    fais:CASES("Regarde le <b>début de chaque ligne</b> : collée à gauche, ou décalée ?", "<b>Prédis</b>, puis réponds."),
-    coince:["Décalée sous le if : elle dépend de la condition. Collée à gauche : elle s'exécute toujours."],
-    ...decale(0, false),
-    variantes:[decale(2, false), decale(0, true)] },
+  { partie:"C — Si… alors", titre:"Ce qui est décalé", min:5, indices:true,
+    bulle:"Six lignes mélangées. Le décalage te dit où va chacune.",
+    veux:"Placer chaque ligne sous la bonne branche : if, else, ou toujours.",
+    fais:CASES("Lis ce que le <b>programme doit faire</b>.",
+               "Regarde le <b>début de chaque ligne</b> : collée à gauche, ou décalée ?",
+               "Remets les lignes dans l'ordre avec les flèches <b>▲ ▼</b>.",
+               "Clique sur <b>▶ Exécuter dans cet ordre</b>."),
+    ...range_({depart:"vies = 0", cond:{ligne:"if vies > 0:", vrai:false}, quand:"S'il reste des vies", oui:"Tu joues", non:"Game over", fin:"Fin du tour"}),
+    variantes:[range_({depart:'cle = "non"', cond:{ligne:'if cle == "oui":', vrai:false}, quand:"Si on a la clé", oui:"Ouvert !", non:"Fermé.", fin:"Porte suivante"}),
+               range_({depart:"pieces = 7", cond:{ligne:"if pieces >= 5:", vrai:true}, quand:"Avec 5 pièces ou plus", oui:"Bonus !", non:"Pas de bonus", fin:"Score affiché"})] },
 
   { partie:"C — Si… alors", titre:"Réparer un si", min:6, indices:true,
     bulle:"Deux erreurs cachées dans trois lignes. La ligne rouge te guide.",
