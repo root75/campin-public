@@ -128,10 +128,11 @@ est libre (`va()` dans `fiche.js`). Les boutons « Étape précédente / suivant
 
 ## Limiteur de cloche (9 novembre 2026)
 
-Au plus 3 sonneries par heure glissante. Un clic sur 🔔 ouvre d'abord « ⚠️ Attention, avant de
-sonner » : trois cases à cocher (consigne relue, « Ça coince ? » lu, voisin consulté), un lien
-« Ouvrir « Ça coince ? » » et le nombre de sonneries restantes. « 🔔 Je sonne » n'est actif
-qu'une fois les trois cases cochées. Au maximum, la cloche passe en pointillés et le panneau donne
+Au plus 3 sonneries par heure glissante. Un clic sur 🔔 ouvre d'abord une seule question, « As-tu
+demandé à ton voisin ? », avec un lien « Ouvrir « Ça coince ? » », le nombre de sonneries restantes
+et deux boutons, « 🔔 Oui, je sonne » et « Pas encore » : deux clics pour sonner. (Jusqu'au
+14 novembre 2026, trois cases à cocher précédaient la sonnerie ; beaucoup d'élèves ne sonnaient
+plus.) Au maximum, la cloche passe en pointillés et le panneau donne
 l'heure de la prochaine sonnerie possible. Le compte vient du serveur (`cloches`, `clocheLibre`) ;
 avec un serveur antérieur ou en aperçu, il est tenu dans la page ouverte. Se débloquer ne compte
 pas et ne demande rien. Détails et déploiement : `campin-pedagogique/outils/pas-a-pas/LIVRAISON-RAT.md`.
