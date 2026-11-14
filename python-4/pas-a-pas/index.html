@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<script>
+/* Une erreur JavaScript s'affiche en haut de la page : sur un téléphone ou un poste d'élève, pas de console. */
+addEventListener("error", e => {
+  if(e.target && e.target.tagName === "LINK") return;   // une police qui manque n'empêche rien
+  const p = document.createElement("p");
+  p.style.cssText = "background:#f8e3e0;color:#b23a2e;border-left:5px solid #b23a2e;padding:8px 12px;margin:8px 0;font:14px/1.4 Arial,sans-serif";
+  p.textContent = "⚠ Erreur dans la page : " + (e.message || (e.target && e.target.src ? "chargement de " + e.target.src : "inconnue")) + (e.lineno ? " (ligne " + e.lineno + ")" : "");
+  if(e.lineno){   // les lignes telles que la page les a reçues : ce que le serveur a pu y changer
+    const pre = document.createElement("pre");
+    pre.style.cssText = "white-space:pre-wrap;word-break:break-all;margin:6px 0 0;font:12px/1.35 monospace";
+    pre.textContent = document.documentElement.outerHTML.split("\n").slice(Math.max(0, e.lineno-4), e.lineno+2)
+      .map((l,i) => (Math.max(0, e.lineno-4)+i+1) + "│" + l).join("\n");
+    p.append(pre);
+  }
+  (document.body || document.documentElement).prepend(p);
+}, true);
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Python 04 — Si… alors, sinon — pas à pas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,600;0,800;1,600&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
+<link rel="stylesheet" href="https://root75.github.io/campin-public/pas-a-pas/fiche.css?v=rappels-20261112">
+<link rel="stylesheet" href="https://root75.github.io/campin-public/assets/navigation.css">
+<link rel="stylesheet" href="https://root75.github.io/campin-public/pas-a-pas/python-missions.css?v=communs-20261112">
+</head>
+<body>
+<nav class="campin-navigation" aria-label="Navigation du site">
+  <details class="campin-menu">
+    <summary>☰ Menu</summary>
+    <div class="campin-menu-liens">
+      <a href="https://root75.github.io/campin-public/cours/" target="_top">Mes cours</a>
+      <a href="https://root75.github.io/campin-public/revisions/" target="_top">Révisions et entraînements</a>
+      <a href="https://root75.github.io/campin-public/se-connecter/#rendre" target="_top">Rendre un devoir</a>
+      <a href="https://root75.github.io/campin-public/" target="_top">Accueil</a>
+    </div>
+  </details>
+</nav>
+
+
+<div class="page">
+  <header class="entete"><svg class="mascotte" id="mascotte" viewBox="0 0 120 120" aria-hidden="true"><ellipse cx="60" cy="108" rx="40" ry="7" fill="#0001"/><path d="M22 100c-6-14 8-22 26-22s34-6 32-20" fill="none" stroke="#3a77ab" stroke-width="16" stroke-linecap="round"/><path d="M22 100c-6-14 8-22 26-22s34-6 32-20" fill="none" stroke="#ffd43b" stroke-width="5" stroke-linecap="round" stroke-dasharray="2 12"/><circle cx="78" cy="42" r="24" fill="#3a77ab"/><circle cx="70" cy="38" r="6" fill="#fff"/><circle cx="88" cy="38" r="6" fill="#fff"/><circle cx="71" cy="39" r="3" fill="#1f2a33"/><circle cx="89" cy="39" r="3" fill="#1f2a33"/><path d="M70 52q9 7 18 0" fill="none" stroke="#1f2a33" stroke-width="3" stroke-linecap="round"/><circle cx="64" cy="49" r="3.5" fill="#f2a7b5"/><circle cx="94" cy="49" r="3.5" fill="#f2a7b5"/><path d="M79 64v8l-4 5M79 72l4 5" fill="none" stroke="#e0485a" stroke-width="2.4" stroke-linecap="round"/></svg><div>
+    <div class="surtitre">Logique et programmation · 3e · LogProg 04 · Python 04</div>
+    <h1>Python 04 — Si… alors, sinon</h1>
+    <p class="bulle" id="bulle">Aujourd’hui, ton programme apprend à décider.</p>
+  </div></header>
+  <p class="qui" id="qui"></p>
+
+  <section class="humeur" id="humeur" hidden aria-label="Humeur du jour"></section>
+
+  <div class="progres" id="progres" aria-hidden="true"></div>
+
+  <main class="panneau" id="bloc" aria-live="polite"></main>
+
+  <details class="coince" id="coince">
+    <summary>Ça coince ?</summary>
+    <ul id="coince-liste"></ul>
+    <p class="protocole">Toujours bloqué ? Relis le bloc et regarde l’animation → demande au voisin (il explique, il ne touche pas ta souris) → sonne la cloche 🔔, en haut à droite, et continue ce qui reste possible.</p>
+  </details>
+
+  <section id="aide" aria-label="Demander de l’aide"><button id="aide-btn" type="button" aria-label="J'attends de l'aide" title="Tu as relu « Ça coince ? » et demandé au voisin ? Sonne.">🔔<span class="mot">J'attends de l'aide</span></button><p id="aide-texte">Tu as relu « Ça coince ? » et demandé au voisin ? Sonne.</p></section>
+  <div id="bravo" role="status" aria-live="polite"></div>
+
+  <details class="coince" id="tutos">
+    <summary>👀 Toutes les animations « Regarde comment faire »</summary>
+    <p class="note">Choisis un geste : son animation s’affiche juste en dessous, sans changer de bloc.</p>
+    <div class="tutos-liste" id="tutos-liste"></div>
+    <div id="tutos-vue"></div>
+  </details>
+
+  <div class="actions">
+    <button class="btn vide" type="button" id="memo-btn">🐍 Si… alors, sinon</button>
+  </div>
+
+  <footer><span id="pied"></span><span class="auteur">M. Louviaux</span></footer>
+  <p class="credit">Exercices inspirés de <a href="https://cscircles.cemc.uwaterloo.ca/6-fr/" target="_blank" rel="noopener">Cercles informatiques</a> (CEMC, Université de Waterloo), sous licence <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/deed.fr" target="_blank" rel="noopener">CC BY-NC-SA 3.0</a>, réécrits pour l'école ; cette fiche est sous la même licence. Python dans la page : Pyodide.</p>
+</div>
+
+<dialog id="memo">
+  <h3>🐍 Si… alors, sinon</h3>
+  <div class="encart" style="margin-top:10px">
+    <table>
+      <tr><th>Python compare</th><th>Se lit</th></tr>
+      <tr><td><code>&gt;</code> <code>&lt;</code></td><td>plus grand que, plus petit que (strictement : <code>50 &gt; 50</code> est faux)</td></tr>
+      <tr><td><code>&gt;=</code> <code>&lt;=</code></td><td>plus grand ou égal, plus petit ou égal (<code>50 &gt;= 50</code> est vrai)</td></tr>
+      <tr><td><code>==</code></td><td>est égal à (deux signes : un seul <code>=</code> RANGE une valeur)</td></tr>
+      <tr><td><code>!=</code></td><td>est différent de</td></tr>
+    </table>
+  </div>
+<pre class="code">if score &gt; 50:
+    score = score + 100
+else:
+    print("Pas de bonus")
+print(score)</pre>
+  <p style="margin-top:12px"><b>⭐ Les deux-points <code>:</code></b> à la fin de la ligne <code>if</code> et de la ligne <code>else</code>.</p>
+  <p style="margin-top:6px"><b>⭐ Le décalage de 4 espaces</b> (touche Tab) : les lignes décalées ne s'exécutent QUE si la condition est vraie (ou fausse, sous else). La ligne qui revient à gauche s'exécute toujours.</p>
+  <p style="margin-top:6px">Un texte se compare entre guillemets : <code>if cle == "oui":</code>. input( ) rend toujours un texte.</p>
+  <p style="margin-top:6px">Logigramme : losange → <code>if … :</code> ; flèche OUI → lignes décalées ; flèche NON → <code>else:</code>.</p>
+  <form method="dialog" class="actions" style="margin-top:14px"><button class="btn plein">Fermer</button></form>
+</dialog>
+
+<!-- Mode séquence (vue prof) : la fiche affiche le moment que le professeur projette. -->
+<script defer src="https://root75.github.io/campin-public/pas-a-pas/recompense.js?v=occupe-20261112"></script>
+<script defer src="https://root75.github.io/campin-public/pas-a-pas/sequence-eleve.js?v=unifie-20261114"></script>
+<script src="https://root75.github.io/campin-public/pas-a-pas/python-editeur.js?v=20261110"></script>
+<script src="https://root75.github.io/campin-public/python-4/pas-a-pas/fiche.js?v=creation-20261114"></script>
+<script src="https://root75.github.io/campin-public/pas-a-pas/demo-lecteur.js?v=sous-cases-20261112"></script>
+<script src="https://root75.github.io/campin-public/pas-a-pas/demos-communs.js?v=classroom-20261113"></script>
+<script src="https://root75.github.io/campin-public/pas-a-pas/demos-python.js?v=communs-20261112"></script>
+<script src="https://root75.github.io/campin-public/pas-a-pas/phrase-fin.js?v=20261106"></script>
+<script src="https://root75.github.io/campin-public/pas-a-pas/cloche.js?v=cloche-20261109"></script>
+<script src="https://root75.github.io/campin-public/pas-a-pas/blocs.js?v=attention-20261113"></script>
+<script defer src="https://root75.github.io/campin-public/pas-a-pas/python-couleurs.js"></script>
+</body>
+</html>
+

@@ -41,6 +41,12 @@
       "etapes": 16
     },
     {
+      "id": "python-4",
+      "titre": "Python 04 — Si… alors, sinon",
+      "chemin": "python-4/pas-a-pas/",
+      "etapes": 15
+    },
+    {
       "id": "labo-07",
       "titre": "Labo 07 — Dans les coulisses du PC",
       "chemin": "labo-07/pas-a-pas/",

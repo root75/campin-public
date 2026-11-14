@@ -904,7 +904,7 @@
   },
   "python-3": {
     "titre": "Python 03 — Texte, nombre et input()",
-    "objectif": "Distinguer texte et nombre, lire une réponse avec input(), la convertir avec int(), puis traduire le logigramme « Le score » (sans son losange) dans Thonny. Deux périodes environ : reprendre la même séance au cours suivant plutôt que couper un bloc.",
+    "objectif": "Distinguer texte et nombre, lire une réponse avec input(), la convertir avec int(), puis traduire le logigramme « Le score » (sans son losange) dans Thonny. Le cours se découpe par sujet, pas par période : à la sonnerie, reprendre la même séance au même bloc au cours suivant.",
     "competences": [
       "S3M10.5 « Traduire un algorithme dans un langage informatique structuré. »",
       "S3M10.3 « Reconnaître et manipuler des variables, des constantes et des types d'affectation. »",
@@ -1107,6 +1107,178 @@
           "Que manque-t-il à « Le score » pour donner un bonus ?"
         ],
         "repere": "Annonce de Python 04 : si… alors (le bonus). Pas d'annonce d'évaluation tant que le rythme de la classe n'est pas connu ; une évaluation globale s'annonce au moins une semaine avant."
+      }
+    ]
+  },
+  "python-4": {
+    "titre": "Python 04 — Si… alors, sinon",
+    "objectif": "L'élève est capable de traduire un losange de logigramme en if / else : comparer (>, >=, ==), écrire les deux-points et les lignes décalées, puis compléter « Le score » avec son bonus dans Thonny et le rendre, coté sur 5. Le cours se découpe par sujet, pas par période : à la sonnerie, reprendre la même séance au même bloc au cours suivant.",
+    "competences": [
+      "S3M10.2 « Développer des algorithmes élémentaires en programmation structurée à l'aide de : séquences, structures alternatives, structures répétitives. »",
+      "S3M10.5 « Traduire un algorithme dans un langage informatique structuré. »",
+      "S3M10.4 « Appliquer les instructions d'entrée et de sortie. »"
+    ],
+    "preparation": [
+      "Tableau professeur → Ouvrir pour une classe… → Python 04 — Si… alors, sinon → la classe ; conserver la séance pour la reprise.",
+      "Publier le devoir Classroom « Python 04 — Le bonus » (texte dans PROF.md) avant le moment « Rendre ».",
+      "Vérifier sur un poste élève : bloc 5 (la ligne vide, Tab décale de 4 espaces, trois essais), puis Thonny : après « if … : » et Enter, la ligne suivante est-elle décalée toute seule ?",
+      "Évaluation : l'annoncer seulement quand le rythme de la classe est connu, au moins une semaine avant."
+    ],
+    "moments": [
+      {
+        "type": "ecran",
+        "titre": "Aujourd'hui, le programme décide",
+        "min": 3,
+        "methode": "Collectif",
+        "lignes": [
+          "Le losange de LogProg 03 attendait sa traduction : c'est if."
+        ],
+        "questions": [
+          "Dans un jeu, quelles décisions le programme prend-il tout seul ?",
+          "Dans le logigramme « Le score », que se passe-t-il avec 5 pièces ?"
+        ],
+        "exemple": "Projeter le logigramme « Le score » complet. Faire dire la trace pour 7 et pour 5, sans écrire de Python."
+      },
+      {
+        "type": "atelier",
+        "titre": "Rappel et comparaisons",
+        "min": 9,
+        "methode": "Travail autonome — fiches accessibles",
+        "lignes": [
+          "Blocs 1 à 3 : int(input()), True / False, le seuil du bonus."
+        ],
+        "blocs": [
+          1,
+          3
+        ],
+        "repere": "Bloc 3 : > contre >= ; écouter qui répond 5 au lieu de 6. Appui : les indices du bloc (une petite table pièces → score)."
+      },
+      {
+        "type": "vote",
+        "titre": "Vote — Je prédis",
+        "min": 1,
+        "methode": "Prédire seul, voter, puis expliquer",
+        "question": "Qu'affiche ce programme ?",
+        "choix": [
+          "Fin du tour, seulement",
+          "Tu joues, puis Fin du tour",
+          "Rien du tout",
+          "Une erreur"
+        ],
+        "situations": [
+          {
+            "texte": "vies = 0\nif vies > 0:\n    print(\"Tu joues\")\nprint(\"Fin du tour\")",
+            "bonne": 0
+          }
+        ],
+        "repere": "Clore le vote pour afficher les effectifs. Puis Suivant : faire expliquer avant de révéler."
+      },
+      {
+        "type": "ecran",
+        "titre": "Mise en commun — le décalage",
+        "min": 4,
+        "methode": "Collectif",
+        "lignes": [
+          "Deux-points, puis 4 espaces : la ligne décalée dépend du if."
+        ],
+        "questions": [
+          "Quelle ligne dépend du if ? Laquelle s'exécute toujours ?",
+          "Que change le vote si on décale aussi le dernier print ?",
+          "Comment le logigramme montre-t-il la même chose ?"
+        ],
+        "code": "vies = 0\nif vies > 0:\n    print(\"Tu joues\")\nprint(\"Fin du tour\")",
+        "exemple": "Montrer une fois, sur un exemple inventé (pas la super-potion) : Enter après les deux-points, Tab, puis Backspace pour revenir à gauche."
+      },
+      {
+        "type": "atelier",
+        "titre": "Si… alors",
+        "min": 21,
+        "methode": "Travail autonome — fiches accessibles",
+        "lignes": [
+          "Blocs 4 à 7 : lire un if, écrire un if, le décalage, réparer.",
+          "Bloc 5 : STOP, la fiche essaie 5, 2 et 3 potions."
+        ],
+        "blocs": [
+          4,
+          7
+        ],
+        "repere": "Bloc 4 : l'exemple du plus grand des deux (leçon 6 de Cercles informatiques). Bloc 5 : trois essais, dont le cas limite, empêchent d'écrire le résultat en dur. Si la même erreur revient (= au lieu de ==), suspendre deux minutes pour une explication collective sur un exemple fictif."
+      },
+      {
+        "type": "ecran",
+        "titre": "Deux branches : else",
+        "min": 3,
+        "methode": "Collectif",
+        "lignes": [
+          "La branche NON du losange a aussi sa ligne : else."
+        ],
+        "questions": [
+          "Où se place else : décalé ou à gauche ?",
+          "Pourquoi \"oui\" entre guillemets ?"
+        ],
+        "code": "if cle == \"oui\":\n    print(\"…\")\nelse:\n    print(\"…\")",
+        "exemple": "Le logigramme « La porte » de LogProg 03. Ne pas écrire les messages de la fiche : chaque élève a sa version."
+      },
+      {
+        "type": "atelier",
+        "titre": "Si… sinon",
+        "min": 14,
+        "methode": "Travail autonome — fiches accessibles",
+        "lignes": [
+          "Blocs 8 et 9 : la porte, puis « Les vies » avec le losange.",
+          "Bloc 8 : STOP, montre ton if / else à ton voisin."
+        ],
+        "blocs": [
+          8,
+          9
+        ],
+        "repere": "Bloc 9 : chaque élève retrouve ses nombres de Python 01 à 03 (clé « vies »). <= 0 et == 0 sont acceptés ; faire remarquer que <= 0 résiste à des dégâts trop grands."
+      },
+      {
+        "type": "atelier",
+        "titre": "« Le score » avec son bonus, dans Thonny",
+        "min": 23,
+        "methode": "Travail autonome — fiches accessibles",
+        "lignes": [
+          "Blocs 10 à 13 : fichier 03_Le-bonus_Nom.py, ajouter le losange, prouver, commenter.",
+          "Bloc 13 : relecture à deux, trois critères ; on inverse les rôles."
+        ],
+        "blocs": [
+          10,
+          13
+        ],
+        "repere": "Le cas limite 5 → 50 est le critère qui départage. Relecture entre pairs : une chose réussie, une chose à corriger ; l'auteur corrige lui-même. Aucun avis de camarade ne vaut note."
+      },
+      {
+        "type": "atelier",
+        "titre": "Rendre « Le bonus », puis le défi",
+        "min": 10,
+        "methode": "Individuel",
+        "lignes": [
+          "Bloc 14 : relire la grille sur 5, puis rendre 03_Le-bonus_Nom.py dans Classroom.",
+          "Bloc 15 : le défi « Le distributeur », seul, sans modèle."
+        ],
+        "blocs": [
+          14,
+          15
+        ],
+        "repere": "Le site ne voit pas la remise : la vérifier dans Classroom. Pour les rapides : « Pour aller plus loin » dans les blocs, puis les trois choix de la page de fin (and, une règle du projet du labo, Cercles informatiques)."
+      },
+      {
+        "type": "fin",
+        "titre": "Bilan",
+        "min": 4,
+        "methode": "Bilan oral",
+        "lignes": [
+          "Enregistre 03_Le-bonus_Nom.py.",
+          "Un losange = un if ; la branche NON = else."
+        ],
+        "questions": [
+          "Pourquoi 5 pièces ne donnent-elles pas de bonus ?",
+          "À quoi servent les 4 espaces ?",
+          "Comment faire rejouer la partie tant qu'il reste des vies ?"
+        ],
+        "repere": "Annonce de Python 05 : les boucles (le jeu qui recommence)."
       }
     ]
   },
