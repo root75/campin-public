@@ -165,6 +165,68 @@
         "repere": "Faire expliquer le choix avant de montrer la correction. Un objet ne contient pas tout le mail."
       },
       {
+        "type": "mots",
+        "titre": "On écrit ensemble : l’adresse",
+        "min": 3,
+        "saisie": "texte",
+        "question": "Que tapes-tu dans À, puis dans Cc ?",
+        "champs": [
+          "À",
+          "Cc"
+        ],
+        "lignes": [
+          "Tu écris à Léo Dubois (leo.dubois@example.org) pour lui demander l’heure de l’entraînement de foot. Sa coach, Nora Petit (nora.petit@example.org), reçoit une copie."
+        ],
+        "methode": "Chacun écrit seul sur son poste, réponses comparées au tableau, puis correction collective",
+        "correction": [
+          "À : leo.dubois@example.org — la personne à qui tu écris.",
+          "Cc : nora.petit@example.org — la personne qui reçoit une copie.",
+          "L’adresse est recopiée exactement : pas d’espace, l’arobase @, le bon domaine."
+        ],
+        "repere": "Laisser chacun taper sans donner la réponse. Afficher les réponses : les réponses identiques sont regroupées (×n). Faire trouver au tableau les adresses fausses (espace, @ oublié, autre domaine) et les champs inversés (Léo dans Cc). Clore, puis corriger ensemble. Rien n’est envoyé : aucune étape de la fiche n’est validée."
+      },
+      {
+        "type": "mots",
+        "titre": "On écrit ensemble : l’objet",
+        "min": 3,
+        "saisie": "texte",
+        "question": "Quel objet écris-tu pour ce mail ?",
+        "champs": [
+          "Objet"
+        ],
+        "lignes": [
+          "Tu écris à Léo Dubois (leo.dubois@example.org) pour lui demander l’heure de l’entraînement de foot. Sa coach, Nora Petit (nora.petit@example.org), reçoit une copie."
+        ],
+        "methode": "Chacun écrit seul sur son poste, réponses comparées au tableau, puis correction collective",
+        "correction": [
+          "L’objet est court et annonce la question : par exemple « Heure de l’entraînement ».",
+          "Pas « Bonjour », pas toute la question, jamais vide."
+        ],
+        "repere": "Plusieurs objets sont justes : faire dire pour chacun s’il annonce la question. Faire écarter « Bonjour », l’objet vide et la question entière recopiée."
+      },
+      {
+        "type": "mots",
+        "titre": "On écrit ensemble : le début et la fin",
+        "min": 4,
+        "saisie": "texte",
+        "question": "Comment commences-tu et termines-tu ce mail ?",
+        "champs": [
+          "Salutation",
+          "Formule de fin",
+          "Signature"
+        ],
+        "lignes": [
+          "Tu écris à Léo Dubois (leo.dubois@example.org) pour lui demander l’heure de l’entraînement de foot. Sa coach, Nora Petit (nora.petit@example.org), reçoit une copie."
+        ],
+        "methode": "Chacun écrit seul sur son poste, réponses comparées au tableau, puis correction collective",
+        "correction": [
+          "Salutation : « Bonjour Léo, » — Bonjour, le prénom avec sa majuscule, une virgule.",
+          "Formule de fin : « Bonne journée, » ou « À bientôt, » — suivie d’une virgule.",
+          "Signature : ton prénom, ton nom et ta classe."
+        ],
+        "repere": "Les majuscules sont gardées au tableau : « bonjour léo, » et « Bonjour Léo, » restent deux réponses. Faire trouver « Bonjour, » sans prénom, la virgule oubliée, la minuscule, la signature sans nom ou sans classe. Les signatures affichent les prénoms et noms des élèves."
+      },
+      {
         "type": "fin",
         "titre": "Bascule",
         "min": 2,

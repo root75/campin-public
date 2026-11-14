@@ -42,6 +42,7 @@
 #seq .sq-copie{display:grid;gap:8px;text-align:left;border-top:1px solid var(--trait);padding-top:14px;font-size:1.1rem}
 #seq .sq-copie h3{margin:0;font-size:1.3rem}#seq .sq-copie p{margin:0}
 #seq .sq-sous{font-weight:700;color:var(--doux)}#seq .sq-questions{margin:0;padding-left:1.2em;display:grid;gap:4px}
+#seq .sq-situation{margin:0;font-size:1.15rem}#seq .sq-texte label{text-align:left;font-weight:700;margin-bottom:-6px}#seq .sq-texte input{text-align:left}
 #seq .sq-paires{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;margin:0}#seq .sq-paires dt{font-weight:700}#seq .sq-paires dd{margin:0}`;
 
   const el = (tag, cls, t) => { const n = document.createElement(tag); if(cls) n.className = cls; if(t != null) n.textContent = t; return n; };
@@ -61,7 +62,7 @@
     const envoie = evt => Promise.resolve(o.envoie(evt));
     const support = m => (contenus && contenus.moments || []).find(x => x.titre === m.titre) || null;
     const redessine = () => dessine(courant);
-    if(o.contenus) fetch("https://root75.github.io/campin-public/pas-a-pas/sequences.json?v=seq-20261112")
+    if(o.contenus) fetch("https://root75.github.io/campin-public/pas-a-pas/sequences.json?v=seq-20261114")
       .then(r => { if(!r.ok) throw Error(); return r.json(); })
       .then(d => { contenus = d[o.cours] || null; cle = ""; }).catch(() => {});   // cle vide : redessiner au prochain appel
 
@@ -88,6 +89,7 @@
       zone.replaceChildren(el("p", "sq-sur", m.titre));
       const propre = o.ecrans && o.ecrans[m.titre];
       if(propre && propre(zone, m, moi, { el, envoie, redessine, support: support(m) })) return;
+      if(m.type === "mots" && m.saisie === "texte") return texte(m, moi);
       if(m.type === "mots") return mots(m, moi);
       if(m.type === "vote") return vote(m, moi);
       const s = support(m);
@@ -139,6 +141,56 @@
           .catch(() => { delete moi.mots; moi.modifier = true; b.disabled = false; b.textContent = "Envoi non confirmé — réessayer"; });
       });
       champs[0].focus();
+    }
+
+    /* « On écrit ensemble » (saisie: 'texte') : une case par champ (À, Cc, Objet…), majuscules gardées.
+       Chaque case part au tableau précédée de son nom (« À : … ») : un champ inversé s'y voit aussi. */
+    function texte(m, moi){
+      const s = support(m) || {}, champs = m.champs || s.champs || ["Ta réponse"];
+      zone.append(el("h2", "sq-grand", m.question));
+      (m.lignes || s.lignes || []).forEach(l => zone.append(el("p", "sq-situation", l)));
+      const envoyee = () => { const d = el("div", "sq-copie"); (moi.reponse || []).forEach(l => d.append(el("p", "sq-res", l))); return d; };
+      if(m.phase === "corrige"){
+        zone.append(el("p", "sq-note", "ENSEMBLE — compare ta réponse à la correction."));
+        const c = el("div", "sq-copie"); (m.correction || s.correction || []).forEach(l => c.append(el("p", null, l))); zone.append(c);
+        if(moi.reponse) zone.append(el("p", "sq-sous", "Ta réponse :"), envoyee());
+        return;
+      }
+      if(m.phase === "clos"){
+        zone.append(el("p", "sq-note", "RÉPONSES FERMÉES — juste ou faux ? Prépare ton explication."));
+        if(moi.reponse) zone.append(el("p", "sq-sous", "Ta réponse :"), envoyee());
+        return;
+      }
+      if(moi.reponse && !moi.modifier){
+        zone.append(el("p", "sq-res juste", "✓ Envoyé"), envoyee(), el("p", "sq-note", "Regarde le tableau."));
+        const b = el("button", "sq-btn vide", "Modifier ma réponse"); b.type = "button";
+        b.addEventListener("click", () => { moi.modifier = true; redessine(); });
+        return zone.append(b);
+      }
+      zone.append(el("p", "sq-note", "À TOI D’ÉCRIRE — chacun seul. On compare ensuite au tableau."));
+      const f = el("form", "sq-champs sq-texte"), cases = [];
+      moi.brouillon = moi.brouillon || [];
+      champs.forEach((nom, k) => {
+        const label = el("label", null, nom), c = el("input");
+        c.type = "text"; c.maxLength = 60; c.autocomplete = "off"; c.spellcheck = false; c.id = "sq-champ-" + k; label.htmlFor = c.id;
+        c.value = moi.brouillon[k] ?? ((moi.reponse && moi.valeurs) ? moi.valeurs[k] : "") ?? "";
+        c.addEventListener("input", () => { moi.brouillon[k] = c.value; });
+        cases.push(c); f.append(label, c);
+      });
+      const b = el("button", "sq-btn", moi.reponse ? "Modifier ma réponse" : "Envoyer ma réponse"), statut = el("p", "sq-note", "");
+      statut.setAttribute("role", "status"); f.append(b, statut); zone.append(f);
+      f.addEventListener("submit", e => {
+        e.preventDefault(); if(b.disabled) return;
+        const v = cases.map(c => c.value.replace(/\|/g, " ").replace(/\s+/g, " ").trim());
+        const vide = v.findIndex(x => !x);
+        if(vide >= 0){ statut.textContent = "Remplis aussi la case « " + champs[vide] + " »."; cases[vide].focus(); return; }
+        const lignes = v.map((x, k) => champs[k] + " : " + x);
+        b.disabled = true; statut.textContent = "Envoi…";
+        envoie({ etape: m.n, type: "motcle", reponse: lignes.join(" | ") })
+          .then(() => { moi.reponse = lignes; moi.valeurs = v; moi.brouillon = []; moi.modifier = false; redessine(); })
+          .catch(() => { b.disabled = false; statut.textContent = "Envoi non confirmé — garde ta réponse et réessaie."; });
+      });
+      cases[0].focus();
     }
 
     function vote(m, moi){
