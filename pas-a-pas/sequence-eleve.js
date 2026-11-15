@@ -42,7 +42,7 @@
 #seq .sq-copie{display:grid;gap:8px;text-align:left;border-top:1px solid var(--trait);padding-top:14px;font-size:1.1rem}
 #seq .sq-copie h3{margin:0;font-size:1.3rem}#seq .sq-copie p{margin:0}
 #seq .sq-sous{font-weight:700;color:var(--doux)}#seq .sq-questions{margin:0;padding-left:1.2em;display:grid;gap:4px}
-#seq .sq-situation{margin:0;font-size:1.15rem}#seq .sq-texte label{text-align:left;font-weight:700;margin-bottom:-6px}#seq .sq-texte input{text-align:left}
+#seq .sq-situation{margin:0;font-size:1.15rem;white-space:pre-line;text-align:left}#seq .sq-texte label{text-align:left;font-weight:700;margin-bottom:-6px}#seq .sq-texte input{text-align:left}
 #seq .sq-paires{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;margin:0}#seq .sq-paires dt{font-weight:700}#seq .sq-paires dd{margin:0}`;
 
   const el = (tag, cls, t) => { const n = document.createElement(tag); if(cls) n.className = cls; if(t != null) n.textContent = t; return n; };
@@ -65,7 +65,7 @@
     // Le « visuel » d'un moment (window.Visuels, chargé par la page) : remplace ses lignes et sa correction, qui en
     // sont la version texte. null si le cours n'en déclare pas ou si le script n'est pas chargé.
     const visuel = (m, s) => { const v = m.visuel || (s && s.visuel); return v && window.Visuels && Visuels[v] ? Visuels[v]({ corrige: m.phase === "corrige" }) : null; };
-    if(o.contenus) fetch("https://root75.github.io/campin-public/pas-a-pas/sequences.json?v=unifie-20261114")
+    if(o.contenus) fetch("https://root75.github.io/campin-public/pas-a-pas/sequences.json?v=objet-20261115")
       .then(r => { if(!r.ok) throw Error(); return r.json(); })
       .then(d => { contenus = d[o.cours] || null; cle = ""; }).catch(() => {});   // cle vide : redessiner au prochain appel
 

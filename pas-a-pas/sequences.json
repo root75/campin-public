@@ -286,43 +286,6 @@
       },
       {
         "type": "mots",
-        "titre": "On écrit ensemble : l’objet",
-        "min": 3,
-        "saisie": "texte",
-        "question": "Quel objet écris-tu pour ce mail ?",
-        "champs": [
-          "Objet"
-        ],
-        "lignes": [
-          "Tu écris à Léo Dubois (leo.dubois@example.org) pour lui demander l’heure de l’entraînement de foot. Sa coach, Nora Petit (nora.petit@example.org), reçoit une copie."
-        ],
-        "methode": "Chacun écrit seul sur son poste, réponses comparées au tableau, puis correction collective",
-        "correction": [
-          "L’objet est court et annonce la question : par exemple « Heure de l’entraînement ».",
-          "Pas « Bonjour », pas toute la question, jamais vide."
-        ],
-        "repere": "Plusieurs objets sont justes : faire dire pour chacun s’il annonce la question. Faire écarter « Bonjour », l’objet vide et la question entière recopiée.",
-        "exemples": [
-          [
-            "Heure de l’entraînement",
-            8
-          ],
-          [
-            "Entraînement de foot",
-            5
-          ],
-          [
-            "Bonjour",
-            3
-          ],
-          [
-            "À quelle heure est l’entraînement de foot ?",
-            2
-          ]
-        ]
-      },
-      {
-        "type": "mots",
         "titre": "On écrit ensemble : le début et la fin",
         "min": 4,
         "saisie": "texte",
@@ -378,6 +341,44 @@
           [
             "Signature : Inès",
             1
+          ]
+        ]
+      },
+      {
+        "type": "mots",
+        "titre": "On écrit ensemble : l’objet",
+        "min": 3,
+        "saisie": "texte",
+        "question": "Quel objet donnes-tu à ce mail ?",
+        "champs": [
+          "Objet"
+        ],
+        "lignes": [
+          "Le mail est écrit. Il ne manque plus que l’objet.",
+          "À : leo.dubois@example.org · Cc : nora.petit@example.org\nBonjour Léo,\nÀ quelle heure commence l’entraînement de foot samedi ?\nBonne journée,\nLina Dupont, 2B"
+        ],
+        "methode": "Chacun écrit seul sur son poste, réponses comparées au tableau, puis correction collective",
+        "correction": [
+          "L’objet est court et annonce la question du mail : par exemple « Heure de l’entraînement de foot ».",
+          "Pas « Bonjour », pas toute la question recopiée, jamais vide."
+        ],
+        "repere": "L’objet vient en dernier : on résume la question du mail en quelques mots. Plusieurs objets sont justes : faire dire pour chacun s’il annonce la question. Faire écarter « Bonjour », l’objet vide et la question entière recopiée.",
+        "exemples": [
+          [
+            "Heure de l’entraînement",
+            8
+          ],
+          [
+            "Entraînement de foot",
+            5
+          ],
+          [
+            "Bonjour",
+            3
+          ],
+          [
+            "À quelle heure est l’entraînement de foot ?",
+            2
           ]
         ]
       },
