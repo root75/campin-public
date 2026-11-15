@@ -643,6 +643,12 @@ function scene(){
     }
     const masques = litSeq("masques", []);
     const mots = r ? r.mots.filter(x=>!masques.includes(x.cle)) : [];
+    // Saisie écrite à plusieurs champs : l'ordre des champs (Salutation, Formule de fin, Signature), puis le
+    // nombre d'élèves. Le serveur trie par nombre puis par ordre alphabétique (« Formule » avant « Salutation »).
+    if(m.saisie === 'texte' && m.champs && m.champs.length > 1){
+      const rang = x => { const k = m.champs.findIndex(c => x.texte.startsWith(c + ' :')); return k < 0 ? m.champs.length : k; };
+      mots.sort((a, b) => rang(a) - rang(b) || b.n - a.n);
+    }
     if(!SEQ.montre){
       box.append(txt("div","compteur", r ? r.repondants : "…"), txt("p","moyen", (r && r.repondants === 1 ? "élève a" : "élèves ont") + (m.saisie === "texte" ? " répondu. Écris ta réponse sur ton poste." : " répondu. Tape tes mots sur ton poste.")));
     } else {
