@@ -174,7 +174,17 @@ function dessinePlafond(){
   $("plafond-tout").hidden = dernier===n; $("plafond-tout").disabled = false;
   $("plafond-etat").textContent = dernier<n ? "🔒 Blocs 1 à "+dernier+" ouverts ; les suivants portent un cadenas sur les postes." : "Tous les blocs sont ouverts. Clique sur un numéro pour fermer les blocs suivants (l’atelier d’une séquence le fait aussi).";
 }
+/* Les cloches en attente se voient partout : titre de l'onglet (le tableau peut être derrière une autre fenêtre)
+   et bandeau de la projection. Un nombre seulement, jamais de nom : la projection est vue par toute la classe. */
+const TITRE_PAGE = document.title;
+function signaleCloches(n){
+  document.title = (n ? "🔔 " + n + " · " : "") + TITRE_PAGE;
+  const c = $("seq-cloches"); if(!c) return;
+  c.hidden = !n; c.textContent = "🔔 " + n;
+  c.title = n + (n > 1 ? " élèves attendent" : " élève attend") + " de l’aide";
+}
 function dessine(d){
+  signaleCloches((d.eleves||[]).filter(e=>e.aide).length);
   if($("ramener-classe"))$("ramener-classe").hidden=true;
   if(!$("filtre-aide")){
     const label=txt("label","filtre-aide"),filtre=document.createElement("input");filtre.type="checkbox";filtre.id="filtre-aide";filtre.checked=seulementAide;
@@ -224,7 +234,7 @@ function dessine(d){
     td("num", e.erreurs || "");
     const etat = td();
     if(e.aide){
-      etat.append(txt("span","pastille aide","✋ aide · bloc "+e.aide.bloc+" · "+ilya(d.maintenant-e.aide.depuis).replace("il y a ","")));
+      etat.append(txt("span","pastille aide","🔔 aide · bloc "+e.aide.bloc+" · "+ilya(d.maintenant-e.aide.depuis).replace("il y a ","")));
       if(SUIVI && (e._d||d).peutCloreAide){
         const cours=$("cours").value,seance=e._seance||choisie(),depuis=e.aide.depuis;
         const b=txt("button","btn vide","Aide traitée");b.type="button";
