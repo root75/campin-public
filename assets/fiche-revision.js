@@ -1,4 +1,5 @@
-/* Fiche de révision à imprimer — pour une page « je révise » (messagerie/, messagerie-2/).
+/* Fiche de révision à imprimer — pour une page « je révise » (messagerie/, python-je-revise/…).
+   Une question qui a du code (Q.code, comme en Python) l'imprime sous l'énoncé.
    Rien n'est recopié : la fiche se construit à partir de la page elle-même
    (ol.resume, ol.etapes, QUIZ), donc elle suit toute retouche du « je révise ».
    À l'écran : un bouton « Imprimer ma fiche de révision ». À l'impression : une page A4 recto.
@@ -35,6 +36,8 @@
   .fp-cadre{border:.8pt solid #000;border-radius:3mm;padding:2mm 4mm}
   .fp-test li{margin-bottom:0}
   .fp-ligne{display:block;border-bottom:.5pt dotted #000;height:6.5mm}
+  #fiche-papier code{font-family:ui-monospace,Consolas,"Courier New",monospace;font-size:.95em;background:none;border:0;padding:0}
+  .fp-code{display:block;margin:.8mm 0 0;padding:.4mm 2.5mm;border-left:1.5pt solid #000;font:9pt/1.25 ui-monospace,Consolas,"Courier New",monospace;white-space:pre}
   .fp-consigne{font-size:9.5pt;margin:0 0 1.5mm}
   .fp-reponses{margin-top:3mm;border-top:.5pt dashed #000;padding-top:2mm;font-size:8.5pt;transform:rotate(180deg);break-inside:avoid}
   .fp-reponses ol{padding-left:5mm}
@@ -71,7 +74,7 @@
     fiche.append(el("h2", null, "3. Je me teste"),
       el("p", "fp-consigne", "Réponds par écrit, sans regarder le haut de la feuille. Ensuite, tourne la feuille tête en bas : les réponses sont au bas de la page."));
     const ol = el("ol", "fp-test");
-    quiz.forEach(q => ol.append(el("li", null, propre(q.q) + '<span class="fp-ligne"></span>')));
+    quiz.forEach(q => ol.append(el("li", null, propre(q.q) + (q.code ? '<span class="fp-code">' + propre(q.code) + "</span>" : "") + '<span class="fp-ligne"></span>')));
     fiche.append(ol);
     if (adresse) fiche.append(el("p", "fp-enligne", "Pour t'entraîner encore (quiz et cartes) : <b>" + propre(adresse) + "</b>"));
     const rep = el("div", "fp-reponses", "<b>Réponses</b>");
