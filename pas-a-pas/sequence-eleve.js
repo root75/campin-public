@@ -92,7 +92,9 @@
       zone.replaceChildren(el("p", "sq-sur", m.titre));
       const propre = o.ecrans && o.ecrans[m.titre];
       if(propre && propre(zone, m, moi, { el, envoie, redessine, support: support(m) })) return;
-      if(m.type === "mots" && m.saisie === "texte") return texte(m, moi);
+      // saisie lue aussi dans sequences.json (contenus:true) : un Code.gs pas encore redéployé ne l'envoie pas,
+      // et l'élève recevait « Tape 1 à 3 mots » sans la situation.
+      if(m.type === "mots" && (m.saisie || (support(m) || {}).saisie) === "texte") return texte(m, moi);
       if(m.type === "mots") return mots(m, moi);
       if(m.type === "vote") return vote(m, moi);
       const s = support(m);
