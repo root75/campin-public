@@ -287,9 +287,17 @@ function dessine(d){
   syntheses(d, el, n);
   ouEstLaClasse(d, el, n);
   const s = choisie(); $("titre-classe").textContent = d._classes ? d._classes.join(" + ") + " · " : s.classe ? s.classe + " · " : "";
-  $("maj").textContent = "Mis à jour à " + new Date(d.maintenant).toLocaleTimeString("fr-BE",{hour:"2-digit",minute:"2-digit",second:"2-digit"});
+  $("maj").textContent = "Mis à jour à " + new Date(d.maintenant).toLocaleTimeString("fr-BE",{hour:"2-digit",minute:"2-digit",second:"2-digit"}) + mesure(d);
 }
 
+/* Mesure (proposition 9 de l'audit) : aller-retour vu du navigateur, et ce qu'en dit le serveur (durée, lignes
+   du Journal relues). Si le serveur reste sous la seconde en fin de séquence, le résumé incrémental est inutile. */
+const secondes = ms => (ms/1000).toLocaleString("fr-BE",{minimumFractionDigits:1,maximumFractionDigits:1}) + " s";
+function mesure(d){
+  if(!d._allerRetour) return "";
+  const m = d.mesure;
+  return " · " + secondes(d._allerRetour) + (m ? " (serveur " + secondes(m.ms) + ", " + m.lignes.toLocaleString("fr-BE") + " lignes lues)" : "");
+}
 const resume = (id, texte) => { if($(id)) $(id).textContent = "— " + texte; };
 
 /* Où est la classe : élèves sur chaque bloc maintenant, et la part de ceux qui coincent. Et le bandeau
@@ -441,11 +449,11 @@ function charge(){
   const cours=$("cours").value,demande=++numeroChargement;
   const contexte=cours+":"+s.debut;
   if(contexte!==contexteAffiche){$("lignes").replaceChildren();if($("python-plafond"))$("python-plafond").hidden=true;}
-  const autres = s.debut ? autresSeances() : [];
+  const autres = s.debut ? autresSeances() : [], depart = Date.now();
   if(autres.length){
     return Promise.all([s].concat(autres).map(x=>serveur("donnees", cours, x.debut, x.fin, x.classe))).then(l=>{
       if(demande!==numeroChargement || $("cours").value!==cours || choisie().debut!==s.debut) return;
-      const d = l[0]; d.eleves.forEach(e=>{ e.classe = s.classe; });
+      const d = l[0]; d._allerRetour = Date.now() - depart; d.eleves.forEach(e=>{ e.classe = s.classe; });
       l.slice(1).forEach((dk,k)=>{
         dk.eleves.forEach(e=>{ e.classe = autres[k].classe; e._seance = autres[k]; e._d = dk; });
         d.eleves = d.eleves.concat(dk.eleves);
@@ -455,7 +463,7 @@ function charge(){
       contexteAffiche = contexte; dessine(d);
     }).catch(err=>{ if(demande===numeroChargement) erreur(err); });
   }
-  return new Promise(fin=>google.script.run.withSuccessHandler(d=>{if(demande===numeroChargement&&$("cours").value===cours&&choisie().debut===s.debut){contexteAffiche=contexte;dessine(d);}fin();}).withFailureHandler(err=>{if(demande===numeroChargement)erreur(err);fin();}).donnees(cours, s.debut, s.fin, s.classe));
+  return new Promise(fin=>google.script.run.withSuccessHandler(d=>{if(demande===numeroChargement&&$("cours").value===cours&&choisie().debut===s.debut){d._allerRetour=Date.now()-depart;contexteAffiche=contexte;dessine(d);}fin();}).withFailureHandler(err=>{if(demande===numeroChargement)erreur(err);fin();}).donnees(cours, s.debut, s.fin, s.classe));
 }
 /* Rafraîchissement : le tour suivant part RAFRAICHIR après la réponse du précédent, jamais avant — un serveur lent
    n'empile pas les appels. Onglet caché : plus aucun appel ; au retour, un tour tout de suite. Une réponse qui

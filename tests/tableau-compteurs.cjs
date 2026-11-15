@@ -21,3 +21,11 @@ assert.equal(coince(e({aide:{bloc:6}}),d),true);assert.equal(coince(e({erreursIc
 assert.equal(coince(e({}),d),false);assert.equal(coince(e({aide:{bloc:6},fini:true}),d),false,'fini : jamais coincé');
 assert.equal(blocDe(e({atteint:4})),5,'bloc en cours = atteint + 1');assert.equal(blocDe(e({atteint:4,aide:{bloc:6}})),6,'la cloche dit son bloc');
 console.log('Compteurs et bandeau : coincés sans sonner, inactifs, butent, bloc de chaque élève vérifiés.');
+{ // Mesure affichée à côté de « Mis à jour à … »
+  const m=vm.createContext({});vm.runInContext(bout('const secondes','const resume'),m);
+  const f=vm.runInContext('mesure',m);
+  assert.equal(f({}),'','pas d’aller-retour (démo) : rien');
+  assert.match(f({_allerRetour:1800,mesure:{ms:420,lignes:2400}}),/^ · 1,8 s \(serveur 0,4 s, 2.400 lignes lues\)$/);
+  assert.match(f({_allerRetour:900}),/^ · 0,9 s$/,'ancien serveur sans mesure : l’aller-retour seul');
+  console.log('Mesure du chargement : affichage vérifié.');
+}
