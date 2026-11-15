@@ -330,7 +330,7 @@ function charge(){
   if(contexte!==contexteAffiche){$("lignes").replaceChildren();if($("python-plafond"))$("python-plafond").hidden=true;}
   const autres = s.debut ? autresSeances() : [];
   if(autres.length){
-    Promise.all([s].concat(autres).map(x=>serveur("donnees", cours, x.debut, x.fin, x.classe))).then(l=>{
+    return Promise.all([s].concat(autres).map(x=>serveur("donnees", cours, x.debut, x.fin, x.classe))).then(l=>{
       if(demande!==numeroChargement || $("cours").value!==cours || choisie().debut!==s.debut) return;
       const d = l[0]; d.eleves.forEach(e=>{ e.classe = s.classe; });
       l.slice(1).forEach((dk,k)=>{
@@ -341,10 +341,24 @@ function charge(){
       d._classes = [s.classe].concat(autres.map(x=>x.classe));
       contexteAffiche = contexte; dessine(d);
     }).catch(err=>{ if(demande===numeroChargement) erreur(err); });
-    return;
   }
-  google.script.run.withSuccessHandler(d=>{if(demande===numeroChargement&&$("cours").value===cours&&choisie().debut===s.debut){contexteAffiche=contexte;dessine(d);}}).withFailureHandler(err=>{if(demande===numeroChargement)erreur(err);}).donnees(cours, s.debut, s.fin, s.classe);
+  return new Promise(fin=>google.script.run.withSuccessHandler(d=>{if(demande===numeroChargement&&$("cours").value===cours&&choisie().debut===s.debut){contexteAffiche=contexte;dessine(d);}fin();}).withFailureHandler(err=>{if(demande===numeroChargement)erreur(err);fin();}).donnees(cours, s.debut, s.fin, s.classe));
 }
+/* Rafraîchissement : le tour suivant part RAFRAICHIR après la réponse du précédent, jamais avant — un serveur lent
+   n'empile pas les appels. Onglet caché : plus aucun appel ; au retour, un tour tout de suite. Une réponse qui
+   n'arrive pas en 60 s n'arrête pas la boucle. */
+let minuterieTableau=0,tourEnCours=false;
+function planifieCharge(){clearTimeout(minuterieTableau);minuterieTableau=document.hidden||tourEnCours?0:setTimeout(tourCharge,RAFRAICHIR);}
+function tourCharge(){
+  if(tourEnCours) return;
+  clearTimeout(minuterieTableau);minuterieTableau=0;tourEnCours=true;
+  Promise.race([Promise.resolve(charge()),new Promise(fin=>setTimeout(fin,60000))]).catch(()=>{}).finally(()=>{tourEnCours=false;planifieCharge();});
+}
+function rafraichitSelonOnglet(){
+  if(document.hidden){clearTimeout(minuterieTableau);minuterieTableau=0;}
+  else tourCharge();
+}
+
 
 /* Données fictives : l'aperçu hors Apps Script. */
 function demo(){
@@ -574,11 +588,13 @@ const momentCourant = () => SEQ.contenu.moments[SEQ.etat.i];
 /* Le moment dont on lit les réponses : le tri range les mots récoltés plus tôt. */
 const momentLu = () => { const m = momentCourant(); return m.type === "tri" ? m.source : ["mots","vote"].includes(m.type) ? SEQ.etat.i : null; };
 
+/* Toutes les 3 s en projection, mais pas tant que la réponse précédente n'est pas revenue, ni onglet caché. */
 function rafraichitReponses(){
-  if(!SEQ.etat || $("projection").hidden) return;
+  if(!SEQ.etat || $("projection").hidden || document.hidden || SEQ.lecture) return;
   const i = momentLu(); if(i == null) return;
   const avant = SEQ.etat.i;
-  serveur("reponses", $("cours").value, i, choisie().classe).then(r=>{ if(SEQ.etat && SEQ.etat.i === avant){ SEQ.rep = r; scene(); } }).catch(erreur);
+  SEQ.lecture = true;
+  serveur("reponses", $("cours").value, i, choisie().classe).then(r=>{ if(SEQ.etat && SEQ.etat.i === avant){ SEQ.rep = r; scene(); } }).catch(erreur).finally(()=>{ SEQ.lecture = false; });
 }
 
 function chrono(){
@@ -847,7 +863,7 @@ function demarre(cours){
   if(!tableauDemarre){
     $("cours").addEventListener("change",()=>{majVoirCours();chargeRessourcesProf();chargeSeances();if(globalThis.FormatifProf)FormatifProf.charge();});
     $("seance").addEventListener("change",charge);
-    setInterval(charge,RAFRAICHIR);tableauDemarre=true;
+    document.addEventListener("visibilitychange",rafraichitSelonOnglet);planifieCharge();tableauDemarre=true;
   }
   if(!meme || !$("seance").options.length) chargeSeances(); else charge();
   majVoirCours();chargeRessourcesProf();chargeSequence();chargeClasses();
