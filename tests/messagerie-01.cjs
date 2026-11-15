@@ -73,6 +73,17 @@ assert.ok(/state\.etape===7[\s\S]{0,700}escapeHtml\(state\.reponse\)/.test(s), '
   // « On écrit ensemble » (15/11/2026) : sans `saisie` envoyée par le serveur, la page la lit dans sequences.json —
   // sinon l'élève reçoit « Tape 1 à 3 mots » sans la mise en situation.
   assert.ok(/\(m\.saisie \|\| \(support\(m\) \|\| \{\}\)\.saisie\) === "texte"/.test(seq), 'sequence-eleve.js lit saisie:"texte" dans sequences.json');
+  // Tableau (15/11/2026) : les réponses écrites suivent l'ordre des champs, pas l'ordre alphabétique du serveur.
+  {
+    const tab = fs.readFileSync(__dirname + '/../pas-a-pas/tableau.js', 'utf8');
+    const corps = tab.match(/const rang = (x => \{[^\n]*\});\n\s*mots\.sort\(([^\n]*)\);/);
+    assert.ok(corps, 'tableau.js trie les réponses écrites par champ');
+    const m = { champs: ['Salutation', 'Formule de fin', 'Signature'] };
+    const mots = [{ texte: 'Formule de fin : Amitié', n: 1 }, { texte: 'Salutation : Salut Léo,', n: 1 },
+      { texte: 'Signature : Vincent', n: 1 }, { texte: 'Salutation : Bonjour Léo,', n: 3 }];
+    const rang = eval(corps[1]); mots.sort(eval('(a, b) => ' + corps[2].replace(/^\(a, b\) => /, '')));
+    assert.deepStrictEqual(mots.map(x => x.texte), ['Salutation : Bonjour Léo,', 'Salutation : Salut Léo,', 'Formule de fin : Amitié', 'Signature : Vincent']);
+  }
   // Mode séquence commun (12/11/2026) : plus de copie propre au cours, les trois écrans propres sont dans la fiche.
   assert.ok(!fs.existsSync(__dirname + '/../messagerie/pas-a-pas/sequence.js'), 'plus de sequence.js propre à la Messagerie 01');
   const page = fs.readFileSync(__dirname + '/../messagerie/pas-a-pas/index.html', 'utf8');
