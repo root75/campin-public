@@ -21,6 +21,8 @@ const HUMEURS = [["😄","Super"],["🙂","Bien"],["😐","Bof"],["🙁","Pas to
 const AVIS = [["plu","Ce qui m'a plu"],["progres","Ce qui m'a aidé à progresser"],["gene","Ce qui m'a gêné dans le cours en ligne"]];
 const RAFRAICHIR = 15000;
 const INACTIF = 8 * 60000;
+/* Coincé sans sonner : 10 min sur le même bloc, encore actif (pas inactif), sans cloche. */
+const SILENCIEUX = 10 * 60000;
 const SUIVI = typeof google !== "undefined" && google.script && google.script.run;
 
 const $ = id => document.getElementById(id);
@@ -38,7 +40,22 @@ const derniereAction = (t,terminee,maintenant) => !t ? "—" : terminee
   : ilya(maintenant-t);
 
 let SEANCES = [];
-let seulementAide=false;
+/* Filtre de la liste : un compteur cliqué (aide, bute, silencieux, inactif, fini), ou aucun. */
+let filtreEleves=null,dernieresDonnees=null;
+const estInactif=(e,d)=>!e.fini && d.maintenant - e.derniere > INACTIF;
+const estSilencieux=(e,d)=>!e.fini && !e.aide && !!e.depuisBloc && d.maintenant - e.depuisBloc > SILENCIEUX && !estInactif(e,d);
+const FILTRES={
+  aide:{titre:"Attendent de l'aide", garde:e=>!!e.aide},
+  bute:{titre:"Butent (3 erreurs ou +)", garde:e=>!e.fini && e.erreursIci>=3},
+  silencieux:{titre:"Coincés sans sonner (10 min)", garde:estSilencieux},
+  inactif:{titre:"Inactifs > 8 min", garde:estInactif},
+  fini:{titre:"Ont fini", garde:e=>e.fini}
+};
+function filtreCompteur(cle){
+  filtreEleves = filtreEleves===cle ? null : cle;
+  if($("filtre-aide")) $("filtre-aide").checked = filtreEleves==="aide";
+  if(dernieresDonnees) dessine(dernieresDonnees);
+}
 const heure = t => new Date(t).toLocaleString("fr-BE",{weekday:"short",day:"numeric",month:"numeric",hour:"2-digit",minute:"2-digit"});
 const choisie = () => SEANCES[Number($("seance").value)] || { classe:"", debut:0, fin:null };
 
@@ -184,12 +201,13 @@ function signaleCloches(n){
   c.title = n + (n > 1 ? " élèves attendent" : " élève attend") + " de l’aide";
 }
 function dessine(d){
+  dernieresDonnees = d;
   signaleCloches((d.eleves||[]).filter(e=>e.aide).length);
   if($("ramener-classe"))$("ramener-classe").hidden=true;
   if(!$("filtre-aide")){
-    const label=txt("label","filtre-aide"),filtre=document.createElement("input");filtre.type="checkbox";filtre.id="filtre-aide";filtre.checked=seulementAide;
+    const label=txt("label","filtre-aide"),filtre=document.createElement("input");filtre.type="checkbox";filtre.id="filtre-aide";filtre.checked=filtreEleves==="aide";
     label.append(filtre,txt("span",null,"Besoin d’aide seulement"));
-    filtre.addEventListener("change",()=>{seulementAide=filtre.checked;charge();});
+    filtre.addEventListener("change",()=>{if((filtreEleves==="aide")!==filtre.checked)filtreCompteur("aide");});
     $("filtres-eleves").append(label);
   }
 
@@ -207,18 +225,26 @@ function dessine(d){
     (!!b.aide - !!a.aide) || (a.aide && b.aide ? a.aide.depuis - b.aide.depuis : 0) ||
     (a.fini - b.fini) || (a.atteint - b.atteint) || (b.erreursIci - a.erreursIci));
 
-  const attend = el.filter(e=>e.aide).length, finis = el.filter(e=>e.fini).length;
-  const butent = el.filter(e=>!e.fini && e.erreursIci>=3).length;
   const median = el.length ? el.map(e=>e.atteint).sort((a,b)=>a-b)[Math.floor(el.length/2)] : 0;
-  $("chiffres").replaceChildren(...[
-    ["Élèves", el.length, ""], ["Attendent de l'aide", attend, attend ? "alerte" : ""],
-    ["Butent (3 erreurs ou +)", butent, butent ? "alerte" : ""], ["Ont fini", finis, ""],
-    ["Bloc médian validé", median+" / "+n, ""]
-  ].map(([t,v,c])=>{ const x=txt("div","chiffre "+c); x.append(txt("b",null,v), txt("span",null,t)); return x; }));
+  const compte = cle => el.filter(e=>FILTRES[cle].garde(e,d)).length;
+  // Un compteur se clique : la liste ne montre plus que ces élèves ; un second clic remet tout.
+  // « Coincés sans sonner » n'apparaît qu'avec un serveur qui envoie depuisBloc.
+  const cles = ["aide","bute"].concat(el.some(e=>e.depuisBloc) ? ["silencieux"] : [], ["inactif","fini"]);
+  $("chiffres").replaceChildren(txt("div","chiffre"), ...cles.map(cle=>{
+    const v = compte(cle), x = txt("button","chiffre"+(v && cle!=="fini" ? " alerte" : ""));
+    x.type = "button"; x.setAttribute("aria-pressed", String(filtreEleves===cle));
+    x.title = filtreEleves===cle ? "Revoir toute la classe" : "Ne montrer que ces élèves";
+    x.append(txt("b",null,v), txt("span",null,FILTRES[cle].titre));
+    x.addEventListener("click",()=>filtreCompteur(cle)); return x;
+  }), txt("div","chiffre"));
+  const [eff, med] = [$("chiffres").firstChild, $("chiffres").lastChild];
+  eff.append(txt("b",null,el.length), txt("span",null,"Élèves")); med.append(txt("b",null,median+" / "+n), txt("span",null,"Bloc médian validé"));
 
   const tb = $("lignes"); tb.replaceChildren();
   if(!el.length){ const tr=txt("tr"); const td=txt("td","vide","Personne n'a encore ouvert la fiche sur cette période."); td.colSpan=8; tr.append(td); tb.append(tr); }
-  el.filter(e=>!seulementAide||e.aide).forEach(e=>{
+  const vus = filtreEleves ? el.filter(e=>FILTRES[filtreEleves].garde(e,d)) : el;
+  if(el.length && !vus.length){ const tr=txt("tr"); const td=txt("td","vide","Personne dans « "+FILTRES[filtreEleves].titre+" ». Clique à nouveau sur le compteur pour revoir toute la classe."); td.colSpan=8; tr.append(td); tb.append(tr); }
+  vus.forEach(e=>{
     const tr = txt("tr", e.aide ? "aide" : e.fini ? "fini" : "");
     const td = (cls,t) => { const c=txt("td",cls,t); tr.append(c); return c; };
     const n1 = td("nom", nom(e.email)); n1.title = e.email;
@@ -251,6 +277,7 @@ function dessine(d){
     }
     else if(e.fini) etat.append(txt("span","pastille fini","✓ fini"));
     else if(e.erreursIci>=3) etat.append(txt("span","pastille bute","bute"));
+    else if(estSilencieux(e,d)) etat.append(txt("span","pastille silence","⏳ "+ilya(d.maintenant-e.depuisBloc).replace("il y a ","")+" sur ce bloc, sans sonner"));
     const der = td("num", derniereAction(e.derniere, !!choisie().fin || e.fini, d.maintenant));
     der.title=e.derniere?new Date(e.derniere).toLocaleString("fr-BE"):"Aucune action";
     if(!e.fini && d.maintenant - e.derniere > INACTIF) der.classList.add("inactif");
@@ -378,9 +405,10 @@ function demo(){
   return { maintenant:t, parBloc:{1:2,4:5,5:3,6:9,8:4,9:6,10:2,12:1},
     variantes:{1:vr([1,3],[1,2],[0,3]), 4:vr([1,3],[4,3],[0,2]), 6:vr([2,3],[1,2],[6,3]), 9:vr([2,2],[2,3],[2,3])}, eleves:[
     e("lina.dubois@arcampin.be",5,7,4,1,{aide:{bloc:6,depuis:t-3*m}, humeur:"🙁 Pas top"}),
-    e("noah.martin@arcampin.be",9,3,1,0,{humeur:"🙂 Bien", phrases:{2:"Parce que le message dit la ligne où chercher, sinon je change des trucs au hasard."}}),
+    e("noah.martin@arcampin.be",9,3,1,0,{depuisBloc:t-2*m, humeur:"🙂 Bien", phrases:{2:"Parce que le message dit la ligne où chercher, sinon je change des trucs au hasard."}}),
     e("ines.lambert@arcampin.be",12,2,0,2,{fini:true, humeur:"😄 Super", avis:{plu:"Les questions pour passer au bloc suivant, on sait tout de suite si c'est juste.", progres:"Ça coince ? quand je me trompais.", gene:""}}),
-    e("adam.peeters@arcampin.be",3,5,3,1,{humeur:"😣 Pas bien"}),
+    e("adam.peeters@arcampin.be",3,5,3,1,{depuisBloc:t-9*m, humeur:"😣 Pas bien"}),
+    e("lucas.renard@arcampin.be",4,1,1,2,{depuisBloc:t-14*m, humeur:"😐 Bof"}),
     e("sara.janssens@arcampin.be",7,4,0,11,{phrases:{2:"Si je lis pas le message je sais pas quelle erreur c'est."}}),
     e("yanis.leroy@arcampin.be",8,6,2,0,{aide:{bloc:9,depuis:t-1*m}, humeur:"😐 Bof"}),
     e("emma.dupont@arcampin.be",12,1,0,1,{fini:true, humeur:"🙂 Bien", avis:{plu:"Travailler à mon rythme.", progres:"Refaire le programme moi-même.", gene:"Attendre que la page charge au début."}})
