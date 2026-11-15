@@ -312,7 +312,7 @@ const FIN = {
   bulle:"Bravo ! Ton programme est réparé, commenté et rendu.",
   texte:"Ton programme est réparé, commenté et rendu dans Classroom. Prochaine étape : Python 03, des programmes qui posent des questions.",
   plus:"Change DEUX touches de « Les vies » pour qu'il affiche 1, puis corrige ton commentaire.",
-  lien:'<a href="https://root75.github.io/campin-public/python-je-revise/" target="_blank" rel="noopener">Premiers pas en Python — je révise</a> (onglet Cartes)',
+  lien:'<a href="https://root75.github.io/campin-public/python-02-je-revise/" target="_blank" rel="noopener">Python 02 — je révise</a> (l\'essentiel, un quiz, des cartes, et une fiche à imprimer)',
   citation:{
     texte:"Les programmes doivent être écrits pour que des gens les lisent, et seulement accessoirement pour que des machines les exécutent.",
     auteur:"Harold Abelson et Gerald Jay Sussman", source:"Structure and Interpretation of Computer Programs (1985), traduit de l'anglais",
