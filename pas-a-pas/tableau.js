@@ -171,7 +171,7 @@ function dessinePlafond(){
       serveur("plafonnerSeance", $("cours").value, s.debut, n, msg.value).then(l=>{ clePlafond = ""; remplitSeances(l, s.debut); })
         .catch(e=>{ clePlafond = ""; dessinePlafond(); erreur(e); }); };
     tout.addEventListener("click",()=>z.ouvre(0));
-    z.append(titre, rang, tout, dl, msg, etat); document.querySelector(".outils-secondaires").before(z);
+    z.append(titre, rang, tout, dl, msg, etat); document.querySelector("header .reglages").after(z);
   }
   const i = Number($("seance").value), s = SEANCES[i] || {}, cours = $("cours").value;
   z.hidden = !SUIVI || !enCours(s,i) || cours === "rat-de-ville-formatif";
@@ -213,7 +213,7 @@ function dessine(d){
 
   if(globalThis.FormatifProf) {
     FormatifProf.presentation($("cours").value === 'rat-de-ville-formatif');
-    if($("cours").value === 'rat-de-ville-formatif') { FormatifProf.dessine(d); syntheses(d, d.declaratif ? d.eleves : [], ETAPES_RAT.length, ETAPES_RAT.map(e=>e.id)); return; }
+    if($("cours").value === 'rat-de-ville-formatif') { ouEstLaClasse(null); FormatifProf.dessine(d); syntheses(d, d.declaratif ? d.eleves : [], ETAPES_RAT.length, ETAPES_RAT.map(e=>e.id)); return; }
   }
   // Pour tous les cours : la classe de la séance choisie revient à l'étape N (ceux qui l'ont dépassée la refont).
   if(!$("ramener-classe")){const b=txt("button","btn vide","Ramener la classe à une étape…");b.type='button';b.id='ramener-classe';b.addEventListener('click',()=>{const s=choisie(),cours=$("cours").value;choisirEtape("Toute la classe "+s.classe,NB_BLOCS[cours]||1,null).then(bloc=>{if(!bloc)return;b.disabled=true;google.script.run.withSuccessHandler(r=>{b.disabled=false;$("maj").textContent=r.repris+' élève(s) ramené(s) à l’étape '+bloc+'. Ils rechargent leur fiche.';charge();}).withFailureHandler(err=>{b.disabled=false;erreur(err);}).noter(cours,{type:'prof-ramener',debut:s.debut,bloc});});});$("gestion-actions").append(b);}
@@ -285,9 +285,80 @@ function dessine(d){
   });
 
   syntheses(d, el, n);
+  ouEstLaClasse(d, el, n);
   const s = choisie(); $("titre-classe").textContent = d._classes ? d._classes.join(" + ") + " · " : s.classe ? s.classe + " · " : "";
   $("maj").textContent = "Mis à jour à " + new Date(d.maintenant).toLocaleTimeString("fr-BE",{hour:"2-digit",minute:"2-digit",second:"2-digit"});
 }
+
+const resume = (id, texte) => { if($(id)) $(id).textContent = "— " + texte; };
+
+/* Où est la classe : élèves sur chaque bloc maintenant, et la part de ceux qui coincent. Et le bandeau
+   « N élèves coincés au bloc B — corriger ensemble » dès SEUIL_COMMUN élèves coincés au même bloc. */
+const SEUIL_COMMUN = 4;
+let bandeauMasque = null;   // {cle, n} : « Pas maintenant » cache le bandeau jusqu'à ce que le nombre augmente
+const estCoince = (e,d) => !e.fini && (!!e.aide || e.erreursIci>=3 || estSilencieux(e,d));
+const blocDe = e => e.aide ? Number(e.aide.bloc) : e.atteint+1;
+function ouEstLaClasse(d, el, n){
+  const pli = $("pli-classe"); if(pli) pli.hidden = !d;
+  let ban = $("bandeau-commun");
+  if(!ban){ ban = txt("div","bandeau-commun"); ban.id = "bandeau-commun"; ban.setAttribute("role","status"); $("chiffres").after(ban); }
+  ban.hidden = true;
+  if(!d) return;
+  const ici = Array(n+1).fill(0), coinces = Array(n+1).fill(0), detail = Array.from({length:n+1},()=>({aide:0,bute:0,silence:0}));
+  el.forEach(e=>{
+    if(e.fini) return;
+    const b = Math.min(n, Math.max(1, blocDe(e))); ici[b]++;
+    if(!estCoince(e,d)) return;
+    coinces[b]++; detail[b][e.aide ? "aide" : e.erreursIci>=3 ? "bute" : "silence"]++;
+  });
+  const finis = el.filter(e=>e.fini).length, max = Math.max(1, finis, ...ici);
+  const z = $("ou-classe");
+  if(z){
+    z.replaceChildren();
+    for(let b=1;b<=n;b++){
+      const r = txt("div","bl ou"), j = txt("div","jauge"), w = txt("div");
+      j.style.width = (ici[b]/max*100)+"%"; if(!ici[b]) j.style.opacity = ".15";
+      const c = txt("span","coince"), reste = txt("span","reste");
+      c.style.width = (ici[b] ? coinces[b]/ici[b]*100 : 0)+"%"; reste.style.width = (ici[b] ? 100-coinces[b]/ici[b]*100 : 100)+"%";
+      j.append(c, reste); w.append(j);
+      if(coinces[b]) w.title = coinces[b]+" sur "+ici[b]+" coincé"+(coinces[b]>1?"s":"");
+      r.append(lienBloc(b, "Bloc "+b), w, txt("span","num",ici[b] || "")); z.append(r);
+    }
+    const r = txt("div","bl ou"), j = txt("div","jauge"), w = txt("div");
+    j.style.width = (finis/max*100)+"%"; j.style.background = "var(--juste)"; if(!finis) j.style.opacity = ".15";
+    w.append(j); r.append(txt("span",null,"Fini"), w, txt("span","num",finis || "")); z.append(r);
+  }
+  let haut = 0; for(let b=1;b<=n;b++) if(ici[b] > ici[haut]) haut = b;   // ici[0] vaut toujours 0
+  resume("resume-classe", haut ? "le plus d’élèves : bloc "+haut+" ("+ici[haut]+(coinces[haut] ? ", dont "+coinces[haut]+" coincé"+(coinces[haut]>1?"s":"") : "")+")" : (finis ? "tout le monde a fini" : "personne n’a commencé"));
+  // Le bandeau : le bloc où le plus d'élèves coincent, à partir de SEUIL_COMMUN.
+  let pire = 0; for(let b=1;b<=n;b++) if(coinces[b] > (coinces[pire]||0)) pire = b;
+  if(!pire || coinces[pire] < SEUIL_COMMUN) return;
+  const cle = $("cours").value+":"+pire;
+  if(bandeauMasque && bandeauMasque.cle===cle && coinces[pire] <= bandeauMasque.n) return;
+  const x = detail[pire], parts = [[x.aide,"cloche"],[x.bute,"bute","butent"],[x.silence,"sans sonner","sans sonner"]]
+    .filter(([v])=>v).map(([v,un,plus])=>v+" "+(v>1 ? (plus || un+"s") : un));
+  const proj = lienBloc(pire, "Corriger ensemble : projeter le bloc "+pire); proj.classList.add("btn");
+  const plusTard = txt("button","btn vide","Pas maintenant"); plusTard.type = "button";
+  plusTard.addEventListener("click",()=>{ bandeauMasque = {cle, n:coinces[pire]}; ban.hidden = true; });
+  const t = txt("span"); t.append("🧩 ", txt("b",null,coinces[pire]+" élèves coincés au bloc "+pire), " ("+parts.join(", ")+")");
+  ban.replaceChildren(t, txt("span","espace"), proj, plusTard); ban.hidden = false;
+}
+
+/* Les sections repliées : le navigateur retient ce qui est ouvert (confort, rien d'autre). */
+function plis(){
+  let ouverts = {}; try { ouverts = JSON.parse(localStorage.getItem("tableau-plis") || "{}"); } catch(e) {}
+  document.querySelectorAll("details.replie").forEach(p=>{
+    if(ouverts[p.id] !== undefined) p.open = !!ouverts[p.id];
+    p.addEventListener("toggle",()=>{ ouverts[p.id] = p.open; try { localStorage.setItem("tableau-plis", JSON.stringify(ouverts)); } catch(e) {} });
+  });
+  // « ⚙ Plus » se ferme d'un clic ailleurs ou avec Esc.
+  const plus = $("plus");
+  if(plus){
+    document.addEventListener("click", e=>{ if(plus.open && !plus.contains(e.target)) plus.open = false; });
+    document.addEventListener("keydown", e=>{ if(e.key==="Escape" && plus.open) plus.open = false; });
+  }
+}
+plis();
 
 /* Les trois encadrés communs à tous les cours : où le groupe bute, son humeur, ses avis.
    Cours déclaratif (formatif) : « où ça bute » compte les élèves qui ont sonné la cloche à chaque étape. */
@@ -318,6 +389,9 @@ function syntheses(d, el, n, ids){
   });
   const sans = el.filter(e=>!e.humeur).length;
   if(sans) zh.append(txt("p","astuce",sans+" élève"+(sans>1?"s n'ont":" n'a")+" pas encore choisi."));
+  resume("resume-humeur", HUMEURS.map(([m],i)=>parHumeur[i] ? m+" "+parHumeur[i] : "").filter(Boolean).join(" · ") || "pas encore de réponse");
+  const pires = Array.from({length:n},(_,k)=>[k+1, d.parBloc[ids ? ids[k] : k+1] || 0]).filter(x=>x[1]).sort((a,b)=>b[1]-a[1]).slice(0,2);
+  resume("resume-blocs", pires.length ? (d.declaratif ? "le plus de cloches : " : "le plus d’erreurs : ") + pires.map(([k,v])=>(d.declaratif ? "étape " : "bloc ")+k+" ("+v+")").join(", ") : (d.declaratif ? "aucune cloche" : "aucune erreur") + " pour l’instant");
 
   const za = $("avis"); za.replaceChildren();
   AVIS.forEach(([k,t])=>{
@@ -327,6 +401,8 @@ function syntheses(d, el, n, ids){
     else { const ul = txt("ul"); rep.forEach(e=>{ const li = txt("li",null,e.avis[k]+" "); li.append(txt("span","qui","— "+nom(e.email))); ul.append(li); }); col.append(ul); }
     za.append(col);
   });
+  const nAvis = el.filter(e=>e.avis && AVIS.some(([k])=>e.avis[k])).length;
+  resume("resume-avis", nAvis ? nAvis+(nAvis>1?" élèves ont donné leur avis":" élève a donné son avis") : "pas encore d’avis");
   phrasesLibres(el);
 }
 /* « Explique avec tes mots » : les phrases libres des blocs à trous, non jugées par la fiche, pour la
@@ -344,7 +420,7 @@ function phrasesLibres(el){
     lab.append(cb," Afficher les noms (à décocher avant de projeter)");
     const zone = txt("div","avis"); zone.id = "phrases";
     section.append(titre, astuce, lab, zone);
-    $("avis").closest("section").before(section);
+    $("avis").closest(".panneau").before(section);
   }
   const parBloc = {};
   el.forEach(e=>Object.keys(e.phrases||{}).forEach(b=>(parBloc[b]||(parBloc[b]=[])).push([e.email, e.phrases[b]])));
