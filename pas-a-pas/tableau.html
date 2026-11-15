@@ -78,7 +78,7 @@ tr.fini td{color:var(--doux)}
 
 .blocs{display:grid;gap:6px}
 .astuce{margin:0 0 8px;font-size:.9rem;color:var(--doux)}
-#blocs a,#lignes a{color:var(--encre-bouton);font-weight:700}
+#blocs a,#ou-classe a,#lignes a{color:var(--encre-bouton);font-weight:700}
 .bl{display:grid;grid-template-columns:4.5rem 1fr 2.5rem;gap:8px;align-items:center;font-size:.95rem}
 .bl.detail > div{cursor:help}
 .bl .jauge{height:14px;border-radius:3px;background:var(--faux);opacity:.85;min-width:2px}
@@ -159,7 +159,24 @@ tr.fini td{color:var(--doux)}
 .trace-projetee th,.trace-projetee td{border:1px solid var(--trait);padding:.5rem .8rem;text-align:left}
 .atelier-note{font-weight:700;color:var(--juste);font-size:1.2rem}
 
-.outils-secondaires{display:flex;flex-wrap:wrap;gap:10px 28px;width:100%;padding:2px 0 4px}
+.plus{position:relative}
+.plus>summary{list-style:none;cursor:pointer}.plus>summary::-webkit-details-marker{display:none}
+.plus[open]>summary{background:var(--carte)}
+.outils-secondaires{display:flex;flex-wrap:wrap;gap:10px 28px;padding:12px 14px;position:absolute;z-index:6;top:calc(100% + 6px);left:0;width:min(640px,calc(100vw - 32px));background:var(--carte);border:1px solid var(--trait);border-radius:12px;box-shadow:0 10px 30px #0002}
+/* Les compteurs restent visibles quand on fait défiler la liste. */
+.chiffres{position:sticky;top:0;z-index:4;background:var(--papier);padding:6px 0}
+details.replie>summary{list-style:none;cursor:pointer;display:flex;align-items:baseline;gap:6px 14px;flex-wrap:wrap}
+details.replie>summary::-webkit-details-marker{display:none}
+details.replie>summary h2{margin:0}
+details.replie>summary h2::before{content:"▸ ";color:var(--doux)}
+details.replie[open]>summary h2::before{content:"▾ "}
+details.replie[open]>summary{margin-bottom:12px}
+details.replie .resume{color:var(--doux);font-size:.95rem}
+.ou .jauge{display:flex;height:14px;border-radius:3px;overflow:hidden;min-width:2px}
+.ou .jauge span{display:block;height:100%}
+.ou .jauge .reste{background:var(--encre-bouton);opacity:.85}.ou .jauge .coince{background:var(--fromage)}
+.bandeau-commun{display:flex;align-items:center;gap:10px 14px;flex-wrap:wrap;background:var(--fromage-pale);border:2px solid var(--fromage);border-radius:12px;padding:10px 16px;margin:4px 0 12px;font-size:1.05rem}
+.bandeau-commun .espace{flex:1}
 .outils-secondaires>details{flex:1;min-width:220px;font-size:.94rem}
 .outils-secondaires summary{cursor:pointer;color:var(--encre-bouton);font-weight:650;padding:5px 0}
 .contenu-menu{display:grid;gap:12px;padding:14px;margin-top:6px;border:1px solid var(--trait);border-radius:10px;background:var(--carte)}
@@ -169,7 +186,7 @@ tr.fini td{color:var(--doux)}
 .filtre-aide{display:inline-flex;gap:8px;align-items:center;font-size:.9rem;cursor:pointer}
 .filtre-aide input{accent-color:var(--encre-bouton);width:17px;height:17px}
 #erreur-tableau{color:var(--faux);font-weight:600}
-@media(max-width:640px){.outils-secondaires>details{min-width:100%}.entete-panneau h2{font-size:1.15rem}}
+@media(max-width:640px){.outils-secondaires>details{min-width:100%}.chiffres{position:static}.entete-panneau h2{font-size:1.15rem}}
 .vue-onglet .page> :not(header):not(.onglet-actif):not(#demo){display:none!important}
 .vue-onglet .page>header>:not(h1):not(.navigation-eleves){display:none!important}
 body:not(.vue-onglet) #panneau-classes{display:none!important}
@@ -189,11 +206,12 @@ body:not(.vue-onglet) #panneau-classes{display:none!important}
       <button class="btn vide" type="button" id="terminer" hidden>Terminer la séance</button>
       <button class="btn" type="button" id="reprendre-seance" hidden>Rouvrir la séance</button>
       <span class="seq-etat" id="seq-etat" hidden></span>
+      <details class="plus" id="plus"><summary class="btn vide" title="Gérer les élèves, cours et classes, ressources, parcours">⚙ Plus</summary>
+      <div class="outils-secondaires"><a class="btn vide" id="gestion-eleves-lien" target="_blank" rel="noopener">Gérer les élèves ↗</a><a class="btn vide" id="gestion-classes-lien" target="_blank" rel="noopener">Cours et classes ↗</a>
+        <details id="ressources-menu"><summary>Ressources professeur</summary><div class="contenu-menu"><nav id="ressources-prof" class="reglages" aria-label="Documents du professeur" aria-live="polite"></nav></div></details>
+        <details id="gestion-menu"><summary>Gestion des parcours</summary><div class="contenu-menu"><p class="astuce">Les reprises conservent les anciennes tentatives.</p><div id="gestion-actions"></div><p class="astuce" id="gestion-attente" hidden>Les commandes de reprise attendent la confirmation du serveur.</p></div></details>
+      </div></details>
       <span class="maj" id="maj"></span>
-    </div>
-    <div class="outils-secondaires"><a class="btn vide" id="gestion-eleves-lien" target="_blank" rel="noopener">Gérer les élèves ↗</a><a class="btn vide" id="gestion-classes-lien" target="_blank" rel="noopener">Cours et classes ↗</a>
-      <details id="ressources-menu"><summary>Ressources professeur</summary><div class="contenu-menu"><nav id="ressources-prof" class="reglages" aria-label="Documents du professeur" aria-live="polite"></nav></div></details>
-      <details id="gestion-menu"><summary>Gestion des parcours</summary><div class="contenu-menu"><p class="astuce">Les reprises conservent les anciennes tentatives.</p><div id="gestion-actions"></div><p class="astuce" id="gestion-attente" hidden>Les commandes de reprise attendent la confirmation du serveur.</p></div></details>
     </div>
   </header>
   <p class="demo" id="demo" hidden>APERÇU FICTIF — aucune donnée réelle, aucune commande enregistrée. Le vrai tableau s'ouvre par l'adresse Apps Script, suivie de <b>?vue=prof</b>.</p>
@@ -220,22 +238,29 @@ body:not(.vue-onglet) #panneau-classes{display:none!important}
     </table></div>
   </section>
 
-  <section class="panneau">
-    <h2>Humeur de la classe</h2>
-    <div class="blocs" id="humeurs"></div>
-  </section>
+  <!-- Repliées par défaut, un résumé d'une ligne dans le titre ; le navigateur retient ce qui est ouvert. -->
+  <details class="panneau replie" id="pli-classe">
+    <summary><h2>Où est la classe — élèves sur chaque bloc</h2><span class="resume" id="resume-classe"></span></summary>
+    <p class="astuce">Élèves sur chaque bloc en ce moment ; en jaune, ceux qui coincent (cloche, 3 erreurs ou plus, 10 min sans sonner). Clic sur « Bloc N » : la fiche à ce bloc, en aperçu, pour la projeter.</p>
+    <div class="blocs" id="ou-classe"></div>
+  </details>
 
-  <section class="panneau">
-    <h2 id="blocs-titre">Où le groupe bute — erreurs par bloc</h2>
+  <details class="panneau replie" id="pli-humeur">
+    <summary><h2>Humeur de la classe</h2><span class="resume" id="resume-humeur"></span></summary>
+    <div class="blocs" id="humeurs"></div>
+  </details>
+
+  <details class="panneau replie" id="pli-blocs">
+    <summary><h2 id="blocs-titre">Où le groupe bute — erreurs par bloc</h2><span class="resume" id="resume-blocs"></span></summary>
     <p class="astuce" id="blocs-astuce">Clic sur « Bloc N » (ici ou dans la colonne Bloc) : la fiche s'ouvre à ce bloc, en aperçu, pour la projeter. Rien n'y est enregistré.
       Chaque élève a sa variante de la question : survoler la jauge donne les erreurs par variante.</p>
     <div class="blocs" id="blocs"></div>
-  </section>
+  </details>
 
-  <section class="panneau">
-    <h2>Leurs avis — fin de la fiche</h2>
+  <details class="panneau replie" id="pli-avis">
+    <summary><h2>Leurs avis — fin de la fiche</h2><span class="resume" id="resume-avis"></span></summary>
     <div class="avis" id="avis"></div>
-  </section>
+  </details>
 
   <!-- Caché tant que le serveur ne connaît pas « Mes cours » (déploiement antérieur). -->
   <section class="panneau" id="panneau-classes" hidden>
@@ -281,7 +306,7 @@ body:not(.vue-onglet) #panneau-classes{display:none!important}
   </form>
 </dialog>
 
-<script defer src="https://root75.github.io/campin-public/messagerie/pas-a-pas/visuels.js?v=unifie-20261114"></script><script defer src="https://root75.github.io/campin-public/pas-a-pas/tableau.js?v=compteurs-20261115"></script>
+<script defer src="https://root75.github.io/campin-public/messagerie/pas-a-pas/visuels.js?v=unifie-20261114"></script><script defer src="https://root75.github.io/campin-public/pas-a-pas/tableau.js?v=replis-20261115"></script>
 <script defer src="https://root75.github.io/campin-public/pas-a-pas/python-couleurs.js"></script>
 <script defer src="https://root75.github.io/campin-public/rat-de-ville/pas-a-pas/contenu.js?v=imperatif-20261113"></script>
 <script defer src="https://root75.github.io/campin-public/pas-a-pas/formatif-prof.js?v=gras-numeros-20261113"></script>

@@ -13,4 +13,11 @@ assert.equal(F.silencieux.garde(e({depuisBloc:85*m,derniere:80*m}),d),false,'ina
 assert.equal(F.silencieux.garde(e({depuisBloc:0}),d),false,'serveur sans depuisBloc : rien');
 assert.equal(F.inactif.garde(e({derniere:80*m}),d),true);assert.equal(F.inactif.garde(e({derniere:80*m,fini:true}),d),false,'fini : pas inactif');
 assert.equal(F.bute.garde(e({erreursIci:3}),d),true);
-console.log('Compteurs : coincés sans sonner, inactifs, butent vérifiés.');
+// Bandeau « corriger ensemble » : qui coince, et à quel bloc.
+vm.runInContext(bout('const SEUIL_COMMUN','function ouEstLaClasse'),c);
+const coince=vm.runInContext('estCoince',c),blocDe=vm.runInContext('blocDe',c);
+assert.equal(vm.runInContext('SEUIL_COMMUN',c),4);
+assert.equal(coince(e({aide:{bloc:6}}),d),true);assert.equal(coince(e({erreursIci:3}),d),true);assert.equal(coince(e({depuisBloc:85*m}),d),true);
+assert.equal(coince(e({}),d),false);assert.equal(coince(e({aide:{bloc:6},fini:true}),d),false,'fini : jamais coincé');
+assert.equal(blocDe(e({atteint:4})),5,'bloc en cours = atteint + 1');assert.equal(blocDe(e({atteint:4,aide:{bloc:6}})),6,'la cloche dit son bloc');
+console.log('Compteurs et bandeau : coincés sans sonner, inactifs, butent, bloc de chaque élève vérifiés.');
