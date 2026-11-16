@@ -72,6 +72,21 @@ function videDecl(essai){
     ditDecl("⚠ "+fileDecl.length+(fileDecl.length>1 ? " choix ne sont pas encore enregistrés" : " choix n’est pas encore enregistré")+". Garde cette page ouverte : nouvel essai à ta prochaine case.");
   }).noter(COURS, fileDecl[0]);
 }
+/* Une étape terminée se fête : quarante confettis, sauf si l'élève a demandé moins d'animations. */
+function confettis(){
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  if(!document.getElementById("style-confettis")){
+    const st = el("style"); st.id = "style-confettis";
+    st.textContent = ".confetti{position:fixed;top:-20px;width:10px;height:14px;z-index:29;pointer-events:none;animation:confetti-tombe 1.6s linear forwards}@keyframes confetti-tombe{to{transform:translateY(105vh) rotate(540deg)}}";
+    document.head.append(st);
+  }
+  const couleurs = ["#ffcf3f","#2fa36b","#e3a922","#7cc3de","#f2a7b5","#e8742a"];
+  for(let k=0;k<40;k++){
+    const c = el("span","confetti"); c.style.left = Math.random()*100+"vw"; c.style.background = couleurs[k%couleurs.length];
+    c.style.animationDelay = (Math.random()*.5)+"s"; c.style.animationDuration = (1.2+Math.random())+"s";
+    document.body.append(c); setTimeout(()=>c.remove(), 2800);
+  }
+}
 const BRAVOS = ["Bravo !","Bien joué !","Une case de plus !","Continue comme ça !","Ça avance !"];
 let recoche = false;   // vrai pendant que la fiche recoche elle-même les cases gardées
 function declareCase(cb){
@@ -82,7 +97,7 @@ function declareCase(cb){
   ecrit(etat); barre();
   declare({ etape:ici+1, type:"case", reponse:j+":"+(cb.checked ? 1 : 0) });
   if(!cb.checked) return;
-  if(!avant && complet(ici)) bravo("⭐ Étape "+(ici+1)+" réussie : « "+BLOCS[ici].titre+" » !", true);
+  if(!avant && complet(ici)){ bravo("⭐ Étape "+(ici+1)+" réussie : « "+BLOCS[ici].titre+" » !", true); confettis(); }
   else bravo(BRAVOS[Math.floor(Math.random()*BRAVOS.length)], false);
 }
 
