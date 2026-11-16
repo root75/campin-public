@@ -195,7 +195,7 @@ const BLOCS = [
   { partie:"B — Texte ou nombre ?", titre:"Deux sortes de valeurs", min:3,
     bulle:"Pour Python, \"3\" et 3, ce n'est pas du tout pareil.",
     veux:"Distinguer un texte d'un nombre.",
-    fais:CASES("Lis l'<b>encadré</b>.", "<b>Prédis</b>, puis réponds."),
+    fais:CASES("Lis l'<b>encadré</b> ci-dessous.", "<b>Prédis</b>, puis réponds."),
     extra:`<div class="encart"><table>
   <tr><th>On écrit</th><th>Python y voit</th><th>Son type</th></tr>
   <tr><td><code>"3"</code></td><td>un texte (avec des guillemets)</td><td><code>str</code></td></tr>
@@ -222,7 +222,7 @@ const BLOCS = [
   { partie:"B — Texte ou nombre ?", titre:"Texte fois nombre", min:3,
     bulle:"Et si on multiplie un texte ?",
     veux:"Prédire ce que fait * sur un texte.",
-    fais:CASES("Lis l'<b>encadré</b>.", "<b>Prédis</b>, puis réponds."),
+    fais:CASES("Lis l'<b>encadré</b> ci-dessous.", "<b>Prédis</b>, puis réponds."),
     extra:`<div class="encart"><p>Un texte multiplié par un nombre entier est <b>recopié</b> : <code>"hop" * 2</code> donne <b>hophop</b>.</p><p>Mais un texte <b>+</b> un nombre est refusé : <b>TypeError</b>.</p></div>`,
     coince:["* recopie le texte autant de fois que le nombre le dit, sans espace."],
     q:{ type:"qcm", q:`Prédis : que fait print("ha" * 3) ?`, c:["hahaha","ha3","ha ha ha","Une erreur TypeError"],
@@ -252,7 +252,7 @@ const BLOCS = [
   { partie:"C — Le programme pose une question", titre:"input() : le programme attend", min:5,
     bulle:"Jusqu'ici, tes programmes parlaient. Maintenant, ils écoutent !",
     veux:"Écrire un programme qui demande quelque chose à la personne qui l'utilise.",
-    fais:CASES("Lis l'<b>encadré</b>.", "Complète le programme : une <b>2e ligne</b> qui affiche le mot demandé et le prénom.", EXECUTER),
+    fais:CASES("Lis l'<b>encadré</b> ci-dessous.", "Complète le programme : une <b>2e ligne</b> qui affiche le mot demandé et le prénom.", EXECUTER),
     extra:`<div class="encart"><p><code>prenom = input("Ton prénom ? ")</code> affiche la question, <b>attend</b> qu'on tape une réponse et Enter, puis range la réponse dans la boîte <code>prenom</code>.</p>
   <p><b>Dans Thonny</b>, la console du bas attend : tu tapes ta réponse, puis Enter.<br><b>Dans cette page</b>, les réponses sont déjà tapées pour toi : la fiche essaie ton programme avec <b>Léa</b>, puis avec <b>Sam</b>.</p>
   <p>Dans la console, la ligne tapée reste affichée, comme dans Thonny.</p></div>`,
