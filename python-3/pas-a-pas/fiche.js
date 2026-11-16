@@ -82,10 +82,25 @@ const flottant = (x, y) => {
 };
 
 /* input() : le programme salue la personne qui tape son prénom. */
+/* Le logigramme d'un programme qui lit puis affiche : Lire → input( ), Afficher → print( ). Mêmes formes que LogProg 03. */
+const logiSalue = mot => `<figure class="logigramme"><svg viewBox="0 0 240 304" role="img" aria-label="Logigramme : Début, Lire prenom, Afficher ${mot} et prenom, Fin">
+  <defs><marker id="pointe-salue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5b6873"/></marker></defs>
+  <g stroke="#5b6873" stroke-width="2" marker-end="url(#pointe-salue)"><line x1="120" y1="50" x2="120" y2="78"/><line x1="120" y1="126" x2="120" y2="154"/><line x1="120" y1="202" x2="120" y2="230"/></g>
+  <g stroke-width="2" font-family="Atkinson Hyperlegible, Segoe UI, Arial, sans-serif" font-size="19" text-anchor="middle" fill="#1f2a33">
+    <ellipse cx="120" cy="27" rx="70" ry="23" fill="#d5e8d4" stroke="#82b366"/><text x="120" y="34" stroke="none">Début</text>
+    <path d="M45 80H225L195 126H15Z" fill="#e1d5e7" stroke="#9673a6"/><text x="120" y="110" stroke="none">Lire prenom</text>
+    <path d="M45 156H225L195 202H15Z" fill="#e1d5e7" stroke="#9673a6"/><text x="120" y="184" stroke="none" font-size="13">Afficher "${mot}", prenom</text>
+    <ellipse cx="120" cy="255" rx="70" ry="23" fill="#f8cecc" stroke="#b85450"/><text x="120" y="262" stroke="none">Fin</text>
+  </g></svg><figcaption>Lire → input( ) · Afficher → print( )</figcaption></figure>`;
+const ENCART_INPUT = `<div class="encart"><p>Dans le logigramme, <b>Lire</b> devient <code>input( )</code> et <b>Afficher</b> devient <code>print( )</code>.</p>
+  <p><code>prenom = input("Ton prénom ? ")</code> affiche la question, <b>attend</b> qu'on tape une réponse et Enter, puis range la réponse dans la boîte <code>prenom</code>.</p>
+  <p><b>Dans Thonny</b>, la console du bas attend : tu tapes ta réponse, puis Enter.<br><b>Dans cette page</b>, les réponses sont déjà tapées pour toi : la fiche essaie ton programme avec <b>Léa</b>, puis avec <b>Sam</b>.</p>
+  <p>Dans la console, la ligne tapée reste affichée, comme dans Thonny.</p></div>`;
 const salue = mot => ({
+  extra: logiSalue(mot) + ENCART_INPUT,
   vois:`Quand on tape Léa, la console affiche ${mot} Léa.`,
   q:{ type:"code", q:`Complète le programme : il demande un prénom, puis affiche ${mot} et ce prénom.`,
-      depart:`prenom = input("Ton prénom ? ")\n`, essais:[["Léa"],["Sam"]],
+      depart:`prenom = input("Ton prénom ? ")\n`, essais:[["Léa"],["Sam"]], scene:{ decor:"salut", ouvre:[`${mot} Léa`,`${mot} Sam`] },
       test: r => r.erreur ? (r.erreur.type==="NameError" ? "NameError : prenom s'écrit sans accent, exactement comme à la 1re ligne." : "Lis la <b>ligne rouge</b> : guillemets et parenthèses vont par paires.")
                : !/input\(/.test(r.code) ? "Garde la 1re ligne : c'est elle qui demande le prénom."
                : r.essais.every((e,i) => DERNIERE(e).replace(/\s+/g," ")===`${mot} ${["Léa","Sam"][i]}`) ? true
@@ -252,10 +267,7 @@ const BLOCS = [
   { partie:"C — Le programme pose une question", titre:"input() : le programme attend", min:5,
     bulle:"Jusqu'ici, tes programmes parlaient. Maintenant, ils écoutent !",
     veux:"Écrire un programme qui demande quelque chose à la personne qui l'utilise.",
-    fais:CASES("Lis l'<b>encadré</b> ci-dessous.", "Complète le programme : une <b>2e ligne</b> qui affiche le mot demandé et le prénom.", EXECUTER),
-    extra:`<div class="encart"><p><code>prenom = input("Ton prénom ? ")</code> affiche la question, <b>attend</b> qu'on tape une réponse et Enter, puis range la réponse dans la boîte <code>prenom</code>.</p>
-  <p><b>Dans Thonny</b>, la console du bas attend : tu tapes ta réponse, puis Enter.<br><b>Dans cette page</b>, les réponses sont déjà tapées pour toi : la fiche essaie ton programme avec <b>Léa</b>, puis avec <b>Sam</b>.</p>
-  <p>Dans la console, la ligne tapée reste affichée, comme dans Thonny.</p></div>`,
+    fais:CASES("Lis le <b>logigramme</b> : une forme, une ligne de programme.", "Lis l'<b>encadré</b> ci-dessous.", "Complète le programme : une <b>2e ligne</b> qui affiche le mot demandé et le prénom.", EXECUTER),
     coince:["Les noms de variables s'écrivent sans accent : prenom, pas prénom.",
             "print(\"Bonjour\", prenom) : le texte entre guillemets, une virgule, la boîte sans guillemets."],
     ...salue("Bonjour"),

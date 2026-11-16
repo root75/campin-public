@@ -101,4 +101,35 @@ details.coince{border-radius:16px}
 .md-ch-sous{display:flex;gap:6px}.md-ch-sous span{padding:4px 12px;border-radius:14px;border:1px solid #c9d3db}.md-ch-sous span.actif{background:#1d5a73;color:#fff;border-color:#1d5a73}
 .md-ch-bouton{justify-self:start;background:#1d5a73;color:#fff;font-weight:700;border-radius:8px;padding:6px 14px}
 @media (max-width:600px){#aide-btn{width:48px;height:48px;font-size:1.4rem}.mascotte{width:70px;height:70px}.demo-scene{min-height:300px}}
+/* ===== La scène d'un programme (python-editeur.js, sceneCree) : un décor par essai, qui réagit à la dernière ligne affichée ===== */
+.scene{display:grid;grid-template-columns:repeat(auto-fit,minmax(11rem,1fr));gap:10px}
+.sc-case{display:grid;justify-items:center;gap:4px;padding:8px 10px 0;border:1px solid var(--trait);border-radius:10px;background:linear-gradient(var(--ciel) 0 78%,#b9d7a8 78%);overflow:hidden}
+.sc-tape{justify-self:start;font-size:.85rem;color:var(--doux);font-style:italic}
+.sc-bulle{min-height:2em;padding:3px 12px;border-radius:14px;background:var(--carte);border:2px solid var(--trait);font-weight:700;opacity:0;transform:translateY(6px);transition:opacity .3s,transform .3s;overflow-wrap:anywhere;text-align:center}
+.sc-case:not([data-etat="attente"]) .sc-bulle{opacity:1;transform:none}
+.sc-case[data-etat="ouvert"] .sc-bulle{border-color:var(--juste)}
+.sc-case[data-etat="panne"] .sc-bulle{border-color:var(--faux);color:var(--faux)}
+.sc-decor{position:relative;display:flex;align-items:flex-end;justify-content:center;gap:26px;width:100%;height:104px}
+.sc-heros{font-size:2.4rem;line-height:1;margin-bottom:10px;transition:transform .9s ease .3s,opacity .4s ease .9s}
+.sc-signe{position:absolute;right:8px;top:0;font-size:1.5rem}
+.sc-porte{position:relative;width:58px;height:92px;border:4px solid #6b4a2b;border-bottom:0;border-radius:28px 28px 0 0;background:radial-gradient(circle at 50% 60%,#fff6c9,var(--soleil))}
+.sc-battant{position:absolute;inset:0;border-radius:24px 24px 0 0;background:#a8703f;box-shadow:inset 0 0 0 3px #8a5a30;transform-origin:left center;transition:transform .8s ease}
+.sc-battant::after{content:"";position:absolute;right:7px;top:52%;width:8px;height:8px;border-radius:50%;background:var(--soleil)}
+.sc-case[data-etat="ouvert"] .sc-battant{transform:perspective(260px) rotateY(-78deg)}
+.scene-porte .sc-case[data-etat="ouvert"] .sc-heros,.scene-garde .sc-case[data-etat="ouvert"] .sc-heros{transform:translateX(64px) scale(.8);opacity:0}
+.sc-case[data-etat="ferme"] .sc-porte,.sc-case[data-etat="ferme"] .sc-coffre{animation:sc-secoue .5s ease 2}
+.sc-case[data-etat="panne"] .sc-decor>:not(.sc-signe),.sc-case[data-etat="muet"] .sc-decor>:not(.sc-signe),.sc-case[data-etat="autre"] .sc-decor>:not(.sc-signe){filter:grayscale(1);opacity:.6}
+.sc-garde{font-size:2.4rem;line-height:1;margin-bottom:10px;margin-right:-22px;z-index:1;transition:transform .6s ease}
+.sc-case[data-etat="ouvert"] .sc-garde{transform:translateX(-30px)}
+.sc-case[data-etat="ferme"] .sc-garde{animation:sc-secoue .5s ease 2}
+.sc-coffre{position:relative;width:84px;height:46px;margin-bottom:2px;border:4px solid #6b4a2b;border-radius:4px 4px 8px 8px;background:#a8703f;box-shadow:inset 0 0 0 3px #8a5a30}
+.sc-couvercle{position:absolute;left:-4px;right:-4px;bottom:100%;height:26px;border:4px solid #6b4a2b;border-radius:40px 40px 0 0;background:#c08548;transform-origin:left bottom;transition:transform .7s ease}
+.sc-couvercle::after{content:"";position:absolute;left:calc(50% - 6px);bottom:-9px;width:12px;height:12px;border-radius:3px;background:var(--soleil)}
+.sc-tresor{position:absolute;left:0;right:0;bottom:60%;text-align:center;font-size:1.8rem;line-height:1;opacity:0;transition:transform .7s ease .3s,opacity .3s ease .3s}
+.sc-case[data-etat="ouvert"] .sc-couvercle{transform:rotate(-46deg)}
+.sc-case[data-etat="ouvert"] .sc-tresor{opacity:1;transform:translateY(-22px)}
+.scene-coffre .sc-case[data-etat="ouvert"] .sc-heros{transform:translateX(14px) rotate(-8deg)}
+.sc-robot{font-size:2.4rem;line-height:1;margin-bottom:10px}
+.scene-salut .sc-case[data-etat="ouvert"] .sc-heros{animation:saute .7s ease .3s 2}
+@keyframes sc-secoue{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}

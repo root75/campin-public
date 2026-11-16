@@ -100,6 +100,12 @@ quatre mots) et s'affiche au tableau, panneau « Leurs phrases », sans les noms
 s'ouvre après la phrase. Trois versions par `variantes`, avec **la même `phrase`** pour la corriger ensemble.
 Exemple : Python 02, bloc 2 ; contrôle : `tests/trous.cjs`.
 
+Une question `code` avec `essais` peut porter une **scène** : `scene:{ decor:"porte" | "coffre" | "garde", ouvre:"Ouvert !", ferme:"Fermé." }`
+ou `scene:{ decor:"salut", ouvre:["Bonjour Léa","Bonjour Sam"] }` (une ligne attendue par essai). Un petit décor par essai,
+entre les boutons et la console, réagit à la dernière ligne affichée par `print( )` : la porte s'ouvre, reste fermée 🔒, ou
+le décor grise (💥 erreur, 💤 rien d'affiché, ❓ autre texte). La scène ne juge rien — `test` reste seul juge — et ne montre
+rien que la console ne dise. Code : `sceneCree` et `sceneEtat` ; style : `.scene` dans [`python-missions.css`](python-missions.css).
+
 ```js
 q:{ type:"trous", q:"Complète la règle avec les mots de la banque.",
     texte:"Je commence par ___ le message. Il me dit quelle ___ est fautive.",

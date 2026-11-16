@@ -1,4 +1,4 @@
-/* ===== Python dans la page — code commun aux fiches Python (python-1, python-2, python-3) =====
+/* ===== Python dans la page — code commun aux fiches Python (python-1 à python-4) =====
    L'éditeur « Mon programme » (question `code`), le code mélangé (`ordre`), le tableau de trace
    (`trace`), la ligne fautive (`ligne`) et l'affichage de la console. Une fiche ne garde que ses blocs.
    À charger AVANT blocs.js, par son adresse absolue (voir pas-a-pas/MOTEUR.md).
@@ -92,14 +92,15 @@ function editeur(zone, Q, reussi, rate){
   const depart = txt("button","btn vide","↺ Code de départ"); depart.type = "button";
   const ecran = el("pre","console"); ecran.hidden = true; ecran.setAttribute("aria-live","polite");
   const barre = el("div","actions"); barre.append(lance, depart);
-  zone.append(ta, barre, ecran);
+  const scene = Q.scene && Q.essais ? sceneCree(Q) : null;   // la scène réagit à ce que le programme affiche
+  zone.append(ta, barre, ...(scene ? [scene.zone] : []), ecran);
   chargePython().catch(() => {});
 
   ta.addEventListener("keydown", e => {
     if(e.key === "Enter" && (e.ctrlKey || e.metaKey)){ e.preventDefault(); go(); }
     else if(e.key === "Tab" && !e.shiftKey){ e.preventDefault(); ta.setRangeText("    ", ta.selectionStart, ta.selectionEnd, "end"); }
   });
-  depart.addEventListener("click", () => { ta.value = Q.depart || ""; ecran.hidden = true; ta.focus(); });
+  depart.addEventListener("click", () => { ta.value = Q.depart || ""; ecran.hidden = true; if(scene) scene.joue(null); ta.focus(); });
   lance.addEventListener("click", go);
 
   async function go(){
@@ -122,10 +123,55 @@ function editeur(zone, Q, reussi, rate){
       ecran.replaceChildren();
       r.essais.forEach((x,i) => { const b = el("div"); ecran.append(txt("span","vide","Essai "+(i+1)+" — on tape : "+Q.essais[i].join(", "))); montre(b, x); ecran.append(b); });
     } else montre(ecran, r);
+    if(scene) scene.joue(r);
     const verdict = Q.test(r);
     if(verdict === true){ ta.readOnly = true; depart.disabled = true; reussi(ta.value); }
     else { lance.disabled = false;ta.readOnly=false;depart.disabled=false; rate(verdict, ta.value); }
   }
+}
+
+/* La scène d'un programme (Python 03 « input() », Python 04 « La porte ») : un petit décor par essai, qui réagit à
+   la DERNIÈRE ligne affichée par print( ). Elle n'évalue rien — c'est Q.test qui juge — et ne dit rien que la
+   console ne dise déjà.
+     q.scene = { decor:"porte" | "coffre" | "garde", ouvre:"Ouvert !", ferme:"Fermé." }
+     q.scene = { decor:"salut", ouvre:["Bonjour Léa","Bonjour Sam"] }      // une ligne attendue par essai
+   État d'un essai : "ouvert" (la ligne `ouvre`), "ferme" (la ligne `ferme`), "panne" (une erreur),
+   "muet" (rien d'affiché) ou "autre" (un autre texte : le décor ne le reconnaît pas). */
+function sceneEtat(S, x, tape, i){
+  if(!x) return { etat:"attente", dit:"" };
+  const net = t => String(t).replace(/\s+/g," ").trim(), de = v => Array.isArray(v) ? v[i] : v;
+  // la ligne de input( ) — la question suivie de la réponse tapée — n'est pas une ligne affichée par print( )
+  const questions = [...String(x.code || "").matchAll(/input\(\s*(["'])(.*?)\1/g)].map(m => m[2]);
+  const echos = questions.flatMap(q => (tape || []).map(t => net(q + t)));
+  const dit = String(x.sortie || "").split("\n").map(net).filter(l => l && !echos.includes(l)).pop() || "";
+  return { dit, etat: x.erreur ? "panne" : dit === "" ? "muet" : dit === de(S.ouvre) ? "ouvert" : dit === de(S.ferme) ? "ferme" : "autre" };
+}
+function sceneCree(Q){
+  const S = Q.scene, zone = el("div","scene scene-" + S.decor); zone.setAttribute("aria-hidden","true");   // la console dit la même chose
+  const DECOR = { porte:'<span class="sc-heros">🧒</span><span class="sc-porte"><span class="sc-battant"></span></span>',
+                  garde:'<span class="sc-heros">🧒</span><span class="sc-garde">💂</span><span class="sc-porte"><span class="sc-battant"></span></span>',
+                  salut:'<span class="sc-robot">🤖</span><span class="sc-heros">🧒</span>',
+                  coffre:'<span class="sc-heros">🧒</span><span class="sc-coffre"><span class="sc-tresor">💰</span><span class="sc-couvercle"></span></span>' }[S.decor];
+  const SIGNE = { attente:"", ouvert:"✨", ferme:"🔒", panne:"💥", muet:"💤", autre:"❓" };
+  let minuteries = [];
+  const cases = Q.essais.map(e => {
+    const c = el("div","sc-case"); c.dataset.etat = "attente";
+    const bulle = txt("span","sc-bulle",""), signe = txt("span","sc-signe","");
+    const decor = el("div","sc-decor",DECOR); decor.append(signe);
+    c.append(txt("span","sc-tape","On tape : " + e.join(", ")), bulle, decor); zone.append(c);
+    return { c, bulle, signe };
+  });
+  function joue(r){
+    minuteries.forEach(clearTimeout); minuteries = [];
+    cases.forEach(k => { k.c.dataset.etat = "attente"; k.bulle.textContent = ""; k.signe.textContent = ""; });
+    if(!r) return;
+    cases.forEach((k,i) => minuteries.push(setTimeout(() => {
+      const { etat, dit } = sceneEtat(S, r.essais[i], Q.essais[i], i);
+      k.c.dataset.etat = etat; k.signe.textContent = SIGNE[etat];
+      k.bulle.textContent = etat === "panne" ? "Erreur !" : etat === "muet" ? "…" : dit;
+    }, 150 + 900*i)));
+  }
+  return { zone, joue };
 }
 
 /* Code mélangé : l'élève remet les lignes dans l'ordre (▲ ▼), puis la fiche EXÉCUTE le programme
