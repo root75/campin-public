@@ -112,7 +112,7 @@ const Demo = (() => {
     ['Fichier', 'Édition', 'Affichage', 'Insertion', 'Format', 'Outils'].forEach(m => menus.append(c(el('span', null, m), 'm-' + m.toLowerCase())));
     const barre = el('div', 'md-barre');
     barre.append(ico('orthographe', 'orthographe'), c(el('span', 'md-champ md-police', (f.police || 'Arial') + ' ▾'), 'police'), c(el('span', 'md-champ', f.taille || '11'), 'taille'),
-      c(el('span', 'md-btn md-g', 'G'), 'gras'), c(el('span', 'md-btn md-i', 'I'), 'italique'), c(el('span', 'md-btn md-s', 'S'), 'souligne'),
+      ico('gras', 'gras'), ico('italique', 'italique'), ico('souligne', 'souligne'),
       ico('centrer', 'centrer'), ico('droite', 'droite'), ico('puces', 'puces'), ico('numeros', 'numeros'));
     const page = c(el('div', 'md-page'), 'page');
     let n = 0;
