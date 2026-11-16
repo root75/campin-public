@@ -1,7 +1,7 @@
 # Suivi du formatif « Le rat de ville »
 
 > **Depuis la migration vers le moteur commun** : cette fiche n'a plus de moteur à elle. `fiche.js` ne contient que
-> des données (`BLOCS`, `GRILLE`, `FIN`, `REPRISE`, mode déclaratif) ; l'affichage, l'enregistrement des cases, la cloche,
+> des données (`BLOCS`, `GRILLE`, `FIN`, mode déclaratif) ; l'affichage, l'enregistrement des cases, la cloche,
 > le cadenas et le cours collectif viennent de `pas-a-pas/blocs.js` — mode d'emploi : `pas-a-pas/MOTEUR.md`, section
 > « Le mode déclaratif ». `contenu.js` et `pas-a-pas/formatif-prof.js` sont supprimés ; le tableau est le tableau commun.
 > Une étape = sa place dans `BLOCS` ; ses cases sont enregistrées sous « étape.rang » et comptées dans
@@ -90,9 +90,8 @@ Fermer et rouvrir ne sont plus des étapes : les élèves ne les faisaient pas a
 - Sous chaque étape, l’encadré **🔔 À la sonnerie, où que j’en sois** (fermer l’onglet, ne pas
   remettre, animation, puis se déconnecter de Windows : touche Windows ▸ son nom ▸ Se déconnecter,
   ajouté le 12/11/2026) et le lien « Je reviens après la sonnerie : je reprends mon document ».
-- En haut, l’encadré **▶ Je reprends mon travail** (Drive ▸ Récents, vue fractionnée, deux
-  animations, bouton « C’est fait : je reprends à l’étape N »). Il s’affiche seul quand l’élève
-  rouvre le cours avec déjà des cases cochées et plus de 5 minutes sans action. Pas de case.
+- L’encadré du haut **▶ Je reprends mon travail** est retiré (16/11/2026) : les mêmes gestes sont sous
+  chaque étape, dans **▶ Je reprends mon cours**, et chacun reprend à l’étape où il s’est arrêté.
 - **7 étapes, 45 cases.** Chaque étape garde son **id** interne (1, 2, 3, 6, 7, 8, 9 dans
   `contenu.js`) : ce sont les clés des cases et du Journal, rien n’est perdu. Le numéro affiché
   est la place (1 à 7). Une ancienne place 4 ou 5 envoie à la première étape non finie.
