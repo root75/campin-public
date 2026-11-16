@@ -1,267 +1,609 @@
-/* Suivi déclaratif : seule une réponse positive du serveur confirme une sauvegarde.
-   Hors Apps Script, aperçu libre sans stockage de compte sur le poste partagé. */
+/* Le rat de ville — fiche pas à pas sur le moteur commun (pas-a-pas/blocs.js), en mode déclaratif.
+   Ici, seulement des DONNÉES ; mode d'emploi : pas-a-pas/MOTEUR.md, section « Le mode déclaratif ».
+   Une étape = un bloc ; son numéro est sa place dans BLOCS. Les cases sont enregistrées par le serveur sous
+   « étape.rang » : déplacer une étape ou une case déplacerait les déclarations déjà faites. Ajouter une case en
+   fin d'étape est sans risque. Le nombre de cases par étape est aussi dans pas-a-pas/cours.json (« cases ») :
+   tests/rat-de-ville.cjs vérifie que les deux sont égaux.
+   Dans une case : <b>…</b> = le mot-clé ; <span class="a-ecrire"> = à écrire exactement.
+   « demos » : "N" (N-ième case) → [clé de l'animation dans demos.js, numéros des images à montrer sous cette case]. */
 const COURS = 'rat-de-ville-formatif';
+const PRESENTATION = 'missions';
+const MODE = 'declaratif';
+const HORS_SUIVI = 'Aperçu libre — ouvre Mes cours avec ton compte scolaire pour retrouver ta progression.';
 const BASE = 'https://root75.github.io/campin-public/rat-de-ville/pas-a-pas/', ICONES = BASE + 'icones/';
-const SUIVI = typeof google !== 'undefined' && google.script && google.script.run;
-const $ = id => document.getElementById(id);
-const txt = (tag, cls, t) => {const n=document.createElement(tag);if(cls)n.className=cls;if(t!=null)n.textContent=t;return n;};
-let etat = {position:1,cases:{},moi:{},aide:null,etapes:[]}, pret=false, occupe=false, vueGrille=false, repriseVue=false;
-/* La grille est l'étape finale, sans case : elle se range hors de la page tant qu'on ne l'affiche pas. */
-const GRILLE=$('grille');GRILLE.remove();GRILLE.hidden=false;
-/* Numéro interne d'une étape (id, celui des clés « 6.1 » et du Journal) ↔ sa place à l'écran. */
-const place=id=>ETAPES_RAT.findIndex(e=>e.id===Number(id));
-const numero=id=>place(id)>=0?place(id)+1:id;
-/* Étapes terminées : toujours calculées ici, depuis les cases ; le serveur ne fait que les garder. */
-function prepare(r){r.cases=r.cases||{};r.etapes=ETAPES_RAT.map(e=>e.actions.every((_,j)=>r.cases[e.id+'.'+(j+1)]));return r;}
-function appel(evt){return new Promise((ok,ko)=>google.script.run.withSuccessHandler(r=>{if(window.Recompense)Recompense.montre(r);ok(prepare(r));}).withFailureHandler(ko).suiviFormatif(COURS,evt));}
-async function envoieHumeurAvis(evt){const r=SUIVI?await appel(evt):demo(evt);if(!occupe)etat=r;return r;}
-function humeurDuJour(){if(typeof HumeurAvis==='undefined')return;HumeurAvis.humeur($('humeur'),{valeur:etat.humeur,suivi:!!SUIVI,envoie:v=>envoieHumeurAvis({type:'humeur',reponse:v})});}
-function commandes(){document.querySelectorAll('#travail input,#travail select,#aide-btn').forEach(n=>n.disabled=!pret||occupe);
-  /* Changer d'étape ne dépend pas du serveur : pastilles et boutons d'étape restent actifs pendant un enregistrement. */
-  document.querySelectorAll('#etapes button,#travail button').forEach(n=>{if(!n.closest('.trous-bloc'))n.disabled=!pret;});}
-/* Aller à une étape : affichage immédiat, puis la place est enregistrée dès que le serveur est libre. */
-let positionVoulue=null;
-function va(id){if(!pret)return;positionVoulue=id;etat.position=id;vueGrille=false;dessine();if(!occupe)sauve({type:'position',etape:id});}
-function calcule(){prepare(etat);}
-function demo(evt){
-  if(evt.type==='position')etat.position=evt.etape;
-  if(evt.type==='case')etat.cases[evt.cle]=evt.fait;
-  if(evt.type==='moi')etat.moi[evt.critere]=evt.lettre;
-  if(evt.type==='aide')etat.aide={bloc:evt.etape};
-  if(evt.type==='aide-fin')etat.aide=null;
-  if(evt.type==='humeur')etat.humeur=evt.reponse;
-  if(evt.type==='avis')etat.avis=evt.avis;
-  calcule();return etat;
-}
-async function sauve(evt){
-  if(!pret||occupe)return;
-  occupe=true;commandes();$('sauvegarde').textContent=SUIVI?'Enregistrement…':'Aperçu : essai sans sauvegarde scolaire.';
-  try{
-    const avant=(etat.etapes||[]).slice();
-    etat=SUIVI?await appel(evt):demo(evt);
-    if(positionVoulue!=null){if(evt.type==='position'&&evt.etape===positionVoulue)positionVoulue=null;else etat.position=positionVoulue;}
-    $('sauvegarde').textContent=SUIVI?'Enregistré avec mon compte scolaire.':'Aperçu : rien n’est enregistré.';
-    if(evt.type==='aide'&&typeof Cloche!=='undefined')Cloche.sonnee();
-    if(evt.type==='case'&&evt.fait){const j=place(evt.etape);if(etat.etapes[j]&&!avant[j])fete(j);else bravo(BRAVOS[Math.floor(Math.random()*BRAVOS.length)],false);}
-  }catch(e){if(evt.type==='position'){etat.position=positionVoulue!=null?positionVoulue:evt.etape;positionVoulue=null;}
-    $('sauvegarde').textContent=evt.type==='aide'&&/sonneries/.test(e.message||'')?'Cloche non sonnée. '+e.message.replace(/^(Exception|Error): /,''):'Non enregistré. Réessaie la case ou le déplacement. '+(e.message||'Connexion indisponible.');}
-  finally{occupe=false;dessine();if(positionVoulue!=null)sauve({type:'position',etape:positionVoulue});}
-}
-/* Texte à trous d'entraînement (étape « Mon bloc-notes ») : corrigé dans la page, jamais enregistré, ne bloque rien.
-   Une variante tirée au hasard par ouverture de la page ; la mémoire survit aux redessins. */
-const TROUS={};
-function trous(cle,T){
-  const m=TROUS[cle]=TROUS[cle]||{v:Math.floor(Math.random()*T.variantes.length),choix:[],ok:false,faux:[]};
-  const V=T.variantes[m.v],boite=txt('div','trous-bloc'),p=txt('p','trous'),banque=txt('div','banque'),retour=txt('p','note');
-  const mots=(m.ordre=m.ordre||V.mots.concat(V.pieges).sort(()=>Math.random()-.5));
-  retour.setAttribute('role','status');
-  const peint=()=>{
-    p.replaceChildren();
-    V.texte.split('___').forEach((bout,k,tous)=>{p.append(bout);if(k===tous.length-1)return;
-      const t=txt('button','trou'+(m.choix[k]?' plein':'')+(m.ok?' juste':m.faux.includes(k)?' faux':''),m.choix[k]||'…');t.type='button';
-      t.setAttribute('aria-label','Trou '+(k+1)+(m.choix[k]?' : '+m.choix[k]+'. Cliquer pour le vider.':', vide'));
-      t.disabled=m.ok;t.addEventListener('click',()=>{m.choix[k]=null;m.faux=[];peint();});p.append(t);});
-    banque.replaceChildren(...mots.map(mot=>{const n=txt('button','mot-banque',mot);n.type='button';n.disabled=m.ok||m.choix.includes(mot);
-      n.addEventListener('click',()=>{const k=V.mots.findIndex((_,i)=>!m.choix[i]);if(k<0)return;m.choix[k]=mot;m.faux=[];peint();});return n;}));
-    const plein=V.mots.every((_,i)=>m.choix[i]);
-    const v=txt('button','btn vide','Je vérifie');v.type='button';v.disabled=!plein;
-    v.addEventListener('click',()=>{m.faux=V.mots.map((x,i)=>m.choix[i]===x?-1:i).filter(i=>i>=0);m.ok=!m.faux.length;peint();});
-    retour.textContent=m.ok?T.bravo:m.faux.length?(m.faux.length===1?'Un mot n’est pas à sa place : le trou rouge. Je clique dessus pour le vider.':m.faux.length+' mots ne sont pas à leur place : les trous rouges. Je clique dessus pour les vider.'):'Je clique sur un mot : il va dans le premier trou vide. Je clique sur un trou pour le vider.';
-    boite.replaceChildren(...(T.titre?[txt('h3',null,T.titre)]:[]),...(T.intro?[txt('p',null,T.intro)]:[]),p,banque,...(m.ok?[]:[v]),retour);boite.classList.toggle('reussi',m.ok);
-  };
-  peint();return boite;
-}
-function dessine(){
-  const i=Math.max(0,place(etat.position)),b=ETAPES_RAT[i];arreteAutres();
-  $('etapes').replaceChildren(...ETAPES_RAT.map((e,j)=>{
-    const faites=e.actions.filter((_,k)=>etat.cases[e.id+'.'+(k+1)]).length;
-    const n=txt('button',etat.etapes[j]?'fini':'',etat.etapes[j]?'✓':String(j+1));n.style.setProperty('--p',Math.round(100*faites/e.actions.length));n.type='button';n.title=(j+1)+'. '+e.titre;n.setAttribute('aria-label',n.title+(etat.etapes[j]?' — déclaré terminé':''));if(j===i&&!vueGrille)n.setAttribute('aria-current','step');n.addEventListener('click',()=>va(e.id));return n;
-  }));
-  const g=txt('button','grille-etape','📋');g.type='button';g.title='Ma grille d’évaluation';g.setAttribute('aria-label',g.title);if(vueGrille)g.setAttribute('aria-current','step');g.addEventListener('click',()=>{vueGrille=true;dessine();});$('etapes').append(g);
-  const z=$('travail');
-  if(vueGrille){dessineGrille(z);return;}z.replaceChildren(txt('p','numero','Période '+b.periode+' — '+(b.periode===1?'le texte':'la mise en forme')+' · '+b.min+' min'),txt('h2',null,(i+1)+'. '+b.titre));
-  if(repriseVue)z.prepend(reprise());
-  entreEtape(i,b);
-  const repere=REPERES_RAT[i];
-  const observation=txt('aside','repere observation');
-  observation.append(txt('h3',null,'À observer'),txt('p',null,repere.observe));
-  if(b.id===6){
-    const modele=txt('div','apercu-document');modele.setAttribute('aria-label','Modèle de présentation des trois zones');
-    const titre=txt('p','exemple-titre','TITRE DE LA FABLE');
-    const corps=txt('p','exemple-strophe','Les strophes sont centrées.');
-    const auteur=txt('p','exemple-auteur','Jean de La Fontaine');modele.append(titre,corps,auteur);observation.append(modele);
-  }
-  if(b.id===7){const tableau=txt('table','repere-polices');const legende=txt('caption',null,'Police et taille attendues');tableau.append(legende);
-    [['Strophes','Police','Taille'],['1 et 2','EB Garamond','14'],['3 et 4','Arial','12'],['5','Calibri','10'],['6 et 7','Arial Black','8']].forEach((ligne,k)=>{const tr=txt('tr');ligne.forEach(v=>tr.append(txt(k?'td':'th',null,v)));tableau.append(tr);});observation.append(tableau);}
-  z.append(observation,txt('p','agir','✋ À moi dans Docs ! Je fais, puis je coche.'),txt('p','note annuler','Je me suis trompé ? Tout de suite : ↶ Annuler (Ctrl + Z), la flèche tout à gauche de la barre d’outils.'));
-  if(b.consigne)z.append(txt('p','note',b.consigne));
-  const ul=txt('ul','cases');b.actions.forEach((t,j)=>{
-    const cle=b.id+'.'+(j+1),li=txt('li'),lab=txt('label'),cb=txt('input');cb.type='checkbox';cb.dataset.cle=cle;cb.checked=!!etat.cases[cle];
-    cb.addEventListener('change',()=>sauve({type:'case',etape:b.id,cle,fait:cb.checked}));const sp=txt('span');((b.icones&&b.icones[j])||[]).forEach(ico=>{const im=txt('img','ico');im.src=ICONES+ico+'.png';im.alt='';sp.append(im);});t.split(/\[\[(.+?)\]\]/).forEach((bout,k)=>{if(!bout.trim())return;if(k%2){const e=txt('span','a-ecrire',bout);e.setAttribute('aria-label','À écrire exactement : '+bout);sp.append(e);}else bout.split(/\*\*(.+?)\*\*/).forEach((m,g)=>{if(m)sp.append(g%2?txt('b',null,m):m);});});lab.append(cb,sp);li.append(lab);
-    const dc=demoCase(i,j);if(dc)li.append(dc);
-    const image=b.images&&b.images[j];if(image){const im=txt('img','extrait');im.src=BASE+image;im.alt='Extrait de la fable à recopier';li.append(im);}
-    const tr=b.trous&&b.trous[j];if(tr)li.append(trous(cle,tr));
-    const aide=b.aides && b.aides[j];
-    if(aide){const d=txt('details');d.append(txt('summary',null,aide.titre),txt('p',null,aide.explication),txt('blockquote',null,aide.exemple),txt('p','note',aide.rappel));if(aide.image){const im=txt('img','capture');im.src=BASE+aide.image;im.alt='Menu Format ▸ Texte ▸ Minuscules/majuscules ▸ MAJUSCULES dans Docs';d.append(im);}li.append(d);}
-    ul.append(li);
-  });z.append(ul);
-  const controle=txt('aside','repere verification');controle.append(txt('h3',null,'À vérifier dans mon document'),txt('p',null,repere.verifie),txt('p','note',repere.encouragement));z.append(controle);
-  if(b.id===2){const lien=txt('a','btn vide','Voir le texte à recopier');lien.href='#texte';lien.addEventListener('click',()=>{$('texte').open=true;});z.append(lien);}
-  const nav=txt('div','actions');for(const [delta,label] of [[-1,'← Étape précédente'],[1,'Étape suivante →']]){
-    if(i+delta<0)continue;
-    if(i+delta>=ETAPES_RAT.length){const n=txt('button','btn vide','Ma grille d’évaluation →');n.type='button';n.addEventListener('click',()=>{vueGrille=true;dessine();scrollTo(0,0);});nav.append(n);continue;}
-    const n=txt('button','btn vide',label);n.type='button';n.addEventListener('click',()=>va(ETAPES_RAT[i+delta].id));nav.append(n);
-  }z.append(nav,txt('p','note','Je peux continuer même si une case reste vide. Je coche quand j’ai terminé ; le professeur examine mon document.'));
-  if(typeof PhraseFin!=='undefined'&&ETAPES_RAT.every((_,j)=>etat.etapes&&etat.etapes[j])){const f=PhraseFin.figure(CITATION);if(f)z.append(f);}
-  z.append(sonnerie());if(!repriseVue)z.append(repriseBas()); // en haut à la réouverture, sinon sous « À la sonnerie »
-  cloche();coince();progression();commandes();
-}
-/* « Ça coince ? » : seulement les aides de l'étape affichée (et « Je me trompe »), sauf si l'élève demande tout. */
-let coinceTout=false;
-function coince(){
-  const n=vueGrille?0:etat.position;
-  document.querySelectorAll('.coince section[data-etapes]').forEach(g=>{const e=g.dataset.etapes.split(' ');g.hidden=!(coinceTout||!n||e.includes('tout')||e.includes(String(n)));});
-  $('coince-etape').textContent=coinceTout||!n?'Toutes les aides.':'Les aides de l’étape '+numero(n)+'.';
-  $('coince-tout').textContent=coinceTout?'Seulement mon étape':'Voir toutes les aides';
-}
-$('coince-tout').addEventListener('click',()=>{coinceTout=!coinceTout;coince();});
-function cloche(){
-  $('aide').classList.toggle('active',!!etat.aide);
-  $('aide-texte').textContent=etat.aide?'J’attends de l’aide (étape '+numero(etat.aide.bloc)+'). Je continue ailleurs. Débloqué ? Je re-clique.':'Relu ? Demandé au voisin ? Alors je sonne.';
-  if(typeof Cloche!=='undefined'){Cloche.marque($('aide'),etat);if(!etat.aide)$('aide-texte').textContent+=' '+Cloche.phrase(etat);}
-  const mot=etat.aide?'Je me suis débloqué':'Je bloque à l’étape '+numero(etat.position);
-  $('aide-btn').replaceChildren('🔔',txt('span','mot',mot));$('aide-btn').setAttribute('aria-label',mot);
-}
-function dessineGrille(z){
-  z.replaceChildren(txt('p','numero','Étape finale · après mes '+ETAPES_RAT.length+' étapes'),txt('h2',null,'Ma grille d’évaluation'),txt('p','agir','Pour chaque critère, je lis les colonnes A à D. Je choisis ma lettre dans « Moi ».'),GRILLE);
-  GRILLE.querySelectorAll('[data-critere]').forEach(n=>{n.value=etat.moi[n.dataset.critere]||'';});
-  if(typeof HumeurAvis!=='undefined'){const av=txt('div');HumeurAvis.avis(av,{valeur:etat.avis,suivi:!!SUIVI,classeBouton:'btn',envoie:a=>envoieHumeurAvis({type:'avis',avis:a})});z.append(av);}
-  const nav=txt('div','actions'),n=txt('button','btn vide','← Étape '+ETAPES_RAT.length);n.type='button';n.addEventListener('click',()=>va(ETAPES_RAT[ETAPES_RAT.length-1].id));nav.append(n);z.append(nav);
-  cloche();coince();progression();commandes();
-}
-/* La phrase de la fin (code commun : pas-a-pas/phrase-fin.js) : quand toutes les étapes sont faites. */
-const CITATION={texte:'Rien ne sert de courir ; il faut partir à point.',auteur:'Jean de La Fontaine',source:'« Le Lièvre et la Tortue », Fables, livre VI, fable 10 (1668)',
-  lien:'Strophe après strophe, une case après l’autre : c’est la régularité qui a fait mon document.'};
-/* Encouragements : chaque mission cochée, chaque étape terminée. */
-const BRAVOS=['Bravo !','Super, une mission de plus !','Bien joué !','Continue comme ça !','Yes ! 🧀','Ça avance !','Top !'];
-const BULLES=['Salut ! On va mettre une fable en forme, mission par mission.','Bon début ! Regarde bien les démos.','Tu es lancé(e) !','Déjà la moitié ! Le rat est fier de toi.','Presque fini, courage !','Tout est coché : bravo ! Il reste à remettre dans Classroom.'];
-let minuterieBravo=null;
-function bravo(t,grand){const b=$('bravo');b.textContent=t;b.classList.toggle('grand',!!grand);b.classList.add('vu');clearTimeout(minuterieBravo);minuterieBravo=setTimeout(()=>b.classList.remove('vu'),grand?3200:1600);
-  const m=$('mascotte');if(m){m.classList.remove('saute');void m.offsetWidth;m.classList.add('saute');}}
-function fete(j){bravo('⭐ Étape '+(j+1)+' réussie : « '+ETAPES_RAT[j].titre+' » !',true);
-  if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
-  const couleurs=['#ffcf3f','#2fa36b','#e3a922','#7cc3de','#f2a7b5','#e8742a'];
-  for(let k=0;k<40;k++){const c=document.createElement('span');c.className='confetti';c.style.left=Math.random()*100+'vw';c.style.background=couleurs[k%couleurs.length];c.style.animationDelay=(Math.random()*.5)+'s';c.style.animationDuration=(1.2+Math.random())+'s';document.body.append(c);setTimeout(()=>c.remove(),2800);}}
-function progression(){
-  const total=ETAPES_RAT.reduce((n,e)=>n+e.actions.length,0);
-  const faites=ETAPES_RAT.reduce((n,e)=>n+e.actions.filter((_,k)=>etat.cases[e.id+'.'+(k+1)]).length,0);
-  const etapes=(etat.etapes||[]).filter(Boolean).length;
-  $('jauge').style.width=Math.round(100*faites/total)+'%';
-  $('progres-texte').textContent='🧀 '+faites+' / '+total+' missions';
-  $('progres-etapes').textContent=etapes+' / '+ETAPES_RAT.length+' étapes';
-  const r=faites/total;$('bulle').textContent=BULLES[r===1?5:r>=.8?4:r>=.5?3:r>=.2?2:r>0?1:0];
-}
-/* « Regarde comment faire » sous chaque case : champ « demos » de l'étape (contenu.js), même format
-   que le moteur commun blocs.js ; le lecteur est pas-a-pas/demo-lecteur.js. Une démo par case, gardée
-   d'un affichage à l'autre (cocher ne la relance pas, les cases restent enregistrées). Une seule ouverte
-   à la fois ; en arrivant sur une étape, celle de la première case pas encore cochée s'ouvre et joue. */
-const demos={},ouverts=new Set();let etapeVue=null;
-const demoDe=(i,j)=>typeof Demo!=='undefined'&&ETAPES_RAT[i].demos&&ETAPES_RAT[i].demos[j+1];
-function entreEtape(i,b){
-  if(etapeVue===i)return;etapeVue=i;
-  ouverts.forEach(c=>demos[c]&&demos[c].stop());ouverts.clear();
-  if(typeof Demo==='undefined')return;
-  const j=b.actions.findIndex((_,k)=>!etat.cases[b.id+'.'+(k+1)]&&demoDe(i,k));
-  if(j>=0&&!repriseVue)ouverts.add(i+'.'+j); // pas deux animations à la fois avec l'encadré « Je reprends »
-}
-function demoCase(i,j){
-  const v=demoDe(i,j);if(!v)return null;
-  const cle=i+'.'+j;
-  if(!demos[cle])demos[cle]=Demo.cree(v[0],ouverts.has(cle),v[1]);
-  if(!demos[cle])return null;
-  const d=txt('details','demo-case');d.dataset.demo=cle;
-  d.open=ouverts.has(cle);d.append(txt('summary',null,'👀 Regarde comment faire'),demos[cle]);
-  d.addEventListener('toggle',()=>{
-    if(d.open&&!ouverts.has(cle)){ouverts.forEach(c=>{demos[c].stop();const x=document.querySelector('details.demo-case[data-demo="'+c+'"]');if(x)x.open=false;});ouverts.clear();ouverts.add(cle);demos[cle].joue();}
-    else if(!d.open&&ouverts.has(cle)){ouverts.delete(cle);demos[cle].stop();}
-  });
-  return d;
-}
-/* Fermer et rouvrir ne sont plus des étapes : chacun le fait à la sonnerie, où qu'il en soit.
-   « À la sonnerie » : tout en bas de chaque étape. « Je reprends » : en haut, à la réouverture du cours
-   (déjà des cases cochées et plus de 5 min sans action), ou par le bouton de l'encadré. Pas de case. */
-let autresActifs=[];
-function arreteAutres(){autresActifs.forEach(x=>x.stop());autresActifs=[];}
-function demoAutre(cle){
-  if(typeof Demo==='undefined')return txt('span');
-  const d=txt('details','demo-case');let box=null;d.append(txt('summary',null,'👀 Regarde comment faire'));
-  d.addEventListener('toggle',()=>{if(d.open){if(!box){box=Demo.cree(cle,false);d.append(box);}autresActifs.push(box);setTimeout(()=>box.joue(),80);}else if(box)box.stop();});
-  return d;
-}
-function sonnerie(){
-  const a=txt('aside','repere sonnerie');
-  const ferme=txt('p');ferme.innerHTML='<b>1. Je ferme l’onglet de mon document.</b> Je ne remets PAS : Docs l’enregistre tout seul.';
-  const deco=txt('p');deco.innerHTML='<b>2. Je me déconnecte de Windows :</b> touche Windows ⊞ ▸ clic sur <b>mon nom</b>, en bas à gauche du menu ▸ <b>Se déconnecter</b> (ou <b>Ctrl + Alt + Delete</b> ▸ <b>Se déconnecter</b>). Sinon, l’élève suivant arrive dans <b>ma</b> session : mon Drive, mes documents, en mon nom.';
-  const piege=txt('p','note','Le bouton ⏻ du menu propose Verrouiller, Arrêter, Redémarrer : pas « Se déconnecter ». Je n’éteins pas l’ordinateur.');
-  a.append(txt('h3',null,'🔔 À la sonnerie, où que j’en sois'),ferme,demoAutre('fermer'),deco,piege,demoAutre('deconnecter'));
-  return a;
-}
-/* Les deux gestes de reprise : sous « À la sonnerie » (même style d'encadré) et, à la réouverture, en haut de l'étape. */
-function gestesReprise(){
-  const ol=txt('ol');
-  [['<b>Je retrouve mon document :</b> menu Google (la gaufre) ▸ <b>Drive</b> ▸ <b>Récents</b> ▸ double-clic sur mon document.','retrouver'],
-   ['<b>Je mets le cours et mon document côte à côte :</b> je clique sur l’onglet du cours, puis clic droit sur l’onglet de mon document ▸ <b>Ajouter l’onglet à une nouvelle vue fractionnée</b>.','cote']]
-    .forEach(([t,cle])=>{const li=txt('li');li.innerHTML=t;li.append(demoAutre(cle));ol.append(li);});
-  return ol;
-}
-function repriseBas(){
-  const a=txt('aside','repere reprise');
-  a.append(txt('h3',null,'▶ Je reprends mon cours'),gestesReprise());return a;
-}
-function reprise(){
-  const k=aReprendre(),box=txt('aside','repere reprise'),ol=gestesReprise();
-  box.append(txt('h3',null,'▶ Je reprends mon travail'));
-  const b=txt('button','btn','C’est fait : je reprends à l’étape '+(k+1)+' — '+ETAPES_RAT[k].titre);b.type='button';
-  b.addEventListener('click',()=>{repriseVue=false;etapeVue=null;const id=ETAPES_RAT[k].id;va(id);scrollTo(0,0);});
-  box.append(ol,b);return box;
-}
-/* La première étape pas encore terminée (sa place), sinon la dernière. */
-function aReprendre(){const k=ETAPES_RAT.findIndex((_,j)=>!etat.etapes[j]);return k<0?ETAPES_RAT.length-1:k;}
-/* Volet « Toutes les animations » (pas-a-pas/demo-lecteur.js) : retrouver n'importe quel tuto sans changer d'étape. */
-(function(){const liste=$('tutos-liste'),vue=$('tutos-vue');if(!liste||typeof Demo==='undefined')return;
-  DemoLecteur.volet({details:$('tutos'),liste,vue,titre:true,cree:Demo.cree,
-    entrees:ETAPES_RAT.map((e,i)=>['etape'+e.id,(i+1)+'. '+e.titre]).concat([['retrouver','Je retrouve mon document (reprise)'],['cote','Le cours et mon document côte à côte'],['fermer','À la sonnerie : je ferme sans remettre'],['deconnecter','À la sonnerie : je me déconnecte de Windows']])});})();
-/* Cloche : avertissement avant de sonner et 3 sonneries par heure, code commun pas-a-pas/cloche.js.
-   Le compte vient du serveur (etat.cloches) ; se débloquer ne demande rien et ne compte pas. */
-$('aide-btn').addEventListener('click',()=>{
-  const ancre=$('aide'),commun=typeof Cloche!=='undefined';
-  if(etat.aide){if(commun)Cloche.ferme(ancre);sauve({type:'aide-fin',etape:etat.aide.bloc});return;}
-  if(!commun){sauve({type:'aide',etape:etat.position});return;}
-  if(Cloche.ouvert(ancre)){Cloche.ferme(ancre);return;}
-  Cloche.verifie({ancre,etape:'de l’étape '+numero(etat.position),info:etat,coince:document.querySelector('details.coince'),
-    sonne:()=>sauve({type:'aide',etape:etat.position})});
-});
-$('compact').addEventListener('click',()=>{const actif=document.body.classList.toggle('compact');$('compact').setAttribute('aria-pressed',String(actif));});
-const boutons=[['','↶ Annuler (dès que je me trompe)','Ctrl + Z','Barre d’outils, tout à gauche : la flèche ↶'],['centrer','Centrer','Ctrl + Shift + E','Bouton « Aligner » ▾ de la barre d’outils'],['droite','Aligner à droite','Ctrl + Shift + R','Même bouton « Aligner » ▾'],['gras','Gras','Ctrl + B','Barre d’outils, après la taille'],['italique','Italique','Ctrl + I','Juste à côté du gras'],['souligne','Souligner','Ctrl + U','Juste à côté de l’italique'],['','MAJUSCULES','—','Format ▸ Texte ▸ Minuscules/majuscules ▸ MAJUSCULES'],['police','Changer la police','—','Le menu qui affiche le nom de la police'],['taille','Changer la taille','—','La case du nombre, avec – et +'],['puces','Liste à puces','Ctrl + Shift + 8','Barre d’outils, à droite'],['numeros','Liste numérotée','Ctrl + Shift + 7','Juste à côté des puces'],['orthographe','Vérifier l’orthographe','Ctrl + Alt + X','Barre d’outils, à gauche, à côté de l’imprimante']];
-boutons.forEach(([ico,nom,racc,ou])=>{const tr=txt('tr'),td=txt('td');if(ico){const img=txt('img');img.src=ICONES+ico+'.png';img.alt='';td.append(img);}td.append(nom);tr.append(td,txt('td',null,racc),txt('td',null,ou));$('mes-boutons').append(tr);});
-GRILLE_RAT.forEach((c,i)=>{
-  const tr=txt('tr'),th=txt('th'),td=txt('td'),sel=txt('select');th.scope='row';th.append(txt('b',null,c.n+(c.inc?' ★':'')),txt('p',null,c.regarde));sel.dataset.critere=i+1;sel.setAttribute('aria-label','Moi — critère '+(i+1));['','A','B','C','D'].forEach(v=>{const o=txt('option',null,v||'À choisir');o.value=v;sel.append(o);});sel.addEventListener('change',()=>sauve({type:'moi',etape:etat.position,critere:i+1,lettre:sel.value}));td.append(sel);tr.append(th,td,...['A','B','C','D'].map(k=>txt('td',null,c[k])));GRILLE.querySelector('#criteres').append(tr);
-});
-async function demarre(){
-  try{
-    if(SUIVI){etat=await appel(null);const derniere=Number(etat.derniere)||0,deja=Object.values(etat.cases).some(Boolean);
-      if(place(etat.position)<0)etat.position=ETAPES_RAT[aReprendre()].id; // ancienne étape 4 ou 5
-      etat=await appel({type:'position',etape:etat.position});repriseVue=deja&&Date.now()-derniere>5*60000;$('qui').textContent='Connecté : '+etat.email+' · '+etat.classe;$('sauvegarde').textContent='Progression retrouvée. Mes cases et ma place sont conservées entre les périodes.';}
-    else{const m=/#bloc=(\d+)/.exec(location.hash);if(m&&place(m[1])>=0)etat.position=Number(m[1]);calcule();repriseVue=/reprise/.test(location.hash);$('qui').textContent='Aperçu libre — ouvrir Mes cours avec le compte scolaire pour retrouver sa progression.';$('sauvegarde').textContent='Aperçu : rien n’est enregistré.';}
-    pret=true;humeurDuJour();dessine();
-  }catch(e){$('qui').textContent='Suivi indisponible.';$('sauvegarde').textContent='Progression non chargée : '+e.message;const b=txt('button','btn vide','Réessayer le chargement');b.addEventListener('click',()=>{b.remove();demarre();});$('travail').replaceChildren(b);commandes();b.disabled=false;}
-}
-demarre();
 
-/* La cloche peut être remise à zéro par le professeur : tant qu'elle sonne, je relis mon état. */
-async function relitCloche(){
-  if(!SUIVI||!pret||occupe||document.hidden||!etat.aide)return;
-  try{const r=await appel(null);if(!occupe&&!r.aide){etat=r;dessine();$('sauvegarde').textContent='Le professeur a réinitialisé ma cloche.';}}catch(e){}
-}
-setInterval(relitCloche,20000);
-document.addEventListener('visibilitychange',relitCloche);
+const BLOCS = [
+ {
+  "partie": "A — Le texte",
+  "titre": "Je crée et je nomme",
+  "min": 5,
+  "bulle": "Salut ! On va mettre une fable en forme, case par case.",
+  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>Je repère le nom du document en haut à gauche dans Docs.</p></aside><p class=\"agir\">✋ À moi dans Docs ! Je fais, puis je coche.</p><p class=\"note annuler\">Je me suis trompé ? Tout de suite : ↶ Annuler (Ctrl + Z), la flèche tout à gauche de la barre d’outils.</p>",
+  "gestes": [
+   "Menu Google (la gaufre) ▸ Docs ▸ <b>Créer un document</b> ▸ Vierge.",
+   "Clique sur « <b>Document sans titre</b> » et tape : <span class=\"a-ecrire\" aria-label=\"À écrire exactement : AAAAMMJJ Le rat de ville – Prénom Nom\">AAAAMMJJ Le rat de ville – Prénom Nom</span> AAAAMMJJ : année, mois, jour de la date d’aujourd’hui.",
+   "Place ton document à côté du cours : clique sur l’onglet du cours, puis clic droit sur l’onglet de ton document ▸ Ajouter l’onglet à une <b>nouvelle vue fractionnée</b>. Le cours et ton document s’affichent côte à côte dans la même fenêtre."
+  ],
+  "vois": "Le nom contient la date d’aujourd’hui, Le rat de ville, mon prénom et mon nom.<br><span class=\"note\">Un nom précis me permettra de retrouver mon travail à la prochaine période.</span>",
+  "demos": {
+   "1": [
+    "etape1",
+    [
+     0,
+     1,
+     2
+    ]
+   ],
+   "2": [
+    "etape1",
+    [
+     3,
+     4
+    ]
+   ],
+   "3": [
+    "cote",
+    [
+     0,
+     1,
+     2,
+     3
+    ]
+   ]
+  }
+ },
+ {
+  "partie": "A — Le texte",
+  "titre": "Je recopie la fable",
+  "min": 30,
+  "bulle": "Bon début ! Regarde bien les animations.",
+  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>J’ouvre l’image de la fiche. Je repère le titre, les vers et l’auteur avant de recopier.</p></aside><p class=\"note\">Un vers = une ligne : touche Enter au bout de chaque vers. Je ne laisse PAS de ligne vide : les 28 vers se suivent. Je séparerai les strophes à l’étape 3.</p><p class=\"agir\">✋ À moi dans Docs ! Je fais, puis je coche.</p><p class=\"note annuler\">Je me suis trompé ? Tout de suite : ↶ Annuler (Ctrl + Z), la flèche tout à gauche de la barre d’outils.</p>",
+  "gestes": [
+   {
+    "geste": "Tape le <b>titre</b>.",
+    "sous": "<img class=\"extrait\" src=\"" + BASE + "fable/titre.png\" alt=\"Extrait de la fable à recopier\">"
+   },
+   {
+    "geste": "Recopie les <b>vers 1 à 4</b>.",
+    "sous": "<img class=\"extrait\" src=\"" + BASE + "fable/strophe-1.png\" alt=\"Extrait de la fable à recopier\"><details><summary>Comment taper ç et à ?</summary><p>Sur le clavier belge : ç est sur la touche 9, à sur la touche 0. Je tape la touche seule, sans Shift.</p><blockquote>façon · à des reliefs</blockquote><p class=\"note\">Avec Shift, ces touches donnent 9 et 0. Je me suis trompé ? ↶ Annuler (Ctrl + Z).</p></details>"
+   },
+   {
+    "geste": "Recopie les <b>vers 5 à 8</b>.",
+    "sous": "<img class=\"extrait\" src=\"" + BASE + "fable/strophe-2.png\" alt=\"Extrait de la fable à recopier\">"
+   },
+   {
+    "geste": "Recopie les <b>vers 9 à 12</b>.",
+    "sous": "<img class=\"extrait\" src=\"" + BASE + "fable/strophe-3.png\" alt=\"Extrait de la fable à recopier\"><details><summary>Comment taper ê (accent circonflexe) ?</summary><p>Je tape d’abord la touche ^, à droite du P : rien ne s’affiche, c’est normal. Puis je tape e : ê apparaît.</p><blockquote>honnête · fête</blockquote><p class=\"note\">^ puis la voyelle : ^ + o donne ô, ^ + a donne â.</p></details>"
+   },
+   {
+    "geste": "Recopie les <b>vers 13 à 16</b>.",
+    "sous": "<img class=\"extrait\" src=\"" + BASE + "fable/strophe-4.png\" alt=\"Extrait de la fable à recopier\">"
+   },
+   {
+    "geste": "Recopie les <b>vers 17 à 20</b>.",
+    "sous": "<img class=\"extrait\" src=\"" + BASE + "fable/strophe-5.png\" alt=\"Extrait de la fable à recopier\"><details><summary>Comment taper ô et les guillemets « » ?</summary><p>ô : je tape la touche ^, à droite du P (rien ne s’affiche, c’est normal), puis o. Guillemets : j’utilise les guillemets américains \" : la touche 3, sans Shift, avant et après les mots.</p><blockquote>aussitôt · rôt · \"achevons tout notre rôt.\"</blockquote><p class=\"note\">Le ^ apparaît seul ? Je l’efface et je recommence : ^, puis o, sans espace. Les guillemets « » de l’image ne sont pas sur le clavier : \" les remplace.</p></details>"
+   },
+   {
+    "geste": "Recopie les <b>vers 21 à 24</b>.",
+    "sous": "<img class=\"extrait\" src=\"" + BASE + "fable/strophe-6.png\" alt=\"Extrait de la fable à recopier\">"
+   },
+   {
+    "geste": "Recopie les <b>vers 25 à 28</b>.",
+    "sous": "<img class=\"extrait\" src=\"" + BASE + "fable/strophe-7.png\" alt=\"Extrait de la fable à recopier\">"
+   },
+   {
+    "geste": "Tape l’<b>auteur</b> : <span class=\"a-ecrire\" aria-label=\"À écrire exactement : Jean de La Fontaine\">Jean de La Fontaine</span>",
+    "sous": "<img class=\"extrait\" src=\"" + BASE + "fable/auteur.png\" alt=\"Extrait de la fable à recopier\">"
+   }
+  ],
+  "vois": "Je compare ma dernière ligne à l’image avant de passer au groupe suivant. Je dois retrouver 28 vers.<br><span class=\"note\">Les petits groupes de quatre vers m’aident à garder ma place.</span>",
+  "extra": "<button class=\"btn vide\" type=\"button\" onclick=\"const t=document.getElementById('texte');t.open=true;t.scrollIntoView({behavior:'smooth'})\">Voir le texte à recopier</button>",
+  "demos": {
+   "1": [
+    "etape2",
+    [
+     0
+    ]
+   ],
+   "2": [
+    "etape2",
+    [
+     1,
+     2,
+     3
+    ]
+   ]
+  }
+ },
+ {
+  "partie": "A — Le texte",
+  "titre": "Je structure",
+  "min": 10,
+  "bulle": "Tu es lancé(e) !",
+  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>Une strophe regroupe quatre vers. Une ligne vide sépare deux strophes.</p></aside><p class=\"agir\">✋ À moi dans Docs ! Je fais, puis je coche.</p><p class=\"note annuler\">Je me suis trompé ? Tout de suite : ↶ Annuler (Ctrl + Z), la flèche tout à gauche de la barre d’outils.</p>",
+  "gestes": [
+   {
+    "geste": "Mets une <b>majuscule</b> à la première lettre de chaque vers.",
+    "sous": "<details><summary>Comment mettre à en majuscule (À) ?</summary><p>Je double-clique sur le à pour le sélectionner, seul. Puis Format ▸ Texte ▸ Minuscules/majuscules ▸ <b>MAJUSCULES</b>.</p><blockquote>à la porte de la salle → À la porte de la salle</blockquote><p class=\"note\">Deux vers commencent par à : le vers 4 et le vers 13. Pour les autres lettres, j’efface la minuscule et je tape la majuscule avec Shift.</p><img class=\"capture\" src=\"" + BASE + "capture-majuscules.png\" alt=\"Menu Format ▸ Texte ▸ Minuscules/majuscules ▸ MAJUSCULES dans Docs\"></details>"
+   },
+   "Clique <b>à la fin du vers 4</b> et appuie sur Enter : une ligne vide apparaît. Fais pareil après les vers 8, 12, 16, 20 et 24 : tu obtiens 7 strophes."
+  ],
+  "vois": "Je compte sept groupes de quatre vers et je regarde la première lettre de chaque vers.<br><span class=\"note\">Les strophes sont maintenant plus faciles à repérer.</span>",
+  "demos": {
+   "1": [
+    "etape3",
+    [
+     0,
+     1
+    ]
+   ],
+   "2": [
+    "etape3",
+    [
+     2
+    ]
+   ]
+  }
+ },
+ {
+  "partie": "B — La mise en forme",
+  "titre": "Titre, texte, auteur",
+  "min": 10,
+  "bulle": "Tu es lancé(e) !",
+  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>Je compare les trois zones du modèle : le titre, les strophes et l’auteur.</p><div class=\"apercu-document\" aria-label=\"Modèle de présentation des trois zones\"><p class=\"exemple-titre\">TITRE DE LA FABLE</p><p class=\"exemple-strophe\">Les strophes sont centrées.</p><p class=\"exemple-auteur\">Jean de La Fontaine</p></div></aside><p class=\"agir\">✋ À moi dans Docs ! Je fais, puis je coche.</p><p class=\"note annuler\">Je me suis trompé ? Tout de suite : ↶ Annuler (Ctrl + Z), la flèche tout à gauche de la barre d’outils.</p>",
+  "gestes": [
+   "<img class=\"ico\" src=\"" + ICONES + "centrer.png\" alt=\"\">Sélectionne le <b>titre</b>. Clique sur <b>Centrer</b> (Ctrl + Shift + E).",
+   "<img class=\"ico\" src=\"" + ICONES + "gras.png\" alt=\"\">Le titre toujours sélectionné, clique sur <b>Gras</b> (Ctrl + B).",
+   "Le titre toujours sélectionné : Format ▸ Texte ▸ Minuscules/majuscules ▸ <b>MAJUSCULES</b>.",
+   "<img class=\"ico\" src=\"" + ICONES + "centrer.png\" alt=\"\">Sélectionne les <b>7 strophes</b>. Clique sur <b>Centrer</b> (Ctrl + Shift + E).",
+   "<img class=\"ico\" src=\"" + ICONES + "droite.png\" alt=\"\">Sélectionne l’<b>auteur</b>. Clique sur <b>Aligner à droite</b> (Ctrl + Shift + R).",
+   "<img class=\"ico\" src=\"" + ICONES + "italique.png\" alt=\"\">L’auteur toujours sélectionné, clique sur <b>Italique</b> (Ctrl + I).",
+   "<img class=\"ico\" src=\"" + ICONES + "souligne.png\" alt=\"\">L’auteur toujours sélectionné, clique sur <b>Souligner</b> (Ctrl + U)."
+  ],
+  "vois": "Le titre est centré, gras et en majuscules ; le texte est centré ; l’auteur est à droite, italique et souligné. J’utilise les boutons d’alignement, sans taper d’espaces.<br><span class=\"note\">Sélectionner la bonne zone me permet de modifier seulement ce que je veux.</span>",
+  "demos": {
+   "1": [
+    "etape6",
+    [
+     0,
+     1
+    ]
+   ],
+   "2": [
+    "etape6",
+    [
+     2
+    ]
+   ],
+   "3": [
+    "etape6",
+    [
+     3
+    ]
+   ],
+   "4": [
+    "etape6",
+    [
+     4,
+     5
+    ]
+   ],
+   "5": [
+    "etape6",
+    [
+     6
+    ]
+   ],
+   "6": [
+    "etape6",
+    [
+     7
+    ]
+   ],
+   "7": [
+    "etape6",
+    [
+     8
+    ]
+   ]
+  }
+ },
+ {
+  "partie": "B — La mise en forme",
+  "titre": "Une police par strophe",
+  "min": 12,
+  "bulle": "Déjà la moitié ! Le rat est fier de toi.",
+  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>Je repère le numéro de la strophe avant de choisir sa police et sa taille.</p><table class=\"repere-polices\"><caption>Police et taille attendues</caption><tr><th>Strophes</th><th>Police</th><th>Taille</th></tr><tr><td>1 et 2</td><td>EB Garamond</td><td>14</td></tr><tr><td>3 et 4</td><td>Arial</td><td>12</td></tr><tr><td>5</td><td>Calibri</td><td>10</td></tr><tr><td>6 et 7</td><td>Arial Black</td><td>8</td></tr></table></aside><p class=\"note\">Pour chaque strophe : je la sélectionne seule, je choisis la police dans le menu des polices, puis je tape la taille dans la case du nombre.</p><p class=\"agir\">✋ À moi dans Docs ! Je fais, puis je coche.</p><p class=\"note annuler\">Je me suis trompé ? Tout de suite : ↶ Annuler (Ctrl + Z), la flèche tout à gauche de la barre d’outils.</p>",
+  "gestes": [
+   "<img class=\"ico\" src=\"" + ICONES + "police.png\" alt=\"\"><img class=\"ico\" src=\"" + ICONES + "taille.png\" alt=\"\">Sélectionne seulement la <b>strophe 1</b> : <b>EB Garamond, taille 14</b>.",
+   "<img class=\"ico\" src=\"" + ICONES + "police.png\" alt=\"\"><img class=\"ico\" src=\"" + ICONES + "taille.png\" alt=\"\">Sélectionne seulement la <b>strophe 2</b> : <b>EB Garamond, taille 14</b>.",
+   "<img class=\"ico\" src=\"" + ICONES + "police.png\" alt=\"\"><img class=\"ico\" src=\"" + ICONES + "taille.png\" alt=\"\">Sélectionne seulement la <b>strophe 3</b> : <b>Arial, taille 12</b>.",
+   "<img class=\"ico\" src=\"" + ICONES + "police.png\" alt=\"\"><img class=\"ico\" src=\"" + ICONES + "taille.png\" alt=\"\">Sélectionne seulement la <b>strophe 4</b> : <b>Arial, taille 12</b>.",
+   "<img class=\"ico\" src=\"" + ICONES + "police.png\" alt=\"\"><img class=\"ico\" src=\"" + ICONES + "taille.png\" alt=\"\">Sélectionne seulement la <b>strophe 5</b> : <b>Calibri, taille 10</b>.",
+   "<img class=\"ico\" src=\"" + ICONES + "police.png\" alt=\"\"><img class=\"ico\" src=\"" + ICONES + "taille.png\" alt=\"\">Sélectionne seulement la <b>strophe 6</b> : <b>Arial Black, taille 8</b>.",
+   "<img class=\"ico\" src=\"" + ICONES + "police.png\" alt=\"\"><img class=\"ico\" src=\"" + ICONES + "taille.png\" alt=\"\">Sélectionne seulement la <b>strophe 7</b> : <b>Arial Black, taille 8</b>."
+  ],
+  "vois": "Je clique dans chaque strophe et je lis la police et la taille dans la barre d’outils. Si les autres strophes ont changé aussi : Ctrl + Z, puis je sélectionne uniquement la strophe voulue.<br><span class=\"note\">Changer une strophe sans toucher aux autres montre que je maîtrise la sélection.</span>",
+  "demos": {
+   "1": [
+    "etape7",
+    [
+     0,
+     1,
+     2,
+     3
+    ]
+   ]
+  }
+ },
+ {
+  "partie": "B — La mise en forme",
+  "titre": "Mon bloc-notes : la liste à puces",
+  "min": 5,
+  "bulle": "Déjà la moitié ! Le rat est fier de toi.",
+  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>Des puces quand l’ordre ne compte pas : les choses du festin.</p></aside><p class=\"agir\">✋ À moi dans Docs ! Je fais, puis je coche.</p><p class=\"note annuler\">Je me suis trompé ? Tout de suite : ↶ Annuler (Ctrl + Z), la flèche tout à gauche de la barre d’outils.</p>",
+  "gestes": [
+   "Sous la fable, laisse <b>deux lignes vides</b> et écris : <span class=\"a-ecrire\" aria-label=\"À écrire exactement : Mon bloc-notes\">Mon bloc-notes</span>",
+   {
+    "geste": "<img class=\"ico\" src=\"" + ICONES + "puces.png\" alt=\"\">Trois choses que l’on trouve au festin du rat de ville, en <b>liste à puces</b> (Ctrl + Shift + 8).",
+    "sous": "<details><summary>Qu’écrire dans la liste à puces ?</summary><p>Je choisis trois choses présentes au festin dans la fable. Dans mon document Docs, j’écris une chose par ligne, je sélectionne ces trois lignes, puis je clique sur le bouton Liste à puces (Ctrl + Shift + 8).</p><blockquote>Exemple d’un élément possible : le tapis.</blockquote><p class=\"note\">Je trouve les autres éléments dans la fable. Trois éléments sont attendus au total.</p></details>"
+   }
+  ],
+  "vois": "Dans Docs : « Mon bloc-notes », puis trois éléments du festin, chacun sur sa ligne, avec sa puce.<br><span class=\"note\">Une vraie liste à puces se fait avec le bouton, jamais avec un tiret tapé.</span>",
+  "demos": {
+   "2": [
+    "etape8",
+    [
+     0
+    ]
+   ]
+  }
+ },
+ {
+  "partie": "B — La mise en forme",
+  "titre": "Mes gestes : la liste numérotée",
+  "min": 10,
+  "bulle": "Presque fini, courage !",
+  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>Des numéros quand l’ordre compte : je raconte mes gestes dans l’ordre où je les ai faits.</p></aside><p class=\"note\">Je raconte six gestes de mise en forme, un par un. Un geste complet dit deux choses : ce que j’ai sélectionné, puis le bouton ou le menu utilisé.</p><p class=\"agir\">✋ À moi dans Docs ! Je fais, puis je coche.</p><p class=\"note annuler\">Je me suis trompé ? Tout de suite : ↶ Annuler (Ctrl + Z), la flèche tout à gauche de la barre d’outils.</p>",
+  "gestes": [
+   {
+    "geste": "Sous tes puces, sur une <b>nouvelle ligne</b>, écris : <span class=\"a-ecrire\" aria-label=\"À écrire exactement : Mes gestes\">Mes gestes</span>",
+    "sous": "<details><summary>Que signifie « Mes gestes » ?</summary><p>Je raconte comment j’ai mis mon document en forme. Pour chaque geste, je précise ce que j’ai sélectionné et le bouton, le menu ou le raccourci utilisé. Avant le premier geste, je clique sur Liste numérotée (Ctrl + Shift + 7) : j’écris chaque geste à côté de son numéro, et Enter fait apparaître le suivant.</p><blockquote>Exemple d’un geste : « J’ai sélectionné le titre, puis j’ai cliqué sur Centrer. »</blockquote><p class=\"note\">« J’ai écrit le texte » ou « J’ai mis l’auteur » ne sont pas des gestes de mise en forme : il manque ce que j’ai sélectionné et le bouton.</p></details>"
+   },
+   "<img class=\"ico\" src=\"" + ICONES + "numeros.png\" alt=\"\">Enter, puis clique sur <b>Liste numérotée</b> (Ctrl + Shift + 7) : le numéro 1 apparaît.",
+   {
+    "geste": "<b>Geste 1</b> : complète la phrase, puis écris-la dans Docs, à côté du numéro 1. Enter.",
+    "trous": {
+     "bravo": "Juste ! J’écris cette phrase dans Docs, à côté de son numéro.",
+     "variantes": [
+      {
+       "texte": "J’ai ___ le titre, puis j’ai cliqué sur ___ .",
+       "mots": [
+        "sélectionné",
+        "Centrer"
+       ],
+       "pieges": [
+        "recopié",
+        "la barre d’espace"
+       ]
+      }
+     ]
+    }
+   },
+   {
+    "geste": "<b>Geste 2</b> : complète la phrase, puis écris-la dans Docs, à côté du numéro 2. Enter.",
+    "trous": {
+     "bravo": "Juste ! J’écris cette phrase dans Docs, à côté de son numéro.",
+     "variantes": [
+      {
+       "texte": "J’ai gardé le titre ___ , puis j’ai cliqué sur ___ .",
+       "mots": [
+        "sélectionné",
+        "Gras"
+       ],
+       "pieges": [
+        "centré",
+        "Italique"
+       ]
+      }
+     ]
+    }
+   },
+   {
+    "geste": "<b>Geste 3</b> : complète la phrase, puis écris-la dans Docs, à côté du numéro 3. Enter.",
+    "trous": {
+     "bravo": "Juste ! J’écris cette phrase dans Docs, à côté de son numéro.",
+     "variantes": [
+      {
+       "texte": "Pour mettre le titre en majuscules, j’ai ouvert le menu ___ ▸ Texte ▸ Minuscules/majuscules ▸ ___ .",
+       "mots": [
+        "Format",
+        "MAJUSCULES"
+       ],
+       "pieges": [
+        "Insertion",
+        "Caps Lock"
+       ]
+      }
+     ]
+    }
+   },
+   {
+    "geste": "<b>Geste 4</b> : complète la phrase, puis écris-la dans Docs, à côté du numéro 4. Enter.",
+    "trous": {
+     "bravo": "Juste ! J’écris cette phrase dans Docs, à côté de son numéro.",
+     "variantes": [
+      {
+       "texte": "J’ai sélectionné les 7 ___ , puis j’ai cliqué sur ___ .",
+       "mots": [
+        "strophes",
+        "Centrer"
+       ],
+       "pieges": [
+        "titres",
+        "Aligner à droite"
+       ]
+      }
+     ]
+    }
+   },
+   {
+    "geste": "<b>Geste 5</b> : complète la phrase, puis écris-la dans Docs, à côté du numéro 5. Enter.",
+    "trous": {
+     "bravo": "Juste ! J’écris cette phrase dans Docs, à côté de son numéro.",
+     "variantes": [
+      {
+       "texte": "J’ai sélectionné ___ , puis j’ai cliqué sur ___ .",
+       "mots": [
+        "l’auteur",
+        "Aligner à droite"
+       ],
+       "pieges": [
+        "le titre",
+        "la barre d’espace"
+       ]
+      }
+     ]
+    }
+   },
+   {
+    "geste": "<b>Geste 6</b> : complète la phrase, puis écris-la dans Docs, à côté du numéro 6.",
+    "trous": {
+     "bravo": "Juste ! J’écris cette phrase dans Docs, à côté de son numéro.",
+     "variantes": [
+      {
+       "texte": "J’ai sélectionné la strophe 1, puis j’ai choisi la ___ EB Garamond et la ___ 14.",
+       "mots": [
+        "police",
+        "taille"
+       ],
+       "pieges": [
+        "couleur",
+        "marge"
+       ]
+      }
+     ]
+    }
+   }
+  ],
+  "vois": "Dans Docs : six lignes numérotées de 1 à 6. Chacune dit ce que j’ai sélectionné et le bouton ou le menu utilisé.<br><span class=\"note\">Nommer le bouton utilisé permet à quelqu’un d’autre de comprendre ma méthode.</span>",
+  "demos": {
+   "2": [
+    "etape10",
+    [
+     0,
+     1,
+     2
+    ]
+   ]
+  }
+ },
+ {
+  "partie": "B — La mise en forme",
+  "titre": "Ma phrase : j’explique",
+  "min": 5,
+  "bulle": "Presque fini, courage !",
+  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>Docs modifie seulement le texte sélectionné.</p></aside><p class=\"agir\">✋ À moi dans Docs ! Je fais, puis je coche.</p><p class=\"note annuler\">Je me suis trompé ? Tout de suite : ↶ Annuler (Ctrl + Z), la flèche tout à gauche de la barre d’outils.</p>",
+  "gestes": [
+   {
+    "geste": "Complète l’<b>explication</b> ci-dessous.",
+    "trous": {
+     "titre": "Pourquoi sélectionner d’abord ?",
+     "intro": "Je complète l’explication avec les mots de la banque.",
+     "bravo": "Juste ! Maintenant, la case suivante : ma phrase à moi, dans Docs.",
+     "variantes": [
+      {
+       "texte": "Docs modifie seulement le texte ___ . Donc je sélectionne d’abord ___ , puis je choisis la ___ .",
+       "mots": [
+        "sélectionné",
+        "la strophe",
+        "police"
+       ],
+       "pieges": [
+        "recopié",
+        "tout le document",
+        "marge"
+       ]
+      },
+      {
+       "texte": "Si je sélectionne ___ avec Ctrl + A, toutes les strophes changent. Pour en changer une seule, je sélectionne ___ cette strophe, puis je choisis la police et la ___ .",
+       "mots": [
+        "tout le texte",
+        "seulement",
+        "taille"
+       ],
+       "pieges": [
+        "le titre",
+        "aussi",
+        "couleur"
+       ]
+      },
+      {
+       "texte": "Avant d’ouvrir le menu des polices, je ___ la strophe. Les autres strophes ne changent pas, parce qu’elles ne sont pas ___ . Si elles ont changé quand même : ___ .",
+       "mots": [
+        "sélectionne",
+        "sélectionnées",
+        "Ctrl + Z"
+       ],
+       "pieges": [
+        "recopie",
+        "centrées",
+        "Ctrl + S"
+       ]
+      }
+     ]
+    }
+   },
+   {
+    "geste": "Dans Docs, sous ta liste, écris <b>une phrase avec tes mots</b> qui répond à : comment changer la police d’une seule strophe sans toucher aux autres ?",
+    "sous": "<details><summary>Qu’expliquer dans ma phrase ?</summary><p>Je réponds avec mes mots à la question : « Comment je change la police d’une seule strophe sans toucher aux autres ? » J’explique ce que je sélectionne et ce que je modifie. J’utilise les mots sélectionner, police et taille.</p><blockquote>Début possible à compléter : « Pour changer une seule strophe, je… »</blockquote><p class=\"note\">J’écris ma phrase dans le document Docs, sous la liste de mes gestes. Je ne recopie pas le texte à trous : je le dis à ma façon.</p></details>"
+   }
+  ],
+  "vois": "Dans Docs : une phrase sous ma liste, écrite avec mes mots, avec sélectionner, police et taille.<br><span class=\"note\">Expliquer pourquoi, c’est montrer que j’ai compris, pas seulement que j’ai fini.</span>",
+  "demos": {
+   "2": [
+    "etape11",
+    [
+     0
+    ]
+   ]
+  }
+ },
+ {
+  "partie": "B — La mise en forme",
+  "titre": "Je m’évalue et je remets",
+  "min": 10,
+  "bulle": "Dernière étape : vérifie, puis remets dans Classroom.",
+  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>J’ouvre la grille : les critères avec une étoile sont incontournables.</p></aside><p class=\"note\">Je vérifie une chose par case, dans mon document. Si une chose manque, je la corrige avant de cocher.</p><p class=\"agir\">✋ À moi dans Docs ! Je fais, puis je coche.</p><p class=\"note annuler\">Je me suis trompé ? Tout de suite : ↶ Annuler (Ctrl + Z), la flèche tout à gauche de la barre d’outils.</p>",
+  "gestes": [
+   "<img class=\"ico\" src=\"" + ICONES + "orthographe.png\" alt=\"\">Clique sur <b>Vérifier l’orthographe</b> (Ctrl + Alt + X) et corrige.",
+   "Vérifie le <b>nom</b> : <span class=\"a-ecrire\" aria-label=\"À écrire exactement : AAAAMMJJ Le rat de ville – Prénom Nom\">AAAAMMJJ Le rat de ville – Prénom Nom</span>",
+   "Vérifie que la fable est <b>complète</b> : titre, 28 vers, auteur.",
+   "Vérifie qu’il y a une <b>majuscule</b> au début de chaque vers.",
+   "Vérifie qu’il y a <b>7 strophes</b>, séparées par une ligne vide.",
+   "Vérifie le <b>titre</b> : centré, gras, en MAJUSCULES.",
+   "Vérifie que les 7 strophes sont <b>centrées</b>.",
+   "Vérifie l’<b>auteur</b> : à droite, en italique, souligné.",
+   "Vérifie que chaque strophe a sa <b>police</b> et sa <b>taille</b>.",
+   "Vérifie ton <b>bloc-notes</b> : une vraie liste à puces, une vraie liste numérotée de six gestes, ta phrase.",
+   "Ouvre ta <b>grille</b> (bouton 📋, après l’étape 9) et remplis la colonne « Moi » : A, B, C ou D pour chaque critère.",
+   "<b>Montre ton document à ton voisin</b>. Il le compare aux cases 2 à 10 et te montre un écart, sans toucher la souris. Corrige.",
+   "Classroom ▸ le devoir ▸ Vos devoirs ▸ Ajouter ou créer ▸ <b>Google Drive</b> ▸ ton document ▸ bouton bleu ▸ <b>Rendre le devoir</b> ▸ Rendre le devoir."
+  ],
+  "vois": "Je compare mon fichier aux critères avant de choisir mes lettres Moi. Après la remise, je vérifie dans Classroom que le devoir est bien indiqué comme remis.<br><span class=\"note\">Repérer et corriger un écart fait partie du travail : je peux encore améliorer mon document avant de le remettre.</span>",
+  "demos": {
+   "1": [
+    "etape9",
+    [
+     0
+    ]
+   ],
+   "13": [
+    "etape9",
+    [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ]
+   ]
+  }
+ }
+];
+
+const GRILLE_CRITERES = [
+ {
+  "n": "1. Choix de l'outil et des fonctions",
+  "inc": false,
+  "regarde": "Chaque mise en forme est faite avec la bonne fonction : alignements avec le bouton (aucun espace tapé), gras, italique, souligné, vraie liste à puces, vraie liste numérotée, une seule ligne vide entre les strophes.",
+  "A": "Tout est fait avec la bonne fonction, sans exception.",
+  "B": "Une seule mise en forme faite « à la main ».",
+  "C": "Deux ou trois mises en forme faites à la main.",
+  "D": "La plupart des mises en forme faites à la main, ou absentes."
+ },
+ {
+  "n": "2. Qualité de la production",
+  "inc": true,
+  "regarde": "Document nommé « AAAAMMJJ Le rat de ville – Prénom Nom ». Fable complète et exacte, une majuscule à chaque vers, 7 strophes séparées. Titre centré, gras, en majuscules ; texte centré ; auteur à droite, italique, souligné. La bonne police et la bonne taille pour chaque strophe.",
+  "A": "Tout est conforme et la copie est sans faute.",
+  "B": "Conforme, avec au plus deux écarts légers (1 à 3 fautes, une taille, une strophe).",
+  "C": "Plusieurs éléments manquent ou sont faux (une police sur plusieurs strophes, l'auteur mal placé, des vers oubliés…).",
+  "D": "Production inachevée : fable incomplète, mise en forme absente, ou rien de remis."
+ },
+ {
+  "n": "3. Démarche de création",
+  "inc": true,
+  "regarde": "La liste numérotée « Mes gestes » : les gestes de mise en forme, dans l'ordre où je les ai faits, chacun avec le bouton, le menu ou le raccourci utilisé. Le document correspond à ce que j'annonce.",
+  "A": "Au moins six gestes, dans l'ordre, chacun avec son bouton ou menu, tous visibles dans le document.",
+  "B": "Cinq gestes dans un ordre cohérent ; le bouton n'est pas toujours nommé.",
+  "C": "Deux à quatre gestes, ou une liste qui ne correspond pas au document.",
+  "D": "Pas de liste des gestes, ou sans rapport avec la mise en forme."
+ },
+ {
+  "n": "4. Communication et justification",
+  "inc": false,
+  "regarde": "La phrase qui répond à : « Comment je change la police d'une seule strophe sans toucher aux autres ? », avec les mots du cours (sélectionner, police, taille).",
+  "A": "Démarche juste et précise : je sélectionne seulement la strophe, puis je choisis la police et la taille.",
+  "B": "Démarche juste, dite simplement.",
+  "C": "Réponse vague : « je change la police », « je clique dessus ».",
+  "D": "Pas de phrase, ou une démarche fausse."
+ }
+];
+
+/* La grille d'auto-évaluation « Moi », écran final du moteur. */
+const GRILLE = {
+  intro: '<p>Grille WBE « Création de contenus », la même que pour le Bilan. Attendu : « produire, éditer et enrichir un contenu numérique en choisissant un outil adapté à son intention, en mettant en forme un document […] ». ★ = critère incontournable. « Moi » = ma lettre avant la correction.</p>'
+    + '<p>Coté en formatif : mes quatre lettres et ma couleur me disent quoi travailler avant le Bilan. Le suivi ne calcule aucune cote.</p>',
+  niveaux: { A: 'dépasse', B: 'atteint', C: 'proche', D: 'loin' },
+  criteres: GRILLE_CRITERES,
+  legende: '<ul><li>Bleu — attendu dépassé : A au critère 2 ou 3, et au moins B partout ailleurs.</li><li>Vert — attendu atteint : B aux critères 2 et 3, et au moins C aux critères 1 et 4.</li>'
+    + '<li>Jaune — presque atteint : un des critères ★ reste à C.</li><li>Orange — pas encore atteint : les critères ★ ne sont pas atteints.</li></ul>'
+};
+const FIN = {
+  titre: 'Ma grille d’évaluation',
+  bouton: 'Ma grille d’évaluation →',
+  bulle: 'Dernière ligne droite : je choisis mes lettres.',
+  texte: 'Pour chaque critère, je lis les colonnes A à D. Je choisis ma lettre dans « Moi ».',
+  citation: { texte: 'Rien ne sert de courir ; il faut partir à point.', auteur: 'Jean de La Fontaine', source: '« Le Lièvre et la Tortue », Fables, livre VI, fable 10 (1668)',
+    lien: 'Strophe après strophe, une case après l’autre : c’est la régularité qui a fait mon document.' }
+};
+
+/* « Ça coince ? » : les aides de l'étape affichée. */
+const AIDE_ANNULER = { html: '<b>Je me suis trompé ?</b><br>Tout de suite : <b>↶ Annuler</b> (<kbd>Ctrl</kbd> + <kbd>Z</kbd>), la flèche tout à gauche de la barre d’outils. Je peux appuyer plusieurs fois.' };
+const AIDE_RETROUVER = { html: '<b>Je ne retrouve pas mon document ?</b><br>Menu Google (la gaufre) ▸ <b>Drive</b> ▸ <b>Récents</b>.' };
+const AIDES_FRAPPE = [
+  { html: '<b>Un accent circonflexe : ê, ô ?</b><br>La touche <kbd>^</kbd> à droite du P (rien ne s’affiche), <b>puis</b> la voyelle.' },
+  { html: '<b>Des guillemets ?</b><br>Les <b>guillemets américains</b> " : la touche <kbd>3</kbd>, sans Shift.' },
+  { html: '<b>Un À majuscule ?</b><br>Je sélectionne le à ▸ <b>Format ▸ Texte ▸ Minuscules/majuscules ▸ MAJUSCULES</b>.' }
+];
+const AIDES_FORME = [
+  { html: '<b>Sélectionner une strophe ?</b><br>Je clique <b>juste avant</b> son premier mot, je garde <kbd>Shift</kbd> enfoncée, je clique <b>juste après</b> son dernier mot.' },
+  { html: '<b>Tout le texte a changé de police ?</b><br><kbd>Ctrl</kbd> + <kbd>Z</kbd>, puis je sélectionne <b>seulement</b> la strophe.' },
+  { html: '<b>Gras ou centrage au mauvais endroit ?</b><br><kbd>Ctrl</kbd> + <kbd>Z</kbd>, puis je <b>sélectionne d’abord</b>, je clique ensuite.' },
+  { html: '<b>La police n’est pas dans la liste (EB Garamond, Arial Black…) ?</b><br>Menu des polices ▸ <b>Autres polices</b> ▸ je tape son nom ▸ je la coche ▸ <b>OK</b>.' },
+  { html: '<b>La taille 8 ou 14 n’est pas proposée ?</b><br>Je clique dans <b>la case du nombre</b>, j’efface, je tape la taille, puis <kbd>Enter</kbd>.' },
+  { html: '<b>Ma liste numérotée ne commence pas à 1 ?</b><br>Clic droit sur le premier numéro ▸ <b>Recommencer la numérotation</b>.' }
+];
+
+/* Sous chaque étape (BAS_ETAPE du moteur) : fermer et se déconnecter à la sonnerie, puis les deux gestes pour reprendre. Pas de case. */
+const GESTES_REPRISE = '<ol class="etapes"><li><b>Je retrouve mon document :</b> menu Google (la gaufre) ▸ <b>Drive</b> ▸ <b>Récents</b> ▸ double-clic sur mon document.</li>'
+  + '<li><b>Je mets le cours et mon document côte à côte :</b> je clique sur l’onglet du cours, puis clic droit sur l’onglet de mon document ▸ <b>Ajouter l’onglet à une nouvelle vue fractionnée</b>.</li></ol>';
+const BAS_ETAPE = [
+  { classe: 'sonnerie', titre: '🔔 À la sonnerie, où que j’en sois', gestes: [
+    { texte: '<b>1. Je ferme l’onglet de mon document.</b> Je ne remets PAS : Docs l’enregistre tout seul.', demo: 'fermer' },
+    { texte: '<b>2. Je me déconnecte de Windows :</b> touche Windows ⊞ ▸ clic sur <b>mon nom</b>, en bas à gauche du menu ▸ <b>Se déconnecter</b> (ou <b>Ctrl + Alt + Delete</b> ▸ <b>Se déconnecter</b>). Sinon, l’élève suivant arrive dans <b>ma</b> session : mon Drive, mes documents, en mon nom.',
+      note: 'Le bouton ⏻ du menu propose Verrouiller, Arrêter, Redémarrer : pas « Se déconnecter ». Je n’éteins pas l’ordinateur.', demo: 'deconnecter' } ] },
+  { classe: 'reprise', titre: '▶ Je reprends mon cours', gestes: [
+    { texte: '<b>Je retrouve mon document :</b> menu Google (la gaufre) ▸ <b>Drive</b> ▸ <b>Récents</b> ▸ double-clic sur mon document.', demo: 'retrouver' },
+    { texte: '<b>Je mets le cours et mon document côte à côte :</b> je clique sur l’onglet du cours, puis clic droit sur l’onglet de mon document ▸ <b>Ajouter l’onglet à une nouvelle vue fractionnée</b>.', demo: 'cote' } ] }
+];
+/* En haut de l'étape, quand je rouvre le cours après une pause. */
+const REPRISE = { titre: '▶ Je reprends mon travail', html: GESTES_REPRISE, demos: { 'reprendre 1.1': ['retrouver'], 'reprendre 1.2': ['cote'] } };
+
+BLOCS.forEach((B, i) => {
+  B.coince = [AIDE_ANNULER].concat(i === 1 || i === 2 ? AIDES_FRAPPE : [], i >= 3 ? AIDES_FORME : [], [AIDE_RETROUVER]);
+});

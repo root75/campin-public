@@ -2,8 +2,8 @@
 
 Un cours = **des données**. L'affichage, les preuves, le suivi professeur, la cloche 🔔, la reprise sur
 un autre poste, l'humeur, l'avis et la phrase de fin sont faits par le moteur commun
-[`blocs.js`](blocs.js). Utilisé par Python 1, 2 et 3, le Labo 07 et la Messagerie 02.
-(La Messagerie 01 et le Rat de ville ont encore leur propre moteur de fiche ; la Messagerie 01 utilise
+[`blocs.js`](blocs.js). Utilisé par Python 1 à 4, le Labo 07, les Messageries 02 et 03, et le Rat de ville (mode déclaratif, plus bas).
+(La Messagerie 01 a encore son propre moteur de fiche ; elle utilise
 le mode séquence commun [`sequence-eleve.js`](sequence-eleve.js) depuis le 12/11/2026, avec ses trois écrans propres
 dans sa fiche : voir les champs facultatifs de `PAS_A_PAS` en tête de ce fichier.)
 
@@ -118,6 +118,38 @@ Deux façons de faire :
 
 Dans `preuves.json`, deux versions peuvent avoir le même énoncé : la fiche les distingue par leur numéro.
 Vérifier dans le test que la réponse d'une version ne valide pas les deux autres.
+
+## Le mode déclaratif — des cases, pas de preuves (le Rat de ville)
+
+`const MODE = "declaratif"` dans la fiche. Pour un travail long dans un autre outil (un document Docs), où l'élève
+**déclare** ce qu'il a fait et où le professeur examine la production.
+
+- **Pas de `q`** dans les blocs. Une étape est terminée quand toutes les cases de `gestes` sont cochées.
+- **Les cases sont enregistrées par le serveur**, une ligne « case » par geste (`noter()`, le chemin de tous les
+  cours) : elles reviennent d'une période à l'autre et d'un poste à l'autre. La fiche n'écrit « Enregistré » qu'après
+  la réponse du serveur ; un envoi raté repart seul (2 s, 5 s, 10 s), la case reste cochée.
+- **Navigation libre** : toutes les pastilles sont cliquables, « Étape suivante → » est toujours là. Le cadenas
+  « Blocs ouverts » du tableau s'applique quand même : au-delà, la fiche attend.
+- **La grille « Moi »** : `const GRILLE = { intro, niveaux:{A:'dépasse',…}, criteres:[{ n, inc, regarde, A, B, C, D }], legende }`
+  = l'écran final (pastille 📋), une lettre par critère, enregistrée comme une case. `FIN.titre` est son titre,
+  `FIN.bouton` le libellé du bouton qui y mène ; `FIN.plus` et `FIN.lien` sont facultatifs.
+- **Sous une case** : `{ geste, sous:'<img …>' }` (un extrait, une aide repliée) ; `{ geste, trous:{ titre, intro, bravo,
+  variantes:[{ texte, mots, pieges }] } }` = un texte à trous d'entraînement, corrigé dans la page, jamais enregistré.
+- **Sous chaque bloc** : `BAS_ETAPE` (« À la sonnerie », « Je reprends mon cours »), comme pour tous les cours.
+- **`const REPRISE = { titre, html, demos }`** : l'encadré affiché en haut quand l'élève rouvre le cours plus de
+  5 min après son dernier geste, avec le bouton « C'est fait : je reprends à l'étape N ».
+- `coince` accepte `{ html:'<b>…</b>' }` à côté des textes simples ; `veux` est facultatif.
+
+**Catalogue** : l'entrée du cours porte `"cases": { "1": 3, "2": 9, … }` (numéro d'étape : nombre de cases) et
+`"criteres"`. C'est ce champ qui rend le cours déclaratif pour le serveur. **Une case est enregistrée sous
+« étape.rang »** : ajouter une case en fin d'étape est sans risque ; déplacer une étape ou une case déplace les
+déclarations déjà faites. Le test du cours compare `cours.json` et la fiche.
+
+**Tableau** : le même que les autres cours. Les colonnes d'erreurs deviennent « Cases cochées » et « Moi » ; la barre
+montre les étapes terminées et la place de l'élève ; « Où le groupe bute » compte les cloches par étape.
+« Ramener la classe » et « Recommencer » ramènent l'élève à l'étape choisie et **décochent ses cases à partir de
+cette étape** (les étapes d'avant restent) ; il recharge sa fiche. Une nouvelle séance ne remet rien à zéro.
+Une étape terminée se fête : bravo et confettis.
 
 ## Ce que le moteur fait seul
 

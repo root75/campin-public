@@ -1,31 +1,46 @@
-// Le rat de ville : forme des cases à cocher. L'essai complet dans Chromium (vrai Code.gs) est dans le dépôt privé : outils/pas-a-pas/essai-rat.js.
+// Le rat de ville, sur le moteur commun (pas-a-pas/blocs.js, mode déclaratif) : la fiche ne porte que des données.
+// L'essai complet dans Chromium (vrai Code.gs) est dans le dépôt privé : outils/pas-a-pas/essai-rat.js.
 const assert=require('node:assert/strict'),fs=require('node:fs');
 const base=__dirname+'/../rat-de-ville/pas-a-pas/';
-const ETAPES=new Function(fs.readFileSync(base+'contenu.js','utf8')+';return ETAPES_RAT;')();
+const fiche=fs.readFileSync(base+'fiche.js','utf8'),page=fs.readFileSync(base+'index.html','utf8');
+const {BLOCS,GRILLE,FIN,REPRISE,MODE}=new Function(fiche+';return {BLOCS,GRILLE,FIN,REPRISE,MODE};')();
+// Moteur commun : la page charge blocs.js et le mode séquence ; la fiche ne parle pas au serveur elle-même.
+assert.equal(MODE,'declaratif');
+for(const f of ['pas-a-pas/blocs.js','pas-a-pas/sequence-eleve.js','pas-a-pas/cloche.js','pas-a-pas/recompense.js','pas-a-pas/demo-lecteur.js'])assert.ok(page.includes(f),'index.html charge '+f);
+assert.ok(!/google\.script|addEventListener|suiviFormatif/.test(fiche),'fiche.js : des données, pas de moteur');
+assert.ok(!fs.existsSync(base+'contenu.js')&&!fs.existsSync(__dirname+'/../pas-a-pas/formatif-prof.js'),'ancien moteur retiré');
+// Les cases sont enregistrées sous « étape.rang » : le catalogue (lu par le serveur) doit compter les mêmes.
+const c=JSON.parse(fs.readFileSync(__dirname+'/../pas-a-pas/cours.json','utf8')).cours.find(x=>x.id==='rat-de-ville-formatif');
+assert.equal(c.etapes,BLOCS.length);
+assert.deepEqual(c.cases,Object.fromEntries(BLOCS.map((b,i)=>[i+1,b.gestes.length])),'cours.json « cases » = cases de fiche.js');
+assert.equal(c.criteres,GRILLE.criteres.length);assert.deepEqual(Object.keys(GRILLE.niveaux),['A','B','C','D']);
 // Au moins un mot-clé en gras par case à cocher : l'œil accroche le geste avant de lire la phrase (Vincent, 13/11/2026).
-// Les actions sont du texte (pas de HTML) : **mot** devient <b>mot</b> dans la fiche, [[texte]] le cadre « à écrire exactement ».
-const actions=ETAPES.flatMap((e,i)=>e.actions.map(t=>[i+1,t]));
+const texte=g=>typeof g==='string'?g:g.geste,sansB=t=>t.replace(/<span class="a-ecrire".*?<\/span>/g,'').replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim();
+const actions=BLOCS.flatMap((b,i)=>b.gestes.map(g=>[i+1,texte(g)]));
 assert.ok(actions.length>=53,'cases lues : '+actions.length);
 actions.forEach(([i,t])=>{
-  assert.ok(/\*\*[^*]+\*\*/.test(t),'étape '+i+', case sans mot en gras : '+t.slice(0,70));
-  assert.equal((t.match(/\*\*/g)||[]).length%2,0,'étape '+i+', ** non refermé : '+t.slice(0,70));
-  assert.ok(!/\[\[[^\]]*\*\*/.test(t),'étape '+i+', pas de gras dans un texte à écrire : '+t.slice(0,70));
+  assert.ok(/<b>[^<]+<\/b>/.test(t),'étape '+i+', case sans mot en gras : '+sansB(t).slice(0,70));
+  assert.ok(!/class="a-ecrire"[^>]*>[^<]*<b>/.test(t),'étape '+i+', pas de gras dans un texte à écrire : '+sansB(t).slice(0,70));
 });
 // Un « ne fais pas » = un encadré ⚠️ à côté du geste, jamais dans le texte d'une case (règle du 12/11/2026, comme le Labo 07).
-const interdit=/(?:^|[.;:!?]\s+)(?:Ne|N[’'])\s?\S+ (?:pas|jamais|ni|aucun|rien)/,sansB=c=>c.replace(/<[^>]+>/g,'').replace(/\*\*/g,'').replace(/\s+/g,' ').trim();
-actions.forEach(([i,t])=>assert.ok(!interdit.test(sansB(t))&&!/^⚠/.test(t),'étape '+i+', une interdiction dans une case : '+t.slice(0,70)));
+const interdit=/(?:^|[.;:!?]\s+)(?:Ne|N[’'])\s?\S+ (?:pas|jamais|ni|aucun|rien)/;
+actions.forEach(([i,t])=>assert.ok(!interdit.test(sansB(t))&&!/^⚠/.test(sansB(t)),'étape '+i+', une interdiction dans une case : '+sansB(t).slice(0,70)));
 // Une case à l'impératif, comme dans les autres cours : pas de « je… » (règle du 05/11/2026, appliquée au Rat le 13/11/2026).
-actions.forEach(([i,t])=>assert.ok(!/(^|[.:] )(Je|J’)\b|\b(je|j’|mon|ma|mes)\b/.test(t.replace(/\[\[.*?\]\]/g,'')),'étape '+i+', case pas à l’impératif : '+t.slice(0,70)));
-// La fiche élève rend **…** en gras ; le détail du tableau du professeur retire les astérisques.
-assert.ok(/split\(\/\\\*\\\*\(\.\+\?\)\\\*\\\*\/\)/.test(fs.readFileSync(base+'fiche.js','utf8')),'fiche.js : **…** rendu en <b>');
-assert.ok(/replace\(\/\\\*\\\*\/g,''\)/.test(fs.readFileSync(__dirname+'/../pas-a-pas/formatif-prof.js','utf8')),'formatif-prof.js : astérisques retirés');
-console.log('OK Rat de ville : '+actions.length+' cases, chacune avec son mot-clé en gras.');
+actions.forEach(([i,t])=>assert.ok(!/(^|[.:] )(Je|J’)\b|\b(je|j’|mon|ma|mes)\b/.test(sansB(t)),'étape '+i+', case pas à l’impératif : '+sansB(t).slice(0,70)));
+// Chaque bloc a ce que le moteur attend, et les textes à trous d'entraînement sont complets.
+BLOCS.forEach((b,i)=>{
+  assert.ok(b.titre&&b.partie&&b.min&&b.vois&&Array.isArray(b.coince)&&b.coince.length,'étape '+(i+1)+' : titre, partie, min, vois, coince');
+  assert.ok(!b.q,'étape '+(i+1)+' : pas de question de preuve en mode déclaratif');
+  b.gestes.forEach(g=>g.trous&&g.trous.variantes.forEach(v=>assert.equal(v.texte.split('___').length-1,v.mots.length,'étape '+(i+1)+' : un mot par trou')));
+});
+assert.ok(FIN.titre&&FIN.citation&&FIN.citation.auteur,'écran final : la grille et la phrase de la fin');
+console.log('OK Rat de ville : '+actions.length+' cases, chacune avec son mot-clé en gras ; catalogue et fiche d’accord.');
 // Barre d'outils des démos : les vraies icônes Google Docs (B, I, U), jamais des lettres françaises G / S (Vincent, 16/11/2026).
 const demos=fs.readFileSync(base+'demos.js','utf8');
 ['gras','italique','souligne'].forEach(n=>{assert.ok(demos.includes("ico('"+n+"'"),'demos.js : bouton '+n+' sans son icône');assert.ok(fs.existsSync(base+'icones/'+n+'.png'),'icône manquante : '+n);});
 assert.ok(!/'md-btn[^']*',\s*'[GS]'/.test(demos),'demos.js : bouton en lettre G ou S');
-// Sous « À la sonnerie », un encadré du même style « Je reprends mon cours » : retrouver le document, vue fractionnée (Vincent, 16/11/2026).
-const fiche=fs.readFileSync(base+'fiche.js','utf8');
-assert.ok(/function repriseBas\(\)/.test(fiche)&&fiche.includes("'▶ Je reprends mon cours'"),'fiche.js : encadré « Je reprends mon cours » sous la sonnerie');
-assert.ok(/z\.append\(sonnerie\(\)\);if\(!repriseVue\)z\.append\(repriseBas\(\)\)/.test(fiche),'fiche.js : « Je reprends » juste sous « À la sonnerie »');
-['retrouver','cote'].forEach(k=>assert.ok(fiche.includes("',\'"+k+"'")||fiche.includes("','"+k+"'"),'fiche.js : démo '+k+' dans la reprise'));
+// Sous chaque étape : « À la sonnerie », puis « Je reprends mon cours » (Vincent, 16/11/2026) ; en haut à la réouverture : REPRISE.
+const BAS=new Function(fiche+';return BAS_ETAPE;')();
+assert.deepEqual(BAS.map(e=>e.classe),['sonnerie','reprise'],'« Je reprends » juste sous « À la sonnerie »');
+assert.deepEqual(BAS.flatMap(e=>e.gestes.map(g=>g.demo)),['fermer','deconnecter','retrouver','cote']);
+assert.deepEqual(Object.values(REPRISE.demos).map(v=>v[0]),['retrouver','cote']);

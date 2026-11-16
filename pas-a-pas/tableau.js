@@ -174,7 +174,7 @@ function dessinePlafond(){
     z.append(titre, rang, tout, dl, msg, etat); document.querySelector("header .reglages").after(z);
   }
   const i = Number($("seance").value), s = SEANCES[i] || {}, cours = $("cours").value;
-  z.hidden = !SUIVI || !enCours(s,i) || cours === "rat-de-ville-formatif";
+  z.hidden = !SUIVI || !enCours(s,i);
   if(z.hidden) return;
   const n = NB_BLOCS[cours] || 1, cle = [cours, s.debut, s.plafond||0, s.messagePlafond||"", n].join("|");
   if(cle === clePlafond) return;          // ne pas défaire ce que le professeur est en train de choisir
@@ -211,10 +211,11 @@ function dessine(d){
     $("filtres-eleves").append(label);
   }
 
-  if(globalThis.FormatifProf) {
-    FormatifProf.presentation($("cours").value === 'rat-de-ville-formatif');
-    if($("cours").value === 'rat-de-ville-formatif') { ouEstLaClasse(null); FormatifProf.dessine(d); syntheses(d, d.declaratif ? d.eleves : [], ETAPES_RAT.length, ETAPES_RAT.map(e=>e.id)); return; }
-  }
+  /* Cours déclaratif (des cases, pas de preuves : d.declaratif) : les deux colonnes d'erreurs deviennent les cases
+     cochées et les lettres « Moi » ; la barre montre les étapes terminées et la place de l'élève. */
+  const decl = !!d.declaratif, totalCases = decl ? Object.values(d.cases||{}).reduce((a,b)=>a+b,0) : 0;
+  const tetes = $("lignes").closest("table").querySelectorAll("thead th");
+  if(tetes.length>=6){ tetes[4].textContent = decl ? "Cases cochées" : "Erreurs ici"; tetes[5].textContent = decl ? "Moi" : "Erreurs"; }
   // Pour tous les cours : la classe de la séance choisie revient à l'étape N (ceux qui l'ont dépassée la refont).
   if(!$("ramener-classe")){const b=txt("button","btn vide","Ramener la classe à une étape…");b.type='button';b.id='ramener-classe';b.addEventListener('click',()=>{const s=choisie(),cours=$("cours").value;choisirEtape("Toute la classe "+s.classe,NB_BLOCS[cours]||1,null).then(bloc=>{if(!bloc)return;b.disabled=true;google.script.run.withSuccessHandler(r=>{b.disabled=false;$("maj").textContent=r.repris+' élève(s) ramené(s) à l’étape '+bloc+'. Ils rechargent leur fiche.';charge();}).withFailureHandler(err=>{b.disabled=false;erreur(err);}).noter(cours,{type:'prof-ramener',debut:s.debut,bloc});});});$("gestion-actions").append(b);}
   $("ramener-classe").hidden=!(SUIVI&&d.reprisesParSuivi&&d.peutReprendre);
@@ -253,11 +254,14 @@ function dessine(d){
     n1.append(caseRecompense(e));
     const h = td("hum", e.humeur ? e.humeur.split(" ")[0] : ""); if(e.humeur) h.title = e.humeur;
     const b = txt("div","barre");
-    for(let i=0;i<n;i++){ const s=txt("span"); s.className = i<e.atteint ? "fait" : (i===e.atteint && !e.fini ? "ici" : ""); b.append(s); }
+    for(let i=0;i<n;i++){ const s=txt("span");
+      if(e.etapes){ s.className = e.etapes[i] ? "fait" : (i===e.position-1 ? "ici" : ""); s.title = "Étape "+(i+1)+" : "+((e.parts||[])[i]||0)+" / "+((d.cases||{})[i+1]||0)+" cases"+(i===e.position-1 ? " — sa place" : ""); }
+      else s.className = i<e.atteint ? "fait" : (i===e.atteint && !e.fini ? "ici" : "");
+      b.append(s); }
     td().append(b);
-    const nb = td("num"); nb.append(e.fini ? txt("span",null,"fini") : lienBloc(e.atteint+1, (e.atteint+1)+" / "+n));
-    td("num", e.fini ? "" : e.erreursIci || "");
-    td("num", e.erreurs || "");
+    const nb = td("num"); nb.append(e.fini ? txt("span",null,"fini") : lienBloc(blocDe(Object.assign({},e,{aide:null})), blocDe(Object.assign({},e,{aide:null}))+" / "+n));
+    if(decl){ td("num", (e.cochees||0)+" / "+totalCases); td("num", Array.from({length:d.criteres||0},(_,k)=>(e.moi||{})[k+1]||"—").join(" · ")); }
+    else { td("num", e.fini ? "" : e.erreursIci || ""); td("num", e.erreurs || ""); }
     const etat = td();
     if(e.aide){
       etat.append(txt("span","pastille aide","🔔 aide · bloc "+e.aide.bloc+" · "+ilya(d.maintenant-e.aide.depuis).replace("il y a ","")));
@@ -305,7 +309,7 @@ const resume = (id, texte) => { if($(id)) $(id).textContent = "— " + texte; };
 const SEUIL_COMMUN = 4;
 let bandeauMasque = null;   // {cle, n} : « Pas maintenant » cache le bandeau jusqu'à ce que le nombre augmente
 const estCoince = (e,d) => !e.fini && (!!e.aide || e.erreursIci>=3 || estSilencieux(e,d));
-const blocDe = e => e.aide ? Number(e.aide.bloc) : e.atteint+1;
+const blocDe = e => e.aide ? Number(e.aide.bloc) : e.position || e.atteint+1;   // position : la place d'un élève en cours déclaratif
 function ouEstLaClasse(d, el, n){
   const pli = $("pli-classe"); if(pli) pli.hidden = !d;
   let ban = $("bandeau-commun");
@@ -932,7 +936,7 @@ function dessineClasses(d){
   $("eleves-statut").textContent="Liste à jour. Les changements de classe sont enregistrés après confirmation du serveur.";
 }
 /* « Je m'occupe » : une case 🎁 à côté du nom. Cochée = la récompense est ouverte une heure pour cet élève.
-   Partagée par le suivi en direct, le suivi formatif (formatif-prof.js) et la liste des élèves. */
+   Partagée par le suivi en direct et la liste des élèves. */
 function caseRecompense(e, apres){
   const fin = Number(e.recompense) || 0, l = txt("label", "recompense"), c = txt("input");
   c.type = "checkbox"; c.checked = !!fin;
@@ -983,13 +987,12 @@ function demarre(cours){
   const meme=cours.includes(avant);
   if(meme) $("cours").value=avant;
   if(!tableauDemarre){
-    $("cours").addEventListener("change",()=>{majVoirCours();chargeRessourcesProf();chargeSeances();if(globalThis.FormatifProf)FormatifProf.charge();});
+    $("cours").addEventListener("change",()=>{majVoirCours();chargeRessourcesProf();chargeSeances();});
     $("seance").addEventListener("change",charge);
     document.addEventListener("visibilitychange",rafraichitSelonOnglet);planifieCharge();tableauDemarre=true;
   }
   if(!meme || !$("seance").options.length) chargeSeances(); else charge();
   majVoirCours();chargeRessourcesProf();chargeSequence();chargeClasses();
-  if(globalThis.FormatifProf) FormatifProf.charge();
 }
 function appliqueCatalogue(data){
   for(const obj of [FICHES,NB_BLOCS,TITRES_COURS]) Object.keys(obj).forEach(k=>delete obj[k]);
