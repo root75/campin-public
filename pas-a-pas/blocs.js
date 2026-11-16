@@ -228,6 +228,22 @@ function barre(){
     b.append(g);
   }
   if(nomIci) b.append(txt("p","nom-etape",nomIci));
+  /* Les étapes de la mission affichée, par leur nom : un clic mène droit à « Relever la mémoire » sans passer par
+     « Étape précédente ». Seulement quand la mission a plusieurs étapes. Nom court : B.court, sinon le titre
+     jusqu'au premier « : » ou à la première virgule. */
+  const g = groupes && ici<BLOCS.length ? groupeCourant() : null;
+  if(g && g.fin-g.debut>1){
+    const ligne = el("div","sous-etapes"); ligne.setAttribute("role","group"); ligne.setAttribute("aria-label","Les étapes de "+(g.court || g.titre));
+    for(let i=g.debut;i<g.fin;i++){
+      const fait = DECLARATIF ? complet(i) : etat.atteint>i, nom = BLOCS[i].court || BLOCS[i].titre.split(/ : |, /)[0];
+      const n = txt("button", fait ? "fait" : "", (fait ? "✓ " : (i-g.debut+1)+". ")+nom); n.type = "button"; n.title = BLOCS[i].titre;
+      if(i===ici) n.setAttribute("aria-current","step");
+      n.disabled = !APERCU && !DECLARATIF && i>etat.atteint;
+      n.addEventListener("click",()=>{ if(ici===i) return; ici = i; affiche(); scrollTo(0,0); });
+      ligne.append(n);
+    }
+    b.append(ligne);
+  }
 }
 function styleBarre(){
   if(document.getElementById("style-barre-blocs")) return;
@@ -241,7 +257,12 @@ function styleBarre(){
     +".progres.nav button.ferme{border-style:dashed}"
     +".progres.nav button.ferme::after{content:'🔒';position:absolute;right:-8px;top:-10px;font-size:.85rem}"
     +".progres.nav button:focus-visible{outline:3px solid var(--fromage,#b7791f);outline-offset:2px}"
-    +".progres.nav .nom-etape{flex:1 1 100%;margin:2px 0 0;font-weight:700;color:var(--encre)}";
+    +".progres.nav .nom-etape{flex:1 1 100%;margin:2px 0 0;font-weight:700;color:var(--encre)}"
+    +".progres.nav .sous-etapes{flex:1 1 100%;display:flex;flex-wrap:wrap;gap:6px}"
+    +".progres.nav .sous-etapes button{width:auto;height:auto;min-height:40px;padding:6px 14px;border-radius:20px;border-width:2px;font-size:.95rem;font-weight:700;background:var(--carte);color:var(--encre);text-align:left}"
+    +".progres.nav .sous-etapes button.fait{background:var(--carte);border-color:var(--juste);color:var(--encre)}"
+    +".progres.nav .sous-etapes button[aria-current]{background:var(--encre-bouton);border-color:var(--encre-bouton);color:var(--carte);outline:none;transform:none}"
+    +".progres.nav .sous-etapes button:hover:not(:disabled){transform:none}";
   document.head.append(st);
 }
 /* Les cases cochées de la consigne, gardées sur le poste et rangées sous l'adresse de l'élève, comme le
