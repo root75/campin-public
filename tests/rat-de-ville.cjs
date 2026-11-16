@@ -20,3 +20,7 @@ actions.forEach(([i,t])=>assert.ok(!/(^|[.:] )(Je|J’)\b|\b(je|j’|mon|ma|mes)
 assert.ok(/split\(\/\\\*\\\*\(\.\+\?\)\\\*\\\*\/\)/.test(fs.readFileSync(base+'fiche.js','utf8')),'fiche.js : **…** rendu en <b>');
 assert.ok(/replace\(\/\\\*\\\*\/g,''\)/.test(fs.readFileSync(__dirname+'/../pas-a-pas/formatif-prof.js','utf8')),'formatif-prof.js : astérisques retirés');
 console.log('OK Rat de ville : '+actions.length+' cases, chacune avec son mot-clé en gras.');
+// Barre d'outils des démos : les vraies icônes Google Docs (B, I, U), jamais des lettres françaises G / S (Vincent, 16/11/2026).
+const demos=fs.readFileSync(base+'demos.js','utf8');
+['gras','italique','souligne'].forEach(n=>{assert.ok(demos.includes("ico('"+n+"'"),'demos.js : bouton '+n+' sans son icône');assert.ok(fs.existsSync(base+'icones/'+n+'.png'),'icône manquante : '+n);});
+assert.ok(!/'md-btn[^']*',\s*'[GS]'/.test(demos),'demos.js : bouton en lettre G ou S');
