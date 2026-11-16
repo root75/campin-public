@@ -1,6 +1,6 @@
 /* Messagerie 01 — démos animées « Regarde comment faire » : seulement les listes d'images.
    Les vues sont communes à tous les cours : pas-a-pas/demos-communs.js, chargé avant ce fichier avec le lecteur
-   pas-a-pas/demo-lecteur.js. Le volet sous la case : DemoLecteur.sousCases, appelé par fiche.js (DEMOS_ETAPES). */
+   pas-a-pas/demo-lecteur.js. Le volet sous la case : champ « demos » du bloc, dans fiche.js (moteur pas-a-pas/blocs.js). */
 const Demo = (() => {
   const NOUVEAU = { vue: 'ol-redac' };
   const CAMARADE = 'Lucas Martin', PROF = 'M. Dupont';

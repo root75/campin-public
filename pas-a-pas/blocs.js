@@ -1,5 +1,5 @@
 /* Moteur commun des fiches pas à pas (Python 1-3, Labo 07, Messagerie 02…).
-   Une fiche = des DONNÉES (COURS, BLOCS, FIN, et au choix PRESENTATION, PARCOURS, PREUVES) ;
+   Une fiche = des DONNÉES (COURS, BLOCS, FIN, et au choix PRESENTATION, PARCOURS, PREUVES, PARTAGE, SEQUENCE) ;
    le moteur fait l'affichage, les preuves, le suivi, la cloche, l'humeur et l'avis.
    Mode d'emploi pour un nouveau cours : pas-a-pas/MOTEUR.md (modèle : pas-a-pas/modele/). */
 /* ===== Moteur ===== */
@@ -132,12 +132,15 @@ function blocVu(i){
    tire la variante de l'élève (preuve()) et corrige (verifier()) : la réponse du voisin ne vaut rien.
    Sans suivi : la variante 1, corrigée ici. La question du bloc peut ajouter rendu (choix → HTML)
    et, pour une rédaction, ses propres champs et son contrôle. */
-let preuvesData = null;
+let preuvesData = null, preuvesRatees = "";
 const varianteServeur = {};
 function blocServeur(i, B){
   const liste = (preuvesData && preuvesData.blocs[i]) || [];
   const n = Math.max(1, liste.length);
   const v = APERCU ? Math.min(apercuV[i] || 1, n) : (varianteServeur[i] || 1);
+  /* « mixte » : l'activité (B.q.activite) est contrôlée dans la page ; seule la question de validation vient de preuves.json. */
+  if(B.q.type==="mixte") return Object.assign({}, B, { _v:v, _n:n,
+    q:Object.assign({}, B.q, { validation:Object.assign({}, liste[v-1] || {}, B.q.validation, { serveur:true }) }) });
   const q = Object.assign({}, liste[v-1] || {}, B.q, { serveur:true });
   if(B.q.type) q.type = B.q.type;          // une rédaction reste une rédaction
   return Object.assign({}, B, { q, _v:v, _n:n });
@@ -145,7 +148,7 @@ function blocServeur(i, B){
 function chargePreuves(){
   if(typeof PREUVES==="undefined") return Promise.resolve();
   return fetch(PREUVES).then(r=>{ if(!r.ok) throw new Error(); return r.json(); }).then(d=>{ preuvesData = d; })
-    .catch(()=>{ qui.textContent = "⚠ Les questions n’ont pas pu se charger : recharge la page (F5). Ton travail validé est gardé."; });
+    .catch(()=>{ preuvesRatees = "⚠ Les questions n’ont pas pu se charger : recharge la page (F5). Ton travail validé est gardé."; qui.textContent = preuvesRatees; });
 }
 /* La variante de chaque élève, demandée une fois au démarrage. */
 function variantesServeur(){
@@ -307,7 +310,7 @@ function rappelDe(ref){
   const [b, c] = String(ref).split(":");
   if(c===undefined){
     const f = typeof RAPPELS!=="undefined" && RAPPELS[b];
-    try{ return f ? String(f() || "") : ""; }catch(e){ return ""; }
+    try{ return f ? String(f(lisPartage(), { classe:classeMoteur, email:emailMoteur }) || "") : String(lisPartage()[b] || "").trim(); }catch(e){ return ""; }
   }
   const r = reponsesGardees()[b];
   return r && r[c] ? String(r[c]) : "";
@@ -329,6 +332,40 @@ function encadreRappel(B){
   });
   return a;
 }
+/* État partagé entre les blocs (Messagerie 01, 16/11/2026) : ce que l'élève écrit dans un bloc sert aux suivants
+   (un mail construit champ par champ, relu en entier, puis une réponse qui reprend son objet). Gardé sur le poste,
+   sous l'adresse de l'élève, comme les cases : { cle: texte }. Y écrivent les rédactions « commun:true ».
+   La fiche peut déclarer  const PARTAGE = { depart, apercu } :
+   - depart(email) → les valeurs de départ quand rien n'est encore gardé (un brouillon d'avant, par exemple) ;
+   - apercu(valeurs, i, { classe }) → le HTML de l'aperçu en direct (#apercu-direct dans la page), redessiné à chaque
+     frappe et à chaque bloc ; i = rang du bloc affiché, à partir de 0 ; "" = aperçu caché.
+   Les rappels lisent aussi cet état : <span data-rappel="objet">…</span>, et RAPPELS.x(valeurs, { classe, email }). */
+const clePartage = () => CLE+":"+(emailMoteur||"")+":partage";
+let partage = null, partageDe = null;
+function lisPartage(){
+  if(partageDe===clePartage() && partage) return partage;
+  partageDe = clePartage(); partage = null;
+  if(!APERCU) try{ partage = JSON.parse(localStorage.getItem(partageDe)); }catch(e){}
+  if(!partage || typeof partage!=="object"){
+    partage = {};
+    if(!APERCU && typeof PARTAGE!=="undefined" && PARTAGE.depart) try{ partage = PARTAGE.depart(emailMoteur) || {}; }catch(e){ partage = {}; }
+  }
+  return partage;
+}
+function gardePartage(k, v){
+  lisPartage()[k] = v;
+  if(!APERCU) try{ localStorage.setItem(partageDe, JSON.stringify(partage)); }catch(e){}
+  apercuDirect();
+}
+function apercuDirect(){
+  const n = document.getElementById("apercu-direct");
+  if(!n || typeof PARTAGE==="undefined" || !PARTAGE.apercu) return;
+  const h = PARTAGE.apercu(lisPartage(), ici, { classe:classeMoteur }) || "";
+  n.hidden = !h; n.innerHTML = h;
+}
+/* Une rédaction (ou l'activité d'une question « mixte ») dont la zone est déjà commencée : elle se rouvre seule (q.ouvre). */
+const commencee = Q => !!Q && (Q.type==="mixte" ? commencee(Q.activite) : !!(Q.commun && Q.zone && String(lisPartage()[Q.zone.cle || "texte"] || "").trim()));
+
 /* À l'affichage d'un bloc : on recoche ses cases gardées. L'événement « change » rejoue ce qu'une coche fait
    (animation de la case suivante, camembert). */
 function recocheCases(){
@@ -416,7 +453,7 @@ function affiche(){
     if(placeNotee>=0) envoie({ etape:Math.min(ici,BLOCS.length-1)+1, type:"ouvert" });
     placeNotee = ici; etat.ici = ici; ecrit(etat);
   }
-  partIci = 0; barre(); if(MISSIONS) bulle();
+  partIci = 0; barre(); if(MISSIONS) bulle(); apercuDirect();
   queueMicrotask(recocheCases);   // une fois le bloc construit, ses animations comprises
   const z = document.getElementById("bloc"); z.replaceChildren();
   const liste = document.getElementById("coince-liste"); liste.replaceChildren();
@@ -484,14 +521,22 @@ function affiche(){
 
   const pr = el("div","preuve");
   const fait = DECLARATIF || (!APERCU && etat.atteint > ici);   // en aperçu, chaque version reste à essayer
+  /* q.ouvre = le libellé d'un bouton à cliquer pour faire apparaître la question (« ↶ Répondre à Camille ») ;
+     une rédaction déjà commencée se rouvre seule. */
+  const direct = () => {
+    if(!B.q.ouvre || commencee(B.q)){ preuve(pr,B); return; }
+    const go = txt("button","btn plein ouvre-preuve",B.q.ouvre); go.type = "button";
+    go.addEventListener("click",()=>{ go.remove(); preuve(pr,B); }); pr.append(go);
+  };
+  const declare_ = ["enquete","rapport"].includes(B.q && B.q.type==="mixte" && B.q.validation ? B.q.validation.type : B.q && B.q.type);   // étape déclarée, pas corrigée
   if(DECLARATIF){
     /* Pas de preuve : les cases sont la déclaration, et on avance librement. */
   } else if(!fait && ["enquete","rapport","mixte"].includes(B.q.type)){
-    preuve(pr,B);
+    direct();
   } else if(fait && B.q.type==="code"){
     relecture(pr, B);
   } else if(fait){
-    pr.append(txt("p","retour juste",["enquete","rapport","mixte"].includes(B.q.type) ? "✅ Étape déjà enregistrée. Les preuves du rapport restent à examiner par le professeur." : "✅ Bloc déjà validé."));
+    pr.append(txt("p","retour juste",declare_ ? "✅ Étape déjà enregistrée. Les preuves du rapport restent à examiner par le professeur." : "✅ Bloc déjà validé."));
   } else if(B.cases){
     pr.append(txt("div","etiquette","✅ Les cinq points (mon message est noté sur 5)"));
     const ul = el("ul","cases");
@@ -502,7 +547,7 @@ function affiche(){
     go.addEventListener("click",()=>{ ul.remove(); go.remove(); preuve(pr,B); });
     pr.append(ul, go);
   } else if(["code","ordre","trace","ligne","redaction"].includes(B.q.type)){
-    preuve(pr,B);
+    direct();
   } else {
     const go = txt("button","btn plein ouvre-preuve",B.essai && B.essai.suite ? B.essai.suite : MISSIONS ? "✅ C’est vérifié" : "👀 Je vois ça"); go.type="button";
     if(!essaiFait){ go.disabled = true; apresEssai = ()=>{ go.disabled = false; }; }
@@ -742,7 +787,7 @@ function preuve(pr, B, apres){
   const Q = B.q;
   const v = r => (B._n>1 ? "v"+B._v+":" : "") + (r==null ? "" : r);   // le Journal note la version
   if(Q.type!=="mixte") pr.append(txt("div","etiquette", Q.etiquette ? Q.etiquette : ["code","ordre"].includes(Q.type) ? "Mon programme" : Q.type==="trous" ? "J’explique" : Q.type==="rapport" ? "Mon rapport individuel" : typeof PARCOURS!=="undefined" ? "Je vérifie mon raisonnement" : "Je prouve que j’ai fait le bloc"));
-  pr.append(txt("p","question",Q.q));
+  if(Q.q) pr.append(txt("p","question",Q.q));
   if(Q.serveur && Q.aide) pr.append(txt("p","note",Q.aide));
   const retour = el("div","retour"); retour.hidden = true;
   const zone = el("div"); pr.append(zone, retour);
@@ -765,18 +810,21 @@ function preuve(pr, B, apres){
       if(g0 && etat.atteint===g0.fin) bravo("⭐ "+g0.titre+" : terminé !", true);
       else bravo(["Bien joué !","C’est enregistré, continue !","Une étape de plus !"][ici%3], false);
     }
+    if(etat.atteint>avant && typeof CONFETTIS!=="undefined" && CONFETTIS) confettis();   // au choix de la fiche : const CONFETTIS = true
     if(enAide) basculeAide();
     const s = txt("button","btn plein",typeof PARCOURS!=="undefined" ? suite() : (ici+1<BLOCS.length ? "Bloc suivant →" : "J'ai fini ✓")); s.type="button";
     s.addEventListener("click",()=>{ ici++; affiche(); });
     pr.append(s); s.focus();
   };
-  const rate = (explication, reponse, dejaNote) => {
+  /* contenu (facultatif) = tout ce que l'élève a écrit, quand la réponse notée n'en est qu'une partie : une
+     tentative n'est « identique » que si rien n'a changé. */
+  const rate = (explication, reponse, dejaNote, contenu) => {
     if(termine)return;
-    const empreinte=String(reponse ?? "");
+    const empreinte=String(contenu ?? reponse ?? "");
     if(empreinte===derniereErreur){retour.hidden=false;if(!retour.querySelector(".sans-doublon"))retour.append(txt("p","sans-doublon","Modifie ta réponse avant de vérifier à nouveau. Cette tentative identique ne compte pas une erreur de plus."));return;}
     derniereErreur=empreinte;
     essais++; etat.erreurs++; ecrit(etat);
-    if(Q.type==="code" && !apres){ const c = zone.querySelector("pre.console"); gardeEssai(ici, { code:empreinte, ecran:c && !c.hidden ? c.innerText.trim() : "", pourquoi:explication }); }
+    if(Q.type==="code" && !apres){ const c = zone.querySelector("pre.console"); gardeEssai(ici, { code:String(reponse ?? ""), ecran:c && !c.hidden ? c.innerText.trim() : "", pourquoi:explication }); }
     if(!dejaNote) envoie({ etape:ici+1, type:"faux", essais:essais, reponse:v(reponse) });
     const expl = Array.isArray(explication) ? el("ul") : txt("p",null,explication);
     if(Array.isArray(explication)) explication.forEach(x=>expl.append(txt("li",null,x)));
@@ -891,7 +939,10 @@ function preuve(pr, B, apres){
   const juge = (reponse, juste, explication) => Q.serveur && SUIVI && !APERCU
     ? correctionServeur(Q, reponse, essais+1).then(r=>({ juste:!!r.juste, texte:r.texte || explication, note:true }))
     : Promise.resolve({ juste, texte:explication, note:false });
-  if(Q.type==="redaction"){ redaction(zone, Q, reussi, rate, juge); return; }
+  if(Q.type==="redaction"){
+    zone.addEventListener("input",()=>{ if(!termine && retour.classList.contains("faux")) retour.hidden = true; });   // on corrige : le refus d'avant s'efface
+    redaction(zone, Q, reussi, rate, juge); return;
+  }
   if(typeof Q.guide==="function"){Q.guide(zone,Q,reussi,rate,()=>{retour.hidden=true;});return;}
   if(Q.type==="trous"){ trous(zone, Q, reussi, rate); return; }
   if(Q.type==="code"){ editeur(zone, Q, reussi, rate); return; }
@@ -940,24 +991,52 @@ function preuve(pr, B, apres){
 /* Rédaction guidée (type "redaction") : l'élève prépare un texte ici, la fiche contrôle la forme
    (Q.controle(texte, valeurs, {classe}) → liste d'erreurs, vide si tout va bien), puis il le copie
    ailleurs (Outlook, Docs). Champs : Q.champs [{cle, nom, aide, max}], Q.zone {nom, aide, lignes, max},
-   Q.modele (texte affiché), Q.copier (bouton « Copier »). Le brouillon reste sur le poste. */
+   Q.modele (texte affiché), Q.copier (bouton « Copier »). Le brouillon reste sur le poste.
+   Depuis le 16/11/2026 (Messagerie 01), au choix de la question :
+   - commun:true : champs et zone (Q.zone.cle) lisent et écrivent l'état partagé entre les blocs (PARTAGE) ; le
+     contrôle reçoit alors toutes les valeurs partagées, et l'aperçu en direct suit la frappe ;
+   - zone:false : pas de grande zone, seulement des champs ; un champ {lignes:3} est une zone de plusieurs lignes ;
+     un champ {siVide:true} n'est demandé que si sa valeur partagée manque (reprise sur un autre poste) ;
+   - criteres(texte, valeurs, {classe}) → [{nom, err}] : la liste des critères, cochée pendant la frappe ; « Vérifier »
+     donne toutes les erreurs d'un coup, jamais une à la fois ;
+   - reponse(valeurs, texte, {classe, refus}) → ce qui part au serveur et au Journal (sinon le texte de la zone) ;
+     refus = vrai quand la page vient de refuser : la fiche peut alors nommer les champs en cause pour le tableau ;
+   - bouton : le libellé de « Vérifier ». */
 function redaction(zone, Q, reussi, rate, juge){
   const cle = k => CLE+":"+(emailMoteur||"")+":"+(ici+1)+":"+k;
-  const garde = (k, v) => { if(APERCU) return; try{ localStorage.setItem(cle(k), v); }catch(e){} };
-  const relit = k => { try{ return localStorage.getItem(cle(k)) || ""; }catch(e){ return ""; } };
+  const garde = (k, v) => { if(Q.commun){ gardePartage(k, v); return; } if(APERCU) return; try{ localStorage.setItem(cle(k), v); }catch(e){} };
+  const relit = k => { if(Q.commun) return String(lisPartage()[k] || ""); try{ return localStorage.getItem(cle(k)) || ""; }catch(e){ return ""; } };
   if(Q.modele){ const m = el("div","modele"); m.append(txt("span","etiquette","Modèle"), txt("pre",null,Q.modele)); zone.append(m); }
   const f = el("form","redaction");
-  const champs = (Q.champs||[]).map(c=>{
-    const lab = el("label"), inp = el("input"); inp.type="text"; inp.maxLength = c.max || 80; inp.value = relit(c.cle);
-    inp.addEventListener("input",()=>garde(c.cle, inp.value));
+  let suit = () => {};
+  const liste = (Q.champs||[]).filter(c=>!(c.siVide && relit(c.cle).trim()));
+  const champs = liste.map(c=>{
+    const lab = el("label"), inp = el(c.lignes ? "textarea" : "input"); if(c.lignes) inp.rows = c.lignes; else inp.type="text";
+    inp.maxLength = c.max || 80; inp.value = relit(c.cle);
+    inp.addEventListener("input",()=>{ garde(c.cle, inp.value); suit(); });
     lab.append(txt("span",null,c.nom)); if(c.aide) lab.append(txt("small","note",c.aide)); lab.append(inp); f.append(lab); return inp;
   });
-  const Z = Q.zone || {}, lab = el("label"), ta = el("textarea");
-  ta.rows = Z.lignes || 8; ta.maxLength = Z.max || 700; ta.value = relit("texte");
-  ta.addEventListener("input",()=>garde("texte", ta.value));
-  lab.append(txt("span",null,Z.nom || "Mon texte")); if(Z.aide) lab.append(txt("small","note",Z.aide)); lab.append(ta); f.append(lab);
-  const act = el("div","actions"), ok = txt("button","btn plein","Vérifier"); ok.type="submit"; act.append(ok);
-  if(Q.copier){
+  const Z = Q.zone===false ? null : (Q.zone || {}), ta = Z ? el("textarea") : null;
+  if(Z){
+    const lab = el("label"), kz = Z.cle || "texte";
+    ta.rows = Z.lignes || 8; ta.maxLength = Z.max || 700; ta.value = relit(kz);
+    ta.addEventListener("input",()=>{ garde(kz, ta.value); suit(); });
+    lab.append(txt("span",null,Z.nom || "Mon texte")); if(Z.aide) lab.append(txt("small","note",Z.aide)); lab.append(ta); f.append(lab);
+  }
+  const texte = () => ta ? ta.value : "", ctx = () => ({ classe:classeMoteur });
+  const valeurs = () => { const v = Q.commun ? Object.assign({}, lisPartage()) : {}; liste.forEach((c,i)=>{ v[c.cle] = champs[i].value.trim(); }); return v; };
+  if(typeof Q.criteres==="function"){
+    if(!document.getElementById("style-criteres")){
+      const st = el("style"); st.id = "style-criteres";
+      st.textContent = ".criteres{list-style:none;padding-left:0;margin:0;display:grid;gap:2px}.criteres li{color:var(--doux)}.criteres li.ok{color:var(--juste);font-weight:700}";
+      document.head.append(st);
+    }
+    const ul = el("ul","criteres"); ul.setAttribute("aria-live","polite"); f.append(ul);
+    suit = () => ul.replaceChildren(...Q.criteres(texte(), valeurs(), ctx()).map(c=>txt("li", c.err ? "" : "ok", (c.err ? "○ " : "✓ ")+c.nom)));
+    suit();
+  }
+  const act = el("div","actions"), ok = txt("button","btn plein",Q.bouton || "Vérifier"); ok.type="submit"; act.append(ok);
+  if(Q.copier && ta){
     const c = txt("button","btn vide","📋 Copier mon texte"), dit = txt("span","note",""); c.type="button";
     c.addEventListener("click",()=>{
       const fait = () => dit.textContent = "✓ Copié. Colle-le : Ctrl+V.";
@@ -969,14 +1048,16 @@ function redaction(zone, Q, reussi, rate, juge){
   f.append(act); zone.append(f);
   f.addEventListener("submit", e=>{
     e.preventDefault(); if(ok.disabled) return;
-    const valeurs = {}; (Q.champs||[]).forEach((c,i)=>valeurs[c.cle] = champs[i].value.trim());
-    const erreurs = typeof Q.controle==="function" ? Q.controle(ta.value, valeurs, { classe:classeMoteur }) : [];
-    const r = ta.value.trim().slice(0,190);
-    if(erreurs.length){ rate(erreurs, r); return; }
+    const v = valeurs(), t = texte(), tout = JSON.stringify([v, t]);
+    const erreurs = (typeof Q.criteres==="function" ? Q.criteres(t, v, ctx()).filter(c=>c.err).map(c=>c.err) : [])
+      .concat(typeof Q.controle==="function" ? Q.controle(t, v, ctx()) : []);
+    const r = String(typeof Q.reponse==="function" ? Q.reponse(v, t, Object.assign(ctx(), { refus:erreurs.length>0 })) : t).trim().slice(0,190);
+    if(erreurs.length){ rate(erreurs, r, false, tout); return; }
     ok.disabled = true;
+    const fige = () => { if(Q.commun) f.querySelectorAll("input,textarea").forEach(x=>{ x.readOnly = true; }); };
     juge(r, Q.regle ? regle(Q.regle, r) : true, Q.faux || "Relis le modèle.").then(x=>{
-      if(x.juste) reussi(r); else { ok.disabled = false; rate(x.texte, r, x.note); }
-    }).catch(err=>{ ok.disabled = false; rate(err.message, r, true); });
+      if(x.juste){ fige(); reussi(r); } else { ok.disabled = false; rate(x.texte, r, x.note, tout); }
+    }).catch(err=>{ ok.disabled = false; rate(err.message, r, true, tout); });
   });
 }
 
@@ -1158,6 +1239,7 @@ if(APERCU){
     if(s && s.email){ emailMoteur = s.email; if(typeof EMAIL!=="undefined") EMAIL = s.email; }
     if(s && s.classe) classeMoteur = String(s.classe).trim();
     if(s && s.email){ qui.textContent = "Connecté : "; qui.append(txt("strong",null,s.email)); if(s.classe) qui.append(" · "+s.classe); }
+    if(preuvesRatees) qui.append(" — "+preuvesRatees);   // l'avertissement ne disparaît pas quand le suivi répond après lui
     if(s && s.humeur) etat.humeur = s.humeur;
     if(s && s.avis) etat.avis = s.avis;
     humeur();
@@ -1176,7 +1258,8 @@ if(APERCU){
     humeur(); quandPret(affiche);
   }).etat(COURS);
   chargeEtat(0);
-  window.PAS_A_PAS = { cours: COURS, envoie, plafond: recoitPlafond };   // lu par sequence-eleve.js (chargé en différé : il ne bloque jamais la fiche)
+  /* const SEQUENCE = { contenus:true, classe:"…" } dans la fiche : les champs facultatifs décrits en tête de sequence-eleve.js. */
+  window.PAS_A_PAS = Object.assign({ cours: COURS, envoie, plafond: recoitPlafond }, typeof SEQUENCE!=="undefined" ? SEQUENCE : null);   // lu par sequence-eleve.js (chargé en différé : il ne bloque jamais la fiche)
 } else {
   qui.textContent = typeof HORS_SUIVI!=="undefined" ? HORS_SUIVI : "Garde deux fenêtres : cette fiche, et Thonny quand elle le demande.";
   pied.textContent = "Ton avancement reste sur cet ordinateur. Aucune donnée n'est envoyée.";

@@ -2,10 +2,10 @@
 
 Un cours = **des données**. L'affichage, les preuves, le suivi professeur, la cloche 🔔, la reprise sur
 un autre poste, l'humeur, l'avis et la phrase de fin sont faits par le moteur commun
-[`blocs.js`](blocs.js). Utilisé par Python 1 à 4, le Labo 07, les Messageries 02 et 03, et le Rat de ville (mode déclaratif, plus bas).
-(La Messagerie 01 a encore son propre moteur de fiche ; elle utilise
-le mode séquence commun [`sequence-eleve.js`](sequence-eleve.js) depuis le 12/11/2026, avec ses trois écrans propres
-dans sa fiche : voir les champs facultatifs de `PAS_A_PAS` en tête de ce fichier.)
+[`blocs.js`](blocs.js). Utilisé par **tous les cours** : Python 1 à 4, le Labo 07, les Messageries 01 à 03, et le Rat de ville
+(mode déclaratif, plus bas). La Messagerie 01 y est depuis le 16/11/2026 (état partagé entre les blocs, plus bas).
+Le mode séquence est commun lui aussi : [`sequence-eleve.js`](sequence-eleve.js) ; une fiche lui passe ses champs
+facultatifs par `const SEQUENCE = { contenus:true, classe:'…' }` (décrits en tête de ce fichier).
 
 ## Les quatre fichiers d'un cours
 
@@ -118,6 +118,32 @@ Deux façons de faire :
 
 Dans `preuves.json`, deux versions peuvent avoir le même énoncé : la fiche les distingue par leur numéro.
 Vérifier dans le test que la réponse d'une version ne valide pas les deux autres.
+
+## L'état partagé entre les blocs — un texte construit pas à pas (la Messagerie 01)
+
+Quand ce que l'élève écrit dans un bloc sert aux suivants : un mail construit champ par champ, relu en entier,
+puis une réponse qui reprend son objet. Gardé sur le poste, sous l'adresse de l'élève, comme les cases.
+
+- **Y écrire** : une rédaction `commun:true`. Ses `champs` (et sa `zone`, par `zone.cle`) lisent et écrivent l'état
+  partagé ; son `controle(texte, valeurs, {classe})` reçoit **toutes** les valeurs partagées. `zone:false` = seulement
+  des champs ; un champ `{lignes:3}` est une zone de plusieurs lignes ; `{siVide:true}` n'est demandé que si la valeur
+  manque (reprise sur un autre poste). `reponse:(valeurs, texte, {classe, refus})` = ce qui part au serveur et au
+  Journal ; `bouton` = le libellé de « Vérifier ».
+- **Les critères, cochés pendant la frappe** : `criteres:(texte, valeurs, {classe}) => [{ nom, err }]`. La liste
+  s'affiche sous la zone (○ / ✓) ; « Vérifier » donne toutes les erreurs d'un coup, jamais une à la fois.
+- **L'aperçu en direct** : `const PARTAGE = { apercu:(valeurs, i, {classe}) => html }` et, dans la page,
+  `<aside id="apercu-direct">` : redessiné à chaque frappe et à chaque bloc (`i` = rang du bloc, à partir de 0 ;
+  `""` = caché). La fiche échappe elle-même ce que l'élève a tapé.
+- **Un brouillon d'avant** : `PARTAGE.depart(email)` rend les valeurs de départ quand rien n'est encore gardé.
+- **Relire une valeur** : `<span data-rappel="objet">…</span>` (la clé), ou `RAPPELS.x(valeurs, {classe, email})`.
+- **Écrire, puis prouver** : `q:{ serveur:true, type:'mixte', activite:{ type:'redaction', commun:true, … },
+  validation:{ juste:'…' } }`. L'activité est contrôlée dans la page ; la question de validation vient de
+  `preuves.json` et le serveur la corrige. `ouvre:'↶ Répondre à Camille'` = un bouton à cliquer pour faire
+  apparaître la zone (une rédaction déjà commencée se rouvre seule).
+- `const CONFETTIS = true` : des confettis à chaque bloc validé.
+
+Exemple : [`messagerie/pas-a-pas/fiche.js`](../messagerie/pas-a-pas/fiche.js) ; contrôle : `tests/messagerie-01.cjs`,
+et le parcours dans Chromium, `campin-pedagogique/outils/pas-a-pas/essai-messagerie-01.js`.
 
 ## Le mode déclaratif — des cases, pas de preuves (le Rat de ville)
 
