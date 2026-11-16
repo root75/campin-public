@@ -2,6 +2,7 @@
 
 Contenu : `pas-a-pas/fiche.js` (préparer le rapport, trois missions, un défi final, remettre le rapport ; onze étapes internes pour le suivi, à reprendre selon les besoins).
 Moteur : `../pas-a-pas/blocs.js`, partagé avec Python 1 et Python 2.
+Sous chaque étape, deux encadrés sans case, décrits par `BAS_ETAPE` dans `fiche.js` : **🔔 À la sonnerie, où que j’en sois** (fermer l’onglet sans remettre, se déconnecter de Windows) et **▶ Je reprends mon cours** (Drive ▸ Récents, vue fractionnée), comme dans Le rat de ville.
 Conducteur professeur : clé `labo-07` dans `../pas-a-pas/sequences.json` ; accessible au tableau.
 Préparation, corrigé et activation : dépôt privé `campin-pedagogique/cours/3ttr-labo/sequences/07-coulisses-pc/PROF.md`.
 

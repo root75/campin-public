@@ -392,6 +392,33 @@ function affiche(){
   nav.append(avant, el("span","espace"));
   if(fait || (APERCU && ici+1<BLOCS.length)){ const s=txt("button","btn plein",suite()); s.type="button"; s.addEventListener("click",()=>{ici++;affiche();}); nav.append(s); }
   z.append(nav);
+  basEtape(z);
+}
+
+/* Encadrés de bas d'étape, facultatifs : la fiche les décrit dans BAS_ETAPE (Labo 07 : « À la sonnerie » et
+   « Je reprends mon cours », comme dans Le rat de ville). Fermer et rouvrir ne sont pas des étapes : chacun le
+   fait à la sonnerie, où qu'il en soit. Pas de case à cocher, rien d'enregistré.
+   BAS_ETAPE = [{ classe, titre, gestes:[{ texte (HTML), note, demo (clé de Demo.cree) }] }]. */
+function basEtape(z){
+  if(typeof BAS_ETAPE==="undefined") return;
+  BAS_ETAPE.forEach(E=>{
+    const a = el("aside","repere "+E.classe), ol = el("ol");
+    E.gestes.forEach(g=>{
+      const li = el("li",null,g.texte);
+      if(g.note) li.append(txt("p","note",g.note));
+      if(g.demo && typeof Demo!=="undefined" && Demo.cree){
+        const d = el("details","demo-case"); let box = null;
+        d.append(txt("summary",null,"👀 Regarde comment faire"));
+        d.addEventListener("toggle",()=>{
+          if(d.open){ if(!box){ box = Demo.cree(g.demo,false); if(box) d.append(box); } if(box) setTimeout(()=>box.joue(),80); }
+          else if(box) box.stop();
+        });
+        li.append(d);
+      }
+      ol.append(li);
+    });
+    a.append(txt("h3",null,E.titre), ol); z.append(a);
+  });
 }
 
 /* Un programme validé reste lisible quand on revient sur le bloc : le code de départ, le programme
