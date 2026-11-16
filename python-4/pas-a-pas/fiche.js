@@ -279,7 +279,7 @@ const BLOCS = [
   { partie:"B — Python compare", titre:"Vrai ou faux ?", min:3,
     bulle:"Avant de décider, Python compare. Et il répond vrai ou faux.",
     veux:"Prédire la valeur d'une comparaison : True ou False.",
-    fais:CASES("Lis l'<b>encadré</b>.", "<b>Prédis</b> les deux lignes, puis réponds."),
+    fais:CASES("Lis l'<b>encadré</b> ci-dessous.", "<b>Prédis</b> les deux lignes, puis réponds."),
     coince:["True veut dire vrai, False veut dire faux. Avec la majuscule, en anglais.",
             "> veut dire « strictement plus grand » : 5 > 5 est faux. >= accepte l'égalité : 5 >= 5 est vrai."],
     ...(() => { const b = compare([7,">",5],[7,"<",5]); return Object.assign(b, { extra:`<div class="encart"><table>
@@ -343,7 +343,7 @@ const BLOCS = [
     bulle:"La porte de LogProg 03 : deux branches, deux messages.",
     veux:"Traduire un losange à deux branches : if et else.",
     fais:CASES("Lis le <b>logigramme</b> : une branche OUI, une branche NON.",
-               "Lis l'<b>encadré</b> : où se place le else ?",
+               "Lis l'<b>encadré</b> ci-dessous : où se place le else ?",
                "Écris le <b>if</b> et le <b>else</b> sous la 1re ligne.", EXECUTER),
     ...porte({nom:"cle", question:"As-tu la clé ?", bon:"oui", mauvais:"non", oui:"Ouvert !", non:"Fermé."}),
     variantes:[porte({nom:"code", question:"Code du coffre ?", bon:"1234", mauvais:"0000", oui:"Trésor !", non:"Code faux."}),
