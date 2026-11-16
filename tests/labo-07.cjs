@@ -102,4 +102,8 @@ assert.ok(!/labo|rapport/i.test(moteur.slice(moteur.indexOf('function basEtape')
 assert.ok(/\.repere\.reprise\{/.test(page)&&/blocs\.js\?v=bas-etape/.test(page),'style et nouvelle version de l’adresse');ok();
 assert.ok(!/\b(Suppr|Échap|Entrée|Maj)\b/.test(JSON.stringify(BAS)),'touches en anglais');ok();
 
+// Le rappel de Python, pour le rapport : copié sur un voisin = 0 sur 20 pour les deux (Vincent, 16/11/2026). Dès la première étape et sous la grille.
+const copie=/⚠️ Pas de copier-coller du voisin\. Un rapport copié sur un autre élève, c’est 0 sur 20, pour les deux rapports\./;
+assert.match(String(F.BLOCS[0].extra),copie);assert.match(page.slice(page.indexOf('id="grille-criteree"')),copie);ok();
+
 console.log('Labo 07 : '+n+' contrôles réussis.');
