@@ -99,11 +99,17 @@ assert.deepEqual(BAS.flatMap(e=>e.gestes.map(g=>g.demo)),['fermer','deconnecter'
 BAS.forEach(e=>e.gestes.forEach(g=>assert.ok(listes.has(g.demo),'animation « '+g.demo+' » absente de demos.js')));ok();
 assert.ok(/z\.append\(nav\);\s*basEtape\(z\);/.test(moteur),'blocs.js : les encadrés tout en bas de l’étape');ok();
 assert.ok(!/labo|rapport/i.test(moteur.slice(moteur.indexOf('function basEtape'),moteur.indexOf('function basEtape')+1200)),'aucun cours nommé dans le moteur');ok();
-assert.ok(/\.repere\.reprise\{/.test(page)&&/blocs\.js\?v=bas-etape/.test(page),'style et nouvelle version de l’adresse');ok();
+assert.ok(/\.repere\.reprise\{/.test(page)&&/blocs\.js\?v=sous-etapes/.test(page),'style et nouvelle version de l’adresse');ok();
 assert.ok(!/\b(Suppr|Échap|Entrée|Maj)\b/.test(JSON.stringify(BAS)),'touches en anglais');ok();
 
 // Le rappel de Python, pour le rapport : copié sur un voisin = 0 sur 20 pour les deux (Vincent, 16/11/2026). Dès la première étape et sous la grille.
 const copie=/⚠️ Pas de copier-coller du voisin\. Un rapport copié sur un autre élève, c’est 0 sur 20, pour les deux rapports\./;
 assert.match(String(F.BLOCS[0].extra),copie);assert.match(page.slice(page.indexOf('id="grille-criteree"')),copie);ok();
+
+// Sous les pastilles des missions : les étapes de la mission affichée, par leur nom court (Vincent, 16/11/2026).
+const court=B=>B.court||B.titre.split(/ : |, /)[0];
+assert.deepEqual(F.BLOCS.slice(1,5).map(court),['Défi','Relever la mémoire','Faire calculer le PC','Capturer et conclure']);ok();
+F.PARCOURS.filter(g=>g.fin-g.debut>1).forEach(g=>{const noms=F.BLOCS.slice(g.debut,g.fin).map(court);assert.equal(new Set(noms).size,noms.length,'noms courts distincts : '+noms);noms.forEach(x=>assert.ok(x.length<=45,x));});ok();
+assert.ok(/el\("div","sous-etapes"\)/.test(moteur)&&/n\.disabled = !APERCU && !DECLARATIF && i>etat\.atteint/.test(moteur),'blocs.js : étapes cliquables jusqu’à celle atteinte');ok();
 
 console.log('Labo 07 : '+n+' contrôles réussis.');
