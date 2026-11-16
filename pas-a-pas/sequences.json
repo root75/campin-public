@@ -156,7 +156,7 @@
         "titre": "Quelle adresse pose problème ?",
         "min": 4,
         "methode": "Choix individuels, justification orale et correction collective",
-        "question": "Camille utilise camille.martin@example.org. Coche les adresses à écarter pour lui écrire, puis envoie tes choix.",
+        "question": "Camille utilise camille.martin@example.org. Pour lui écrire, chaque adresse est-elle à utiliser ou à écarter ?",
         "choix": [
           "À utiliser",
           "À écarter"
