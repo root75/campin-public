@@ -139,7 +139,7 @@ const piegeCode = ({n,m}) => {
     coince:["int( ) transforme un texte en nombre entier : int(\"3\") vaut 3.",
             "On peut convertir à la lecture, nombre = int(input(\"Un nombre ? \")), ou juste avant le calcul, int(nombre) * …"],
     q:{ type:"code", q:`Répare le programme : il doit afficher ${n*m} quand on tape ${n}.`,
-        depart:`nombre = input("Un nombre ? ")\nprint(nombre * ${m})`, essais:[[String(n)],[String(autre)]],
+        depart:`nombre = input("Un nombre ? ")\nprint(nombre * ${m})`, essais:[[String(n)],[String(autre)]], scene:{ decor:"calcul", ouvre:[String(n*m), String(autre*m)] },
         test: r => r.erreur ? (r.erreur.type==="ValueError" ? "ValueError : int( ) a reçu autre chose qu'un nombre entier. Ne touche pas aux réponses tapées." : "Lis la <b>ligne rouge</b> : chaque parenthèse ouverte doit être fermée. int(input(\"…\")) en a DEUX à la fin.")
                  : !/\bint\(/.test(r.code) ? "Utilise int( ) : c'est lui qui transforme le texte en nombre."
                  : DERNIERE(r.essais[0])===String(n).repeat(m) ? "Toujours recopié : int( ) doit entourer le texte tapé (ou la boîte nombre)."
@@ -413,6 +413,8 @@ const BLOCS = [
             "Des noms sans accent : degats, pas dégâts.",
             "Toujours bloqué après ton voisin : relis ton programme « Les vies » de Python 01 et ajoute un int(input(…))."],
     q:{ type:"code", q:"Écris le programme « Les vies, version jeu ».", depart:"vies = {D}\n", essais:[["{K}"],["1"]],
+        scene:{ decor:"coeurs", ouvre:(dit, x, i) => (dit.match(/-?\d+/g)||[]).pop()===String([LV.r, LV.d-1][i]),
+                montre:(dit, x, i, etat) => etat==="ouvert" ? "❤️".repeat([LV.r, LV.d-1][i]) : "" },
         test: r => r.erreur ? (r.erreur.type==="EOFError" ? "Un seul input( ) : on ne tape qu'une fois les dégâts." : r.erreur.type==="TypeError" ? "TypeError : texte et nombre mélangés. As-tu mis int( ) autour de input( ) ?" : "Lis la <b>ligne rouge</b>, corrige, puis exécute.")
                  : !/input\(/.test(r.code) ? "Le programme doit demander les dégâts avec input( )."
                  : r.essais.every((e,i) => (DERNIERE(e).match(/-?\d+/g)||[]).pop()===String([LV.r, LV.d-1][i])) ? true
