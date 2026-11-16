@@ -33,6 +33,59 @@ let enAide = false;
 /* Opt-in de la fiche : const PRESENTATION = "missions" (cloche, bulle, bravo). Les fiches Python n'en ont pas. */
 const MISSIONS = typeof PRESENTATION!=="undefined" && PRESENTATION==="missions";
 
+/* Mode déclaratif — opt-in de la fiche : const MODE = "declaratif" (le Rat de ville). Pas de question de preuve :
+   une étape est terminée quand toutes ses cases (B.gestes) sont cochées. Les cases sont enregistrées par le
+   serveur (une ligne « case » par geste), donc gardées d'une période à l'autre et d'un poste à l'autre ; la
+   navigation est libre, sauf au-delà du cadenas « Blocs ouverts ». Avec const GRILLE = { intro, niveaux:{A:"dépasse",…},
+   criteres:[{ n, inc, regarde, A, B, C, D }], legende }, l'écran de fin porte la grille d'auto-évaluation « Moi ».
+   const REPRISE = { titre, html, demos } : l'encadré affiché en haut quand l'élève rouvre le cours après une pause.
+   État : etat.cases = { "étape.rang": true } (étape et rang à partir de 1), etat.moi = { critère: lettre }. */
+const DECLARATIF = typeof MODE!=="undefined" && MODE==="declaratif";
+if(DECLARATIF){ etat.cases = etat.cases || {}; etat.moi = etat.moi || {}; ici = Math.min(BLOCS.length-1, Number(etat.ici)||0); }
+const nbCases = i => (BLOCS[i].gestes||[]).length;
+const cochees = i => { let n = 0; for(let j=1;j<=nbCases(i);j++) if(etat.cases[(i+1)+"."+j]) n++; return n; };
+/* Bloc terminé : toutes ses cases en mode déclaratif, sinon sa preuve réussie. */
+const complet = i => DECLARATIF ? i<BLOCS.length && cochees(i)===nbCases(i) : i<etat.atteint;
+const premierManque = () => { const k = BLOCS.findIndex((_,i)=>!complet(i)); return k<0 ? BLOCS.length : k; };
+let repriseVue = false, placeNotee = -1;
+/* Une déclaration (case, lettre « Moi ») part au serveur dans l'ordre, une à la fois, et se réessaie seule : la
+   fiche ne dit « Enregistré » qu'après une réponse positive. Deux changements de la même case en attente n'en font qu'un. */
+const fileDecl = []; let envoiDecl = false;
+const ditDecl = t => { const n = document.getElementById("pied"); if(n) n.textContent = t; };
+function declare(evt){
+  if(!SUIVI || APERCU) return;
+  const cle = e => e.type+"|"+e.etape+"|"+String(e.reponse).split(":")[0];
+  const k = fileDecl.findIndex((e,i)=>cle(e)===cle(evt) && !(i===0 && envoiDecl));
+  if(k>=0) fileDecl[k] = evt; else fileDecl.push(evt);
+  videDecl(0);
+}
+function videDecl(essai){
+  if(envoiDecl || !fileDecl.length) return;
+  envoiDecl = true; ditDecl("Enregistrement…");
+  google.script.run.withSuccessHandler(()=>{
+    fileDecl.shift(); envoiDecl = false;
+    if(fileDecl.length) videDecl(0); else ditDecl("✓ Enregistré avec ton compte scolaire. Tes cases sont gardées d’une période à l’autre.");
+  }).withFailureHandler(()=>{
+    envoiDecl = false;
+    if(essai<3){ ditDecl("Enregistrement : nouvel essai dans un instant…"); setTimeout(()=>videDecl(essai+1), [2000,5000,10000][essai]); return; }
+    fileDecl.push(fileDecl.shift());   // une déclaration refusée ne bloque pas les suivantes
+    ditDecl("⚠ "+fileDecl.length+(fileDecl.length>1 ? " choix ne sont pas encore enregistrés" : " choix n’est pas encore enregistré")+". Garde cette page ouverte : nouvel essai à ta prochaine case.");
+  }).noter(COURS, fileDecl[0]);
+}
+const BRAVOS = ["Bravo !","Bien joué !","Une case de plus !","Continue comme ça !","Ça avance !"];
+let recoche = false;   // vrai pendant que la fiche recoche elle-même les cases gardées
+function declareCase(cb){
+  if(recoche || ici>=BLOCS.length) return;
+  const j = casesIci().indexOf(cb)+1; if(!j) return;
+  const cle = (ici+1)+"."+j, avant = complet(ici);
+  if(cb.checked) etat.cases[cle] = true; else delete etat.cases[cle];
+  ecrit(etat); barre();
+  declare({ etape:ici+1, type:"case", reponse:j+":"+(cb.checked ? 1 : 0) });
+  if(!cb.checked) return;
+  if(!avant && complet(ici)) bravo("⭐ Étape "+(ici+1)+" réussie : « "+BLOCS[ici].titre+" » !", true);
+  else bravo(BRAVOS[Math.floor(Math.random()*BRAVOS.length)], false);
+}
+
 /* Le bloc tel que CET élève le voit : sa version, et les nombres de « Les vies ». */
 const apercuV = {};
 /* Ce que les premières fiches devaient fournir elles-mêmes : repris ici quand la fiche ne le fait pas.
@@ -106,6 +159,7 @@ function groupeCourant(i=ici){
   return typeof PARCOURS!=="undefined" ? PARCOURS.find(g=>i>=g.debut && i<g.fin) : null;
 }
 function suite(){
+  if(DECLARATIF) return ici+1<BLOCS.length ? "Étape suivante →" : (FIN.bouton || FIN.titre+" →");
   if(typeof PARCOURS==="undefined") return ici+1<BLOCS.length ? "Bloc suivant →" : "J'ai fini ✓";
   if(ici+1>=BLOCS.length) return "J’ai terminé l’enquête ✓";
   const avant=groupeCourant(), apres=groupeCourant(ici+1);
@@ -136,20 +190,28 @@ function barre(){
   b.classList.add("nav"); b.removeAttribute("aria-hidden"); b.setAttribute("role","navigation"); b.setAttribute("aria-label", groupes ? "Mes missions" : "Mes blocs");
   let nomIci = "";
   const rond = (signe, nom, debut, fin, cible) => {
-    const fait = etat.atteint>=fin, ferme = !!plafond && !APERCU && !fait && debut>=etat.atteint && debut>=plafond.bloc;   // pas encore ouvert par le professeur
-    let p = 0; for(let i=debut;i<fin;i++) p += i<etat.atteint ? 1 : i===ici ? partIci : partCases(i);
+    let fait = etat.atteint>=fin;
+    if(DECLARATIF){ fait = true; for(let i=debut;i<fin;i++) fait = fait && complet(i); }
+    const ferme = !!plafond && !APERCU && !fait && debut>=plafond.bloc && (DECLARATIF || debut>=etat.atteint);   // pas encore ouvert par le professeur
+    let p = 0; for(let i=debut;i<fin;i++) p += DECLARATIF ? cochees(i)/Math.max(1,nbCases(i)) : i<etat.atteint ? 1 : i===ici ? partIci : partCases(i);
     const n = txt("button", fait ? "fait" : ferme ? "ferme" : "", fait ? "✓" : signe);
     n.type = "button"; n.title = nom+(ferme ? " — pas encore ouvert" : "");
     n.style.setProperty("--p", Math.round(100*p/(fin-debut)));
-    n.setAttribute("aria-label", n.title+(fait ? " — validé" : ""));
+    n.setAttribute("aria-label", n.title+(fait ? (DECLARATIF ? " — terminé" : " — validé") : ""));
     if(ici>=debut && ici<fin){ n.setAttribute("aria-current","step"); nomIci = nom; }
-    n.disabled = !APERCU && debut>etat.atteint;   // le premier bloc fermé reste cliquable : il dit pourquoi
+    n.disabled = !APERCU && !DECLARATIF && debut>etat.atteint;   // le premier bloc fermé reste cliquable : il dit pourquoi ; déclaratif : navigation libre
     n.addEventListener("click",()=>{ if(ici===cible) return; ici = cible; affiche(); scrollTo(0,0); });
     b.append(n);
   };
   if(groupes) PARCOURS.forEach((g,k)=>rond(g.rond || String(k+1), g.titre, g.debut, g.fin,
     !APERCU && etat.atteint>g.debut && etat.atteint<g.fin ? etat.atteint : g.debut));   // groupe en cours : là où j'en suis
   else BLOCS.forEach((B,i)=>rond(String(i+1), (i+1)+". "+B.titre, i, i+1, i));
+  if(DECLARATIF && typeof GRILLE!=="undefined"){   // la grille « Moi » : une pastille de plus, après les étapes
+    const g = txt("button", plafond && !APERCU && plafond.bloc<BLOCS.length ? "ferme" : "", "📋"); g.type = "button"; g.title = FIN.titre; g.setAttribute("aria-label", FIN.titre);
+    if(ici>=BLOCS.length){ g.setAttribute("aria-current","step"); nomIci = FIN.titre; }
+    g.addEventListener("click",()=>{ if(ici>=BLOCS.length) return; ici = BLOCS.length; affiche(); scrollTo(0,0); });
+    b.append(g);
+  }
   if(nomIci) b.append(txt("p","nom-etape",nomIci));
 }
 function styleBarre(){
@@ -180,10 +242,11 @@ function lisCases(){
   return casesGardees;
 }
 const partCases = i => { const g = lisCases()[i]; return g && g.n ? Math.min(1, g.c.length/g.n) : 0; };
-const casesIci = () => [...document.querySelectorAll("#bloc ol.etapes input[type=checkbox]")];
+const casesIci = () => [...document.querySelectorAll(DECLARATIF ? "#bloc .faire > ol.etapes > li > label input[type=checkbox]" : "#bloc ol.etapes input[type=checkbox]")];
 /* Une case cochée ou décochée dans la consigne : le camembert du bloc affiché suit, et la case est gardée. */
 document.getElementById("bloc").addEventListener("change", e=>{
   if(!e.target.matches || !e.target.matches("ol.etapes input[type=checkbox]")) return;
+  if(DECLARATIF){ declareCase(e.target); return; }
   const c = casesIci(), g = lisCases();
   partIci = c.filter(x=>x.checked).length/c.length;
   if(ici<BLOCS.length) g[ici] = { n:c.length, c:c.map((x,k)=>x.checked ? k : -1).filter(k=>k>=0) };
@@ -233,6 +296,11 @@ function encadreRappel(B){
 /* À l'affichage d'un bloc : on recoche ses cases gardées. L'événement « change » rejoue ce qu'une coche fait
    (animation de la case suivante, camembert). */
 function recocheCases(){
+  if(DECLARATIF){   // les cases viennent du serveur (ou du poste, hors suivi) : rien n'est renvoyé
+    recoche = true;
+    casesIci().forEach((x,k)=>{ if(etat.cases[(ici+1)+"."+(k+1)] && !x.checked){ x.checked = true; x.dispatchEvent(new Event("change",{bubbles:true})); } });
+    recoche = false; return;
+  }
   const g = lisCases()[ici], c = casesIci();
   if(!g || !c.length || g.n!==c.length) return;   // la consigne a changé : on ne recoche rien
   g.c.forEach(k=>{ const x = c[k]; if(x && !x.checked){ x.checked = true; x.dispatchEvent(new Event("change",{bubbles:true})); } });
@@ -242,7 +310,7 @@ function recocheCases(){
    jusqu'à un bloc ; les suivants portent un cadenas dans la barre. Il arrive avec etat() au démarrage, puis avec moment() toutes les 5 s
    (sequence-eleve.js appelle PAS_A_PAS.plafond). Les blocs déjà validés restent lisibles. */
 let plafond = null;
-const enPause = () => !!plafond && !APERCU && plafond.bloc<BLOCS.length && ici>=plafond.bloc && ici>=etat.atteint;
+const enPause = () => !!plafond && !APERCU && plafond.bloc<BLOCS.length && ici>=plafond.bloc && (DECLARATIF ? !complet(ici) : ici>=etat.atteint);
 function recoitPlafond(p){
   p = p && Number(p.bloc)>0 ? { bloc:Number(p.bloc), message:String(p.message||"") } : null;
   if(JSON.stringify(p)===JSON.stringify(plafond)) return;
@@ -255,7 +323,7 @@ function pause(z){
     txt("p",null,"En attendant, reviens sur tes blocs : clique sur une pastille ✓, juste au-dessus. Pour chacun, sais-tu expliquer l’erreur à ton voisin, sans lire l’explication ?"),
     txt("p","note","Le professeur ouvre la suite : le cadenas 🔒 disparaîtra tout seul, sans recharger la page."));
   const nav = el("div","actions"), avant = txt("button","btn vide","← Bloc précédent"); avant.type = "button";
-  avant.addEventListener("click",()=>{ ici = Math.min(ici, BLOCS.length)-1; affiche(); });
+  avant.addEventListener("click",()=>{ ici = Math.min(ici, BLOCS.length, plafond.bloc)-1; affiche(); });
   nav.append(avant);
   /* Les prolongements vivent hors du fil des blocs (<details id="plus-loin"> de la page) : l'attente y mène. */
   const loin = document.getElementById("plus-loin");
@@ -266,9 +334,32 @@ function pause(z){
 }
 
 /* B.gestes = une liste de consignes (HTML permis) : une case à cocher par geste, à l'impératif.
-   Un geste peut porter son « ne fais pas » : {geste:'…', attention:'⚠️ …'}, un encadré sous la case, jamais dans son texte. */
-const gestesHtml = l => !l ? "" : '<ol class="etapes">'+l.map(g=>{const [t,a]=typeof g==="string"?[g,""]:[g.geste,g.attention];
-  return '<li><label><input type="checkbox"><span>'+t+'</span></label>'+(a?'<p class="attention">'+a+'</p>':'')+'</li>';}).join("")+'</ol>';
+   Un geste peut porter son « ne fais pas » : {geste:'…', attention:'⚠️ …'}, un encadré sous la case, jamais dans son texte.
+   {geste:'…', sous:'<img …>'} : du HTML sous la case (un extrait à recopier, une aide repliée).
+   {geste:'…', trous:{ titre, intro, bravo, variantes:[{ texte, mots, pieges }] }} : un texte à trous d'entraînement sous
+   la case, corrigé dans la page, jamais enregistré, qui ne bloque rien ; une variante tirée au hasard à chaque affichage. */
+const gestesHtml = l => !l ? "" : '<ol class="etapes">'+l.map(g=>{const [t,a,s]=typeof g==="string"?[g,"",""]:[g.geste,g.attention,g.sous];
+  return '<li><label><input type="checkbox"><span>'+t+'</span></label>'+(a?'<p class="attention">'+a+'</p>':'')+(s?'<div class="sous-case">'+s+'</div>':'')+'</li>';}).join("")+'</ol>';
+function entrainements(z, B){
+  const lis = z.querySelectorAll(".faire > ol.etapes > li");
+  (B.gestes||[]).forEach((g,k)=>{
+    const T = g && g.trous; if(!T || !lis[k]) return;
+    const V = T.variantes[Math.floor(Math.random()*T.variantes.length)];
+    const boite = el("div","trous-bloc"), zone = el("div"), dit = txt("p","note",""); dit.setAttribute("role","status");
+    if(T.titre) boite.append(txt("h3",null,T.titre));
+    if(T.intro) boite.append(txt("p",null,T.intro));
+    boite.append(zone, dit); lis[k].append(boite);
+    trous(zone, V, ()=>{ dit.textContent = T.bravo || "Juste !"; boite.classList.add("reussi"); }, m=>{ dit.textContent = m; });
+  });
+}
+/* const REPRISE (voir le mode déclaratif) : les gestes pour retrouver son travail, puis un bouton vers la première étape pas finie. */
+function boiteReprise(){
+  const k = Math.min(premierManque(), BLOCS.length-1), box = el("aside","repere reprendre");
+  box.append(txt("h3",null,REPRISE.titre), el("div",null,REPRISE.html));
+  const b = txt("button","btn plein","C’est fait : je reprends à l’étape "+(k+1)+" — "+BLOCS[k].titre); b.type = "button";
+  b.addEventListener("click",()=>{ repriseVue = false; ici = k; affiche(); scrollTo(0,0); });
+  box.append(b); return box;
+}
 /* E = { q:"question", choix:[["libellé","retour"],…], apres:"<p>l'analyse</p>", suite:"libellé du bouton de preuve" } */
 function essaiHtml(E, fini){
   if(!document.getElementById("style-essai")){
@@ -285,6 +376,10 @@ function essaiHtml(E, fini){
   d.append(ch, r); return d;
 }
 function affiche(){
+  if(DECLARATIF && ici!==placeNotee){   // la place de l'élève : gardée, et visible au tableau (« ouvert »)
+    if(placeNotee>=0) envoie({ etape:Math.min(ici,BLOCS.length-1)+1, type:"ouvert" });
+    placeNotee = ici; etat.ici = ici; ecrit(etat);
+  }
   partIci = 0; barre(); if(MISSIONS) bulle();
   queueMicrotask(recocheCases);   // une fois le bloc construit, ses animations comprises
   const z = document.getElementById("bloc"); z.replaceChildren();
@@ -306,6 +401,8 @@ function affiche(){
   }
   else num.append(txt("span",null,"Bloc "+(ici+1)+" sur "+BLOCS.length+" · Partie "+B.partie.split(" — ")[0]), txt("span",null,"⏱ "+B.min+" min"));
   z.append(num, txt("h2",null,groupe ? B.titre : (ici+1)+". "+B.titre));
+  const avecReprise = repriseVue && typeof REPRISE!=="undefined";
+  if(avecReprise) z.append(boiteReprise());
   if(APERCU && B._n>1){
     const sel = el("div","actions"); sel.append(txt("span","note","Version de la preuve :"));
     for(let k=1;k<=B._n;k++){ const b = txt("button","btn "+(k===B._v ? "plein" : "vide"),String(k)); b.type="button";
@@ -316,7 +413,7 @@ function affiche(){
   if(MISSIONS){
     /* Présentation « missions » (Labo 07) : le but en une phrase, les cases, puis ce qu'on vérifie.
        Pas d'étiquettes répétées à chaque bloc. */
-    z.append(el("p","but",B.veux));
+    if(B.veux) z.append(el("p","but",B.veux));
     const rappel = encadreRappel(B); if(rappel) z.append(rappel);
     /* B.avant = ce qu'il faut avoir sous les yeux AVANT de cocher (un exemple analysé, un tableau à lire) : les
        cases ne demandent jamais de lire ce qui n'est pas encore à l'écran, comme la question de preuve. */
@@ -330,7 +427,7 @@ function affiche(){
     /* B.essai = une question d'essai sur ce qui est montré dans `avant`, À LA PLACE des cases : l'élève se prononce
        (« Je ne sais pas » compris), puis lit l'analyse. Rien n'est noté ni envoyé : la preuve vient après. */
     if(B.essai) z.append(essaiHtml(B.essai, ()=>{ essaiFait = true; if(apresEssai) apresEssai(); }));
-    else z.append(el("div","faire",B.fais || gestesHtml(B.gestes)));
+    else { z.append(el("div","faire",B.fais || gestesHtml(B.gestes))); entrainements(z, B); }
     const v = el("aside","repere verification"); v.append(txt("h3",null,"✅ À vérifier"), el("p",null,B.vois)); z.append(v);
   } else {
     const dl = el("dl","lignes");
@@ -340,19 +437,20 @@ function affiche(){
     z.append(dl);
   }
   if(B.extra) z.append(el("div",null,B.extra));
-  demosSousCases(z, B);
   if(B.stop) z.append(txt("p","stop",MISSIONS ? "🛑 STOP — ne continue pas avant d’avoir vérifié." : "🛑 STOP — je ne continue pas tant que je ne vois pas ça."));
 
   B.coince.forEach((c,i)=>{
-    if(!B.indices){ liste.append(txt("li",null,c)); return; }
+    if(!B.indices){ liste.append(c && c.html ? el("li",null,c.html) : txt("li",null,c)); return; }   // {html:'…'} : une aide avec du gras ou des touches
     const li=el("li"), d=el("details");
     d.append(txt("summary",null,"Indice "+(i+1)+(i===0 ? " — une piste" : " — un geste précis")),txt("p",null,c));
     li.append(d); liste.append(li);
   });
 
   const pr = el("div","preuve");
-  const fait = !APERCU && etat.atteint > ici;   // en aperçu, chaque version reste à essayer
-  if(!fait && ["enquete","rapport","mixte"].includes(B.q.type)){
+  const fait = DECLARATIF || (!APERCU && etat.atteint > ici);   // en aperçu, chaque version reste à essayer
+  if(DECLARATIF){
+    /* Pas de preuve : les cases sont la déclaration, et on avance librement. */
+  } else if(!fait && ["enquete","rapport","mixte"].includes(B.q.type)){
     preuve(pr,B);
   } else if(fait && B.q.type==="code"){
     relecture(pr, B);
@@ -377,21 +475,27 @@ function affiche(){
   }
   /* q.colle (12/11/2026) : la question et sa zone de réponse juste sous les cases, sans « À vérifier » ni encadrés
      entre les deux : « à ton avis… » et « mon hypothèse » se lisent d'un seul tenant. Le reste du bloc suit. */
-  if(B.q.colle && MISSIONS && !B.essai){
+  if(B.q && B.q.colle && MISSIONS && !B.essai){
     const faire = z.querySelector(".faire");
     if(faire) faire.after(pr);
   }
   remplitRappels(document.body);   // le bloc, et la page autour (fenêtre « Mon rapport »)
   document.body.dataset.pret = "1";
   if(!fait && SUIVI && !APERCU && B._n>1) pr.append(txt("p","note","Ton voisin a peut-être une autre version que toi : c'est normal, chacun a la sienne."));
-  if(!pr.parentNode) z.append(pr);   // déjà placé sous les cases (q.colle)
+  if(!DECLARATIF && !pr.parentNode) z.append(pr);   // déjà placé sous les cases (q.colle)
 
   const nav = el("div","actions");
-  const avant = txt("button","btn vide",groupe ? "← Étape précédente" : "← Bloc précédent"); avant.type="button"; avant.disabled = ici===0;
+  const avant = txt("button","btn vide",groupe || DECLARATIF ? "← Étape précédente" : "← Bloc précédent"); avant.type="button"; avant.disabled = ici===0;
   avant.addEventListener("click",()=>{ ici--; affiche(); });
   nav.append(avant, el("span","espace"));
-  if(fait || (APERCU && ici+1<BLOCS.length)){ const s=txt("button","btn plein",suite()); s.type="button"; s.addEventListener("click",()=>{ici++;affiche();}); nav.append(s); }
+  if(fait || (APERCU && ici+1<BLOCS.length)){ const s=txt("button","btn plein",suite()); s.type="button"; s.addEventListener("click",()=>{ici++;affiche();if(DECLARATIF)scrollTo(0,0);}); nav.append(s); }
   z.append(nav);
+  if(DECLARATIF) z.append(txt("p","note","Tu peux continuer même si une case reste vide. Coche quand tu as terminé ; le professeur examine ton document."));
+  /* B.pied : du HTML après la navigation, pour ce qui se répète sous chaque bloc (« À la sonnerie »). */
+  if(B.pied) z.append(el("div","pied-bloc",B.pied));
+  demosSousCases(z, Object.assign({}, B.demos, avecReprise ? REPRISE.demos : null));
+  // Avec l'encadré « Je reprends », aucune animation de case ne s'ouvre seule : pas deux animations à la fois.
+  if(avecReprise) z.querySelectorAll(".faire details.demo-case[open]").forEach(d=>{ d.open = false; });
 }
 
 /* Un programme validé reste lisible quand on revient sur le bloc : le code de départ, le programme
@@ -462,9 +566,9 @@ function relecture(pr, B){
 /* « Regarde comment faire » sous chaque case : le volet est commun à tous les moteurs (DemoLecteur.sousCases,
    pas-a-pas/demo-lecteur.js). La fiche décrit seulement les données, dans le bloc :
      demos: { "3": ["gestionnaire", [4]], "incident 2.4": ["fenetres", [3]] } */
-function demosSousCases(z, B){
-  if(!B.demos || typeof Demo==="undefined" || !Demo.cree || typeof DemoLecteur==="undefined" || !DemoLecteur.sousCases) return;
-  DemoLecteur.sousCases(z, B.demos, Demo.cree);
+function demosSousCases(z, demos){
+  if(!Object.keys(demos).length || typeof Demo==="undefined" || !Demo.cree || typeof DemoLecteur==="undefined" || !DemoLecteur.sousCases) return;
+  DemoLecteur.sousCases(z, demos, Demo.cree);
 }
 
 /* Texte à trous — « Explique avec tes mots », en deux temps (Vincent, 10/11/2026).
@@ -821,27 +925,60 @@ function citation(c){ return typeof PhraseFin!=="undefined" ? PhraseFin.figure(c
 
 function fin(z){
   const loin = document.getElementById("plus-loin"); if(loin) loin.hidden = false;
+  if(DECLARATIF) z.append(txt("div","numero","Étape finale · après les "+BLOCS.length+" étapes"));
   z.append(txt("h2",null,FIN.titre), txt("p",null,FIN.texte));
+  if(typeof GRILLE!=="undefined") z.append(grilleMoi());
   if(FIN.revision){
     const revision=el("div","encart"),lien=txt("a","btn vide",FIN.revision.titre);
     lien.href=FIN.revision.url;lien.target="_blank";lien.rel="noopener";
     revision.append(txt("p",null,FIN.revision.texte),lien);z.append(revision);
   }
-  const phrase = FIN.citation && citation(FIN.citation); if(phrase) z.append(phrase);
+  // Déclaratif : la phrase de la fin attend que toutes les étapes soient terminées (on vient ici librement).
+  const phrase = FIN.citation && (!DECLARATIF || premierManque()>=BLOCS.length) && citation(FIN.citation); if(phrase) z.append(phrase);
   const plus = el("div","encart");
-  plus.append(txt("h3",null,MISSIONS ? "⚡ Fini avant les autres ?" : "⚡ J'ai fini avant les autres"), txt("p",null,FIN.plus),
-    el("p",null,(MISSIONS ? "Puis révise : " : "Puis je révise : ")+FIN.lien+"."));
+  if(FIN.plus) plus.append(txt("h3",null,MISSIONS ? "⚡ Fini avant les autres ?" : "⚡ J'ai fini avant les autres"), txt("p",null,FIN.plus));
+  if(FIN.lien) plus.append(el("p",null,(MISSIONS ? "Puis révise : " : "Puis je révise : ")+FIN.lien+"."));
+  if(!plus.children.length) plus.hidden = true;
   const nav = el("div","actions");
-  const avant = txt("button","btn vide","← Revoir les blocs"); avant.type="button";
-  avant.addEventListener("click",()=>{ ici=0; affiche(); });
+  const avant = txt("button","btn vide",DECLARATIF ? "← Étape "+BLOCS.length : "← Revoir les blocs"); avant.type="button";
+  avant.addEventListener("click",()=>{ ici=DECLARATIF ? BLOCS.length-1 : 0; affiche(); });
   nav.append(avant);
   if(!SUIVI){
     const zero = txt("button","btn vide","Recommencer à zéro"); zero.type="button";
-    zero.addEventListener("click",()=>{ etat = { atteint:0, erreurs:0 }; ecrit(etat); oublieProgrammes(); try{ localStorage.removeItem(cleCases()); }catch(e){} casesDe = null; ici=0; humeur(); affiche(); });
+    zero.addEventListener("click",()=>{ etat = { atteint:0, erreurs:0, cases:{}, moi:{} }; ecrit(etat); oublieProgrammes(); try{ localStorage.removeItem(cleCases()); }catch(e){} casesDe = null; ici=0; humeur(); affiche(); });
     nav.append(zero);
   }
   z.append(bilan(), plus, nav);
-  if(!etat.fini){ etat.fini = true; ecrit(etat); envoie({ etape:BLOCS.length, type:"fini" }); }
+  if(!DECLARATIF && !etat.fini){ etat.fini = true; ecrit(etat); envoie({ etape:BLOCS.length, type:"fini" }); }
+}
+/* La grille d'auto-évaluation « Moi » (const GRILLE) : une lettre par critère, enregistrée comme une case. */
+function grilleMoi(){
+  if(!document.getElementById("style-grille-moi")){
+    const st = el("style"); st.id = "style-grille-moi";
+    st.textContent = ".grille-moi{display:grid;gap:12px}.grille-moi .defile{overflow:auto}.grille-moi table{border-collapse:collapse;width:100%}"
+      +".grille-moi th,.grille-moi td{border:1px solid var(--trait);padding:10px;text-align:left;vertical-align:top}"
+      +".grille-moi td{min-width:11rem}.grille-moi td.moi{min-width:0}.grille-moi th:first-child{min-width:14rem}.grille-moi th p{font-weight:400;margin:4px 0 0}.grille-moi select{font:inherit}";
+    document.head.append(st);
+  }
+  const G = GRILLE, lettres = Object.keys(G.niveaux), d = el("div","grille-moi");
+  if(G.intro) d.append(el("div",null,G.intro));
+  const table = el("table"), tete = el("tr"), corps = el("tbody"), defile = el("div","defile");
+  ["Critère et attendu","Moi"].concat(lettres.map(k=>k+(G.niveaux[k] ? " — "+G.niveaux[k] : ""))).forEach(t=>tete.append(txt("th",null,t)));
+  G.criteres.forEach((c,i)=>{
+    const tr = el("tr"), th = el("th"), td = el("td","moi"), sel = el("select");
+    th.scope = "row"; th.append(txt("b",null,c.n+(c.inc ? " ★" : "")), txt("p",null,c.regarde));
+    sel.dataset.critere = i+1; sel.setAttribute("aria-label","Moi — critère "+(i+1));
+    [""].concat(lettres).forEach(v=>{ const o = txt("option",null,v || "À choisir"); o.value = v; sel.append(o); });
+    sel.value = etat.moi[i+1] || "";
+    sel.addEventListener("change",()=>{
+      if(sel.value) etat.moi[i+1] = sel.value; else delete etat.moi[i+1];
+      ecrit(etat); declare({ etape:0, type:"moi", reponse:(i+1)+":"+sel.value });
+    });
+    td.append(sel); tr.append(th, td, ...lettres.map(k=>txt("td",null,c[k]))); corps.append(tr);
+  });
+  const thead = el("thead"); thead.append(tete); table.append(thead, corps); defile.append(table); d.append(defile);
+  if(G.legende) d.append(el("div",null,G.legende));
+  return d;
 }
 
 /* Humeur du jour : un clic, au-dessus du bloc 1. Ce n'est pas un bloc : rien n'est compté,
@@ -964,7 +1101,12 @@ if(APERCU){
     if(s && s.avis) etat.avis = s.avis;
     humeur();
     if(s && s.plafond) plafond = { bloc:Number(s.plafond.bloc), message:String(s.plafond.message||"") };
-    if(s && s.atteint){ etat.atteint = s.atteint; etat.fini = s.atteint >= BLOCS.length; ici = Math.min(s.atteint, BLOCS.length); }
+    if(DECLARATIF && s){   // cases et lettres de toutes les périodes ; la place : la dernière connue, sinon la première étape pas finie
+      etat.cases = s.cases || {}; etat.moi = s.moi || {};
+      ici = s.position>=1 && s.position<=BLOCS.length ? s.position-1 : Math.min(premierManque(), BLOCS.length-1);
+      repriseVue = Object.keys(etat.cases).length>0 && !!s.derniere && Date.now()-s.derniere > 5*60000;
+      placeNotee = ici;   // demarre() l'envoie (« ouvert »)
+    } else if(s && s.atteint){ etat.atteint = s.atteint; etat.fini = s.atteint >= BLOCS.length; ici = Math.min(s.atteint, BLOCS.length); }
     const demarre = () => { affiche(); envoie({ etape:Math.min(ici,BLOCS.length-1)+1, type:"ouvert" }); restaureAide(); };
     if(typeof PREUVES==="undefined") demarre(); else pretPreuves.then(variantesServeur).then(demarre);
   }).withFailureHandler(()=>{
@@ -977,6 +1119,7 @@ if(APERCU){
 } else {
   qui.textContent = typeof HORS_SUIVI!=="undefined" ? HORS_SUIVI : "Garde deux fenêtres : cette fiche, et Thonny quand elle le demande.";
   pied.textContent = "Ton avancement reste sur cet ordinateur. Aucune donnée n'est envoyée.";
+  if(DECLARATIF) repriseVue = location.hash==="#reprise";
   humeur();
   quandPret(affiche);
 }

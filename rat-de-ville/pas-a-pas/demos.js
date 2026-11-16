@@ -3,7 +3,7 @@
    communs à tous les cours (pas-a-pas/demos-communs.js). Aucune donnée élève ; rien n'est enregistré.
    Une image = un état de l'écran + l'élément que la souris va cliquer + une légende.
    Ici, seulement les maquettes et les images. Le lecteur est commun (pas-a-pas/demo-lecteur.js) ;
-   quelle image va sous quelle case : champ « demos » de chaque étape, dans contenu.js. */
+   quelle image va sous quelle case : champ « demos » de chaque étape, dans fiche.js. */
 const Demo = (() => {
   const ICO = 'https://root75.github.io/campin-public/rat-de-ville/pas-a-pas/icones/';
   const FABLE = ['autrefois le rat de ville', 'invita le rat des champs,', 'd’une façon fort civile,', 'à des reliefs d’ortolans.'];
@@ -19,7 +19,7 @@ const Demo = (() => {
   // Le document de départ de la période 2 : titre, une strophe, l'auteur.
   const base = (t = '', s = '', a = '') => [L(TITRE, t), L(''), ...FABLE_MAJ.map(v => L(v, s)), L(''), L('Jean de La Fontaine', a)];
 
-  /* Les animations, par clé : une par étape (etape + id de l’étape dans contenu.js), puis celles hors étape. */
+  /* Les animations, par clé : une par étape (etape + ancien numéro interne de l’étape), puis celles hors étape. */
   const DEMOS = {
     etape1: { titre: 'Je crée et je nomme', images: [
       { vue: 'g-gaufre', cible: 'gaufre', legende: 'Je clique sur la gaufre, en haut à droite.' },
@@ -149,5 +149,8 @@ const Demo = (() => {
     const m = e.querySelector('.md-menu'), ancre = m && e.querySelector('[data-c="' + (f.menu.sous || 'm-format') + '"]');
     if (ancre) DemoLecteur.sousAncre(e, m, ancre, 170);
   } });
+  /* Volet « Toutes les animations » de la page : retrouver n'importe quelle animation sans changer d'étape. */
+  const details = document.getElementById('tutos'), liste = document.getElementById('tutos-liste'), vue = document.getElementById('tutos-vue');
+  if (details && liste && vue) DemoLecteur.volet({ details, liste, vue, titre: true, cree: Lect.cree, entrees: Object.keys(DEMOS).map(cle => [cle, DEMOS[cle].titre]) });
   return { cree: Lect.cree, cles: Lect.cles };
 })();

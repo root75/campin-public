@@ -1,4 +1,4 @@
-/* Cloche « J'attends de l'aide » — limiteur commun à tous les cours (Rat de ville, blocs.js, Messagerie 01).
+/* Cloche « J'attends de l'aide » — limiteur commun à tous les cours (blocs.js, Messagerie 01).
    Avant de sonner, une seule question : « As-tu demandé à ton voisin ? », avec le lien « Ça coince ? »,
    le compte restant et deux boutons, « 🔔 Oui, je sonne » et « Pas encore ». Deux clics en tout.
    (Jusqu'au 14/11/2026 : trois cases à cocher avant de sonner ; beaucoup d'élèves ne sonnaient plus, dit Vincent.)

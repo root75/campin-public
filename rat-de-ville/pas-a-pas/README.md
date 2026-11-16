@@ -1,5 +1,14 @@
 # Suivi du formatif « Le rat de ville »
 
+> **Depuis la migration vers le moteur commun** : cette fiche n'a plus de moteur à elle. `fiche.js` ne contient que
+> des données (`BLOCS`, `GRILLE`, `FIN`, `REPRISE`, mode déclaratif) ; l'affichage, l'enregistrement des cases, la cloche,
+> le cadenas et le cours collectif viennent de `pas-a-pas/blocs.js` — mode d'emploi : `pas-a-pas/MOTEUR.md`, section
+> « Le mode déclaratif ». `contenu.js` et `pas-a-pas/formatif-prof.js` sont supprimés ; le tableau est le tableau commun.
+> Une étape = sa place dans `BLOCS` ; ses cases sont enregistrées sous « étape.rang » et comptées dans
+> `pas-a-pas/cours.json`. Les numéros internes d'avant (1, 2, 3, 6, 7, 8, 10, 11, 9) ne servent plus qu'au serveur, pour
+> relire les anciennes lignes du Journal. Retirés avec l'ancien moteur : la jauge « missions », les confettis, le bouton
+> « Affichage compact », « Voir toutes les aides ». **La suite de ce fichier décrit l'ancien moteur : historique.**
+
 Entrée du catalogue : `rat-de-ville-formatif`, 9 étapes sur deux périodes (7 du 6/11 au 11/11 ; voir la fin de ce fichier).
 Les 45 petites cases (une action ou une vérification par case) déclarent les actions terminées ; elles ne corrigent pas la copie.
 Navigation libre, copie par groupes de quatre vers (strophes séparées à l’étape 3) ; grille complète et colonne « Moi » en étape finale (bouton 📋). Plus de repère collectif depuis le 4/11 (voir LIVRAISON-RAT.md).

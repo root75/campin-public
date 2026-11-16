@@ -99,8 +99,8 @@ assert.ok(/state\.etape===7[\s\S]{0,700}escapeHtml\(state\.reponse\)/.test(s), '
   const vis = fs.readFileSync(__dirname + '/../messagerie/pas-a-pas/visuels.js', 'utf8');
   assert.ok(/window\.Visuels=Object\.assign\(window\.Visuels\|\|\{\},\{adresse,email\}\)/.test(vis) && !/MessagerieVisuels/.test(vis), 'visuels.js s’inscrit au registre commun Visuels');
   for (const f of ['tableau.js', 'sequence-eleve.js'])
-    assert.ok(!/MessagerieVisuels|'domaine'|value *===? *["'](?!rat-de-ville-formatif)[a-z0-9-]+["']/.test(fs.readFileSync(__dirname + '/../pas-a-pas/' + f, 'utf8')),
-      f + ' : aucun test sur le nom d’un cours (sauf le formatif, qui a son moteur)');
+    assert.ok(!/MessagerieVisuels|'domaine'|value *===? *["'][a-z0-9-]+["']/.test(fs.readFileSync(__dirname + '/../pas-a-pas/' + f, 'utf8')),
+      f + ' : aucun test sur le nom d’un cours');
   assert.ok(/const enPause=\(\)=>!!plafond&&!APERCU&&plafond\.bloc<TITRES\.length&&state\.etape>=plafond\.bloc&&state\.etape>=state\.atteint/.test(s), 'même règle que blocs.js');
 }
 
