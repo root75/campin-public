@@ -201,7 +201,7 @@ const repare = (depart, msg) => ({
       juste:"Trois règles du if : == pour comparer, les deux-points, la ligne décalée en dessous." } });
 
 /* D. Si… sinon : la porte (et ses deux cousines). Un texte se compare entre guillemets. */
-const porte = ({nom, question, bon, mauvais, oui, non}) => ({
+const porte = ({nom, question, bon, mauvais, oui, non, decor}) => ({
   vois:`On tape ${bon} : la console affiche ${oui}. On tape ${mauvais} : ${non}`,
   extra: logiSinon(nom, `${nom} = "${bon}"`, oui, non, "Deux branches : OUI → if, NON → else")
        + `<div class="encart"><p>Le <b>else</b> (sinon) donne une ligne à la branche NON. Il est collé à gauche, sous le if, avec ses <b>deux-points</b>. Un exemple, dans un autre jeu :</p>${CODE(`if meteo == "pluie":\n    print("Parapluie !")\nelse:\n    print("Lunettes !")`)}
@@ -211,7 +211,7 @@ const porte = ({nom, question, bon, mauvais, oui, non}) => ({
           "else: est collé à gauche, à la même hauteur que if. Ses deux-points, puis sa ligne décalée en dessous.",
           `Structure complète : if ${nom} == "${bon}": / ligne décalée / else: / ligne décalée.`],
   q:{ type:"code", q:`Complète le programme avec un if et un else.`,
-      depart:`${nom} = input("${question} ")\n`, essais:[[bon],[mauvais]],
+      depart:`${nom} = input("${question} ")\n`, essais:[[bon],[mauvais]], scene:{ decor, ouvre:oui, ferme:non },
       test: r => r.erreur ? (r.erreur.type==="NameError" ? `NameError : ${bon} sans guillemets est pris pour un nom de boîte. Écris "${bon}".`
                            : r.erreur.type==="IndentationError" ? "IndentationError : sous if et sous else, la ligne est décalée de 4 espaces ; else lui-même est collé à gauche."
                            : "Lis la <b>ligne rouge</b> : == pour comparer, deux-points après la condition et après else.")
@@ -345,9 +345,9 @@ const BLOCS = [
     fais:CASES("Lis le <b>logigramme</b> : une branche OUI, une branche NON.",
                "Lis l'<b>encadré</b> ci-dessous : où se place le else ?",
                "Écris le <b>if</b> et le <b>else</b> sous la 1re ligne.", EXECUTER),
-    ...porte({nom:"cle", question:"As-tu la clé ?", bon:"oui", mauvais:"non", oui:"Ouvert !", non:"Fermé."}),
-    variantes:[porte({nom:"code", question:"Code du coffre ?", bon:"1234", mauvais:"0000", oui:"Trésor !", non:"Code faux."}),
-               porte({nom:"mot", question:"Mot de passe ?", bon:"ami", mauvais:"ennemi", oui:"Entre !", non:"Halte !"})] },
+    ...porte({nom:"cle", question:"As-tu la clé ?", bon:"oui", mauvais:"non", oui:"Ouvert !", non:"Fermé.", decor:"porte"}),
+    variantes:[porte({nom:"code", question:"Code du coffre ?", bon:"1234", mauvais:"0000", oui:"Trésor !", non:"Code faux.", decor:"coffre"}),
+               porte({nom:"mot", question:"Mot de passe ?", bon:"ami", mauvais:"ennemi", oui:"Entre !", non:"Halte !", decor:"garde"})] },
 
   { partie:"D — Si… sinon", titre:"Les vies, avec le losange", min:7, cle:"vies", variantes:[{},{}], indices:true,
     bulle:"« Les vies » de Python 01 : cette fois, la partie peut se perdre.",
