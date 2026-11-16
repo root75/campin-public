@@ -262,7 +262,7 @@ function styleBarre(){
     +".progres.nav button:focus-visible{outline:3px solid var(--fromage,#b7791f);outline-offset:2px}"
     +".progres.nav .nom-etape{flex:1 1 100%;margin:2px 0 0;font-weight:700;color:var(--encre)}"
     +".progres.nav .sous-etapes{flex:1 1 100%;display:flex;flex-wrap:wrap;gap:6px}"
-    +".progres.nav .sous-etapes button{width:auto;height:auto;min-height:40px;padding:6px 14px;border-radius:20px;border-width:2px;font-size:.95rem;font-weight:700;background:var(--carte);color:var(--encre);text-align:left}"
+    +".progres.nav .sous-etapes button{flex:0 1 auto;max-width:100%;line-height:1.25;width:auto;height:auto;min-height:40px;padding:6px 14px;border-radius:20px;border-width:2px;font-size:.95rem;font-weight:700;background:var(--carte);color:var(--encre);text-align:left}"
     +".progres.nav .sous-etapes button.fait{background:var(--carte);border-color:var(--juste);color:var(--encre)}"
     +".progres.nav .sous-etapes button[aria-current]{background:var(--encre-bouton);border-color:var(--encre-bouton);color:var(--carte);outline:none;transform:none}"
     +".progres.nav .sous-etapes button:hover:not(:disabled){transform:none}";
