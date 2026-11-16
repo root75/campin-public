@@ -11,6 +11,10 @@ const PRESENTATION = 'missions';
 const MODE = 'declaratif';
 const HORS_SUIVI = 'Aperçu libre — ouvre Mes cours avec ton compte scolaire pour retrouver ta progression.';
 const BASE = 'https://root75.github.io/campin-public/rat-de-ville/pas-a-pas/', ICONES = BASE + 'icones/';
+/* Avant les cases des étapes où l'on agit dans Docs : le signal « à moi », et le bouton Annuler tel qu'il est dans la barre d'outils. */
+const ICO_ANNULER = '<img class="ico" src="' + ICONES + 'annuler.png" alt="">';
+const A_MOI = '<aside class="repere agir"><h3>✋ À moi dans Docs !</h3><p>Je fais, puis je coche.</p>'
+  + '<p class="annuler">' + ICO_ANNULER + '<span><b>Je me suis trompé ?</b> Tout de suite : <b>Annuler</b> (<kbd>Ctrl</kbd> + <kbd>Z</kbd>), la flèche tout à gauche de la barre d’outils.</span></p></aside>';
 
 const BLOCS = [
  {
@@ -18,7 +22,7 @@ const BLOCS = [
   "titre": "Je crée et je nomme",
   "min": 5,
   "bulle": "Salut ! On va mettre une fable en forme, case par case.",
-  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>Je repère le nom du document en haut à gauche dans Docs.</p></aside><p class=\"agir\">✋ À moi dans Docs ! Je fais, puis je coche.</p><p class=\"note annuler\">Je me suis trompé ? Tout de suite : ↶ Annuler (Ctrl + Z), la flèche tout à gauche de la barre d’outils.</p>",
+  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>Je repère le nom du document en haut à gauche dans Docs.</p></aside>" + A_MOI,
   "gestes": [
    "Menu Google (la gaufre) ▸ Docs ▸ <b>Créer un document</b> ▸ Vierge.",
    "Clique sur « <b>Document sans titre</b> » et tape : <span class=\"a-ecrire\" aria-label=\"À écrire exactement : AAAAMMJJ Le rat de ville – Prénom Nom\">AAAAMMJJ Le rat de ville – Prénom Nom</span> AAAAMMJJ : année, mois, jour de la date d’aujourd’hui.",
@@ -57,7 +61,7 @@ const BLOCS = [
   "titre": "Je recopie la fable",
   "min": 30,
   "bulle": "Bon début ! Regarde bien les animations.",
-  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>J’ouvre l’image de la fiche. Je repère le titre, les vers et l’auteur avant de recopier.</p></aside><p class=\"note\">Un vers = une ligne : touche Enter au bout de chaque vers. Je ne laisse PAS de ligne vide : les 28 vers se suivent. Je séparerai les strophes à l’étape 3.</p><p class=\"agir\">✋ À moi dans Docs ! Je fais, puis je coche.</p><p class=\"note annuler\">Je me suis trompé ? Tout de suite : ↶ Annuler (Ctrl + Z), la flèche tout à gauche de la barre d’outils.</p>",
+  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>J’ouvre l’image de la fiche. Je repère le titre, les vers et l’auteur avant de recopier.</p></aside><p class=\"note\">Un vers = une ligne : touche Enter au bout de chaque vers. Je ne laisse PAS de ligne vide : les 28 vers se suivent. Je séparerai les strophes à l’étape 3.</p>" + A_MOI,
   "gestes": [
    {
     "geste": "Tape le <b>titre</b>.",
@@ -65,7 +69,7 @@ const BLOCS = [
    },
    {
     "geste": "Recopie les <b>vers 1 à 4</b>.",
-    "sous": "<img class=\"extrait\" src=\"" + BASE + "fable/strophe-1.png\" alt=\"Extrait de la fable à recopier\"><details><summary>Comment taper ç et à ?</summary><p>Sur le clavier belge : ç est sur la touche 9, à sur la touche 0. Je tape la touche seule, sans Shift.</p><blockquote>façon · à des reliefs</blockquote><p class=\"note\">Avec Shift, ces touches donnent 9 et 0. Je me suis trompé ? ↶ Annuler (Ctrl + Z).</p></details>"
+    "sous": "<img class=\"extrait\" src=\"" + BASE + "fable/strophe-1.png\" alt=\"Extrait de la fable à recopier\"><details><summary>Comment taper ç et à ?</summary><p>Sur le clavier belge : ç est sur la touche 9, à sur la touche 0. Je tape la touche seule, sans Shift.</p><blockquote>façon · à des reliefs</blockquote><p class=\"note\">Avec Shift, ces touches donnent 9 et 0. Je me suis trompé ? " + ICO_ANNULER + "Annuler (Ctrl + Z).</p></details>"
    },
    {
     "geste": "Recopie les <b>vers 5 à 8</b>.",
@@ -120,7 +124,7 @@ const BLOCS = [
   "titre": "Je structure",
   "min": 10,
   "bulle": "Tu es lancé(e) !",
-  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>Une strophe regroupe quatre vers. Une ligne vide sépare deux strophes.</p></aside><p class=\"agir\">✋ À moi dans Docs ! Je fais, puis je coche.</p><p class=\"note annuler\">Je me suis trompé ? Tout de suite : ↶ Annuler (Ctrl + Z), la flèche tout à gauche de la barre d’outils.</p>",
+  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>Une strophe regroupe quatre vers. Une ligne vide sépare deux strophes.</p></aside>" + A_MOI,
   "gestes": [
    {
     "geste": "Mets une <b>majuscule</b> à la première lettre de chaque vers.",
@@ -150,7 +154,7 @@ const BLOCS = [
   "titre": "Titre, texte, auteur",
   "min": 10,
   "bulle": "Tu es lancé(e) !",
-  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>Je compare les trois zones du modèle : le titre, les strophes et l’auteur.</p><div class=\"apercu-document\" aria-label=\"Modèle de présentation des trois zones\"><p class=\"exemple-titre\">TITRE DE LA FABLE</p><p class=\"exemple-strophe\">Les strophes sont centrées.</p><p class=\"exemple-auteur\">Jean de La Fontaine</p></div></aside><p class=\"agir\">✋ À moi dans Docs ! Je fais, puis je coche.</p><p class=\"note annuler\">Je me suis trompé ? Tout de suite : ↶ Annuler (Ctrl + Z), la flèche tout à gauche de la barre d’outils.</p>",
+  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>Je compare les trois zones du modèle : le titre, les strophes et l’auteur.</p><div class=\"apercu-document\" aria-label=\"Modèle de présentation des trois zones\"><p class=\"exemple-titre\">TITRE DE LA FABLE</p><p class=\"exemple-strophe\">Les strophes sont centrées.</p><p class=\"exemple-auteur\">Jean de La Fontaine</p></div></aside>" + A_MOI,
   "gestes": [
    "<img class=\"ico\" src=\"" + ICONES + "centrer.png\" alt=\"\">Sélectionne le <b>titre</b>. Clique sur <b>Centrer</b> (Ctrl + Shift + E).",
    "<img class=\"ico\" src=\"" + ICONES + "gras.png\" alt=\"\">Le titre toujours sélectionné, clique sur <b>Gras</b> (Ctrl + B).",
@@ -213,7 +217,7 @@ const BLOCS = [
   "titre": "Une police par strophe",
   "min": 12,
   "bulle": "Déjà la moitié ! Le rat est fier de toi.",
-  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>Je repère le numéro de la strophe avant de choisir sa police et sa taille.</p><table class=\"repere-polices\"><caption>Police et taille attendues</caption><tr><th>Strophes</th><th>Police</th><th>Taille</th></tr><tr><td>1 et 2</td><td>EB Garamond</td><td>14</td></tr><tr><td>3 et 4</td><td>Arial</td><td>12</td></tr><tr><td>5</td><td>Calibri</td><td>10</td></tr><tr><td>6 et 7</td><td>Arial Black</td><td>8</td></tr></table></aside><p class=\"note\">Pour chaque strophe : je la sélectionne seule, je choisis la police dans le menu des polices, puis je tape la taille dans la case du nombre.</p><p class=\"agir\">✋ À moi dans Docs ! Je fais, puis je coche.</p><p class=\"note annuler\">Je me suis trompé ? Tout de suite : ↶ Annuler (Ctrl + Z), la flèche tout à gauche de la barre d’outils.</p>",
+  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>Je repère le numéro de la strophe avant de choisir sa police et sa taille.</p><table class=\"repere-polices\"><caption>Police et taille attendues</caption><tr><th>Strophes</th><th>Police</th><th>Taille</th></tr><tr><td>1 et 2</td><td>EB Garamond</td><td>14</td></tr><tr><td>3 et 4</td><td>Arial</td><td>12</td></tr><tr><td>5</td><td>Calibri</td><td>10</td></tr><tr><td>6 et 7</td><td>Arial Black</td><td>8</td></tr></table></aside><p class=\"note\">Pour chaque strophe : je la sélectionne seule, je choisis la police dans le menu des polices, puis je tape la taille dans la case du nombre.</p>" + A_MOI,
   "gestes": [
    "<img class=\"ico\" src=\"" + ICONES + "police.png\" alt=\"\"><img class=\"ico\" src=\"" + ICONES + "taille.png\" alt=\"\">Sélectionne seulement la <b>strophe 1</b> : <b>EB Garamond, taille 14</b>.",
    "<img class=\"ico\" src=\"" + ICONES + "police.png\" alt=\"\"><img class=\"ico\" src=\"" + ICONES + "taille.png\" alt=\"\">Sélectionne seulement la <b>strophe 2</b> : <b>EB Garamond, taille 14</b>.",
@@ -241,7 +245,7 @@ const BLOCS = [
   "titre": "Mon bloc-notes : la liste à puces",
   "min": 5,
   "bulle": "Déjà la moitié ! Le rat est fier de toi.",
-  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>Des puces quand l’ordre ne compte pas : les choses du festin.</p></aside><p class=\"agir\">✋ À moi dans Docs ! Je fais, puis je coche.</p><p class=\"note annuler\">Je me suis trompé ? Tout de suite : ↶ Annuler (Ctrl + Z), la flèche tout à gauche de la barre d’outils.</p>",
+  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>Des puces quand l’ordre ne compte pas : les choses du festin.</p></aside>" + A_MOI,
   "gestes": [
    "Sous la fable, laisse <b>deux lignes vides</b> et écris : <span class=\"a-ecrire\" aria-label=\"À écrire exactement : Mon bloc-notes\">Mon bloc-notes</span>",
    {
@@ -264,7 +268,7 @@ const BLOCS = [
   "titre": "Mes gestes : la liste numérotée",
   "min": 10,
   "bulle": "Presque fini, courage !",
-  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>Des numéros quand l’ordre compte : je raconte mes gestes dans l’ordre où je les ai faits.</p></aside><p class=\"note\">Je raconte six gestes de mise en forme, un par un. Un geste complet dit deux choses : ce que j’ai sélectionné, puis le bouton ou le menu utilisé.</p><p class=\"agir\">✋ À moi dans Docs ! Je fais, puis je coche.</p><p class=\"note annuler\">Je me suis trompé ? Tout de suite : ↶ Annuler (Ctrl + Z), la flèche tout à gauche de la barre d’outils.</p>",
+  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>Des numéros quand l’ordre compte : je raconte mes gestes dans l’ordre où je les ai faits.</p></aside><p class=\"note\">Je raconte six gestes de mise en forme, un par un. Un geste complet dit deux choses : ce que j’ai sélectionné, puis le bouton ou le menu utilisé.</p>" + A_MOI,
   "gestes": [
    {
     "geste": "Sous tes puces, sur une <b>nouvelle ligne</b>, écris : <span class=\"a-ecrire\" aria-label=\"À écrire exactement : Mes gestes\">Mes gestes</span>",
@@ -403,7 +407,7 @@ const BLOCS = [
   "titre": "Ma phrase : j’explique",
   "min": 5,
   "bulle": "Presque fini, courage !",
-  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>Docs modifie seulement le texte sélectionné.</p></aside><p class=\"agir\">✋ À moi dans Docs ! Je fais, puis je coche.</p><p class=\"note annuler\">Je me suis trompé ? Tout de suite : ↶ Annuler (Ctrl + Z), la flèche tout à gauche de la barre d’outils.</p>",
+  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>Docs modifie seulement le texte sélectionné.</p></aside>" + A_MOI,
   "gestes": [
    {
     "geste": "Complète l’<b>explication</b> ci-dessous.",
@@ -474,7 +478,7 @@ const BLOCS = [
   "titre": "Je m’évalue et je remets",
   "min": 10,
   "bulle": "Dernière étape : vérifie, puis remets dans Classroom.",
-  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>J’ouvre la grille : les critères avec une étoile sont incontournables.</p></aside><p class=\"note\">Je vérifie une chose par case, dans mon document. Si une chose manque, je la corrige avant de cocher.</p><p class=\"agir\">✋ À moi dans Docs ! Je fais, puis je coche.</p><p class=\"note annuler\">Je me suis trompé ? Tout de suite : ↶ Annuler (Ctrl + Z), la flèche tout à gauche de la barre d’outils.</p>",
+  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>J’ouvre la grille : les critères avec une étoile sont incontournables.</p></aside><p class=\"note\">Je vérifie une chose par case, dans mon document. Si une chose manque, je la corrige avant de cocher.</p>" + A_MOI,
   "gestes": [
    "<img class=\"ico\" src=\"" + ICONES + "orthographe.png\" alt=\"\">Clique sur <b>Vérifier l’orthographe</b> (Ctrl + Alt + X) et corrige.",
    "Vérifie le <b>nom</b> : <span class=\"a-ecrire\" aria-label=\"À écrire exactement : AAAAMMJJ Le rat de ville – Prénom Nom\">AAAAMMJJ Le rat de ville – Prénom Nom</span>",
@@ -573,7 +577,7 @@ const FIN = {
 };
 
 /* « Ça coince ? » : les aides de l'étape affichée. */
-const AIDE_ANNULER = { html: '<b>Je me suis trompé ?</b><br>Tout de suite : <b>↶ Annuler</b> (<kbd>Ctrl</kbd> + <kbd>Z</kbd>), la flèche tout à gauche de la barre d’outils. Je peux appuyer plusieurs fois.' };
+const AIDE_ANNULER = { html: '<b>Je me suis trompé ?</b><br>Tout de suite : ' + ICO_ANNULER + '<b>Annuler</b> (<kbd>Ctrl</kbd> + <kbd>Z</kbd>), la flèche tout à gauche de la barre d’outils. Je peux appuyer plusieurs fois.' };
 const AIDE_RETROUVER = { html: '<b>Je ne retrouve pas mon document ?</b><br>Menu Google (la gaufre) ▸ <b>Drive</b> ▸ <b>Récents</b>.' };
 const AIDES_FRAPPE = [
   { html: '<b>Un accent circonflexe : ê, ô ?</b><br>La touche <kbd>^</kbd> à droite du P (rien ne s’affiche), <b>puis</b> la voyelle.' },
@@ -590,8 +594,6 @@ const AIDES_FORME = [
 ];
 
 /* Sous chaque étape (BAS_ETAPE du moteur) : fermer et se déconnecter à la sonnerie, puis les deux gestes pour reprendre. Pas de case. */
-const GESTES_REPRISE = '<ol class="etapes"><li><b>Je retrouve mon document :</b> menu Google (la gaufre) ▸ <b>Drive</b> ▸ <b>Récents</b> ▸ double-clic sur mon document.</li>'
-  + '<li><b>Je mets le cours et mon document côte à côte :</b> je clique sur l’onglet du cours, puis clic droit sur l’onglet de mon document ▸ <b>Ajouter l’onglet à une nouvelle vue fractionnée</b>.</li></ol>';
 const BAS_ETAPE = [
   { classe: 'sonnerie', titre: '🔔 À la sonnerie, où que j’en sois', gestes: [
     { texte: '<b>1. Je ferme l’onglet de mon document.</b> Je ne remets PAS : Docs l’enregistre tout seul.', demo: 'fermer' },
@@ -601,8 +603,6 @@ const BAS_ETAPE = [
     { texte: '<b>Je retrouve mon document :</b> menu Google (la gaufre) ▸ <b>Drive</b> ▸ <b>Récents</b> ▸ double-clic sur mon document.', demo: 'retrouver' },
     { texte: '<b>Je mets le cours et mon document côte à côte :</b> je clique sur l’onglet du cours, puis clic droit sur l’onglet de mon document ▸ <b>Ajouter l’onglet à une nouvelle vue fractionnée</b>.', demo: 'cote' } ] }
 ];
-/* En haut de l'étape, quand je rouvre le cours après une pause. */
-const REPRISE = { titre: '▶ Je reprends mon travail', html: GESTES_REPRISE, demos: { 'reprendre 1.1': ['retrouver'], 'reprendre 1.2': ['cote'] } };
 
 BLOCS.forEach((B, i) => {
   B.coince = [AIDE_ANNULER].concat(i === 1 || i === 2 ? AIDES_FRAPPE : [], i >= 3 ? AIDES_FORME : [], [AIDE_RETROUVER]);
