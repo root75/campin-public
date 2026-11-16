@@ -148,7 +148,8 @@ déclarations déjà faites. Le test du cours compare `cours.json` et la fiche.
 **Tableau** : le même que les autres cours. Les colonnes d'erreurs deviennent « Cases cochées » et « Moi » ; la barre
 montre les étapes terminées et la place de l'élève ; « Où le groupe bute » compte les cloches par étape.
 « Ramener la classe » et « Recommencer » ramènent l'élève à l'étape choisie et **décochent ses cases à partir de
-cette étape** (les étapes d'avant restent) ; il recharge sa fiche. Une nouvelle séance ne remet rien à zéro.
+cette étape** (les étapes d'avant restent) ; il recharge sa fiche. « Ouvrir pour une classe… » ne remet rien à zéro ;
+« Recommencer à zéro » (nouvelle séance) vide les cases et les lettres « Moi » de la classe.
 Une étape terminée se fête : bravo et confettis.
 
 ## Ce que le moteur fait seul
