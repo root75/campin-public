@@ -104,7 +104,9 @@ Une question `code` avec `essais` peut porter une **scène** : `scene:{ decor:"p
 ou `scene:{ decor:"salut", ouvre:["Bonjour Léa","Bonjour Sam"] }` (une ligne attendue par essai). Un petit décor par essai,
 entre les boutons et la console, réagit à la dernière ligne affichée par `print( )` : la porte s'ouvre, reste fermée 🔒, ou
 le décor grise (💥 erreur, 💤 rien d'affiché, ❓ autre texte). La scène ne juge rien — `test` reste seul juge — et ne montre
-rien que la console ne dise. Code : `sceneCree` et `sceneEtat` ; style : `.scene` dans [`python-missions.css`](python-missions.css).
+rien que la console ne dise. `ouvre` et `ferme` acceptent aussi une RegExp ou une fonction `(dit, x, i)` quand le texte
+affiché est libre ; `montre(dit, x, i, etat)` rend ce que le décor affiche en grand (des cœurs, un nombre). Autres décors :
+`calcul`, `coeurs`, `potion`, `distributeur`. Code : `sceneCree` et `sceneEtat` ; style : `.scene` dans [`python-missions.css`](python-missions.css).
 
 ```js
 q:{ type:"trous", q:"Complète la règle avec les mots de la banque.",

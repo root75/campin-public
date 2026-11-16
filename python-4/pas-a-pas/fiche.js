@@ -148,6 +148,7 @@ const potion = ({m,b}) => {
             `Le bonus s'écrit energie = energie + ${b} : on range dans energie l'ancienne valeur plus ${b}.`],
     q:{ type:"code", q:`Ajoute le losange au programme, à la ligne vide : le bonus de ${b} si energie > ${s}.`,
         depart:`potions = int(input("Combien de potions ? "))\nenergie = potions * ${m}\n\nprint(energie)`, essais:[["5"],["2"],["3"]],
+        scene:{ decor:"potion", ouvre:(dit, x, i) => NOMBRES(dit).pop()===att[i], montre:(dit, x, i, etat) => etat==="ouvert" ? "⚡ "+att[i] : "" },
         test: r => r.erreur ? (r.erreur.type==="IndentationError" ? "IndentationError : la ligne sous le if doit être décalée de 4 espaces (touche Tab) ; print(energie) reste collé à gauche."
                              : /expected ':'/.test(r.erreur.message) ? "Il manque les deux-points : à la fin de la ligne if."
                              : "Lis la <b>ligne rouge</b> : un if s'écrit if condition: puis, en dessous, une ligne décalée.")
@@ -256,6 +257,9 @@ const distributeur = prix => ({
           "Assez de pièces, c'est AUTANT ou plus que le prix : >=, pas >.",
           "La monnaie : pieces - prix. Ce qui manque : prix - pieces. Sous le if, deux lignes décalées."],
   q:{ type:"code", q:`Écris le distributeur : une boisson coûte ${prix} pièces.`, depart:`prix = ${prix}\n`, essais:[["5"],["1"],[String(prix)]],
+      scene:{ decor:"distributeur", ouvre:(dit, x, i) => i!==1 && /boisson/i.test(x.sortie) && NOMBRES(dit).pop()===[5-prix,0,0][i],
+              ferme:(dit, x, i) => i===1 && !/boisson/i.test(x.sortie) && NOMBRES(dit).pop()===prix-1,
+              montre:(dit, x, i, etat) => etat==="ouvert" ? "🥤" : "" },
       test: r => r.erreur ? (r.erreur.type==="TypeError" ? "TypeError : texte et nombre mélangés. As-tu mis int( ) autour de input( ) ?" : "Lis la <b>ligne rouge</b>, corrige, puis exécute.")
                : !/input\(/.test(r.code) ? "Le distributeur demande le nombre de pièces avec input( )."
                : !/boisson/i.test(SORTIE(r.essais[2])) ? `Avec exactement ${prix} pièces, on a assez : la condition doit être pieces >= prix.`
@@ -363,6 +367,9 @@ const BLOCS = [
             "Pour afficher un texte et un nombre : print(\"Il te reste\", vies, \"vies\") — la virgule, pas le +."],
     q:{ type:"code", q:"Ajoute le losange au programme « Les vies ».",
         depart:`vies = {D}\ndegats = int(input("Dégâts ? "))\nvies = vies - degats\n`, essais:[["{K}"],["{D}"]],
+        scene:{ decor:"coeurs", ouvre:(dit, x, i) => i===0 && !/game\s*over/i.test(x.sortie) && NOMBRES(dit).pop()===LV.r,
+                ferme:(dit, x, i) => i===1 && /game\s*over/i.test(x.sortie),
+                montre:(dit, x, i, etat) => etat==="ouvert" ? "❤️".repeat(LV.r) : etat==="ferme" ? "💀" : "" },
         test: r => r.erreur ? (r.erreur.type==="TypeError" ? "TypeError : texte + nombre. Dans print, sépare le texte et vies par une virgule." : r.erreur.type==="IndentationError" ? "IndentationError : sous if et sous else, une ligne décalée de 4 espaces (Tab)." : "Lis la <b>ligne rouge</b> : == pour comparer, deux-points, décalage.")
                  : !/^\s*if\b/m.test(r.code) || !/^\s*else\s*:/m.test(r.code) ? "Il faut un if et un else : les deux branches du losange."
                  : /game\s*over/i.test(SORTIE(r.essais[0])) ? `Avec ${LV.k} de dégâts, il reste des vies : pas de Game over. Relis ta condition.`
