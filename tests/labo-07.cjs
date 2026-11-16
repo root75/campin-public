@@ -91,4 +91,15 @@ const ateliers=seq.moments.filter(m=>m.type==='atelier');
 assert.deepEqual(ateliers[0].blocs,[1,5]);
 ateliers.slice(1).forEach(m=>assert.equal(m.blocs[1],11,m.titre));ok();
 
+// Sous chaque étape : « À la sonnerie » puis « Je reprends mon cours », comme dans Le rat de ville (Vincent, 16/11/2026).
+const moteur=fs.readFileSync(__dirname+'/../pas-a-pas/blocs.js','utf8');
+const BAS=new Function(src+';return BAS_ETAPE;')();
+assert.deepEqual(BAS.map(e=>e.classe),['sonnerie','reprise']);ok();
+assert.deepEqual(BAS.flatMap(e=>e.gestes.map(g=>g.demo)),['fermer','deconnecter','retrouver','cote']);ok();
+BAS.forEach(e=>e.gestes.forEach(g=>assert.ok(listes.has(g.demo),'animation « '+g.demo+' » absente de demos.js')));ok();
+assert.ok(/z\.append\(nav\);\s*basEtape\(z\);/.test(moteur),'blocs.js : les encadrés tout en bas de l’étape');ok();
+assert.ok(!/labo|rapport/i.test(moteur.slice(moteur.indexOf('function basEtape'),moteur.indexOf('function basEtape')+1200)),'aucun cours nommé dans le moteur');ok();
+assert.ok(/\.repere\.reprise\{/.test(page)&&/blocs\.js\?v=bas-etape/.test(page),'style et nouvelle version de l’adresse');ok();
+assert.ok(!/\b(Suppr|Échap|Entrée|Maj)\b/.test(JSON.stringify(BAS)),'touches en anglais');ok();
+
 console.log('Labo 07 : '+n+' contrôles réussis.');

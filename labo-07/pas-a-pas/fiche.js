@@ -655,6 +655,19 @@ const BLOCS = [
 /* Une seule version du QCM (étape 4) et de l'ordre (étape 7) depuis le 06/11/2026 : exercices non cotés,
    les trois variantes étaient presque identiques. Exception voulue à la règle des trois variantes. */
 
+/* Sous chaque étape (blocs.js, basEtape) : fermer et rouvrir ne sont pas des étapes, chacun le fait à la sonnerie,
+   où qu'il en soit. Mêmes encadrés que dans Le rat de ville. */
+const BAS_ETAPE = [
+ {classe:'sonnerie',titre:'🔔 À la sonnerie, où que j’en sois',gestes:[
+  {texte:'<b>Je ferme l’onglet de mon rapport.</b> Docs l’enregistre tout seul.',note:'⚠️ Je ne remets pas mon rapport : la remise se fait à la dernière étape.',demo:'fermer'},
+  {texte:'<b>Je me déconnecte de Windows :</b> touche Windows ⊞ ▸ clic sur <b>mon nom</b>, en bas à gauche du menu ▸ <b>Se déconnecter</b> (ou <b>Ctrl + Alt + Delete</b> ▸ <b>Se déconnecter</b>). Sinon, l’élève suivant arrive dans <b>ma</b> session : mon Drive, mes documents, en mon nom.',note:'Le bouton ⏻ du menu propose Verrouiller, Arrêter, Redémarrer : pas « Se déconnecter ». Je n’éteins pas l’ordinateur.',demo:'deconnecter'}
+ ]},
+ {classe:'reprise',titre:'▶ Je reprends mon cours',gestes:[
+  {texte:'<b>Je retrouve mon rapport :</b> menu Google (la gaufre) ▸ <b>Drive</b> ▸ <b>Récents</b> ▸ double-clic sur mon rapport.',demo:'retrouver'},
+  {texte:'<b>Je mets le cours et mon rapport côte à côte :</b> je clique sur l’onglet du cours, puis clic droit sur l’onglet de mon rapport ▸ <b>Ajouter l’onglet à une nouvelle vue fractionnée</b>.',demo:'cote'}
+ ]}
+];
+
 const FIN = {
  titre:'Mon enquête est terminée',
  bulle:'Enquête bouclée : bravo, détective !',
