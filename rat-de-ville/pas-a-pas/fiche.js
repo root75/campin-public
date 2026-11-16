@@ -113,7 +113,7 @@ function dessine(){
     const n=txt('button','btn vide',label);n.type='button';n.addEventListener('click',()=>va(ETAPES_RAT[i+delta].id));nav.append(n);
   }z.append(nav,txt('p','note','Je peux continuer même si une case reste vide. Je coche quand j’ai terminé ; le professeur examine mon document.'));
   if(typeof PhraseFin!=='undefined'&&ETAPES_RAT.every((_,j)=>etat.etapes&&etat.etapes[j])){const f=PhraseFin.figure(CITATION);if(f)z.append(f);}
-  z.append(sonnerie());
+  z.append(sonnerie());if(!repriseVue)z.append(repriseBas()); // en haut à la réouverture, sinon sous « À la sonnerie »
   cloche();coince();progression();commandes();
 }
 /* « Ça coince ? » : seulement les aides de l'étape affichée (et « Je me trompe »), sauf si l'élève demande tout. */
@@ -204,15 +204,23 @@ function sonnerie(){
   const deco=txt('p');deco.innerHTML='<b>2. Je me déconnecte de Windows :</b> touche Windows ⊞ ▸ clic sur <b>mon nom</b>, en bas à gauche du menu ▸ <b>Se déconnecter</b> (ou <b>Ctrl + Alt + Delete</b> ▸ <b>Se déconnecter</b>). Sinon, l’élève suivant arrive dans <b>ma</b> session : mon Drive, mes documents, en mon nom.';
   const piege=txt('p','note','Le bouton ⏻ du menu propose Verrouiller, Arrêter, Redémarrer : pas « Se déconnecter ». Je n’éteins pas l’ordinateur.');
   a.append(txt('h3',null,'🔔 À la sonnerie, où que j’en sois'),ferme,demoAutre('fermer'),deco,piege,demoAutre('deconnecter'));
-  const b=txt('button','lien','▶ Je reviens après la sonnerie : je reprends mon document');b.type='button';
-  b.addEventListener('click',()=>{repriseVue=true;dessine();scrollTo(0,0);});a.append(b);return a;
+  return a;
+}
+/* Les deux gestes de reprise : sous « À la sonnerie » (même style d'encadré) et, à la réouverture, en haut de l'étape. */
+function gestesReprise(){
+  const ol=txt('ol');
+  [['<b>Je retrouve mon document :</b> menu Google (la gaufre) ▸ <b>Drive</b> ▸ <b>Récents</b> ▸ double-clic sur mon document.','retrouver'],
+   ['<b>Je mets le cours et mon document côte à côte :</b> je clique sur l’onglet du cours, puis clic droit sur l’onglet de mon document ▸ <b>Ajouter l’onglet à une nouvelle vue fractionnée</b>.','cote']]
+    .forEach(([t,cle])=>{const li=txt('li');li.innerHTML=t;li.append(demoAutre(cle));ol.append(li);});
+  return ol;
+}
+function repriseBas(){
+  const a=txt('aside','repere reprise');
+  a.append(txt('h3',null,'▶ Je reprends mon cours'),gestesReprise());return a;
 }
 function reprise(){
-  const k=aReprendre(),box=txt('aside','repere reprise'),ol=txt('ol');
+  const k=aReprendre(),box=txt('aside','repere reprise'),ol=gestesReprise();
   box.append(txt('h3',null,'▶ Je reprends mon travail'));
-  [['Menu Google (la gaufre) ▸ Drive ▸ Récents ▸ double-clic sur mon document.','retrouver'],
-   ['Je place mon document à côté du cours : je clique sur l’onglet du cours, puis clic droit sur l’onglet de mon document ▸ Ajouter l’onglet à une nouvelle vue fractionnée.','cote']]
-    .forEach(([t,cle])=>{const li=txt('li',null,t);li.append(demoAutre(cle));ol.append(li);});
   const b=txt('button','btn','C’est fait : je reprends à l’étape '+(k+1)+' — '+ETAPES_RAT[k].titre);b.type='button';
   b.addEventListener('click',()=>{repriseVue=false;etapeVue=null;const id=ETAPES_RAT[k].id;va(id);scrollTo(0,0);});
   box.append(ol,b);return box;
