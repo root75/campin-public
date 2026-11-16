@@ -39,7 +39,7 @@
       if(e.aide){etat.append(document.createElement('br'),boutonCloche(e));}
       td(ilya(d.maintenant-e.derniere));tb.append(tr);
     });
-    $('maj').textContent='Suivi déclaratif · mis à jour à '+new Date(d.maintenant).toLocaleTimeString('fr-BE');
+    $('maj').textContent='Suivi déclaratif · mis à jour à '+new Date(d.maintenant).toLocaleTimeString('fr-BE')+(typeof mesure==='function'?mesure(d):'');
     $('titre-classe').textContent=choisie().classe?choisie().classe+' · ':'';
   }
   globalThis.FormatifProf={charge:chargeFormatif,presentation,dessine};
