@@ -24,3 +24,8 @@ console.log('OK Rat de ville : '+actions.length+' cases, chacune avec son mot-cl
 const demos=fs.readFileSync(base+'demos.js','utf8');
 ['gras','italique','souligne'].forEach(n=>{assert.ok(demos.includes("ico('"+n+"'"),'demos.js : bouton '+n+' sans son icône');assert.ok(fs.existsSync(base+'icones/'+n+'.png'),'icône manquante : '+n);});
 assert.ok(!/'md-btn[^']*',\s*'[GS]'/.test(demos),'demos.js : bouton en lettre G ou S');
+// Sous « À la sonnerie », un encadré du même style « Je reprends mon cours » : retrouver le document, vue fractionnée (Vincent, 16/11/2026).
+const fiche=fs.readFileSync(base+'fiche.js','utf8');
+assert.ok(/function repriseBas\(\)/.test(fiche)&&fiche.includes("'▶ Je reprends mon cours'"),'fiche.js : encadré « Je reprends mon cours » sous la sonnerie');
+assert.ok(/z\.append\(sonnerie\(\)\);if\(!repriseVue\)z\.append\(repriseBas\(\)\)/.test(fiche),'fiche.js : « Je reprends » juste sous « À la sonnerie »');
+['retrouver','cote'].forEach(k=>assert.ok(fiche.includes("',\'"+k+"'")||fiche.includes("','"+k+"'"),'fiche.js : démo '+k+' dans la reprise'));
