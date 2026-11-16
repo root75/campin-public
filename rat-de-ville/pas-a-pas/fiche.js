@@ -589,20 +589,21 @@ const AIDES_FORME = [
   { html: '<b>Ma liste numérotée ne commence pas à 1 ?</b><br>Clic droit sur le premier numéro ▸ <b>Recommencer la numérotation</b>.' }
 ];
 
-/* Sous chaque étape : fermer et se déconnecter à la sonnerie, puis les deux gestes pour reprendre. Pas de case. */
+/* Sous chaque étape (BAS_ETAPE du moteur) : fermer et se déconnecter à la sonnerie, puis les deux gestes pour reprendre. Pas de case. */
 const GESTES_REPRISE = '<ol class="etapes"><li><b>Je retrouve mon document :</b> menu Google (la gaufre) ▸ <b>Drive</b> ▸ <b>Récents</b> ▸ double-clic sur mon document.</li>'
   + '<li><b>Je mets le cours et mon document côte à côte :</b> je clique sur l’onglet du cours, puis clic droit sur l’onglet de mon document ▸ <b>Ajouter l’onglet à une nouvelle vue fractionnée</b>.</li></ol>';
-const PIED = '<aside class="repere sonnerie"><h3>🔔 À la sonnerie, où que j’en sois</h3><ol class="etapes">'
-  + '<li><b>1. Je ferme l’onglet de mon document.</b> Je ne remets PAS : Docs l’enregistre tout seul.</li>'
-  + '<li><b>2. Je me déconnecte de Windows :</b> touche Windows ⊞ ▸ clic sur <b>mon nom</b>, en bas à gauche du menu ▸ <b>Se déconnecter</b> (ou <b>Ctrl + Alt + Delete</b> ▸ <b>Se déconnecter</b>). Sinon, l’élève suivant arrive dans <b>ma</b> session : mon Drive, mes documents, en mon nom.'
-  + '<p class="note">Le bouton ⏻ du menu propose Verrouiller, Arrêter, Redémarrer : pas « Se déconnecter ». Je n’éteins pas l’ordinateur.</p></li></ol></aside>'
-  + '<aside class="repere reprise"><h3>▶ Je reprends mon cours</h3>' + GESTES_REPRISE + '</aside>';
-const DEMOS_PIED = { 'sonnerie 1.1': ['fermer'], 'sonnerie 1.2': ['deconnecter'], 'reprise 1.1': ['retrouver'], 'reprise 1.2': ['cote'] };
+const BAS_ETAPE = [
+  { classe: 'sonnerie', titre: '🔔 À la sonnerie, où que j’en sois', gestes: [
+    { texte: '<b>1. Je ferme l’onglet de mon document.</b> Je ne remets PAS : Docs l’enregistre tout seul.', demo: 'fermer' },
+    { texte: '<b>2. Je me déconnecte de Windows :</b> touche Windows ⊞ ▸ clic sur <b>mon nom</b>, en bas à gauche du menu ▸ <b>Se déconnecter</b> (ou <b>Ctrl + Alt + Delete</b> ▸ <b>Se déconnecter</b>). Sinon, l’élève suivant arrive dans <b>ma</b> session : mon Drive, mes documents, en mon nom.',
+      note: 'Le bouton ⏻ du menu propose Verrouiller, Arrêter, Redémarrer : pas « Se déconnecter ». Je n’éteins pas l’ordinateur.', demo: 'deconnecter' } ] },
+  { classe: 'reprise', titre: '▶ Je reprends mon cours', gestes: [
+    { texte: '<b>Je retrouve mon document :</b> menu Google (la gaufre) ▸ <b>Drive</b> ▸ <b>Récents</b> ▸ double-clic sur mon document.', demo: 'retrouver' },
+    { texte: '<b>Je mets le cours et mon document côte à côte :</b> je clique sur l’onglet du cours, puis clic droit sur l’onglet de mon document ▸ <b>Ajouter l’onglet à une nouvelle vue fractionnée</b>.', demo: 'cote' } ] }
+];
 /* En haut de l'étape, quand je rouvre le cours après une pause. */
 const REPRISE = { titre: '▶ Je reprends mon travail', html: GESTES_REPRISE, demos: { 'reprendre 1.1': ['retrouver'], 'reprendre 1.2': ['cote'] } };
 
 BLOCS.forEach((B, i) => {
   B.coince = [AIDE_ANNULER].concat(i === 1 || i === 2 ? AIDES_FRAPPE : [], i >= 3 ? AIDES_FORME : [], [AIDE_RETROUVER]);
-  B.pied = PIED;
-  B.demos = Object.assign({}, B.demos, DEMOS_PIED);
 });

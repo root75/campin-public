@@ -504,13 +504,38 @@ function affiche(){
   avant.addEventListener("click",()=>{ ici--; affiche(); });
   nav.append(avant, el("span","espace"));
   if(fait || (APERCU && ici+1<BLOCS.length)){ const s=txt("button","btn plein",suite()); s.type="button"; s.addEventListener("click",()=>{ici++;affiche();if(DECLARATIF)scrollTo(0,0);}); nav.append(s); }
-  z.append(nav);
-  if(DECLARATIF) z.append(txt("p","note","Tu peux continuer même si une case reste vide. Coche quand tu as terminé ; le professeur examine ton document."));
-  /* B.pied : du HTML après la navigation, pour ce qui se répète sous chaque bloc (« À la sonnerie »). */
-  if(B.pied) z.append(el("div","pied-bloc",B.pied));
   demosSousCases(z, Object.assign({}, B.demos, avecReprise ? REPRISE.demos : null));
   // Avec l'encadré « Je reprends », aucune animation de case ne s'ouvre seule : pas deux animations à la fois.
   if(avecReprise) z.querySelectorAll(".faire details.demo-case[open]").forEach(d=>{ d.open = false; });
+  z.append(nav);
+  basEtape(z);
+  if(DECLARATIF) nav.after(txt("p","note","Tu peux continuer même si une case reste vide. Coche quand tu as terminé ; le professeur examine ton document."));
+}
+
+/* Encadrés de bas d'étape, facultatifs : la fiche les décrit dans BAS_ETAPE (Labo 07 : « À la sonnerie » et
+   « Je reprends mon cours », comme dans Le rat de ville). Fermer et rouvrir ne sont pas des étapes : chacun le
+   fait à la sonnerie, où qu'il en soit. Pas de case à cocher, rien d'enregistré.
+   BAS_ETAPE = [{ classe, titre, gestes:[{ texte (HTML), note, demo (clé de Demo.cree) }] }]. */
+function basEtape(z){
+  if(typeof BAS_ETAPE==="undefined") return;
+  BAS_ETAPE.forEach(E=>{
+    const a = el("aside","repere "+E.classe), ol = el("ol");
+    E.gestes.forEach(g=>{
+      const li = el("li",null,g.texte);
+      if(g.note) li.append(txt("p","note",g.note));
+      if(g.demo && typeof Demo!=="undefined" && Demo.cree){
+        const d = el("details","demo-case"); let box = null;
+        d.append(txt("summary",null,"👀 Regarde comment faire"));
+        d.addEventListener("toggle",()=>{
+          if(d.open){ if(!box){ box = Demo.cree(g.demo,false); if(box) d.append(box); } if(box) setTimeout(()=>box.joue(),80); }
+          else if(box) box.stop();
+        });
+        li.append(d);
+      }
+      ol.append(li);
+    });
+    a.append(txt("h3",null,E.titre), ol); z.append(a);
+  });
 }
 
 /* Un programme validé reste lisible quand on revient sur le bloc : le code de départ, le programme

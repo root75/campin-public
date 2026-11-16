@@ -40,8 +40,7 @@ const demos=fs.readFileSync(base+'demos.js','utf8');
 ['gras','italique','souligne'].forEach(n=>{assert.ok(demos.includes("ico('"+n+"'"),'demos.js : bouton '+n+' sans son icône');assert.ok(fs.existsSync(base+'icones/'+n+'.png'),'icône manquante : '+n);});
 assert.ok(!/'md-btn[^']*',\s*'[GS]'/.test(demos),'demos.js : bouton en lettre G ou S');
 // Sous chaque étape : « À la sonnerie », puis « Je reprends mon cours » (Vincent, 16/11/2026) ; en haut à la réouverture : REPRISE.
-BLOCS.forEach((b,i)=>{
-  assert.ok(/class="repere sonnerie"[\s\S]*class="repere reprise"/.test(b.pied),'étape '+(i+1)+' : « Je reprends » juste sous « À la sonnerie »');
-  for(const [ref,cle] of [['sonnerie 1.1','fermer'],['sonnerie 1.2','deconnecter'],['reprise 1.1','retrouver'],['reprise 1.2','cote']])assert.equal((b.demos[ref]||[])[0],cle,'étape '+(i+1)+' : animation '+cle);
-});
+const BAS=new Function(fiche+';return BAS_ETAPE;')();
+assert.deepEqual(BAS.map(e=>e.classe),['sonnerie','reprise'],'« Je reprends » juste sous « À la sonnerie »');
+assert.deepEqual(BAS.flatMap(e=>e.gestes.map(g=>g.demo)),['fermer','deconnecter','retrouver','cote']);
 assert.deepEqual(Object.values(REPRISE.demos).map(v=>v[0]),['retrouver','cote']);

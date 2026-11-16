@@ -121,6 +121,22 @@ const Demo = (() => {
       { ecran: 'moniteur', eteint: 1, cible: 'bouton', legende: 'Test sans risque : le bouton du MONITEUR, montré par le professeur. Je ne touche pas au PC.' },
       { ecran: 'moniteur', cible: 'ecran', ok: 1, legende: 'Les mêmes fenêtres réapparaissent : le PC était resté allumé.' }
     ] },
+    fermer: { titre: 'À la sonnerie : je ferme sans remettre', images: [ // encadré « À la sonnerie » (fiche.js, BAS_ETAPE)
+      { ecran: 'docs', onglet: 1, lignes: ['Dans les coulisses du PC', '1 — Observer ce qui tourne', '…'], cible: 'enregistre', legende: 'Je regarde : « Enregistré ». Docs garde tout seul.' },
+      { ecran: 'docs', onglet: 1, lignes: ['Dans les coulisses du PC', '1 — Observer ce qui tourne', '…'], cible: 'onglet', ok: 1, legende: 'Je ferme l’onglet. Je ne remets PAS encore.' }
+    ] },
+    deconnecter: { titre: 'À la sonnerie : je me déconnecte de Windows', images: [ // vues win-* de pas-a-pas/demos-communs.js
+      { vue: 'win-bureau', cible: 'demarrer', legende: 'J’appuie sur la touche Windows ⊞ (ou je clique sur ⊞, en bas de l’écran).' },
+      { vue: 'win-bureau', demarrer: 1, compte: 'Prénom Nom', cible: 'nom', legende: 'En bas à gauche du menu, je clique sur mon nom.' },
+      { vue: 'win-bureau', demarrer: 1, compte: 'Prénom Nom', panneau: 1, cible: 'deconnecter', legende: 'En haut à droite du panneau : Se déconnecter.' },
+      { vue: 'win-bureau', demarrer: 1, compte: 'Prénom Nom', alim: 1, cible: 'alimentation', legende: '⚠️ Pas le bouton ⏻ : il propose Verrouiller, Arrêter, Redémarrer. Pas « Se déconnecter ».' },
+      { vue: 'win-cad', hi: 'Se déconnecter', cible: 'item-Se déconnecter', ok: 1, legende: 'Autre chemin : Ctrl + Alt + Delete ▸ Se déconnecter.' }
+    ] },
+    retrouver: { titre: 'Je reprends : je retrouve mon rapport dans Drive', images: [ // encadré « Je reprends mon cours »
+      { vue: 'g-gaufre', menu: 1, cible: 'app-drive', legende: 'Gaufre ▸ Drive.' },
+      { ecran: 'drive', cible: 'recents', legende: 'Je clique sur « Récents », à gauche.' },
+      { ecran: 'drive', cible: 'fichier', ok: 1, legende: 'Double-clic sur mon rapport : il s’ouvre.' }
+    ] },
     joindre: { titre: 'Joindre mon rapport au devoir, sans le rendre', images: [
       ...CLASSROOM,
       devoir({ cible: 'ajouter', legende: 'Le devoir s’ouvre. Dans « Vos devoirs » : + Ajouter ou créer.' }),
@@ -177,6 +193,7 @@ const Demo = (() => {
       page.append(im);
       if (f.legendeImg) page.append(c(el('p', 'md-l md-leg', 'Capture du Gestionnaire 1 min après le calcul : GIMP garde l’image. D’autres logiciels tournent aussi.'), 'legende-img'));
     }
+    if (f.onglet) e.append(c(el('span', 'md-onglet', NOM.slice(0, 18) + '…  ✕'), 'onglet'));   // l'onglet de Chrome, pour « je ferme l'onglet »
     e.append(haut, menus, ...(outils ? [outils] : []), page);
     if (f.styles) {
       const box = el('div', 'md-menu md-styles');
@@ -227,6 +244,11 @@ const Demo = (() => {
     if (f.ecran === 'docs') return docs(f);
     const e = el('div', 'md md-' + f.ecran);
     if (f.ecran === 'accueil') e.append(el('div', 'md-titre', 'Docs — Créer un document'), c(el('div', 'md-vierge', '+ Document vierge'), 'vierge'));
+    if (f.ecran === 'drive') {
+      const g = el('div', 'md-col'); ['Mon Drive', 'Récents', 'Corbeille'].forEach(t => g.append(c(el('span', null, t), t === 'Récents' ? 'recents' : '')));
+      const d = el('div', 'md-liste'); d.append(c(el('div', 'md-fichier', '📄 ' + NOM), 'fichier'), el('div', 'md-fichier autre', '📄 Le document qui obéit'));
+      e.append(g, d);
+    }
     if (f.ecran === 'gestion') {
       const corps = el('div', 'md-tm');
       const nav = el('div', 'md-tm-nav'); nav.append(c(el('span', f.perf ? null : 'on', '☰ Processus'), 'processus'), c(el('span', f.perf ? 'on' : null, '📈 Performance'), 'performances'), el('span', null, '🕘 Historique'));

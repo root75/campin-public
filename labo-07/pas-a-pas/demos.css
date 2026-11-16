@@ -112,3 +112,9 @@
 .md-moni-pc{text-align:center;font-size:11px;color:#5f6368;margin-top:6px}
 @media(max-width:560px){.demo-scene{min-height:320px}.md-tm{grid-template-columns:1fr}.md-tm-nav{display:none}.md-tm-perf{grid-template-columns:1fr}.md-tm-res{display:none}.md-ex{grid-template-columns:1fr}.md-ex-gauche{display:none}.md-icones{grid-template-columns:1fr}}
 @media (prefers-reduced-motion:reduce){.demo-curseur{transition:none}}
+/* « À la sonnerie » et « Je reprends » : l'onglet de Chrome au-dessus de Docs, et Drive ▸ Récents. */
+.md-onglet{display:inline-block;background:#dfe7ee;border-radius:8px 8px 0 0;padding:3px 10px;margin:4px 0 0 8px;font-size:11px}
+.md-drive{display:grid;grid-template-columns:110px 1fr}
+.md-col{display:grid;align-content:start;gap:6px;padding:16px 10px;border-right:1px solid #e3e8ec}.md-col span{padding:4px 8px;border-radius:12px}
+.md-liste{padding:16px;display:grid;align-content:start;gap:6px}
+.md-fichier{padding:6px 8px;border-radius:6px;background:#f1f3f4}.md-fichier.autre{opacity:.6}

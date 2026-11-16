@@ -135,8 +135,7 @@ Vérifier dans le test que la réponse d'une version ne valide pas les deux autr
   `FIN.bouton` le libellé du bouton qui y mène ; `FIN.plus` et `FIN.lien` sont facultatifs.
 - **Sous une case** : `{ geste, sous:'<img …>' }` (un extrait, une aide repliée) ; `{ geste, trous:{ titre, intro, bravo,
   variantes:[{ texte, mots, pieges }] } }` = un texte à trous d'entraînement, corrigé dans la page, jamais enregistré.
-- **Sous chaque bloc** : `pied:'<aside …>'`, du HTML après la navigation (« À la sonnerie »). Ses animations se
-  déclarent dans `demos` comme les autres : `"sonnerie 1.2": ["deconnecter"]` = 2e ligne de la 1re `.sonnerie`.
+- **Sous chaque bloc** : `BAS_ETAPE` (« À la sonnerie », « Je reprends mon cours »), comme pour tous les cours.
 - **`const REPRISE = { titre, html, demos }`** : l'encadré affiché en haut quand l'élève rouvre le cours plus de
   5 min après son dernier geste, avec le bouton « C'est fait : je reprends à l'étape N ».
 - `coince` accepte `{ html:'<b>…</b>' }` à côté des textes simples ; `veux` est facultatif.
