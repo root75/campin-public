@@ -59,7 +59,7 @@ const colle = (a, b) => ({
 const melangeTexte = (texte, nom, val) => ({
   vois:`Le programme affiche ${texte} : ${val}`,
   coince:["TypeError : on additionne un texte et un nombre. Python refuse de deviner.",
-          `Dans print, la virgule sépare deux choses à afficher et met un espace entre elles : print("${texte} :", ${nom}).`],
+          `Dans print( ), la virgule sépare deux choses à afficher et met un espace entre elles : le texte entre guillemets, une virgule, la boîte sans guillemets.`],
   q:{ type:"code", q:`Répare le programme : il doit afficher ${texte} : ${val}`,
       depart:`${nom} = ${val}\nprint("${texte} : " + ${nom})`,
       test: r => r.erreur ? (r.erreur.type==="TypeError" ? "Toujours TypeError : un texte + un nombre. Remplace le + par une virgule." : "Lis la <b>ligne rouge</b> : il manque un guillemet ou une parenthèse ?")
@@ -113,7 +113,7 @@ const salue = mot => ({
 const echo = n => ({
   vois:`Quand on tape Echo, la console affiche Echo ${n} fois (plus la ligne que tu as tapée).`,
   coince:["EOFError : le programme veut lire une 2e réponse, mais on n'a tapé qu'une seule ligne. Chaque input( ) attend une nouvelle réponse.",
-          "Lis UNE fois, range dans une boîte : mot = input(). Puis affiche la boîte autant de fois qu'il faut."],
+          "Lis UNE fois et range la réponse dans une boîte, comme la boîte prenom du programme précédent. Puis affiche la boîte autant de fois qu'il faut."],
   q:{ type:"code", q:`Répare le programme : il lit UNE ligne et l'affiche ${n} fois.`,
       depart: Array(n).fill("print(input())").join("\n"), essais:[["Echo"],["Hop"]],
       test: r => r.essais.some(e => e.erreur && e.erreur.type==="EOFError") ? `EOFError : il y a ${(r.code.match(/input\(/g)||[]).length} input( ), mais une seule ligne tapée. Garde un seul input( ) et range sa réponse dans une boîte.`
@@ -138,7 +138,7 @@ const piegeCode = ({n,m}) => {
   return {
     vois:`On tape ${n} : la console affiche ${n*m}. On tape ${autre} : elle affiche ${autre*m}.`,
     coince:["int( ) transforme un texte en nombre entier : int(\"3\") vaut 3.",
-            "On peut convertir à la lecture, nombre = int(input(\"Un nombre ? \")), ou juste avant le calcul, int(nombre) * …"],
+            "Deux endroits possibles pour int( ) : autour de input( ), à la lecture, ou autour de la boîte, juste avant le calcul."],
     q:{ type:"code", q:`Répare le programme : il doit afficher ${n*m} quand on tape ${n}.`,
         depart:`nombre = input("Un nombre ? ")\nprint(nombre * ${m})`, essais:[[String(n)],[String(autre)]], scene:{ decor:"calcul", ouvre:[String(n*m), String(autre*m)] },
         test: r => r.erreur ? (r.erreur.type==="ValueError" ? "ValueError : int( ) a reçu autre chose qu'un nombre entier. Ne touche pas aux réponses tapées." : "Lis la <b>ligne rouge</b> : chaque parenthèse ouverte doit être fermée. int(input(\"…\")) en a DEUX à la fin.")
@@ -349,7 +349,7 @@ const BLOCS = [
     vois:"La fiche essaie avec 3 pièces, puis avec 12 : 30, puis 120.",
     coince:["ValueError : int( ) a reçu autre chose qu'un nombre entier. Ici, la fiche tape 3 puis 12 : regarde ta ligne input.",
             "Le cadre affiche le nombre de pièces au lieu du score : print doit afficher la boîte score.",
-            "Tu peux afficher print(score) ou print(\"Score :\", score) : les deux sont acceptés."],
+            "Tu peux afficher le score seul, ou le mot Score suivi du score : les deux sont acceptés."],
     q:{ type:"code", q:"Colle ici ton programme « Le score ».", depart:"", essais:[["3"],["12"]],
         test: r => r.erreur ? (r.erreur.type==="EOFError" ? "Un seul input( ) : le programme ne lit qu'un nombre de pièces." : "Lis la <b>ligne rouge</b>, corrige aussi dans Thonny, puis Ctrl + S.")
                  : !/input\(/.test(r.code) ? "Le programme doit demander le nombre de pièces avec input( )."
