@@ -18,8 +18,12 @@ const M1 = (() => {
   const propre = s => String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/[’]/g,"'").replace(/\s+/g,' ').trim();
   const html = s => String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const CLASSE = /(?:^|[\s,:])([1-7]\s*[a-z](?:\d)?)(?=$|[\s,.;])/i;
-  /* La classe : celle de la séance (serveur), sinon celle écrite dans la signature. */
-  const classeDe = (d, classe) => String(classe||'').trim() || (CLASSE.exec(String(d.signature||'').trim())||[])[1] || '';
+  /* La classe : celle de la séance (serveur), sinon celle écrite dans la signature (1B, 2F…). Sans séance et sans
+     classe de cette forme (aperçu professeur, classe d'essai « TEST »), ce qui suit le prénom et le nom dans la
+     signature : la page ne connaît pas la classe, elle vérifie seulement qu'il y en a une. */
+  const resteSignature = d => { const noms = propre(d.nom).split(/[^a-z0-9'-]+/).filter(Boolean);
+    return noms.length<2 ? '' : String(d.signature||'').split(/[\s,;:.]+/).filter(m => m && !noms.includes(propre(m))).join(' ').trim(); };
+  const classeDe = (d, classe) => String(classe||'').trim() || (CLASSE.exec(String(d.signature||'').trim())||[])[1] || resteSignature(d);
   /* La salutation « Bonjour Camille, » : un mot du modèle, une majuscule, le prénom avec sa majuscule, une virgule.
      seule=true : rien d'autre sur la ligne (bloc 4) ; sinon on ne lit que le début (réponse du bloc 8). */
   function erreurSalutation(brut, seule){
