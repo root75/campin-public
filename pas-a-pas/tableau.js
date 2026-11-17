@@ -264,7 +264,7 @@ function dessine(d){
     else { td("num", e.fini ? "" : e.erreursIci || ""); td("num", e.erreurs || ""); }
     const etat = td();
     if(e.aide){
-      etat.append(txt("span","pastille aide","🔔 aide · bloc "+e.aide.bloc+" · "+ilya(d.maintenant-e.aide.depuis).replace("il y a ","")));
+      etat.append(txt("span","pastille aide"+(e.aide.motif==="accord" ? " accord" : ""),"🔔 "+(MOTIFS_CLOCHE[e.aide.motif]||"aide")+" · bloc "+e.aide.bloc+" · "+ilya(d.maintenant-e.aide.depuis).replace("il y a ","")));
       if(SUIVI && (e._d||d).peutCloreAide){
         const cours=$("cours").value,seance=e._seance||choisie(),depuis=e.aide.depuis;
         const b=txt("button","btn vide","Aide traitée");b.type="button";
@@ -308,7 +308,10 @@ const resume = (id, texte) => { if($(id)) $(id).textContent = "— " + texte; };
    « N élèves coincés au bloc B — corriger ensemble » dès SEUIL_COMMUN élèves coincés au même bloc. */
 const SEUIL_COMMUN = 4;
 let bandeauMasque = null;   // {cle, n} : « Pas maintenant » cache le bandeau jusqu'à ce que le nombre augmente
-const estCoince = (e,d) => !e.fini && (!!e.aide || e.erreursIci>=3 || estSilencieux(e,d));
+/* Le motif de la cloche (bouton choisi par l'élève). « accord » = il a fini et attend l'accord avant de rendre : il n'est pas coincé. */
+const MOTIFS_CLOCHE = {consigne:"consigne", ecran:"écran", accord:"accord"};
+const enPanne = e => !!e.aide && e.aide.motif!=="accord";
+const estCoince = (e,d) => !e.fini && (enPanne(e) || e.erreursIci>=3 || estSilencieux(e,d));
 const blocDe = e => e.aide ? Number(e.aide.bloc) : e.position || e.atteint+1;   // position : la place d'un élève en cours déclaratif
 function ouEstLaClasse(d, el, n){
   const pli = $("pli-classe"); if(pli) pli.hidden = !d;
@@ -321,7 +324,7 @@ function ouEstLaClasse(d, el, n){
     if(e.fini) return;
     const b = Math.min(n, Math.max(1, blocDe(e))); ici[b]++;
     if(!estCoince(e,d)) return;
-    coinces[b]++; detail[b][e.aide ? "aide" : e.erreursIci>=3 ? "bute" : "silence"]++;
+    coinces[b]++; detail[b][enPanne(e) ? "aide" : e.erreursIci>=3 ? "bute" : "silence"]++;
   });
   const finis = el.filter(e=>e.fini).length, max = Math.max(1, finis, ...ici);
   const z = $("ou-classe");
@@ -492,13 +495,13 @@ function demo(){
   const vr = (...l) => l.map(([erreurs,eleves],k)=>({v:k+1, erreurs, eleves}));
   return { maintenant:t, parBloc:{1:2,4:5,5:3,6:9,8:4,9:6,10:2,12:1},
     variantes:{1:vr([1,3],[1,2],[0,3]), 4:vr([1,3],[4,3],[0,2]), 6:vr([2,3],[1,2],[6,3]), 9:vr([2,2],[2,3],[2,3])}, eleves:[
-    e("lina.dubois@arcampin.be",5,7,4,1,{aide:{bloc:6,depuis:t-3*m}, humeur:"🙁 Pas top"}),
+    e("lina.dubois@arcampin.be",5,7,4,1,{aide:{bloc:6,depuis:t-3*m,motif:"consigne"}, humeur:"🙁 Pas top"}),
     e("noah.martin@arcampin.be",9,3,1,0,{depuisBloc:t-2*m, humeur:"🙂 Bien", phrases:{2:"Parce que le message dit la ligne où chercher, sinon je change des trucs au hasard."}}),
     e("ines.lambert@arcampin.be",12,2,0,2,{fini:true, humeur:"😄 Super", avis:{plu:"Les questions pour passer au bloc suivant, on sait tout de suite si c'est juste.", progres:"Ça coince ? quand je me trompais.", gene:""}}),
     e("adam.peeters@arcampin.be",3,5,3,1,{depuisBloc:t-9*m, humeur:"😣 Pas bien"}),
     e("lucas.renard@arcampin.be",4,1,1,2,{depuisBloc:t-14*m, humeur:"😐 Bof"}),
     e("sara.janssens@arcampin.be",7,4,0,11,{phrases:{2:"Si je lis pas le message je sais pas quelle erreur c'est."}}),
-    e("yanis.leroy@arcampin.be",8,6,2,0,{aide:{bloc:9,depuis:t-1*m}, humeur:"😐 Bof"}),
+    e("yanis.leroy@arcampin.be",8,6,2,0,{aide:{bloc:9,depuis:t-1*m,motif:"accord"}, humeur:"😐 Bof"}),
     e("emma.dupont@arcampin.be",12,1,0,1,{fini:true, humeur:"🙂 Bien", avis:{plu:"Travailler à mon rythme.", progres:"Refaire le programme moi-même.", gene:"Attendre que la page charge au début."}})
   ]};
 }
