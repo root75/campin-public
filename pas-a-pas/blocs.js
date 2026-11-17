@@ -811,6 +811,7 @@ function preuve(pr, B, apres){
       else bravo(["Bien joué !","C’est enregistré, continue !","Une étape de plus !"][ici%3], false);
     }
     if(etat.atteint>avant && typeof CONFETTIS!=="undefined" && CONFETTIS) confettis();   // au choix de la fiche : const CONFETTIS = true
+    if(etat.atteint>avant && typeof BLOCS[ici].fete==="function"){ try { BLOCS[ici].fete(); } catch(e){} }   // au choix du bloc : une animation à sa première réussite
     if(enAide) basculeAide();
     const s = txt("button","btn plein",typeof PARCOURS!=="undefined" ? suite() : (ici+1<BLOCS.length ? "Bloc suivant →" : "J'ai fini ✓")); s.type="button";
     s.addEventListener("click",()=>{ ici++; affiche(); });

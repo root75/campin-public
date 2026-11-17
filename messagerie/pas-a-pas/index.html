@@ -49,6 +49,15 @@ addEventListener("error", e => {
 .rappel-question.rappele{background:#eef6ff;border-left:4px solid #0f6cbd;padding:2px 8px;font-weight:700}
 #bloc details img{display:block;max-width:100%;height:auto;margin-top:10px}
 .demo-case{margin:10px 0 0 34px;border:1px solid var(--trait);border-radius:12px;padding:6px 10px;background:var(--carte)}.demo-case>summary{cursor:pointer;font-weight:700;color:var(--encre-bouton)}
+/* Le message reçu arrive dans une enveloppe fermée : l'élève l'ouvre d'un clic (étape 8). */
+.enveloppe>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:14px;font-weight:800;font-size:1.1rem;background:#fff4d6;border:2px solid #c27c0e;border-radius:14px;padding:14px 18px}
+.enveloppe>summary::-webkit-details-marker{display:none}
+.enveloppe-dessin{font-size:2.6rem;line-height:1;display:inline-block;animation:enveloppe-appelle 1.6s ease-in-out infinite}
+.enveloppe[open]>summary{display:none}
+.enveloppe[open]>.email{transform-origin:50% 0;animation:enveloppe-ouvre .5s ease-out}
+@keyframes enveloppe-appelle{0%,60%,100%{transform:none}70%{transform:rotate(-10deg) scale(1.1)}80%{transform:rotate(8deg) scale(1.1)}90%{transform:rotate(-5deg)}}
+@keyframes enveloppe-ouvre{from{opacity:0;transform:scaleY(.2)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.enveloppe-dessin,.enveloppe[open]>.email{animation:none}}
 .email .rappele{background:none;padding:0;margin:0;border:0;border-radius:0;font-weight:inherit;color:inherit}
 </style>
 </head>
@@ -113,14 +122,14 @@ addEventListener("error", e => {
 
 <!-- Ordre : sequence-eleve (différé), fiche.js (les données), phrase-fin, blocs.js (le moteur). -->
 <script defer src="https://root75.github.io/campin-public/pas-a-pas/recompense.js?v=occupe-20261112"></script>
-<script defer src="https://root75.github.io/campin-public/messagerie/pas-a-pas/visuels.js?v=unifie-20261114"></script>
-<script defer src="https://root75.github.io/campin-public/pas-a-pas/sequence-eleve.js?v=saisie-20261115"></script>
+<script defer src="https://root75.github.io/campin-public/messagerie/pas-a-pas/visuels.js?v=enveloppe-20261117"></script>
+<script defer src="https://root75.github.io/campin-public/pas-a-pas/sequence-eleve.js?v=sms-20261117"></script>
 <script src="https://root75.github.io/campin-public/pas-a-pas/demo-lecteur.js?v=sous-cases-20261112"></script>
 <script src="https://root75.github.io/campin-public/pas-a-pas/demos-communs.js?v=classroom-20261113"></script>
 <script src="https://root75.github.io/campin-public/messagerie/pas-a-pas/demos.js?v=nouveau-20261112"></script>
-<script src="https://root75.github.io/campin-public/messagerie/pas-a-pas/fiche.js?v=moteur-20261116"></script>
+<script src="https://root75.github.io/campin-public/messagerie/pas-a-pas/fiche.js?v=enveloppe-20261117"></script>
 <script src="https://root75.github.io/campin-public/pas-a-pas/phrase-fin.js?v=20261106"></script>
 <script src="https://root75.github.io/campin-public/pas-a-pas/cloche.js?v=un-clic-20261117"></script>
-<script src="https://root75.github.io/campin-public/pas-a-pas/blocs.js?v=un-clic-20261117"></script>
+<script src="https://root75.github.io/campin-public/pas-a-pas/blocs.js?v=fete-20261117"></script>
 </body>
 </html>

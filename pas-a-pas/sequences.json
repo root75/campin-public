@@ -101,15 +101,53 @@
         "exemple": "J'écris à Monsieur le soir. Il me répond le lendemain."
       },
       {
-        "type": "ecran",
-        "titre": "Choisir l’outil : explique ton choix",
-        "lignes": [
-          "OBSERVE ET RÉPONDS AU PROFESSEUR — rien à saisir pour le moment.",
-          "Envoyer un travail à un professeur : quel outil et pourquoi ?",
-          "Prévenir un ami que tu arrives dans cinq minutes : quel outil et pourquoi ?",
-          "Un email peut être lu plus tard ; le choix dépend aussi du destinataire et des usages."
+        "type": "mots",
+        "titre": "Du message au mail",
+        "min": 4,
+        "saisie": "texte",
+        "visuel": "sms",
+        "question": "Ce message part chez ton professeur, par e-mail. Que changes-tu ?",
+        "champs": [
+          "Je change"
         ],
-        "min": 3
+        "lignes": [
+          "À un copain, sur ton téléphone : « slt c koi le devoir de math stp ??? »",
+          "Tu poses la même question à ton professeur, par e-mail."
+        ],
+        "methode": "Chacun écrit seul sur son poste, réponses comparées au tableau, puis le message se transforme en mail",
+        "correction": [
+          "Un objet : « Devoir de mathématiques ».",
+          "Une salutation : « Bonjour Monsieur, » ou « Bonjour Madame, ».",
+          "Une phrase complète, sans abréviation : « Quel est le devoir de mathématiques pour demain ? »",
+          "Une formule de fin et une signature : « Merci et bonne journée, » puis ton prénom, ton nom et ta classe."
+        ],
+        "repere": "Une idée par élève suffit : « dire bonjour », « pas d’abréviations », « signer »… Afficher les réponses, faire regrouper celles qui disent la même chose, puis Clore ▸ Corriger ensemble : au projecteur, le message du téléphone devient un mail, partie par partie. Faire nommer chaque partie qui apparaît. Le message à un copain n’est pas « mal écrit » : il est écrit pour un copain. Ce moment ne valide aucune étape de la fiche.",
+        "exemples": [
+          [
+            "dire bonjour",
+            9
+          ],
+          [
+            "pas d’abréviations",
+            6
+          ],
+          [
+            "mettre mon nom",
+            4
+          ],
+          [
+            "les fautes",
+            3
+          ],
+          [
+            "un seul point d’interrogation",
+            2
+          ],
+          [
+            "rien",
+            1
+          ]
+        ]
       },
       {
         "type": "mots",
