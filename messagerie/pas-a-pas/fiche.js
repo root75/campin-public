@@ -17,7 +17,7 @@ const M1 = (() => {
   const DEST = 'camille.martin@example.org';
   const propre = s => String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/[’]/g,"'").replace(/\s+/g,' ').trim();
   const html = s => String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const CLASSE = /(?:^|[\s,:])([12]\s*[a-z](?:\d)?)(?=$|[\s,.;])/i;
+  const CLASSE = /(?:^|[\s,:])([1-7]\s*[a-z](?:\d)?)(?=$|[\s,.;])/i;
   /* La classe : celle de la séance (serveur), sinon celle écrite dans la signature. */
   const classeDe = (d, classe) => String(classe||'').trim() || (CLASSE.exec(String(d.signature||'').trim())||[])[1] || '';
   /* La salutation « Bonjour Camille, » : un mot du modèle, une majuscule, le prénom avec sa majuscule, une virgule.
@@ -78,10 +78,12 @@ const M1 = (() => {
     if(k==='signature'){
       const cl = classeDe(d, classe);
       if(!d.nom.trim() || d.nom.trim().split(/\s+/).length<2) return 'Renseigne ton prénom et ton nom au-dessus de la signature.';
-      if(!/^[12]\s*[a-z](?:\d)?$/i.test(cl)) return 'Ajoute ta classe dans ta signature, après ton prénom et ton nom.';
+      // La classe de la séance fait foi, quel que soit son nom (« 3F », « Test ») ; sans elle, celle lue dans la signature.
+      if(!cl) return 'Ajoute ta classe dans ta signature, après ton prénom et ton nom'+(String(classe||'').trim() ? '' : ' (exemple : 1B)')+'.';
       if(/\[|\]|\b(prenom|classe|signature)\b/.test(v)) return 'Écris tes informations dans la signature, sans conserver les indications du modèle.';
       const mots = propre(d.nom).split(/[^a-z0-9'-]+/).filter(Boolean), sig = v.split(/[^a-z0-9'-]+/).filter(Boolean);
-      return mots.every(m=>sig.includes(m)) && v.replace(/\s/g,'').includes(propre(cl).replace(/\s/g,'')) ? '' : 'La signature doit contenir ton prénom, ton nom et ta classe.';
+      if(!mots.every(m=>sig.includes(m))) return 'La signature doit contenir ton prénom, ton nom et ta classe.';
+      return v.replace(/\s/g,'').includes(propre(cl).replace(/\s/g,'')) ? '' : 'Dans ta signature, écris ta classe : '+cl+'.';
     }
     return '';
   }

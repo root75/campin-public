@@ -147,6 +147,12 @@ for(const [i,bons] of Object.entries(variantes)){const l=proofs.blocs[i];assert.
     'le moteur : arrive() à l’affichage d’un bloc, diplome() sur l’écran de fin, et un serveur pas à jour ne casse rien');
   assert.ok(M1.RATE.length === 6 && M1.RATE.filter(l => l[2]).length === 4 && M1.RATE.every(l => l[3]) && typeof BLOCS[0].arrive === 'function',
     'bloc 1 : six lignes, quatre à réparer, un rôle expliqué pour chacune');
+  { // Bloc 6 : la classe de la séance fait foi, même si elle ne ressemble pas à « 1B » (classe d'essai, 3e).
+    const sig = (signature, classe) => M1.verifie('signature', { nom: 'Lina Dupont', signature }, classe);
+    assert.ok(sig('Lina Dupont, Test', 'Test') === '' && sig('Lina Dupont, 3F', '3F') === '' && sig('Lina Dupont, 1C', '1C') === '', 'bloc 6 : signature acceptée avec la classe de la séance, quelle qu’elle soit');
+    assert.ok(sig('Lina Dupont', 'Test') !== '' && sig('Lina Dupont, 1B', 'Test') !== '', 'bloc 6 : sans la classe de la séance, la signature est refusée');
+    assert.ok(sig('Lina Dupont, 3F', '') === '' && /exemple : 1B/.test(sig('Lina Dupont', '')), 'bloc 6 : hors séance, la classe est lue dans la signature (1re à 7e)');
+  }
   assert.ok(/let trouve = 0, clics = total;/.test(s) && /Un clic perdu\./.test(s) && /quatre clics/.test(BLOCS[0].avant), 'bloc 1 : autant de clics que de lignes à réparer — cliquer partout ne répare pas le mail');
   assert.ok(/class="email mail-rate"/.test(BLOCS[0].avant) && /Bonjour Camille,/.test(BLOCS[0].avant) && !/<details>/.test(BLOCS[0].avant.split('<h3>')[0]),
     'bloc 1 : sans script, le mail réparé est lisible ; plus de repères à déplier un par un');
