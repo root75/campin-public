@@ -575,8 +575,18 @@ function affiche(){
   if(avecReprise) z.querySelectorAll(".faire details.demo-case[open]").forEach(d=>{ d.open = false; });
   z.append(nav);
   basEtape(z);
+  if(typeof B.arrive==="function"){ try { B.arrive(apiBloc(z)); } catch(e){} }   // au choix du bloc : brancher un jeu, demander une donnée au serveur
   if(DECLARATIF) nav.after(txt("p","note","Tu peux continuer même si une case reste vide. Coche quand tu as terminé ; le professeur examine ton document."));
 }
+
+/* Ce qu'un bloc reçoit dans B.arrive(api), à chaque affichage : sa zone, l'état partagé, les rappels à redessiner,
+   et un appel au serveur par son nom — refusé hors suivi, en aperçu, ou si le serveur déployé ne connaît pas encore
+   cette fonction (Code.gs pas recollé) : le bloc garde alors son texte d'origine. */
+const apiBloc = z => ({ zone:z, suivi:!!SUIVI && !APERCU, valeurs:lisPartage, garde:gardePartage, rappels:()=>remplitRappels(document.body),
+  serveur:(nom, ...a)=>new Promise((ok, ko)=>{
+    if(!SUIVI || APERCU || typeof google.script.run[nom]!=="function") return ko(new Error("hors suivi"));
+    google.script.run.withSuccessHandler(ok).withFailureHandler(ko)[nom](...a);
+  }) });
 
 /* Encadrés de bas d'étape, facultatifs : la fiche les décrit dans BAS_ETAPE (Labo 07 : « À la sonnerie » et
    « Je reprends mon cours », comme dans Le rat de ville). Fermer et rouvrir ne sont pas des étapes : chacun le
@@ -1070,6 +1080,7 @@ function fin(z){
   const loin = document.getElementById("plus-loin"); if(loin) loin.hidden = false;
   if(DECLARATIF) z.append(txt("div","numero","Étape finale · après les "+BLOCS.length+" étapes"));
   z.append(txt("h2",null,FIN.titre), txt("p",null,FIN.texte));
+  if(typeof FIN.diplome==="function"){ try { const d = FIN.diplome({ email:emailMoteur, classe:classeMoteur, valeurs:lisPartage() }); if(d) z.append(d); } catch(e){} }   // au choix de la fiche : un élément de plus sous le titre
   if(typeof GRILLE!=="undefined") z.append(grilleMoi());
   if(FIN.revision){
     const revision=el("div","encart"),lien=txt("a","btn vide",FIN.revision.titre);
