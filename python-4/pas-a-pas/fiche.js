@@ -153,7 +153,7 @@ const potion = ({m,b}) => {
                              : /expected ':'/.test(r.erreur.message) ? "Il manque les deux-points : à la fin de la ligne if."
                              : "Lis la <b>ligne rouge</b> : un if s'écrit if condition: puis, en dessous, une ligne décalée.")
                  : !/^\s*if\b/m.test(r.code) ? "Il manque le if : c'est lui qui traduit le losange."
-                 : !/energie\s*(=\s*energie\s*\+|\+=)/.test(r.code) ? `Le bonus se calcule : energie = energie + ${b}. Écrire le résultat en dur ne marche que pour un nombre.`
+                 : !/energie\s*(=\s*energie\s*\+|\+=)/.test(r.code) ? `Le bonus se calcule : range dans energie son ancienne valeur plus ${b}. Écrire le résultat en dur ne marche que pour un nombre.`
                  : NOMBRES(DERNIERE(r.essais[1])).pop()===att[1]+b ? "Avec 2 potions, le bonus est donné quand même : la ligne du bonus est-elle bien décalée sous le if ?"
                  : NOMBRES(DERNIERE(r.essais[2])).pop()===att[2]+b ? `Avec 3 potions, energie vaut ${s}. ${s} > ${s} est faux : pas de bonus. Utilise >, pas >=.`
                  : NOMBRES(DERNIERE(r.essais[0])).pop()===5*m ? `Avec 5 potions, pas de bonus : relis ta condition, energie > ${s}.`
@@ -196,7 +196,7 @@ const repare = (depart, msg) => ({
                            : /^\s*if[^\n]*[^=!<>]=[^=]/m.test(r.code) ? "SyntaxError : dans un if, on compare avec == (deux signes). Un seul = range une valeur."
                            : /expected ':'/.test(r.erreur.message) ? "SyntaxError : il manque les deux-points : à la fin de la ligne if."
                            : "Lis la <b>ligne rouge</b> : son numéro te dit où chercher.")
-               : !SORTIE(r.essais[0]).includes(msg) ? `Avec 0 vie, on attend ${msg}. La condition est-elle vies == 0 ?`
+               : !SORTIE(r.essais[0]).includes(msg) ? `Avec 0 vie, on attend ${msg}. Relis la condition de ton if : que compare-t-elle ?`
                : SORTIE(r.essais[1]).includes(msg) ? `Avec 2 vies, ${msg} ne doit pas s'afficher : la ligne du print est-elle décalée sous le if ?`
                : true,
       juste:"Trois règles du if : == pour comparer, les deux-points, la ligne décalée en dessous." } });
@@ -213,7 +213,7 @@ const porte = ({nom, question, bon, mauvais, oui, non, decor}) => ({
           `Structure complète : une ligne if avec sa condition et ses deux-points / ligne décalée / else: / ligne décalée. La condition compare la boîte ${nom} au texte attendu, avec ==.`],
   q:{ type:"code", q:`Complète le programme avec un if et un else.`,
       depart:`${nom} = input("${question} ")\n`, essais:[[bon],[mauvais]], scene:{ decor, ouvre:oui, ferme:non },
-      test: r => r.erreur ? (r.erreur.type==="NameError" ? `NameError : ${bon} sans guillemets est pris pour un nom de boîte. Écris "${bon}".`
+      test: r => r.erreur ? (r.erreur.type==="NameError" ? `NameError : ${bon} sans guillemets est pris pour un nom de boîte. Un texte s'écrit entre guillemets.`
                            : r.erreur.type==="IndentationError" ? "IndentationError : sous if et sous else, la ligne est décalée de 4 espaces ; else lui-même est collé à gauche."
                            : "Lis la <b>ligne rouge</b> : == pour comparer, deux-points après la condition et après else.")
                : !/^\s*else\s*:/m.test(r.code) ? "Il manque le else : c'est lui qui traduit la branche NON."
@@ -262,7 +262,7 @@ const distributeur = prix => ({
               montre:(dit, x, i, etat) => etat==="ouvert" ? "🥤" : "" },
       test: r => r.erreur ? (r.erreur.type==="TypeError" ? "TypeError : texte et nombre mélangés. As-tu mis int( ) autour de input( ) ?" : "Lis la <b>ligne rouge</b>, corrige, puis exécute.")
                : !/input\(/.test(r.code) ? "Le distributeur demande le nombre de pièces avec input( )."
-               : !/boisson/i.test(SORTIE(r.essais[2])) ? `Avec exactement ${prix} pièces, on a assez : la condition doit être pieces >= prix.`
+               : !/boisson/i.test(SORTIE(r.essais[2])) ? `Avec exactement ${prix} pièces, on a assez : assez, c'est autant ou plus que le prix. Relis ta condition.`
                : /boisson/i.test(SORTIE(r.essais[1])) ? "Avec 1 pièce, pas de boisson : la branche else doit dire ce qui manque."
                : !/boisson/i.test(SORTIE(r.essais[0])) ? "Avec 5 pièces, on attend « Voici ta boisson »."
                : NOMBRES(DERNIERE(r.essais[0])).pop()!==5-prix ? `Avec 5 pièces, la dernière ligne doit donner la monnaie : ${5-prix}.`
