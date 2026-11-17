@@ -167,17 +167,17 @@
     "regle": {
      "motif": "enregistre.*onedrive"
     },
-    "faux": "Clique sur l’onglet Courrier, puis recopie les mots écrits juste sous la carte du fichier.",
-    "aide": "Clique sur l’onglet Courrier, puis regarde juste sous la carte du fichier."
+    "faux": "Comment faire : en haut de Chrome, onglet Courrier ▸ le message de ton professeur ▸ la carte du fichier, sous l’objet. Recopie les trois mots écrits juste en dessous de la carte.",
+    "aide": "Comment faire : en haut de Chrome, onglet Courrier ▸ le message de ton professeur ▸ regarde juste sous la carte du fichier."
    },
    {
     "type": "saisie",
-    "q": "Dans Word, clique sur le petit nuage à côté du titre du document. Dans quel dossier de OneDrive ta fiche est-elle rangée ? Recopie son nom.",
+    "q": "Dans l’onglet Word, clique sur le petit nuage, juste à droite du titre de ta fiche, tout en haut. Sous « Emplacement du fichier », il y a ton nom, puis un dossier. Recopie le nom du dossier.",
     "regle": {
      "motif": "attachments?|pieces? ?jointes?"
     },
-    "faux": "Clique sur le petit nuage à côté du titre : le nom du dossier est écrit après « OneDrive › ».",
-    "aide": "Dans Word, clique sur le petit nuage à côté du titre du document."
+    "faux": "Comment faire : onglet Word ▸ le petit nuage à droite du titre ▸ « Emplacement du fichier ». Deux noms soulignés : le premier est le tien, le deuxième est le dossier. Recopie le deuxième.",
+    "aide": "Comment faire : en haut de Chrome, onglet Word ▸ le petit nuage à droite du titre ▸ sous « Emplacement du fichier », le dernier nom souligné."
    }
   ],
   [
@@ -265,8 +265,8 @@
     "regle": {
      "motif": "attachments?|pieces? ?jointes?"
     },
-    "faux": "Outlook a rangé ta fiche à l’étape 4 : à gauche du sélecteur, clique sur Fichiers, ouvre les dossiers et recopie le nom de celui qui contient ta fiche.",
-    "aide": "Outlook a rangé ta fiche dans OneDrive, à l’étape 4."
+    "faux": "Comment faire : onglet Message ▸ 📎 Joindre un fichier ▸ OneDrive ▸ à gauche, Fichiers. Clique sur le nom d’un dossier pour l’ouvrir : celui qui contient « Ma fiche a completer » est le bon. Recopie son nom, puis Annuler.",
+    "aide": "Comment faire : rouvre le sélecteur (onglet Message ▸ 📎 Joindre un fichier ▸ OneDrive) ▸ à gauche, Fichiers ▸ ouvre les dossiers jusqu’à voir ta fiche ▸ recopie le nom du dossier ▸ Annuler."
    }
   ],
   [
