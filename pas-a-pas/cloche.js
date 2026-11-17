@@ -6,6 +6,9 @@
    Au plus 3 sonneries par heure glissante : le serveur compte (Code.gs, CLOCHE_MAX_) et refuse la 4e.
    Le seul panneau qui reste dit qu'une sonnerie n'est PAS partie : limite atteinte, ou demande non transmise.
    Sans serveur (aperçu), le compte est tenu dans la page ouverte.
+   Une sonnerie éteinte par l'élève dans la minute ne compte pas (17/11/2026 : des clics répétés mangeaient les 3
+   sonneries sans que le professeur soit passé) ; le serveur applique la même règle (Code.gs, CLOCHE_ANNULE_).
+   Tant que la demande est en cours, la cloche bouge un peu toutes les 3 secondes : l'élève voit qu'elle est active.
 
      Cloche.refuse({ ancre, plein, info, coince })   la sonnerie n'est pas partie : le panneau dit pourquoi
        ancre  : la zone de la cloche (#aide) ; le panneau s'ouvre dedans
@@ -13,12 +16,13 @@
        info   : { cloches, clocheMax, clocheLibre } du serveur, ou une promesse, ou rien
        coince : le <details> « Ça coince ? » de la page (facultatif)
      Cloche.sonnee()          à appeler quand une sonnerie est confirmée (compte local)
+     Cloche.eteinte()         à appeler quand l'élève éteint sa cloche : dans la minute, la sonnerie est décomptée
      Cloche.restantes(info)   { n, max, libre }
      Cloche.marque(ancre, info)  cloche en pointillés quand il ne reste rien
      Cloche.ferme(ancre), Cloche.ouvert(ancre)
    Rien n'est enregistré sur le poste. */
 const Cloche = (() => {
-  const MAX = 3, HEURE = 3600 * 1000, ici = [];
+  const MAX = 3, HEURE = 3600 * 1000, ANNULE = 60 * 1000, ici = [];
   const el = (tag, cls, t) => { const n = document.createElement(tag); if (cls) n.className = cls; if (t != null) n.textContent = t; return n; };
   const heure = t => new Date(t).toLocaleTimeString('fr-BE', { hour: '2-digit', minute: '2-digit' });
   let style = false;
@@ -27,6 +31,9 @@ const Cloche = (() => {
     const s = el('style');
     s.textContent = `.verif>p{display:none!important}
 .epuise:not(.active)>button{opacity:.55;border-style:dashed!important}
+#aide.active #aide-btn{animation:sonne 1s ease 2,cloche-attend 3s ease-in-out 2s infinite}
+@keyframes cloche-attend{0%,70%,100%{transform:rotate(0)}78%{transform:rotate(9deg)}86%{transform:rotate(-8deg)}94%{transform:rotate(4deg)}}
+@media (prefers-reduced-motion:reduce){#aide.active #aide-btn{animation:none}}
 .cloche-verif{background:var(--carte,#fff);color:var(--encre,#1f2a33);border:3px solid var(--fromage,#e3a922);border-radius:14px;padding:12px 14px;max-width:min(22rem,calc(100vw - 32px));box-shadow:0 6px 20px #0003;display:grid;gap:8px;text-align:left;font-size:1rem}
 .cloche-verif p{margin:0}.cloche-titre{font-weight:800}
 .cloche-verif .cloche-lien{background:none;border:0;padding:0;font:inherit;font-weight:700;color:var(--encre-bouton,#1d5a73);text-decoration:underline;cursor:pointer;justify-self:start}
@@ -43,6 +50,7 @@ const Cloche = (() => {
     return { n: Math.max(0, max - i.cloches), max, libre: i.clocheLibre || 0 };
   }
   const sonnee = () => { ici.push(Date.now()); };
+  const eteinte = () => { if (ici.length && Date.now() - ici[ici.length - 1] < ANNULE) ici.pop(); };
   const marque = (ancre, info) => { css(); ancre.classList.toggle('epuise', restantes(info).n <= 0); };
   const zone = ancre => ancre.querySelector('.cloche-verif');
   function ferme(ancre) { const v = ancre && zone(ancre); if (v) v.hidden = true; if (ancre) ancre.classList.remove('verif'); }
@@ -70,6 +78,7 @@ const Cloche = (() => {
       ...(lien ? [lien] : []), pied);
     if (r.n <= 0) marque(o.ancre, info);
   }
+  css();
   document.addEventListener('keydown', e => { if (e.key === 'Escape') document.querySelectorAll('.verif').forEach(ferme); });
-  return { MAX, refuse, ferme, ouvert, sonnee, restantes, marque, heure };
+  return { MAX, ANNULE, refuse, ferme, ouvert, sonnee, eteinte, restantes, marque, heure };
 })();

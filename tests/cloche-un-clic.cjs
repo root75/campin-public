@@ -34,6 +34,13 @@ const boutons=ancre=>ancre.tous().filter(x=>x.tag==='button');
   assert.ok(ancre.tous().some(x=>/Cloche non transmise/.test(x.textContent))&&ancre.tous().some(x=>/encore une fois sur la cloche/.test(x.textContent)));
   /* Compte local (aperçu) : trois sonneries, puis plus rien. */
   assert.equal(Cloche.restantes().n,3);Cloche.sonnee();Cloche.sonnee();Cloche.sonnee();assert.equal(Cloche.restantes().n,0);
+  /* Éteinte par l'élève dans la minute : la sonnerie ne compte pas ; après une minute, elle compte. */
+  Cloche.eteinte();assert.equal(Cloche.restantes().n,1,'éteinte tout de suite : décomptée');
+  { const vrai=c.Date.now;Cloche.sonnee();c.Date.now=()=>vrai()+61000;Cloche.eteinte();c.Date.now=vrai;assert.equal(Cloche.restantes().n,0,'éteinte après une minute : comptée'); }
+  /* Demande en cours : la cloche bouge un peu, en boucle ; rien si l'élève a réduit les animations. */
+  const style=document.head.enfants.map(x=>x.textContent).join('');
+  assert.match(style,/#aide\.active #aide-btn\{animation:[^}]*cloche-attend [^}]*infinite\}/);assert.match(style,/prefers-reduced-motion:reduce\)\{#aide\.active #aide-btn\{animation:none/);
+  assert.ok(/Cloche\.eteinte\(\);? ?envoie\(\{ etape, type:"aide-fin" \}\)/.test(lis('pas-a-pas/blocs.js')),'blocs.js décompte la sonnerie éteinte');
   /* Le moteur sonne au premier clic et n'ouvre plus de question. */
   const moteur=lis('pas-a-pas/blocs.js');
   assert.ok(!/Cloche\.verifie|CLOCHE_ACCORD/.test(moteur),'blocs.js ne passe plus par un panneau avant de sonner');

@@ -1245,7 +1245,7 @@ function bilan(){
    Un clic sonne, tout de suite : plus de question ni de motif avant (17/11/2026 — les élèves ouvraient le
    panneau sans aller au bout et croyaient la cloche active). 3 sonneries par heure au plus : le serveur
    compte et refuse la 4e ; un refus ou une demande non transmise s'affiche dans un panneau (pas-a-pas/cloche.js).
-   Se débloquer ne demande rien et ne compte pas. */
+   Se débloquer ne demande rien et ne compte pas ; éteinte dans la minute, la sonnerie elle-même ne compte pas. */
 function allumeAide(on){
   enAide = on;
   document.getElementById("aide").classList.toggle("active", enAide);
@@ -1257,7 +1257,7 @@ function allumeAide(on){
 function basculeAide(){
   const ancre = document.getElementById("aide"), etape = Math.min(ici,BLOCS.length-1)+1, commun = typeof Cloche!=="undefined";
   if(commun) Cloche.ferme(ancre);
-  if(enAide){ allumeAide(false); envoie({ etape, type:"aide-fin" }); return; }
+  if(enAide){ allumeAide(false); if(commun && Cloche.eteinte) Cloche.eteinte(); envoie({ etape, type:"aide-fin" }); return; }
   const refus = plein => {
     allumeAide(false);
     if(!commun){ document.getElementById("aide-texte").textContent = plein ? "Déjà 3 sonneries en une heure." : "Cloche non transmise. Réessaie dans un instant."; return; }
