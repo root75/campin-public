@@ -46,6 +46,8 @@ est aussi servie par Apps Script, où une adresse relative ne mène nulle part.
   extra:'<aside class="repere">…</aside>',          // facultatif : HTML sous les cases
   coince:['Blocage prévisible et sa solution.', '…'],  // le « Ça coince ? » du bloc
   fete:()=>{ … },              // facultatif : appelé une fois, à la première réussite du bloc (l'enveloppe de la Messagerie 01)
+  arrive:api=>{ … },           // facultatif : appelé à chaque affichage du bloc. api = { zone, suivi, valeurs(), garde(cle, texte),
+                               //   rappels(), serveur(nom, …arguments) → Promise } : brancher un jeu sur `avant`, demander une donnée au serveur
   q:{ … } }                    // la preuve, ci-dessous
 ```
 

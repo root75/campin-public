@@ -89,6 +89,72 @@ const M1 = (() => {
   const erreurs = champs => (texte, d, ctx) => champs.map(k=>verifie(k, d, ctx && ctx.classe)).filter(Boolean);
   /* L'enveloppe en plein écran (visuels.js). Sans elle (script pas chargé, tests), rien : la fiche continue. */
   const enveloppe = o => { if(typeof window!=='undefined' && typeof window.MessagerieEnvol==='function') window.MessagerieEnvol(o); };
+  const noeud = (tag, cls, texte) => { const n = document.createElement(tag); if(cls) n.className = cls; if(texte!=null) n.textContent = texte; return n; };
+  /* « Prénom Nom » lu dans une adresse scolaire (prenom.nom@…) : sans accent, l'adresse n'en porte pas. */
+  const nomDe = email => String(email||'').split('@')[0].replace(/\d+/g,'').split('.').filter(Boolean)
+    .map(m => m.split('-').map(p => p.charAt(0).toUpperCase()+p.slice(1)).join('-')).join(' ');
+
+  /* Bloc 1 — « Le mail raté » : six lignes, quatre à réparer. Un clic sur une ligne fautive la répare et dit le rôle
+     de cette partie ; sur une ligne juste, il dit pourquoi elle l'est. Rien n'est envoyé au serveur : la preuve du
+     bloc reste la question sur l'adresse. Sans script, le mail réparé est déjà dans la page (texte de repli). */
+  const RATE = [
+    ['À', 'camille.martin@example.org', '', 'Cette ligne est juste. Le destinataire : son adresse, recopiée lettre par lettre, sans espace.'],
+    ['Objet', '(rien)', 'Une question sur tes loisirs', 'L’objet : un titre court. Il annonce le sujet et aide à retrouver le mail dans la liste.'],
+    ['', 'slt', 'Bonjour Camille,', 'La salutation : « Bonjour », le prénom avec sa majuscule, une virgule. Pour un professeur : « Bonjour Monsieur, » ou « Bonjour Madame, ».'],
+    ['', 'tu fé koi kom sport', 'Quel sport ou quel loisir pratiques-tu ?', 'Le message : une phrase complète, sans abréviation. Le destinataire doit pouvoir répondre.'],
+    ['', 'Bonne journée,', '', 'Cette ligne est juste. La formule de fin : elle termine le message poliment.'],
+    ['', 'moi', 'Lina Dupont, 2B', 'La signature : le prénom, le nom et la classe. « moi » ne dit pas qui écrit.']
+  ];
+  function mailRate(zone){
+    const cible = zone && zone.querySelector('.mail-rate'); if(!cible) return;
+    const total = RATE.filter(l => l[2]).length, dit = noeud('p','rate-dit','Clique sur une ligne du mail.'), compte = noeud('p','rate-compte');
+    dit.setAttribute('role','status');
+    let trouve = 0;
+    const maj = () => { compte.textContent = trouve<total ? 'Lignes réparées : '+trouve+' sur '+total : '✔ Mail réparé ! À, Objet, puis un corps en quatre parties : salutation, message, formule de fin, signature.'; cible.classList.toggle('repare', trouve>=total); };
+    const lignes = RATE.map(([champ, mauvais, bon, role]) => {
+      const b = noeud('button','rate-ligne'); b.type = 'button';
+      const texte = noeud('span', null, mauvais);
+      if(champ) b.append(noeud('b', null, champ+' : '));
+      b.append(texte);
+      b.addEventListener('click', () => {
+        if(bon && !b.classList.contains('reparee')){ texte.textContent = bon; b.classList.add('reparee'); trouve++; maj(); if(trouve>=total && typeof confettis==='function') confettis(); }
+        else if(!bon) b.classList.add('juste');
+        dit.textContent = role;
+      });
+      return b;
+    });
+    cible.replaceChildren(...lignes, dit, compte); maj();
+  }
+
+  /* Bloc 10 — le correspondant tiré au sort par le serveur (Code.gs, correspondant) : chaque élève présent écrit à
+     un camarade et reçoit un message d'un autre. Gardé dans l'état partagé ; le serveur redonne le même nom sur un
+     autre poste. Un élève seul à cette étape attend le suivant : on redemande toutes les 8 s, vingt fois au plus.
+     Hors suivi, en aperçu ou avec un serveur pas encore à jour : le texte d'origine reste (« demande à ton professeur »). */
+  function correspondant(api, essai){
+    const repere = api.zone.querySelector('.correspondant');
+    if(!api.suivi || !repere || api.valeurs().corrAdresse) return;
+    api.serveur('correspondant', COURS).then(r => {
+      if(!repere.isConnected) return;   // l'élève a changé de bloc
+      if(r && r.adresse){ api.garde('corrNom', String(r.nom||'')); api.garde('corrPrenom', String(r.prenom||'')); api.garde('corrAdresse', String(r.adresse)); api.rappels(); }
+      else if(r && r.attente && (essai||0)<20) setTimeout(() => correspondant(api, (essai||0)+1), 8000);
+    }).catch(() => {});
+  }
+
+  /* Écran de fin — le « permis de mail » : le nom de l'élève, les cinq gestes de la leçon, un tampon. */
+  const GESTES_PERMIS = ['Je lis une adresse : la partie locale, @, le domaine.', 'J’écris un objet court, qui annonce le sujet.',
+    'Je salue, je termine et je signe.', 'J’envoie un mail avec mon professeur en copie (Cc).', 'Je réponds avec « Répondre à tous ».'];
+  function permis(ctx){
+    if(typeof document==='undefined') return null;
+    const d = ctx.valeurs || {}, nom = String(d.nom||'').trim() || nomDe(ctx.email) || 'Élève', classe = classeDe(d, ctx.classe);
+    const p = noeud('section','permis'), liste = noeud('ul');
+    p.setAttribute('aria-label','Mon permis de mail');
+    GESTES_PERMIS.forEach(g => liste.append(noeud('li', null, g)));
+    p.append(noeud('p','permis-tete','🪪 Permis de mail'), noeud('p','permis-nom', nom+(classe ? ' · '+classe : '')), liste,
+      noeud('p','permis-date','Délivré le '+new Date().toLocaleDateString('fr-BE', { day:'numeric', month:'long', year:'numeric' })),
+      noeud('span','permis-tampon','Validé'),
+      noeud('p','note','Ce permis dit ce que tu sais faire. Ta cote, c’est ton professeur qui la donne, en lisant tes deux mails.'));
+    return p;
+  }
   const TOUS = ['a','objet','salutation','message','fin','signature'];
   const corps = d => [d.salutation, d.message, d.fin, d.signature].map(x=>x||'').join('\n\n');
   /* L'aperçu en direct, à droite : blocs 1 à 7 et 9 à 12, le mail d'entraînement ; bloc 8, la réponse à Camille
@@ -110,7 +176,7 @@ const M1 = (() => {
   }
   /* Le nom à taper dans Cc : Outlook trouve la personne dans l'annuaire de l'école. */
   const prof = classe => { const c = String(classe||'').replace(/\s/g,'').toUpperCase(); return /^2E/.test(c) ? 'Michiels' : c ? 'Louviaux' : ''; };
-  return { DEST, propre, html, classeDe, erreurSalutation, criteresReponse, verifie, erreurs, TOUS, corps, apercu, ancienBrouillon, prof, enveloppe };
+  return { DEST, propre, html, classeDe, erreurSalutation, criteresReponse, verifie, erreurs, TOUS, corps, apercu, ancienBrouillon, prof, enveloppe, nomDe, RATE, mailRate, correspondant, GESTES_PERMIS, permis };
 })();
 
 const PARTAGE = { depart:M1.ancienBrouillon, apercu:M1.apercu };
@@ -132,9 +198,10 @@ const champMail = (etiquette, champs, controle, reponse, juste, plus) => Object.
   etiquette, champs, controle:M1.erreurs(controle), reponse, juste }, plus);
 
 const BLOCS = [
- {partie:'A — Je comprends', titre:'Observer un email', min:3,
+ {partie:'A — Je comprends', titre:'Réparer un mail raté', min:3,
   veux:'Avant de toucher Outlook : reconnaître les parties d’un mail et les deux parties d’une adresse.',
-  avant:'<p>Observe les parties de ce mail. Clique sur chaque repère pour comprendre son rôle.</p><div class="email exemple"><details><summary>À : camille.martin@example.org</summary><p><b>Le destinataire</b> : la personne qui doit recevoir le mail. Une lettre différente peut changer son adresse.</p></details><details><summary>Objet : Une question sur tes loisirs</summary><p><b>L’objet</b> : un titre court. Il annonce le sujet et aide à retrouver le mail dans la liste.</p></details><details><summary>Bonjour Camille,</summary><p><b>La salutation</b> : elle s’adapte à la personne. Pour un professeur : Bonjour Monsieur, ou Bonjour Madame,. On en choisit une seule.</p></details><details><summary>Quel sport ou quel loisir pratiques-tu ?</summary><p><b>Le message</b> : il dit pourquoi tu écris et ce que tu demandes. Le destinataire doit pouvoir répondre.</p></details><details><summary>Bonne journée,</summary><p><b>La formule de fin</b> : elle termine le message poliment.</p></details><details><summary>Lina Dupont, 2B</summary><p><b>La signature</b> : elle permet d’identifier l’élève et sa classe.</p></details></div><p class="note">Le corps du mail réunit la salutation, le message, la formule de fin et la signature.</p>'
+  arrive:api=>M1.mailRate(api.zone),
+  avant:'<p><b>Lina a écrit ce mail trop vite.</b> Quatre lignes sont à réparer. Clique sur une ligne : si elle pose problème, elle se répare, et tu lis à quoi elle sert.</p><div class="email mail-rate"><div class="ligne-mail"><b>À</b><span>camille.martin@example.org</span></div><div class="ligne-mail"><b>Objet</b><span>Une question sur tes loisirs</span></div><div class="corps"><p>Bonjour Camille,\n\nQuel sport ou quel loisir pratiques-tu ?\n\nBonne journée,\nLina Dupont, 2B</p></div></div><p class="note">Le corps du mail réunit la salutation, le message, la formule de fin et la signature.</p>'
    +'<h3>Comprendre une adresse email</h3><div class="email"><div class="ligne-mail"><b>camille.martin</b><b>@</b><b>example.org</b></div></div><ul><li><b>Partie locale :</b> avant @, elle identifie une boîte dans le domaine. Ce peut être une personne ou un service, comme secretariat.</li><li><b>@, l’arobase :</b> sépare les deux parties ; on peut le lire « chez ».</li><li><b>Domaine :</b> après @, il indique le domaine auquel appartient la boîte. Il n’est pas nécessairement le nom du serveur technique.</li></ul><p>Dans ton adresse scolaire, le domaine est <b>arcampin.be</b>. Recopie l’adresse fournie exactement, sans ajouter d’espace. Une adresse bien écrite ne prouve pas que la boîte existe ni que son propriétaire est fiable.</p><p class="note">example.org est utilisé ici pour les personnages fictifs. On ne lui envoie aucun message réel.</p>',
   fais:'<p>Dans <b>camille.martin@example.org</b>, repère les deux parties de l’adresse et écris-les dans les deux cases.</p>',
   vois:'Les deux cases sont remplies : ce qui précède @ dans la première, ce qui suit @ dans la seconde.',
@@ -243,15 +310,17 @@ const BLOCS = [
      validation:{juste:'Tu as trouvé ce que ton professeur demande. À l’étape suivante, tu poses sa question à ton camarade.'}}},
 
  {partie:'D — Dans Outlook, pour de vrai', titre:'Rédiger dans le corps du message', min:8,
-  veux:'Écrire un vrai message à un camarade désigné par le professeur, avec mon professeur en copie.',
-  gestes:[{geste:'Vérifie avec ton camarade son <b>adresse scolaire</b> exacte.', attention:'⚠️ N’utilise pas l’adresse fictive de Camille : tu écris à un vrai camarade.'},
+  veux:'Écrire un vrai message à un camarade tiré au sort, avec mon professeur en copie.',
+  avant:'<aside class="repere correspondant"><b>🎲 Ton correspondant, tiré au sort</b><p class="corr-nom"><span data-rappel="corrNom">Pas encore de nom : le tirage se fait en classe, pendant la séance. Rien ne s’affiche après quelques secondes ? Demande à ton professeur à qui écrire.</span></p><p class="corr-adresse"><span data-rappel="corrAdresse"></span></p><p class="note">Un autre camarade a tiré ton nom : toi aussi, tu vas recevoir un message. Son prénom porte un accent ? Écris-le comme lui.</p></aside>',
+  arrive:api=>M1.correspondant(api),
+  gestes:[{geste:'Lis le nom et l’<b>adresse scolaire</b> de ton correspondant, dans l’encadré 🎲 juste au-dessus.', attention:'⚠️ N’utilise pas l’adresse fictive de Camille : tu écris à un vrai camarade.'},
    'Outlook ▸ onglet <b>Accueil</b> ▸ bouton bleu <b>Nouveau message</b> (touche N).',
-   'Dans <b>À</b>, écris l’adresse de ton camarade et choisis-la dans la liste proposée.',
+   'Dans <b>À</b>, écris l’adresse de ton correspondant et choisis-la dans la liste proposée.',
    {geste:'Dans <b>Cc</b>, juste sous la ligne À, tape simplement le <b>nom</b> de ton professeur : '+PROF_M1+'. Outlook te propose plusieurs lignes : clique sur celle dont l’adresse finit par <b>@arcampin.be</b>. Pas une ligne marquée « Externe », pas une adresse en @arcampin.com ou @gmail.com.',
     sous:'<p class="note"><b>Pour écrire à n’importe quel professeur de l’école</b> : tape son nom dans À ou dans Cc, puis choisis dans la liste la ligne dont l’adresse finit par <b>@arcampin.be</b>. Outlook trouve son adresse tout seul : pas besoin de la connaître par cœur.</p>'},
    'Laisse <b>Cci</b> vide.',
    'Dans <b>Objet</b>, écris un titre court qui annonce ta question.',
-   '<b>Clique dans la grande zone sous l’objet.</b> Écris « Bonjour », le prénom de ton camarade avec une majuscule et une virgule (« Bonjour Lucas, »), puis passe à la ligne.',
+   '<b>Clique dans la grande zone sous l’objet.</b> Écris « Bonjour », le prénom de ton correspondant avec une majuscule et une virgule (« Bonjour <span data-rappel="corrPrenom">Lucas</span>, »), puis passe à la ligne.',
    'Pose-lui <b>la question que ton professeur t’a posée</b> (étape 9) : <span class="rappel-question" data-rappel="questionProf">rouvre son message dans Outlook, Boîte de réception, pour la relire</span>. Passe à la ligne.',
    {geste:'Ajoute une <b>formule de fin</b>, puis ton prénom, ton nom et ta classe.', attention:'⚠️ Attention : n’envoie pas encore ! Tu relis d’abord, à l’étape suivante.'}],
   demos:{'6':['nouveau']},
@@ -291,6 +360,7 @@ const FIN = {
   titre:'Bravo pour ce parcours !',
   bulle:'Parcours terminé !',
   texte:'Ton professeur, en copie, a reçu ton message et ta réponse : il va les coter.',
+  diplome:ctx=>M1.permis(ctx),
   revision:{titre:'Mon premier message — je révise ↗', texte:'Réponds aux questions, puis retourne les cartes mémoire.', url:'https://root75.github.io/campin-public/messagerie/'},
   citation:{texte:'Ce que l’on conçoit bien s’énonce clairement,\nEt les mots pour le dire arrivent aisément.', auteur:'Nicolas Boileau', source:'L’Art poétique, chant I (1674)', lien:'Un bon mail aussi : je sais ce que je veux dire, puis je l’écris simplement.'},
   plus:'Donne ton avis, juste au-dessus : trois phrases courtes. Bonus : agrandis le ruban d’Outlook. Le ruban, en haut, tient sur une seule ligne et ses boutons n’ont pas de nom ? Clique sur la petite flèche ˅ tout en bas à droite du ruban (« Changer de disposition ») : il s’agrandit, avec le nom sous chaque bouton. Si ton professeur te le propose, deviens aidant : va voir un camarade qui a sonné la cloche 🔔. Tu expliques avec des mots, tu ne touches pas sa souris.',

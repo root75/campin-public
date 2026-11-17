@@ -58,6 +58,26 @@ addEventListener("error", e => {
 @keyframes enveloppe-appelle{0%,60%,100%{transform:none}70%{transform:rotate(-10deg) scale(1.1)}80%{transform:rotate(8deg) scale(1.1)}90%{transform:rotate(-5deg)}}
 @keyframes enveloppe-ouvre{from{opacity:0;transform:scaleY(.2)}to{opacity:1;transform:none}}
 @media(prefers-reduced-motion:reduce){.enveloppe-dessin,.enveloppe[open]>.email{animation:none}}
+/* Bloc 1 — le mail raté : chaque ligne est un bouton ; réparée, elle passe au vert. */
+.mail-rate{display:grid}.rate-ligne{all:unset;box-sizing:border-box;display:block;width:100%;padding:12px 14px;border-bottom:1px solid var(--trait);cursor:pointer;font:inherit;background:#fff6f4;overflow-wrap:anywhere}
+.rate-ligne:hover{background:#ffe9e4}.rate-ligne:focus-visible{outline:3px solid var(--encre-bouton);outline-offset:-3px}
+.rate-ligne.reparee,.rate-ligne.juste{background:#eaf7ef}.rate-ligne.reparee{animation:rate-repare .5s ease-out}.rate-ligne.reparee::after,.rate-ligne.juste::after{content:" ✔";color:#1c7c4a;font-weight:800}
+.rate-dit{margin:0;padding:12px 14px;background:var(--papier);font-weight:700;min-height:3.2em}.rate-compte{margin:0;padding:10px 14px;font-weight:800}
+.mail-rate.repare .rate-compte{background:#eaf7ef;color:#1c7c4a}
+@keyframes rate-repare{from{background:#ffcf3f;transform:scale(1.02)}to{transform:none}}
+/* Bloc 10 — le correspondant tiré au sort. */
+.repere.correspondant{background:#eef6ff;border-left-color:#0f6cbd}.correspondant p{margin:6px 0}
+.corr-nom .rappele{font-size:1.5rem;font-weight:800;animation:rate-repare .6s ease-out}.corr-adresse .rappele{font-family:ui-monospace,Consolas,monospace;font-size:1.1rem;font-weight:700;overflow-wrap:anywhere}
+.correspondant .rappele{background:none;padding:0;border:0}
+/* Écran de fin — le permis de mail. */
+.permis{position:relative;max-width:30rem;margin:18px auto;padding:20px 22px;border:3px solid #0f6cbd;border-radius:18px;background:linear-gradient(135deg,#eef6ff,#fff);box-shadow:0 8px 22px #0f6cbd22;overflow:hidden}
+.permis p{margin:0}.permis-tete{font:800 1.1rem/1.2 var(--display,Arial,sans-serif);letter-spacing:.08em;text-transform:uppercase;color:#0f6cbd}
+.permis-nom{font:800 1.7rem/1.2 var(--display,Arial,sans-serif);margin:6px 0 10px!important;overflow-wrap:anywhere}
+.permis ul{list-style:none;margin:0 0 10px;padding:0;display:grid;gap:6px}.permis li::before{content:"✔ ";color:#1c7c4a;font-weight:800}
+.permis-date{font-size:.9rem;color:var(--doux)}.permis .note{margin-top:10px!important}
+.permis-tampon{position:absolute;right:14px;top:14px;transform:rotate(12deg);border:3px solid #c2410c;color:#c2410c;border-radius:8px;padding:2px 10px;font:800 1rem/1.4 var(--display,Arial,sans-serif);letter-spacing:.12em;text-transform:uppercase;animation:permis-tampon .5s cubic-bezier(.3,1.6,.6,1) .5s both}
+@keyframes permis-tampon{from{opacity:0;transform:rotate(12deg) scale(3)}to{opacity:.9;transform:rotate(12deg)}}
+@media(prefers-reduced-motion:reduce){.rate-ligne.reparee,.corr-nom .rappele,.permis-tampon{animation:none}}
 .email .rappele{background:none;padding:0;margin:0;border:0;border-radius:0;font-weight:inherit;color:inherit}
 </style>
 </head>
@@ -127,9 +147,9 @@ addEventListener("error", e => {
 <script src="https://root75.github.io/campin-public/pas-a-pas/demo-lecteur.js?v=sous-cases-20261112"></script>
 <script src="https://root75.github.io/campin-public/pas-a-pas/demos-communs.js?v=classroom-20261113"></script>
 <script src="https://root75.github.io/campin-public/messagerie/pas-a-pas/demos.js?v=nouveau-20261112"></script>
-<script src="https://root75.github.io/campin-public/messagerie/pas-a-pas/fiche.js?v=enveloppe-20261117"></script>
+<script src="https://root75.github.io/campin-public/messagerie/pas-a-pas/fiche.js?v=correspondant-20261117"></script>
 <script src="https://root75.github.io/campin-public/pas-a-pas/phrase-fin.js?v=20261106"></script>
 <script src="https://root75.github.io/campin-public/pas-a-pas/cloche.js?v=un-clic-20261117"></script>
-<script src="https://root75.github.io/campin-public/pas-a-pas/blocs.js?v=fete-20261117"></script>
+<script src="https://root75.github.io/campin-public/pas-a-pas/blocs.js?v=arrive-20261117"></script>
 </body>
 </html>

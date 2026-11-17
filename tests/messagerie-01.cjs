@@ -46,7 +46,7 @@ assert.notEqual(M1.verifie('signature',{...good,signature:'Lina Dupont, 2F'},'2B
  assert.equal(BLOCS.length,12);assert.equal(cat.etapes,12);assert.equal(cat.preuves,'messagerie/pas-a-pas/preuves.json');assert.equal(proofs.blocs.length,12);
  BLOCS.forEach((B,i)=>{assert.ok(B.partie&&B.titre&&B.min>0&&B.veux&&B.vois,'bloc '+(i+1)+' : partie, titre, durée, but, à vérifier');
   assert.ok(Array.isArray(B.coince)&&B.coince.length>=2,'bloc '+(i+1)+' : « Ça coince ? »');assert.ok(B.q&&B.q.serveur===true,'bloc '+(i+1)+' : preuve corrigée par le serveur');});
- pareil(BLOCS.map(B=>B.titre),['Observer un email','Choisir le destinataire','Donner un objet','Saluer','Rédiger la demande','Terminer et signer','Relire le mail complet','Répondre au message reçu','Ouvrir et lire dans Outlook','Rédiger dans le corps du message','Envoyer et retrouver son mail','Répondre à son camarade'],'les 12 étapes gardent leur place : les progressions enregistrées restent valables');
+ pareil(BLOCS.map(B=>B.titre),['Réparer un mail raté','Choisir le destinataire','Donner un objet','Saluer','Rédiger la demande','Terminer et signer','Relire le mail complet','Répondre au message reçu','Ouvrir et lire dans Outlook','Rédiger dans le corps du message','Envoyer et retrouver son mail','Répondre à son camarade'],'les 12 étapes gardent leur place : les progressions enregistrées restent valables');
  for(let i=0;i<7;i++)assert.ok(BLOCS[i].q.type==='redaction'&&BLOCS[i].q.commun&&BLOCS[i].q.zone===false,'bloc '+(i+1)+' : un champ du mail, dans l’état partagé');
  pareil(BLOCS[6].q.champs.map(c=>c.cle),['a','objet','salutation','message','fin','nom','signature'],'bloc 7 : tout le mail se relit et se corrige');
  assert.ok(BLOCS[8].q.type==='mixte'&&BLOCS[8].q.activite.champs[0].cle==='questionProf','bloc 9 : la question du professeur est recopiée');
@@ -141,6 +141,33 @@ for(const [i,bons] of Object.entries(variantes)){const l=proofs.blocs[i];assert.
   assert.doesNotThrow(() => { BLOCS[6].fete(); BLOCS[7].fete(); }, 'sans visuels.js, la fête ne casse rien');
   assert.ok(/<details class="enveloppe"><summary>[\s\S]*<\/summary><div class="email">[\s\S]*<\/div><\/details>$/.test(BLOCS[7].avant), 'étape 8 : le message de Camille est dans une enveloppe à ouvrir');
   assert.ok(/typeof BLOCS\[ici\]\.fete==="function"/.test(fs.readFileSync(__dirname + '/../pas-a-pas/blocs.js', 'utf8')), 'le moteur appelle la fête du bloc à sa première réussite');
+  // 17/11 (suite) : le mail raté au bloc 1, le correspondant tiré au sort au bloc 10, le permis de mail à la fin.
+  const moteurJs = fs.readFileSync(__dirname + '/../pas-a-pas/blocs.js', 'utf8');
+  assert.ok(/typeof B\.arrive==="function"/.test(moteurJs) && /typeof FIN\.diplome==="function"/.test(moteurJs) && /typeof google\.script\.run\[nom\]!=="function"/.test(moteurJs),
+    'le moteur : arrive() à l’affichage d’un bloc, diplome() sur l’écran de fin, et un serveur pas à jour ne casse rien');
+  assert.ok(M1.RATE.length === 6 && M1.RATE.filter(l => l[2]).length === 4 && M1.RATE.every(l => l[3]) && typeof BLOCS[0].arrive === 'function',
+    'bloc 1 : six lignes, quatre à réparer, un rôle expliqué pour chacune');
+  assert.ok(/class="email mail-rate"/.test(BLOCS[0].avant) && /Bonjour Camille,/.test(BLOCS[0].avant) && !/<details>/.test(BLOCS[0].avant.split('<h3>')[0]),
+    'bloc 1 : sans script, le mail réparé est lisible ; plus de repères à déplier un par un');
+  assert.ok(/data-rappel="corrNom"/.test(BLOCS[9].avant) && /data-rappel="corrAdresse"/.test(BLOCS[9].avant) && /Demande à ton professeur/.test(BLOCS[9].avant) && typeof BLOCS[9].arrive === 'function',
+    'bloc 10 : le correspondant tiré au sort, et « demande à ton professeur » tant qu’aucun nom n’est là');
+  { // Le correspondant : demandé au serveur, gardé, jamais redemandé ; seul, l'élève attend ; hors suivi, rien.
+    const gardes = {}, appels = [], repere = { isConnected: true };
+    const api = r => ({ suivi: true, zone: { querySelector: () => repere }, valeurs: () => gardes, garde: (k, v) => { gardes[k] = v; }, rappels: () => { gardes.redessine = true; },
+      serveur: (nom, cours) => { appels.push(nom + ':' + cours); return Promise.resolve(r); } });
+    M1.correspondant(Object.assign(api({}), { suivi: false }));
+    assert.ok(!appels.length, 'bloc 10 : hors suivi, aucun appel');
+    M1.correspondant(api({ adresse: 'lucas.dupont@arcampin.be', nom: 'Lucas Dupont', prenom: 'Lucas' }));
+    setImmediate(() => {
+      assert.ok(appels.join() === 'correspondant:messagerie-1' && gardes.corrAdresse === 'lucas.dupont@arcampin.be' && gardes.corrNom === 'Lucas Dupont' && gardes.corrPrenom === 'Lucas' && gardes.redessine,
+        'bloc 10 : le nom, le prénom et l’adresse du correspondant sont gardés et affichés');
+      M1.correspondant(api({ adresse: 'autre@arcampin.be' }));
+      assert.ok(appels.length === 1, 'bloc 10 : un correspondant déjà connu n’est pas redemandé');
+    });
+  }
+  assert.ok(M1.nomDe('jean-luc.van.den.berg2@arcampin.be') === 'Jean-Luc Van Den Berg' && M1.GESTES_PERMIS.length === 5 && typeof FIN.diplome === 'function' && FIN.diplome({}) === null,
+    'écran de fin : le permis de mail, cinq gestes, le nom lu dans l’adresse');
+  assert.ok(/\.permis-tampon\{/.test(page) && /\.rate-ligne\{/.test(page) && /\.repere\.correspondant\{/.test(page), 'la page porte les styles du mail raté, du correspondant et du permis');
   for (const f of ['tableau.js', 'sequence-eleve.js'])
     assert.ok(!/MessagerieVisuels|'domaine'|value *===? *["'][a-z0-9-]+["']/.test(fs.readFileSync(__dirname + '/../pas-a-pas/' + f, 'utf8')),
       f + ' : aucun test sur le nom d’un cours');
