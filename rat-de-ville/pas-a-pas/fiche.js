@@ -9,7 +9,6 @@
 const COURS = 'rat-de-ville-formatif';
 const PRESENTATION = 'missions';
 const MODE = 'declaratif';
-const CLOCHE_ACCORD = true;   // la cloche propose aussi « J’ai fini, je demande l’accord » (accord avant la remise, étape 9)
 const HORS_SUIVI = 'Aperçu libre — ouvre Mes cours avec ton compte scolaire pour retrouver ta progression.';
 const BASE = 'https://root75.github.io/campin-public/rat-de-ville/pas-a-pas/', ICONES = BASE + 'icones/';
 /* Avant les cases des étapes où l'on agit dans Docs : le signal « à moi », et le bouton Annuler tel qu'il est dans la barre d'outils. */
