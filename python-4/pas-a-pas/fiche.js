@@ -409,7 +409,7 @@ const BLOCS = [
     vois:"Cinq lignes de Python. La console pose la question, attend ta réponse, puis affiche le score, avec ou sans bonus.",
     extra: LOGIGRAMME_SCORE + `<p>Dans Thonny, après les deux-points et Enter, la ligne suivante est <b>déjà décalée</b> : Thonny le fait pour toi. Pour revenir à gauche : <b>Backspace</b>.</p>`
          + PLUS("Ajoute un else : quand il n'y a pas de bonus, le programme affiche « Encore un effort ! » avant le score."),
-    coince:["Le losange devient if score > 50: — et la flèche OUI, une ligne décalée en dessous.",
+    coince:["Le losange devient une ligne if, avec la condition du losange et les deux-points au bout — et la flèche OUI, une ligne décalée en dessous.",
             "print(score) reste collé à gauche, tout en bas : il s'exécute avec ou sans bonus.",
             "Toujours bloqué après ton voisin : relis ton programme « La super-potion », au bloc 5. Même forme, autres nombres."],
     ...bonusPredit(BONUS_V[0]),
