@@ -163,21 +163,21 @@
    },
    {
     "type": "saisie",
-    "q": "Retourne dans l’onglet Courrier. Recopie ce qui est écrit sous la carte du fichier, maintenant.",
+    "q": "Retourne dans l’onglet Courrier. Sur la carte du fichier, recopie ce qui est écrit sous son nom, maintenant.",
     "regle": {
      "motif": "enregistre.*onedrive"
     },
-    "faux": "Clique sur l’onglet Courrier, puis recopie les mots écrits juste sous la carte du fichier.",
-    "aide": "Clique sur l’onglet Courrier, puis regarde juste sous la carte du fichier."
+    "faux": "Comment faire : en haut de Chrome, onglet Courrier ▸ le message de ton professeur ▸ la carte du fichier, sous l’objet. Recopie les trois mots écrits sur la carte, juste sous le nom du fichier.",
+    "aide": "Comment faire : en haut de Chrome, onglet Courrier ▸ le message de ton professeur ▸ regarde sur la carte du fichier, juste sous son nom."
    },
    {
     "type": "saisie",
-    "q": "Dans Word, clique sur le petit nuage à côté du titre du document. Dans quel dossier de OneDrive ta fiche est-elle rangée ? Recopie son nom.",
+    "q": "Dans l’onglet Word, clique sur le petit nuage, juste à droite du titre de ta fiche, tout en haut. Sous « Emplacement du fichier », il y a ton nom, puis un dossier. Recopie le nom du dossier.",
     "regle": {
-     "motif": "pieces? ?jointes?"
+     "motif": "attachments?|pieces? ?jointes?"
     },
-    "faux": "Clique sur le petit nuage à côté du titre : le nom du dossier est écrit après « OneDrive › ».",
-    "aide": "Dans Word, clique sur le petit nuage à côté du titre du document."
+    "faux": "Comment faire : onglet Word ▸ le petit nuage à droite du titre ▸ « Emplacement du fichier ». Deux noms soulignés : le premier est le tien, le deuxième est le dossier. Recopie le deuxième.",
+    "aide": "Comment faire : en haut de Chrome, onglet Word ▸ le petit nuage à droite du titre ▸ sous « Emplacement du fichier », le dernier nom souligné."
    }
   ],
   [
@@ -261,12 +261,12 @@
    },
    {
     "type": "saisie",
-    "q": "Ta fiche n’est pas dans Récents. Dans quel dossier la trouves-tu, à gauche du sélecteur ? Recopie son nom.",
+    "q": "Dans le sélecteur, clique à gauche sur Fichiers. Dans quel dossier ta fiche est-elle rangée ? Ouvre-le pour vérifier, puis recopie son nom.",
     "regle": {
-     "motif": "pieces? ?jointes?"
+     "motif": "attachments?|pieces? ?jointes?"
     },
-    "faux": "Outlook a rangé ta fiche à l’étape 4 : à gauche du sélecteur, ouvre Fichiers et recopie le nom du dossier.",
-    "aide": "Outlook a rangé ta fiche dans OneDrive, à l’étape 4."
+    "faux": "Comment faire : onglet Message ▸ 📎 Joindre un fichier ▸ OneDrive ▸ à gauche, Fichiers. Clique sur le nom d’un dossier pour l’ouvrir : celui qui contient « Ma fiche a completer » est le bon. Recopie son nom, puis Annuler.",
+    "aide": "Comment faire : rouvre le sélecteur (onglet Message ▸ 📎 Joindre un fichier ▸ OneDrive) ▸ à gauche, Fichiers ▸ ouvre les dossiers jusqu’à voir ta fiche ▸ recopie le nom du dossier ▸ Annuler."
    }
   ],
   [

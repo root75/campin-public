@@ -46,10 +46,10 @@ assert.ok(proofs.blocs.every(l=>l.every(v=>v.type!=='qcm')),'aucun QCM');
 assert.deepEqual(proofs.blocs.map(l=>l[0].type),['trous','trous','saisie','saisie','saisie','saisie','saisie','saisie','saisie','saisie','saisie']);
 // Chaque saisie accepte ce qu'un élève écrit vraiment (plusieurs façons), et refuse les réponses des deux autres variantes.
 const BONS={
-  4:[['Word','word','Word dans le navigateur','Microsoft Word'],['Enregistré sur OneDrive','enregistre sur onedrive'],['Pièces jointes','OneDrive › Pièces jointes','pieces jointes']],
+  4:[['Word','word','Word dans le navigateur','Microsoft Word'],['Enregistré sur OneDrive','enregistre sur onedrive'],['Attachments','attachments','OneDrive › Attachments','Pièces jointes','OneDrive › Pièces jointes','pieces jointes']],
   5:[['Mon prénom et ma classe','prénom et classe'],['Le plat que je préfère','le plat que je prefere'],['Ce que j’aimerais apprendre en informatique',"Ce que j'aimerais apprendre en informatique"]],
   6:[['RE:','RE','re :','Re:'],['À','A','la ligne À','dans la ligne À','le champ À'],['au-dessus','Au-dessus du message','au dessus','avant le message','en haut']],
-  7:[['Joindre','joindre','Joindre une copie'],['Ma fiche a completer.docx','Ma fiche à compléter.docx'],['Pièces jointes','Fichiers ▸ Pièces jointes','pieces jointes']],
+  7:[['Joindre','joindre','Joindre une copie'],['Ma fiche a completer.docx','Ma fiche à compléter.docx'],['Attachments','Fichiers ▸ Attachments','Pièces jointes','Fichiers ▸ Pièces jointes','pieces jointes']],
   9:[['Éléments envoyés','elements envoyes','Éléments envoyés.'],['Brouillons','brouillon','dans Brouillons'],['le trombone','trombone','Un trombone']],
   10:[['TR:','TR','tr :'],['Ma fiche a completer.docx'],['Cc','CC','la ligne Cc','dans Cc']],
   11:[['ana.dubois@arcampin.be','Ana.Dubois@arcampin.be'],['Enregistrer','enregistrer','sur Enregistrer','le bouton Enregistrer'],['Contacts','contacts','Contact','l’application Contacts','dans Contacts']]

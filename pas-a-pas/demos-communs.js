@@ -14,7 +14,7 @@
 
    Les vues (champ `vue` de l'image) :
      ch-fractionnee  Chrome, vue fractionnée (créée par vueFractionnee)
-     ch-onglets      Chrome : des onglets et une page (onglets: [[texte, id, actif]], titre, bord: 'word')
+     ch-onglets      Chrome : des onglets et une page (onglets: [[texte, id, actif]], titre, bord: 'word' ; nuage: 1 = le petit nuage de Word à droite du titre, 2 = sa bulle « Emplacement du fichier », dossier)
      ch-nouvel       Chrome : un nouvel onglet, Google et le rond du profil (connecte: lettre du prénom ;
                      menu = menu du profil, nom = prénom du profil de l'école)
      g-gaufre        Google : la gaufre ⋮⋮⋮ en haut à droite (menu = les applications ouvertes)
@@ -31,7 +31,7 @@
      ol-redac        Outlook : la rédaction (ruban, a: [noms], cc: [noms], objet, cci: [noms], tape, props: [[texte, id, hi]],
                      dans: ligne de la saisie 'a' | 'cc' | 'cci' (défaut 'cci'),
                      jointe: nom du fichier, menu: 'joindre' + hi)
-     ol-selecteur    Outlook : le sélecteur OneDrive (fichier, coche, menu + hi = Partager le lien ▾)
+     ol-selecteur    Outlook : le sélecteur OneDrive (fichier, coche, menu + hi = Partager le lien ▾ ; lieu: 'fichiers' = la liste des dossiers, 'dossier' = dans le dossier ; dossier = son nom)
      ol-accueil      Outlook : l'onglet Accueil et son ruban, simplifié ou agrandi (grand, bulle = infobulle de la flèche)
    Les cibles : data-c des nœuds (« ligne-a », « cci », « carte », « fleche », « joindre », « item-<libellé> »…).
 
@@ -151,6 +151,7 @@ const DemosCommuns = (() => {
 .md-ch-menu{position:absolute;left:28%;top:34px;background:#fff;border:1px solid #c9d3db;border-radius:8px;box-shadow:0 4px 14px #0003;padding:4px 0;z-index:3;max-width:70%}
 .md-ch-menu .md-item{padding:4px 14px;font-size:12px}.md-ch-menu .md-item.hi{background:#edebe9;font-weight:700}
 .md-ch-word{border-top:4px solid #185abd}
+.md-w-titre{display:flex;align-items:center;gap:8px}.md-w-nuage{padding:2px 6px;border-radius:6px;background:#eef1f4}.md-w-bulle{justify-self:start;display:grid;gap:4px;padding:8px 12px;border:1px solid #c9d3db;border-radius:8px;box-shadow:0 4px 14px #0003;background:#fff}.md-w-bulle u{color:#185abd}
 .ol-boite{display:grid;grid-template-columns:34% 1fr;min-height:270px}.ol-dossiers{background:#f3f2f1;padding:10px 8px;display:grid;align-content:start;gap:4px}.ol-dossier{padding:5px 8px;border-radius:6px}.ol-dossier.on{background:#e1dfdd;font-weight:700}
 .ol-liste{padding:8px;display:grid;align-content:start;gap:6px}.ol-msg{display:grid;padding:6px 8px 6px 12px;border-bottom:1px solid #e1dfdd;border-left:4px solid transparent}.ol-msg b{font-weight:400}.ol-msg.nonlu{border-left-color:#0f6cbd}.ol-msg.nonlu b,.ol-msg.nonlu span{font-weight:700}.ol-msg.nonlu span{color:#0f6cbd}
 .ol-menu{position:absolute;background:#fff;border:1px solid #c8c6c4;border-radius:8px;box-shadow:0 6px 18px #0003;padding:4px 0;font-size:12px;z-index:3;text-align:left;font-weight:400;color:#1f1f1f}.ol-menu hr{border:0;border-top:1px solid #e1dfdd;margin:2px 0}.ol-item{padding:3px 12px;white-space:nowrap}.ol-item.hi{background:#edebe9;font-weight:700}.ol-item.grise{color:#a19f9d}.ol-gris{height:8px;margin:7px 12px;border-radius:4px;background:#e6eaee}
@@ -246,7 +247,15 @@ const DemosCommuns = (() => {
 
   /* ——— Chrome : des onglets et une page ——— */
   function onglets(f) {
-    const page = el('div', 'md-ch-vol' + (f.bord ? ' md-ch-' + f.bord : '')); page.append(el('b', null, f.titre));
+    const page = el('div', 'md-ch-vol' + (f.bord ? ' md-ch-' + f.bord : '')), titre = el('b', null, f.titre);
+    if (f.nuage) {   // Word en ligne : le petit nuage à droite du titre, et sa bulle (relevés le 17/11/2026)
+      const r = el('div', 'md-w-titre'); r.append(titre, c(el('span', 'md-w-nuage', '☁️'), 'nuage')); page.append(r);
+      if (f.nuage > 1) {
+        const b = el('div', 'md-w-bulle'), ou = el('span');
+        ou.append('📁 ', el('u', null, 'Prénom NOM'), ' › ', c(el('u', null, f.dossier || '▒▒▒▒▒▒▒▒'), 'dossier'));
+        b.append(el('span', null, 'Enregistré'), el('b', null, 'Emplacement du fichier'), ou); page.append(b);
+      }
+    } else page.append(titre);
     (f.lignes || []).forEach(t => page.append(el('span', null, t))); page.append(el('span', 'md-ch-barre'), el('span', 'md-ch-barre'), el('span', 'md-ch-barre court'));
     return fenetre({ onglets: f.onglets, adresse: f.adresse, contenu: [page] });
   }
@@ -476,12 +485,17 @@ const DemosCommuns = (() => {
   function selecteur(f) {
     const e = el('div', 'md ol-selecteur');
     const gauche = el('div', 'ol-s-gauche');
-    ['Récents', 'Fichiers', 'Partagés avec vous', 'Groupes', 'Pièces jointes récentes'].forEach((t, k) => gauche.append(el('div', k === 0 ? 'on' : '', t)));
-    const l = el('div', 'ol-s-liste'); l.append(el('div', 'ol-s-titre', 'Récents'));
+    const ici = f.lieu ? 1 : 0, dossier = f.dossier || 'Attachments';
+    ['Récents', 'Fichiers', 'Partagés avec vous', 'Groupes', 'Pièces jointes récentes'].forEach((t, k) => gauche.append(c(el('div', k === ici ? 'on' : '', t), 'lieu-' + t)));
+    const l = el('div', 'ol-s-liste'); l.append(el('div', 'ol-s-titre', f.lieu === 'dossier' ? 'Fichiers › ' + dossier : f.lieu ? 'Fichiers' : 'Récents'));
+    if (f.lieu === 'fichiers') {   // les dossiers d'un compte élève, relevés le 17/11/2026
+      ['Bureau', 'Images', 'Documents', dossier].forEach(t => { const g = el('div', 'ol-s-fic'); g.append(el('span', null, '📁'), el('span', null, t)); l.append(t === dossier ? c(g, 'dossier') : g); });
+      const bas0 = el('div', 'ol-s-bas'); bas0.append(el('span', 'ol-bouton', 'Annuler')); e.append(gauche, l, bas0); return e;
+    }
     const fic = c(el('div', 'ol-s-fic' + (f.coche ? ' coche' : '')), 'fichier');
     fic.append(el('span', 'ol-s-case', f.coche ? '✓' : ''), el('span', 'ol-ico', 'W'), el('span', null, f.fichier));
     l.append(fic);
-    [1, 2].forEach(() => { const g = el('div', 'ol-s-fic'); g.append(el('span', 'ol-s-case'), el('i')); l.append(g); });
+    if (!f.lieu) [1, 2].forEach(() => { const g = el('div', 'ol-s-fic'); g.append(el('span', 'ol-s-case'), el('i')); l.append(g); });
     const bas = el('div', 'ol-s-bas'), partager = el('span', 'ol-s-partager');
     partager.append(el('span', null, 'Partager le lien'), c(el('span', 'ol-s-fleche', '▾'), 'fleche-partager'));
     if (f.menu) partager.append(menu('ol-menu-dessus', ['Partager le lien', 'Joindre'], f.hi));
