@@ -57,6 +57,9 @@ const Demo = (() => {
       doc(base('centre gras capitales', 'centre garamond grand', 'droite italique souligne'), { police: 'EB Garamond', taille: '14', cible: 'L2', ok: 1, legende: 'Seule la strophe 1 a changé. À la suivante !' })
     ] },
     etape8: { titre: 'Mon bloc-notes : la liste à puces', images: [
+      doc(base('centre gras capitales', 'centre', 'droite italique souligne'), { cible: 'L7', legende: 'Je clique à la fin de la fable, après l’auteur.' }),
+      doc(base('centre gras capitales', 'centre', 'droite italique souligne'), { cible: 'item-Saut de page', menu: { sous: 'm-insertion', items: ['Image ▸', 'Tableau ▸', 'Saut ▸', 'Saut de page'], hi: 'Saut de page' }, legende: 'Insertion ▸ Saut ▸ Saut de page (Ctrl + Enter).' }),
+      doc([L('Jean de La Fontaine', 'droite italique souligne'), L('', 'saut'), L('Mon bloc-notes', 'gras')], { cible: 'L2', ok: 1, legende: 'Une nouvelle page commence : j’écris « Mon bloc-notes » en haut.' }),
       doc([L('Mon bloc-notes', 'gras'), L('le tapis', 'sel'), L('…', 'sel'), L('…', 'sel')], { cible: 'puces', legende: 'Je sélectionne mes 3 lignes ▸ Liste à puces (Ctrl + Shift + 8).' })
     ] },
     etape10: { titre: 'Mes gestes : la liste numérotée', images: [
