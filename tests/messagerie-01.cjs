@@ -44,7 +44,8 @@ assert.notEqual(M1.verifie('signature',{...good,signature:'Lina Dupont, 2F'},'2B
 // La forme des blocs : 12, comme au catalogue ; chacun a son but, son « À vérifier », son « Ça coince ? » et sa preuve du serveur.
 {const cat=JSON.parse(fs.readFileSync(__dirname+'/../pas-a-pas/cours.json','utf8')).cours.find(c=>c.id===COURS);
  assert.equal(BLOCS.length,12);assert.equal(cat.etapes,12);assert.equal(cat.preuves,'messagerie/pas-a-pas/preuves.json');assert.equal(proofs.blocs.length,12);
- BLOCS.forEach((B,i)=>{assert.ok(B.partie&&B.titre&&B.min>0&&B.veux&&B.vois,'bloc '+(i+1)+' : partie, titre, durée, but, à vérifier');
+ // « À vérifier » : seulement là où la page ne voit pas le travail (blocs 9 à 12, dans Outlook) ; une phrase, pas une liste.
+ BLOCS.forEach((B,i)=>{assert.ok(B.partie&&B.titre&&B.min>0&&B.veux&&(i<8 ? !B.vois : /^Dans Outlook, /.test(B.vois)&&B.vois.length<110),'bloc '+(i+1)+' : partie, titre, durée, but ; à vérifier seulement dans Outlook');
   assert.ok(Array.isArray(B.coince)&&B.coince.length>=2,'bloc '+(i+1)+' : « Ça coince ? »');assert.ok(B.q&&B.q.serveur===true,'bloc '+(i+1)+' : preuve corrigée par le serveur');});
  pareil(BLOCS.map(B=>B.titre),['Réparer un mail raté','Choisir le destinataire','Donner un objet','Saluer','Rédiger la demande','Terminer et signer','Relire le mail complet','Répondre au message reçu','Ouvrir et lire dans Outlook','Rédiger dans le corps du message','Envoyer et retrouver son mail','Répondre à son camarade'],'les 12 étapes gardent leur place : les progressions enregistrées restent valables');
  for(let i=0;i<7;i++)assert.ok(BLOCS[i].q.type==='redaction'&&BLOCS[i].q.commun&&BLOCS[i].q.zone===false,'bloc '+(i+1)+' : un champ du mail, dans l’état partagé');
