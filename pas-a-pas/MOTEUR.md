@@ -189,8 +189,7 @@ Une étape terminée se fête : bravo et confettis.
 ## Ce que le moteur fait seul
 
 Humeur du jour au bloc 1 ; avis en fin de parcours ; cloche 🔔 « J'attends de l'aide » (relue du
-serveur après un rechargement, éteinte quand le professeur la traite ; avant de sonner, une question,
-« As-tu demandé à ton voisin ? », puis un bouton par motif — « 🔔 Je ne comprends pas la consigne », « 🔔 Ça ne marche pas à l’écran », et « 🔔 J’ai fini, je demande l’accord » si la fiche porte `const CLOCHE_ACCORD = true` ; le motif s'affiche au tableau du professeur —, **3 sonneries par heure au plus** — code commun [`cloche.js`](cloche.js), à charger
+serveur après un rechargement, éteinte quand le professeur la traite ; **un clic sonne, sans question ni motif avant** (17/11/2026), **3 sonneries par heure au plus** — code commun [`cloche.js`](cloche.js), à charger
 avant `blocs.js` comme dans `modele/index.html`) ; bandeau « bravo » ; reprise de
 l'avancement depuis le serveur ; aperçu professeur `#bloc=N` avec le choix de la version de la preuve ;
 menu des étapes, repris du Rat de ville (une pastille ronde par bloc, ou par groupe de `PARCOURS` ; elle se remplit

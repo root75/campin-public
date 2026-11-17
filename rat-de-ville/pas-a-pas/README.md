@@ -136,17 +136,15 @@ est libre (`va()` dans `fiche.js`). Les boutons « Étape précédente / suivant
 
 ## Limiteur de cloche (9 novembre 2026)
 
-Au plus 3 sonneries par heure glissante. Un clic sur 🔔 ouvre d'abord une seule question, « As-tu
-demandé à ton voisin ? », avec un lien « Ouvrir « Ça coince ? » », le nombre de sonneries restantes
-un bouton par motif et « Pas encore » : deux clics pour sonner. Les motifs (17 novembre 2026) :
-« 🔔 Je ne comprends pas la consigne », « 🔔 Ça ne marche pas à l’écran » et, parce que
-`fiche.js` porte `const CLOCHE_ACCORD = true`, « 🔔 J’ai fini, je demande l’accord » (accord avant la
-remise, étape 9). Le motif se lit au tableau du professeur ; un accord n'y compte pas comme un blocage.
-(Jusqu'au 14 novembre 2026, trois cases à cocher précédaient la sonnerie ; beaucoup d'élèves ne
-sonnaient plus.) Au maximum, la cloche passe en pointillés et le panneau donne
-l'heure de la prochaine sonnerie possible. Le compte vient du serveur (`cloches`, `clocheLibre`) ;
-avec un serveur antérieur ou en aperçu, il est tenu dans la page ouverte. Se débloquer ne compte
-pas et ne demande rien. Détails et déploiement : `campin-pedagogique/outils/pas-a-pas/LIVRAISON-RAT.md`.
+Au plus 3 sonneries par heure glissante. **Un clic sur 🔔 sonne, tout de suite** (17 novembre 2026) :
+plus de question « As-tu demandé à ton voisin ? » ni de bouton par motif. Les élèves ouvraient le
+panneau, ne cliquaient pas sur le motif et croyaient la cloche active. (Jusqu'au 14 novembre 2026,
+trois cases à cocher précédaient la sonnerie ; beaucoup d'élèves ne sonnaient plus.) Le serveur
+refuse la 4e sonnerie : la cloche s'éteint, passe en pointillés et un panneau donne l'heure de la
+prochaine sonnerie possible. Le compte vient du serveur (`cloches`, `clocheLibre`) ; en aperçu, il
+est tenu dans la page ouverte. Se débloquer ne compte pas et ne demande rien. Le tableau du
+professeur lit encore le motif des anciennes sonneries ; les nouvelles s'affichent « aide ».
+Détails et déploiement : `campin-pedagogique/outils/pas-a-pas/LIVRAISON-RAT.md`.
 
 Depuis le même jour, le panneau et le compte sont du **code commun** : `pas-a-pas/cloche.js`, aussi
 utilisé par `blocs.js` (Python 1 à 3, Labo 07, Messagerie 2) et Messagerie 01. Le serveur applique la

@@ -1,28 +1,24 @@
-/* Cloche « J'attends de l'aide » — limiteur commun à tous les cours (blocs.js, Messagerie 01).
-   Avant de sonner, une seule question : « As-tu demandé à ton voisin ? », avec le lien « Ça coince ? »,
-   le compte restant, un bouton par motif (chacun sonne) et « Pas encore ». Deux clics en tout.
-   Motifs (17/11/2026) : « consigne », « ecran », et « accord » si la fiche le demande (accord avant la remise).
-   Le motif part avec la sonnerie et se lit au tableau du professeur : il trie les accords des vrais blocages.
-   (Jusqu'au 14/11/2026 : trois cases à cocher avant de sonner ; beaucoup d'élèves ne sonnaient plus, dit Vincent.)
-   Au plus 3 sonneries par heure glissante : le serveur compte (Code.gs, CLOCHE_MAX_) et refuse la 4e ;
-   la page affiche ce qu'il reste. Sans serveur (aperçu) ou avec un serveur qui ne compte pas encore,
-   le compte est tenu dans la page ouverte. Se débloquer ne passe jamais par ce panneau.
+/* Cloche « J'attends de l'aide » — code commun à tous les cours (blocs.js).
+   Un clic sur la cloche sonne, tout de suite : plus aucune question ni bouton avant (17/11/2026).
+   (Avant : un panneau « As-tu demandé à ton voisin ? » puis un bouton par motif. Les élèves ouvraient le
+   panneau, ne cliquaient pas sur le motif et croyaient la cloche active, dit Vincent. Jusqu'au 14/11/2026 :
+   trois cases à cocher.) Le rappel « relis, demande au voisin » reste dans « Ça coince ? ».
+   Au plus 3 sonneries par heure glissante : le serveur compte (Code.gs, CLOCHE_MAX_) et refuse la 4e.
+   Le seul panneau qui reste dit qu'une sonnerie n'est PAS partie : limite atteinte, ou demande non transmise.
+   Sans serveur (aperçu), le compte est tenu dans la page ouverte.
 
-     Cloche.verifie({ ancre, etape, info, sonne, coince, accord })
+     Cloche.refuse({ ancre, plein, info, coince })   la sonnerie n'est pas partie : le panneau dit pourquoi
        ancre  : la zone de la cloche (#aide) ; le panneau s'ouvre dedans
-       etape  : « de l'étape 3 » ; n'est plus affiché depuis le 14/11/2026, accepté pour les appels existants
+       plein  : true = limite atteinte ; sinon, demande non transmise
        info   : { cloches, clocheMax, clocheLibre } du serveur, ou une promesse, ou rien
-       sonne  : appelé avec le motif choisi (« consigne », « ecran », « accord »)
-       accord : true pour proposer aussi « J’ai fini, je demande l’accord »
        coince : le <details> « Ça coince ? » de la page (facultatif)
      Cloche.sonnee()          à appeler quand une sonnerie est confirmée (compte local)
-     Cloche.phrase(info)      « Il me reste 2 sonneries sur 3 cette heure. »
+     Cloche.restantes(info)   { n, max, libre }
      Cloche.marque(ancre, info)  cloche en pointillés quand il ne reste rien
      Cloche.ferme(ancre), Cloche.ouvert(ancre)
    Rien n'est enregistré sur le poste. */
 const Cloche = (() => {
   const MAX = 3, HEURE = 3600 * 1000, ici = [];
-  const MOTIFS = { consigne: 'Je ne comprends pas la consigne', ecran: 'Ça ne marche pas à l’écran', accord: 'J’ai fini, je demande l’accord' };
   const el = (tag, cls, t) => { const n = document.createElement(tag); if (cls) n.className = cls; if (t != null) n.textContent = t; return n; };
   const heure = t => new Date(t).toLocaleTimeString('fr-BE', { hour: '2-digit', minute: '2-digit' });
   let style = false;
@@ -35,7 +31,6 @@ const Cloche = (() => {
 .cloche-verif p{margin:0}.cloche-titre{font-weight:800}
 .cloche-verif .cloche-lien{background:none;border:0;padding:0;font:inherit;font-weight:700;color:var(--encre-bouton,#1d5a73);text-decoration:underline;cursor:pointer;justify-self:start}
 .cloche-pied{display:flex;gap:8px;flex-wrap:wrap}.cloche-pied button{font:inherit;font-weight:700;border-radius:20px;padding:6px 14px;cursor:pointer;border:2px solid var(--encre-bouton,#1d5a73);background:var(--carte,#fff);color:var(--encre-bouton,#1d5a73)}
-.cloche-pied .cloche-go{background:var(--encre-bouton,#1d5a73);color:#fff;flex:1 1 100%;text-align:left}.cloche-pied button:disabled{opacity:.4;cursor:default}
 .cloche-note{font-size:.85rem;color:var(--doux,#5b6873)}`;
     document.head.append(s);
   }
@@ -47,49 +42,34 @@ const Cloche = (() => {
     const i = info && typeof info.cloches === 'number' ? info : local(), max = i.clocheMax || MAX;
     return { n: Math.max(0, max - i.cloches), max, libre: i.clocheLibre || 0 };
   }
-  function phrase(info) {
-    const r = restantes(info);
-    return r.n > 0 ? 'Il me reste ' + r.n + ' sonnerie' + (r.n > 1 ? 's' : '') + ' sur ' + r.max + ' cette heure.'
-      : 'Plus de sonnerie avant ' + heure(r.libre) + '.';
-  }
   const sonnee = () => { ici.push(Date.now()); };
   const marque = (ancre, info) => { css(); ancre.classList.toggle('epuise', restantes(info).n <= 0); };
   const zone = ancre => ancre.querySelector('.cloche-verif');
   function ferme(ancre) { const v = ancre && zone(ancre); if (v) v.hidden = true; if (ancre) ancre.classList.remove('verif'); }
   const ouvert = ancre => { const v = zone(ancre); return !!v && !v.hidden; };
 
-  async function verifie(o) {
+  async function refuse(o) {
     css();
-    let v = zone(o.ancre);
-    if (!v) { v = el('div', 'cloche-verif'); v.setAttribute('role', 'dialog'); v.setAttribute('aria-label', 'Avant de sonner'); o.ancre.append(v); }
-    o.ancre.classList.add('verif'); v.hidden = false;
-    v.replaceChildren(el('p', 'cloche-titre', 'As-tu demandé à ton voisin ?'), el('p', 'cloche-note', 'Je vérifie combien de sonneries il me reste…'));
     let info = null; try { info = await o.info; } catch (e) { info = null; }
-    if (v.hidden) return;   // refermé pendant l'attente
+    let v = zone(o.ancre);
+    if (!v) { v = el('div', 'cloche-verif'); v.setAttribute('role', 'alert'); o.ancre.append(v); }
+    o.ancre.classList.add('verif'); v.hidden = false;
+    const ok = el('button', null, 'J’ai compris'); ok.type = 'button'; ok.addEventListener('click', () => { ferme(o.ancre); });
+    const pied = el('div', 'cloche-pied'); pied.append(ok);
+    if (!o.plein) {
+      v.replaceChildren(el('p', 'cloche-titre', '⚠️ Cloche non transmise'),
+        el('p', null, 'Le professeur n’a pas reçu ma demande. Je clique encore une fois sur la cloche 🔔.'), pied);
+      return;
+    }
     const r = restantes(info);
-    const fermer = t => { const b = el('button', null, t); b.type = 'button'; b.addEventListener('click', () => { ferme(o.ancre); }); return b; };
     const lien = o.coince ? el('button', 'cloche-lien', 'Ouvrir « Ça coince ? »') : null;
     if (lien) { lien.type = 'button'; lien.addEventListener('click', () => { o.coince.open = true; o.coince.scrollIntoView({ block: 'start' }); }); }
-    const pied = el('div', 'cloche-pied');
-    if (r.n <= 0) {
-      pied.append(fermer('J’ai compris'));
-      v.replaceChildren(el('p', 'cloche-titre', '⚠️ Plus de sonnerie pour l’instant'),
-        el('p', null, 'J’ai déjà sonné ' + r.max + ' fois en une heure. Prochaine sonnerie possible vers ' + heure(r.libre) + '.'),
-        el('p', null, 'En attendant : je relis « Ça coince ? », je demande à un autre voisin, ou j’entoure la case et je continue ailleurs.'),
-        ...(lien ? [lien] : []), pied);
-      marque(o.ancre, info); return;
-    }
-    const motifs = Object.keys(MOTIFS).filter(m => m !== 'accord' || o.accord).map(m => {
-      const go = el('button', 'cloche-go', '🔔 ' + MOTIFS[m]); go.type = 'button'; go.dataset.motif = m;
-      go.addEventListener('click', () => { ferme(o.ancre); o.sonne(m); });
-      return go;
-    });
-    pied.append(...motifs, fermer('Pas encore'));
-    v.replaceChildren(el('p', 'cloche-titre', 'As-tu demandé à ton voisin ?'),
-      el('p', 'cloche-note', 'Il explique, il ne touche pas la souris.'), ...(lien ? [lien] : []),
-      el('p', 'cloche-note', phrase(info)), pied);
-    motifs[0].focus();
+    v.replaceChildren(el('p', 'cloche-titre', '⚠️ Plus de sonnerie pour l’instant'),
+      el('p', null, 'J’ai déjà sonné ' + r.max + ' fois en une heure.' + (r.libre ? ' Prochaine sonnerie possible vers ' + heure(r.libre) + '.' : '')),
+      el('p', null, 'En attendant : je relis « Ça coince ? », je demande à un autre voisin, ou j’entoure la case et je continue ailleurs.'),
+      ...(lien ? [lien] : []), pied);
+    if (r.n <= 0) marque(o.ancre, info);
   }
   document.addEventListener('keydown', e => { if (e.key === 'Escape') document.querySelectorAll('.verif').forEach(ferme); });
-  return { MAX, MOTIFS, verifie, ferme, ouvert, sonnee, restantes, phrase, marque, heure };
+  return { MAX, refuse, ferme, ouvert, sonnee, restantes, marque, heure };
 })();
