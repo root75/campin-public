@@ -66,7 +66,7 @@ const soldes = (prix, pct) => {
     fais:CASES(`Lis : un pull à ${prix} €, soldé à −${pct} %, doit coûter <b>${reste} €</b>.`, EXECUTER,
                `Compare le résultat avec <b>${reste}</b>.`, "Trouve la <b>ligne qui calcule faux</b>, puis corrige-la."),
     vois:`Le programme affiche ${reste}.0.`,
-    extra:`<div class="encart"><h3>Pourquoi ${reste}.0 ?</h3><p>Dès qu'un calcul utilise un nombre à virgule (${garde}), Python donne un nombre à virgule : ${reste}.0. Une virgule s'écrit avec un POINT en Python.</p></div>`,
+    extra:`<div class="encart"><h3>Pourquoi ${reste}.0 ?</h3><p>Dès qu'un calcul utilise un nombre à virgule, Python donne un nombre à virgule : ${reste}.0. Une virgule s'écrit avec un POINT en Python.</p></div>`,
     coince:[`prix * ${faux}, c'est ${pct} % du prix : ${fr(prix*faux)} €. Ce qu'on garde, c'est ${100-pct} % du prix.`,
             `Écris ${100-pct} % comme un nombre à virgule, sur le modèle du nombre déjà dans le programme : un seul caractère à changer.`],
     q:{ type:"code", q:"Corrige le calcul.", depart:`prix = ${prix}\n# les soldes : moins ${pct} %\nprix = prix * ${faux}\nprint(prix)`,
