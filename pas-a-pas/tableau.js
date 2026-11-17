@@ -291,6 +291,7 @@ function dessine(d){
   syntheses(d, el, n);
   ouEstLaClasse(d, el, n);
   const s = choisie(); $("titre-classe").textContent = d._classes ? d._classes.join(" + ") + " · " : s.classe ? s.classe + " · " : "";
+  if($("tresor")){ const t = Number(d.tresor)||0; $("tresor").hidden = !t; $("tresor").textContent = t ? "⭐ "+t+(t>1?" étoiles":" étoile")+" · trésor de la classe" : ""; }
   $("maj").textContent = "Mis à jour à " + new Date(d.maintenant).toLocaleTimeString("fr-BE",{hour:"2-digit",minute:"2-digit",second:"2-digit"}) + mesure(d);
 }
 
@@ -465,6 +466,7 @@ function charge(){
         dk.eleves.forEach(e=>{ e.classe = autres[k].classe; e._seance = autres[k]; e._d = dk; });
         d.eleves = d.eleves.concat(dk.eleves);
         Object.keys(dk.parBloc||{}).forEach(b=>{ d.parBloc[b] = (d.parBloc[b]||0) + dk.parBloc[b]; });
+        d.tresor = (Number(d.tresor)||0) + (Number(dk.tresor)||0);   // plusieurs classes affichées ensemble : leurs étoiles s'additionnent
       });
       d._classes = [s.classe].concat(autres.map(x=>x.classe));
       contexteAffiche = contexte; dessine(d);
@@ -493,7 +495,7 @@ function demo(){
   const t = Date.now(), m = 60000;
   const e = (email, atteint, erreurs, erreursIci, derniere, extra) => Object.assign({email, atteint, erreurs, erreursIci, aide:null, fini:false, derniere:t-derniere*m, humeur:"", avis:null}, extra||{});
   const vr = (...l) => l.map(([erreurs,eleves],k)=>({v:k+1, erreurs, eleves}));
-  return { maintenant:t, parBloc:{1:2,4:5,5:3,6:9,8:4,9:6,10:2,12:1},
+  return { maintenant:t, tresor:57, parBloc:{1:2,4:5,5:3,6:9,8:4,9:6,10:2,12:1},
     variantes:{1:vr([1,3],[1,2],[0,3]), 4:vr([1,3],[4,3],[0,2]), 6:vr([2,3],[1,2],[6,3]), 9:vr([2,2],[2,3],[2,3])}, eleves:[
     e("lina.dubois@arcampin.be",5,7,4,1,{aide:{bloc:6,depuis:t-3*m,motif:"consigne"}, humeur:"🙁 Pas top"}),
     e("noah.martin@arcampin.be",9,3,1,0,{depuisBloc:t-2*m, humeur:"🙂 Bien", phrases:{2:"Parce que le message dit la ligne où chercher, sinon je change des trucs au hasard."}}),
