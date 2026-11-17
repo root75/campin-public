@@ -11,7 +11,7 @@
 
 Entrée du catalogue : `rat-de-ville-formatif`, 9 étapes sur deux périodes (7 du 6/11 au 11/11 ; voir la fin de ce fichier).
 Les 45 petites cases (une action ou une vérification par case) déclarent les actions terminées ; elles ne corrigent pas la copie.
-Navigation libre, copie par groupes de quatre vers (strophes séparées à l’étape 3) ; grille complète et colonne « Moi » en étape finale (bouton 📋). Plus de repère collectif depuis le 4/11 (voir LIVRAISON-RAT.md).
+Navigation libre, copie par groupes de quatre vers (strophes séparées à l’étape 3) ; grille complète et lettres « Moi » en étape finale (une carte par critère, on clique sur la phrase de son niveau) (bouton 📋). Plus de repère collectif depuis le 4/11 (voir LIVRAISON-RAT.md).
 À l’étape 8, chaque partie du bloc-notes dispose d’une explication à déplier :
 un élément du festin en exemple, un geste détaillé en exemple et un début de phrase
 à compléter. Les productions sont écrites dans Docs ; au moins six gestes restent attendus.
@@ -57,7 +57,7 @@ locale au panneau, sans bloquer la fiche.
 
 ## Une case par action (4 novembre 2026)
 
-Étape 6 : 7 cases ; étape 9 : 13 cases (10 min), voisin après la colonne « Moi ». 46 cases au lieu de 35 :
+Étape 6 : 7 cases ; étape 9 : 13 cases (10 min), voisin après les lettres « Moi ». 46 cases au lieu de 35 :
 `CASES_RAT` de `Code.gs` doit suivre `contenu.js`.
 
 ## Document à côté du cours (5 novembre 2026)

@@ -165,7 +165,8 @@ et le parcours dans Chromium, `campin-pedagogique/outils/pas-a-pas/essai-message
 - **Navigation libre** : toutes les pastilles sont cliquables, « Étape suivante → » est toujours là. Le cadenas
   « Blocs ouverts » du tableau s'applique quand même : au-delà, la fiche attend.
 - **La grille « Moi »** : `const GRILLE = { intro, niveaux:{A:'dépasse',…}, criteres:[{ n, inc, regarde, A, B, C, D }], legende }`
-  = l'écran final (pastille 📋), une lettre par critère, enregistrée comme une case. `FIN.titre` est son titre,
+  = l'écran final (pastille 📋), une lettre par critère, enregistrée comme une case. Une carte par critère, les
+  niveaux l'un sous l'autre : l'élève clique sur la phrase qui décrit son travail (pas de tableau, trop large pour la page). `FIN.titre` est son titre,
   `FIN.bouton` le libellé du bouton qui y mène ; `FIN.plus` et `FIN.lien` sont facultatifs.
 - **Sous une case** : `{ geste, sous:'<img …>' }` (un extrait, une aide repliée) ; `{ geste, trous:{ titre, intro, bravo,
   variantes:[{ texte, mots, pieges }] } }` = un texte à trous d'entraînement, corrigé dans la page, jamais enregistré.

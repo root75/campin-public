@@ -1093,32 +1093,42 @@ function fin(z){
   z.append(bilan(), plus, nav);
   if(!DECLARATIF && !etat.fini){ etat.fini = true; ecrit(etat); envoie({ etape:BLOCS.length, type:"fini" }); }
 }
-/* La grille d'auto-évaluation « Moi » (const GRILLE) : une lettre par critère, enregistrée comme une case. */
+/* La grille d'auto-évaluation « Moi » (const GRILLE) : une lettre par critère, enregistrée comme une case.
+   Une carte par critère, les niveaux l'un sous l'autre : on choisit sa lettre en cliquant sur la phrase qui
+   décrit son travail. Pas de tableau : à cinq colonnes il dépassait la page et demandait un défilement de côté. */
 function grilleMoi(){
   if(!document.getElementById("style-grille-moi")){
     const st = el("style"); st.id = "style-grille-moi";
-    st.textContent = ".grille-moi{display:grid;gap:12px}.grille-moi .defile{overflow:auto}.grille-moi table{border-collapse:collapse;width:100%}"
-      +".grille-moi th,.grille-moi td{border:1px solid var(--trait);padding:10px;text-align:left;vertical-align:top}"
-      +".grille-moi td{min-width:11rem}.grille-moi td.moi{min-width:0}.grille-moi th:first-child{min-width:14rem}.grille-moi th p{font-weight:400;margin:4px 0 0}.grille-moi select{font:inherit}";
+    st.textContent = ".grille-moi{display:grid;gap:16px}.grille-moi fieldset{margin:0;min-width:0;border:1px solid var(--trait);border-radius:10px;padding:12px 14px;display:grid;gap:8px;background:var(--carte)}"
+      +".grille-moi legend{font-weight:700;padding:0 6px}.grille-moi .etat{font-weight:400;color:var(--doux)}.grille-moi .regarde{margin:0;color:var(--doux);font-size:.95em}"
+      +".grille-moi .niveau{display:grid;grid-template-columns:auto 2rem 1fr;gap:10px;align-items:start;padding:8px 10px;border:2px solid var(--trait);border-radius:8px;cursor:pointer}"
+      +".grille-moi .niveau:hover{border-color:var(--encre-bouton)}.grille-moi .niveau:has(input:checked){border-color:var(--encre-bouton);background:var(--fromage-pale)}"
+      +".grille-moi .niveau input{margin:.35em 0 0;width:1.1em;height:1.1em;accent-color:var(--encre-bouton)}"
+      +".grille-moi .lettre{font-weight:700;text-align:center;border-radius:6px;background:var(--papier);border:1px solid var(--trait)}"
+      +".grille-moi .niveau:has(input:checked) .lettre{background:var(--encre-bouton);border-color:var(--encre-bouton);color:var(--carte)}";
     document.head.append(st);
   }
   const G = GRILLE, lettres = Object.keys(G.niveaux), d = el("div","grille-moi");
   if(G.intro) d.append(el("div",null,G.intro));
-  const table = el("table"), tete = el("tr"), corps = el("tbody"), defile = el("div","defile");
-  ["Critère et attendu","Moi"].concat(lettres.map(k=>k+(G.niveaux[k] ? " — "+G.niveaux[k] : ""))).forEach(t=>tete.append(txt("th",null,t)));
   G.criteres.forEach((c,i)=>{
-    const tr = el("tr"), th = el("th"), td = el("td","moi"), sel = el("select");
-    th.scope = "row"; th.append(txt("b",null,c.n+(c.inc ? " ★" : "")), txt("p",null,c.regarde));
-    sel.dataset.critere = i+1; sel.setAttribute("aria-label","Moi — critère "+(i+1));
-    [""].concat(lettres).forEach(v=>{ const o = txt("option",null,v || "À choisir"); o.value = v; sel.append(o); });
-    sel.value = etat.moi[i+1] || "";
-    sel.addEventListener("change",()=>{
-      if(sel.value) etat.moi[i+1] = sel.value; else delete etat.moi[i+1];
-      ecrit(etat); declare({ etape:0, type:"moi", reponse:(i+1)+":"+sel.value });
+    const carte = el("fieldset"), titre = el("legend"), etatMoi = txt("span","etat","");
+    const dit = ()=>{ etatMoi.textContent = etat.moi[i+1] ? " · Moi : "+etat.moi[i+1] : " · à choisir"; };
+    titre.append(c.n+(c.inc ? " ★" : ""), etatMoi); dit();
+    carte.append(titre, txt("p","regarde",c.regarde));
+    lettres.forEach(k=>{
+      const ligne = el("label","niveau"), rond = el("input"), phrase = el("span");
+      rond.type = "radio"; rond.name = "moi-"+(i+1); rond.value = k; rond.dataset.critere = i+1;
+      rond.checked = etat.moi[i+1]===k;
+      rond.addEventListener("change",()=>{
+        etat.moi[i+1] = k; dit();
+        ecrit(etat); declare({ etape:0, type:"moi", reponse:(i+1)+":"+k });
+      });
+      if(G.niveaux[k]) phrase.append(txt("b",null,G.niveaux[k]), " — ");
+      phrase.append(c[k]);
+      ligne.append(rond, txt("span","lettre",k), phrase); carte.append(ligne);
     });
-    td.append(sel); tr.append(th, td, ...lettres.map(k=>txt("td",null,c[k]))); corps.append(tr);
+    d.append(carte);
   });
-  const thead = el("thead"); thead.append(tete); table.append(thead, corps); defile.append(table); d.append(defile);
   if(G.legende) d.append(el("div",null,G.legende));
   return d;
 }

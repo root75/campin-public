@@ -501,7 +501,7 @@ const BLOCS = [
    "Vérifie l’<b>auteur</b> : à droite, en italique, souligné.",
    "Vérifie que chaque strophe a sa <b>police</b> et sa <b>taille</b>.",
    "Vérifie ton <b>bloc-notes</b> : une vraie liste à puces, une vraie liste numérotée de six gestes, ta phrase.",
-   "Ouvre ta <b>grille</b> (bouton 📋, après l’étape 9) et remplis la colonne « Moi » : A, B, C ou D pour chaque critère.",
+   "Ouvre ta <b>grille</b> (bouton 📋, après l’étape 9) et clique, pour chaque critère, sur la phrase qui décrit ton travail : A, B, C ou D.",
    "<b>Montre ton document à ton voisin</b>. Il le compare aux cases 2 à 10 et te montre un écart, sans toucher la souris. Corrige.",
    "🔔 Clique sur <b>« J’attends de l’aide »</b> et attends le professeur : il regarde ton document. <b>Rends seulement avec son accord.</b>",
    {
@@ -586,7 +586,7 @@ const FIN = {
   titre: 'Ma grille d’évaluation',
   bouton: 'Ma grille d’évaluation →',
   bulle: 'Dernière ligne droite : je choisis mes lettres.',
-  texte: 'Pour chaque critère, je lis les colonnes A à D. Je choisis ma lettre dans « Moi ».',
+  texte: 'Pour chaque critère, je lis les quatre phrases, de A à D. Je clique sur celle qui décrit mon travail : c’est ma lettre « Moi ».',
   citation: { texte: 'Rien ne sert de courir ; il faut partir à point.', auteur: 'Jean de La Fontaine', source: '« Le Lièvre et la Tortue », Fables, livre VI, fable 10 (1668)',
     lien: 'Strophe après strophe, une case après l’autre : c’est la régularité qui a fait mon document.' }
 };
