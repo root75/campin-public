@@ -492,9 +492,13 @@ const BLOCS = [
    "Vérifie ton <b>bloc-notes</b> : une vraie liste à puces, une vraie liste numérotée de six gestes, ta phrase.",
    "Ouvre ta <b>grille</b> (bouton 📋, après l’étape 9) et remplis la colonne « Moi » : A, B, C ou D pour chaque critère.",
    "<b>Montre ton document à ton voisin</b>. Il le compare aux cases 2 à 10 et te montre un écart, sans toucher la souris. Corrige.",
-   "Classroom ▸ le devoir ▸ Vos devoirs ▸ Ajouter ou créer ▸ <b>Google Drive</b> ▸ ton document ▸ bouton bleu ▸ <b>Rendre le devoir</b> ▸ Rendre le devoir."
+   "🔔 Clique sur <b>« J’attends de l’aide »</b> et attends le professeur : il regarde ton document. <b>Rends seulement avec son accord.</b>",
+   {
+    "geste": "Le professeur a dit oui ? Classroom ▸ le devoir ▸ Vos devoirs ▸ Ajouter ou créer ▸ <b>Google Drive</b> ▸ ton document ▸ bouton bleu ▸ <b>Rendre le devoir</b> ▸ Rendre le devoir.",
+    "sous": "<details><summary>Où est le devoir dans Classroom ?</summary><p>Classroom ▸ ma classe ▸ onglet <b>Travaux et devoirs</b> ▸ clique sur <b>03 EVAL Formatif Le rat de ville</b> ▸ Afficher les instructions.</p><img class=\"capture\" src=\"" + BASE + "capture-devoir-classroom.png\" alt=\"Classroom, onglet Travaux et devoirs : le devoir 03 EVAL Formatif Le rat de ville\"></details>"
+   }
   ],
-  "vois": "Je compare mon fichier aux critères avant de choisir mes lettres Moi. Après la remise, je vérifie dans Classroom que le devoir est bien indiqué comme remis.<br><span class=\"note\">Repérer et corriger un écart fait partie du travail : je peux encore améliorer mon document avant de le remettre.</span>",
+  "vois": "Je compare mon fichier aux critères avant de choisir mes lettres Moi. Je sonne la cloche et j’attends l’accord du professeur avant de rendre. Après la remise, je vérifie dans Classroom que le devoir est bien indiqué comme remis.<br><span class=\"note\">Repérer et corriger un écart fait partie du travail : je peux encore améliorer mon document avant de le remettre.</span>",
   "demos": {
    "1": [
     "etape9",
@@ -502,7 +506,7 @@ const BLOCS = [
      0
     ]
    ],
-   "13": [
+   "14": [
     "etape9",
     [
      1,
