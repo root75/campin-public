@@ -132,6 +132,22 @@ Dans `preuves.json`, deux versions peuvent avoir le même énoncé : la fiche le
 Vérifier dans le test que la réponse d'une version ne valide pas les deux autres.
 
 
+## La scène de bloc (blocs sans code)
+
+La scène de l'éditeur Python réagit à ce que le programme affiche. Pour un bloc **sans code** (QCM, texte à trous,
+saisie), un bloc peut porter une scène qui réagit au verdict de sa preuve :
+
+```js
+scene:{ avant:['🎣','Un hameçon traîne dans la boîte…'], juste:['🛡️','Piège évité.'], faux:['🐟','Mordu ! Relis l’exemple.'] },
+```
+
+Chaque état : une image (émojis) et une courte phrase. Le décor s'affiche entre la question et le retour ; il s'anime
+à chaque erreur et à la réussite (texte à trous : dès que les mots sont justes, avant la phrase libre). Règles : la
+phrase « faux » **ne dit jamais la réponse** et ne renvoie qu'à un élément présent dans le bloc (le tableau, l'encadré,
+l'exemple) ; le retour écrit reste la seule explication (`aria-hidden` sur le décor). Code : `sceneBloc` dans
+[`blocs.js`](blocs.js). En service : Messagerie 02 (blocs 1, 2, 9) et Messagerie 03 (blocs 1, 3, 4, 5, 8, 9, 10).
+Test : `tests/scene-bloc.cjs`.
+
 ## Le trésor de classe
 
 Chaque bloc réussi par un élève ajoute une étoile au compteur de sa classe (jamais d'étoiles individuelles). Rien à

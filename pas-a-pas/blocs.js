@@ -778,6 +778,8 @@ function trous(zone, Q, reussi, rate){
     const f = el("form","bilan phrase-libre"), lab = el("label"), ta = el("textarea");
     ta.rows = 3; ta.maxLength = 200; ta.required = true; ta.setAttribute("autocapitalize","sentences");
     lab.append(txt("span",null,"✅ Les mots sont à leur place. Maintenant, avec tes mots : "+Q.phrase), ta);
+    { const sc = zone.parentNode && zone.parentNode.querySelector(".scene-bloc"); if(sc && sc.joue) sc.joue("juste");
+      const vieux = zone.parentNode && zone.parentNode.querySelector(".retour.faux"); if(vieux) vieux.hidden = true; }   // le « Pas encore » d'avant ne vaut plus   // les mots sont justes : le décor le montre sans attendre la phrase libre
     const statut = txt("p","note","La fiche ne dit ni juste ni faux à ta phrase. Ton professeur la lit, et la classe corrige ensemble.");
     const go = txt("button","btn plein","Enregistrer ma phrase"); go.type = "submit";
     f.append(lab, statut, go); zone.append(f); ta.focus();
@@ -793,6 +795,41 @@ function trous(zone, Q, reussi, rate){
   });
 }
 
+/* Scène de bloc (17/11/2026) : la scène de l'éditeur Python (python-editeur.js) réagit à ce que le programme
+   affiche ; celle-ci sert aux blocs SANS code (QCM, texte à trous, saisie) et réagit au verdict de la preuve.
+     B.scene = { avant:["📪","Le message attend…"], juste:["📬","Bien arrivé !"], faux:["📭","Perdu en route."] }
+   Chaque état : une image (émojis) et une courte phrase. Elle ne juge rien et ne dit jamais la réponse : le retour
+   écrit, en dessous, reste la seule explication (aria-hidden : un lecteur d'écran lit le retour, pas le décor). */
+function sceneBloc(S){
+  if(!document.getElementById("style-scene-bloc")){
+    const st = el("style"); st.id = "style-scene-bloc";
+    st.textContent = `.scene-bloc{display:flex;align-items:center;gap:14px;margin:12px 0;padding:10px 14px;border-radius:14px;border:2px dashed var(--trait,#d5dce2);background:var(--papier,#f3f5f7);min-height:64px}
+.scene-bloc .scene-image{font-size:2.4rem;line-height:1;white-space:nowrap}
+.scene-bloc .scene-dit{font-weight:700;color:var(--doux,#5b6873)}
+.scene-bloc[data-etat="juste"]{border-style:solid;border-color:#2e8b57;background:#e3f4e9}
+.scene-bloc[data-etat="juste"] .scene-dit{color:#1d5c39}
+.scene-bloc[data-etat="juste"] .scene-image{animation:scene-saut .8s ease-out}
+.scene-bloc[data-etat="faux"]{border-color:#b23a2e}
+.scene-bloc[data-etat="faux"] .scene-image{filter:grayscale(.8);animation:scene-secoue .5s ease-in-out}
+@keyframes scene-saut{0%{transform:scale(.6)}50%{transform:scale(1.35) rotate(-8deg)}100%{transform:scale(1)}}
+@keyframes scene-secoue{0%,100%{transform:none}20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
+@media (prefers-color-scheme:dark){.scene-bloc[data-etat="juste"]{background:#1d3a2a}.scene-bloc[data-etat="juste"] .scene-dit{color:#a9e0bf}}
+@media (prefers-reduced-motion:reduce){.scene-bloc .scene-image{animation:none !important}}
+@media print{.scene-bloc{display:none}}`;
+    document.head.append(st);
+  }
+  const zone = el("div","scene-bloc"), image = el("span","scene-image"), dit = el("span","scene-dit");
+  zone.setAttribute("aria-hidden","true"); zone.append(image, dit);
+  const joue = etat => {
+    const e = S[etat] || S.avant || ["",""];
+    zone.dataset.etat = "";                      // rejouer l'animation à chaque nouvelle erreur
+    image.textContent = e[0] || ""; dit.textContent = e[1] || "";
+    void zone.offsetWidth; zone.dataset.etat = etat;
+  };
+  joue("avant"); zone.joue = joue;   // trous() le retrouve par la page : il n'a pas la scène sous la main
+  return { zone, joue };
+}
+
 /* La question de preuve. Faux : on explique, on compte, et on recommence. */
 function preuve(pr, B, apres){
   const Q = B.q;
@@ -801,7 +838,10 @@ function preuve(pr, B, apres){
   if(Q.q) pr.append(txt("p","question",Q.q));
   if(Q.serveur && Q.aide) pr.append(txt("p","note",Q.aide));
   const retour = el("div","retour"); retour.hidden = true;
-  const zone = el("div"); pr.append(zone, retour);
+  const zone = el("div");
+  // Scène de bloc (B.scene) : un petit décor qui réagit à juste / faux. Pas sur l'exercice préparatoire d'un bloc mixte.
+  const scene = B.scene && !apres ? sceneBloc(B.scene) : null;
+  pr.append(zone, ...(scene ? [scene.zone] : []), retour);
   let essais = 0, derniereErreur = null, termine = false;
 
   const reussi = (reponse) => {
@@ -809,6 +849,7 @@ function preuve(pr, B, apres){
     retour.className="retour juste"; retour.replaceChildren(txt("strong",null,Q.type==="rapport" ? "Étape déclarée faite." : Q.type==="enquete" ? (SUIVI && !APERCU ? "Réponse enregistrée." : "Réponse saisie pour cet essai.") : "Oui, c'est ça."));
     if(Q.juste) retour.append(txt("p",null,Q.juste));
     retour.hidden=false;
+    if(scene) scene.joue("juste");
     if(apres){
       envoie({etape:ici+1,type:"ouvert",reponse:"activité:"+v(reponse)});
       apres();return; // L’exercice prépare la mission ; sa réussite ne valide pas le rapport.
@@ -841,6 +882,7 @@ function preuve(pr, B, apres){
     const expl = Array.isArray(explication) ? el("ul") : txt("p",null,explication);
     if(Array.isArray(explication)) explication.forEach(x=>expl.append(txt("li",null,x)));
     retour.className="retour faux"; retour.replaceChildren(txt("strong",null,"Pas encore."), expl);
+    if(scene) scene.joue("faux");
     if(essais>=2){ retour.append(txt("p",null,"Ouvre « Ça coince ? » juste en dessous.")); document.getElementById("coince").open = true; }
     if(essais>=3) retour.append(txt("p",null,"Toujours bloqué : demande à ton voisin, puis clique sur « J'attends de l'aide »."));
     retour.hidden=false;

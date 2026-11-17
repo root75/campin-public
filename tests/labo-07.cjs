@@ -99,7 +99,7 @@ assert.deepEqual(BAS.flatMap(e=>e.gestes.map(g=>g.demo)),['fermer','deconnecter'
 BAS.forEach(e=>e.gestes.forEach(g=>assert.ok(listes.has(g.demo),'animation « '+g.demo+' » absente de demos.js')));ok();
 assert.ok(/z\.append\(nav\);\s*basEtape\(z\);/.test(moteur),'blocs.js : les encadrés tout en bas de l’étape');ok();
 assert.ok(!/labo|rapport/i.test(moteur.slice(moteur.indexOf('function basEtape'),moteur.indexOf('function basEtape')+1200)),'aucun cours nommé dans le moteur');ok();
-assert.ok(/\.repere\.reprise\{/.test(page)&&/blocs\.js\?v=sous-etapes/.test(page),'style et nouvelle version de l’adresse');ok();
+assert.ok(/\.repere\.reprise\{/.test(page)&&/blocs\.js\?v=(sous-etapes|scene-bloc)/.test(page),'style et nouvelle version de l’adresse');ok();
 assert.ok(!/\b(Suppr|Échap|Entrée|Maj)\b/.test(JSON.stringify(BAS)),'touches en anglais');ok();
 
 // Le rappel de Python, pour le rapport : copié sur un voisin = 0 sur 20 pour les deux (Vincent, 16/11/2026). Dès la première étape et sous la grille.
