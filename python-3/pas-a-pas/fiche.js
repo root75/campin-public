@@ -141,7 +141,7 @@ const piegeCode = ({n,m}) => {
             "Deux endroits possibles pour int( ) : autour de input( ), à la lecture, ou autour de la boîte, juste avant le calcul."],
     q:{ type:"code", q:`Répare le programme : il doit afficher ${n*m} quand on tape ${n}.`,
         depart:`nombre = input("Un nombre ? ")\nprint(nombre * ${m})`, essais:[[String(n)],[String(autre)]], scene:{ decor:"calcul", ouvre:[String(n*m), String(autre*m)] },
-        test: r => r.erreur ? (r.erreur.type==="ValueError" ? "ValueError : int( ) a reçu autre chose qu'un nombre entier. Ne touche pas aux réponses tapées." : "Lis la <b>ligne rouge</b> : chaque parenthèse ouverte doit être fermée. int(input(\"…\")) en a DEUX à la fin.")
+        test: r => r.erreur ? (r.erreur.type==="ValueError" ? "ValueError : int( ) a reçu autre chose qu'un nombre entier. Ne touche pas aux réponses tapées." : "Lis la <b>ligne rouge</b> : chaque parenthèse ouverte doit être fermée. Avec int( ) autour de input( ), il y en a DEUX à la fin.")
                  : !/\bint\(/.test(r.code) ? "Utilise int( ) : c'est lui qui transforme le texte en nombre."
                  : DERNIERE(r.essais[0])===String(n).repeat(m) ? "Toujours recopié : int( ) doit entourer le texte tapé (ou la boîte nombre)."
                  : r.essais.every((e,i) => DERNIERE(e)===String([n,autre][i]*m)) ? true
@@ -293,7 +293,7 @@ const BLOCS = [
     bulle:"int( ) : du texte au nombre.",
     veux:"Transformer la réponse tapée en nombre.",
     fais:CASES("Exécute le programme tel quel : "+EXECUTER, "Ajoute <b>int( )</b> au bon endroit.", "<b>Exécute</b> : la fiche essaie deux nombres."),
-    extra:`<div class="encart"><p><code>int("3")</code> transforme le texte <b>"3"</b> en nombre <b>3</b>. La forme la plus courante, à retenir :</p>${CODE('nombre = int(input("Un nombre ? "))')}
+    extra:`<div class="encart"><p><code>int("3")</code> transforme le texte <b>"3"</b> en nombre <b>3</b>. La forme la plus courante, à retenir :</p>${CODE('age = int(input("Ton âge ? "))')}
   <p><b>Dans Thonny</b>, <span class="chemin">menu Affichage ▸ Variables</span> le montre : sans int( ), la boîte contient <code>'3'</code>, <b>entre apostrophes</b> : c'est un texte. Avec int( ), elle contient <code>3</code>.</p></div>`,
     ...piegeCode(PIEGE_V[0]),
     variantes:[piegeCode(PIEGE_V[1]), piegeCode(PIEGE_V[2])] },

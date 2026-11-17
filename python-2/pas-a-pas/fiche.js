@@ -61,7 +61,7 @@ const bonjour = nom => ({
       juste:"Avec les guillemets, "+nom+" est un texte rangé dans la boîte nom." } });
 const fr = x => String(x).replace(".", ",");
 const soldes = (prix, pct) => {
-  const faux = pct/100, garde = (100-pct)/100, reste = prix*(100-pct)/100;
+  const faux = pct/100, reste = prix*(100-pct)/100;
   return {
     fais:CASES(`Lis : un pull à ${prix} €, soldé à −${pct} %, doit coûter <b>${reste} €</b>.`, EXECUTER,
                `Compare le résultat avec <b>${reste}</b>.`, "Trouve la <b>ligne qui calcule faux</b>, puis corrige-la."),
@@ -70,9 +70,9 @@ const soldes = (prix, pct) => {
     coince:[`prix * ${faux}, c'est ${pct} % du prix : ${fr(prix*faux)} €. Ce qu'on garde, c'est ${100-pct} % du prix.`,
             `Écris ${100-pct} % comme un nombre à virgule, sur le modèle du nombre déjà dans le programme : un seul caractère à changer.`],
     q:{ type:"code", q:"Corrige le calcul.", depart:`prix = ${prix}\n# les soldes : moins ${pct} %\nprix = prix * ${faux}\nprint(prix)`,
-        test: r => r.erreur ? "Lis la <b>ligne rouge</b>. Une virgule s'écrit avec un point en Python : "+garde+", pas "+fr(garde)+"."
+        test: r => r.erreur ? "Lis la <b>ligne rouge</b>. En Python, la virgule d'un nombre s'écrit avec un POINT."
                  : !/\bprix\b\s*\*/.test(r.code.split("\n").slice(1).join("\n")) && !/\*\s*\bprix\b/.test(r.code.split("\n").slice(1).join("\n")) ? "Calcule à partir de prix : le programme doit marcher pour un autre prix."
-                 : SORTIE(r).startsWith("(") ? "Python affiche « "+SORTIE(r)+" » : avec une virgule, il voit deux nombres. Un nombre à virgule s'écrit avec un POINT : "+garde+"."
+                 : SORTIE(r).startsWith("(") ? "Python affiche « "+SORTIE(r)+" » : avec une virgule, il voit deux nombres. Un nombre à virgule s'écrit avec un POINT."
                  : Math.abs(r.vars.prix-reste)<1e-9 ? true
                  : "Python affiche « "+SORTIE(r)+" » : on veut "+reste+". Quelle part du prix garde-t-on après −"+pct+" % ?",
         juste:faux+" gardait "+pct+" % du prix au lieu d'en enlever "+pct+" %. Aucune ligne rouge : c'est à toi de comparer avec le résultat attendu." } };
