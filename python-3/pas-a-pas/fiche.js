@@ -270,7 +270,7 @@ const BLOCS = [
     veux:"Écrire un programme qui demande quelque chose à la personne qui l'utilise.",
     fais:CASES("Lis le <b>logigramme</b> : une forme, une ligne de programme.", "Lis l'<b>encadré</b> ci-dessous.", "Complète le programme : une <b>2e ligne</b> qui affiche le mot demandé et le prénom.", EXECUTER),
     coince:["Les noms de variables s'écrivent sans accent : prenom, pas prénom.",
-            "print(\"Bonjour\", prenom) : le texte entre guillemets, une virgule, la boîte sans guillemets."],
+            "Dans le logigramme, Afficher montre deux choses, séparées par une virgule. Dans print( ), c'est pareil : le texte entre guillemets, une virgule, la boîte sans guillemets."],
     ...salue("Bonjour"),
     variantes:[salue("Salut"), salue("Coucou")] },
 

@@ -149,3 +149,7 @@ for (let v = 1; v <= 3; v++) {
   }
 }
 console.log('OK bloc 7 : le mot dans input( ) est refusé, en deux temps.');
+
+/* Bloc 7 : « Ça coince ? » s'ouvre seul au 2e essai raté. Il aide, il ne donne pas la ligne à écrire. */
+for (let v = 1; v <= 3; v++) assert.ok(!ctx.bloc(7, v).coince.some(c => /print\(".*prenom\)/.test(c)), `7/${v}: pas la réponse dans Ça coince`);
+console.log('OK bloc 7 : « Ça coince ? » ne donne pas la réponse.');
