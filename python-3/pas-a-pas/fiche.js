@@ -10,7 +10,10 @@
    une question de code peut porter `essais` : la liste des réponses tapées au clavier, essai par
    essai (ex. [["3"],["8"]] = deux exécutions, on tape 3 puis on tape 8). input() lit ces réponses
    dans l'ordre et les réécrit dans la console, comme Thonny. test(r) reçoit alors r.essais, la
-   liste des résultats (un r par essai). Sans `essais`, une seule exécution, sans rien à taper. */
+   liste des résultats (un r par essai). Sans `essais`, une seule exécution, sans rien à taper.
+   FIL ROUGE (17/11/2026) : un seul jeu grandit de bloc en bloc — un héros, ses pièces, ses vies, la grotte,
+   le marchand de potions, puis « Le score » et « Les vies ». Les bulles de la mascotte racontent la suite ;
+   les notions, l'ordre des blocs et les réponses attendues ne changent pas. */
 const COURS = "python-3";
 const PRESENTATION = "missions";   // blocs.js : cloche, mascotte, bulle, bravo
 const CODE = s => `<pre class="code">${s}</pre>`;
@@ -43,10 +46,10 @@ const portemonNom = f => { const n = nomsEleve(); return !n.length || n.some(m =
 
 /* Deux textes collés : "3" + "4" → 34. */
 const colle = (a, b) => ({
-  vois:`Le programme affiche ${a+b}.`,
+  vois:`Le compteur affiche ${a+b}.`,
   coince:[`Entre guillemets, "${a}" est un texte : + colle les deux textes, il ne calcule pas.`,
           "Deux façons de réparer : enlever les guillemets, ou transformer chaque texte en nombre avec int( )."],
-  q:{ type:"code", q:`Répare le programme : il doit afficher ${a+b}, pas ${a}${b}.`,
+  q:{ type:"code", q:`Répare le compteur de pièces : ${a} pièces et ${b} pièces font ${a+b}, pas ${a}${b}.`,
       depart:`a = "${a}"\nb = "${b}"\nprint(a + b)`,
       test: r => r.erreur ? "Lis la <b>ligne rouge</b>. Un guillemet tout seul casse l'écriture : enlève-les par paires."
                : !/\ba\b[\s\S]*\bb\b/.test(r.code.split("\n").slice(2).join("\n")) ? "Garde a et b dans le calcul : le programme doit marcher avec d'autres nombres."
@@ -109,12 +112,12 @@ const salue = mot => ({
                : `Avec Léa, ta dernière ligne est « ${DERNIERE(r.essais[0])} ». On attend : ${mot} Léa`,
       juste:`input( ) range dans prenom ce qu'on tape. print("${mot}", prenom) l'affiche après ${mot}.` } });
 
-/* Echo (leçon 5) : un seul input(), une variable, plusieurs print. */
+/* Echo (leçon 5) : un seul input(), une variable, plusieurs print. Fil rouge : l'écho de la grotte. */
 const echo = n => ({
-  vois:`Quand on tape Echo, la console affiche Echo ${n} fois (plus la ligne que tu as tapée).`,
+  vois:`Quand le héros crie Echo, la console affiche Echo ${n} fois (plus la ligne tapée).`,
   coince:["EOFError : le programme veut lire une 2e réponse, mais on n'a tapé qu'une seule ligne. Chaque input( ) attend une nouvelle réponse.",
           "Lis UNE fois et range la réponse dans une boîte, comme la boîte prenom du programme précédent. Puis affiche la boîte autant de fois qu'il faut."],
-  q:{ type:"code", q:`Répare le programme : il lit UNE ligne et l'affiche ${n} fois.`,
+  q:{ type:"code", q:`Dans la grotte, le héros crie UN mot et l'écho le répète. Répare le programme : il lit UNE ligne et l'affiche ${n} fois.`,
       depart: Array(n).fill("print(input())").join("\n"), essais:[["Echo"],["Hop"]],
       test: r => r.essais.some(e => e.erreur && e.erreur.type==="EOFError") ? `EOFError : il y a ${(r.code.match(/input\(/g)||[]).length} input( ), mais une seule ligne tapée. Garde un seul input( ) et range sa réponse dans une boîte.`
                : r.erreur ? "Lis la <b>ligne rouge</b> : parenthèses et noms."
@@ -123,27 +126,27 @@ const echo = n => ({
                : `Avec Echo, la console doit montrer Echo ${n+1} fois : la ligne tapée, puis ${n} fois le print.`,
       juste:`input( ) n'est appelé qu'une fois ; la boîte, elle, s'affiche autant de fois qu'on veut.` } });
 
-/* Le piège du nombre tapé : "3" * 10 → 3333333333. */
+/* Le piège du nombre tapé : "3" * 10 → 3333333333. Fil rouge : le marchand, une potion coûte m pièces. */
 const PIEGE_V = [{n:3,m:10},{n:5,m:4},{n:7,m:3}];
 const piegeQ = ({n,m}) => ({
-  extra: CODE(`nombre = input("Un nombre ? ")\nprint(nombre * ${m})`) + `<p>À l'exécution, on tape <b>${n}</b> puis Enter.</p>`,
+  extra: `<p>Chez le marchand, une potion coûte <b>${m} pièces</b>. Ce programme doit afficher le prix à payer.</p>` + CODE(`potions = input("Combien de potions ? ")\nprint(potions * ${m})`) + `<p>À l'exécution, le joueur tape <b>${n}</b> puis Enter.</p>`,
   q:{ type:"qcm", q:"Prédis : qu'affiche la dernière ligne ?",
-      c:[String(n).repeat(m), String(n*m), "Une erreur TypeError", `nombre * ${m}`],
+      c:[String(n).repeat(m), String(n*m), "Une erreur TypeError", `potions * ${m}`],
       p:[null, `input( ) rend TOUJOURS un texte : "${n}", pas ${n}. Et un texte fois ${m}, c'est le texte recopié ${m} fois.`,
          `Texte × nombre est permis en Python (souviens-toi de "ha" * 3). Seul texte + nombre est refusé.`,
-         "Sans guillemets, nombre * "+m+" est un calcul : Python affiche son résultat, pas la formule."],
-      juste:`"${n}" est un texte : × ${m} le recopie ${m} fois. Il faut le transformer en nombre : c'est le bloc suivant.` } });
+         "Sans guillemets, potions * "+m+" est un calcul : Python affiche son résultat, pas la formule."],
+      juste:`"${n}" est un texte : × ${m} le recopie ${m} fois. Drôle de prix ! Il faut le transformer en nombre : c'est le bloc suivant.` } });
 const piegeCode = ({n,m}) => {
   const autre = n===3 ? 8 : n===5 ? 2 : 4;
   return {
-    vois:`On tape ${n} : la console affiche ${n*m}. On tape ${autre} : elle affiche ${autre*m}.`,
+    vois:`Le joueur tape ${n} potions : la console affiche ${n*m}. Il en tape ${autre} : elle affiche ${autre*m}.`,
     coince:["int( ) transforme un texte en nombre entier : int(\"3\") vaut 3.",
-            "Deux endroits possibles pour int( ) : autour de input( ), à la lecture, ou autour de la boîte, juste avant le calcul."],
-    q:{ type:"code", q:`Répare le programme : il doit afficher ${n*m} quand on tape ${n}.`,
-        depart:`nombre = input("Un nombre ? ")\nprint(nombre * ${m})`, essais:[[String(n)],[String(autre)]], scene:{ decor:"calcul", ouvre:[String(n*m), String(autre*m)] },
+            "Deux endroits possibles pour int( ) : autour de input( ), à la lecture, ou autour de la boîte potions, juste avant le calcul."],
+    q:{ type:"code", q:`Répare le programme du marchand : pour ${n} potions à ${m} pièces, il doit afficher ${n*m}.`,
+        depart:`potions = input("Combien de potions ? ")\nprint(potions * ${m})`, essais:[[String(n)],[String(autre)]], scene:{ decor:"calcul", ouvre:[String(n*m), String(autre*m)] },
         test: r => r.erreur ? (r.erreur.type==="ValueError" ? "ValueError : int( ) a reçu autre chose qu'un nombre entier. Ne touche pas aux réponses tapées." : "Lis la <b>ligne rouge</b> : chaque parenthèse ouverte doit être fermée. Avec int( ) autour de input( ), il y en a DEUX à la fin.")
                  : !/\bint\(/.test(r.code) ? "Utilise int( ) : c'est lui qui transforme le texte en nombre."
-                 : DERNIERE(r.essais[0])===String(n).repeat(m) ? "Toujours recopié : int( ) doit entourer le texte tapé (ou la boîte nombre)."
+                 : DERNIERE(r.essais[0])===String(n).repeat(m) ? "Toujours recopié : int( ) doit entourer le texte tapé (ou la boîte potions)."
                  : r.essais.every((e,i) => DERNIERE(e)===String([n,autre][i]*m)) ? true
                  : `Avec ${n}, ta dernière ligne est « ${DERNIERE(r.essais[0])} ». On attend ${n*m}.`,
         juste:`int( ) transforme le texte "${n}" en nombre ${n} : × ${m}, cela fait ${n*m}.` } };
@@ -187,7 +190,7 @@ const rendreScore = ({n,r}) => ({
 
 const BLOCS = [
   { partie:"A — Se remettre en route", titre:"Quelle sorte d'erreur ?", min:3,
-    bulle:"Re-bonjour ! D'abord, un rappel de la séance des erreurs.",
+    bulle:"Re-bonjour ! Aujourd'hui, tu construis un jeu, bloc après bloc. D'abord : un bug dans son score.",
     veux:"Te rappeler les trois sortes d'erreurs de Python 02.",
     fais:CASES("Lis le programme et <b>ce qu'il est censé faire</b>.", "Prédis la <b>sorte d'erreur</b>, puis réponds."),
     extra: CODE("score = 10\nprint(score"),
@@ -209,7 +212,7 @@ const BLOCS = [
             juste:"Aucune ligne rouge, mais 5 au lieu de 15 : le − devait être un +." } } ] },
 
   { partie:"B — Texte ou nombre ?", titre:"Deux sortes de valeurs", min:3,
-    bulle:"Pour Python, \"3\" et 3, ce n'est pas du tout pareil.",
+    bulle:"Ton héros ramasse des pièces. Mais pour Python, \"3\" et 3, ce n'est pas du tout pareil.",
     veux:"Distinguer un texte d'un nombre.",
     fais:CASES("Lis l'<b>encadré</b> ci-dessous.", "<b>Prédis</b>, puis réponds."),
     extra:`<div class="encart"><table>
@@ -220,23 +223,23 @@ const BLOCS = [
   <p>Avec deux nombres, <b>+</b> calcule : <code>3 + 4</code> donne 7. Avec deux textes, <b>+</b> colle : <code>"3" + "4"</code> donne 34.</p>
   <p><code>print(type(3))</code> affiche <code>&lt;class 'int'&gt;</code> : Python dit le type.</p></div>`,
     coince:["Les guillemets changent tout : ce qui est entre guillemets est un texte, même si ce sont des chiffres."],
-    q:{ type:"qcm", q:`Prédis : que fait print("5" + "2") ?`, c:["52","7","5 + 2","Une erreur"],
-        p:[null,"Les guillemets en font des textes : + colle, il ne calcule pas.","Entre guillemets, Python affiche le résultat : il colle les deux textes.","Coller deux textes est permis : pas d'erreur."], juste:"Deux textes : + les colle, 5 puis 2." },
+    q:{ type:"qcm", q:`Ton héros ramasse 5 pièces au niveau 1, puis 2 au niveau 2. Prédis : que fait print("5" + "2") ?`, c:["52","7","5 + 2","Une erreur"],
+        p:[null,"Les guillemets en font des textes : + colle, il ne calcule pas.","Entre guillemets, Python affiche le résultat : il colle les deux textes.","Coller deux textes est permis : pas d'erreur."], juste:"Deux textes : + les colle, 5 puis 2. Le compteur afficherait 52 pièces au lieu de 7 !" },
     variantes:[
-      { q:{ type:"qcm", q:`Prédis : que fait print("6" + "1") ?`, c:["61","7","6 + 1","Une erreur"],
-            p:[null,"Les guillemets en font des textes : + colle, il ne calcule pas.","Entre guillemets, Python affiche le résultat : il colle les deux textes.","Coller deux textes est permis : pas d'erreur."], juste:"Deux textes : + les colle, 6 puis 1." } },
-      { q:{ type:"qcm", q:`Prédis : que fait print("4" + "4") ?`, c:["44","8","4 + 4","Une erreur"],
-            p:[null,"Les guillemets en font des textes : + colle, il ne calcule pas.","Entre guillemets, Python affiche le résultat : il colle les deux textes.","Coller deux textes est permis : pas d'erreur."], juste:"Deux textes : + les colle, 4 puis 4." } } ] },
+      { q:{ type:"qcm", q:`Ton héros ramasse 6 pièces au niveau 1, puis 1 au niveau 2. Prédis : que fait print("6" + "1") ?`, c:["61","7","6 + 1","Une erreur"],
+            p:[null,"Les guillemets en font des textes : + colle, il ne calcule pas.","Entre guillemets, Python affiche le résultat : il colle les deux textes.","Coller deux textes est permis : pas d'erreur."], juste:"Deux textes : + les colle, 6 puis 1. Le compteur afficherait 61 pièces au lieu de 7 !" } },
+      { q:{ type:"qcm", q:`Ton héros ramasse 4 pièces au niveau 1, puis 4 au niveau 2. Prédis : que fait print("4" + "4") ?`, c:["44","8","4 + 4","Une erreur"],
+            p:[null,"Les guillemets en font des textes : + colle, il ne calcule pas.","Entre guillemets, Python affiche le résultat : il colle les deux textes.","Coller deux textes est permis : pas d'erreur."], juste:"Deux textes : + les colle, 4 puis 4. Le compteur afficherait 44 pièces au lieu de 8 !" } } ] },
 
   { partie:"B — Texte ou nombre ?", titre:"Le total qui colle", min:5,
-    bulle:"Pas de ligne rouge… mais un total bizarre.",
+    bulle:"Le compteur de pièces n'a pas de ligne rouge… mais son total est bizarre.",
     veux:"Réparer un calcul fait sur des textes.",
     fais:CASES("Exécute le programme tel quel : "+EXECUTER, "Compare avec le <b>résultat attendu</b>.", "<b>Répare</b>, puis exécute à nouveau."),
     ...colle(3, 4),
     variantes:[colle(6, 2), colle(5, 4)] },
 
   { partie:"B — Texte ou nombre ?", titre:"Texte fois nombre", min:3,
-    bulle:"Et si on multiplie un texte ?",
+    bulle:"Ton héros rit quand il gagne. Et si on multiplie un texte ?",
     veux:"Prédire ce que fait * sur un texte.",
     fais:CASES("Lis l'<b>encadré</b> ci-dessous.", "<b>Prédis</b>, puis réponds."),
     extra:`<div class="encart"><p>Un texte multiplié par un nombre entier est <b>recopié</b> : <code>"hop" * 2</code> donne <b>hophop</b>.</p><p>Mais un texte <b>+</b> un nombre est refusé : <b>TypeError</b>.</p></div>`,
@@ -250,14 +253,14 @@ const BLOCS = [
             p:[null,"* ne colle pas le nombre : il recopie le texte.","Python n'ajoute pas d'espace entre les copies.","Texte × nombre est permis ; c'est texte + nombre qui est refusé."], juste:"Le texte na, recopié 4 fois." } } ] },
 
   { partie:"B — Texte ou nombre ?", titre:"Texte + nombre : TypeError", min:5, stop:true,
-    bulle:"Afficher un texte ET un nombre, sans erreur.",
+    bulle:"En haut de l'écran du jeu : un texte ET un nombre, sans erreur.",
     veux:"Afficher un texte et un nombre sur la même ligne.",
     fais:CASES("Exécute le programme tel quel : "+EXECUTER, "Lis la <b>ligne rouge</b> : quel est le nom de l'erreur ?", "Répare avec une <b>virgule</b>, puis exécute à nouveau."),
     ...melangeTexte("Vies", "vies", 3),
     variantes:[melangeTexte("Score", "score", 30), melangeTexte("Pièces", "pieces", 7)] },
 
   { partie:"B — Texte ou nombre ?", titre:"Les nombres à virgule", min:3,
-    bulle:"Un dernier type : les nombres à virgule.",
+    bulle:"Le chrono du jeu compte avec un dernier type : les nombres à virgule.",
     veux:"Prédire le type d'un calcul qui mélange entier et nombre à virgule.",
     fais:CASES("Lis le programme <b>ligne par ligne</b>.", "Prédis les <b>trois valeurs affichées</b>, puis réponds."),
     coince:["En Python, la virgule d'un nombre s'écrit avec un POINT : 1.5.",
@@ -266,7 +269,7 @@ const BLOCS = [
     variantes:[flottant(2.5, 2), flottant(0.5, 4)] },
 
   { partie:"C — Le programme pose une question", titre:"input() : le programme attend", min:5,
-    bulle:"Jusqu'ici, tes programmes parlaient. Maintenant, ils écoutent !",
+    bulle:"Jusqu'ici, ton jeu parlait. Maintenant, il écoute le joueur !",
     veux:"Écrire un programme qui demande quelque chose à la personne qui l'utilise.",
     fais:CASES("Lis le <b>logigramme</b> : une forme, une ligne de programme.", "Lis l'<b>encadré</b> ci-dessous.", "Complète le programme : une <b>2e ligne</b> qui affiche le mot demandé et le prénom.", EXECUTER),
     coince:["Les noms de variables s'écrivent sans accent : prenom, pas prénom.",
@@ -275,14 +278,14 @@ const BLOCS = [
     variantes:[salue("Salut"), salue("Coucou")] },
 
   { partie:"C — Le programme pose une question", titre:"Echo", min:4,
-    bulle:"Un programme qui demande trop…",
+    bulle:"Ton héros entre dans une grotte. Il crie… et le programme demande trop !",
     veux:"Comprendre qu'un input( ) = une réponse à taper.",
     fais:CASES("Exécute le programme tel quel : "+EXECUTER, "Lis le <b>nom de l'erreur</b>.", "Répare : <b>un seul input( )</b>, rangé dans une boîte.", EXECUTER),
     ...echo(2),
     variantes:[echo(3), echo(4)] },
 
   { partie:"C — Le programme pose une question", titre:"Le piège du nombre tapé", min:3, cle:"piege",
-    bulle:"Attention, piège !",
+    bulle:"Le marchand vend des potions. Attention, piège !",
     veux:"Découvrir ce que input( ) rend vraiment.",
     fais:CASES("Lis le <b>programme</b>.", "Prédis ce qu'affiche la <b>dernière ligne</b>, puis réponds."),
     coince:["Ce qu'on tape au clavier, c'est toujours du texte, même des chiffres."],
@@ -290,7 +293,7 @@ const BLOCS = [
     variantes:[piegeQ(PIEGE_V[1]), piegeQ(PIEGE_V[2])] },
 
   { partie:"C — Le programme pose une question", titre:"Réparer avec int()", min:5, stop:true, cle:"piege",
-    bulle:"int( ) : du texte au nombre.",
+    bulle:"Le marchand veut un vrai prix. int( ) : du texte au nombre.",
     veux:"Transformer la réponse tapée en nombre.",
     fais:CASES("Exécute le programme tel quel : "+EXECUTER, "Ajoute <b>int( )</b> au bon endroit.", "<b>Exécute</b> : la fiche essaie deux nombres."),
     extra:`<div class="encart"><p><code>int("3")</code> transforme le texte <b>"3"</b> en nombre <b>3</b>. La forme la plus courante, à retenir :</p>${CODE('age = int(input("Ton âge ? "))')}
