@@ -46,3 +46,9 @@ assert.deepEqual(BAS.flatMap(e=>e.gestes.map(g=>g.demo)),['fermer','deconnecter'
 assert.ok(!/\bconst REPRISE\b/.test(fiche),'pas d’encadré « Je reprends » en haut de l’étape');
 // « À moi dans Docs ! » : un encadré, avec l'icône Annuler de la barre d'outils (pas un caractère ↶).
 assert.equal(BLOCS.filter(B=>B.avant.includes('class="repere agir"')).length,9);assert.ok(!fiche.includes('↶'),'↶ : mettre l’icône annuler.png');assert.ok(fs.existsSync(base+'icones/annuler.png'));
+// La grille « Moi » : une carte par critère, on clique sur la phrase de son niveau. Pas de tableau : à cinq colonnes
+// il demandait 1 047 px dans une page de 648 px, donc un défilement de côté (mesuré dans Chromium le 17/11/2026).
+const moteur=fs.readFileSync(__dirname+'/../pas-a-pas/blocs.js','utf8'),gm=moteur.slice(moteur.indexOf('function grilleMoi'),moteur.indexOf('/* Humeur du jour'));
+assert.ok(gm.includes('rond.type = "radio"')&&gm.includes('el("fieldset")'),'grille « Moi » : une carte par critère, un bouton radio par niveau');
+assert.ok(!/el\("(table|select)"\)|overflow/.test(gm),'grille « Moi » : ni tableau, ni liste déroulante, ni défilement de côté');
+assert.ok(!/colonne/.test(FIN.texte)&&!actions.some(([,t])=>/colonne « Moi »/.test(t)),'la fiche ne parle plus de colonnes');
