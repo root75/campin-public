@@ -163,12 +163,12 @@
    },
    {
     "type": "saisie",
-    "q": "Retourne dans l’onglet Courrier. Recopie ce qui est écrit sous la carte du fichier, maintenant.",
+    "q": "Retourne dans l’onglet Courrier. Sur la carte du fichier, recopie ce qui est écrit sous son nom, maintenant.",
     "regle": {
      "motif": "enregistre.*onedrive"
     },
-    "faux": "Comment faire : en haut de Chrome, onglet Courrier ▸ le message de ton professeur ▸ la carte du fichier, sous l’objet. Recopie les trois mots écrits juste en dessous de la carte.",
-    "aide": "Comment faire : en haut de Chrome, onglet Courrier ▸ le message de ton professeur ▸ regarde juste sous la carte du fichier."
+    "faux": "Comment faire : en haut de Chrome, onglet Courrier ▸ le message de ton professeur ▸ la carte du fichier, sous l’objet. Recopie les trois mots écrits sur la carte, juste sous le nom du fichier.",
+    "aide": "Comment faire : en haut de Chrome, onglet Courrier ▸ le message de ton professeur ▸ regarde sur la carte du fichier, juste sous son nom."
    },
    {
     "type": "saisie",
