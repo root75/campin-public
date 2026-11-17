@@ -49,7 +49,7 @@ const SOLUTIONS = {
   5: b => { const [l1, l2] = b.q.depart.split('\n'); const nom = l1.split(' = ')[0]; const texte = l2.match(/"(.*?) : "/)[1]; return `${l1}\nprint("${texte} :", ${nom})`; },
   7: b => b.q.depart + `print("${b.q.q.match(/affiche (\S+) et/)[1]}", prenom)`,
   8: b => 'mot = input()\n' + 'print(mot)\n'.repeat(b.q.depart.split('\n').length),
-  10: b => b.q.depart.replace('input("Un nombre ? ")', 'int(input("Un nombre ? "))'),
+  10: b => b.q.depart.replace('input("Combien de potions ? ")', 'int(input("Combien de potions ? "))'),
   13: () => '# on demande le nombre de pièces\npieces = int(input("Combien de pièces ? "))\n# on calcule\nscore = pieces * 10\n# on affiche\nprint("Score :", score)',
   16: b => b.q.depart + 'degats = int(input("Dégâts ? "))\nvies = vies - degats\nprint("Il reste", vies, "vies")'
 };
@@ -90,7 +90,7 @@ for (let v = 1; v <= 3; v++) {
   const b6 = ctx.bloc(6, v); const c6 = b6.extra.match(/<pre class="code">([\s\S]*?)<\/pre>/)[1];
   assert.equal(derniere(lance(c6)), b6.q.c[0], `bloc 6/${v}`);
   const b9 = ctx.bloc(9, v); const c9 = b9.extra.match(/<pre class="code">([\s\S]*?)<\/pre>/)[1].replace(/&quot;/g, '"');
-  const tape9 = b9.extra.match(/on tape <b>(\d+)<\/b>/)[1];
+  const tape9 = b9.extra.match(/tape <b>(\d+)<\/b>/)[1];
   assert.equal(derniere(lance(c9, [tape9])), b9.q.c[0], `bloc 9/${v}`);
   const b12 = ctx.bloc(12, v), n12 = b12.q.q.match(/taperas (\d+)/)[1];
   const r12 = lance(SOLUTIONS[13](), [n12]);
