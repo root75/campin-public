@@ -65,7 +65,7 @@
     // Le « visuel » d'un moment (window.Visuels, chargé par la page) : remplace ses lignes et sa correction, qui en
     // sont la version texte. null si le cours n'en déclare pas ou si le script n'est pas chargé.
     const visuel = (m, s) => { const v = m.visuel || (s && s.visuel); return v && window.Visuels && Visuels[v] ? Visuels[v]({ corrige: m.phase === "corrige" }) : null; };
-    if(o.contenus) fetch("https://root75.github.io/campin-public/pas-a-pas/sequences.json?v=objet-20261115")
+    if(o.contenus) fetch("https://root75.github.io/campin-public/pas-a-pas/sequences.json?v=sms-20261117")
       .then(r => { if(!r.ok) throw Error(); return r.json(); })
       .then(d => { contenus = d[o.cours] || null; cle = ""; }).catch(() => {});   // cle vide : redessiner au prochain appel
 

@@ -45,6 +45,7 @@ est aussi servie par Apps Script, où une adresse relative ne mène nulle part.
   stop:true,                   // facultatif : 🛑 ne continue pas avant d'avoir vérifié
   extra:'<aside class="repere">…</aside>',          // facultatif : HTML sous les cases
   coince:['Blocage prévisible et sa solution.', '…'],  // le « Ça coince ? » du bloc
+  fete:()=>{ … },              // facultatif : appelé une fois, à la première réussite du bloc (l'enveloppe de la Messagerie 01)
   q:{ … } }                    // la preuve, ci-dessous
 ```
 

@@ -87,6 +87,8 @@ const M1 = (() => {
   }
   /* Les erreurs de plusieurs champs, toutes ensemble (le contrôle d'une rédaction du moteur). */
   const erreurs = champs => (texte, d, ctx) => champs.map(k=>verifie(k, d, ctx && ctx.classe)).filter(Boolean);
+  /* L'enveloppe en plein écran (visuels.js). Sans elle (script pas chargé, tests), rien : la fiche continue. */
+  const enveloppe = o => { if(typeof window!=='undefined' && typeof window.MessagerieEnvol==='function') window.MessagerieEnvol(o); };
   const TOUS = ['a','objet','salutation','message','fin','signature'];
   const corps = d => [d.salutation, d.message, d.fin, d.signature].map(x=>x||'').join('\n\n');
   /* L'aperçu en direct, à droite : blocs 1 à 7 et 9 à 12, le mail d'entraînement ; bloc 8, la réponse à Camille
@@ -108,7 +110,7 @@ const M1 = (() => {
   }
   /* Le nom à taper dans Cc : Outlook trouve la personne dans l'annuaire de l'école. */
   const prof = classe => { const c = String(classe||'').replace(/\s/g,'').toUpperCase(); return /^2E/.test(c) ? 'Michiels' : c ? 'Louviaux' : ''; };
-  return { DEST, propre, html, classeDe, erreurSalutation, criteresReponse, verifie, erreurs, TOUS, corps, apercu, ancienBrouillon, prof };
+  return { DEST, propre, html, classeDe, erreurSalutation, criteresReponse, verifie, erreurs, TOUS, corps, apercu, ancienBrouillon, prof, enveloppe };
 })();
 
 const PARTAGE = { depart:M1.ancienBrouillon, apercu:M1.apercu };
@@ -203,15 +205,17 @@ const BLOCS = [
      {cle:'nom', nom:'Ton prénom et ton nom', max:120},{cle:'signature', nom:'Signature', max:120}],
     M1.TOUS, (d, t, ctx)=>ctx.refus ? M1.TOUS.filter(k=>M1.verifie(k, d, ctx.classe)).join(',') : d.objet,   // refus : les champs en cause, pour « Où le groupe bute »
     'L’adresse, l’objet et les parties du corps sont en place. Tu peux maintenant lire la réponse fictive de Camille.',
-    {q:'Relis chaque champ de ton mail. « Vérifier » contrôle cet entraînement : aucun email ne sera envoyé.', bouton:'Vérifier mon mail d’entraînement'})},
+    {q:'Relis chaque champ de ton mail. « Vérifier » contrôle cet entraînement : aucun email ne sera envoyé.', bouton:'Vérifier mon mail d’entraînement'}),
+  fete:()=>M1.enveloppe({vole:true, titre:'Ton mail d’entraînement s’envole vers Camille…', texte:'C’est une simulation : aucun vrai email n’est envoyé.'})},
 
  {partie:'C — Je réponds', titre:'Répondre au message reçu', min:5,
   veux:'Camille m’a répondu, et elle me pose une question : je lui réponds, dans la même conversation.',
-  avant:'<p>Dans cette simulation, Camille a reçu ta question et t’a répondu. Lis son message.</p><div class="email"><div class="ligne-mail"><b>De</b><span>Camille Martin &lt;camille.martin@example.org&gt;</span></div><div class="ligne-mail"><b>Objet</b><span>RE : <span data-rappel="objet">ta question sur les loisirs</span></span></div><div class="corps"><p>Bonjour<span data-rappel="prenom"></span>,\n\nJe pratique la boxe thaï. Et toi, quel sport ou quel loisir pratiques-tu ?\n\nBonne journée,\nCamille</p></div></div>',
+  avant:'<p>Dans cette simulation, Camille a reçu ta question et t’a répondu. <b>Clique sur l’enveloppe</b> pour ouvrir son message, puis lis-le.</p><details class="enveloppe"><summary><span class="enveloppe-dessin" aria-hidden="true">📬</span> Un nouveau message de Camille — clique pour l’ouvrir</summary><div class="email"><div class="ligne-mail"><b>De</b><span>Camille Martin &lt;camille.martin@example.org&gt;</span></div><div class="ligne-mail"><b>Objet</b><span>RE : <span data-rappel="objet">ta question sur les loisirs</span></span></div><div class="corps"><p>Bonjour<span data-rappel="prenom"></span>,\n\nJe pratique la boxe thaï. Et toi, quel sport ou quel loisir pratiques-tu ?\n\nBonne journée,\nCamille</p></div></div></details>',
   fais:'<p><b>Utilise Répondre :</b> le destinataire et l’objet de la conversation sont conservés. Écris seulement ta réponse au-dessus du message précédent.</p><p class="note"><b>Signature à reprendre :</b> <span data-rappel="signature">ton prénom, ton nom et ta classe, comme au bloc 6</span>.</p>',
   vois:'Dans « Ma réponse se construit », l’objet commence par RE :, et les cinq points de la liste sont cochés ✓.',
   extra:'<p class="note">Les contrôles vérifient des éléments de forme. Le professeur vérifie aussi que la réponse a du sens et répond bien à la question.</p>',
-  coince:['La liste sous ta réponse se coche pendant que tu écris : un point reste ○ ? C’est lui qu’il faut ajouter ou corriger.','Dans l’ordre : « Bonjour Camille, », une phrase complète sur ton sport ou ton loisir, « Bonne journée, », puis ton prénom, ton nom et ta classe.','Tu peux inventer un loisir si tu préfères.'],
+  fete:()=>M1.enveloppe({vole:false, emoji:'🏁', titre:'Première partie réussie !', texte:'Tu sais écrire un mail et y répondre. La suite se passe dans Outlook, pour de vrai.', duree:4500}),
+  coince:['Le message de Camille est dans l’enveloppe 📬, au-dessus : clique dessus pour l’ouvrir.','La liste sous ta réponse se coche pendant que tu écris : un point reste ○ ? C’est lui qu’il faut ajouter ou corriger.','Dans l’ordre : « Bonjour Camille, », une phrase complète sur ton sport ou ton loisir, « Bonne journée, », puis ton prénom, ton nom et ta classe.','Tu peux inventer un loisir si tu préfères.'],
   q:{serveur:true, type:'mixte', colle:true, ouvre:'↶ Répondre à Camille',
      activite:{type:'redaction', commun:true, etiquette:'Ma réponse à Camille', q:'Écris ta réponse. La liste, en dessous, se coche pendant que tu écris.',
        champs:[{cle:'nom', siVide:true, nom:'Ton prénom et ton nom', aide:'Tu reprends sur un autre poste : écris-les ici, ta signature sera vérifiée avec eux.', max:120}],

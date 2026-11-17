@@ -130,7 +130,17 @@ for(const [i,bons] of Object.entries(variantes)){const l=proofs.blocs[i];assert.
   const dom = mo('Une adresse en trois parties');
   assert.ok(dom.visuel === 'adresse' && dom.saisie === 'texte' && dom.champs.join() === 'Domaine' && !s.includes("'Une adresse en trois parties':"), 'le domaine : réponse écrite commune, visuel « adresse »');
   const vis = fs.readFileSync(__dirname + '/../messagerie/pas-a-pas/visuels.js', 'utf8');
-  assert.ok(/window\.Visuels=Object\.assign\(window\.Visuels\|\|\{\},\{adresse,email\}\)/.test(vis) && !/MessagerieVisuels/.test(vis), 'visuels.js s’inscrit au registre commun Visuels');
+  assert.ok(/window\.Visuels=Object\.assign\(window\.Visuels\|\|\{\},\{adresse,email,sms\}\)/.test(vis) && !/MessagerieVisuels/.test(vis), 'visuels.js s’inscrit au registre commun Visuels');
+  // 17/11 : « Du message au mail » (le message du téléphone devient un mail) remplace « Choisir l’outil » — même rang, la Bascule reste le moment 13.
+  const sms = mo('Du message au mail');
+  assert.ok(seqData.moments.indexOf(sms) === 4 && seqData.moments.length === 13 && !seqData.moments.some(m => /Choisir l’outil/.test(m.titre)), 'Du message au mail : cinquième moment, treize moments en tout');
+  assert.ok(sms.type === 'mots' && sms.saisie === 'texte' && sms.visuel === 'sms' && sms.champs.length === 1 && sms.correction.length === 4 && sms.lignes.length, 'Du message au mail : réponse écrite, visuel « sms », version texte et correction');
+  assert.ok(/function sms\(/.test(vis) && /window\.MessagerieEnvol=envol/.test(vis) && /prefers-reduced-motion/.test(vis), 'visuels.js : le téléphone, l’enveloppe, et pas d’animation pour qui n’en veut pas');
+  // L’enveloppe : le mail d’entraînement s’envole à l’étape 7, la réponse de Camille s’ouvre à l’étape 8, qui clôt la première partie.
+  assert.ok(typeof BLOCS[6].fete === 'function' && typeof BLOCS[7].fete === 'function' && BLOCS.filter(B => B.fete).length === 2, 'une fête aux étapes 7 et 8 seulement');
+  assert.doesNotThrow(() => { BLOCS[6].fete(); BLOCS[7].fete(); }, 'sans visuels.js, la fête ne casse rien');
+  assert.ok(/<details class="enveloppe"><summary>[\s\S]*<\/summary><div class="email">[\s\S]*<\/div><\/details>$/.test(BLOCS[7].avant), 'étape 8 : le message de Camille est dans une enveloppe à ouvrir');
+  assert.ok(/typeof BLOCS\[ici\]\.fete==="function"/.test(fs.readFileSync(__dirname + '/../pas-a-pas/blocs.js', 'utf8')), 'le moteur appelle la fête du bloc à sa première réussite');
   for (const f of ['tableau.js', 'sequence-eleve.js'])
     assert.ok(!/MessagerieVisuels|'domaine'|value *===? *["'][a-z0-9-]+["']/.test(fs.readFileSync(__dirname + '/../pas-a-pas/' + f, 'utf8')),
       f + ' : aucun test sur le nom d’un cours');
