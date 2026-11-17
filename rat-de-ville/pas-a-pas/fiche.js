@@ -258,10 +258,18 @@ const BLOCS = [
   ],
   "vois": "Dans Docs : « Mon bloc-notes », puis trois éléments du festin, chacun sur sa ligne, avec sa puce.<br><span class=\"note\">Une vraie liste à puces se fait avec le bouton, jamais avec un tiret tapé.</span>",
   "demos": {
+   "1": [
+    "etape8",
+    [
+     0,
+     1,
+     2
+    ]
+   ],
    "2": [
     "etape8",
     [
-     0
+     3
     ]
    ]
   }
