@@ -107,23 +107,35 @@ const M1 = (() => {
   ];
   function mailRate(zone){
     const cible = zone && zone.querySelector('.mail-rate'); if(!cible) return;
-    const total = RATE.filter(l => l[2]).length, dit = noeud('p','rate-dit','Clique sur une ligne du mail.'), compte = noeud('p','rate-compte');
+    const total = RATE.filter(l => l[2]).length, dit = noeud('p','rate-dit'), compte = noeud('p','rate-compte');
     dit.setAttribute('role','status');
-    let trouve = 0;
-    const maj = () => { compte.textContent = trouve<total ? 'Lignes réparées : '+trouve+' sur '+total : '✔ Mail réparé ! À, Objet, puis un corps en quatre parties : salutation, message, formule de fin, signature.'; cible.classList.toggle('repare', trouve>=total); };
+    const encore = noeud('button','btn vide rate-encore','↻ Recommencer'); encore.type = 'button';
+    encore.addEventListener('click', () => mailRate(zone));
+    let trouve = 0, clics = total;   // autant de clics que de lignes à réparer : cliquer partout ne marche pas
+    const fini = () => trouve>=total, perdu = () => !fini() && clics<=0;
+    const maj = () => {
+      compte.textContent = fini() ? '✔ Mail réparé, sans un clic de trop ! À, Objet, puis un corps en quatre parties : salutation, message, formule de fin, signature. Clique sur une ligne pour relire à quoi elle sert.'
+        : perdu() ? 'Plus de clic : '+trouve+' ligne'+(trouve>1 ? 's' : '')+' réparée'+(trouve>1 ? 's' : '')+' sur '+total+'. Relis chaque ligne avant de cliquer, puis recommence.'
+        : 'Lignes réparées : '+trouve+' sur '+total+' · Clics restants : '+clics;
+      cible.classList.toggle('repare', fini()); cible.classList.toggle('perdu', perdu()); encore.hidden = !perdu();
+    };
     const lignes = RATE.map(([champ, mauvais, bon, role]) => {
       const b = noeud('button','rate-ligne'); b.type = 'button';
       const texte = noeud('span', null, mauvais);
       if(champ) b.append(noeud('b', null, champ+' : '));
       b.append(texte);
       b.addEventListener('click', () => {
-        if(bon && !b.classList.contains('reparee')){ texte.textContent = bon; b.classList.add('reparee'); trouve++; maj(); if(trouve>=total && typeof confettis==='function') confettis(); }
-        else if(!bon) b.classList.add('juste');
-        dit.textContent = role;
+        if(perdu()) return;
+        if(fini() || b.classList.contains('reparee') || b.classList.contains('juste')){ dit.textContent = role; return; }   // déjà vue, ou partie gagnée : on relit, sans rien dépenser
+        clics--;
+        if(bon){ texte.textContent = bon; b.classList.add('reparee'); trouve++; dit.textContent = role; if(fini() && typeof confettis==='function') confettis(); }
+        else { b.classList.add('juste'); dit.textContent = 'Un clic perdu. '+role; }
+        maj();
       });
       return b;
     });
-    cible.replaceChildren(...lignes, dit, compte); maj();
+    dit.textContent = 'Lis tout le mail, puis clique sur une ligne à réparer.';
+    cible.replaceChildren(...lignes, dit, compte, encore); maj();
   }
 
   /* Bloc 10 — le correspondant tiré au sort par le serveur (Code.gs, correspondant) : chaque élève présent écrit à
@@ -201,7 +213,7 @@ const BLOCS = [
  {partie:'A — Je comprends', titre:'Réparer un mail raté', min:3,
   veux:'Avant de toucher Outlook : reconnaître les parties d’un mail et les deux parties d’une adresse.',
   arrive:api=>M1.mailRate(api.zone),
-  avant:'<p><b>Lina a écrit ce mail trop vite.</b> Quatre lignes sont à réparer. Clique sur une ligne : si elle pose problème, elle se répare, et tu lis à quoi elle sert.</p><div class="email mail-rate"><div class="ligne-mail"><b>À</b><span>camille.martin@example.org</span></div><div class="ligne-mail"><b>Objet</b><span>Une question sur tes loisirs</span></div><div class="corps"><p>Bonjour Camille,\n\nQuel sport ou quel loisir pratiques-tu ?\n\nBonne journée,\nLina Dupont, 2B</p></div></div><p class="note">Le corps du mail réunit la salutation, le message, la formule de fin et la signature.</p>'
+  avant:'<p><b>Lina a écrit ce mail trop vite.</b> Quatre lignes sont à réparer, et tu as <b>quatre clics</b>, pas un de plus. Lis d’abord tout le mail. Un clic sur une ligne fautive la répare ; un clic sur une ligne juste est perdu.</p><div class="email mail-rate"><div class="ligne-mail"><b>À</b><span>camille.martin@example.org</span></div><div class="ligne-mail"><b>Objet</b><span>Une question sur tes loisirs</span></div><div class="corps"><p>Bonjour Camille,\n\nQuel sport ou quel loisir pratiques-tu ?\n\nBonne journée,\nLina Dupont, 2B</p></div></div><p class="note">Le corps du mail réunit la salutation, le message, la formule de fin et la signature.</p>'
    +'<h3>Comprendre une adresse email</h3><div class="email"><div class="ligne-mail"><b>camille.martin</b><b>@</b><b>example.org</b></div></div><ul><li><b>Partie locale :</b> avant @, elle identifie une boîte dans le domaine. Ce peut être une personne ou un service, comme secretariat.</li><li><b>@, l’arobase :</b> sépare les deux parties ; on peut le lire « chez ».</li><li><b>Domaine :</b> après @, il indique le domaine auquel appartient la boîte. Il n’est pas nécessairement le nom du serveur technique.</li></ul><p>Dans ton adresse scolaire, le domaine est <b>arcampin.be</b>. Recopie l’adresse fournie exactement, sans ajouter d’espace. Une adresse bien écrite ne prouve pas que la boîte existe ni que son propriétaire est fiable.</p><p class="note">example.org est utilisé ici pour les personnages fictifs. On ne lui envoie aucun message réel.</p>',
   fais:'<p>Dans <b>camille.martin@example.org</b>, repère les deux parties de l’adresse et écris-les dans les deux cases.</p>',
   vois:'Les deux cases sont remplies : ce qui précède @ dans la première, ce qui suit @ dans la seconde.',

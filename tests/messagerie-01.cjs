@@ -147,6 +147,7 @@ for(const [i,bons] of Object.entries(variantes)){const l=proofs.blocs[i];assert.
     'le moteur : arrive() à l’affichage d’un bloc, diplome() sur l’écran de fin, et un serveur pas à jour ne casse rien');
   assert.ok(M1.RATE.length === 6 && M1.RATE.filter(l => l[2]).length === 4 && M1.RATE.every(l => l[3]) && typeof BLOCS[0].arrive === 'function',
     'bloc 1 : six lignes, quatre à réparer, un rôle expliqué pour chacune');
+  assert.ok(/let trouve = 0, clics = total;/.test(s) && /Un clic perdu\./.test(s) && /quatre clics/.test(BLOCS[0].avant), 'bloc 1 : autant de clics que de lignes à réparer — cliquer partout ne répare pas le mail');
   assert.ok(/class="email mail-rate"/.test(BLOCS[0].avant) && /Bonjour Camille,/.test(BLOCS[0].avant) && !/<details>/.test(BLOCS[0].avant.split('<h3>')[0]),
     'bloc 1 : sans script, le mail réparé est lisible ; plus de repères à déplier un par un');
   assert.ok(/data-rappel="corrNom"/.test(BLOCS[9].avant) && /data-rappel="corrAdresse"/.test(BLOCS[9].avant) && /Demande à ton professeur/.test(BLOCS[9].avant) && typeof BLOCS[9].arrive === 'function',
