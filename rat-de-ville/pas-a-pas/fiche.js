@@ -247,7 +247,10 @@ const BLOCS = [
   "bulle": "Déjà la moitié ! Le rat est fier de toi.",
   "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>Des puces quand l’ordre ne compte pas : les choses du festin.</p></aside>" + A_MOI,
   "gestes": [
-   "Sous la fable, laisse <b>deux lignes vides</b> et écris : <span class=\"a-ecrire\" aria-label=\"À écrire exactement : Mon bloc-notes\">Mon bloc-notes</span>",
+   {
+    "geste": "Clique à la fin de la fable, après l’auteur. Insertion ▸ Saut ▸ <b>Saut de page</b> (Ctrl + Enter). Sur la nouvelle page, écris : <span class=\"a-ecrire\" aria-label=\"À écrire exactement : Mon bloc-notes\">Mon bloc-notes</span>",
+    "sous": "<details><summary>Où est le saut de page ?</summary><p>Menu <b>Insertion</b> ▸ <b>Saut</b>, vers le bas du menu ▸ <b>Saut de page</b>.</p><img class=\"capture\" src=\"" + BASE + "capture-saut-de-page.png\" alt=\"Menu Insertion ▸ Saut ▸ Saut de page dans Docs\"></details>"
+   },
    {
     "geste": "<img class=\"ico\" src=\"" + ICONES + "puces.png\" alt=\"\">Trois choses que l’on trouve au festin du rat de ville, en <b>liste à puces</b> (Ctrl + Shift + 8).",
     "sous": "<details><summary>Qu’écrire dans la liste à puces ?</summary><p>Je choisis trois choses présentes au festin dans la fable. Dans mon document Docs, j’écris une chose par ligne, je sélectionne ces trois lignes, puis je clique sur le bouton Liste à puces (Ctrl + Shift + 8).</p><blockquote>Exemple d’un élément possible : le tapis.</blockquote><p class=\"note\">Je trouve les autres éléments dans la fable. Trois éléments sont attendus au total.</p></details>"
