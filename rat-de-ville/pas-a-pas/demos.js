@@ -14,7 +14,7 @@ const Demo = (() => {
   const L = (t, c = '') => ({ t, c });
   const doc = (lignes, o = {}) => Object.assign({ ecran: 'docs', nom: NOM, lignes }, o);
   // La page du devoir dans Classroom : vue commune à tous les cours (pas-a-pas/demos-communs.js).
-  const devoir = DemosCommuns.devoir({ titre: '20261104 Le rat de ville', meta: ['M. Louviaux · Date limite : vendredi'], instructions: 1, fichier: NOM, autre: 'Mon portrait chinois' });
+  const devoir = DemosCommuns.devoir({ titre: '03 EVAL Formatif Le rat de ville', meta: ['M. Louviaux · Date limite : vendredi'], instructions: 1, fichier: NOM, autre: 'Mon portrait chinois' });
 
   // Le document de départ de la période 2 : titre, une strophe, l'auteur.
   const base = (t = '', s = '', a = '') => [L(TITRE, t), L(''), ...FABLE_MAJ.map(v => L(v, s)), L(''), L('Jean de La Fontaine', a)];

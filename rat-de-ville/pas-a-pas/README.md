@@ -181,3 +181,10 @@ l’écrit entre doubles crochets : `"j’écris : [[Mon bloc-notes]]"` ; `fiche
 `span.a-ecrire`. Le point final de la phrase n’est pas dans l’encadré : l’élève ne le recopie pas.
 Le tableau du professeur (`pas-a-pas/formatif-prof.js`) affiche le même texte entre guillemets.
 
+## L'accord du professeur avant la remise (17 novembre 2026)
+
+Étape 9 : 14 cases au lieu de 13. La case 13 demande de cliquer sur « J'attends de l'aide » et d'attendre l'accord du
+professeur ; la remise devient la case 14, avec un volet « Où est le devoir dans Classroom ? » et la capture réelle
+(`capture-devoir-classroom.png`, relevée par Vincent). L'animation « Regarde comment faire » suit la case 14 et porte le
+vrai titre du devoir. Une case 13 cochée avant ce jour voulait dire « remis » : elle s'affiche maintenant comme
+« accord demandé », et la case 14 est à recocher.
