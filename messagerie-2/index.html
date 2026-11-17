@@ -132,7 +132,7 @@ footer{font-size:.9rem;color:var(--doux);text-align:center}
     <h2>L'essentiel en 6 lignes</h2>
     <ol class="resume">
       <li><span>Avant d'ouvrir une pièce jointe, je regarde <strong>qui</strong> l'envoie et <strong>quel fichier</strong> c'est.</span></li>
-      <li><span>Pour compléter une fiche reçue : flèche <span class="touche">▾</span> de la carte du fichier ▸ <strong>Modifier dans le navigateur</strong>. Elle est rangée dans <strong>OneDrive › Pièces jointes</strong>.</span></li>
+      <li><span>Pour compléter une fiche reçue : flèche <span class="touche">▾</span> de la carte du fichier ▸ <strong>Modifier dans le navigateur</strong>. Elle est rangée dans <strong>OneDrive › Attachments (ou Pièces jointes)</strong>.</span></li>
       <li><span><strong>Répondre</strong> = à celui qui m'a écrit. <strong>Répondre à tous</strong> = à tous ceux qui ont reçu le message.</span></li>
       <li><span><strong>Transférer</strong> = faire suivre le message, avec sa pièce jointe (objet « TR: »).</span></li>
       <li><span>Joindre un fichier : onglet <strong>Message</strong> ▸ le trombone <span class="touche">📎</span> <strong>Joindre un fichier</strong>.</span></li>
@@ -207,7 +207,7 @@ const QUIZ = [
        "Répondre ouvre une réponse, pas la fiche.",
        "Un nouveau message est vide : ta fiche n'y est pas."],
     h:"La petite flèche est à droite de la carte du fichier.",
-    e:"« Modifier dans le navigateur » ouvre la fiche dans Word en ligne et la range dans OneDrive › Pièces jointes." },
+    e:"« Modifier dans le navigateur » ouvre la fiche dans Word en ligne et la range dans OneDrive › Attachments (ou Pièces jointes)." },
   { q:"Mon professeur a écrit à toute la classe. Je veux lui répondre, à lui seul. Quel bouton ?",
     c:["Répondre", "Répondre à tous", "Transférer", "Nouveau message, avec toute la classe dans À"],
     p:[null,
@@ -312,9 +312,9 @@ const tire = () => { tirage = TOUTES.map(v => v[Math.floor(Math.random()*v.lengt
 tire();
 
 const CONSOLIDATION = { q:"Où Outlook range-t-il la fiche que j'ouvre avec « Modifier dans le navigateur » ?",
-  c:["Dans OneDrive, dossier Pièces jointes.", "Dans Brouillons.", "Dans Éléments envoyés.", "Nulle part : elle disparaît quand je ferme l'onglet."],
+  c:["Dans OneDrive, dossier Attachments (ou Pièces jointes).", "Dans Brouillons.", "Dans Éléments envoyés.", "Nulle part : elle disparaît quand je ferme l'onglet."],
   p:[null, "Brouillons garde les messages pas envoyés, pas les fichiers.", "Éléments envoyés garde les messages envoyés.", "Word enregistre tout seul : elle reste dans ton OneDrive."],
-  h:"Mon classeur de l'école, en ligne.", e:"OneDrive › Pièces jointes : c'est là que je la retrouve pour la joindre à ma réponse." };
+  h:"Mon classeur de l'école, en ligne.", e:"OneDrive › Attachments (ou Pièces jointes) : c'est là que je la retrouve pour la joindre à ma réponse." };
 const DEPASSEMENT = { q:"Quelle réponse à ton professeur est écrite dans un langage correct ?",
   c:["Bonjour Monsieur, voici ma fiche complétée en pièce jointe. Bonne journée, Léa Dupont, 2B",
      "slt voila ma fiche",

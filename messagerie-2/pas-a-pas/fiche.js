@@ -104,7 +104,7 @@ const BLOCS = [
   gestes:['Dans ta réponse, clique sur l’onglet <b>Message</b> du ruban, en haut.','Clique sur le trombone <b>📎 Joindre un fichier</b> ▸ <b>OneDrive</b>.','Le sélecteur s’ouvre sur <b>Récents</b> : coche « <b>Ma fiche a completer</b> ».','En bas, clique sur la petite flèche <b>▾</b> à côté de <b>Partager le lien</b> ▸ <b>Joindre</b>.'],
   demos:{'2':['joindre',[0,1,2]],'4':['joindre',[3,4,5,6]]},
   vois:'La carte de ma fiche apparaît sous l’objet de ma réponse.', stop:true,
-  coince:['Ma fiche n’est pas dans Récents : à gauche du sélecteur, Fichiers ▸ Pièces jointes ▸ Ma fiche a completer.','Joindre est grisé : coche un seul fichier, ta fiche.','Ma fiche part comme un lien : retire-la (✕ sur la carte), puis recommence en choisissant bien Joindre, pas Partager le lien.'],
+  coince:['Ma fiche n’est pas dans Récents : à gauche du sélecteur, Fichiers ▸ Attachments (ou Pièces jointes) ▸ Ma fiche a completer.','Joindre est grisé : coche un seul fichier, ta fiche.','Ma fiche part comme un lien : retire-la (✕ sur la carte), puis recommence en choisissant bien Joindre, pas Partager le lien.'],
   q:{serveur:true}},
  {partie:'C — Je réponds et je joins ma fiche', titre:'Écrire ta réponse', min:10,
   veux:'Une réponse polie et complète, vérifiée <b>ici</b> avant de la coller dans Outlook.',

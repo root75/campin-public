@@ -174,7 +174,7 @@
     "type": "saisie",
     "q": "Dans Word, clique sur le petit nuage à côté du titre du document. Dans quel dossier de OneDrive ta fiche est-elle rangée ? Recopie son nom.",
     "regle": {
-     "motif": "pieces? ?jointes?"
+     "motif": "attachments?|pieces? ?jointes?"
     },
     "faux": "Clique sur le petit nuage à côté du titre : le nom du dossier est écrit après « OneDrive › ».",
     "aide": "Dans Word, clique sur le petit nuage à côté du titre du document."
@@ -261,11 +261,11 @@
    },
    {
     "type": "saisie",
-    "q": "Ta fiche n’est pas dans Récents. Dans quel dossier la trouves-tu, à gauche du sélecteur ? Recopie son nom.",
+    "q": "Dans le sélecteur, clique à gauche sur Fichiers. Dans quel dossier ta fiche est-elle rangée ? Ouvre-le pour vérifier, puis recopie son nom.",
     "regle": {
-     "motif": "pieces? ?jointes?"
+     "motif": "attachments?|pieces? ?jointes?"
     },
-    "faux": "Outlook a rangé ta fiche à l’étape 4 : à gauche du sélecteur, ouvre Fichiers et recopie le nom du dossier.",
+    "faux": "Outlook a rangé ta fiche à l’étape 4 : à gauche du sélecteur, clique sur Fichiers, ouvre les dossiers et recopie le nom de celui qui contient ta fiche.",
     "aide": "Outlook a rangé ta fiche dans OneDrive, à l’étape 4."
    }
   ],
