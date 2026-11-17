@@ -138,3 +138,14 @@ cases.forEach(c=>assert.ok(/<b[\s>]/.test(c),'Python 3, case sans mot en gras : 
 const interdit=/(?:^|[.;:!?]\s+)(?:Ne|N[’'])\s?\S+ (?:pas|jamais|ni|aucun|rien)/,sansB=c=>c.replace(/<[^>]+>/g,'').replace(/\*\*/g,'').replace(/\s+/g,' ').trim();
 cases.forEach(c=>assert.ok(!interdit.test(sansB(c))&&!/^⚠|class="attention"/.test(sansB(c)+c),'Python 3, une interdiction dans une case : '+sansB(c).slice(0,70)));
 console.log('OK Python 3 : '+cases.length+' cases, chacune avec son mot-clé en gras.');}
+
+/* Bloc 7 : mettre le mot dans la question de input( ) affiche « Coucou Léa » sans aucun print.
+   Ce n'est pas la réponse : deux temps, demander puis afficher. */
+for (let v = 1; v <= 3; v++) {
+  const b7 = ctx.bloc(7, v), mot7 = b7.q.q.match(/affiche (\S+) et/)[1];
+  for (const triche of [`prenom = input("${mot7} ")`, `prenom = input("${mot7} ")\nprint()`, `prenom = input("${mot7} ")\nprint(prenom)`]) {
+    const r7 = execute(b7.q, triche);
+    assert.match(String(b7.q.test(r7)), /Deux temps/, `7/${v}: ${triche} ne doit pas passer`);
+  }
+}
+console.log('OK bloc 7 : le mot dans input( ) est refusé, en deux temps.');

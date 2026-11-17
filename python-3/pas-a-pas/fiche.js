@@ -103,6 +103,7 @@ const salue = mot => ({
       depart:`prenom = input("Ton prénom ? ")\n`, essais:[["Léa"],["Sam"]], scene:{ decor:"salut", ouvre:[`${mot} Léa`,`${mot} Sam`] },
       test: r => r.erreur ? (r.erreur.type==="NameError" ? "NameError : prenom s'écrit sans accent, exactement comme à la 1re ligne." : "Lis la <b>ligne rouge</b> : guillemets et parenthèses vont par paires.")
                : !/input\(/.test(r.code) ? "Garde la 1re ligne : c'est elle qui demande le prénom."
+               : new RegExp(`input\\([^\\n]*${mot}`,"i").test(r.code) || !/print\s*\(/.test(r.code) ? `Deux temps : d'abord <b>demander</b> le prénom avec input( ), à la 1re ligne ; puis <b>afficher</b> ${mot} et le prénom avec print( ), à la 2e ligne. ${mot} ne va pas dans la question de input( ).`
                : r.essais.every((e,i) => DERNIERE(e).replace(/\s+/g," ")===`${mot} ${["Léa","Sam"][i]}`) ? true
                : r.essais.some(e => DERNIERE(e)==="prenom" || /prenom$/.test(DERNIERE(e))) ? "La console affiche le mot prenom : sans guillemets, print affiche ce qu'il y a dans la boîte."
                : `Avec Léa, ta dernière ligne est « ${DERNIERE(r.essais[0])} ». On attend : ${mot} Léa`,
