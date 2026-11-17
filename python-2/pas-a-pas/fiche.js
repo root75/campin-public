@@ -68,7 +68,7 @@ const soldes = (prix, pct) => {
     vois:`Le programme affiche ${reste}.0.`,
     extra:`<div class="encart"><h3>Pourquoi ${reste}.0 ?</h3><p>Dès qu'un calcul utilise un nombre à virgule (${garde}), Python donne un nombre à virgule : ${reste}.0. Une virgule s'écrit avec un POINT en Python.</p></div>`,
     coince:[`prix * ${faux}, c'est ${pct} % du prix : ${fr(prix*faux)} €. Ce qu'on garde, c'est ${100-pct} % du prix.`,
-            `${100-pct} %, c'est ${garde} : un seul caractère à changer.`],
+            `Écris ${100-pct} % comme un nombre à virgule, sur le modèle du nombre déjà dans le programme : un seul caractère à changer.`],
     q:{ type:"code", q:"Corrige le calcul.", depart:`prix = ${prix}\n# les soldes : moins ${pct} %\nprix = prix * ${faux}\nprint(prix)`,
         test: r => r.erreur ? "Lis la <b>ligne rouge</b>. Une virgule s'écrit avec un point en Python : "+garde+", pas "+fr(garde)+"."
                  : !/\bprix\b\s*\*/.test(r.code.split("\n").slice(1).join("\n")) && !/\*\s*\bprix\b/.test(r.code.split("\n").slice(1).join("\n")) ? "Calcule à partir de prix : le programme doit marcher pour un autre prix."

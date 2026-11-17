@@ -172,7 +172,7 @@ const BLOCS = [
     fais:CASES("Lis : un paquet de jeu, c'est <b>4 rois, 12 figures et 52 cartes</b>.",
                "Complète les trois lignes avec la variable <b>paquets</b>.", EXECUTER),
     coince:["Le signe de la multiplication est * (étoile), pas x.",
-            "N'écris pas 12 : écris 4 * paquets. Sinon, le programme est faux dès qu'on change le nombre de paquets.",
+            "N'écris pas le résultat : écris le calcul, avec la boîte paquets. Sinon, le programme est faux dès qu'on change le nombre de paquets.",
             "Ligne rouge sur « rois = » : il manque le calcul à droite du =."],
     ...cartes(3),
     variantes:[cartes(2), cartes(4)] },

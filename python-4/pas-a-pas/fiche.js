@@ -143,9 +143,9 @@ const potion = ({m,b}) => {
          + `<div class="encart"><p>Un losange devient un <b>if</b>. Un exemple, dans un autre jeu :</p>${CODE(`if temperature &gt; 30:\n    soif = soif + 2`)}
   <p>Les <b>deux-points</b> <code>:</code> à la fin de la ligne <code>if</code>. La ligne en dessous est <b>décalée de 4 espaces</b> : ${TAB}. Elle ne s'exécute QUE si la condition est vraie.</p></div>`
          + PLUS(`Ajoute un 2e losange : si energie dépasse ${s+2*m}, affiche aussi « Super forme ! ». Dans quel ordre places-tu les deux if ?`),
-    coince:[`Le losange se lit « energie > ${s} ? » : en Python, if energie > ${s}: — avec les deux-points.`,
+    coince:[`Le losange se lit « energie > ${s} ? » : en Python, une ligne if, la même condition, et les deux-points au bout. Regarde l'exemple de l'encadré.`,
             `Sous le if, la ligne du bonus commence par 4 espaces (touche Tab). print(energie) reste collé à gauche : il s'exécute toujours.`,
-            `Le bonus s'écrit energie = energie + ${b} : on range dans energie l'ancienne valeur plus ${b}.`],
+            `Le bonus : on range dans energie l'ancienne valeur de energie plus ${b}, comme la ligne décalée de l'exemple.`],
     q:{ type:"code", q:`Ajoute le losange au programme, à la ligne vide : le bonus de ${b} si energie > ${s}.`,
         depart:`potions = int(input("Combien de potions ? "))\nenergie = potions * ${m}\n\nprint(energie)`, essais:[["5"],["2"],["3"]],
         scene:{ decor:"potion", ouvre:(dit, x, i) => NOMBRES(dit).pop()===att[i], montre:(dit, x, i, etat) => etat==="ouvert" ? "⚡ "+att[i] : "" },
@@ -210,7 +210,7 @@ const porte = ({nom, question, bon, mauvais, oui, non, decor}) => ({
        + PLUS(`Une 3e réponse possible : si on tape « ? », le programme affiche un indice. Cherche dans le mémo 🐍 comment enchaîner deux conditions… ou essaie elif, le « sinon si » de Python.`),
   coince:[`Sans guillemets, ${bon} serait un nom de boîte : Python le cherche et ne le trouve pas (NameError).`,
           "else: est collé à gauche, à la même hauteur que if. Ses deux-points, puis sa ligne décalée en dessous.",
-          `Structure complète : if ${nom} == "${bon}": / ligne décalée / else: / ligne décalée.`],
+          `Structure complète : une ligne if avec sa condition et ses deux-points / ligne décalée / else: / ligne décalée. La condition compare la boîte ${nom} au texte attendu, avec ==.`],
   q:{ type:"code", q:`Complète le programme avec un if et un else.`,
       depart:`${nom} = input("${question} ")\n`, essais:[[bon],[mauvais]], scene:{ decor, ouvre:oui, ferme:non },
       test: r => r.erreur ? (r.erreur.type==="NameError" ? `NameError : ${bon} sans guillemets est pris pour un nom de boîte. Écris "${bon}".`
@@ -253,9 +253,9 @@ const rendreBonus = ({n,r}) => ({
 const distributeur = prix => ({
   vois:`Avec 5 pièces : « Voici ta boisson », puis la monnaie, ${5-prix}. Avec 1 pièce : il manque ${prix-1}. Avec ${prix} pièces, pile le prix : la boisson, et 0 de monnaie.`,
   extra: PLUS("Un 2e choix : le distributeur demande d'abord « eau ou soda ? », et le soda coûte une pièce de plus. Deux input( ), deux if."),
-  coince:["Même plan que la porte : un input, un if, un else. Mais ici, la condition compare deux nombres : pieces >= prix.",
+  coince:["Même plan que la porte : un input, un if, un else. Mais ici, la condition compare deux nombres : les pièces tapées et le prix.",
           "Assez de pièces, c'est AUTANT ou plus que le prix : >=, pas >.",
-          "La monnaie : pieces - prix. Ce qui manque : prix - pieces. Sous le if, deux lignes décalées."],
+          "La monnaie et ce qui manque sont deux soustractions, l'une dans un sens, l'autre dans l'autre. Sous le if, deux lignes décalées."],
   q:{ type:"code", q:`Écris le distributeur : une boisson coûte ${prix} pièces.`, depart:`prix = ${prix}\n`, essais:[["5"],["1"],[String(prix)]],
       scene:{ decor:"distributeur", ouvre:(dit, x, i) => i!==1 && /boisson/i.test(x.sortie) && NOMBRES(dit).pop()===[5-prix,0,0][i],
               ferme:(dit, x, i) => i===1 && !/boisson/i.test(x.sortie) && NOMBRES(dit).pop()===prix-1,
@@ -363,8 +363,8 @@ const BLOCS = [
     extra:`<div class="encart"><p>Dans LogProg 03, le losange disait <b>vies = 0 ?</b>. En Python, on compare avec <b>==</b>… ou avec <b>&lt;= 0</b>, qui marche aussi quand les dégâts dépassent les vies.</p></div>`
          + PLUS("Et si les dégâts tapés sont négatifs ? Le joueur gagnerait des vies ! Ajoute un if qui refuse un nombre plus petit que 0."),
     coince:["Les dégâts ont déjà été retirés : il reste à tester vies, puis à afficher selon le cas.",
-            "if vies <= 0: puis, décalé, print(\"Game over\"). Puis else: et, décalé, l'affichage des vies.",
-            "Pour afficher un texte et un nombre : print(\"Il te reste\", vies, \"vies\") — la virgule, pas le +."],
+            "Un if qui teste s'il ne reste plus de vies (relis l'encadré), puis, décalé, l'affichage de Game over. Puis else: et, décalé, l'affichage des vies.",
+            "Pour afficher un texte et un nombre dans le même print( ) : la virgule, pas le +."],
     q:{ type:"code", q:"Ajoute le losange au programme « Les vies ».",
         depart:`vies = {D}\ndegats = int(input("Dégâts ? "))\nvies = vies - degats\n`, essais:[["{K}"],["{D}"]],
         scene:{ decor:"coeurs", ouvre:(dit, x, i) => i===0 && !/game\s*over/i.test(x.sortie) && NOMBRES(dit).pop()===LV.r,
