@@ -44,7 +44,8 @@ assert.notEqual(M1.verifie('signature',{...good,signature:'Lina Dupont, 2F'},'2B
 // La forme des blocs : 12, comme au catalogue ; chacun a son but, son « À vérifier », son « Ça coince ? » et sa preuve du serveur.
 {const cat=JSON.parse(fs.readFileSync(__dirname+'/../pas-a-pas/cours.json','utf8')).cours.find(c=>c.id===COURS);
  assert.equal(BLOCS.length,12);assert.equal(cat.etapes,12);assert.equal(cat.preuves,'messagerie/pas-a-pas/preuves.json');assert.equal(proofs.blocs.length,12);
- BLOCS.forEach((B,i)=>{assert.ok(B.partie&&B.titre&&B.min>0&&B.veux&&B.vois,'bloc '+(i+1)+' : partie, titre, durée, but, à vérifier');
+ // « À vérifier » : seulement là où la page ne voit pas le travail (blocs 9 à 12, dans Outlook) ; une phrase, pas une liste.
+ BLOCS.forEach((B,i)=>{assert.ok(B.partie&&B.titre&&B.min>0&&B.veux&&(i<8 ? !B.vois : /^Dans Outlook, /.test(B.vois)&&B.vois.length<110),'bloc '+(i+1)+' : partie, titre, durée, but ; à vérifier seulement dans Outlook');
   assert.ok(Array.isArray(B.coince)&&B.coince.length>=2,'bloc '+(i+1)+' : « Ça coince ? »');assert.ok(B.q&&B.q.serveur===true,'bloc '+(i+1)+' : preuve corrigée par le serveur');});
  pareil(BLOCS.map(B=>B.titre),['Réparer un mail raté','Choisir le destinataire','Donner un objet','Saluer','Rédiger la demande','Terminer et signer','Relire le mail complet','Répondre au message reçu','Ouvrir et lire dans Outlook','Rédiger dans le corps du message','Envoyer et retrouver son mail','Répondre à son camarade'],'les 12 étapes gardent leur place : les progressions enregistrées restent valables');
  for(let i=0;i<7;i++)assert.ok(BLOCS[i].q.type==='redaction'&&BLOCS[i].q.commun&&BLOCS[i].q.zone===false,'bloc '+(i+1)+' : un champ du mail, dans l’état partagé');
@@ -147,6 +148,13 @@ for(const [i,bons] of Object.entries(variantes)){const l=proofs.blocs[i];assert.
     'le moteur : arrive() à l’affichage d’un bloc, diplome() sur l’écran de fin, et un serveur pas à jour ne casse rien');
   assert.ok(M1.RATE.length === 6 && M1.RATE.filter(l => l[2]).length === 4 && M1.RATE.every(l => l[3]) && typeof BLOCS[0].arrive === 'function',
     'bloc 1 : six lignes, quatre à réparer, un rôle expliqué pour chacune');
+  { // Bloc 6 : la classe de la séance fait foi, même si elle ne ressemble pas à « 1B » (classe d'essai, 3e).
+    const sig = (signature, classe) => M1.verifie('signature', { nom: 'Lina Dupont', signature }, classe);
+    assert.ok(sig('Lina Dupont, Test', 'Test') === '' && sig('Lina Dupont, 3F', '3F') === '' && sig('Lina Dupont, 1C', '1C') === '', 'bloc 6 : signature acceptée avec la classe de la séance, quelle qu’elle soit');
+    assert.ok(sig('Lina Dupont', 'Test') !== '' && sig('Lina Dupont, 1B', 'Test') !== '', 'bloc 6 : sans la classe de la séance, la signature est refusée');
+    assert.ok(sig('Lina Dupont, 3F', '') === '' && /exemple : 1B/.test(sig('Lina Dupont', '')), 'bloc 6 : hors séance, la classe est lue dans la signature (1re à 7e)');
+  }
+  assert.ok(/let trouve = 0, clics = total;/.test(s) && /Un clic perdu\./.test(s) && /quatre clics/.test(BLOCS[0].avant), 'bloc 1 : autant de clics que de lignes à réparer — cliquer partout ne répare pas le mail');
   assert.ok(/class="email mail-rate"/.test(BLOCS[0].avant) && /Bonjour Camille,/.test(BLOCS[0].avant) && !/<details>/.test(BLOCS[0].avant.split('<h3>')[0]),
     'bloc 1 : sans script, le mail réparé est lisible ; plus de repères à déplier un par un');
   assert.ok(/data-rappel="corrNom"/.test(BLOCS[9].avant) && /data-rappel="corrAdresse"/.test(BLOCS[9].avant) && /Demande à ton professeur/.test(BLOCS[9].avant) && typeof BLOCS[9].arrive === 'function',

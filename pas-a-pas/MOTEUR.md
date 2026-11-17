@@ -41,7 +41,8 @@ est aussi servie par Apps Script, où une adresse relative ne mène nulle part.
   essai:{ q:'…', choix:[['libellé','retour'],…], apres:'<p>…</p>', suite:'👉 À toi' },   // facultatif : À LA PLACE des cases, une question d'essai sur `avant` (avec « Je ne sais pas »), puis l'analyse ; rien n'est noté
   gestes:['Une action par ligne, à l’impératif, avec le <b>chemin de clics</b>.', '…'],  // une case par geste, au moins un mot-clé en <b>
           // un geste peut porter son « ne fais pas » : {geste:'…', attention:'⚠️ …'} (encadré sous la case, jamais dans son texte)
-  vois:'Ce qui est à l’écran quand c’est fait.',   // encadré « ✅ À vérifier »
+  vois:'Ce qui est à l’écran quand c’est fait.',   // encadré « ✅ À vérifier ». À omettre quand la page contrôle elle-même
+                                                   // le travail (rédaction avec bouton « Vérifier ») : il ferait double emploi
   stop:true,                   // facultatif : 🛑 ne continue pas avant d'avoir vérifié
   extra:'<aside class="repere">…</aside>',          // facultatif : HTML sous les cases
   coince:['Blocage prévisible et sa solution.', '…'],  // le « Ça coince ? » du bloc

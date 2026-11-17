@@ -501,7 +501,8 @@ function affiche(){
        (« Je ne sais pas » compris), puis lit l'analyse. Rien n'est noté ni envoyé : la preuve vient après. */
     if(B.essai) z.append(essaiHtml(B.essai, ()=>{ essaiFait = true; if(apresEssai) apresEssai(); }));
     else { z.append(el("div","faire",B.fais || gestesHtml(B.gestes))); entrainements(z, B); }
-    const v = el("aside","repere verification"); v.append(txt("h3",null,"✅ À vérifier"), el("p",null,B.vois)); z.append(v);
+    // Facultatif : quand la page contrôle elle-même le travail (bouton « Vérifier »), l'encadré ferait double emploi.
+    if(B.vois){ const v = el("aside","repere verification"); v.append(txt("h3",null,"✅ À vérifier"), el("p",null,B.vois)); z.append(v); }
   } else {
     const dl = el("dl","lignes");
     [["🎯 Je veux","veux",B.veux],["👉 Je fais","fais",B.fais],["👀 Je vois","vois",B.vois]].forEach(([t,c,h])=>{

@@ -14,7 +14,9 @@ assert.equal(F.COURS,'messagerie-3');
 assert.equal(F.BLOCS.length,proofs.blocs.length,'un bloc par liste de preuves');
 F.BLOCS.forEach((B,i)=>{
   assert.ok(B.q&&B.q.serveur,'bloc '+(i+1)+' corrigé par le serveur');
-  for(const k of ['partie','titre','min','veux','vois'])assert.ok(B[k],k+' '+(i+1));
+  for(const k of ['partie','titre','min','veux'])assert.ok(B[k],k+' '+(i+1));
+  // « À vérifier » : pas après une question d'essai (la page y répond elle-même) ; ailleurs, une phrase qui dit où regarder.
+  assert.ok(B.essai ? !B.vois : B.vois && B.vois.length<130 && !/^Je sais|^Je peux/.test(B.vois),'à vérifier '+(i+1));
   assert.ok(B.essai?(B.avant&&B.essai.q&&B.essai.choix.length>=2):(B.gestes&&B.gestes.length>=2),'essai sur un exemple, ou des cases '+(i+1));
   assert.ok(B.coince&&B.coince.length>=1,'Ça coince ? '+(i+1));
   // Des blocs courts (Vincent, 12/11/2026) : plutôt un bloc de plus qu'une page chargée de cases.

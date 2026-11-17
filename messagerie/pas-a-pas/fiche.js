@@ -17,7 +17,7 @@ const M1 = (() => {
   const DEST = 'camille.martin@example.org';
   const propre = s => String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/[’]/g,"'").replace(/\s+/g,' ').trim();
   const html = s => String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const CLASSE = /(?:^|[\s,:])([12]\s*[a-z](?:\d)?)(?=$|[\s,.;])/i;
+  const CLASSE = /(?:^|[\s,:])([1-7]\s*[a-z](?:\d)?)(?=$|[\s,.;])/i;
   /* La classe : celle de la séance (serveur), sinon celle écrite dans la signature. */
   const classeDe = (d, classe) => String(classe||'').trim() || (CLASSE.exec(String(d.signature||'').trim())||[])[1] || '';
   /* La salutation « Bonjour Camille, » : un mot du modèle, une majuscule, le prénom avec sa majuscule, une virgule.
@@ -78,10 +78,12 @@ const M1 = (() => {
     if(k==='signature'){
       const cl = classeDe(d, classe);
       if(!d.nom.trim() || d.nom.trim().split(/\s+/).length<2) return 'Renseigne ton prénom et ton nom au-dessus de la signature.';
-      if(!/^[12]\s*[a-z](?:\d)?$/i.test(cl)) return 'Ajoute ta classe dans ta signature, après ton prénom et ton nom.';
+      // La classe de la séance fait foi, quel que soit son nom (« 3F », « Test ») ; sans elle, celle lue dans la signature.
+      if(!cl) return 'Ajoute ta classe dans ta signature, après ton prénom et ton nom'+(String(classe||'').trim() ? '' : ' (exemple : 1B)')+'.';
       if(/\[|\]|\b(prenom|classe|signature)\b/.test(v)) return 'Écris tes informations dans la signature, sans conserver les indications du modèle.';
       const mots = propre(d.nom).split(/[^a-z0-9'-]+/).filter(Boolean), sig = v.split(/[^a-z0-9'-]+/).filter(Boolean);
-      return mots.every(m=>sig.includes(m)) && v.replace(/\s/g,'').includes(propre(cl).replace(/\s/g,'')) ? '' : 'La signature doit contenir ton prénom, ton nom et ta classe.';
+      if(!mots.every(m=>sig.includes(m))) return 'La signature doit contenir ton prénom, ton nom et ta classe.';
+      return v.replace(/\s/g,'').includes(propre(cl).replace(/\s/g,'')) ? '' : 'Dans ta signature, écris ta classe : '+cl+'.';
     }
     return '';
   }
@@ -107,23 +109,35 @@ const M1 = (() => {
   ];
   function mailRate(zone){
     const cible = zone && zone.querySelector('.mail-rate'); if(!cible) return;
-    const total = RATE.filter(l => l[2]).length, dit = noeud('p','rate-dit','Clique sur une ligne du mail.'), compte = noeud('p','rate-compte');
+    const total = RATE.filter(l => l[2]).length, dit = noeud('p','rate-dit'), compte = noeud('p','rate-compte');
     dit.setAttribute('role','status');
-    let trouve = 0;
-    const maj = () => { compte.textContent = trouve<total ? 'Lignes réparées : '+trouve+' sur '+total : '✔ Mail réparé ! À, Objet, puis un corps en quatre parties : salutation, message, formule de fin, signature.'; cible.classList.toggle('repare', trouve>=total); };
+    const encore = noeud('button','btn vide rate-encore','↻ Recommencer'); encore.type = 'button';
+    encore.addEventListener('click', () => mailRate(zone));
+    let trouve = 0, clics = total;   // autant de clics que de lignes à réparer : cliquer partout ne marche pas
+    const fini = () => trouve>=total, perdu = () => !fini() && clics<=0;
+    const maj = () => {
+      compte.textContent = fini() ? '✔ Mail réparé, sans un clic de trop ! À, Objet, puis un corps en quatre parties : salutation, message, formule de fin, signature. Clique sur une ligne pour relire à quoi elle sert.'
+        : perdu() ? 'Plus de clic : '+trouve+' ligne'+(trouve>1 ? 's' : '')+' réparée'+(trouve>1 ? 's' : '')+' sur '+total+'. Relis chaque ligne avant de cliquer, puis recommence.'
+        : 'Lignes réparées : '+trouve+' sur '+total+' · Clics restants : '+clics;
+      cible.classList.toggle('repare', fini()); cible.classList.toggle('perdu', perdu()); encore.hidden = !perdu();
+    };
     const lignes = RATE.map(([champ, mauvais, bon, role]) => {
       const b = noeud('button','rate-ligne'); b.type = 'button';
       const texte = noeud('span', null, mauvais);
       if(champ) b.append(noeud('b', null, champ+' : '));
       b.append(texte);
       b.addEventListener('click', () => {
-        if(bon && !b.classList.contains('reparee')){ texte.textContent = bon; b.classList.add('reparee'); trouve++; maj(); if(trouve>=total && typeof confettis==='function') confettis(); }
-        else if(!bon) b.classList.add('juste');
-        dit.textContent = role;
+        if(perdu()) return;
+        if(fini() || b.classList.contains('reparee') || b.classList.contains('juste')){ dit.textContent = role; return; }   // déjà vue, ou partie gagnée : on relit, sans rien dépenser
+        clics--;
+        if(bon){ texte.textContent = bon; b.classList.add('reparee'); trouve++; dit.textContent = role; if(fini() && typeof confettis==='function') confettis(); }
+        else { b.classList.add('juste'); dit.textContent = 'Un clic perdu. '+role; }
+        maj();
       });
       return b;
     });
-    cible.replaceChildren(...lignes, dit, compte); maj();
+    dit.textContent = 'Lis tout le mail, puis clique sur une ligne à réparer.';
+    cible.replaceChildren(...lignes, dit, compte, encore); maj();
   }
 
   /* Bloc 10 — le correspondant tiré au sort par le serveur (Code.gs, correspondant) : chaque élève présent écrit à
@@ -201,10 +215,9 @@ const BLOCS = [
  {partie:'A — Je comprends', titre:'Réparer un mail raté', min:3,
   veux:'Avant de toucher Outlook : reconnaître les parties d’un mail et les deux parties d’une adresse.',
   arrive:api=>M1.mailRate(api.zone),
-  avant:'<p><b>Lina a écrit ce mail trop vite.</b> Quatre lignes sont à réparer. Clique sur une ligne : si elle pose problème, elle se répare, et tu lis à quoi elle sert.</p><div class="email mail-rate"><div class="ligne-mail"><b>À</b><span>camille.martin@example.org</span></div><div class="ligne-mail"><b>Objet</b><span>Une question sur tes loisirs</span></div><div class="corps"><p>Bonjour Camille,\n\nQuel sport ou quel loisir pratiques-tu ?\n\nBonne journée,\nLina Dupont, 2B</p></div></div><p class="note">Le corps du mail réunit la salutation, le message, la formule de fin et la signature.</p>'
+  avant:'<p><b>Lina a écrit ce mail trop vite.</b> Quatre lignes sont à réparer, et tu as <b>quatre clics</b>, pas un de plus. Lis d’abord tout le mail. Un clic sur une ligne fautive la répare ; un clic sur une ligne juste est perdu.</p><div class="email mail-rate"><div class="ligne-mail"><b>À</b><span>camille.martin@example.org</span></div><div class="ligne-mail"><b>Objet</b><span>Une question sur tes loisirs</span></div><div class="corps"><p>Bonjour Camille,\n\nQuel sport ou quel loisir pratiques-tu ?\n\nBonne journée,\nLina Dupont, 2B</p></div></div><p class="note">Le corps du mail réunit la salutation, le message, la formule de fin et la signature.</p>'
    +'<h3>Comprendre une adresse email</h3><div class="email"><div class="ligne-mail"><b>camille.martin</b><b>@</b><b>example.org</b></div></div><ul><li><b>Partie locale :</b> avant @, elle identifie une boîte dans le domaine. Ce peut être une personne ou un service, comme secretariat.</li><li><b>@, l’arobase :</b> sépare les deux parties ; on peut le lire « chez ».</li><li><b>Domaine :</b> après @, il indique le domaine auquel appartient la boîte. Il n’est pas nécessairement le nom du serveur technique.</li></ul><p>Dans ton adresse scolaire, le domaine est <b>arcampin.be</b>. Recopie l’adresse fournie exactement, sans ajouter d’espace. Une adresse bien écrite ne prouve pas que la boîte existe ni que son propriétaire est fiable.</p><p class="note">example.org est utilisé ici pour les personnages fictifs. On ne lui envoie aucun message réel.</p>',
   fais:'<p>Dans <b>camille.martin@example.org</b>, repère les deux parties de l’adresse et écris-les dans les deux cases.</p>',
-  vois:'Les deux cases sont remplies : ce qui précède @ dans la première, ce qui suit @ dans la seconde.',
   coince:['La partie locale, c’est tout ce qui est écrit AVANT le signe @. Le domaine, c’est tout ce qui est écrit APRÈS.','N’écris pas le signe @ dans les cases : il sépare les deux parties, il n’appartient à aucune.','Pas d’espace et pas de majuscule : recopie lettre par lettre.'],
   q:champMail('Les deux parties de l’adresse',
     [{cle:'locale', nom:'Repère la partie locale', aide:'Dans camille.martin@example.org, écris seulement ce qui précède @.', max:120},
@@ -215,7 +228,6 @@ const BLOCS = [
   veux:'Dire à qui j’écris : l’adresse complète de Camille, dans le champ À.',
   avant:MISSION,
   fais:'<p><b>À qui écris-tu ?</b> Écris l’adresse complète de Camille dans le champ <b>À</b>.</p>',
-  vois:'Dans « Mon mail se construit », la ligne À montre l’adresse de Camille, lettre pour lettre.',
   extra:'<p class="note">Les adresses qui posent problème sont travaillées ensemble, avec le professeur.</p>',
   coince:['L’adresse est dans l’encadré « Ta mission d’entraînement » : recopie-la lettre par lettre.','Vérifie : un point entre camille et martin, un seul @, example.org à la fin, aucun espace.'],
   q:champMail('Mon mail : le champ À', [{cle:'a', nom:'À — adresse du destinataire', aide:'Recopie l’adresse de la mission. Le message viendra dans le corps du mail.', max:120}],
@@ -225,7 +237,6 @@ const BLOCS = [
   veux:'Donner un titre à mon mail : l’objet annonce le sujet, en quelques mots.',
   avant:MISSION,
   fais:'<p>Donne un <b>titre</b> à ton email. Le texte de la demande viendra après.</p>',
-  vois:'Dans « Mon mail se construit », la ligne Objet montre un titre court qui parle des loisirs.',
   coince:['Un objet, c’est quelques mots, comme le titre d’un livre : pas de « Bonjour », pas de question entière.','Ton objet doit contenir le sujet du mail : le sport, les loisirs, une activité.'],
   q:champMail('Mon mail : l’objet', [{cle:'objet', nom:'Objet', aide:'Le titre doit parler des loisirs. Tu peux trouver ta propre formulation.', max:120}],
     ['objet'], d=>d.objet, 'Ton objet annonce les loisirs sans contenir tout le message.')},
@@ -234,7 +245,6 @@ const BLOCS = [
   veux:'Commencer le corps du message en saluant Camille.',
   avant:MISSION,
   fais:'<p>Commence le corps du message en <b>saluant Camille</b>. Choisis une seule formulation.</p>',
-  vois:'Dans « Mon mail se construit », le corps du message commence par ta salutation, sur sa propre ligne.',
   coince:['Le modèle : « Bonjour Camille, » — une majuscule à Bonjour, une majuscule à Camille, puis une virgule.','Écris seulement la salutation ici : la demande vient à l’étape suivante.'],
   q:champMail('Mon mail : la salutation', [{cle:'salutation', nom:'Salutation', aide:'Commence ton message en saluant Camille.', max:120}],
     ['salutation'], d=>d.salutation, 'Une seule salutation pour commencer le message.')},
@@ -243,7 +253,6 @@ const BLOCS = [
   veux:'Écrire ma demande en une ou deux phrases : Camille doit comprendre ce que je lui demande, et pouvoir me répondre.',
   avant:MISSION,
   fais:'<p>Rédige ta demande en une ou deux phrases.</p><ul><li>Demande quel <b>sport</b> ou quel <b>loisir</b> Camille pratique.</li><li>Tu peux lui demander ce qui lui plaît dans cette activité.</li><li>Relis : une <b>majuscule</b> au début et une <b>ponctuation</b> à la fin.</li></ul>',
-  vois:'Dans « Mon mail se construit », ta demande est sous la salutation : une ou deux phrases, de la majuscule au point d’interrogation.',
   extra:'<p class="note">Le contrôle repère les éléments de la mission. Il ne remplace pas la lecture du professeur : des mots-clés présents ne prouvent pas, à eux seuls, qu’une phrase est claire.</p>',
   coince:['Un exemple de demande : « Quel sport ou quel loisir pratiques-tu ? » Écris la tienne, avec tes mots.','Ta phrase doit parler du sport ou des loisirs, et poser une question à Camille.','La salutation et la signature ne vont pas ici : elles ont leur propre étape.'],
   q:champMail('Mon mail : la demande', [{cle:'message', nom:'Ton message', aide:'Écris ta propre phrase. La salutation et la signature sont préparées aux autres étapes.', lignes:4, max:700}],
@@ -252,7 +261,6 @@ const BLOCS = [
  {partie:'B — J’écris mon mail d’entraînement', titre:'Terminer et signer', min:3,
   veux:'Terminer poliment, puis signer : Camille doit savoir qui lui écrit.',
   fais:'<p>Termine ton message par une <b>formule de fin</b>, puis <b>signe</b> avec tes informations d’élève : ton prénom, ton nom et ta classe.</p><p class="note">Ta classe : <b><span data-rappel="classe">celle de ton horaire, par exemple 2B</span></b>.</p>',
-  vois:'Dans « Mon mail se construit », le corps se termine par ta formule de fin, puis par ta signature : prénom, nom, classe.',
   coince:['Une formule de fin : « Bonne journée, » ou « À bientôt, ».','La signature reprend exactement le prénom et le nom écrits dans la case du milieu, puis ta classe : « Lina Dupont, 2B ».','Écris ta classe avec son chiffre et sa lettre, sans rien entre les deux : 2B.'],
   q:champMail('Mon mail : la fin et la signature',
     [{cle:'fin', nom:'Formule de fin', aide:'Exemples : Bonne journée, ou À bientôt,', max:120},
@@ -264,7 +272,6 @@ const BLOCS = [
   veux:'Relire mon mail en entier avant la suite : le destinataire, le titre et chacune des parties du corps.',
   avant:'<p>Voici ton mail complet, dans « Mon mail se construit ». Vérifie chaque point :</p><ul class="controle"><li>Le destinataire est bien Camille.</li><li>L’objet annonce le sujet des loisirs.</li><li>Je la salue une seule fois.</li><li>Je lui demande son sport ou son loisir.</li><li>Je termine et je signe.</li></ul>',
   fais:'<p>Un champ est <b>vide</b> ou à <b>corriger</b> ? Change-le dans les cases ci-dessous, puis vérifie.</p>',
-  vois:'Mon mail d’entraînement est complet : À, Objet, et un corps en quatre parties. Aucun email n’est envoyé.',
   coince:['Un champ est vide (tu reprends sur un autre poste) : réécris-le dans sa case, ici même.','La liste « Pas encore » nomme chaque champ à corriger : corrige-les tous, puis vérifie à nouveau.'],
   q:champMail('Mon mail complet',
     [{cle:'a', nom:'À', max:120},{cle:'objet', nom:'Objet', max:120},{cle:'salutation', nom:'Salutation', max:120},
@@ -279,7 +286,6 @@ const BLOCS = [
   veux:'Camille m’a répondu, et elle me pose une question : je lui réponds, dans la même conversation.',
   avant:'<p>Dans cette simulation, Camille a reçu ta question et t’a répondu. <b>Clique sur l’enveloppe</b> pour ouvrir son message, puis lis-le.</p><details class="enveloppe"><summary><span class="enveloppe-dessin" aria-hidden="true">📬</span> Un nouveau message de Camille — clique pour l’ouvrir</summary><div class="email"><div class="ligne-mail"><b>De</b><span>Camille Martin &lt;camille.martin@example.org&gt;</span></div><div class="ligne-mail"><b>Objet</b><span>RE : <span data-rappel="objet">ta question sur les loisirs</span></span></div><div class="corps"><p>Bonjour<span data-rappel="prenom"></span>,\n\nJe pratique la boxe thaï. Et toi, quel sport ou quel loisir pratiques-tu ?\n\nBonne journée,\nCamille</p></div></div></details>',
   fais:'<p><b>Utilise Répondre :</b> le destinataire et l’objet de la conversation sont conservés. Écris seulement ta réponse au-dessus du message précédent.</p><p class="note"><b>Signature à reprendre :</b> <span data-rappel="signature">ton prénom, ton nom et ta classe, comme au bloc 6</span>.</p>',
-  vois:'Dans « Ma réponse se construit », l’objet commence par RE :, et les cinq points de la liste sont cochés ✓.',
   extra:'<p class="note">Les contrôles vérifient des éléments de forme. Le professeur vérifie aussi que la réponse a du sens et répond bien à la question.</p>',
   fete:()=>M1.enveloppe({vole:false, emoji:'🏁', titre:'Première partie réussie !', texte:'Tu sais écrire un mail et y répondre. La suite se passe dans Outlook, pour de vrai.', duree:4500}),
   coince:['Le message de Camille est dans l’enveloppe 📬, au-dessus : clique dessus pour l’ouvrir.','La liste sous ta réponse se coche pendant que tu écris : un point reste ○ ? C’est lui qu’il faut ajouter ou corriger.','Dans l’ordre : « Bonjour Camille, », une phrase complète sur ton sport ou ton loisir, « Bonne journée, », puis ton prénom, ton nom et ta classe.','Tu peux inventer un loisir si tu préfères.'],
@@ -299,7 +305,7 @@ const BLOCS = [
    {geste:'Clique sur le message pour l’ouvrir, puis <b>lis-le jusqu’au bout</b>.', attention:'⚠️ Ici, tu lis seulement. Tu ne réponds pas au professeur et tu n’écris aucun message : cela vient à l’étape 10.'},
    'Repère son nom, son adresse, l’objet et <b>la question qu’il te pose</b>.',
    '<b>Recopie cette question</b> dans la case ci-dessous : l’étape suivante te la rappellera.'],
-  vois:'Le message de ton professeur est ouvert dans Outlook, et sa question est recopiée dans la case, avec son point d’interrogation.',
+  vois:'Dans Outlook, le message de ton professeur est ouvert. Sa question est recopiée dans la case ci-dessus.',
   extra:'<p><b>Repères :</b> les messages reçus sont dans Boîte de réception ; les messages commencés restent dans Brouillons ; les envois sont dans Éléments envoyés.</p>',
   coince:['Outlook demande un compte : c’est ton adresse scolaire, celle qui finit par @arcampin.be.','Le message n’est pas dans la liste : regarde l’onglet Autres, juste au-dessus de la liste, ou tape le nom de ton professeur dans Rechercher.','La question du professeur est la phrase qui finit par un point d’interrogation.'],
   q:{serveur:true, type:'mixte', colle:true,
@@ -324,7 +330,7 @@ const BLOCS = [
    'Pose-lui <b>la question que ton professeur t’a posée</b> (étape 9) : <span class="rappel-question" data-rappel="questionProf">rouvre son message dans Outlook, Boîte de réception, pour la relire</span>. Passe à la ligne.',
    {geste:'Ajoute une <b>formule de fin</b>, puis ton prénom, ton nom et ta classe.', attention:'⚠️ Attention : n’envoie pas encore ! Tu relis d’abord, à l’étape suivante.'}],
   demos:{'6':['nouveau']},
-  vois:'Dans Outlook, ton message est prêt et pas encore envoyé : ton camarade dans À, ton professeur dans Cc, un objet, et un corps en quatre parties.',
+  vois:'Dans Outlook, ton message est écrit, et pas encore envoyé.',
   extra:COTE(false)+'<details><summary>Voir les champs dans Outlook</summary><img loading="lazy" src="https://root75.github.io/campin-public/messagerie/pas-a-pas/capture.webp?v=20261110" alt="Vue adaptée d’Outlook : À, Cc, Objet et corps du message."><p>Vue adaptée à partir de la capture fournie.</p></details>',
   coince:['Je ne vois pas la ligne Cc : elle est juste sous la ligne À. Sinon, clique sur « Cc », à droite de la ligne À.','Outlook ne propose pas mon camarade : vérifie son adresse avec lui, lettre par lettre ; elle finit par @arcampin.be.','Je ne sais plus la question du professeur : rouvre son message dans Boîte de réception.'],
   q:{serveur:true}},
@@ -337,7 +343,7 @@ const BLOCS = [
    'Clique sur <b>Envoyer</b>.',
    'Clique sur <b>Éléments envoyés</b>, à gauche, et ouvre ton mail : ton professeur doit apparaître dans la ligne Cc. S’il est encore dans <b>Brouillons</b>, il n’est pas parti.',
    'Ton camarade te répond à l’étape 12. Pas de mail reçu chez lui ? Vérifiez ensemble <b>l’adresse dans la ligne À</b>.'],
-  vois:'Mon mail est dans Éléments envoyés, avec mon professeur dans la ligne Cc.',
+  vois:'Dans Outlook, ton message est dans Éléments envoyés.',
   coince:['Mon mail est dans Brouillons : il n’est pas parti. Ouvre-le, puis clique sur Envoyer.','Mon camarade n’a rien reçu : comparez l’adresse de la ligne À avec son adresse scolaire, lettre par lettre.','J’ai oublié mon professeur en Cc : écris un nouveau message, avec lui en Cc cette fois.'],
   q:{serveur:true}},
 
@@ -350,7 +356,7 @@ const BLOCS = [
    'Dans le corps, salue ton camarade puis <b>réponds à sa question</b> par une phrase complète.',
    'Ajoute une <b>formule de fin</b> et ta <b>signature</b>.',
    'Relis, envoie, et vérifie dans <b>Éléments envoyés</b>. Vérifie aussi que tu as reçu sa réponse à ton premier mail.'],
-  vois:'Ma réponse est dans Éléments envoyés : objet « RE: », mon camarade dans À, mon professeur dans Cc.',
+  vois:'Dans Outlook, ta réponse est dans Éléments envoyés.',
   extra:'<p class="note">Cette page ne voit pas Outlook. La vraie preuve, c’est ton professeur en Cc : il reçoit ton message et ta réponse.</p>',
   coince:['Je n’ai pas encore reçu le mail de mon camarade : il est peut-être à l’étape 10 ou 11. En attendant, relis ton message dans Éléments envoyés.','« Répondre à tous » est à côté de « Répondre » : une flèche double ↩↩, sous le message ou en haut à droite.','Le mail n’arrive toujours pas : vérifiez ensemble, dans ses Éléments envoyés, l’adresse de la ligne À.'],
   q:{serveur:true}}
