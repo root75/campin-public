@@ -579,8 +579,8 @@ const GRILLE = {
     + '<p>Coté en formatif : mes quatre lettres et ma couleur me disent quoi travailler avant le Bilan. Le suivi ne calcule aucune cote.</p>',
   niveaux: { A: 'dépasse', B: 'atteint', C: 'proche', D: 'loin' },
   criteres: GRILLE_CRITERES,
-  legende: '<ul><li>Bleu — attendu dépassé : A au critère 2 ou 3, et au moins B partout ailleurs.</li><li>Vert — attendu atteint : B aux critères 2 et 3, et au moins C aux critères 1 et 4.</li>'
-    + '<li>Jaune — presque atteint : un des critères ★ reste à C.</li><li>Orange — pas encore atteint : les critères ★ ne sont pas atteints.</li></ul>'
+  legende: '<ul class="couleurs"><li><span class="couleur bleu">Bleu</span> attendu dépassé : A au critère 2 ou 3, et au moins B partout ailleurs.</li><li><span class="couleur vert">Vert</span> attendu atteint : B aux critères 2 et 3, et au moins C aux critères 1 et 4.</li>'
+    + '<li><span class="couleur jaune">Jaune</span> presque atteint : un des critères ★ reste à C.</li><li><span class="couleur orange">Orange</span> pas encore atteint : les critères ★ ne sont pas atteints.</li></ul>'
 };
 const FIN = {
   titre: 'Ma grille d’évaluation',

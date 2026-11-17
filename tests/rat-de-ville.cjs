@@ -52,3 +52,5 @@ const moteur=fs.readFileSync(__dirname+'/../pas-a-pas/blocs.js','utf8'),gm=moteu
 assert.ok(gm.includes('rond.type = "radio"')&&gm.includes('el("fieldset")'),'grille « Moi » : une carte par critère, un bouton radio par niveau');
 assert.ok(!/el\("(table|select)"\)|overflow/.test(gm),'grille « Moi » : ni tableau, ni liste déroulante, ni défilement de côté');
 assert.ok(!/colonne/.test(FIN.texte)&&!actions.some(([,t])=>/colonne « Moi »/.test(t)),'la fiche ne parle plus de colonnes');
+// Légende : chaque couleur du bulletin est une pastille de sa couleur (Vincent, 17/11/2026).
+['bleu','vert','jaune','orange'].forEach(c=>{assert.ok(GRILLE.legende.includes('class="couleur '+c+'"'),'légende : pastille '+c);assert.ok(gm.includes('.grille-moi .'+c+'{background:'),'moteur : couleur '+c);});

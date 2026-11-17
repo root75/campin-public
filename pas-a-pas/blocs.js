@@ -1105,7 +1105,11 @@ function grilleMoi(){
       +".grille-moi .niveau:hover{border-color:var(--encre-bouton)}.grille-moi .niveau:has(input:checked){border-color:var(--encre-bouton);background:var(--fromage-pale)}"
       +".grille-moi .niveau input{margin:.35em 0 0;width:1.1em;height:1.1em;accent-color:var(--encre-bouton)}"
       +".grille-moi .lettre{font-weight:700;text-align:center;border-radius:6px;background:var(--papier);border:1px solid var(--trait)}"
-      +".grille-moi .niveau:has(input:checked) .lettre{background:var(--encre-bouton);border-color:var(--encre-bouton);color:var(--carte)}";
+      +".grille-moi .niveau:has(input:checked) .lettre{background:var(--encre-bouton);border-color:var(--encre-bouton);color:var(--carte)}"
+      // Légende des couleurs du bulletin : <ul class="couleurs"> et <span class="couleur bleu|vert|jaune|orange">. Texte foncé ou blanc selon le fond, pour rester lisible.
+      +".grille-moi .couleurs{list-style:none;margin:0;padding:0;display:grid;gap:8px}.grille-moi .couleurs li{display:grid;grid-template-columns:5.5rem 1fr;gap:10px;align-items:start}"
+      +".grille-moi .couleur{font-weight:700;text-align:center;border-radius:6px;padding:1px 8px}"
+      +".grille-moi .bleu{background:#1f6fb5;color:#fff}.grille-moi .vert{background:#1f7a4d;color:#fff}.grille-moi .jaune{background:#f2c230;color:#1f2a33}.grille-moi .orange{background:#e8862a;color:#1f2a33}";
     document.head.append(st);
   }
   const G = GRILLE, lettres = Object.keys(G.niveaux), d = el("div","grille-moi");
