@@ -138,9 +138,12 @@ est libre (`va()` dans `fiche.js`). Les boutons « Étape précédente / suivant
 
 Au plus 3 sonneries par heure glissante. Un clic sur 🔔 ouvre d'abord une seule question, « As-tu
 demandé à ton voisin ? », avec un lien « Ouvrir « Ça coince ? » », le nombre de sonneries restantes
-et deux boutons, « 🔔 Oui, je sonne » et « Pas encore » : deux clics pour sonner. (Jusqu'au
-14 novembre 2026, trois cases à cocher précédaient la sonnerie ; beaucoup d'élèves ne sonnaient
-plus.) Au maximum, la cloche passe en pointillés et le panneau donne
+un bouton par motif et « Pas encore » : deux clics pour sonner. Les motifs (17 novembre 2026) :
+« 🔔 Je ne comprends pas la consigne », « 🔔 Ça ne marche pas à l’écran » et, parce que
+`fiche.js` porte `const CLOCHE_ACCORD = true`, « 🔔 J’ai fini, je demande l’accord » (accord avant la
+remise, étape 9). Le motif se lit au tableau du professeur ; un accord n'y compte pas comme un blocage.
+(Jusqu'au 14 novembre 2026, trois cases à cocher précédaient la sonnerie ; beaucoup d'élèves ne
+sonnaient plus.) Au maximum, la cloche passe en pointillés et le panneau donne
 l'heure de la prochaine sonnerie possible. Le compte vient du serveur (`cloches`, `clocheLibre`) ;
 avec un serveur antérieur ou en aperçu, il est tenu dans la page ouverte. Se débloquer ne compte
 pas et ne demande rien. Détails et déploiement : `campin-pedagogique/outils/pas-a-pas/LIVRAISON-RAT.md`.

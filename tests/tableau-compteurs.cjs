@@ -19,6 +19,8 @@ const coince=vm.runInContext('estCoince',c),blocDe=vm.runInContext('blocDe',c);
 assert.equal(vm.runInContext('SEUIL_COMMUN',c),4);
 assert.equal(coince(e({aide:{bloc:6}}),d),true);assert.equal(coince(e({erreursIci:3}),d),true);assert.equal(coince(e({depuisBloc:85*m}),d),true);
 assert.equal(coince(e({}),d),false);assert.equal(coince(e({aide:{bloc:6},fini:true}),d),false,'fini : jamais coincé');
+assert.equal(coince(e({aide:{bloc:6,motif:'consigne'}}),d),true,'motif consigne : coincé');assert.equal(coince(e({aide:{bloc:9,motif:'accord'}}),d),false,'demande d’accord avant la remise : pas coincé');
+assert.equal(coince(e({aide:{bloc:9,motif:'accord'},erreursIci:3}),d),true,'accord demandé mais bute encore : coincé');assert.equal(F.aide.garde(e({aide:{bloc:9,motif:'accord'}})),true,'un accord attend quand même le professeur');
 assert.equal(blocDe(e({atteint:4})),5,'bloc en cours = atteint + 1');assert.equal(blocDe(e({atteint:4,aide:{bloc:6}})),6,'la cloche dit son bloc');
 console.log('Compteurs et bandeau : coincés sans sonner, inactifs, butent, bloc de chaque élève vérifiés.');
 { // Mesure affichée à côté de « Mis à jour à … »
