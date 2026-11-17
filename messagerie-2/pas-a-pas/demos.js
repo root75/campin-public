@@ -14,6 +14,16 @@ const Demo = (() => {
       { ...LU, survol: 1, menu: 1, hi: 'Modifier dans le navigateur', cible: 'item-Modifier dans le navigateur', legende: 'Un menu s’ouvre : je clique sur « Modifier dans le navigateur ».' },
       { vue: 'ch-onglets', onglets: [['✉️ Courrier - Outlook'], ['W ' + FICHE, 'onglet-word', 1]], titre: 'Ma fiche à compléter', bord: 'word', cible: 'onglet-word', ok: 1, legende: 'Un nouvel onglet s’ouvre : Word, avec ma fiche. Word enregistre tout seul.' }
     ] },
+    nuage: { titre: 'Voir où Word a rangé ma fiche', images: [
+      { vue: 'ch-onglets', onglets: [['✉️ Courrier - Outlook'], ['W ' + FICHE, 'onglet-word', 1]], titre: 'Ma fiche a completer', bord: 'word', nuage: 1, cible: 'nuage', legende: 'Dans l’onglet Word, tout en haut : je clique sur le petit nuage, juste à droite du titre.' },
+      { vue: 'ch-onglets', onglets: [['✉️ Courrier - Outlook'], ['W ' + FICHE, 'onglet-word', 1]], titre: 'Ma fiche a completer', bord: 'word', nuage: 2, cible: 'dossier', ok: 1, legende: 'Sous « Emplacement du fichier » : mon nom, puis le dossier. Je lis son nom sur mon écran.' }
+    ] },
+    retrouver: { titre: 'Retrouver ma fiche dans OneDrive', images: [
+      { ...ONEDRIVE, cible: 'fichier', legende: 'Le sélecteur s’ouvre sur « Récents ». Ma fiche est là : je la coche.' },
+      { ...ONEDRIVE, lieu: 'fichiers', cible: 'lieu-Fichiers', legende: 'Elle n’y est pas ? À gauche, je clique sur « Fichiers ».' },
+      { ...ONEDRIVE, lieu: 'fichiers', cible: 'dossier', legende: 'Je clique sur le dossier « Attachments ». Sur certains comptes, il s’appelle « Pièces jointes ».' },
+      { ...ONEDRIVE, lieu: 'dossier', coche: 1, cible: 'fichier', ok: 1, legende: 'Ma fiche est dedans : je la coche.' }
+    ] },
     joindre: { titre: 'Joindre un fichier depuis OneDrive', images: [
       { ...REPONSE, cible: 'onglet-message', legende: 'Dans ma réponse, je clique sur l’onglet « Message » du ruban, en haut.' },
       { ...REPONSE, cible: 'joindre', legende: 'Je clique sur le trombone « Joindre un fichier ».' },

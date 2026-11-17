@@ -43,14 +43,16 @@ const DemoLecteur = (() => {
       [prec, jouer, suiv].forEach(b => { b.type = 'button'; });
       prec.setAttribute('aria-label', 'Image précédente'); suiv.setAttribute('aria-label', 'Image suivante');
       const points = el('span', 'demo-points');
-      ctrl.append(prec, points, suiv, jouer); scene.append(curseur); box.append(scene, legende, ctrl);
+      // Une seule image : ni ◀ ▶, ni numéro, ni « Revoir » — il n'y a rien à parcourir (Vincent, 17/11/2026).
+      const seule = frames.length === 1;
+      ctrl.append(prec, points, suiv, jouer); scene.append(curseur); box.append(scene, legende); if (!seule) box.append(ctrl);
       let k = 0, minuteur = null;
       const calme = matchMedia('(prefers-reduced-motion: reduce)').matches;
       function montre(n) {
         k = (n + frames.length) % frames.length; const f = frames[k];
         scene.querySelectorAll('.md').forEach(x => x.remove());
         const e = o.ecran(f); scene.prepend(e);
-        legende.textContent = (k + 1) + '. ' + f.legende;
+        legende.textContent = (seule ? '' : (k + 1) + '. ') + f.legende;
         box.setAttribute('aria-label', 'Démonstration : ' + frames.map(x => x.legende).join(' '));
         points.replaceChildren(...frames.map((x, j) => {
           const b = el('button', j === k ? 'on' : '', String(j + 1)); b.type = 'button';
