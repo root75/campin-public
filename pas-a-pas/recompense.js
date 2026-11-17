@@ -5,6 +5,56 @@
    qui porte { recompense, occupe } quand 🎁 est ouvert (Code.gs,
    recompenseEleve_). Sans ces champs, le bandeau s'en va (case décochée).
      Recompense.montre(r)   r = réponse du serveur ; r.recompense = heure de fin (ms), r.occupe = adresse ?vue=occupe */
+/* Trésor de classe (17/11/2026) : étoiles COLLECTIVES. Chaque bloc réussi par un élève de la classe ajoute une
+   étoile ; jamais d'étoiles individuelles (elles récompensent la vitesse). Le nombre arrive avec moment()
+   (r.tresor, Code.gs ▸ tresorLu_) : toujours aucun appel au serveur ici. Une ligne sous « Connecté : … »,
+   absente tant que la classe n'a pas d'étoile ; elle ne s'efface pas sur une réponse vide (réseau, fin de séance).
+     Tresor.montre(r)   r = réponse du serveur ; r.tresor = nombre d'étoiles de la classe pour la séance */
+const Tresor = (() => {
+  const COFFRES = [10, 25, 50, 75, 100, 150, 200, 300, 400, 500];
+  const prochain = n => COFFRES.find(c => c > n) || (Math.floor(n / 100) + 1) * 100;
+  const ouvert = (avant, n) => COFFRES.filter(c => c > avant && c <= n).pop() || (n >= 600 && Math.floor(n / 100) > Math.floor(avant / 100) ? Math.floor(n / 100) * 100 : 0);
+  let zone = null, vu = 0, minuterie = 0;
+  function cree() {
+    const s = document.createElement('style');
+    s.textContent = `#tresor{display:flex;flex-wrap:wrap;align-items:center;gap:.25em .6em;margin:.4rem 0;padding:.45em .8em;border-radius:12px;background:var(--fromage-pale,#fbf0d4);border:2px solid var(--fromage,#e3a922);color:var(--encre,#1f2a33);font-size:1rem;line-height:1.35}
+#tresor b{font:800 1.25em/1 var(--display,Georgia,serif);white-space:nowrap}
+#tresor .tresor-plus{font-weight:700}
+#tresor.gagne b{animation:tresor-saut .7s ease-out}
+#tresor.coffre{background:var(--fromage,#e3a922);color:#1f2a33}
+@keyframes tresor-saut{0%{transform:scale(1)}40%{transform:scale(1.5) rotate(-6deg)}100%{transform:scale(1)}}
+@media (prefers-reduced-motion:reduce){#tresor.gagne b{animation:none}}
+body.en-sequence #tresor{display:none}
+@media print{#tresor{display:none}}`;
+    zone = document.createElement('p'); zone.id = 'tresor'; zone.setAttribute('role', 'status');
+    const qui = document.getElementById('qui');
+    if (qui) qui.after(zone); else document.body.prepend(zone);
+    document.head.append(s);
+  }
+  function montre(r) {
+    const n = Math.floor(Number(r && r.tresor)) || 0;
+    if (n <= 0 || n === vu) return;
+    if (!zone) cree();
+    const plus = vu && n > vu ? n - vu : 0, coffre = vu ? ouvert(vu, n) : 0;
+    vu = n;
+    const b = document.createElement('b'); b.textContent = '⭐ ' + n;
+    const t = document.createElement('span');
+    t.textContent = (n > 1 ? 'étoiles' : 'étoile') + ' dans le trésor de la classe';
+    const suite = document.createElement('span'); suite.className = 'tresor-plus';
+    suite.textContent = coffre ? '🎉 La classe a ouvert le coffre des ' + coffre + ' étoiles !'
+      : (plus ? '+' + plus + ' · ' : '') + 'prochain coffre à ' + prochain(n);
+    zone.replaceChildren(b, t, suite);
+    zone.classList.remove('gagne'); zone.classList.toggle('coffre', !!coffre);
+    if (plus) { void zone.offsetWidth; zone.classList.add('gagne'); }
+    clearTimeout(minuterie);
+    if (plus || coffre) minuterie = setTimeout(() => {   // la fête passe, le compte reste
+      zone.classList.remove('gagne', 'coffre'); suite.textContent = 'prochain coffre à ' + prochain(vu);
+    }, coffre ? 12000 : 4000);
+  }
+  return { montre, prochain, ouvert };
+})();
+window.Tresor = Tresor;
+
 const Recompense = (() => {
   let zone = null, minuterie = 0, deja = '';
   const heure = t => new Date(t).toLocaleTimeString('fr-BE', { hour: '2-digit', minute: '2-digit' });
@@ -25,6 +75,7 @@ const Recompense = (() => {
     document.body.append(zone); document.body.classList.add('avec-occupe');
   }
   function montre(r) {
+    Tresor.montre(r);                        // le trésor de classe arrive par la même réponse
     const jusqua = Number(r && r.recompense) || 0, url = r && typeof r.occupe === 'string' ? r.occupe : '';
     if (!jusqua || !/^https:\/\//.test(url)) return retire();
     const cle = jusqua + ' ' + url;

@@ -130,6 +130,14 @@ Deux façons de faire :
 Dans `preuves.json`, deux versions peuvent avoir le même énoncé : la fiche les distingue par leur numéro.
 Vérifier dans le test que la réponse d'une version ne valide pas les deux autres.
 
+
+## Le trésor de classe
+
+Chaque bloc réussi par un élève ajoute une étoile au compteur de sa classe (jamais d'étoiles individuelles). Rien à
+écrire dans une fiche : [`recompense.js`](recompense.js) (`Tresor`) affiche la ligne « ⭐ 24 étoiles dans le trésor de
+la classe » dès que `moment()` porte `tresor`. Le compte est fait par le serveur (`Code.gs` ▸ `tresorLu_`, dépôt
+campin-pedagogique, `outils/pas-a-pas/LISEZMOI.md`). Test : `tests/tresor.cjs`.
+
 ## L'état partagé entre les blocs — un texte construit pas à pas (la Messagerie 01)
 
 Quand ce que l'élève écrit dans un bloc sert aux suivants : un mail construit champ par champ, relu en entier,
