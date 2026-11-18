@@ -252,11 +252,19 @@ const BLOCS = [
     "sous": "<details><summary>Où est le saut de page ?</summary><p>Menu <b>Insertion</b> ▸ <b>Saut</b>, vers le bas du menu ▸ <b>Saut de page</b>.</p><img class=\"capture\" src=\"" + BASE + "capture-saut-de-page.png\" alt=\"Menu Insertion ▸ Saut ▸ Saut de page dans Docs\"></details>"
    },
    {
-    "geste": "<img class=\"ico\" src=\"" + ICONES + "puces.png\" alt=\"\">Trois choses que l’on trouve au festin du rat de ville, en <b>liste à puces</b> (Ctrl + Shift + 8).",
-    "sous": "<details><summary>Qu’écrire dans la liste à puces ?</summary><p>Je choisis trois choses présentes au festin dans la fable. Dans mon document Docs, j’écris une chose par ligne, je sélectionne ces trois lignes, puis je clique sur le bouton Liste à puces (Ctrl + Shift + 8).</p><blockquote>Exemple d’un élément possible : le tapis.</blockquote><p class=\"note\">Je trouve les autres éléments dans la fable. Trois éléments sont attendus au total.</p></details>"
+    "geste": "Sous le titre, écris <b>trois choses du repas</b> du rat de ville. Une chose par ligne : touche Enter après chacune.",
+    "sous": "<details><summary>Qu’est-ce que j’écris ?</summary><ul><li>Relis les strophes 1 et 2 de la fable : c’est le repas.</li><li>Cherche ce qu’il y a sur la table ou par terre.</li><li>Écris trois choses, en deux ou trois mots. Pas de phrase.</li><li>Exemple : <b>le tapis</b>.</li></ul><p class=\"note\">« Les reliefs d’ortolans », dans la fable, ce sont des restes de petits oiseaux.</p></details>"
+   },
+   {
+    "geste": "<b>Sélectionne</b> les trois lignes : clique avant la première, garde le bouton de la souris enfoncé, glisse jusqu’à la fin de la troisième.",
+    "sous": "<p class=\"note\">Les trois lignes deviennent bleues. Le titre, lui, reste blanc.</p>"
+   },
+   {
+    "geste": "<img class=\"ico\" src=\"" + ICONES + "puces.png\" alt=\"\">Clique sur le bouton <b>Liste à puces</b> (Ctrl + Shift + 8), dans la barre d’outils, à droite.",
+    "sous": "<p class=\"note\">Un rond noir apparaît devant chaque ligne. Une vraie liste à puces se fait avec le bouton, jamais avec un tiret tapé.</p>"
    }
   ],
-  "vois": "Dans Docs : « Mon bloc-notes », puis trois éléments du festin, chacun sur sa ligne, avec sa puce.<br><span class=\"note\">Une vraie liste à puces se fait avec le bouton, jamais avec un tiret tapé.</span>",
+  "vois": "Dans Docs : « Mon bloc-notes », puis trois choses du repas, chacune sur sa ligne, avec un rond noir devant.",
   "demos": {
    "1": [
     "etape8",
@@ -270,6 +278,19 @@ const BLOCS = [
     "etape8",
     [
      3
+    ]
+   ],
+   "3": [
+    "etape8",
+    [
+     4
+    ]
+   ],
+   "4": [
+    "etape8",
+    [
+     5,
+     6
     ]
    ]
   }

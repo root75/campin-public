@@ -60,7 +60,10 @@ const Demo = (() => {
       doc(base('centre gras capitales', 'centre', 'droite italique souligne'), { cible: 'L7', legende: 'Je clique à la fin de la fable, après l’auteur.' }),
       doc(base('centre gras capitales', 'centre', 'droite italique souligne'), { cible: 'item-Saut de page', menu: { sous: 'm-insertion', items: ['Image ▸', 'Tableau ▸', 'Saut ▸', 'Saut de page'], hi: 'Saut de page' }, legende: 'Insertion ▸ Saut ▸ Saut de page (Ctrl + Enter).' }),
       doc([L('Jean de La Fontaine', 'droite italique souligne'), L('', 'saut'), L('Mon bloc-notes', 'gras')], { cible: 'L2', ok: 1, legende: 'Une nouvelle page commence : j’écris « Mon bloc-notes » en haut.' }),
-      doc([L('Mon bloc-notes', 'gras'), L('le tapis', 'sel'), L('…', 'sel'), L('…', 'sel')], { cible: 'puces', legende: 'Je sélectionne mes 3 lignes ▸ Liste à puces (Ctrl + Shift + 8).' })
+      doc([L('Mon bloc-notes', 'gras'), L('le tapis'), L('…'), L('…')], { cible: 'L3', legende: 'Sous le titre : une chose par ligne, Enter après chacune.' }),
+      doc([L('Mon bloc-notes', 'gras'), L('le tapis', 'sel'), L('…', 'sel'), L('…', 'sel')], { cible: 'L1', legende: 'Je glisse la souris sur les 3 lignes : elles deviennent bleues.' }),
+      doc([L('Mon bloc-notes', 'gras'), L('le tapis', 'sel'), L('…', 'sel'), L('…', 'sel')], { cible: 'puces', legende: 'Bouton Liste à puces (Ctrl + Shift + 8).' }),
+      doc([L('Mon bloc-notes', 'gras'), L('le tapis', 'puce'), L('…', 'puce'), L('…', 'puce')], { cible: 'L1', ok: 1, legende: 'Un rond noir devant chaque ligne : c’est une liste à puces.' })
     ] },
     etape10: { titre: 'Mes gestes : la liste numérotée', images: [
       doc([L('Mon bloc-notes', 'gras'), L('le tapis', 'puce'), L('…', 'puce'), L('…', 'puce'), L('Mes gestes', 'gras'), L('', 'sel')], { cible: 'numeros', legende: 'Sous « Mes gestes », Enter ▸ Liste numérotée (Ctrl + Shift + 7).' }),
