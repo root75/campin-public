@@ -61,10 +61,10 @@ const BLOCS = [
   "titre": "Je recopie la fable",
   "min": 30,
   "bulle": "Bon début ! Regarde bien les animations.",
-  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>J’ouvre l’image de la fiche. Je repère le titre, les vers et l’auteur avant de recopier.</p></aside><p class=\"note\">Un vers = une ligne : touche Enter au bout de chaque vers. Au bout du 4e vers d’une strophe, j’appuie <b>deux fois</b> sur Enter : une ligne vide sépare les strophes.</p>" + A_MOI,
+  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>J’ouvre l’image de la fiche. Je repère le titre, les vers et l’auteur avant de recopier.</p></aside><p class=\"note\">Un vers = une ligne : touche Enter au bout de chaque vers. Après le titre et au bout du 4e vers de chaque strophe, j’appuie <b>deux fois</b> sur Enter : une ligne vide sépare le titre, chaque strophe et l’auteur.</p>" + A_MOI,
   "gestes": [
    {
-    "geste": "Tape le <b>titre</b>.",
+    "geste": "Tape le <b>titre</b>. Puis Enter <b>deux fois</b> : une ligne vide.",
     "sous": "<img class=\"extrait\" src=\"" + BASE + "fable/titre.png\" alt=\"Extrait de la fable à recopier\">"
    },
    {
@@ -92,7 +92,7 @@ const BLOCS = [
     "sous": "<img class=\"extrait\" src=\"" + BASE + "fable/strophe-6.png\" alt=\"Extrait de la fable à recopier\">"
    },
    {
-    "geste": "Recopie les <b>vers 25 à 28</b>.",
+    "geste": "Recopie les <b>vers 25 à 28</b>. Puis Enter <b>deux fois</b> : une ligne vide.",
     "sous": "<img class=\"extrait\" src=\"" + BASE + "fable/strophe-7.png\" alt=\"Extrait de la fable à recopier\">"
    },
    {
@@ -100,7 +100,7 @@ const BLOCS = [
     "sous": "<img class=\"extrait\" src=\"" + BASE + "fable/auteur.png\" alt=\"Extrait de la fable à recopier\">"
    }
   ],
-  "vois": "Je compare ma dernière ligne à l’image avant de passer au groupe suivant. Je dois retrouver 28 vers, en 7 strophes séparées par une ligne vide.<br><span class=\"note\">Les petits groupes de quatre vers m’aident à garder ma place.</span>",
+  "vois": "Je compare ma dernière ligne à l’image avant de passer au groupe suivant. Je dois retrouver le titre, 28 vers en 7 strophes, puis l’auteur, séparés par une ligne vide.<br><span class=\"note\">Les petits groupes de quatre vers m’aident à garder ma place.</span>",
   "extra": "<button class=\"btn vide\" type=\"button\" onclick=\"const t=document.getElementById('texte');t.open=true;t.scrollIntoView({behavior:'smooth'})\">Voir le texte à recopier</button>",
   "demos": {
    "1": [
@@ -131,7 +131,7 @@ const BLOCS = [
     "geste": "Mets une <b>majuscule</b> à la première lettre de chaque vers.",
     "sous": "<details><summary>Comment mettre à en majuscule (À) ?</summary><p>Je double-clique sur le à pour le sélectionner, seul. Puis Format ▸ Texte ▸ Minuscules/majuscules ▸ <b>MAJUSCULES</b>.</p><blockquote>à la porte de la salle → À la porte de la salle</blockquote><p class=\"note\">Deux vers commencent par à : le vers 4 et le vers 13. Pour les autres lettres, j’efface la minuscule et je tape la majuscule avec Shift.</p><img class=\"capture\" src=\"" + BASE + "capture-majuscules.png\" alt=\"Menu Format ▸ Texte ▸ Minuscules/majuscules ▸ MAJUSCULES dans Docs\"></details>"
    },
-   "Vérifie les <b>lignes vides</b> : une seule entre deux strophes, 7 strophes en tout. Il en manque une ? Clique à la fin du dernier vers de la strophe, puis Enter."
+   "Vérifie les <b>lignes vides</b> : une seule après le titre, entre deux strophes et avant l’auteur, 7 strophes en tout. Il en manque une ? Clique à la fin du dernier vers de la strophe, puis Enter."
   ],
   "vois": "Je compte sept groupes de quatre vers et je regarde la première lettre de chaque vers.<br><span class=\"note\">Les strophes sont maintenant plus faciles à repérer.</span>",
   "demos": {

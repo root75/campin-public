@@ -29,16 +29,16 @@ const Demo = (() => {
       doc([L('')], { nom: NOM, cible: 'nom', ok: 1, legende: 'Je tape la date à l’envers, le titre, mon prénom et mon nom.' })
     ] },
     etape2: { titre: 'Je recopie la fable', images: [
-      doc([L(TITRE.toLowerCase())], { cible: 'page', legende: 'Je tape le titre, puis Enter.' }),
-      doc([L(TITRE.toLowerCase()), L(FABLE[0])], { cible: 'page', legende: 'Un vers = une ligne.' }),
-      doc([L(TITRE.toLowerCase()), L(FABLE[0]), L(FABLE[1])], { cible: 'page', legende: 'Enter au bout de chaque vers.' }),
-      doc([L(TITRE.toLowerCase()), ...FABLE.map(v => L(v))], { cible: 'page', legende: 'Quatre vers : la strophe est finie.' }),
-      doc([L(TITRE.toLowerCase()), ...FABLE.map(v => L(v)), L(''), L(S2[0].toLowerCase())], { cible: 'L5', ok: 1, legende: 'Enter deux fois : une ligne vide, puis la strophe suivante.' })
+      doc([L(TITRE.toLowerCase())], { cible: 'page', legende: 'Je tape le titre, puis Enter deux fois : une ligne vide.' }),
+      doc([L(TITRE.toLowerCase()), L(''), L(FABLE[0])], { cible: 'page', legende: 'Un vers = une ligne.' }),
+      doc([L(TITRE.toLowerCase()), L(''), L(FABLE[0]), L(FABLE[1])], { cible: 'page', legende: 'Enter au bout de chaque vers.' }),
+      doc([L(TITRE.toLowerCase()), L(''), ...FABLE.map(v => L(v))], { cible: 'page', legende: 'Quatre vers : la strophe est finie.' }),
+      doc([L(TITRE.toLowerCase()), L(''), ...FABLE.map(v => L(v)), L(''), L(S2[0].toLowerCase())], { cible: 'L6', ok: 1, legende: 'Enter deux fois : une ligne vide, puis la strophe suivante.' })
     ] },
     etape3: { titre: 'Je structure', images: [
-      doc([L(TITRE.toLowerCase()), ...FABLE.map(v => L(v)), L(''), L(S2[0].toLowerCase())], { cible: 'L1', legende: 'Les vers commencent par une minuscule…' }),
-      doc([L(TITRE), ...FABLE_MAJ.map(v => L(v, 'maj')), L(''), L(S2[0].toLowerCase())], { cible: 'L1', legende: '… je mets une majuscule au début de chaque vers.' }),
-      doc([L(TITRE), ...FABLE_MAJ.map(v => L(v)), L(''), L(S2[0])], { cible: 'L5', ok: 1, legende: 'Une seule ligne vide entre deux strophes.' })
+      doc([L(TITRE.toLowerCase()), L(''), ...FABLE.map(v => L(v)), L(''), L(S2[0].toLowerCase())], { cible: 'L2', legende: 'Les vers commencent par une minuscule…' }),
+      doc([L(TITRE), L(''), ...FABLE_MAJ.map(v => L(v, 'maj')), L(''), L(S2[0].toLowerCase())], { cible: 'L2', legende: '… je mets une majuscule au début de chaque vers.' }),
+      doc([L(TITRE), L(''), ...FABLE_MAJ.map(v => L(v)), L(''), L(S2[0])], { cible: 'L6', ok: 1, legende: 'Une seule ligne vide entre deux strophes.' })
     ] },
     etape6: { titre: 'Titre, texte, auteur', images: [
       doc(base('sel'), { cible: 'L0', legende: 'Je sélectionne le titre.' }),
