@@ -6,6 +6,10 @@
 /* Une erreur JavaScript s'affiche en haut de la page : sur un téléphone ou un poste d'élève, pas de console. */
 addEventListener("error", e => {
   if(e.target && e.target.tagName === "LINK") return;   // une police qui manque n'empêche rien
+  if(e.target && e.target.tagName === "IMG"){   // une image qui ne vient pas : un second essai, sans alarmer l'élève
+    const im = e.target; if(!im.dataset.reessai){ im.dataset.reessai = 1; setTimeout(() => { im.src = im.src.split("#")[0] + (im.src.includes("?") ? "&" : "?") + "r=" + Date.now(); }, 2000); }
+    return;
+  }
   const p = document.createElement("p");
   p.style.cssText = "background:#f8e3e0;color:#b23a2e;border-left:5px solid #b23a2e;padding:8px 12px;margin:8px 0;font:14px/1.4 Arial,sans-serif";
   p.textContent = "⚠ Erreur dans la page : " + (e.message || (e.target && e.target.src ? "chargement de " + e.target.src : "inconnue")) + (e.lineno ? " (ligne " + e.lineno + ")" : "");
