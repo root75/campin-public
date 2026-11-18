@@ -42,6 +42,8 @@ const MISSIONS = typeof PRESENTATION!=="undefined" && PRESENTATION==="missions";
    État : etat.cases = { "étape.rang": true } (étape et rang à partir de 1), etat.moi = { critère: lettre }. */
 const DECLARATIF = typeof MODE!=="undefined" && MODE==="declaratif";
 if(DECLARATIF){ etat.cases = etat.cases || {}; etat.moi = etat.moi || {}; ici = Math.min(BLOCS.length-1, Number(etat.ici)||0); }
+/* La grille « Moi » sert aussi à un cours à preuves (les Messagerie) : const GRILLE dans la fiche, « criteres » au catalogue. */
+if(typeof GRILLE!=="undefined") etat.moi = etat.moi || {};
 const nbCases = i => (BLOCS[i].gestes||[]).length;
 const cochees = i => { let n = 0; for(let j=1;j<=nbCases(i);j++) if(etat.cases[(i+1)+"."+j]) n++; return n; };
 /* Bloc terminé : toutes ses cases en mode déclaratif, sinon sa preuve réussie. */
@@ -64,7 +66,7 @@ function videDecl(essai){
   envoiDecl = true; ditDecl("Enregistrement…");
   google.script.run.withSuccessHandler(()=>{
     fileDecl.shift(); envoiDecl = false;
-    if(fileDecl.length) videDecl(0); else ditDecl("✓ Enregistré avec ton compte scolaire. Tes cases sont gardées d’une période à l’autre.");
+    if(fileDecl.length) videDecl(0); else ditDecl(DECLARATIF ? "✓ Enregistré avec ton compte scolaire. Tes cases sont gardées d’une période à l’autre." : "✓ Enregistré avec ton compte scolaire.");
   }).withFailureHandler(()=>{
     envoiDecl = false;
     if(essai<3){ ditDecl("Enregistrement : nouvel essai dans un instant…"); setTimeout(()=>videDecl(essai+1), [2000,5000,10000][essai]); return; }
@@ -1321,7 +1323,7 @@ if(APERCU){
       ici = s.position>=1 && s.position<=BLOCS.length ? s.position-1 : Math.min(premierManque(), BLOCS.length-1);
       repriseVue = Object.keys(etat.cases).length>0 && !!s.derniere && Date.now()-s.derniere > 5*60000;
       placeNotee = ici;   // demarre() l'envoie (« ouvert »)
-    } else if(s && s.atteint){ etat.atteint = s.atteint; etat.fini = s.atteint >= BLOCS.length; ici = Math.min(s.atteint, BLOCS.length); }
+    } else { if(s && s.moi && typeof GRILLE!=="undefined") etat.moi = s.moi; if(s && s.atteint){ etat.atteint = s.atteint; etat.fini = s.atteint >= BLOCS.length; ici = Math.min(s.atteint, BLOCS.length); } }
     const demarre = () => { affiche(); envoie({ etape:Math.min(ici,BLOCS.length-1)+1, type:"ouvert" }); restaureAide(); };
     if(typeof PREUVES==="undefined") demarre(); else pretPreuves.then(variantesServeur).then(demarre);
   }).withFailureHandler(()=>{

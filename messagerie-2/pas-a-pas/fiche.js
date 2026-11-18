@@ -139,6 +139,36 @@ const BLOCS = [
   q:{serveur:true}}
 ];
 
+/* L'auto-évaluation de fin de cours (grille « Moi » du moteur) : une question simple par critère de la grille
+   (le critère est rappelé sous la question, intitulé exact)
+   « Communication et collaboration », quatre phrases propres à la question. A = je vais plus loin que demandé,
+   B = je fais seul ce qui est demandé, C = avec de l'aide ou pas à chaque fois, D = pas encore. Non cotée. */
+const GRILLE = {
+  intro: '<p><b>Avant de partir : où en es-tu ?</b> Quatre questions. Pour chacune, lis les quatre phrases, de A à D, et clique sur celle qui te ressemble le plus. Ce n’est pas coté : ta réponse t’aide à voir ce qu’il te reste à travailler, et ton professeur voit où t’aider. ★ = le plus important.</p>',
+  niveaux: { A:'', B:'', C:'', D:'' },
+  criteres: [
+    { n:'1. Sais-tu répondre, joindre un fichier et transférer ?', inc:false, regarde:'Critère : Choix et usage des outils de communication',
+      A:'Je fais les trois seul, et je connais une autre façon de faire (un raccourci clavier, par exemple).',
+      B:'Je réponds, je joins un fichier et je transfère seul.',
+      C:'J’y arrive avec de l’aide, ou pas encore pour les trois.',
+      D:'Je n’y arrive pas encore.' },
+    { n:'2. Vérifies-tu qui t’écrit avant d’ouvrir une pièce jointe ?', inc:true, regarde:'Critère : Respect du cadre éthique, juridique et relationnel',
+      A:'Je vérifie toujours l’expéditeur et le fichier, et je sais dire pourquoi un mail est un piège.',
+      B:'Je vérifie l’expéditeur et le fichier avant d’ouvrir.',
+      C:'J’y pense parfois.',
+      D:'J’ouvre sans regarder.' },
+    { n:'3. Ta réponse aide-t-elle celui qui la reçoit ?', inc:true, regarde:'Critère : Collaboration et efficacité de la communication',
+      A:'Ma réponse répond à la question, le bon fichier est joint, et j’ajoute une phrase qui dit ce que contient le fichier.',
+      B:'Ma réponse répond à la question, et le bon fichier est joint.',
+      C:'J’ai répondu, mais il manquait le fichier ou une partie de la réponse.',
+      D:'Je n’ai pas réussi à répondre.' },
+    { n:'4. Sais-tu expliquer quand choisir Répondre, Répondre à tous ou Transférer ?', inc:false, regarde:'Critère : Explicitation de la démarche numérique',
+      A:'J’explique les trois, avec un exemple pour chacun.',
+      B:'Je dis quand choisir chacun des trois.',
+      C:'J’en confonds encore deux.',
+      D:'Je ne vois pas encore la différence.' },
+  ]
+};
 const FIN = {
   titre:'Bravo : tu sais ouvrir, répondre, joindre et transférer',
   bulle:'Parcours terminé !',
@@ -149,4 +179,4 @@ const FIN = {
   lien:'<a href="https://root75.github.io/campin-public/messagerie-2/" target="_blank" rel="noopener">la page « Je réponds et je joins »</a>'
 };
 
-if(typeof module!=='undefined') module.exports = { erreursReponse, BLOCS, FIN, COURS };
+if(typeof module!=='undefined') module.exports = { erreursReponse, BLOCS, FIN, GRILLE, COURS };

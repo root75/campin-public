@@ -366,6 +366,36 @@ const BLOCS = [
   q:{serveur:true}}
 ];
 
+/* L'auto-évaluation de fin de cours (grille « Moi » du moteur) : une question simple par critère de la grille
+   (le critère est rappelé sous la question, intitulé exact)
+   « Communication et collaboration », quatre phrases propres à la question. A = je vais plus loin que demandé,
+   B = je fais seul ce qui est demandé, C = avec de l'aide ou pas à chaque fois, D = pas encore. Non cotée. */
+const GRILLE = {
+  intro: '<p><b>Avant de partir : où en es-tu ?</b> Quatre questions. Pour chacune, lis les quatre phrases, de A à D, et clique sur celle qui te ressemble le plus. Ce n’est pas coté : ta réponse t’aide à voir ce qu’il te reste à travailler, et ton professeur voit où t’aider. ★ = le plus important.</p>',
+  niveaux: { A:'', B:'', C:'', D:'' },
+  criteres: [
+    { n:'1. Sais-tu écrire et envoyer un mail dans Outlook ?', inc:false, regarde:'Critère : Choix et usage des outils de communication',
+      A:'J’écris et j’envoie mon mail seul, et je sais faire plus que demandé : par exemple retrouver un ancien mail, ou guider un camarade sans toucher sa souris.',
+      B:'J’écris et j’envoie mon mail seul.',
+      C:'J’y arrive avec l’aide du cours ou d’un camarade.',
+      D:'Je n’arrive pas encore à envoyer un mail.' },
+    { n:'2. Ton mail est-il poli et complet ?', inc:true, regarde:'Critère : Respect du cadre éthique, juridique et relationnel',
+      A:'Salutation, formule de fin et signature : rien ne manque, et je choisis mes mots selon la personne (un professeur, un camarade).',
+      B:'Salutation, formule de fin et signature : rien ne manque.',
+      C:'Il manque parfois une des trois.',
+      D:'J’écris encore comme dans un SMS.' },
+    { n:'3. Ton correspondant comprend-il ce que tu demandes ?', inc:true, regarde:'Critère : Collaboration et efficacité de la communication',
+      A:'Mon objet et ma demande sont clairs du premier coup, et je me relis en me mettant à la place de celui qui va lire.',
+      B:'Mon objet dit de quoi parle le mail, et ma demande se comprend.',
+      C:'Mon objet ou ma demande n’est pas toujours clair.',
+      D:'Mon correspondant ne comprend pas ce que je veux.' },
+    { n:'4. Sais-tu expliquer comment on construit un mail ?', inc:false, regarde:'Critère : Explicitation de la démarche numérique',
+      A:'Je nomme toutes les parties d’un mail, et j’explique à quoi sert chacune.',
+      B:'Je nomme les parties d’un mail : destinataire, objet, salutation, message, formule de fin, signature.',
+      C:'J’en nomme quelques-unes.',
+      D:'Je ne sais pas encore les nommer.' },
+  ]
+};
 const FIN = {
   titre:'Bravo pour ce parcours !',
   bulle:'Parcours terminé !',
@@ -377,4 +407,4 @@ const FIN = {
   lien:'<a href="https://root75.github.io/campin-public/messagerie/" target="_blank" rel="noopener">la page « Mon premier message — je révise »</a>'
 };
 
-if(typeof module!=='undefined') module.exports = { M1, BLOCS, FIN, COURS, PARTAGE, RAPPELS };
+if(typeof module!=='undefined') module.exports = { M1, BLOCS, FIN, GRILLE, COURS, PARTAGE, RAPPELS };

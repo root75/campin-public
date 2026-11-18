@@ -181,6 +181,22 @@ puis une réponse qui reprend son objet. Gardé sur le poste, sous l'adresse de 
 Exemple : [`messagerie/pas-a-pas/fiche.js`](../messagerie/pas-a-pas/fiche.js) ; contrôle : `tests/messagerie-01.cjs`,
 et le parcours dans Chromium, `campin-pedagogique/outils/pas-a-pas/essai-messagerie-01.js`.
 
+## L'auto-évaluation de fin — la grille « Moi » dans un cours à preuves (les Messagerie)
+
+Chaque séquence finit par une auto-évaluation de l'élève. Dans un cours à preuves : `const GRILLE` dans la fiche (même
+forme que dans le mode déclaratif, plus bas) et `"criteres": 4` dans `cours.json`, **sans** `"cases"`. L'écran de fin
+affiche les cartes sous le titre ; chaque clic part au serveur (`noter`, type `moi`, « question:lettre ») et revient
+avec `etat()`. Au tableau : une pastille « Moi : B · A · — · C » dans la colonne État. Non cotée.
+
+- `n` = la question, numérotée (« 1. Sais-tu… ? ») ; `regarde` = le critère de la grille officielle, intitulé exact.
+- `niveaux: { A:'', B:'', C:'', D:'' }` : pas d'étiquette, les quatre phrases sont propres à la question. A = je vais
+  plus loin que demandé ; B = je fais seul ce qui est demandé ; C = avec de l'aide, ou pas à chaque fois ; D = pas encore.
+- Sans `"criteres"` au catalogue, le serveur ignore les lettres : la grille s'affiche mais rien n'est gardé.
+- « Recommencer » au bloc 1 vide les lettres ; à un autre bloc, elles restent.
+
+Modèle : [`messagerie/pas-a-pas/fiche.js`](../messagerie/pas-a-pas/fiche.js) ; contrôle : `tests/auto-evaluation.cjs` et
+`campin-pedagogique/outils/pas-a-pas/essai-moi.js`.
+
 ## Le mode déclaratif — des cases, pas de preuves (le Rat de ville)
 
 `const MODE = "declaratif"` dans la fiche. Pour un travail long dans un autre outil (un document Docs), où l'élève

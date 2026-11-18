@@ -263,6 +263,8 @@ function dessine(d){
     if(decl){ td("num", (e.cochees||0)+" / "+totalCases); td("num", Array.from({length:d.criteres||0},(_,k)=>(e.moi||{})[k+1]||"—").join(" · ")); }
     else { td("num", e.fini ? "" : e.erreursIci || ""); td("num", e.erreurs || ""); }
     const etat = td();
+    // Cours à preuves avec une auto-évaluation de fin (« criteres » au catalogue) : les lettres « Moi », une par question.
+    if(!decl && d.criteres && e.moi && Object.keys(e.moi).length){ const m = txt("span","pastille silence","Moi : "+Array.from({length:d.criteres},(_,k)=>e.moi[k+1]||"—").join(" · ")); m.title = "Auto-évaluation de fin de cours : une lettre par question, choisie par l’élève. Non cotée."; etat.append(m, " "); }
     if(e.aide){
       etat.append(txt("span","pastille aide"+(e.aide.motif==="accord" ? " accord" : ""),"🔔 "+(MOTIFS_CLOCHE[e.aide.motif]||"aide")+" · bloc "+e.aide.bloc+" · "+ilya(d.maintenant-e.aide.depuis).replace("il y a ","")));
       if(SUIVI && (e._d||d).peutCloreAide){
