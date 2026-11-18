@@ -47,6 +47,10 @@ Sans cette installation, le tableau signale que le serveur utilise encore sa lis
    `"criteres": 4` (critères de la grille). Le serveur lit ces champs : ajouter une case en fin
    d’étape se fait ici et dans la fiche, **sans redéployer Code.gs**. Une case est enregistrée sous
    « étape.rang » : ne pas déplacer une étape ni une case d’un cours déjà commencé par des élèves.
+
+   **Auto-évaluation de fin d’un cours à preuves** (les Messagerie) : `"criteres": 4` seul, sans
+   `"cases"` = le nombre de questions de `const GRILLE` dans la fiche. Sans ce champ, le serveur
+   n’enregistre pas les lettres « Moi ». Voir MOTEUR.md, « L’auto-évaluation de fin ».
    `catalogue.js` et `Code.gs` refusent un catalogue dont un champ est inconnu.
 
    **Règle anti-recopie (5 novembre 2026)** : chaque question de preuve a **toujours trois

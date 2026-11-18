@@ -36,6 +36,6 @@ for (const cours of Object.keys(ATTENDU)) {
     for (const k of Object.keys(renvoi)) if (S.faux[1].includes(k)) assert.match(b, renvoi[k], ou + ' : « ' + k + ' » cité mais absent du bloc');
   });
   assert.equal(n, ATTENDU[cours], cours + ' : ' + ATTENDU[cours] + ' scènes');
-  assert.match(lis(cours + '/pas-a-pas/index.html'), /blocs\.js\?v=scene-bloc-annule-20261117/, cours + ' charge le moteur à jour');
+  assert.match(lis(cours + '/pas-a-pas/index.html'), /blocs\.js\?v=moi-20261118/, cours + ' charge le moteur à jour');
 }
 console.log('scene-bloc : OK (' + total + ' scènes)');

@@ -150,6 +150,36 @@ const BLOCS = [
   q:{serveur:true}}
 ];
 
+/* L'auto-évaluation de fin de cours (grille « Moi » du moteur) : une question simple par critère de la grille
+   (le critère est rappelé sous la question, intitulé exact)
+   « Communication et collaboration », quatre phrases propres à la question. A = je vais plus loin que demandé,
+   B = je fais seul ce qui est demandé, C = avec de l'aide ou pas à chaque fois, D = pas encore. Non cotée. */
+const GRILLE = {
+  intro: '<p><b>Avant de partir : où en es-tu ?</b> Quatre questions. Pour chacune, lis les quatre phrases, de A à D, et clique sur celle qui te ressemble le plus. Ce n’est pas coté : ta réponse t’aide à voir ce qu’il te reste à travailler, et ton professeur voit où t’aider. ★ = le plus important.</p>',
+  niveaux: { A:'', B:'', C:'', D:'' },
+  criteres: [
+    { n:'1. Sais-tu choisir entre le courriel et la messagerie instantanée (chat) ?', inc:false, regarde:'Critère : Choix et usage des outils de communication',
+      A:'Je choisis le bon outil selon la personne et la situation, et je trouve moi-même des exemples.',
+      B:'Je choisis le bon outil selon la personne à qui j’écris.',
+      C:'J’hésite encore dans certaines situations.',
+      D:'Je ne vois pas encore la différence.' },
+    { n:'2. Respectes-tu les autres quand tu écris ?', inc:true, regarde:'Critère : Respect du cadre éthique, juridique et relationnel',
+      A:'J’applique la nétiquette et la copie cachée (Cci), et j’explique en quoi elles protègent les autres.',
+      B:'J’applique la nétiquette, et je mets les adresses en Cci quand j’écris à plusieurs personnes.',
+      C:'Je connais ces règles, mais je ne les applique pas toujours.',
+      D:'Je ne connais pas encore ces règles.' },
+    { n:'3. Ton message en copie cachée est-il bien arrivé ?', inc:true, regarde:'Critère : Collaboration et efficacité de la communication',
+      A:'Mon message est arrivé, j’ai vérifié avec mon camarade, et j’ai aidé quelqu’un d’autre à réussir le sien.',
+      B:'Mon message est arrivé, et j’ai vérifié avec mon camarade qu’il ne voit pas l’autre adresse.',
+      C:'Mon message est parti, mais je n’ai pas vérifié, ou une adresse était visible.',
+      D:'Je n’ai pas réussi à l’envoyer.' },
+    { n:'4. Sais-tu expliquer comment tu protèges ton compte ?', inc:false, regarde:'Critère : Explicitation de la démarche numérique',
+      A:'J’explique mes précautions (mail piège, verrouiller, se déconnecter) et ce qui pourrait arriver sans elles.',
+      B:'J’explique quoi faire devant un mail qui demande mon mot de passe, et quand verrouiller ou me déconnecter.',
+      C:'Je connais les gestes, sans savoir les expliquer.',
+      D:'Je ne sais pas encore quoi faire.' },
+  ]
+};
 const FIN = {
   titre:'Bravo : tu sais communiquer en ligne sans risque',
   bulle:'Parcours terminé !',
@@ -160,4 +190,4 @@ const FIN = {
   lien:'<a href="https://root75.github.io/campin-public/messagerie-3/" target="_blank" rel="noopener">la page « Bien communiquer en ligne »</a>'
 };
 
-if(typeof module!=='undefined') module.exports = { BLOCS, FIN, COURS };
+if(typeof module!=='undefined') module.exports = { BLOCS, FIN, GRILLE, COURS };
