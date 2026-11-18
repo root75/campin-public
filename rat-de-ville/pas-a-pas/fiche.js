@@ -61,34 +61,34 @@ const BLOCS = [
   "titre": "Je recopie la fable",
   "min": 30,
   "bulle": "Bon début ! Regarde bien les animations.",
-  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>J’ouvre l’image de la fiche. Je repère le titre, les vers et l’auteur avant de recopier.</p></aside><p class=\"note\">Un vers = une ligne : touche Enter au bout de chaque vers. Je ne laisse PAS de ligne vide : les 28 vers se suivent. Je séparerai les strophes à l’étape 3.</p>" + A_MOI,
+  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>J’ouvre l’image de la fiche. Je repère le titre, les vers et l’auteur avant de recopier.</p></aside><p class=\"note\">Un vers = une ligne : touche Enter au bout de chaque vers. Au bout du 4e vers d’une strophe, j’appuie <b>deux fois</b> sur Enter : une ligne vide sépare les strophes.</p>" + A_MOI,
   "gestes": [
    {
     "geste": "Tape le <b>titre</b>.",
     "sous": "<img class=\"extrait\" src=\"" + BASE + "fable/titre.png\" alt=\"Extrait de la fable à recopier\">"
    },
    {
-    "geste": "Recopie les <b>vers 1 à 4</b>.",
+    "geste": "Recopie les <b>vers 1 à 4</b>. Puis Enter <b>deux fois</b> : une ligne vide.",
     "sous": "<img class=\"extrait\" src=\"" + BASE + "fable/strophe-1.png\" alt=\"Extrait de la fable à recopier\"><details><summary>Comment taper ç et à ?</summary><p>Sur le clavier belge : ç est sur la touche 9, à sur la touche 0. Je tape la touche seule, sans Shift.</p><blockquote>façon · à des reliefs</blockquote><p class=\"note\">Avec Shift, ces touches donnent 9 et 0. Je me suis trompé ? " + ICO_ANNULER + "Annuler (Ctrl + Z).</p></details>"
    },
    {
-    "geste": "Recopie les <b>vers 5 à 8</b>.",
+    "geste": "Recopie les <b>vers 5 à 8</b>. Puis Enter <b>deux fois</b> : une ligne vide.",
     "sous": "<img class=\"extrait\" src=\"" + BASE + "fable/strophe-2.png\" alt=\"Extrait de la fable à recopier\">"
    },
    {
-    "geste": "Recopie les <b>vers 9 à 12</b>.",
+    "geste": "Recopie les <b>vers 9 à 12</b>. Puis Enter <b>deux fois</b> : une ligne vide.",
     "sous": "<img class=\"extrait\" src=\"" + BASE + "fable/strophe-3.png\" alt=\"Extrait de la fable à recopier\"><details><summary>Comment taper ê (accent circonflexe) ?</summary><p>Je tape d’abord la touche ^, à droite du P : rien ne s’affiche, c’est normal. Puis je tape e : ê apparaît.</p><blockquote>honnête · fête</blockquote><p class=\"note\">^ puis la voyelle : ^ + o donne ô, ^ + a donne â.</p></details>"
    },
    {
-    "geste": "Recopie les <b>vers 13 à 16</b>.",
+    "geste": "Recopie les <b>vers 13 à 16</b>. Puis Enter <b>deux fois</b> : une ligne vide.",
     "sous": "<img class=\"extrait\" src=\"" + BASE + "fable/strophe-4.png\" alt=\"Extrait de la fable à recopier\">"
    },
    {
-    "geste": "Recopie les <b>vers 17 à 20</b>.",
+    "geste": "Recopie les <b>vers 17 à 20</b>. Puis Enter <b>deux fois</b> : une ligne vide.",
     "sous": "<img class=\"extrait\" src=\"" + BASE + "fable/strophe-5.png\" alt=\"Extrait de la fable à recopier\"><details><summary>Comment taper ô et les guillemets « » ?</summary><p>ô : je tape la touche ^, à droite du P (rien ne s’affiche, c’est normal), puis o. Guillemets : j’utilise les guillemets américains \" : la touche 3, sans Shift, avant et après les mots.</p><blockquote>aussitôt · rôt · \"achevons tout notre rôt.\"</blockquote><p class=\"note\">Le ^ apparaît seul ? Je l’efface et je recommence : ^, puis o, sans espace. Les guillemets « » de l’image ne sont pas sur le clavier : \" les remplace.</p></details>"
    },
    {
-    "geste": "Recopie les <b>vers 21 à 24</b>.",
+    "geste": "Recopie les <b>vers 21 à 24</b>. Puis Enter <b>deux fois</b> : une ligne vide.",
     "sous": "<img class=\"extrait\" src=\"" + BASE + "fable/strophe-6.png\" alt=\"Extrait de la fable à recopier\">"
    },
    {
@@ -100,7 +100,7 @@ const BLOCS = [
     "sous": "<img class=\"extrait\" src=\"" + BASE + "fable/auteur.png\" alt=\"Extrait de la fable à recopier\">"
    }
   ],
-  "vois": "Je compare ma dernière ligne à l’image avant de passer au groupe suivant. Je dois retrouver 28 vers.<br><span class=\"note\">Les petits groupes de quatre vers m’aident à garder ma place.</span>",
+  "vois": "Je compare ma dernière ligne à l’image avant de passer au groupe suivant. Je dois retrouver 28 vers, en 7 strophes séparées par une ligne vide.<br><span class=\"note\">Les petits groupes de quatre vers m’aident à garder ma place.</span>",
   "extra": "<button class=\"btn vide\" type=\"button\" onclick=\"const t=document.getElementById('texte');t.open=true;t.scrollIntoView({behavior:'smooth'})\">Voir le texte à recopier</button>",
   "demos": {
    "1": [
@@ -114,7 +114,8 @@ const BLOCS = [
     [
      1,
      2,
-     3
+     3,
+     4
     ]
    ]
   }
@@ -130,7 +131,7 @@ const BLOCS = [
     "geste": "Mets une <b>majuscule</b> à la première lettre de chaque vers.",
     "sous": "<details><summary>Comment mettre à en majuscule (À) ?</summary><p>Je double-clique sur le à pour le sélectionner, seul. Puis Format ▸ Texte ▸ Minuscules/majuscules ▸ <b>MAJUSCULES</b>.</p><blockquote>à la porte de la salle → À la porte de la salle</blockquote><p class=\"note\">Deux vers commencent par à : le vers 4 et le vers 13. Pour les autres lettres, j’efface la minuscule et je tape la majuscule avec Shift.</p><img class=\"capture\" src=\"" + BASE + "capture-majuscules.png\" alt=\"Menu Format ▸ Texte ▸ Minuscules/majuscules ▸ MAJUSCULES dans Docs\"></details>"
    },
-   "Clique <b>à la fin du vers 4</b> et appuie sur Enter : une ligne vide apparaît. Fais pareil après les vers 8, 12, 16, 20 et 24 : tu obtiens 7 strophes."
+   "Vérifie les <b>lignes vides</b> : une seule entre deux strophes, 7 strophes en tout. Il en manque une ? Clique à la fin du dernier vers de la strophe, puis Enter."
   ],
   "vois": "Je compte sept groupes de quatre vers et je regarde la première lettre de chaque vers.<br><span class=\"note\">Les strophes sont maintenant plus faciles à repérer.</span>",
   "demos": {
