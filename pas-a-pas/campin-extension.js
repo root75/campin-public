@@ -1,0 +1,53 @@
+// Bouton « à côté du cours » des fiches Pas à pas.
+// Un lien <a data-a-cote href="https://…" target="_blank"> devient un bouton qui ouvre le site
+// à droite du cours, en vue fractionnée, quand l'extension Chrome « Campin — cours » est installée
+// (source : campin-pedagogique/outils/extension-chrome, Chrome 155+).
+// Sans l'extension, ou si Chrome ne sait pas faire : nouvel onglet, et le volet <details class="cote">
+// le plus proche s'ouvre pour montrer le geste à la main. La fiche ne casse jamais.
+(function () {
+  let n = 0;
+  function presente() {
+    return !!document.documentElement.dataset.campinExtension;
+  }
+  function demander(action, url) {
+    return new Promise((resoudre) => {
+      const id = 'c' + (++n) + '-' + Date.now();
+      const minuterie = setTimeout(() => {
+        window.removeEventListener('message', ecoute);
+        resoudre({ ok: false, erreur: 'pas de réponse de l’extension' });
+      }, 3000);
+      function ecoute(ev) {
+        if (ev.source !== window || !ev.data || ev.data.campin !== 'reponse' || ev.data.id !== id) return;
+        clearTimeout(minuterie);
+        window.removeEventListener('message', ecoute);
+        resoudre(ev.data);
+      }
+      window.addEventListener('message', ecoute);
+      window.postMessage({ campin: 'demande', id, action, url }, '*');
+    });
+  }
+  async function ouvrirACote(url) {
+    let u;
+    try { u = new URL(url, location.href); } catch (e) { u = null; }
+    if (!u || u.protocol !== 'https:') return { ok: false, erreur: 'adresse refusée (https seulement)' };
+    url = u.href;
+    if (presente()) {
+      const r = await demander('ouvrir-a-cote', url);
+      if (r.ok) return r;
+    }
+    window.open(url, '_blank', 'noopener');
+    return { ok: true, mode: 'sans-extension' };
+  }
+  const FAIT = { 'vue-fractionnee': 1, 'vue-existante': 1 };
+  document.addEventListener('click', async (ev) => {
+    const a = ev.target.closest && ev.target.closest('a[data-a-cote]');
+    if (!a || !presente()) return; // sans extension, le lien fait son travail habituel
+    ev.preventDefault();
+    const r = await ouvrirACote(a.href);
+    if (FAIT[r.mode]) return;
+    const zone = a.closest('.reel, p, div');
+    const volet = (zone && zone.parentElement || document).querySelector('details.cote');
+    if (volet) volet.open = true;
+  });
+  window.CampinExtension = { presente, ouvrirACote };
+})();
