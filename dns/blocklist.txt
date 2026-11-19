@@ -1,0 +1,220 @@
+! Title: Campin — liste de blocage des labos
+! Description: Blocages et exceptions des labos informatiques (AdGuard Home).
+! Homepage: https://github.com/root75/campin-public/tree/main/dns
+! Expires: 1 hour
+!
+! Ce fichier fait foi. Les deux AdGuard Home (local et secours) y sont abonnés.
+! Une ligne par règle, syntaxe AdGuard : ||domaine^ bloque, @@||domaine^ autorise.
+! ==============================================================================
+! === WHITELIST — Services Critiques, Éducation & Outils de Travail ===
+! ==============================================================================
+@@||accounts.youtube.com^$important
+@@||app.diagrams.net^$important
+@@||cdpn.io^$important
+@@||codenames.game^$important
+@@||codepen.io^$important
+@@||config.edge.skype.com^$important
+@@||data.msn.com^$important
+@@||dbdiagram.io^$important
+@@||draw.io^$important
+@@||e-classe.be^$important
+@@||fandom.com^$important
+@@||github.com^$important
+@@||githubassets.com^$important
+@@||google.com^$important
+@@||googleapis.com^$important
+@@||googleusercontent.com^$important
+@@||graph.windows.net^$important
+@@||gvt2.com^$important
+@@||gvt3.com^$important
+@@||jeunesingenieux.be^$important
+@@||microsoft.com^$important
+@@||milan-jeunesse.com^$important
+@@||nextdns.io^$important
+@@||officeapps.live.com^$important
+@@||openguessr.com^$important
+@@||pelckmans.be^$important
+@@||pelckmansportail.be^$important
+@@||player.vimeo.com^$important
+@@||prismic.io^$important
+@@||quizlet.com^$important
+@@||root75.github.io^$important
+@@||skribbl.io^$important
+@@||slack.com^$important
+@@||snapcraft.io^$important
+@@||turbowarp.org^$important
+@@||veyon.io^$important
+@@||vsassets.io^$important
+! ==============================================================================
+! === BLOCAGE REGEX — TLDs et mots-clés à risque ===
+! ==============================================================================
+! Bloque tout le TLD .io (les exceptions .io sont whitelistées ci-dessus)
+/^([a-z0-9-]+\.)*[a-z0-9-]+\.io$/
+! Bloque tout domaine contenant "game" ou "games"
+/^(.*\.)?.*game[s]?.*\.(com|fr|net|org|co|eu|be|nl|us|uk|ca|de|es|it)$/
+! Bloque tout domaine contenant "jeux" ou "jeu"
+/^(.*\.)?.*jeu[x]?.*\.(com|fr|net|org|co|eu|be)$/
+! Bloque tout domaine contenant "anime"
+/^(.*\.)?.*anime.*\.(com|fr|net|org|co|eu|be|tv|to|si|fan)$/
+! Bloque tout domaine contenant "clash"
+/^(.*\.)?.*clash.*\.(com|fr|net|org|co|eu|be)$/
+! ==============================================================================
+! === BLOCAGE — Contournements & Proxies ===
+! ==============================================================================
+||4everproxy.com^$important
+||croxy.network^$important
+||croxyproxy.com^$important
+||croxyproxy.net^$important
+||hide.me^$important
+||hola.org^$important
+||kproxy.com^$important
+||proxysite.com^$important
+||translate.goog^$important
+||ultrasurf.us^$important
+||unblockasites.com^$important
+||unblocksites.co^$important
+||vpnbook.com^$important
+! ==============================================================================
+! === BLOCAGE — Sites de Jeux (non couverts par les regex) ===
+! ==============================================================================
+||1001jeux.fr^$important
+||1v1lol.us.com^$important
+||2dans.com^$important
+||3daimtrainer.com^$important
+||addictinggames.com^$important
+||agame.com^$important
+||azgames.io^$important
+||blipzi.com^$important
+||bubblebox.com^$important
+||car-soccer.com^$important
+||classroom6x.com^$important
+||classroomcommunity.com^$important
+||coolmathgames.com^$important
+||crazygames.com^$important
+||crazygames.fr^$important
+||dashnet.org^$important
+||definitelyscience.com^$important
+||eaglecraft.com^$important
+||epsteinclicker.com^$important
+||ezclasswork.com^$important
+||freezenova.com^$important
+||friv.com^$important
+||friv2.com^$important
+||friv5.com^$important
+||frivextra.com^$important
+||funclap.com^$important
+||funkypotato.com^$important
+||funlabmobile.com^$important
+||gameflare.com^$important
+||guesstherank.org^$important
+||gun-spin.com^$important
+||gun-spin.org^$important
+||humanornot.so^$important
+||iogames.space^$important
+||jeu.info^$important
+||jeuxfriv.com^$important
+||jeuxgratuits.fr^$important
+||kizi.com^$important
+||miniclip.com^$important
+||neal.fun^$important
+||neonwarp.com^$important
+||nowgg.nl^$important
+||pixelgun3d.com^$important
+||poki.com^$important
+||polytrack.fr^$important
+||polytrackonline.com^$important
+||polytrak.co^$important
+||ragdollhit.com^$important
+||retrobowl.school^$important
+||silvergames.com^$important
+||snokido.com^$important
+||snokido.fr^$important
+||solarsmashonline.com^$important
+||stumbleguys.com^$important
+||subway-surfers-jeux.fr^$important
+||subwaysurfer.fr^$important
+||subwaysurfers.com^$important
+||subwaysurferscity.com^$important
+||subwaysurfersenligne.fr^$important
+||subwaysurfersonline.es^$important
+||theducklair.com^$important
+||totallyscience.co^$important
+||totallyscienceco.com^$important
+||wavedash.com^$important
+||worldguessr.com^$important
+||www.snake.be^$important
+||y8.com^$important
+||yurk.com^$important
+! ==============================================================================
+! === BLOCAGE — Anime & Streaming non autorisé (non couverts par regex) ===
+! ==============================================================================
+||adinplay.com^$important
+||animevostfr.tv^$important
+||cdn.instants.meme^$important
+||french-anime.com^$important
+||mavanimes.co^$important
+||myinstants.com^$important
+||neko-sama.com^$important
+||soundbuttons.com^$important
+||soundbuttonsworld.com^$important
+||voirdrama.org^$important
+||wakanim.net^$important
+||watchdocumentaries.com^$important
+! ==============================================================================
+! === BLOCAGE — Réseaux sociaux & Distractions ===
+! ==============================================================================
+||assets.msn.com^$important
+||pinterest.com^$important
+||tiktok.com^$important
+||www.yoosfuhl.com^$important
+! ==============================================================================
+! === BLOCAGE — Outils de triche / Solvers ===
+! ==============================================================================
+||brainide.com^$important
+||calc-solver.com^$important
+||calcsolver.com^$important
+||calcsolver.net^$important
+||calcsolver.online^$important
+||calcsolver.org^$important
+||duckmath.org^$important
+||mathslack.com^$important
+||solvecalc.net^$important
+! ==============================================================================
+! === BLOCAGE — Sites de téléchargement (16/11/2026) ===
+! ==============================================================================
+||softonic.com^$important
+||uptodown.com^$important
+! ==============================================================================
+! === BLOCAGE — Geometry Dash (16/11/2026) — mot-clé + serveurs du jeu ===
+! ==============================================================================
+||boomlings.com^$important
+||gdbrowser.com^$important
+||geometry-dash.nl^$important
+||geometrydash-pc.com^$important
+||geometrydashpc.fr^$important
+||geometrylitepc.net^$important
+||www.geometrydash.com^$important
+/geometry-?(dash|lite)/
+! ==============================================================================
+! === BLOCAGE — Divers indésirables ===
+! ==============================================================================
+||convars.com^$important
+||cookielaw.org^$important
+||culinaryschools.org^$important
+||d11jzht7mj96rr.cloudfront.net^$important
+||d1tmbzjih4bfq6.cloudfront.net^$important
+||dnrweqffuwjtx.cloudfront.net^$important
+||fuxien.com^$important
+||lovetesteronline.com^$important
+||myfluneo.eu^$important
+||packasandwich.com^$important
+||qiniu.keepwork.com^$important
+||scratch.mit.edu^$important
+||thief.ro^$important
+||totalbeauty.com^$important
+||totallyveganbuzz.com^$important
+||v2z.ru^$important
+||weslack.com^$important
+||wpad.cyberclasse.cyber^$important
+||www.rapidwebapp.com^$important
+||xbitlabs.com^$important
