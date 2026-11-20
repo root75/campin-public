@@ -643,7 +643,7 @@ const BAS_ETAPE = [
       note: 'Le bouton ⏻ du menu propose Verrouiller, Arrêter, Redémarrer : pas « Se déconnecter ». Je n’éteins pas l’ordinateur.', demo: 'deconnecter' } ] },
   { classe: 'reprise', titre: '▶ Je reprends mon cours', gestes: [
     { texte: '<b>Je retrouve mon document :</b> menu Google (la gaufre) ▸ <b>Drive</b> ▸ <b>Récents</b> ▸ double-clic sur mon document.', demo: 'retrouver' },
-    { texte: '<b>Je mets le cours et mon document côte à côte :</b> je clique sur l’onglet du cours, puis clic droit sur l’onglet de mon document ▸ <b>Ajouter l’onglet à une nouvelle vue fractionnée</b>.', demo: 'cote' } ] }
+    { texte: '<b>Je mets le cours et mon document côte à côte :</b> je clique sur l’onglet du cours, puis clic droit sur l’onglet de mon document ▸ <b>Ajouter l’onglet à une nouvelle vue fractionnée</b>. <button class="btn vide" type="button" data-cote-a-cote hidden>🪟 Mettre côte à côte</button>', demo: 'cote' } ] }
 ];
 
 BLOCS.forEach((B, i) => {
