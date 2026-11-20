@@ -221,6 +221,8 @@ Modèle : [`messagerie/pas-a-pas/fiche.js`](../messagerie/pas-a-pas/fiche.js) ; 
   la case se coche seule chez l'élève (15 s au plus, ou à la réouverture) et s'enregistre comme les autres. Les cases
   suivantes de l'étape restent fermées 🔒 jusque-là. Hors suivi ou en aperçu : case à cocher à la main. Le verrou est
   dans la page seulement — Classroom laisse rendre à tout moment.
+  Plusieurs cases d'accord par cours ; `accord:{ bouton, attente, ok }` change les trois textes. Les cases grisées
+  restent lisibles, animations comprises.
 - **Sous chaque bloc** : `BAS_ETAPE` (« À la sonnerie », « Je reprends mon cours »), comme pour tous les cours.
 - **`const REPRISE = { titre, html, demos }`** : l'encadré affiché en haut quand l'élève rouvre le cours plus de
   5 min après son dernier geste, avec le bouton « C'est fait : je reprends à l'étape N ».
@@ -240,7 +242,7 @@ Une étape terminée se fête : bravo et confettis.
 
 ## Ce que le moteur fait seul
 
-Humeur du jour au bloc 1 ; avis en fin de parcours ; cloche 🔔 « J'attends de l'aide » (relue du
+Humeur du jour au bloc 1 ; avis en fin de parcours ; cloche 🔔 « J'attends de l'aide » (à la sonnerie, « Ça coince ? » du bloc s'ouvre dans une fenêtre que l'élève referme, cloche allumée (20/11/2026) ; relue du
 serveur après un rechargement, éteinte quand le professeur la traite ; **un clic sonne, sans question ni motif avant** (17/11/2026), **3 sonneries par heure au plus** (une sonnerie éteinte par l'élève dans la minute ne compte pas ; tant que la demande est en cours, la cloche bouge un peu toutes les 3 secondes) — code commun [`cloche.js`](cloche.js), à charger
 avant `blocs.js` comme dans `modele/index.html`) ; bandeau « bravo » ; reprise de
 l'avancement depuis le serveur ; aperçu professeur `#bloc=N` avec le choix de la version de la preuve ;

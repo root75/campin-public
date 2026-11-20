@@ -421,11 +421,19 @@ const gestesHtml = l => !l ? "" : '<ol class="etapes">'+l.map(g=>{const [t,a,s]=
    « accord » (pastille verte au tableau, hors « Où le groupe bute », hors limite des 3 sonneries). Quand le professeur
    clique « Accord donné » sur sa ligne du tableau, la case se coche toute seule (au plus 15 s après, ou à la
    prochaine ouverture de la fiche) et elle est enregistrée comme les autres. Tant qu'elle n'est pas cochée, les
-   cases suivantes de l'étape restent fermées 🔒. Éteindre la cloche (« Je me suis débloqué ») retire la demande.
+   cases suivantes de l'étape restent grisées 🔒 (impossibles à cocher), mais leur consigne et leurs animations restent
+   lisibles : l'élève doit pouvoir lire la procédure, et rendre, même sans avoir montré (Vincent, 20/11/2026). Éteindre la cloche (« Je me suis débloqué ») retire la demande.
    Hors suivi ou en aperçu, il n'y a pas de professeur au bout : la case se coche à la main.
    Ce verrou est dans la page seulement : Classroom, lui, laisse rendre à tout moment. */
+/* accord:true, ou accord:{ bouton, attente, ok } pour d'autres mots que ceux-ci. */
+const ACCORD_TEXTES = { bouton:"🔔 Je demande l’accord du professeur", attente:"✋ Ton professeur sait que tu attends son accord. En attendant, relis ton document : cette case se cochera toute seule.", ok:"✅ Le professeur a donné son accord : tu peux rendre." };
+const ACCORD_ATTEND = "✋ Ton professeur sait que tu attends qu’il regarde ton document.";
 let attendAccord = null;   // "étape.rang" de la case d'accord en attente
-const caseAccord = () => { for(let i=0;i<BLOCS.length;i++){ const k = (BLOCS[i].gestes||[]).findIndex(g=>g && g.accord); if(k>=0) return (i+1)+"."+(k+1); } return null; };
+/* Plusieurs étapes peuvent porter une case d'accord (Rat de ville : après la structure, puis avant la remise).
+   casesAccord() = leurs clés ; caseAccord(bloc) = celle de l'étape `bloc` donnée par le serveur (etatAide), sinon,
+   pour un serveur qui ne la donne pas : la seule case d'accord du cours, ou rien (on ne devine pas laquelle). */
+const casesAccord = () => { const l = []; BLOCS.forEach((B,i)=>{ const k = (B.gestes||[]).findIndex(g=>g && g.accord); if(k>=0) l.push((i+1)+"."+(k+1)); }); return l; };
+const caseAccord = bloc => { const l = casesAccord(); return bloc ? l.find(c=>c.split(".")[0]===String(bloc)) || null : l.length===1 ? l[0] : null; };
 function accordCases(z, B){
   if(!DECLARATIF || ici>=BLOCS.length) return;
   const k = (B.gestes||[]).findIndex(g=>g && g.accord); if(k<0) return;
@@ -433,23 +441,23 @@ function accordCases(z, B){
   if(!document.getElementById("style-accord")){
     const st = el("style"); st.id = "style-accord";
     st.textContent = ".zone-accord{margin:8px 0 4px}.zone-accord p{margin:0}"
-      +".faire li.ferme-accord>label{opacity:.5;cursor:not-allowed}.faire li.ferme-accord input{cursor:not-allowed}"
+      +".faire li.ferme-accord>label{cursor:default}.faire li.ferme-accord input{cursor:not-allowed;opacity:.45}"
       +".note-accord{margin:6px 0;padding:8px 12px;border-radius:10px;border:2px dashed var(--doux,#5b6873);font-weight:700}";
     document.head.append(st);
   }
-  const cle = (ici+1)+"."+(k+1), ok = !!etat.cases[cle];
+  const cle = (ici+1)+"."+(k+1), ok = !!etat.cases[cle], T = Object.assign({}, ACCORD_TEXTES, typeof B.gestes[k].accord==="object" ? B.gestes[k].accord : null);
   if(SUIVI && !APERCU){
     li.querySelector("input[type=checkbox]").disabled = true;
     const zone = el("div","zone-accord");
-    if(ok) zone.append(txt("p","retour juste","✅ Le professeur a donné son accord : tu peux rendre."));
-    else if(attendAccord===cle && enAide) zone.append(txt("p","note","✋ Ton professeur sait que tu attends son accord. En attendant, relis ton document : cette case se cochera toute seule."));
-    else { const b = txt("button","btn plein","🔔 Je demande l’accord du professeur"); b.type = "button"; b.addEventListener("click",()=>demandeAccord(cle)); zone.append(b); }
+    if(ok) zone.append(txt("p","retour juste",T.ok));
+    else if(attendAccord===cle && enAide) zone.append(txt("p","note",T.attente));
+    else { const b = txt("button","btn plein",T.bouton); b.type = "button"; b.addEventListener("click",()=>demandeAccord(cle)); zone.append(b); }
     li.querySelector("label").after(zone);
   }
   if(ok) return;
   let ferme = 0;
   lis.slice(k+1).forEach((x,j)=>{ if(etat.cases[(ici+1)+"."+(k+j+2)]) return; x.querySelector("input[type=checkbox]").disabled = true; x.classList.add("ferme-accord"); ferme++; });
-  if(ferme) li.append(txt("p","note-accord","🔒 Les cases suivantes s’ouvrent quand le professeur a donné son accord."));
+  if(ferme) li.append(txt("p","note-accord","🔒 Les cases suivantes se cochent quand le professeur a donné son accord. Tu peux déjà lire la suite."));
 }
 /* Redessine l'étape affichée sans perdre la place dans la page. */
 const redessine = () => { const y = scrollY; affiche(); scrollTo(0, y); };
@@ -458,7 +466,7 @@ function demandeAccord(cle){
   const ancre = document.getElementById("aide"), commun = typeof Cloche!=="undefined";
   if(commun) Cloche.ferme(ancre);
   attendAccord = cle; allumeAide(true);
-  document.getElementById("aide-texte").textContent = "✋ Ton professeur sait que tu attends son accord pour rendre.";
+  document.getElementById("aide-texte").textContent = ACCORD_ATTEND;
   redessine();
   google.script.run.withSuccessHandler(()=>{})
     .withFailureHandler(err=>{
@@ -473,9 +481,11 @@ function accordRecu(cle){
   attendAccord = null;
   if(!cle || etat.cases[cle]) return;
   const [e, r] = cle.split(".").map(Number);
+  const avant = complet(e-1);
   etat.cases[cle] = true; ecrit(etat); barre();
   declare({ etape:e, type:"case", reponse:r+":1" });
-  bravo("✅ Le professeur a donné son accord : tu peux rendre ton devoir.", true);
+  if(!avant && complet(e-1)){ bravo("⭐ Étape "+e+" réussie : « "+BLOCS[e-1].titre+" » !", true); confettis(); }
+  else bravo("✅ Le professeur a regardé ton document : accord donné !", true);
   if(ici===e-1) redessine();
 }
 function entrainements(z, B){
@@ -1319,21 +1329,38 @@ function allumeAide(on){
     : (MISSIONS ? AIDE_REPOS : "Je suis bloqué malgré « Ça coince ? » et mon voisin :");
   libelleAide(enAide ? "Je me suis débloqué" : "J'attends de l'aide");
 }
+/* À la sonnerie, « Ça coince ? » de l'étape s'ouvre dans une fenêtre (Vincent, 20/11/2026 : replié en bas de page,
+   il n'était jamais lu). La cloche reste allumée ; l'élève ferme la fenêtre quand il veut. Rien si l'étape n'a pas d'aide. */
+function fenetreCoince(){
+  const liste = document.getElementById("coince-liste"); if(!liste || !liste.children.length) return;
+  let d = document.getElementById("coince-fenetre");
+  if(!d){
+    d = el("dialog"); d.id = "coince-fenetre";
+    const st = el("style"); st.textContent = "#coince-fenetre h2{margin:0 0 4px;font-size:1.2rem}#coince-fenetre ul{margin:10px 0;padding-left:1.2rem}#coince-fenetre li{padding:8px 0;line-height:1.5}";
+    document.head.append(st); document.body.append(d);
+  }
+  const copie = liste.cloneNode(true); copie.removeAttribute("id");
+  const ferme = txt("button","btn plein","J’ai lu : je ferme (ma cloche reste allumée)"); ferme.type = "button"; ferme.addEventListener("click",()=>d.close());
+  const pied = el("div","actions"); pied.append(ferme);
+  d.replaceChildren(txt("h2",null,"🔔 Le professeur est prévenu"), txt("p",null,"En attendant qu’il arrive, je lis « Ça coince ? » : la réponse est peut-être ici."), copie, pied);
+  if(!d.open){ if(d.showModal) d.showModal(); else d.setAttribute("open",""); }
+}
+const fermeCoince = () => { const d = document.getElementById("coince-fenetre"); if(d && d.open) d.close(); };
 function basculeAide(){
   const ancre = document.getElementById("aide"), etape = Math.min(ici,BLOCS.length-1)+1, commun = typeof Cloche!=="undefined";
   if(commun) Cloche.ferme(ancre);
   if(enAide){ allumeAide(false); if(commun && Cloche.eteinte) Cloche.eteinte(); envoie({ etape, type:"aide-fin" }); if(attendAccord){ attendAccord = null; redessine(); } return; }
   const refus = plein => {
-    allumeAide(false);
+    allumeAide(false); fermeCoince();
     if(!commun){ document.getElementById("aide-texte").textContent = plein ? "Déjà 3 sonneries en une heure." : "Cloche non transmise. Réessaie dans un instant."; return; }
     Cloche.refuse({ ancre, plein, coince: document.getElementById("coince"),
       info: plein && SUIVI && !APERCU ? new Promise(ok=>google.script.run.withSuccessHandler(ok).withFailureHandler(()=>ok(null)).cloches(COURS)) : null });
   };
   if(!SUIVI || APERCU){
     if(commun && Cloche.restantes().n<=0){ refus(true); return; }
-    allumeAide(true); if(commun) Cloche.sonnee(); return;
+    allumeAide(true); if(commun) Cloche.sonnee(); fenetreCoince(); return;
   }
-  allumeAide(true);
+  allumeAide(true); fenetreCoince();
   google.script.run.withSuccessHandler(()=>{ if(commun) Cloche.sonnee(); })
     .withFailureHandler(err=>refus(/sonneries/.test(String(err && err.message || ""))))
     .noter(COURS, { etape, type:"aide", reponse:"" });
@@ -1356,9 +1383,9 @@ const quandPret = f => typeof PREUVES==="undefined" ? f() : pretPreuves.then(f);
 /* La cloche reste allumée après un rechargement (autre poste, onglet fermé). */
 function restaureAide(){
   google.script.run.withSuccessHandler(r=>{
-    if(r && r.active===false && r.accord===true && DECLARATIF) accordRecu(caseAccord());   // accordé pendant que la fiche était fermée
+    if(r && r.active===false && r.accord===true && DECLARATIF) accordRecu(caseAccord(r.bloc));   // accordé pendant que la fiche était fermée
     if(!r || r.active!==true || enAide) return;
-    if(r.motif==="accord" && DECLARATIF){ const c = caseAccord(); if(c && !etat.cases[c]){ attendAccord = c; allumeAide(true); document.getElementById("aide-texte").textContent = "✋ Ton professeur sait que tu attends son accord pour rendre."; redessine(); return; } }
+    if(r.motif==="accord" && DECLARATIF){ const c = caseAccord(r.bloc) || caseAccord(ici+1); if(c && !etat.cases[c]){ attendAccord = c; allumeAide(true); document.getElementById("aide-texte").textContent = ACCORD_ATTEND; redessine(); return; } }
     enAide = true; document.getElementById("aide").classList.add("active"); libelleAide("Je me suis débloqué");
     document.getElementById("aide-texte").textContent = (MISSIONS ? "🔔 Le professeur sait que tu attends. " : "✋ Ton professeur sait que tu attends. ")+"Continue ce qui reste possible.";
   }).withFailureHandler(()=>{}).etatAide(COURS);

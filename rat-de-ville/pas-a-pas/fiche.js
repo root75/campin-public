@@ -131,7 +131,11 @@ const BLOCS = [
     "geste": "Mets une <b>majuscule</b> à la première lettre de chaque vers.",
     "sous": "<details><summary>Comment mettre à en majuscule (À) ?</summary><p>Je double-clique sur le à pour le sélectionner, seul. Puis Format ▸ Texte ▸ Minuscules/majuscules ▸ <b>MAJUSCULES</b>.</p><blockquote>à la porte de la salle → À la porte de la salle</blockquote><p class=\"note\">Deux vers commencent par à : le vers 4 et le vers 13. Pour les autres lettres, j’efface la minuscule et je tape la majuscule avec Shift.</p><img class=\"capture\" src=\"" + BASE + "capture-majuscules.png\" alt=\"Menu Format ▸ Texte ▸ Minuscules/majuscules ▸ MAJUSCULES dans Docs\"></details>"
    },
-   "Vérifie les <b>lignes vides</b> : une seule après le titre, entre deux strophes et avant l’auteur, 7 strophes en tout. Il en manque une ? Clique à la fin du dernier vers de la strophe, puis Enter."
+   "Vérifie les <b>lignes vides</b> : une seule après le titre, entre deux strophes et avant l’auteur, 7 strophes en tout. Il en manque une ? Clique à la fin du dernier vers de la strophe, puis Enter.",
+   {
+    "geste": "Montre ton <b>texte</b> au professeur : clique sur le bouton <b>🔔 Texte prêt : appeler le professeur</b> ci-dessous, puis continue à l’étape 4 sans attendre. Quand il a regardé, cette case se coche toute seule.",
+    "accord": { "bouton": "🔔 Texte prêt : appeler le professeur", "attente": "✋ Ton professeur sait que ton texte est prêt. Continue à l’étape 4 : cette case se cochera toute seule.", "ok": "✅ Le professeur a regardé ton texte." }
+   }
   ],
   "vois": "Je compte sept groupes de quatre vers et je regarde la première lettre de chaque vers.<br><span class=\"note\">Les strophes sont maintenant plus faciles à repérer.</span>",
   "demos": {
@@ -643,6 +647,14 @@ const AIDES_FORME = [
   { html: '<b>Ma liste numérotée ne commence pas à 1 ?</b><br>Clic droit sur le premier numéro ▸ <b>Recommencer la numérotation</b>.' }
 ];
 
+const AIDES_REMISE = [
+  { html: '<b>Je ne trouve pas le devoir ?</b><br>Classroom ▸ <b>Numérique</b> (ma classe) ▸ onglet <b>Travaux et devoirs</b> ▸ <b>03 EVAL Formatif Le rat de ville</b> ▸ <b>Afficher les instructions</b>.' },
+  { html: '<b>Mon document n’est pas dans la fenêtre Google Drive ?</b><br>Je clique sur l’onglet <b>Récents</b>, ou sur <b>Mon Drive</b>. Sinon, je tape « rat » dans <b>Rechercher dans Drive</b>, en haut de la fenêtre.' },
+  { html: '<b>J’ai joint le mauvais fichier ?</b><br>Dans <b>Vos devoirs</b>, je clique sur la <b>croix ✕</b> à droite du fichier, puis je recommence : <b>+ Ajouter ou créer</b> ▸ <b>Google Drive</b>.' },
+  { html: '<b>J’ai cliqué sur Docs et un document vide s’est ouvert ?</b><br>Je ferme son onglet. Dans <b>Vos devoirs</b>, je clique sur la <b>croix ✕</b> à droite de ce document vide, puis <b>+ Ajouter ou créer</b> ▸ <b>Google Drive</b>.' },
+  { html: '<b>Le bouton dit « Marquer comme terminé » ?</b><br>Aucun fichier n’est joint. Je ne clique pas : d’abord <b>+ Ajouter ou créer</b> ▸ <b>Google Drive</b> ▸ mon document ▸ <b>Ajouter</b>.' }
+];
+
 /* Sous chaque étape (BAS_ETAPE du moteur) : fermer et se déconnecter à la sonnerie, puis les deux gestes pour reprendre. Pas de case. */
 const BAS_ETAPE = [
   { classe: 'sonnerie', titre: '🔔 À la sonnerie, où que j’en sois', gestes: [
@@ -655,5 +667,5 @@ const BAS_ETAPE = [
 ];
 
 BLOCS.forEach((B, i) => {
-  B.coince = [AIDE_ANNULER].concat(i === 1 || i === 2 ? AIDES_FRAPPE : [], i >= 3 ? AIDES_FORME : [], [AIDE_RETROUVER]);
+  B.coince = [AIDE_ANNULER].concat(i === 1 || i === 2 ? AIDES_FRAPPE : [], i >= 3 && i < 9 ? AIDES_FORME : [], i === 9 ? AIDES_REMISE : [], [AIDE_RETROUVER]);
 });
