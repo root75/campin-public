@@ -33,6 +33,17 @@ addEventListener("error", e => {
 <link rel="stylesheet" href="https://root75.github.io/campin-public/assets/navigation.css">
 <link rel="stylesheet" href="https://root75.github.io/campin-public/pas-a-pas/python-missions.css?v=communs-20261112">
 <style>
+/* Couleurs propres à la Messagerie 01, en deux thèmes : jamais un fond clair écrit en dur sous un texte qui suit
+   le thème (en sombre, l'encre claire de fiche.css devenait illisible sur le rose pâle du mail raté). */
+:root{--m-rate:#fff6f4;--m-rate-survol:#ffe9e4;--m-ok-fond:#eaf7ef;--m-ok:#1c7c4a;--m-perdu-fond:#f8e3e0;--m-perdu:#b23a2e;
+  --m-chaud-fond:#fff4d6;--m-chaud:#c27c0e;--m-droit-fond:#fff1e6;--m-droit-bord:#e8590c;--m-droit:#c2410c;
+  --m-bleu-fond:#eef6ff;--m-bleu:#0f6cbd;--m-eclat:#ffcf3f}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--m-rate:#2b2124;--m-rate-survol:#3a2a2e;--m-ok-fond:#183427;--m-ok:#6fd0a0;
+  --m-perdu-fond:#3d2120;--m-perdu:#f08b7f;--m-chaud-fond:#3a3120;--m-chaud:#e9b84a;--m-droit-fond:#3d2618;--m-droit-bord:#f08a4b;
+  --m-droit:#ffa36b;--m-bleu-fond:#16283a;--m-bleu:#6cb4f0;--m-eclat:#6b5512}}
+:root[data-theme="dark"]{--m-rate:#2b2124;--m-rate-survol:#3a2a2e;--m-ok-fond:#183427;--m-ok:#6fd0a0;
+  --m-perdu-fond:#3d2120;--m-perdu:#f08b7f;--m-chaud-fond:#3a3120;--m-chaud:#e9b84a;--m-droit-fond:#3d2618;--m-droit-bord:#f08a4b;
+  --m-droit:#ffa36b;--m-bleu-fond:#16283a;--m-bleu:#6cb4f0;--m-eclat:#6b5512}
 /* Propre à la Messagerie 01 : l'aperçu en direct à droite du bloc, et les maquettes de mail. Le reste est commun. */
 .fil{display:grid;gap:18px;min-width:0}
 #apercu-direct{display:grid;gap:10px;align-content:start}#apercu-direct h2{font-size:1.3rem;margin:0}#apercu-direct .note{margin:0}
@@ -46,16 +57,16 @@ addEventListener("error", e => {
 .outlookbar{background:var(--papier);padding:8px 14px;border:1px solid var(--trait);border-radius:10px;color:var(--encre-bouton);font-size:.9rem;font-weight:700}
 .avant{display:grid;gap:10px}.avant h3{margin:6px 0 0}.avant ul,.faire ul{margin:0;padding-left:1.3rem}.faire p{margin:0 0 8px}
 .repere.mission p{margin:5px 0;font-size:.95rem}
-.repere.cote{background:#fff4d6;border-left-color:#c27c0e}.repere.cote p{margin:6px 0}
+.repere.cote{background:var(--m-chaud-fond);border-left-color:var(--m-chaud)}.repere.cote p{margin:6px 0}
 .grille-cote{border-collapse:collapse;width:100%;margin:8px 0;font-size:.95rem;background:var(--carte)}
 .grille-cote th,.grille-cote td{border:1px solid var(--trait);padding:6px 10px;text-align:left;vertical-align:top}
 .grille-cote th:last-child,.grille-cote td:last-child{width:4.5rem;text-align:center;font-weight:700}
-.droit{display:inline-block;background:#fff1e6;border:2px solid #e8590c;border-radius:8px;padding:0 6px;white-space:nowrap}.droit b{color:#c2410c;letter-spacing:.04em}
-.rappel-question.rappele{background:#eef6ff;border-left:4px solid #0f6cbd;padding:2px 8px;font-weight:700}
+.droit{display:inline-block;background:var(--m-droit-fond);border:2px solid var(--m-droit-bord);border-radius:8px;padding:0 6px;white-space:nowrap}.droit b{color:var(--m-droit);letter-spacing:.04em}
+.rappel-question.rappele{background:var(--m-bleu-fond);border-left:4px solid var(--m-bleu);padding:2px 8px;font-weight:700}
 #bloc details img{display:block;max-width:100%;height:auto;margin-top:10px}
 .demo-case{margin:10px 0 0 34px;border:1px solid var(--trait);border-radius:12px;padding:6px 10px;background:var(--carte)}.demo-case>summary{cursor:pointer;font-weight:700;color:var(--encre-bouton)}
 /* Le message reçu arrive dans une enveloppe fermée : l'élève l'ouvre d'un clic (étape 8). */
-.enveloppe>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:14px;font-weight:800;font-size:1.1rem;background:#fff4d6;border:2px solid #c27c0e;border-radius:14px;padding:14px 18px}
+.enveloppe>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:14px;font-weight:800;font-size:1.1rem;background:var(--m-chaud-fond);border:2px solid var(--m-chaud);border-radius:14px;padding:14px 18px}
 .enveloppe>summary::-webkit-details-marker{display:none}
 .enveloppe-dessin{font-size:2.6rem;line-height:1;display:inline-block;animation:enveloppe-appelle 1.6s ease-in-out infinite}
 .enveloppe[open]>summary{display:none}
@@ -64,25 +75,25 @@ addEventListener("error", e => {
 @keyframes enveloppe-ouvre{from{opacity:0;transform:scaleY(.2)}to{opacity:1;transform:none}}
 @media(prefers-reduced-motion:reduce){.enveloppe-dessin,.enveloppe[open]>.email{animation:none}}
 /* Bloc 1 — le mail raté : chaque ligne est un bouton ; réparée, elle passe au vert. */
-.mail-rate{display:grid}.rate-ligne{all:unset;box-sizing:border-box;display:block;width:100%;padding:12px 14px;border-bottom:1px solid var(--trait);cursor:pointer;font:inherit;background:#fff6f4;overflow-wrap:anywhere}
-.rate-ligne:hover{background:#ffe9e4}.rate-ligne:focus-visible{outline:3px solid var(--encre-bouton);outline-offset:-3px}
-.rate-ligne.reparee,.rate-ligne.juste{background:#eaf7ef}.rate-ligne.reparee{animation:rate-repare .5s ease-out}.rate-ligne.reparee::after,.rate-ligne.juste::after{content:" ✔";color:#1c7c4a;font-weight:800}
+.mail-rate{display:grid}.rate-ligne{all:unset;box-sizing:border-box;display:block;width:100%;padding:12px 14px;border-bottom:1px solid var(--trait);cursor:pointer;font:inherit;color:var(--encre);background:var(--m-rate);overflow-wrap:anywhere}
+.rate-ligne:hover{background:var(--m-rate-survol)}.rate-ligne:focus-visible{outline:3px solid var(--encre-bouton);outline-offset:-3px}
+.rate-ligne.reparee,.rate-ligne.juste{background:var(--m-ok-fond)}.rate-ligne.reparee{animation:rate-repare .5s ease-out}.rate-ligne.reparee::after,.rate-ligne.juste::after{content:" ✔";color:var(--m-ok);font-weight:800}
 .rate-dit{margin:0;padding:12px 14px;background:var(--papier);font-weight:700;min-height:3.2em}.rate-compte{margin:0;padding:10px 14px;font-weight:800}
-.mail-rate.repare .rate-compte{background:#eaf7ef;color:#1c7c4a}
-.rate-ligne.juste::after{content:" ✔ juste";color:#526779}.mail-rate.perdu .rate-compte{background:#f8e3e0;color:#b23a2e}.mail-rate.perdu .rate-ligne{cursor:default;opacity:.75}
+.mail-rate.repare .rate-compte{background:var(--m-ok-fond);color:var(--m-ok)}
+.rate-ligne.juste::after{content:" ✔ juste";color:var(--doux)}.mail-rate.perdu .rate-compte{background:var(--m-perdu-fond);color:var(--m-perdu)}.mail-rate.perdu .rate-ligne{cursor:default;opacity:.75}
 .rate-encore{margin:10px 14px 14px;justify-self:start}.rate-encore[hidden]{display:none}
-@keyframes rate-repare{from{background:#ffcf3f;transform:scale(1.02)}to{transform:none}}
+@keyframes rate-repare{from{background:var(--m-eclat);transform:scale(1.02)}to{transform:none}}
 /* Bloc 10 — le correspondant tiré au sort. */
-.repere.correspondant{background:#eef6ff;border-left-color:#0f6cbd}.correspondant p{margin:6px 0}
+.repere.correspondant{background:var(--m-bleu-fond);border-left-color:var(--m-bleu)}.correspondant p{margin:6px 0}
 .corr-nom .rappele{font-size:1.5rem;font-weight:800;animation:rate-repare .6s ease-out}.corr-adresse .rappele{font-family:ui-monospace,Consolas,monospace;font-size:1.1rem;font-weight:700;overflow-wrap:anywhere}
 .correspondant .rappele{background:none;padding:0;border:0}
 /* Écran de fin — le permis de mail. */
-.permis{position:relative;max-width:30rem;margin:18px auto;padding:20px 22px;border:3px solid #0f6cbd;border-radius:18px;background:linear-gradient(135deg,#eef6ff,#fff);box-shadow:0 8px 22px #0f6cbd22;overflow:hidden}
-.permis p{margin:0}.permis-tete{font:800 1.1rem/1.2 var(--display,Arial,sans-serif);letter-spacing:.08em;text-transform:uppercase;color:#0f6cbd}
+.permis{position:relative;max-width:30rem;margin:18px auto;padding:20px 22px;border:3px solid var(--m-bleu);border-radius:18px;background:linear-gradient(135deg,var(--m-bleu-fond),var(--carte));box-shadow:0 8px 22px #0f6cbd22;overflow:hidden}
+.permis p{margin:0}.permis-tete{font:800 1.1rem/1.2 var(--display,Arial,sans-serif);letter-spacing:.08em;text-transform:uppercase;color:var(--m-bleu)}
 .permis-nom{font:800 1.7rem/1.2 var(--display,Arial,sans-serif);margin:6px 0 10px!important;overflow-wrap:anywhere}
-.permis ul{list-style:none;margin:0 0 10px;padding:0;display:grid;gap:6px}.permis li::before{content:"✔ ";color:#1c7c4a;font-weight:800}
+.permis ul{list-style:none;margin:0 0 10px;padding:0;display:grid;gap:6px}.permis li::before{content:"✔ ";color:var(--m-ok);font-weight:800}
 .permis-date{font-size:.9rem;color:var(--doux)}.permis .note{margin-top:10px!important}
-.permis-tampon{position:absolute;right:14px;top:14px;transform:rotate(12deg);border:3px solid #c2410c;color:#c2410c;border-radius:8px;padding:2px 10px;font:800 1rem/1.4 var(--display,Arial,sans-serif);letter-spacing:.12em;text-transform:uppercase;animation:permis-tampon .5s cubic-bezier(.3,1.6,.6,1) .5s both}
+.permis-tampon{position:absolute;right:14px;top:14px;transform:rotate(12deg);border:3px solid var(--m-droit);color:var(--m-droit);border-radius:8px;padding:2px 10px;font:800 1rem/1.4 var(--display,Arial,sans-serif);letter-spacing:.12em;text-transform:uppercase;animation:permis-tampon .5s cubic-bezier(.3,1.6,.6,1) .5s both}
 @keyframes permis-tampon{from{opacity:0;transform:rotate(12deg) scale(3)}to{opacity:.9;transform:rotate(12deg)}}
 @media(prefers-reduced-motion:reduce){.rate-ligne.reparee,.corr-nom .rappele,.permis-tampon{animation:none}}
 .email .rappele{background:none;padding:0;margin:0;border:0;border-radius:0;font-weight:inherit;color:inherit}

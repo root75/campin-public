@@ -1,6 +1,6 @@
 /* Style « missions » et démos animées des fiches Python (python-1, python-2) : cloche, mascotte,
    bulle, cases, bravo, mini-maquettes Windows / Thonny / Chrome. Lu par les deux index.html. */
-@import url("demo-lecteur.css?v=20261112");
+@import url("demo-lecteur.css?v=contraste-20261120");
 /* ===== Style « missions », repris du Labo 07 et du Rat de ville (05/11/2026) ===== */
 :root{--vert:#2fa36b;--soleil:#ffcf3f;--ciel:#e8f4fb}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--ciel:#17303d}}

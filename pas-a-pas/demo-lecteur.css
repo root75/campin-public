@@ -14,7 +14,7 @@
 .demo-ctrl{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .demo-b{border:2px solid var(--encre-bouton,#1d5a73);background:var(--carte,#fff);color:var(--encre-bouton,#1d5a73);border-radius:20px;padding:4px 12px;font-weight:700;cursor:pointer}
 .demo-jouer{margin-left:auto}
-.demo-points{display:flex;flex-wrap:wrap;gap:4px}.demo-points button{min-width:26px;height:26px;padding:0 4px;border-radius:13px;border:2px solid #b9c9d4;background:#fff;color:#1f1f1f;font:inherit;font-size:.8rem;font-weight:700;line-height:1;cursor:pointer}.demo-points button:hover{border-color:var(--encre-bouton,#1d5a73)}.demo-points button.on{background:var(--encre-bouton,#1d5a73);border-color:var(--encre-bouton,#1d5a73);color:#fff}
+.demo-points{display:flex;flex-wrap:wrap;gap:4px}.demo-points button{min-width:26px;height:26px;padding:0 4px;border-radius:13px;border:2px solid var(--trait,#b9c9d4);background:var(--carte,#fff);color:var(--encre,#1f1f1f);font:inherit;font-size:.8rem;font-weight:700;line-height:1;cursor:pointer}.demo-points button:hover{border-color:var(--encre-bouton,#1d5a73)}.demo-points button.on{background:var(--encre-bouton,#1d5a73);border-color:var(--encre-bouton,#1d5a73);color:var(--carte,#fff)}
 .demo-cote{border:2px dashed var(--fromage,#e3a922);border-radius:14px;padding:8px 12px}.demo-cote summary{cursor:pointer;font-weight:700}.demo-cote .demo{margin-top:8px}
 .md{background:#fff;color:#1f1f1f;font-family:"Segoe UI",Arial,sans-serif;font-size:13px;border:1px solid #c9d3db;border-radius:10px;min-height:260px;position:relative;overflow:hidden}
 .md-vise{outline:3px solid var(--fromage,#e3a922);outline-offset:2px;border-radius:4px}
