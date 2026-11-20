@@ -12,8 +12,8 @@
 **20/11/2026 — la remise en détail et l'accord du professeur.** Étape 9 : 19 cases (14 avant). Case 13 = l'accord
 (`accord:true`, voir `pas-a-pas/MOTEUR.md`) : l'élève le demande par un bouton, le professeur le donne au tableau
 (« ✓ Donner l'accord »), la case se coche seule et ouvre les cases 14 à 19 : ouvrir le devoir ▸ + Ajouter ou créer ▸
-Google Drive ▸ son document ▸ bouton bleu ▸ vérifier « Vos devoirs » ▸ Rendre le devoir ×2 ▸ vérifier « Remis ».
-Le libellé du bouton bleu du sélecteur Drive n'est pas encore relevé à l'écran.
+Google Drive ▸ son document ▸ Ajouter ▸ vérifier « Vos devoirs » ▸ Rendre le devoir ×2 ▸ vérifier « Remis ».
+Le sélecteur s'intitule « Insérer des fichiers avec Google Drive », bouton bleu « Ajouter » (relevé le 20/11/2026).
 
 Entrée du catalogue : `rat-de-ville-formatif`, 9 étapes sur deux périodes (7 du 6/11 au 11/11 ; voir la fin de ce fichier).
 Les 45 petites cases (une action ou une vérification par case) déclarent les actions terminées ; elles ne corrigent pas la copie.

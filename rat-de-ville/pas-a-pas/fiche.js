@@ -538,7 +538,7 @@ const BLOCS = [
     "geste": "À droite, dans le cadre <b>Vos devoirs</b> : clique sur <b>+ Ajouter ou créer</b> ▸ <b>Google Drive</b> (la 1re ligne du menu).",
     "attention": "⚠️ Pas <b>Docs</b>, sous « Créer » : il fabriquerait un nouveau document vide. Ton document existe déjà."
    },
-   "Dans la fenêtre Google Drive, clique sur <b>ton document</b> (AAAAMMJJ Le rat de ville – Prénom Nom), puis sur le <b>bouton bleu</b>, en bas à droite.",
+   "Dans la fenêtre Google Drive, clique sur <b>ton document</b> (AAAAMMJJ Le rat de ville – Prénom Nom), puis sur le bouton bleu <b>Ajouter</b>, en bas à droite.",
    "Vérifie : ton document apparaît maintenant sous <b>Vos devoirs</b>, avec son nom. Joindre ne suffit pas : il n’est pas encore rendu.",
    "Clique sur le bouton bleu <b>Rendre le devoir</b>. Une fenêtre demande « Rendre le devoir ? » : clique encore sur <b>Rendre le devoir</b>.",
    "Vérifie : en haut du cadre <b>Vos devoirs</b>, c’est écrit <b>Remis</b>. C’est rendu !"

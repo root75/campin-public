@@ -91,7 +91,7 @@
       devoir({ cible: 'ajouter', legende: 'Devoir ouvert. À droite, dans Vos devoirs : + Ajouter ou créer.' }),
       devoir({ menu: 1, cible: 'gdrive', legende: 'Google Drive (ou Fichier si ton fichier est sur l’ordinateur).' }),
       devoir({ picker: 1, cible: 'fichier', legende: 'Clique sur ton fichier…' }),
-      devoir({ picker: 2, cible: 'inserer', legende: '… puis sur le bouton bleu, en bas à droite.' }),
+      devoir({ picker: 2, cible: 'inserer', legende: '… puis sur le bouton bleu Ajouter, en bas à droite.' }),
       devoir({ joint: 1, cible: 'piece', legende: 'Ton fichier apparaît dans Vos devoirs.' }),
       devoir({ joint: 1, cible: 'rendre', legende: 'Joindre ne suffit pas : Rendre le devoir.' }),
       devoir({ joint: 1, confirme: 1, cible: 'confirmer', legende: '« Rendre le devoir ? » : encore Rendre le devoir, pour confirmer.' }),
