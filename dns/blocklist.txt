@@ -21,7 +21,6 @@
 @@||fandom.com^$important
 @@||github.com^$important
 @@||githubassets.com^$important
-@@||google.com^$important
 @@||googleapis.com^$important
 @@||googleusercontent.com^$important
 @@||graph.windows.net^$important
