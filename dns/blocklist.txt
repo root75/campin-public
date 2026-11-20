@@ -225,3 +225,4 @@
 ||wpad.cyberclasse.cyber^$important
 ||www.rapidwebapp.com^$important
 ||xbitlabs.com^$important
+||red-ball4.com^$important
