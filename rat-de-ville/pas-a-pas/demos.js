@@ -74,7 +74,7 @@ const Demo = (() => {
     etape11: { titre: 'Ma phrase : j’explique', images: [
       doc([L('Mon bloc-notes', 'gras'), L('le tapis', 'puce'), L('…', 'puce'), L('…', 'puce'), L('Mes gestes', 'gras'), L('J’ai sélectionné le titre, puis Centrer.', 'num'), L('…', 'num'), L('Pour changer une seule strophe, je…')], { cible: 'L7', ok: 1, legende: 'Et ma phrase pour finir.' })
     ] },
-    etape9: { titre: 'Je m’évalue et je remets', images: [
+    etape9: { titre: 'Je vérifie et je remets', images: [
       doc(base('centre gras capitales', 'centre garamond', 'droite italique souligne'), { cible: 'orthographe', legende: 'Vérifier l’orthographe (Ctrl + Alt + X).' }),
       devoir({ cible: 'instructions', legende: 'Classroom ▸ ma classe ▸ Travaux et devoirs ▸ le devoir ▸ Afficher les instructions. Je relis ma grille.' }),
       devoir({ cible: 'ajouter', legende: 'À droite, dans « Vos devoirs » : + Ajouter ou créer.' }),

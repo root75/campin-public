@@ -131,7 +131,11 @@ const BLOCS = [
     "geste": "Mets une <b>majuscule</b> à la première lettre de chaque vers.",
     "sous": "<details><summary>Comment mettre à en majuscule (À) ?</summary><p>Je double-clique sur le à pour le sélectionner, seul. Puis Format ▸ Texte ▸ Minuscules/majuscules ▸ <b>MAJUSCULES</b>.</p><blockquote>à la porte de la salle → À la porte de la salle</blockquote><p class=\"note\">Deux vers commencent par à : le vers 4 et le vers 13. Pour les autres lettres, j’efface la minuscule et je tape la majuscule avec Shift.</p><img class=\"capture\" src=\"" + BASE + "capture-majuscules.png\" alt=\"Menu Format ▸ Texte ▸ Minuscules/majuscules ▸ MAJUSCULES dans Docs\"></details>"
    },
-   "Vérifie les <b>lignes vides</b> : une seule après le titre, entre deux strophes et avant l’auteur, 7 strophes en tout. Il en manque une ? Clique à la fin du dernier vers de la strophe, puis Enter."
+   "Vérifie les <b>lignes vides</b> : une seule après le titre, entre deux strophes et avant l’auteur, 7 strophes en tout. Il en manque une ? Clique à la fin du dernier vers de la strophe, puis Enter.",
+   {
+    "geste": "Montre ton <b>texte</b> au professeur : clique sur le bouton <b>🔔 Texte prêt : appeler le professeur</b> ci-dessous, puis continue à l’étape 4 sans attendre. Quand il a regardé, cette case se coche toute seule.",
+    "accord": { "bouton": "🔔 Texte prêt : appeler le professeur", "attente": "✋ Ton professeur sait que ton texte est prêt. Continue à l’étape 4 : cette case se cochera toute seule.", "ok": "✅ Le professeur a regardé ton texte." }
+   }
   ],
   "vois": "Je compte sept groupes de quatre vers et je regarde la première lettre de chaque vers.<br><span class=\"note\">Les strophes sont maintenant plus faciles à repérer.</span>",
   "demos": {
@@ -508,9 +512,10 @@ const BLOCS = [
  },
  {
   "partie": "B — La mise en forme",
-  "titre": "Je m’évalue et je remets",
-  "min": 15,
-  "bulle": "Dernière étape : vérifie, puis remets dans Classroom.",
+  "titre": "Je vérifie mon document",
+  "court": "Je vérifie",
+  "min": 10,
+  "bulle": "Avant de remettre : je vérifie tout, une chose par case.",
   "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>J’ouvre la grille : les critères avec une étoile sont incontournables.</p></aside><p class=\"note\">Je vérifie une chose par case, dans mon document. Si une chose manque, je la corrige avant de cocher.</p>" + A_MOI,
   "gestes": [
    "<img class=\"ico\" src=\"" + ICONES + "orthographe.png\" alt=\"\">Clique sur <b>Vérifier l’orthographe</b> (Ctrl + Alt + X) et corrige.",
@@ -523,8 +528,21 @@ const BLOCS = [
    "Vérifie l’<b>auteur</b> : à droite, en italique, souligné.",
    "Vérifie que chaque strophe a sa <b>police</b> et sa <b>taille</b>.",
    "Vérifie ton <b>bloc-notes</b> : une vraie liste à puces, une vraie liste numérotée de six gestes, ta phrase.",
-   "Ouvre ta <b>grille</b> (bouton 📋, après l’étape 9) et clique, pour chaque critère, sur la phrase qui décrit ton travail : A, B, C ou D.",
-   "<b>Montre ton document à ton voisin</b>. Il le compare aux cases 2 à 10 et te montre un écart, sans toucher la souris. Corrige.",
+   "<b>Montre ton document à ton voisin</b>. Il le compare aux cases 2 à 10 et te montre un écart, sans toucher la souris. Corrige."
+  ],
+  "vois": "Chaque case cochée = une chose vérifiée dans mon document, et corrigée s’il le fallait. Mon voisin n’a plus trouvé d’écart.<br><span class=\"note\">Repérer et corriger un écart fait partie du travail : après la remise, je ne peux plus modifier mon document.</span>",
+  "demos": {
+   "1": ["etape9", [0]]
+  }
+ },
+ {
+  "partie": "B — La mise en forme",
+  "titre": "Je remets mon document",
+  "court": "Je remets",
+  "min": 10,
+  "bulle": "Le professeur dit oui, puis je remets dans Classroom.",
+  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>Dans Classroom, le cadre <b>Vos devoirs</b> est à droite du devoir. Il dit <b>Attribué</b> avant la remise, <b>Remis</b> après.</p></aside><p class=\"note\">Une fois remis, mon document ne se modifie plus : c’est le professeur qui l’a.</p>",
+  "gestes": [
    {
     "geste": "Demande l’<b>accord</b> du professeur : clique sur le bouton <b>🔔 Je demande l’accord du professeur</b> ci-dessous. Il vient regarder ton document. Quand il a dit oui, cette case se coche toute seule.",
     "accord": true,
@@ -543,20 +561,14 @@ const BLOCS = [
    "Clique sur le bouton bleu <b>Rendre le devoir</b>. Une fenêtre demande « Rendre le devoir ? » : clique encore sur <b>Rendre le devoir</b>.",
    "Vérifie : en haut du cadre <b>Vos devoirs</b>, c’est écrit <b>Remis</b>. C’est rendu !"
   ],
-  "vois": "Je compare mon fichier aux critères avant de choisir mes lettres Moi. Je demande l’accord du professeur avant de rendre. Après la remise, « Vos devoirs » affiche <b>Remis</b>.<br><span class=\"note\">Repérer et corriger un écart fait partie du travail : je peux encore améliorer mon document avant de le remettre.</span>",
+  "vois": "Le professeur a donné son accord, puis j’ai rendu : « Vos devoirs » affiche <b>Remis</b>. Il me reste à m’évaluer avec ma grille.<br><span class=\"note\">Rendre, c’est dire « j’ai fini » : le professeur peut maintenant lire et corriger mon document.</span>",
   "demos": {
-   "1": [
-    "etape9",
-    [
-     0
-    ]
-   ],
-   "14": ["etape9", [1]],
-   "15": ["etape9", [2, 3]],
-   "16": ["etape9", [4, 5]],
-   "17": ["etape9", [6]],
-   "18": ["etape9", [6, 7]],
-   "19": ["etape9", [8]]
+   "2": ["etape9", [1]],
+   "3": ["etape9", [2, 3]],
+   "4": ["etape9", [4, 5]],
+   "5": ["etape9", [6]],
+   "6": ["etape9", [6, 7]],
+   "7": ["etape9", [8]]
   }
  }
 ];
@@ -610,10 +622,10 @@ const GRILLE = {
     + '<li><span class="couleur jaune">Jaune</span> presque atteint : un des critères ★ reste à C.</li><li><span class="couleur orange">Orange</span> pas encore atteint : les critères ★ ne sont pas atteints.</li></ul>'
 };
 const FIN = {
-  titre: 'Ma grille d’évaluation',
-  bouton: 'Ma grille d’évaluation →',
+  titre: 'Je m’évalue',
+  bouton: 'Je m’évalue →',
   bulle: 'Dernière ligne droite : je choisis mes lettres.',
-  texte: 'Pour chaque critère, je lis les quatre phrases, de A à D. Je clique sur celle qui décrit mon travail : c’est ma lettre « Moi ».',
+  texte: 'Mon document est rendu. Pour chaque critère, je lis les quatre phrases, de A à D. Je clique sur celle qui décrit mon travail : c’est ma lettre « Moi ».',
   citation: { texte: 'Rien ne sert de courir ; il faut partir à point.', auteur: 'Jean de La Fontaine', source: '« Le Lièvre et la Tortue », Fables, livre VI, fable 10 (1668)',
     lien: 'Strophe après strophe, une case après l’autre : c’est la régularité qui a fait mon document.' }
 };
@@ -635,6 +647,14 @@ const AIDES_FORME = [
   { html: '<b>Ma liste numérotée ne commence pas à 1 ?</b><br>Clic droit sur le premier numéro ▸ <b>Recommencer la numérotation</b>.' }
 ];
 
+const AIDES_REMISE = [
+  { html: '<b>Je ne trouve pas le devoir ?</b><br>Classroom ▸ <b>Numérique</b> (ma classe) ▸ onglet <b>Travaux et devoirs</b> ▸ <b>03 EVAL Formatif Le rat de ville</b> ▸ <b>Afficher les instructions</b>.' },
+  { html: '<b>Mon document n’est pas dans la fenêtre Google Drive ?</b><br>Je clique sur l’onglet <b>Récents</b>, ou sur <b>Mon Drive</b>. Sinon, je tape « rat » dans <b>Rechercher dans Drive</b>, en haut de la fenêtre.' },
+  { html: '<b>J’ai joint le mauvais fichier ?</b><br>Dans <b>Vos devoirs</b>, je clique sur la <b>croix ✕</b> à droite du fichier, puis je recommence : <b>+ Ajouter ou créer</b> ▸ <b>Google Drive</b>.' },
+  { html: '<b>J’ai cliqué sur Docs et un document vide s’est ouvert ?</b><br>Je ferme son onglet. Dans <b>Vos devoirs</b>, je clique sur la <b>croix ✕</b> à droite de ce document vide, puis <b>+ Ajouter ou créer</b> ▸ <b>Google Drive</b>.' },
+  { html: '<b>Le bouton dit « Marquer comme terminé » ?</b><br>Aucun fichier n’est joint. Je ne clique pas : d’abord <b>+ Ajouter ou créer</b> ▸ <b>Google Drive</b> ▸ mon document ▸ <b>Ajouter</b>.' }
+];
+
 /* Sous chaque étape (BAS_ETAPE du moteur) : fermer et se déconnecter à la sonnerie, puis les deux gestes pour reprendre. Pas de case. */
 const BAS_ETAPE = [
   { classe: 'sonnerie', titre: '🔔 À la sonnerie, où que j’en sois', gestes: [
@@ -647,5 +667,5 @@ const BAS_ETAPE = [
 ];
 
 BLOCS.forEach((B, i) => {
-  B.coince = [AIDE_ANNULER].concat(i === 1 || i === 2 ? AIDES_FRAPPE : [], i >= 3 ? AIDES_FORME : [], [AIDE_RETROUVER]);
+  B.coince = [AIDE_ANNULER].concat(i === 1 || i === 2 ? AIDES_FRAPPE : [], i >= 3 && i < 9 ? AIDES_FORME : [], i === 9 ? AIDES_REMISE : [], [AIDE_RETROUVER]);
 });

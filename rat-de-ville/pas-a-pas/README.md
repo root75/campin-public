@@ -9,6 +9,16 @@
 > relire les anciennes lignes du Journal. Retirés avec l'ancien moteur : la jauge « missions », le bouton
 > « Affichage compact », « Voir toutes les aides ». **La suite de ce fichier décrit l'ancien moteur : historique.**
 
+**20/11/2026, suite.** Case 3.3 : accord intermédiaire, le professeur regarde le texte avant la mise en forme
+(l'élève continue sans attendre). Étape 10 : la procédure de remise reste lisible avant l'accord, seules les cases
+sont grisées ; « Ça coince ? » y parle de Classroom. À la sonnerie, « Ça coince ? » s'ouvre en fenêtre. 61 cases.
+
+**20/11/2026, après-midi — trois temps (Vincent).** L'ancienne étape 9 « Je m'évalue et je remets » devient
+**9. Je vérifie mon document** (11 cases : les dix vérifications, puis le voisin) et **10. Je remets mon document**
+(7 cases : l'accord, puis la remise) ; l'auto-évaluation « Moi » vient **après** la remise, sur l'écran final
+renommé « Je m'évalue ». La case « Ouvre ta grille » a disparu de l'étape 9 : c'est l'écran final qui la porte.
+Les cases 9.12 à 9.19 cochées avant ce découpage ne comptent plus (le catalogue en annonce 11).
+
 **20/11/2026 — la remise en détail et l'accord du professeur.** Étape 9 : 19 cases (14 avant). Case 13 = l'accord
 (`accord:true`, voir `pas-a-pas/MOTEUR.md`) : l'élève le demande par un bouton, le professeur le donne au tableau
 (« ✓ Donner l'accord »), la case se coche seule et ouvre les cases 14 à 19 : ouvrir le devoir ▸ + Ajouter ou créer ▸
