@@ -76,7 +76,8 @@
     if (!presente()) return;
     const a = document.querySelector('a[data-a-cote][data-auto]');
     if (!a) return;
-    const cle = 'campin-a-cote:' + location.pathname;
+    // Servie par Apps Script, toute fiche a la même adresse de cadre : le titre distingue les fiches.
+    const cle = 'campin-a-cote:' + location.pathname + '|' + document.title;
     try {
       if (sessionStorage.getItem(cle)) return;
       sessionStorage.setItem(cle, '1');
