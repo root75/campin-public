@@ -7,6 +7,7 @@
 // Un <button data-cote-a-cote hidden> (le document de l'élève, dont on ne connaît pas l'adresse) n'apparaît
 // qu'avec l'extension : il met le cours à côté de l'onglet que l'élève vient de quitter. Sans l'extension,
 // la fiche garde le geste écrit juste à côté.
+// Avec data-auto en plus de data-a-cote, le site s'ouvre à côté dès le chargement de la fiche (une fois par onglet).
 (function () {
   let n = 0;
   function presente() {
@@ -68,5 +69,21 @@
     const volet = (zone && zone.parentElement || document).querySelector('details.cote');
     if (volet) volet.open = true;
   });
+  // <a data-a-cote data-auto> : le site s'ouvre à côté tout seul, une seule fois par onglet et par fiche
+  // (un rechargement ne rouvre rien : la moitié de droite garde le document de l'élève). Seulement avec
+  // l'extension : sans elle, ouvrir un onglet sans clic serait bloqué comme une fenêtre surgissante.
+  function ouvrirAuto() {
+    if (!presente()) return;
+    const a = document.querySelector('a[data-a-cote][data-auto]');
+    if (!a) return;
+    const cle = 'campin-a-cote:' + location.pathname;
+    try {
+      if (sessionStorage.getItem(cle)) return;
+      sessionStorage.setItem(cle, '1');
+    } catch (e) { return; } // pas de mémoire d'onglet : on ne risque pas de rouvrir à chaque chargement
+    demander('ouvrir-a-cote', a.href);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ouvrirAuto);
+  else ouvrirAuto();
   window.CampinExtension = { presente, ouvrirACote, coteACote: () => demander('cote-a-cote'), ping: () => demander('ping') };
 })();
