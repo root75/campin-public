@@ -77,10 +77,11 @@ addEventListener("error", e => {
 /* Bloc 1 — le mail raté : chaque ligne est un bouton ; réparée, elle passe au vert. */
 .mail-rate{display:grid}.rate-ligne{all:unset;box-sizing:border-box;display:block;width:100%;padding:12px 14px;border-bottom:1px solid var(--trait);cursor:pointer;font:inherit;color:var(--encre);background:var(--m-rate);overflow-wrap:anywhere}
 .rate-ligne:hover{background:var(--m-rate-survol)}.rate-ligne:focus-visible{outline:3px solid var(--encre-bouton);outline-offset:-3px}
-.rate-ligne.reparee,.rate-ligne.juste{background:var(--m-ok-fond)}.rate-ligne.reparee{animation:rate-repare .5s ease-out}.rate-ligne.reparee::after,.rate-ligne.juste::after{content:" ✔";color:var(--m-ok);font-weight:800}
+.rate-ligne.reparee{background:var(--m-ok-fond)}.rate-ligne.juste{background:var(--m-perdu-fond)}.rate-ligne.reparee{animation:rate-repare .5s ease-out}.rate-ligne.reparee::after{content:" ✔";color:var(--m-ok);font-weight:800}
 .rate-dit{margin:0;padding:12px 14px;background:var(--papier);font-weight:700;min-height:3.2em}.rate-compte{margin:0;padding:10px 14px;font-weight:800}
 .mail-rate.repare .rate-compte{background:var(--m-ok-fond);color:var(--m-ok)}
-.rate-ligne.juste::after{content:" ✔ juste";color:var(--doux)}.mail-rate.perdu .rate-compte{background:var(--m-perdu-fond);color:var(--m-perdu)}.mail-rate.perdu .rate-ligne{cursor:default;opacity:.75}
+/* Une ligne juste cliquée : le clic était une erreur, croix rouge (Vincent, 20/11/2026). */
+.rate-ligne.juste::after{content:" ✘ clic perdu";color:var(--m-perdu);font-weight:800}.mail-rate.perdu .rate-compte{background:var(--m-perdu-fond);color:var(--m-perdu)}.mail-rate.perdu .rate-ligne{cursor:default;opacity:.75}
 .rate-encore{margin:10px 14px 14px;justify-self:start}.rate-encore[hidden]{display:none}
 @keyframes rate-repare{from{background:var(--m-eclat);transform:scale(1.02)}to{transform:none}}
 /* Bloc 10 — le correspondant tiré au sort. */
