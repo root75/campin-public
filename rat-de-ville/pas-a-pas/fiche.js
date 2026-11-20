@@ -557,7 +557,7 @@ const BLOCS = [
    "Clique sur le bouton bleu <b>Rendre le devoir</b>. Une fenêtre demande « Rendre le devoir ? » : clique encore sur <b>Rendre le devoir</b>.",
    "Vérifie : en haut du cadre <b>Vos devoirs</b>, c’est écrit <b>Remis</b>. C’est rendu !"
   ],
-  "vois": "Le professeur a donné son accord, puis j’ai rendu : « Vos devoirs » affiche <b>Remis</b>. Il me reste à m’évaluer avec ma grille.<br><span class=\"note\">Repérer et corriger un écart fait partie du travail : je peux encore améliorer mon document avant de le remettre.</span>",
+  "vois": "Le professeur a donné son accord, puis j’ai rendu : « Vos devoirs » affiche <b>Remis</b>. Il me reste à m’évaluer avec ma grille.<br><span class=\"note\">Rendre, c’est dire « j’ai fini » : le professeur peut maintenant lire et corriger mon document.</span>",
   "demos": {
    "2": ["etape9", [1]],
    "3": ["etape9", [2, 3]],
