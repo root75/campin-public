@@ -269,14 +269,17 @@ function dessine(d){
       etat.append(txt("span","pastille aide"+(e.aide.motif==="accord" ? " accord" : ""),"🔔 "+(MOTIFS_CLOCHE[e.aide.motif]||"aide")+" · bloc "+e.aide.bloc+" · "+ilya(d.maintenant-e.aide.depuis).replace("il y a ","")));
       if(SUIVI && (e._d||d).peutCloreAide){
         const cours=$("cours").value,seance=e._seance||choisie(),depuis=e.aide.depuis;
-        const b=txt("button","btn vide","Aide traitée");b.type="button";
-        b.setAttribute("aria-label","Aide traitée pour "+nom(e.email));
+        // Motif « accord » (Rat de ville, case de l'accord) : le même geste vaut accord, la case de l'élève se coche seule.
+        const acc=e.aide.motif==="accord", mot=acc?"Accord donné":"Aide traitée";
+        const b=txt("button","btn vide",acc?"✓ Donner l’accord":mot);b.type="button";
+        b.setAttribute("aria-label",(acc?"Donner l’accord de remise à ":"Aide traitée pour ")+nom(e.email));
+        if(acc)b.title="J’ai regardé son document : il peut rendre. Sa case « accord » se coche toute seule.";
         b.addEventListener("click",()=>{
           if(b.disabled)return;b.disabled=true;b.textContent="Enregistrement…";
           google.script.run.withSuccessHandler(r=>{
             if(!r?.traitee){b.disabled=false;b.textContent="Réessayer";return;}
-            b.textContent="✓ Aide traitée";charge();
-          }).withFailureHandler(err=>{b.disabled=false;b.textContent="Réessayer : aide traitée";erreur(err);}).cloreAide(cours,e.email,seance.debut,depuis);
+            b.textContent="✓ "+mot;charge();
+          }).withFailureHandler(err=>{b.disabled=false;b.textContent="Réessayer : "+mot.toLowerCase();erreur(err);}).cloreAide(cours,e.email,seance.debut,depuis);
         });
         etat.append(b);
       }

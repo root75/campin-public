@@ -509,7 +509,7 @@ const BLOCS = [
  {
   "partie": "B — La mise en forme",
   "titre": "Je m’évalue et je remets",
-  "min": 10,
+  "min": 15,
   "bulle": "Dernière étape : vérifie, puis remets dans Classroom.",
   "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>J’ouvre la grille : les critères avec une étoile sont incontournables.</p></aside><p class=\"note\">Je vérifie une chose par case, dans mon document. Si une chose manque, je la corrige avant de cocher.</p>" + A_MOI,
   "gestes": [
@@ -525,13 +525,25 @@ const BLOCS = [
    "Vérifie ton <b>bloc-notes</b> : une vraie liste à puces, une vraie liste numérotée de six gestes, ta phrase.",
    "Ouvre ta <b>grille</b> (bouton 📋, après l’étape 9) et clique, pour chaque critère, sur la phrase qui décrit ton travail : A, B, C ou D.",
    "<b>Montre ton document à ton voisin</b>. Il le compare aux cases 2 à 10 et te montre un écart, sans toucher la souris. Corrige.",
-   "🔔 Clique sur <b>« J’attends de l’aide »</b> et attends le professeur : il regarde ton document. <b>Rends seulement avec son accord.</b>",
    {
-    "geste": "Le professeur a dit oui ? Classroom ▸ le devoir ▸ Vos devoirs ▸ Ajouter ou créer ▸ <b>Google Drive</b> ▸ ton document ▸ bouton bleu ▸ <b>Rendre le devoir</b> ▸ Rendre le devoir.",
-    "sous": "<details><summary>Où est le devoir dans Classroom ?</summary><p>Classroom ▸ ma classe ▸ onglet <b>Travaux et devoirs</b> ▸ clique sur <b>03 EVAL Formatif Le rat de ville</b> ▸ Afficher les instructions.</p><img class=\"capture\" src=\"" + BASE + "capture-devoir-classroom.png\" alt=\"Classroom, onglet Travaux et devoirs : le devoir 03 EVAL Formatif Le rat de ville\"></details>"
-   }
+    "geste": "Demande l’<b>accord</b> du professeur : clique sur le bouton <b>🔔 Je demande l’accord du professeur</b> ci-dessous. Il vient regarder ton document. Quand il a dit oui, cette case se coche toute seule.",
+    "accord": true,
+    "sous": "<details><summary>Le professeur demande une correction ?</summary><p>Je corrige dans mon document. Ma demande reste allumée : il revient voir. Si j’ai éteint la cloche, je clique encore sur <b>🔔 Je demande l’accord du professeur</b>.</p></details>"
+   },
+   {
+    "geste": "Ouvre le <b>devoir</b> : clique sur l’onglet de Classroom ▸ onglet <b>Travaux et devoirs</b> ▸ <b>03 EVAL Formatif Le rat de ville</b> ▸ <b>Afficher les instructions</b>.",
+    "sous": "<details><summary>Je n’ai plus l’onglet de Classroom ?</summary><p>Menu Google (la gaufre ⋮⋮⋮, en haut à droite) ▸ <b>Classroom</b> ▸ <b>Numérique</b> (ma classe) ▸ onglet <b>Travaux et devoirs</b>.</p><img class=\"capture\" src=\"" + BASE + "capture-devoir-classroom.png\" alt=\"Classroom, onglet Travaux et devoirs : le devoir 03 EVAL Formatif Le rat de ville\"></details>"
+   },
+   {
+    "geste": "À droite, dans le cadre <b>Vos devoirs</b> : clique sur <b>+ Ajouter ou créer</b> ▸ <b>Google Drive</b> (la 1re ligne du menu).",
+    "attention": "⚠️ Pas <b>Docs</b>, sous « Créer » : il fabriquerait un nouveau document vide. Ton document existe déjà."
+   },
+   "Dans la fenêtre Google Drive, clique sur <b>ton document</b> (AAAAMMJJ Le rat de ville – Prénom Nom), puis sur le <b>bouton bleu</b>, en bas à droite.",
+   "Vérifie : ton document apparaît maintenant sous <b>Vos devoirs</b>, avec son nom. Joindre ne suffit pas : il n’est pas encore rendu.",
+   "Clique sur le bouton bleu <b>Rendre le devoir</b>. Une fenêtre demande « Rendre le devoir ? » : clique encore sur <b>Rendre le devoir</b>.",
+   "Vérifie : en haut du cadre <b>Vos devoirs</b>, c’est écrit <b>Remis</b>. C’est rendu !"
   ],
-  "vois": "Je compare mon fichier aux critères avant de choisir mes lettres Moi. Je sonne la cloche et j’attends l’accord du professeur avant de rendre. Après la remise, je vérifie dans Classroom que le devoir est bien indiqué comme remis.<br><span class=\"note\">Repérer et corriger un écart fait partie du travail : je peux encore améliorer mon document avant de le remettre.</span>",
+  "vois": "Je compare mon fichier aux critères avant de choisir mes lettres Moi. Je demande l’accord du professeur avant de rendre. Après la remise, « Vos devoirs » affiche <b>Remis</b>.<br><span class=\"note\">Repérer et corriger un écart fait partie du travail : je peux encore améliorer mon document avant de le remettre.</span>",
   "demos": {
    "1": [
     "etape9",
@@ -539,19 +551,12 @@ const BLOCS = [
      0
     ]
    ],
-   "14": [
-    "etape9",
-    [
-     1,
-     2,
-     3,
-     4,
-     5,
-     6,
-     7,
-     8
-    ]
-   ]
+   "14": ["etape9", [1]],
+   "15": ["etape9", [2, 3]],
+   "16": ["etape9", [4, 5]],
+   "17": ["etape9", [6]],
+   "18": ["etape9", [6, 7]],
+   "19": ["etape9", [8]]
   }
  }
 ];
