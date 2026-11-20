@@ -145,6 +145,8 @@
 ||www.snake.be^$important
 ||y8.com^$important
 ||yurk.com^$important
+! 2026-11-20 block — Truffled (jeux « unblocked »)
+||garbsoftball.com^$important
 ! ==============================================================================
 ! === BLOCAGE — Anime & Streaming non autorisé (non couverts par regex) ===
 ! ==============================================================================
