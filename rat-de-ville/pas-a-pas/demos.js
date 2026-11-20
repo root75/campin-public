@@ -80,7 +80,7 @@ const Demo = (() => {
       devoir({ cible: 'ajouter', legende: 'À droite, dans « Vos devoirs » : + Ajouter ou créer.' }),
       devoir({ menu: 1, cible: 'gdrive', legende: 'Je choisis Google Drive.' }),
       devoir({ picker: 1, cible: 'fichier', legende: 'Je clique sur mon document : ' + NOM + '.' }),
-      devoir({ picker: 2, cible: 'inserer', legende: 'Il est sélectionné : je clique sur le bouton bleu, en bas à droite.' }),
+      devoir({ picker: 2, cible: 'inserer', legende: '« 1 élément sélectionné » : je clique sur le bouton bleu Ajouter, en bas à droite.' }),
       devoir({ joint: 1, cible: 'rendre', legende: 'Mon document apparaît sous « Vos devoirs ». Joindre ne suffit pas : Rendre le devoir.' }),
       devoir({ joint: 1, confirme: 1, cible: 'confirmer', legende: '« Rendre le devoir ? » : je confirme, Rendre le devoir une deuxième fois.' }),
       devoir({ joint: 1, remis: 1, cible: 'statut', ok: 1, legende: '« Vos devoirs » affiche Remis : c’est rendu. Bravo !' })

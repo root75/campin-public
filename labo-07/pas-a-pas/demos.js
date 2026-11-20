@@ -142,7 +142,7 @@ const Demo = (() => {
       devoir({ cible: 'ajouter', legende: 'Le devoir s’ouvre. Dans « Vos devoirs » : + Ajouter ou créer.' }),
       devoir({ menu: 1, cible: 'gdrive', legende: 'Je choisis Google Drive.' }),
       devoir({ picker: 1, cible: 'fichier', legende: 'Je clique sur ' + NOM + '…' }),
-      devoir({ picker: 2, cible: 'inserer', legende: '… puis sur le bouton bleu, en bas à droite.' }),
+      devoir({ picker: 2, cible: 'inserer', legende: '… puis sur le bouton bleu Ajouter, en bas à droite.' }),
       devoir({ joint: 1, cible: 'piece', ok: 1, legende: 'Mon rapport est joint ; le devoir reste « Attribué ». Je ne clique PAS sur Rendre : ce sera à la fin du labo.' })
     ] },
     remise: { titre: 'Joindre mon rapport et le remettre', images: [
@@ -151,7 +151,7 @@ const Demo = (() => {
       devoir({ cible: 'ajouter', legende: 'Le devoir s’ouvre. Dans « Vos devoirs » : + Ajouter ou créer.' }),
       devoir({ menu: 1, cible: 'gdrive', legende: 'Je choisis Google Drive.' }),
       devoir({ picker: 1, cible: 'fichier', legende: 'Je clique sur ' + NOM + '…' }),
-      devoir({ picker: 2, cible: 'inserer', legende: '… puis sur le bouton bleu, en bas à droite.' }),
+      devoir({ picker: 2, cible: 'inserer', legende: '… puis sur le bouton bleu Ajouter, en bas à droite.' }),
       devoir({ joint: 1, cible: 'rendre', legende: 'Joindre ne suffit pas : Rendre le devoir.' }),
       devoir({ joint: 1, confirme: 1, cible: 'confirmer', legende: '« Rendre le devoir ? » : je confirme, Rendre le devoir une deuxième fois.' }),
       devoir({ joint: 1, remis: 1, cible: 'statut', ok: 1, legende: '« Remis » : c’est envoyé. Remise unique, à la toute fin de l’enquête.' }),

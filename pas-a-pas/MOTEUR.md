@@ -215,6 +215,12 @@ Modèle : [`messagerie/pas-a-pas/fiche.js`](../messagerie/pas-a-pas/fiche.js) ; 
   `FIN.bouton` le libellé du bouton qui y mène ; `FIN.plus` et `FIN.lien` sont facultatifs.
 - **Sous une case** : `{ geste, sous:'<img …>' }` (un extrait, une aide repliée) ; `{ geste, trous:{ titre, intro, bravo,
   variantes:[{ texte, mots, pieges }] } }` = un texte à trous d'entraînement, corrigé dans la page, jamais enregistré.
+- **La case de l'accord** : `{ geste, accord:true }` (20/11/2026, Rat de ville). L'élève ne la coche pas : le bouton
+  « 🔔 Je demande l'accord du professeur » sonne la cloche avec le motif `accord` (pastille verte au tableau, hors
+  « Où le groupe bute », hors limite des 3 sonneries). Au tableau, le bouton de la ligne devient « ✓ Donner l'accord » :
+  la case se coche seule chez l'élève (15 s au plus, ou à la réouverture) et s'enregistre comme les autres. Les cases
+  suivantes de l'étape restent fermées 🔒 jusque-là. Hors suivi ou en aperçu : case à cocher à la main. Le verrou est
+  dans la page seulement — Classroom laisse rendre à tout moment.
 - **Sous chaque bloc** : `BAS_ETAPE` (« À la sonnerie », « Je reprends mon cours »), comme pour tous les cours.
 - **`const REPRISE = { titre, html, demos }`** : l'encadré affiché en haut quand l'élève rouvre le cours plus de
   5 min après son dernier geste, avec le bouton « C'est fait : je reprends à l'étape N ».

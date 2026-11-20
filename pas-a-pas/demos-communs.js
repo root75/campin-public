@@ -39,7 +39,7 @@
    Labo 07, Messagerie 03. Menu de l'onglet : « Ajouter l'onglet à une nouvelle vue fractionnée » relevé
    à l'écran ; les trois autres lignes sont celles des maquettes du Rat et du Labo 07.
    Chrome, Windows et Classroom : libellés relevés avec un compte élève de test le 08/11/2026
-   (memoire/ref_docs_eleves.md). Non relevés : le bouton du sélecteur Google Drive (bouton bleu sans texte),
+   (memoire/ref_docs_eleves.md). Sélecteur Google Drive relevé le 20/11/2026 (bouton bleu « Ajouter »). Non relevés :
    les applications de la gaufre, le menu du clic droit sur Démarrer (celui du Labo 07).
    Windows, poste de l'école, relevés le 12/11/2026 : menu Démarrer ▸ son nom (en bas à gauche) ▸ panneau
    (établissement, Se déconnecter en haut à droite, ⋯, le nom, l'adresse, Gérer mon compte) ; ⏻ ▸ Verrouiller ·
@@ -134,7 +134,7 @@ const DemosCommuns = (() => {
 .md-cr-carte{border:1px solid #dadce0;border-radius:8px;padding:12px;display:grid;gap:8px;box-shadow:0 1px 3px #0002;position:relative}
 .md-cr-tete{display:flex;justify-content:space-between;align-items:center;gap:6px}.md-cr-statut{color:#137333;font-size:12px}.md-cr-statut.remis{font-weight:700}.md-cr-statut.note{font-weight:700;font-size:14px;color:#1f1f1f}
 .md-cr-ajouter,.md-cr-btn{border:1px solid #dadce0;border-radius:4px;padding:6px 10px;text-align:center;color:#1a73e8;font-weight:700}
-.md-cr-plein{background:#1a73e8;border-color:#1a73e8;color:#fff}.md-cr-plein.eteint{background:#c5d6f2;border-color:#c5d6f2}.md-cr-sans{min-width:60px}
+.md-cr-ponglets{font-size:.8em;color:#5f6368}.md-cr-plein{background:#1a73e8;border-color:#1a73e8;color:#fff}.md-cr-plein.eteint{background:#c5d6f2;border-color:#c5d6f2}.md-cr-sans{min-width:60px}
 .md-cr-piece{border:1px solid #dadce0;border-radius:4px;padding:6px;font-size:12px;overflow-wrap:anywhere}
 .md-cr-menu{position:absolute;left:12px;right:12px;top:72px;max-height:240px;overflow:hidden;background:#fff;border:1px solid #c9d3db;border-radius:8px;box-shadow:0 4px 14px #0003;padding:4px 0;z-index:3}
 .md-cr-sous{padding:6px 14px 2px;font-size:11px;font-weight:700;color:#5f6368;border-top:1px solid #eee;margin-top:4px}
@@ -395,8 +395,9 @@ const DemosCommuns = (() => {
       liste.append(c(el('div', 'md-cr-f' + (f.picker === 2 ? ' choisi' : ''), '📄 ' + o.fichier), 'fichier'));
       if (o.autre) liste.append(el('div', 'md-cr-f autre', '📄 ' + o.autre));
       const pied = el('div', 'md-cr-ppied');
-      pied.append(el('span', 'md-cr-btn', 'Annuler'), c(el('span', 'md-cr-btn md-cr-plein md-cr-sans' + (f.picker === 2 ? '' : ' eteint'), ' '), 'inserer'));
-      p.append(el('div', 'md-cr-ptitre', 'Google Drive'), liste, pied); e.append(p);
+      // Relevé à l'écran le 20/11/2026 (capture de Vincent) : titre, onglets, « 1 élément sélectionné », bouton bleu « Ajouter ».
+      pied.append(el('span', 'md-cr-btn', f.picker === 2 ? '✕ 1 élément sélectionné' : ' '), c(el('span', 'md-cr-btn md-cr-plein' + (f.picker === 2 ? '' : ' eteint'), 'Ajouter'), 'inserer'));
+      p.append(el('div', 'md-cr-ptitre', 'Insérer des fichiers avec Google Drive'), el('div', 'md-cr-ponglets', 'Récents · Importer · Mon Drive · Suivis'), liste, pied); e.append(p);
     }
     if (f.confirme) {
       const dlg = el('div', 'md-cr-dialogue'), pied = el('div', 'md-cr-ppied');
