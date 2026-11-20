@@ -109,6 +109,8 @@ kbd{font:inherit;font-weight:700;border:1px solid var(--trait);border-bottom-wid
     <p class="bulle" id="bulle">Salut ! On va mettre une fable en forme, case par case.</p>
   </div></header>
   <p class="qui" id="qui"></p>
+  <!-- En premier : le document de l'élève. Avec l'extension « Campin — cours », Docs s'ouvre à droite du cours, tout seul au premier chargement (data-auto), puis d'un clic. Sans elle, le lien ouvre un onglet. -->
+  <div class="actions" style="margin:0 0 14px"><a class="btn plein" href="https://docs.google.com/document/" target="campin-travail" rel="noopener" data-a-cote data-auto>📄 Retrouver mon document dans Docs ↗</a></div>
   <details class="panneau" id="intro"><summary>Comment ça marche ?</summary><p>Je recopie la fable, puis je la mets en forme. À chaque étape : je <b>regarde l’animation</b>, je fais dans Docs, je <b>coche</b> ma case.</p><p><b>Une case cochée signifie : je déclare avoir terminé.</b> Elle ne vérifie ni la qualité de mon document, ni sa remise. Un seul devoir pour tout le cours : je remets à la fin.</p><p>Quand le professeur demande d’observer, je regarde le support collectif et j’écoute. Je réponds quand il me le demande. Quand il me propose d’agir, je reprends mon document à mon étape.</p></details>
 
   <section class="humeur" id="humeur" hidden aria-label="Humeur du jour"></section>
@@ -128,7 +130,6 @@ kbd{font:inherit;font-weight:700;border:1px solid var(--trait);border-bottom-wid
 
   <div class="actions">
     <button class="btn vide" type="button" id="memo-btn">📌 Mes boutons, menus et raccourcis</button>
-    <a class="btn vide" href="https://docs.google.com/document/" target="campin-travail" rel="noopener">Retrouver mon document dans Docs ↗</a>
   </div>
 
   <details class="panneau" id="texte"><summary>Le texte à recopier — disponible pendant la copie</summary><p>Les vers commencent par une minuscule et les strophes sont collées. C’est à moi de corriger.</p><a href="https://root75.github.io/campin-public/rat-de-ville/pas-a-pas/fable-rat.png" target="_blank" rel="noopener" aria-label="Agrandir l’image de la fable dans un nouvel onglet"><img class="ressource" src="https://root75.github.io/campin-public/rat-de-ville/pas-a-pas/fable-rat.png" alt="Fable à recopier depuis la fiche papier"></a><a class="btn vide" href="https://root75.github.io/campin-public/rat-de-ville/pas-a-pas/fable-rat.png" target="_blank" rel="noopener">Agrandir l’image ↗</a><p class="note">L’image s’ouvre dans un nouvel onglet. Je peux zoomer pour lire les vers et garder mon suivi ouvert.</p></details>
@@ -149,7 +150,7 @@ kbd{font:inherit;font-weight:700;border:1px solid var(--trait);border-bottom-wid
 <script src="https://root75.github.io/campin-public/pas-a-pas/demos-communs.js?v=classroom-20261113"></script>
 <script src="https://root75.github.io/campin-public/rat-de-ville/pas-a-pas/demos.js?v=lignes-vides2-20261118"></script>
 <script src="https://root75.github.io/campin-public/rat-de-ville/pas-a-pas/fiche.js?v=a-cote-20261120"></script>
-<script defer src="https://root75.github.io/campin-public/pas-a-pas/campin-extension.js?v=cote-20261118"></script>
+<script defer src="https://root75.github.io/campin-public/pas-a-pas/campin-extension.js?v=auto-20261120"></script>
 <script src="https://root75.github.io/campin-public/pas-a-pas/phrase-fin.js?v=20261106"></script>
 <script src="https://root75.github.io/campin-public/pas-a-pas/cloche.js?v=annule-20261117"></script>
 <script src="https://root75.github.io/campin-public/pas-a-pas/blocs.js?v=scene-bloc-annule-20261117"></script>
