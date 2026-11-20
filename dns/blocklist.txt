@@ -151,6 +151,8 @@
 ||ixl.boats^$important
 ! 2026-11-20 block — fichiers GitHub servis comme pages web (jeux HTML)
 ||rawcdn.githack.com^$important
+! 2026-11-20 block — serveur Minecraft (bloqué jusqu'ici par l'amont NextDNS, quitté)
+||hypixel.net^$important
 ! ==============================================================================
 ! === BLOCAGE — Anime & Streaming non autorisé (non couverts par regex) ===
 ! ==============================================================================
