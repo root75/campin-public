@@ -29,15 +29,16 @@ const Demo = (() => {
       doc([L('')], { nom: NOM, cible: 'nom', ok: 1, legende: 'Je tape la date à l’envers, le titre, mon prénom et mon nom.' })
     ] },
     etape2: { titre: 'Je recopie la fable', images: [
-      doc([L(TITRE.toLowerCase())], { cible: 'page', legende: 'Je tape le titre, puis Enter.' }),
-      doc([L(TITRE.toLowerCase()), L(FABLE[0])], { cible: 'page', legende: 'Un vers = une ligne.' }),
-      doc([L(TITRE.toLowerCase()), L(FABLE[0]), L(FABLE[1])], { cible: 'page', legende: 'Enter au bout de chaque vers.' }),
-      doc([L(TITRE.toLowerCase()), ...FABLE.map(v => L(v))], { cible: 'page', ok: 1, legende: 'Quatre vers : un repère. Je continue jusqu’au vers 28.' })
+      doc([L(TITRE.toLowerCase())], { cible: 'page', legende: 'Je tape le titre, puis Enter deux fois : une ligne vide.' }),
+      doc([L(TITRE.toLowerCase()), L(''), L(FABLE[0])], { cible: 'page', legende: 'Un vers = une ligne.' }),
+      doc([L(TITRE.toLowerCase()), L(''), L(FABLE[0]), L(FABLE[1])], { cible: 'page', legende: 'Enter au bout de chaque vers.' }),
+      doc([L(TITRE.toLowerCase()), L(''), ...FABLE.map(v => L(v))], { cible: 'page', legende: 'Quatre vers : la strophe est finie.' }),
+      doc([L(TITRE.toLowerCase()), L(''), ...FABLE.map(v => L(v)), L(''), L(S2[0].toLowerCase())], { cible: 'L6', ok: 1, legende: 'Enter deux fois : une ligne vide, puis la strophe suivante.' })
     ] },
     etape3: { titre: 'Je structure', images: [
-      doc([L(TITRE.toLowerCase()), ...FABLE.map(v => L(v)), L(S2[0].toLowerCase())], { cible: 'L1', legende: 'Les vers commencent par une minuscule…' }),
-      doc([L(TITRE), ...FABLE_MAJ.map(v => L(v, 'maj')), L(S2[0].toLowerCase())], { cible: 'L1', legende: '… je mets une majuscule au début de chaque vers.' }),
-      doc([L(TITRE), ...FABLE_MAJ.map(v => L(v)), L(''), L(S2[0])], { cible: 'L5', ok: 1, legende: 'Je clique à la fin du vers 4, Enter : une ligne vide sépare les strophes.' })
+      doc([L(TITRE.toLowerCase()), L(''), ...FABLE.map(v => L(v)), L(''), L(S2[0].toLowerCase())], { cible: 'L2', legende: 'Les vers commencent par une minuscule…' }),
+      doc([L(TITRE), L(''), ...FABLE_MAJ.map(v => L(v, 'maj')), L(''), L(S2[0].toLowerCase())], { cible: 'L2', legende: '… je mets une majuscule au début de chaque vers.' }),
+      doc([L(TITRE), L(''), ...FABLE_MAJ.map(v => L(v)), L(''), L(S2[0])], { cible: 'L6', ok: 1, legende: 'Une seule ligne vide entre deux strophes.' })
     ] },
     etape6: { titre: 'Titre, texte, auteur', images: [
       doc(base('sel'), { cible: 'L0', legende: 'Je sélectionne le titre.' }),
@@ -60,7 +61,10 @@ const Demo = (() => {
       doc(base('centre gras capitales', 'centre', 'droite italique souligne'), { cible: 'L7', legende: 'Je clique à la fin de la fable, après l’auteur.' }),
       doc(base('centre gras capitales', 'centre', 'droite italique souligne'), { cible: 'item-Saut de page', menu: { sous: 'm-insertion', items: ['Image ▸', 'Tableau ▸', 'Saut ▸', 'Saut de page'], hi: 'Saut de page' }, legende: 'Insertion ▸ Saut ▸ Saut de page (Ctrl + Enter).' }),
       doc([L('Jean de La Fontaine', 'droite italique souligne'), L('', 'saut'), L('Mon bloc-notes', 'gras')], { cible: 'L2', ok: 1, legende: 'Une nouvelle page commence : j’écris « Mon bloc-notes » en haut.' }),
-      doc([L('Mon bloc-notes', 'gras'), L('le tapis', 'sel'), L('…', 'sel'), L('…', 'sel')], { cible: 'puces', legende: 'Je sélectionne mes 3 lignes ▸ Liste à puces (Ctrl + Shift + 8).' })
+      doc([L('Mon bloc-notes', 'gras'), L('le tapis'), L('…'), L('…')], { cible: 'L3', legende: 'Sous le titre : une chose par ligne, Enter après chacune.' }),
+      doc([L('Mon bloc-notes', 'gras'), L('le tapis', 'sel'), L('…', 'sel'), L('…', 'sel')], { cible: 'L1', legende: 'Je glisse la souris sur les 3 lignes : elles deviennent bleues.' }),
+      doc([L('Mon bloc-notes', 'gras'), L('le tapis', 'sel'), L('…', 'sel'), L('…', 'sel')], { cible: 'puces', legende: 'Bouton Liste à puces (Ctrl + Shift + 8).' }),
+      doc([L('Mon bloc-notes', 'gras'), L('le tapis', 'puce'), L('…', 'puce'), L('…', 'puce')], { cible: 'L1', ok: 1, legende: 'Un rond noir devant chaque ligne : c’est une liste à puces.' })
     ] },
     etape10: { titre: 'Mes gestes : la liste numérotée', images: [
       doc([L('Mon bloc-notes', 'gras'), L('le tapis', 'puce'), L('…', 'puce'), L('…', 'puce'), L('Mes gestes', 'gras'), L('', 'sel')], { cible: 'numeros', legende: 'Sous « Mes gestes », Enter ▸ Liste numérotée (Ctrl + Shift + 7).' }),
@@ -76,7 +80,7 @@ const Demo = (() => {
       devoir({ cible: 'ajouter', legende: 'À droite, dans « Vos devoirs » : + Ajouter ou créer.' }),
       devoir({ menu: 1, cible: 'gdrive', legende: 'Je choisis Google Drive.' }),
       devoir({ picker: 1, cible: 'fichier', legende: 'Je clique sur mon document : ' + NOM + '.' }),
-      devoir({ picker: 2, cible: 'inserer', legende: 'Il est sélectionné : je clique sur le bouton bleu, en bas à droite.' }),
+      devoir({ picker: 2, cible: 'inserer', legende: '« 1 élément sélectionné » : je clique sur le bouton bleu Ajouter, en bas à droite.' }),
       devoir({ joint: 1, cible: 'rendre', legende: 'Mon document apparaît sous « Vos devoirs ». Joindre ne suffit pas : Rendre le devoir.' }),
       devoir({ joint: 1, confirme: 1, cible: 'confirmer', legende: '« Rendre le devoir ? » : je confirme, Rendre le devoir une deuxième fois.' }),
       devoir({ joint: 1, remis: 1, cible: 'statut', ok: 1, legende: '« Vos devoirs » affiche Remis : c’est rendu. Bravo !' })

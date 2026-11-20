@@ -8,6 +8,11 @@
 /* Une erreur JavaScript s'affiche en haut de la page : sur un téléphone ou un poste d'élève, pas de console. */
 addEventListener("error", e => {
   if(e.target && e.target.tagName === "LINK") return;   // une police qui manque n'empêche rien
+  if(e.target && e.target.tagName === "IMG"){   // une image qui ne vient pas : jusqu'à 4 essais espacés (2, 5, 10, 20 s), sans alarmer l'élève
+    const im = e.target, n = +(im.dataset.reessai || 0), attente = [2000, 5000, 10000, 20000][n];
+    if(attente){ im.dataset.reessai = n + 1; setTimeout(() => { im.src = im.src.replace(/[?&]r=\d+$/, "") + (im.src.replace(/[?&]r=\d+$/, "").includes("?") ? "&" : "?") + "r=" + Date.now(); }, attente); }
+    return;
+  }
   const p = document.createElement("p");
   p.style.cssText = "background:#f8e3e0;color:#b23a2e;border-left:5px solid #b23a2e;padding:8px 12px;margin:8px 0;font:14px/1.4 Arial,sans-serif";
   p.textContent = "⚠ Erreur dans la page : " + (e.message || (e.target && e.target.src ? "chargement de " + e.target.src : "inconnue")) + (e.lineno ? " (ligne " + e.lineno + ")" : "");
@@ -142,8 +147,8 @@ kbd{font:inherit;font-weight:700;border:1px solid var(--trait);border-bottom-wid
 <script defer src="https://root75.github.io/campin-public/pas-a-pas/sequence-eleve.js?v=saisie-20261115"></script>
 <script src="https://root75.github.io/campin-public/pas-a-pas/demo-lecteur.js?v=sous-cases-20261112"></script>
 <script src="https://root75.github.io/campin-public/pas-a-pas/demos-communs.js?v=classroom-20261113"></script>
-<script src="https://root75.github.io/campin-public/rat-de-ville/pas-a-pas/demos.js?v=moteur-commun-20261116"></script>
-<script src="https://root75.github.io/campin-public/rat-de-ville/pas-a-pas/fiche.js?v=a-cote-20261118"></script>
+<script src="https://root75.github.io/campin-public/rat-de-ville/pas-a-pas/demos.js?v=lignes-vides2-20261118"></script>
+<script src="https://root75.github.io/campin-public/rat-de-ville/pas-a-pas/fiche.js?v=a-cote-20261120"></script>
 <script defer src="https://root75.github.io/campin-public/pas-a-pas/campin-extension.js?v=cote-20261118"></script>
 <script src="https://root75.github.io/campin-public/pas-a-pas/phrase-fin.js?v=20261106"></script>
 <script src="https://root75.github.io/campin-public/pas-a-pas/cloche.js?v=annule-20261117"></script>

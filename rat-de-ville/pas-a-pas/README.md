@@ -9,6 +9,12 @@
 > relire les anciennes lignes du Journal. Retirés avec l'ancien moteur : la jauge « missions », le bouton
 > « Affichage compact », « Voir toutes les aides ». **La suite de ce fichier décrit l'ancien moteur : historique.**
 
+**20/11/2026 — la remise en détail et l'accord du professeur.** Étape 9 : 19 cases (14 avant). Case 13 = l'accord
+(`accord:true`, voir `pas-a-pas/MOTEUR.md`) : l'élève le demande par un bouton, le professeur le donne au tableau
+(« ✓ Donner l'accord »), la case se coche seule et ouvre les cases 14 à 19 : ouvrir le devoir ▸ + Ajouter ou créer ▸
+Google Drive ▸ son document ▸ Ajouter ▸ vérifier « Vos devoirs » ▸ Rendre le devoir ×2 ▸ vérifier « Remis ».
+Le sélecteur s'intitule « Insérer des fichiers avec Google Drive », bouton bleu « Ajouter » (relevé le 20/11/2026).
+
 Entrée du catalogue : `rat-de-ville-formatif`, 9 étapes sur deux périodes (7 du 6/11 au 11/11 ; voir la fin de ce fichier).
 Les 45 petites cases (une action ou une vérification par case) déclarent les actions terminées ; elles ne corrigent pas la copie.
 Navigation libre, copie par groupes de quatre vers (strophes séparées à l’étape 3) ; grille complète et lettres « Moi » en étape finale (une carte par critère, on clique sur la phrase de son niveau) (bouton 📋). Plus de repère collectif depuis le 4/11 (voir LIVRAISON-RAT.md).

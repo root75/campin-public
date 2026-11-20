@@ -61,38 +61,38 @@ const BLOCS = [
   "titre": "Je recopie la fable",
   "min": 30,
   "bulle": "Bon début ! Regarde bien les animations.",
-  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>J’ouvre l’image de la fiche. Je repère le titre, les vers et l’auteur avant de recopier.</p></aside><p class=\"note\">Un vers = une ligne : touche Enter au bout de chaque vers. Je ne laisse PAS de ligne vide : les 28 vers se suivent. Je séparerai les strophes à l’étape 3.</p>" + A_MOI,
+  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>J’ouvre l’image de la fiche. Je repère le titre, les vers et l’auteur avant de recopier.</p></aside><p class=\"note\">Un vers = une ligne : touche Enter au bout de chaque vers. Après le titre et au bout du 4e vers de chaque strophe, j’appuie <b>deux fois</b> sur Enter : une ligne vide sépare le titre, chaque strophe et l’auteur.</p>" + A_MOI,
   "gestes": [
    {
-    "geste": "Tape le <b>titre</b>.",
+    "geste": "Tape le <b>titre</b>. Puis Enter <b>deux fois</b> : une ligne vide.",
     "sous": "<img class=\"extrait\" src=\"" + BASE + "fable/titre.png\" alt=\"Extrait de la fable à recopier\">"
    },
    {
-    "geste": "Recopie les <b>vers 1 à 4</b>.",
+    "geste": "Recopie les <b>vers 1 à 4</b>. Puis Enter <b>deux fois</b> : une ligne vide.",
     "sous": "<img class=\"extrait\" src=\"" + BASE + "fable/strophe-1.png\" alt=\"Extrait de la fable à recopier\"><details><summary>Comment taper ç et à ?</summary><p>Sur le clavier belge : ç est sur la touche 9, à sur la touche 0. Je tape la touche seule, sans Shift.</p><blockquote>façon · à des reliefs</blockquote><p class=\"note\">Avec Shift, ces touches donnent 9 et 0. Je me suis trompé ? " + ICO_ANNULER + "Annuler (Ctrl + Z).</p></details>"
    },
    {
-    "geste": "Recopie les <b>vers 5 à 8</b>.",
+    "geste": "Recopie les <b>vers 5 à 8</b>. Puis Enter <b>deux fois</b> : une ligne vide.",
     "sous": "<img class=\"extrait\" src=\"" + BASE + "fable/strophe-2.png\" alt=\"Extrait de la fable à recopier\">"
    },
    {
-    "geste": "Recopie les <b>vers 9 à 12</b>.",
+    "geste": "Recopie les <b>vers 9 à 12</b>. Puis Enter <b>deux fois</b> : une ligne vide.",
     "sous": "<img class=\"extrait\" src=\"" + BASE + "fable/strophe-3.png\" alt=\"Extrait de la fable à recopier\"><details><summary>Comment taper ê (accent circonflexe) ?</summary><p>Je tape d’abord la touche ^, à droite du P : rien ne s’affiche, c’est normal. Puis je tape e : ê apparaît.</p><blockquote>honnête · fête</blockquote><p class=\"note\">^ puis la voyelle : ^ + o donne ô, ^ + a donne â.</p></details>"
    },
    {
-    "geste": "Recopie les <b>vers 13 à 16</b>.",
+    "geste": "Recopie les <b>vers 13 à 16</b>. Puis Enter <b>deux fois</b> : une ligne vide.",
     "sous": "<img class=\"extrait\" src=\"" + BASE + "fable/strophe-4.png\" alt=\"Extrait de la fable à recopier\">"
    },
    {
-    "geste": "Recopie les <b>vers 17 à 20</b>.",
+    "geste": "Recopie les <b>vers 17 à 20</b>. Puis Enter <b>deux fois</b> : une ligne vide.",
     "sous": "<img class=\"extrait\" src=\"" + BASE + "fable/strophe-5.png\" alt=\"Extrait de la fable à recopier\"><details><summary>Comment taper ô et les guillemets « » ?</summary><p>ô : je tape la touche ^, à droite du P (rien ne s’affiche, c’est normal), puis o. Guillemets : j’utilise les guillemets américains \" : la touche 3, sans Shift, avant et après les mots.</p><blockquote>aussitôt · rôt · \"achevons tout notre rôt.\"</blockquote><p class=\"note\">Le ^ apparaît seul ? Je l’efface et je recommence : ^, puis o, sans espace. Les guillemets « » de l’image ne sont pas sur le clavier : \" les remplace.</p></details>"
    },
    {
-    "geste": "Recopie les <b>vers 21 à 24</b>.",
+    "geste": "Recopie les <b>vers 21 à 24</b>. Puis Enter <b>deux fois</b> : une ligne vide.",
     "sous": "<img class=\"extrait\" src=\"" + BASE + "fable/strophe-6.png\" alt=\"Extrait de la fable à recopier\">"
    },
    {
-    "geste": "Recopie les <b>vers 25 à 28</b>.",
+    "geste": "Recopie les <b>vers 25 à 28</b>. Puis Enter <b>deux fois</b> : une ligne vide.",
     "sous": "<img class=\"extrait\" src=\"" + BASE + "fable/strophe-7.png\" alt=\"Extrait de la fable à recopier\">"
    },
    {
@@ -100,7 +100,7 @@ const BLOCS = [
     "sous": "<img class=\"extrait\" src=\"" + BASE + "fable/auteur.png\" alt=\"Extrait de la fable à recopier\">"
    }
   ],
-  "vois": "Je compare ma dernière ligne à l’image avant de passer au groupe suivant. Je dois retrouver 28 vers.<br><span class=\"note\">Les petits groupes de quatre vers m’aident à garder ma place.</span>",
+  "vois": "Je compare ma dernière ligne à l’image avant de passer au groupe suivant. Je dois retrouver le titre, 28 vers en 7 strophes, puis l’auteur, séparés par une ligne vide.<br><span class=\"note\">Les petits groupes de quatre vers m’aident à garder ma place.</span>",
   "extra": "<button class=\"btn vide\" type=\"button\" onclick=\"const t=document.getElementById('texte');t.open=true;t.scrollIntoView({behavior:'smooth'})\">Voir le texte à recopier</button>",
   "demos": {
    "1": [
@@ -114,7 +114,8 @@ const BLOCS = [
     [
      1,
      2,
-     3
+     3,
+     4
     ]
    ]
   }
@@ -130,7 +131,7 @@ const BLOCS = [
     "geste": "Mets une <b>majuscule</b> à la première lettre de chaque vers.",
     "sous": "<details><summary>Comment mettre à en majuscule (À) ?</summary><p>Je double-clique sur le à pour le sélectionner, seul. Puis Format ▸ Texte ▸ Minuscules/majuscules ▸ <b>MAJUSCULES</b>.</p><blockquote>à la porte de la salle → À la porte de la salle</blockquote><p class=\"note\">Deux vers commencent par à : le vers 4 et le vers 13. Pour les autres lettres, j’efface la minuscule et je tape la majuscule avec Shift.</p><img class=\"capture\" src=\"" + BASE + "capture-majuscules.png\" alt=\"Menu Format ▸ Texte ▸ Minuscules/majuscules ▸ MAJUSCULES dans Docs\"></details>"
    },
-   "Clique <b>à la fin du vers 4</b> et appuie sur Enter : une ligne vide apparaît. Fais pareil après les vers 8, 12, 16, 20 et 24 : tu obtiens 7 strophes."
+   "Vérifie les <b>lignes vides</b> : une seule après le titre, entre deux strophes et avant l’auteur, 7 strophes en tout. Il en manque une ? Clique à la fin du dernier vers de la strophe, puis Enter."
   ],
   "vois": "Je compte sept groupes de quatre vers et je regarde la première lettre de chaque vers.<br><span class=\"note\">Les strophes sont maintenant plus faciles à repérer.</span>",
   "demos": {
@@ -252,11 +253,19 @@ const BLOCS = [
     "sous": "<details><summary>Où est le saut de page ?</summary><p>Menu <b>Insertion</b> ▸ <b>Saut</b>, vers le bas du menu ▸ <b>Saut de page</b>.</p><img class=\"capture\" src=\"" + BASE + "capture-saut-de-page.png\" alt=\"Menu Insertion ▸ Saut ▸ Saut de page dans Docs\"></details>"
    },
    {
-    "geste": "<img class=\"ico\" src=\"" + ICONES + "puces.png\" alt=\"\">Trois choses que l’on trouve au festin du rat de ville, en <b>liste à puces</b> (Ctrl + Shift + 8).",
-    "sous": "<details><summary>Qu’écrire dans la liste à puces ?</summary><p>Je choisis trois choses présentes au festin dans la fable. Dans mon document Docs, j’écris une chose par ligne, je sélectionne ces trois lignes, puis je clique sur le bouton Liste à puces (Ctrl + Shift + 8).</p><blockquote>Exemple d’un élément possible : le tapis.</blockquote><p class=\"note\">Je trouve les autres éléments dans la fable. Trois éléments sont attendus au total.</p></details>"
+    "geste": "Sous le titre, écris <b>trois choses du repas</b> du rat de ville. Une chose par ligne : touche Enter après chacune.",
+    "sous": "<details><summary>Qu’est-ce que j’écris ?</summary><ul><li>Relis les strophes 1 et 2 de la fable : c’est le repas.</li><li>Cherche ce qu’il y a sur la table ou par terre.</li><li>Écris trois choses, en deux ou trois mots. Pas de phrase.</li><li>Exemple : <b>le tapis</b>.</li></ul><p class=\"note\">« Les reliefs d’ortolans », dans la fable, ce sont des restes de petits oiseaux.</p></details>"
+   },
+   {
+    "geste": "<b>Sélectionne</b> les trois lignes : clique avant la première, garde le bouton de la souris enfoncé, glisse jusqu’à la fin de la troisième.",
+    "sous": "<p class=\"note\">Les trois lignes deviennent bleues. Le titre, lui, reste blanc.</p>"
+   },
+   {
+    "geste": "<img class=\"ico\" src=\"" + ICONES + "puces.png\" alt=\"\">Clique sur le bouton <b>Liste à puces</b> (Ctrl + Shift + 8), dans la barre d’outils, à droite.",
+    "sous": "<p class=\"note\">Un rond noir apparaît devant chaque ligne. Une vraie liste à puces se fait avec le bouton, jamais avec un tiret tapé.</p>"
    }
   ],
-  "vois": "Dans Docs : « Mon bloc-notes », puis trois éléments du festin, chacun sur sa ligne, avec sa puce.<br><span class=\"note\">Une vraie liste à puces se fait avec le bouton, jamais avec un tiret tapé.</span>",
+  "vois": "Dans Docs : « Mon bloc-notes », puis trois choses du repas, chacune sur sa ligne, avec un rond noir devant.",
   "demos": {
    "1": [
     "etape8",
@@ -270,6 +279,19 @@ const BLOCS = [
     "etape8",
     [
      3
+    ]
+   ],
+   "3": [
+    "etape8",
+    [
+     4
+    ]
+   ],
+   "4": [
+    "etape8",
+    [
+     5,
+     6
     ]
    ]
   }
@@ -487,7 +509,7 @@ const BLOCS = [
  {
   "partie": "B — La mise en forme",
   "titre": "Je m’évalue et je remets",
-  "min": 10,
+  "min": 15,
   "bulle": "Dernière étape : vérifie, puis remets dans Classroom.",
   "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>J’ouvre la grille : les critères avec une étoile sont incontournables.</p></aside><p class=\"note\">Je vérifie une chose par case, dans mon document. Si une chose manque, je la corrige avant de cocher.</p>" + A_MOI,
   "gestes": [
@@ -503,13 +525,25 @@ const BLOCS = [
    "Vérifie ton <b>bloc-notes</b> : une vraie liste à puces, une vraie liste numérotée de six gestes, ta phrase.",
    "Ouvre ta <b>grille</b> (bouton 📋, après l’étape 9) et clique, pour chaque critère, sur la phrase qui décrit ton travail : A, B, C ou D.",
    "<b>Montre ton document à ton voisin</b>. Il le compare aux cases 2 à 10 et te montre un écart, sans toucher la souris. Corrige.",
-   "🔔 Clique sur <b>« J’attends de l’aide »</b> et attends le professeur : il regarde ton document. <b>Rends seulement avec son accord.</b>",
    {
-    "geste": "Le professeur a dit oui ? Classroom ▸ le devoir ▸ Vos devoirs ▸ Ajouter ou créer ▸ <b>Google Drive</b> ▸ ton document ▸ bouton bleu ▸ <b>Rendre le devoir</b> ▸ Rendre le devoir.",
-    "sous": "<details><summary>Où est le devoir dans Classroom ?</summary><p>Classroom ▸ ma classe ▸ onglet <b>Travaux et devoirs</b> ▸ clique sur <b>03 EVAL Formatif Le rat de ville</b> ▸ Afficher les instructions.</p><img class=\"capture\" src=\"" + BASE + "capture-devoir-classroom.png\" alt=\"Classroom, onglet Travaux et devoirs : le devoir 03 EVAL Formatif Le rat de ville\"></details>"
-   }
+    "geste": "Demande l’<b>accord</b> du professeur : clique sur le bouton <b>🔔 Je demande l’accord du professeur</b> ci-dessous. Il vient regarder ton document. Quand il a dit oui, cette case se coche toute seule.",
+    "accord": true,
+    "sous": "<details><summary>Le professeur demande une correction ?</summary><p>Je corrige dans mon document. Ma demande reste allumée : il revient voir. Si j’ai éteint la cloche, je clique encore sur <b>🔔 Je demande l’accord du professeur</b>.</p></details>"
+   },
+   {
+    "geste": "Ouvre le <b>devoir</b> : clique sur l’onglet de Classroom ▸ onglet <b>Travaux et devoirs</b> ▸ <b>03 EVAL Formatif Le rat de ville</b> ▸ <b>Afficher les instructions</b>.",
+    "sous": "<details><summary>Je n’ai plus l’onglet de Classroom ?</summary><p>Menu Google (la gaufre ⋮⋮⋮, en haut à droite) ▸ <b>Classroom</b> ▸ <b>Numérique</b> (ma classe) ▸ onglet <b>Travaux et devoirs</b>.</p><img class=\"capture\" src=\"" + BASE + "capture-devoir-classroom.png\" alt=\"Classroom, onglet Travaux et devoirs : le devoir 03 EVAL Formatif Le rat de ville\"></details>"
+   },
+   {
+    "geste": "À droite, dans le cadre <b>Vos devoirs</b> : clique sur <b>+ Ajouter ou créer</b> ▸ <b>Google Drive</b> (la 1re ligne du menu).",
+    "attention": "⚠️ Pas <b>Docs</b>, sous « Créer » : il fabriquerait un nouveau document vide. Ton document existe déjà."
+   },
+   "Dans la fenêtre Google Drive, clique sur <b>ton document</b> (AAAAMMJJ Le rat de ville – Prénom Nom), puis sur le bouton bleu <b>Ajouter</b>, en bas à droite.",
+   "Vérifie : ton document apparaît maintenant sous <b>Vos devoirs</b>, avec son nom. Joindre ne suffit pas : il n’est pas encore rendu.",
+   "Clique sur le bouton bleu <b>Rendre le devoir</b>. Une fenêtre demande « Rendre le devoir ? » : clique encore sur <b>Rendre le devoir</b>.",
+   "Vérifie : en haut du cadre <b>Vos devoirs</b>, c’est écrit <b>Remis</b>. C’est rendu !"
   ],
-  "vois": "Je compare mon fichier aux critères avant de choisir mes lettres Moi. Je sonne la cloche et j’attends l’accord du professeur avant de rendre. Après la remise, je vérifie dans Classroom que le devoir est bien indiqué comme remis.<br><span class=\"note\">Repérer et corriger un écart fait partie du travail : je peux encore améliorer mon document avant de le remettre.</span>",
+  "vois": "Je compare mon fichier aux critères avant de choisir mes lettres Moi. Je demande l’accord du professeur avant de rendre. Après la remise, « Vos devoirs » affiche <b>Remis</b>.<br><span class=\"note\">Repérer et corriger un écart fait partie du travail : je peux encore améliorer mon document avant de le remettre.</span>",
   "demos": {
    "1": [
     "etape9",
@@ -517,19 +551,12 @@ const BLOCS = [
      0
     ]
    ],
-   "14": [
-    "etape9",
-    [
-     1,
-     2,
-     3,
-     4,
-     5,
-     6,
-     7,
-     8
-    ]
-   ]
+   "14": ["etape9", [1]],
+   "15": ["etape9", [2, 3]],
+   "16": ["etape9", [4, 5]],
+   "17": ["etape9", [6]],
+   "18": ["etape9", [6, 7]],
+   "19": ["etape9", [8]]
   }
  }
 ];

@@ -7,6 +7,11 @@
 /* Une erreur JavaScript s'affiche en haut de la page : sur un téléphone ou un poste d'élève, pas de console. */
 addEventListener("error", e => {
   if(e.target && e.target.tagName === "LINK") return;   // une police qui manque n'empêche rien
+  if(e.target && e.target.tagName === "IMG"){   // une image qui ne vient pas : jusqu'à 4 essais espacés (2, 5, 10, 20 s), sans alarmer l'élève
+    const im = e.target, n = +(im.dataset.reessai || 0), attente = [2000, 5000, 10000, 20000][n];
+    if(attente){ im.dataset.reessai = n + 1; setTimeout(() => { im.src = im.src.replace(/[?&]r=\d+$/, "") + (im.src.replace(/[?&]r=\d+$/, "").includes("?") ? "&" : "?") + "r=" + Date.now(); }, attente); }
+    return;
+  }
   const p = document.createElement("p");
   p.style.cssText = "background:#f8e3e0;color:#b23a2e;border-left:5px solid #b23a2e;padding:8px 12px;margin:8px 0;font:14px/1.4 Arial,sans-serif";
   p.textContent = "⚠ Erreur dans la page : " + (e.message || (e.target && e.target.src ? "chargement de " + e.target.src : "inconnue")) + (e.lineno ? " (ligne " + e.lineno + ")" : "");
