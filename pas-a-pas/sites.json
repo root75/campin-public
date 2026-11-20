@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "toujours": [
+    "root75.github.io",
+    "script.google.com",
+    "accounts.google.com",
+    "accounts.youtube.com",
+    "login.microsoftonline.com"
+  ],
+  "cours": {
+    "rat-de-ville-formatif": [
+      "docs.google.com"
+    ]
+  },
+  "bonus": [
+    "1jour1actu.com",
+    "agilefingers.com",
+    "artsandculture.google.com",
+    "autodraw.com",
+    "beepbox.co",
+    "blockly.games",
+    "chiark.greenend.org.uk",
+    "code.org",
+    "codecombat.com",
+    "edclub.com",
+    "excalidraw.com",
+    "fr.duolingo.com",
+    "fr.khanacademy.org",
+    "france-ioi.org",
+    "geo-fs.com",
+    "geogebra.org",
+    "geoguessr.com",
+    "kleki.com",
+    "lumni.fr",
+    "musiclab.chromeexperiments.com",
+    "openguessr.com",
+    "phet.colorado.edu",
+    "pixilart.com",
+    "play.typeracer.com",
+    "play2048.co",
+    "quickdraw.withgoogle.com",
+    "ratatype.com",
+    "turbowarp.org",
+    "worldle.teuteuf.fr"
+  ]
+}

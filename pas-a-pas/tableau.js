@@ -909,11 +909,14 @@ let CL = null;
 const DEMO_CL = {
   d: { cours:[],
        classes:{ "2B":["messagerie-1"], "2E":["messagerie-1"], "3F":["python-1"] },
+       modes:{},
        eleves:[{email:"lea.dupont@arcampin.be",classe:"2B"},{email:"noah.martin@arcampin.be",classe:"2E"},{email:"sami.benali@arcampin.be",classe:"2B"}] },
   classesEtCours(){ return this.d; },
   ajouterClasse(c){ this.d.classes[c] = this.d.classes[c] || []; return this.d; },
   retirerClasse(c){ delete this.d.classes[c]; return this.d; },
   activerCours(c, k, oui){ const l = this.d.classes[c].filter(x=>x!==k); if(oui) l.push(k); this.d.classes[c] = l; return this.d; },
+  modeCours(c, k, min){ this.d.modes[c] = { debut: Date.now(), jusqua: Date.now() + min * 60000, cours: k }; return this.d; },
+  arreterModeCours(c){ delete this.d.modes[c]; return this.d; },
   changerClasse(e, c){ if(c) this.d.eleves.find(x=>x.email===e).classe = c; else this.d.eleves = this.d.eleves.filter(x=>x.email!==e); return this.d; }
 };
 function serveurCl(fn, ...args){
@@ -921,11 +924,40 @@ function serveurCl(fn, ...args){
   return Promise.resolve(DEMO_CL[fn](...args));
 }
 const appelCl = (fn, ...args) => serveurCl(fn, ...args).then(dessineClasses, erreur);
+/* Mode cours (extension Chrome « Campin — cours ») : pendant ce temps, le Chrome des élèves de la classe ouvre le
+   cours et ne laisse passer que ses sites (pas-a-pas/sites.json). On choisit une durée, pas une heure à taper :
+   passé ce délai le mode tombe seul, un élève ne reste jamais bloqué au cours suivant. « Arrêter » le lève tout de suite.
+   Un serveur antérieur n'envoie pas « modes » : la colonne reste vide, sans erreur. */
+const DUREES_MODE = [25, 50, 100];
+const libelleMode = m => "🔒 jusqu’à " + new Date(m.jusqua).toLocaleTimeString("fr-BE",{hour:"2-digit",minute:"2-digit"});
+function caseModeCours(n, d){
+  const td = txt("td", "mode-cours"), m = d.modes && d.modes[n];
+  if(!d.modes) return td;
+  if(m){
+    const b = txt("button", "btn vide", "Arrêter"); b.type = "button";
+    b.setAttribute("aria-label", "Arrêter le mode cours de " + n);
+    b.addEventListener("click", ()=>{ b.disabled = true; appelCl("arreterModeCours", n); });
+    td.append(txt("span", "mode-actif", libelleMode(m) + " "), b);
+    return td;
+  }
+  const sel = txt("select"), b = txt("button", "btn vide", "🔒 Lancer"); b.type = "button";
+  sel.replaceChildren(...DUREES_MODE.map(v=>{ const o = txt("option", null, v + " min"); o.value = v; return o; }));
+  sel.value = 50; sel.setAttribute("aria-label", "Durée du mode cours pour " + n);
+  b.setAttribute("aria-label", "Lancer le mode cours pour " + n);
+  b.title = "Le Chrome des élèves de " + n + " ouvre le cours choisi en haut du tableau et ne laisse passer que ses sites.";
+  b.addEventListener("click", ()=>{
+    const cours = $("cours") ? $("cours").value : "";
+    b.disabled = true;
+    appelCl("modeCours", n, d.classes[n].includes(cours) ? cours : "", Number(sel.value));
+  });
+  td.append(sel, document.createTextNode(" "), b);
+  return td;
+}
 function dessineClasses(d){
   CL = d;
   if($("seance")) caseAutresClasses();   // les classes qui ont ce cours ouvert viennent d'arriver
   const noms = Object.keys(d.classes).sort();
-  const tete = txt("tr"); tete.append(txt("th", null, "Classe"), ...d.cours.map(c=>{ const th = txt("th", null, c.titre); th.title = c.cle; return th; }), txt("th"));
+  const tete = txt("tr"); tete.append(txt("th", null, "Classe"), ...d.cours.map(c=>{ const th = txt("th", null, c.titre); th.title = c.cle; return th; }), txt("th", null, d.modes ? "Mode cours" : ""), txt("th"));
   $("cl-tete").replaceChildren(tete);
   $("cl-corps").replaceChildren(...noms.map(n=>{
     const tr = txt("tr"); tr.append(txt("td", "nom", n));
@@ -934,6 +966,7 @@ function dessineClasses(d){
       cb.setAttribute("aria-label", c.titre + " pour " + n);
       cb.addEventListener("change", ()=>appelCl("activerCours", n, c.cle, cb.checked));
       td.append(cb); tr.append(td); });
+    tr.append(caseModeCours(n, d));
     const td = txt("td"), x = txt("button", "retirer", "Retirer"); x.type = "button";
     x.addEventListener("click", ()=>{ if(confirm("Retirer la classe " + n + " ? Ses élèves ne verront plus aucun cours tant que tu ne les as pas déplacés.")) appelCl("retirerClasse", n); });
     td.append(x); tr.append(td); return tr; }));
