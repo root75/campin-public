@@ -536,6 +536,8 @@ function affiche(){
   if(typeof DemoLecteur!=="undefined" && DemoLecteur.arrete) DemoLecteur.arrete();
   /* Les prolongements (#plus-loin) ne s'affichent que lorsqu'on attend (cadenas) ou qu'on a fini (Vincent, 12/11/2026). */
   const loin = document.getElementById("plus-loin"); if(loin){ loin.hidden = true; loin.open = false; }
+  /* « Comment ça marche ? » (#intro) : sur la première page seulement, pour ne garder à l'écran que le nécessaire (Vincent, 20/11/2026). */
+  const intro = document.getElementById("intro"); if(intro){ intro.hidden = ici!==0; if(ici!==0) intro.open = false; }
   if(enPause()){ pause(z); return; }
   if(ici >= BLOCS.length){ fin(z); return; }
   const B = blocVu(ici);
