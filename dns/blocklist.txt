@@ -147,6 +147,10 @@
 ||yurk.com^$important
 ! 2026-11-20 block — Truffled (jeux « unblocked »)
 ||garbsoftball.com^$important
+! 2026-11-20 block — faux IXL (jeux « unblocked » derrière une page d'école)
+||ixl.boats^$important
+! 2026-11-20 block — fichiers GitHub servis comme pages web (jeux HTML)
+||rawcdn.githack.com^$important
 ! ==============================================================================
 ! === BLOCAGE — Anime & Streaming non autorisé (non couverts par regex) ===
 ! ==============================================================================
