@@ -16,9 +16,11 @@
 @@||config.edge.skype.com^$important
 @@||data.msn.com^$important
 @@||dbdiagram.io^$important
+@@||docker.io^$important
 @@||draw.io^$important
 @@||e-classe.be^$important
 @@||fandom.com^$important
+@@||ghcr.io^$important
 @@||github.com^$important
 @@||githubassets.com^$important
 @@||googleapis.com^$important
