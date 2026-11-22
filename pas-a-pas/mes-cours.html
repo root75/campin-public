@@ -6,6 +6,7 @@
 <title>Mes cours — pas à pas</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:wght@0,800&family=Atkinson+Hyperlegible:wght@0,400;0,700&display=swap">
+<link rel="stylesheet" href="https://root75.github.io/campin-public/assets/navigation.css">
 <style>
 /* Mes cours : le point d'entrée unique de l'élève, un bouton par cours ouvert pour sa classe.
    Servi par Apps Script (outils/pas-a-pas), adresse sans paramètre ; ouvert ailleurs, il montre un aperçu. */
@@ -38,11 +39,22 @@ p{margin:0}
 .btn.cours{display:block;text-align:left;font-size:1.2rem;padding:14px 18px}
 .coince{background:var(--fromage-pale);border-left:5px solid var(--fromage);border-radius:6px;padding:10px 14px;display:grid;gap:6px}
 .coince ul{margin:0;padding-left:1.2rem;display:grid;gap:4px}
+.campin-navigation{padding:0;margin:0}
 .demo{background:var(--fromage-pale);border-left:5px solid var(--fromage);border-radius:6px;padding:8px 12px;font-size:1rem}
 </style>
 </head>
 <body>
 <main class="page">
+  <nav class="campin-navigation" aria-label="Navigation du site">
+    <details class="campin-menu">
+      <summary>☰ Menu</summary>
+      <div class="campin-menu-liens">
+        <a href="https://root75.github.io/campin-public/portail/" target="_top">Mon portail</a>
+        <a href="https://root75.github.io/campin-public/revisions/" target="_top">Révisions et entraînements</a>
+        <a href="https://root75.github.io/campin-public/se-connecter/#rendre" target="_top">Rendre un devoir</a>
+      </div>
+    </details>
+  </nav>
   <h1>Mes cours<span class="classe" id="titre-classe"></span></h1>
   <p class="demo" id="demo" hidden>Aperçu : rien n'est enregistré. La vraie page s'ouvre par l'adresse Apps Script, sans rien derrière <b>/exec</b>.</p>
   <p class="doux" id="attente">Chargement…</p>
