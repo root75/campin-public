@@ -42,6 +42,10 @@ a{color:inherit}
 .marque span{color:var(--doux);font-size:15px}
 .pastille{border:1px solid var(--trait);border-radius:999px;padding:7px 14px;font:400 15px var(--corps);color:var(--texte);background:transparent;cursor:pointer}
 .pastille:hover{border-color:var(--accent)}
+.date{margin:0;text-align:right;line-height:1.25}
+.date>b{display:block;font:600 19px var(--titre)}
+.date span{color:var(--doux);font-size:14px}
+.date span b{color:var(--texte);font-variant-numeric:tabular-nums}
 
 h1{font:800 clamp(28px,4.2vw,42px)/1.1 var(--titre);margin:0;text-wrap:balance}
 .compte{margin:6px 0 0;color:var(--doux);overflow-wrap:anywhere}
@@ -87,8 +91,10 @@ h1{font:800 clamp(28px,4.2vw,42px)/1.1 var(--titre);margin:0;text-wrap:balance}
 .pied a{color:var(--doux)}
 .auteur{margin-left:auto}
 
-@media (max-width:820px){.portes{grid-template-columns:1fr}.porte{flex-direction:row;flex-wrap:wrap;text-align:left;padding:16px;gap:4px 14px}
-  .rond{flex:0 0 64px;width:64px;height:64px;margin:0}.rond svg{width:36px;height:36px}.porte b{flex:1 1 60%}.porte span{flex:1 1 100%}.porte em{margin:0}}
+@media (max-width:820px){.portes{grid-template-columns:1fr}
+  .porte{display:grid;grid-template-columns:64px 1fr;justify-items:start;align-items:center;text-align:left;padding:16px;gap:2px 14px}
+  .porte .rond{grid-row:1 / span 3;width:64px;height:64px;margin:0}.rond svg{width:36px;height:36px}.porte em{margin:2px 0 0}
+  .date{text-align:left;flex:1 1 100%;order:3}}
 @media (prefers-reduced-motion:reduce){.porte{transition:none}.porte:hover{transform:none}}
 </style>
 </head>
@@ -97,6 +103,8 @@ h1{font:800 clamp(28px,4.2vw,42px)/1.1 var(--titre);margin:0;text-wrap:balance}
   <header class="bandeau">
     <div class="marque"><img class="blason" src="https://root75.github.io/campin-public/assets/logo-campin.png" alt="Logo de l'Athénée royal Robert Campin : un hibou coiffé d'une toque" width="72" height="72">
       <div><b>Mon portail</b><span>Athénée royal Robert Campin · Informatique</span></div></div>
+    <!-- La date du jour : l'élève en a besoin pour nommer son travail (AAAAMMJJ Titre – Prénom Nom). -->
+    <p class="date" id="date" hidden><b id="date-jour"></b><span>Pour nommer ton travail : <b id="date-nom"></b></span></p>
     <button class="pastille" id="theme" type="button">Mode clair</button>
   </header>
 
@@ -144,7 +152,6 @@ h1{font:800 clamp(28px,4.2vw,42px)/1.1 var(--titre);margin:0;text-wrap:balance}
     <a target="_top" href="https://drive.google.com/"><b>Drive</b><span>mes fichiers</span></a>
     <a target="_top" href="https://docs.google.com/document/"><b>Docs</b><span>écrire</span></a>
     <a target="_top" href="https://outlook.cloud.microsoft/"><b>Outlook</b><span>ma messagerie</span></a>
-    <a target="_top" href="https://www.canva.com/"><b>Canva</b><span>créer</span></a>
     <a target="_top" href="https://root75.github.io/campin-public/revisions/"><b>Je révise</b><span>quiz et cartes, sans connexion</span></a>
   </nav>
 
@@ -153,6 +160,11 @@ h1{font:800 clamp(28px,4.2vw,42px)/1.1 var(--titre);margin:0;text-wrap:balance}
       <h2>Météo à Tournai</h2>
       <div class="meteo"><b id="meteo-temp"></b><span id="meteo-ciel"></span></div>
       <p id="meteo-conseil"></p>
+    </div>
+    <div class="panneau">
+      <h2>L'actu, à ton niveau</h2>
+      <p>Cinq minutes pour comprendre ce qui se passe dans le monde, expliqué pour les jeunes.</p>
+      <p><a target="_top" href="https://www.1jour1actu.com/"><b>Lire l'actu du jour sur 1jour1actu ▸</b></a></p>
     </div>
     <div class="panneau">
       <h2>Ça coince ?</h2>

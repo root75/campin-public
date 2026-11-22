@@ -55,7 +55,14 @@ p.ctx.campinConnecte(false); assert.equal(p.ctx.parti, undefined);
 p.ctx.campinConnecte(true); assert.match(p.ctx.parti, /\/exec\?vue=portail$/);
 
 // Météo : les mots et le conseil.
-const { ciel, conseil } = p.ctx.PortailEssai;
+const { ciel, conseil, dateNom, dateJour } = p.ctx.PortailEssai;
+// La date : en toutes lettres, et sous la forme AAAAMMJJ des noms de travaux. Elle s'affiche sans connexion.
+assert.equal(dateNom(new Date(2026, 0, 5)), '20260105');
+assert.equal(dateJour(new Date(2026, 10, 23)), 'Lundi 23 novembre 2026');
+assert.equal(p.$('date').hidden, false); assert.match(p.$('date-nom').textContent, /^\d{8}$/);
+// Peu de distractions : pas de Canva ni de messagerie instantanée sur la page d'accueil.
+assert.doesNotMatch(html, /canva|chat\.google/i);
+assert.match(html, /href="https:\/\/www\.1jour1actu\.com\/"/);
 assert.equal(ciel(0), 'ciel dégagé'); assert.equal(ciel(61), 'pluie'); assert.equal(ciel(95), 'orage');
 assert.match(conseil(12, 61), /pluie/); assert.match(conseil(2, 3), /froid/); assert.equal(conseil(15, 1), '');
 console.log('portail : page publique, élève reconnu, hors école, redirection et météo vérifiés.');

@@ -17,6 +17,11 @@ $("theme").addEventListener("click", () => {
   theme(t); try { localStorage.setItem("portail-theme", t); } catch(e) {}
 });
 
+/* ----- La date du jour, en toutes lettres, et sous la forme qui sert à nommer un travail. ----- */
+function dateNom(d){ return String(d.getFullYear()) + String(d.getMonth() + 1).padStart(2, "0") + String(d.getDate()).padStart(2, "0"); }
+function dateJour(d){ const t = d.toLocaleDateString("fr-BE", { weekday:"long", day:"numeric", month:"long", year:"numeric" }); return t.charAt(0).toUpperCase() + t.slice(1); }
+{ const d = new Date(); $("date-jour").textContent = dateJour(d); $("date-nom").textContent = dateNom(d); $("date").hidden = false; }
+
 /* ----- État connecté : tout vient du serveur. ----- */
 function affiche(d){
   if(!d || !d.email) return;            // compte hors école : la page reste dans son état public
@@ -71,5 +76,5 @@ if(typeof fetch === "function"){
       $("meteo").hidden = false;
     }).catch(() => {});
 }
-globalThis.PortailEssai = { ciel, conseil };
+globalThis.PortailEssai = { ciel, conseil, dateNom, dateJour };
 })();
