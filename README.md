@@ -6,6 +6,7 @@ est public. Les sources pédagogiques (fiches, mémoire) restent dans `campin-pe
 - `index.html` — accueil public sans connexion ni redirection automatique, logo et valeurs WBE ; une seule entrée « Mes cours » (la séance ouverte de la classe, sinon Mes cours), puis « Me connecter et rendre un devoir » et les révisions en accès libre.
 - `se-connecter/` — « À chaque cours » en sept gestes (Chrome par Démarrer, profil, Classroom ▸ À faire ▸ devoir ▸ Rendre le devoir ×2 ▸ Remis) avec une animation ; le reste replié : la première fois (profil Chrome, @ et point, rejoindre le cours), joindre un fichier, points et corrections, question, devoir déjà rendu ; « Ça coince ? ». Animations : lecteur commun, maquettes dans `se-connecter/demos.js`. Carte en tête de l’accueil et entrée « Rendre un devoir » du ☰ Menu des fiches (#rendre).
 - `cours/` — adresse courte à donner aux élèves, redirige vers Mes cours (plus liée depuis l’accueil, qui pointe directement sur le déploiement).
+- `portail/` — « Mon portail », page d'accueil des profils élèves : publique ici (« Tu n'es pas connecté »), remplie pour l'élève quand Apps Script la sert (`…/exec?vue=portail`). Aucune donnée d'élève dans ces fichiers.
 - `revisions/` — révisions et entraînements regroupés par niveau (1re, 2e, 3e).
 - `prof/` — raccourci vers le tableau professeur du même déploiement (`?vue=prof`).
 
