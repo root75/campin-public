@@ -1,0 +1,36 @@
+# Quelques nouvelles : chaque matin d'école, relit les flux des journaux pour les jeunes et met à jour
+# portail/actus.json. Le portail tire ensuite un titre au hasard à chaque visite.
+# Tôt le matin, avant la première heure de cours : le site se republie à chaque changement.
+name: Actus du portail
+
+on:
+  schedule:
+    - cron: '30 4 * * 1-5'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: actus
+  cancel-in-progress: false
+
+jobs:
+  actus:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node outils/actus.cjs
+      - name: Vérifier avant de publier
+        run: node tests/portail.cjs && node tests/actus.cjs
+      - name: Publier s'il y a du neuf
+        run: |
+          if git diff --quiet -- portail/actus.json; then echo "Rien de neuf."; exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Actus du portail : titres du jour" -- portail/actus.json
+          git push

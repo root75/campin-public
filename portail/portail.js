@@ -76,5 +76,32 @@ if(typeof fetch === "function"){
       $("meteo").hidden = false;
     }).catch(() => {});
 }
-globalThis.PortailEssai = { ciel, conseil, dateNom, dateJour };
+/* ----- Quelques nouvelles : un titre différent à chaque visite, et à chaque clic sur « Une autre ». ----- */
+const ACTUS = "https://root75.github.io/campin-public/portail/actus.json";
+/** Un titre au hasard, jamais celui qu'on vient de voir quand il y en a d'autres. Seuls les liens https passent. */
+function tire(actus, dernier, hasard = Math.random){
+  const bons = (Array.isArray(actus) ? actus : []).filter(a => a && typeof a.titre === "string" && a.titre && /^https:\/\//.test(a.lien || ""));
+  const choix = bons.length > 1 ? bons.filter(a => a.lien !== dernier) : bons;
+  return choix.length ? choix[Math.floor(hasard() * choix.length)] : null;
+}
+if(typeof fetch === "function"){
+  fetch(ACTUS).then(r => r.ok ? r.json() : Promise.reject()).then(d => {
+    let dernier = ""; try { dernier = localStorage.getItem("portail-nouvelle") || ""; } catch(e) {}
+    const vus = new Set();
+    const montre = () => {
+      // Pendant la visite, on fait le tour de tous les titres avant d'en revoir un.
+      let reste = (d.actus || []).filter(x => x && !vus.has(x.lien));
+      if(!reste.length){ vus.clear(); reste = d.actus; }
+      const a = tire(reste, dernier); if(!a) return;
+      vus.add(a.lien);
+      dernier = a.lien; try { localStorage.setItem("portail-nouvelle", dernier); } catch(e) {}
+      $("nouvelle-lien").textContent = a.titre; $("nouvelle-lien").href = a.lien;
+      $("nouvelle-source").textContent = a.source || "";
+      $("nouvelle").hidden = false; $("nouvelle-repli").hidden = true;
+    };
+    $("nouvelle-autre").addEventListener("click", montre);
+    montre();
+  }).catch(() => {});
+}
+globalThis.PortailEssai = { tire,  ciel, conseil, dateNom, dateJour };
 })();

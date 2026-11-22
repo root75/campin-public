@@ -63,6 +63,17 @@ assert.equal(p.$('date').hidden, false); assert.match(p.$('date-nom').textConten
 // Peu de distractions : pas de Canva ni de messagerie instantanée sur la page d'accueil.
 assert.doesNotMatch(html, /canva|chat\.google/i);
 assert.match(html, /href="https:\/\/www\.1jour1actu\.com\/"/);
+// Quelques nouvelles : jamais deux fois de suite le même titre, et rien d'autre qu'un lien https.
+const { tire } = p.ctx.PortailEssai;
+const A = [{ titre:'Un', lien:'https://a.test/1', source:'A' }, { titre:'Deux', lien:'https://a.test/2', source:'A' }];
+for (let i = 0; i < 20; i++) assert.equal(tire(A, 'https://a.test/1').titre, 'Deux');
+assert.equal(tire([A[0]], 'https://a.test/1').titre, 'Un', 'Un seul titre : on le garde');
+assert.equal(tire([{ titre:'Piège', lien:'javascript:alert(1)' }, { titre:'', lien:'https://a.test/3' }], ''), null);
+assert.equal(tire(null, ''), null);
+// Le fichier publié : des titres, de plus d'une source, tous en https.
+const actus = JSON.parse(fs.readFileSync(require.resolve('../portail/actus.json'), 'utf8')).actus;
+assert.ok(actus.length >= 4); assert.ok(new Set(actus.map(a => a.source)).size >= 2, 'Sources variées');
+for (const a of actus) { assert.match(a.lien, /^https:\/\/www\.(1jour1actu\.com|lejde\.be)\//); assert.ok(a.titre.length >= 8); }
 assert.equal(ciel(0), 'ciel dégagé'); assert.equal(ciel(61), 'pluie'); assert.equal(ciel(95), 'orage');
 assert.match(conseil(12, 61), /pluie/); assert.match(conseil(2, 3), /froid/); assert.equal(conseil(15, 1), '');
 console.log('portail : page publique, élève reconnu, hors école, redirection et météo vérifiés.');
