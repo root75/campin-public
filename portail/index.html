@@ -36,8 +36,8 @@ a{color:inherit}
 
 .bandeau{display:flex;flex-wrap:wrap;align-items:center;gap:12px 18px}
 .marque{display:flex;align-items:center;gap:12px;margin-right:auto}
-.blason{width:44px;height:44px;border-radius:12px;background:var(--accent);color:var(--sur-accent);
-  display:grid;place-items:center;font:800 22px var(--titre)}
+/* Le hibou de l'école : son texte est noir, il lui faut donc toujours un fond blanc. */
+.blason{width:72px;height:72px;border-radius:50%;background:#fff;padding:5px;flex:none}
 .marque b{display:block;font:800 20px/1.1 var(--titre)}
 .marque span{color:var(--doux);font-size:15px}
 .pastille{border:1px solid var(--trait);border-radius:999px;padding:7px 14px;font:400 15px var(--corps);color:var(--texte);background:transparent;cursor:pointer}
@@ -95,7 +95,7 @@ h1{font:800 clamp(28px,4.2vw,42px)/1.1 var(--titre);margin:0;text-wrap:balance}
 <body>
 <div class="page">
   <header class="bandeau">
-    <div class="marque"><div class="blason" aria-hidden="true">C</div>
+    <div class="marque"><img class="blason" src="https://root75.github.io/campin-public/assets/logo-campin.png" alt="Logo de l'Athénée royal Robert Campin : un hibou coiffé d'une toque" width="72" height="72">
       <div><b>Mon portail</b><span>Athénée royal Robert Campin · Informatique</span></div></div>
     <button class="pastille" id="theme" type="button">Mode clair</button>
   </header>
@@ -123,6 +123,10 @@ h1{font:800 clamp(28px,4.2vw,42px)/1.1 var(--titre);margin:0;text-wrap:balance}
     </div>
     <a class="bouton" id="seance-lien" target="_top" href="#">Ouvrir ma séance ▸</a>
   </section>
+
+  <!-- Place réservée à l'extension « Campin — cours » : elle y posera le bandeau « Je m'occupe » des élèves qui y ont droit.
+       Le portail ne le construit pas et n'y écrit rien. -->
+  <div id="bandeau-extension" hidden></div>
 
   <nav class="portes" aria-label="Mes accès">
     <a class="porte" id="porte-cours" target="_top" href="https://script.google.com/a/macros/arcampin.be/s/AKfycbyOPTaq-L1PuittB1rkkiL9OOtShFc2WpiD8H_pH_INaw9ePWenCzhlIPlHu4zBOgLk/exec">
