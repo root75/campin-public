@@ -71,3 +71,12 @@ async function affiche(cours, {choix=false, seance=null}={}){
   assert.equal(automatique.rejoints(),1,'L’entrée normale conserve la reprise automatique');
   console.log('Vue élève : tri français, casse, accents, numéros, liens et liste vide vérifiés.');
 })().catch(err=>{ console.error(err); process.exitCode=1; });
+
+// Le petit menu des cours est aussi sur « Mes cours » : revenir au portail ou aux révisions sans chercher.
+{
+  const fs = require('fs'), path = require('path'), assert = require('assert');
+  const page = fs.readFileSync(path.join(__dirname, '..', 'pas-a-pas', 'mes-cours.html'), 'utf8');
+  assert.match(page, /assets\/navigation\.css/, 'Mes cours : la feuille du menu est chargée');
+  for (const lien of ['portail/', 'revisions/', 'se-connecter/#rendre'])
+    assert.ok(page.includes('href="https://root75.github.io/campin-public/' + lien + '" target="_top"'), 'Mes cours : le menu mène à ' + lien);
+}
