@@ -361,6 +361,76 @@
         ]
       },
       "retenir": "Quand je suis en colère, j'écris demain. Et je choisis l'outil selon la personne à qui je parle."
+    },
+    {
+      "id": "juste-pour-moi",
+      "titre": "« Juste pour moi »",
+      "attendu": "identite",
+      "scene": {
+        "genre": "discussion", "lieu": "Discussion privée", "detail": "Lou et Nathan",
+        "messages": [
+          { "de": "Nathan", "heure": "21:15", "texte": "Tu me plais trop. Envoie-moi une image de toi en sous-vêtements 😏" },
+          { "de": "Lou", "moi": true, "heure": "21:16", "texte": "Je ne sais pas…" },
+          { "de": "Nathan", "heure": "21:16", "texte": "Juste pour moi. Promis, je l'efface après. Si tu m'aimes, tu le fais." }
+        ]
+      },
+      "percevoir": {
+        "question": "Lou lit les messages de Nathan. Que peut-elle ressentir ?",
+        "souvent": ["peur", "degout", "surprise"],
+        "pourquoi": "On cite souvent la peur ou le malaise (on lui demande quelque chose d'intime), et la surprise. Certains citent aussi la joie de plaire : plusieurs émotions peuvent se mélanger."
+      },
+      "comprendre": {
+        "question": "Qu'est-ce qui rend cette demande dangereuse ?",
+        "choix": [
+          { "texte": "Une fois envoyée, l'image ne dépend plus de Lou : elle peut être copiée, transférée, ou servir à un chantage.", "bon": true, "retour": "Oui. Une promesse n'empêche pas une capture d'écran, et la confiance peut changer après une dispute." },
+          { "texte": "Rien : Nathan a promis de l'effacer.", "bon": false, "retour": "Lou ne peut pas vérifier. Et « si tu m'aimes, tu le fais », c'est de la pression, pas de l'amour." },
+          { "texte": "Il est trop tard le soir pour écrire.", "bon": false, "retour": "L'heure ne change rien : c'est ce que Nathan demande qui pose problème." }
+        ]
+      },
+      "ajuster": {
+        "question": "Que peut faire Lou ?",
+        "choix": [
+          { "texte": "Envoyer une image où l'on ne voit pas son visage.", "bon": false, "retour": "Elle reste intime, et on peut reconnaître Lou autrement : sa chambre, son compte, la discussion." },
+          { "texte": "Dire non et ne rien envoyer. Si Nathan insiste : le bloquer et en parler à une personne de confiance.", "bon": true, "retour": "Oui. Lou a le droit de dire non, et quelqu'un qui la respecte n'insiste pas." },
+          { "texte": "L'envoyer, en lui faisant promettre encore une fois.", "bon": false, "retour": "Deux promesses ne protègent pas mieux qu'une : l'image serait déjà partie." }
+        ]
+      },
+      "retenir": "Une image intime envoyée ne se reprend pas. J'ai le droit de dire non : quelqu'un qui me respecte n'insiste pas."
+    },
+    {
+      "id": "elle-circule",
+      "titre": "L'image qui circule",
+      "attendu": "signaler",
+      "scene": {
+        "genre": "discussion", "lieu": "Groupe « Les potes »", "detail": "9 membres",
+        "messages": [
+          { "de": "Enzo", "heure": "20:02", "texte": "Regardez ce qu'on m'a envoyé 😳 une image de Clara en sous-vêtements" },
+          { "info": "3 personnes ont réagi 😂" },
+          { "de": "Enzo", "heure": "20:04", "texte": "Faites tourner !" }
+        ]
+      },
+      "percevoir": {
+        "question": "Tu es dans ce groupe. Que peux-tu ressentir ?",
+        "souvent": ["degout", "colere", "peur", "surprise"],
+        "pourquoi": "On cite souvent le malaise ou la colère (Clara n'a rien demandé), la surprise, et la peur de ce qui va arriver à Clara."
+      },
+      "comprendre": {
+        "question": "Quel est le vrai problème ?",
+        "choix": [
+          { "texte": "Clara n'avait qu'à ne pas l'envoyer.", "bon": false, "retour": "Clara a fait confiance à quelqu'un. Celui qui est en tort, c'est celui qui fait circuler l'image." },
+          { "texte": "Une image intime de Clara circule sans son accord : c'est grave, et la loi l'interdit.", "bon": true, "retour": "Oui. Chaque transfert blesse Clara un peu plus, et celui qui transfère est en tort lui aussi." },
+          { "texte": "Seulement trois personnes ont réagi.", "bon": false, "retour": "Une seule personne qui la voit sans l'accord de Clara, c'est déjà trop." }
+        ]
+      },
+      "ajuster": {
+        "question": "Que fais-tu ?",
+        "choix": [
+          { "texte": "Je ne la montre pas, je ne la transfère pas, et je préviens tout de suite un adulte.", "bon": true, "retour": "Oui. Un adulte peut faire retirer l'image et protéger Clara. Child Focus aide aussi, au 116 000 (gratuit)." },
+          { "texte": "Je quitte le groupe sans rien dire.", "bon": false, "retour": "Tu te protèges, mais l'image continue de circuler et Clara reste seule." },
+          { "texte": "Je la transfère à un seul ami, pour lui demander son avis.", "bon": false, "retour": "Un transfert de plus, c'est une personne de plus qui la voit. Demande plutôt l'avis d'un adulte." }
+        ]
+      },
+      "retenir": "L'image intime de quelqu'un d'autre : je ne la montre pas, je ne la transfère pas, je préviens un adulte."
     }
   ]
 }

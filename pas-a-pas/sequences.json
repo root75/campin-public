@@ -1728,7 +1728,7 @@
   "vie-en-ligne-1": {
     "ecransSurPostes": true,
     "titre": "Vie en ligne 01 — Derrière l’écran",
-    "objectif": "L’élève est capable de nommer l’émotion qu’un échange en ligne fait naître (percevoir), de trouver ce qui la déclenche (comprendre) et de choisir une réaction responsable (ajuster) : nétiquette d’un groupe de discussion, rôle du témoin, bloquer, signaler, en parler. Un sujet, environ deux heures de cours : à la sonnerie, reprendre la même séance au même moment. Rien n’est coté. Démarche inspirée du jeu « ConnectÉmoi » (Fédération Wallonie-Bruxelles, e-classe) ; roue des émotions de R. Plutchik (1980).",
+    "objectif": "L’élève est capable de nommer l’émotion qu’un échange en ligne fait naître (percevoir), de trouver ce qui la déclenche (comprendre) et de choisir une réaction responsable (ajuster) : nétiquette d’un groupe de discussion, rôle du témoin, vigilance devant une demande d’image intime, bloquer, signaler, en parler. Un sujet, environ deux heures de cours : à la sonnerie, reprendre la même séance au même moment. Rien n’est coté. Démarche inspirée du jeu « ConnectÉmoi » (Fédération Wallonie-Bruxelles, e-classe) ; roue des émotions de R. Plutchik (1980).",
     "competences": [
       "COM-SF-04 « Respecter, dans un environnement numérique d’interaction et de communication, une nétiquette définie. »",
       "COM-SF-01 « Sélectionner un outil d’interaction adéquat en fonction des interlocuteurs. »",
@@ -1736,12 +1736,14 @@
       "« Proposer et mettre en place des actions pertinentes pour faire face à des situations de cyberattaque, de cyberharcèlement, de cybermanipulation. »",
       "« Identifier les moyens de signaler ou bloquer un contenu partagé de manière inappropriée en ligne. »",
       "« Reconnaitre l'importance du droit à la déconnexion, tant pour soi-même que pour les autres. »",
-      "« Reconnaitre l'importance de chercher de l'aide humaine plutôt que l’IA pour son bien-être numérique, psychologique et social. »"
+      "« Reconnaitre l'importance de chercher de l'aide humaine plutôt que l’IA pour son bien-être numérique, psychologique et social. »",
+      "« Gérer son identité numérique, ses traces, ses données personnelles, de manière responsable. »"
     ],
     "preparation": [
       "Tableau professeur → Ouvrir pour une classe… → Vie en ligne 01 — Derrière l’écran → la classe. Conserver la séance pour la reprise à l’heure suivante.",
       "Dire le cadre avant de commencer : ce qu’un élève ressent ne se corrige pas, on ne se moque de la réponse de personne, et personne n’est obligé de raconter une histoire vraie.",
       "Les mots, les votes et les phrases s’affichent sans nom. Ne jamais ouvrir le Journal au projecteur.",
+      "L’étape 5 parle de l’image intime (une demande dans une discussion privée, inventée). Le dire avec des mots simples, sans détail, et sans demander de témoignage.",
       "Si un élève confie une situation réelle et grave : l’écouter à part, après le cours, et suivre la procédure de l’école (éducateur, centre PMS).",
       "Prévoir les trios du moment « À trois » : trois voisins, sans déplacer les postes."
     ],
@@ -2010,7 +2012,7 @@
       {
         "type": "atelier",
         "titre": "Seul — J’ajuste",
-        "min": 18,
+        "min": 20,
         "methode": "Travail autonome — fiches accessibles",
         "blocs": [
           4,
@@ -2021,6 +2023,23 @@
           "À l’étape 6, tu écris une règle pour le groupe de la classe : elle s’affichera au tableau, sans ton nom."
         ],
         "repere": "Circuler. Ceux qui finissent : la page « Derrière l’écran — je m’entraîne » (lien de l’écran de fin), une manche de situations."
+      },
+      {
+        "type": "ecran",
+        "titre": "Mise en commun — Une image intime : pourquoi rester vigilant",
+        "min": 5,
+        "methode": "Exposé bref, puis questions à la classe. Aucun témoignage personnel n’est demandé.",
+        "lignes": [
+          "Une image intime envoyée ne se reprend pas : elle peut être copiée, enregistrée, transférée.",
+          "La confiance peut changer, et l’image peut servir à un chantage.",
+          "J’ai le droit de dire non. Quelqu’un qui me respecte n’insiste pas.",
+          "Celle d’un autre : je ne la montre pas, je ne la transfère pas, je préviens un adulte."
+        ],
+        "questions": [
+          "Léo a promis d’effacer l’image. Pourquoi cette promesse ne protège-t-elle pas Maya ?",
+          "Si une image intime circule, qui est en tort ?"
+        ],
+        "repere": "On parle de Maya et de Léo, jamais d’un élève. Trois idées à faire dire : l’image ne se reprend pas ; celui qui la fait circuler est en tort, et la loi l’interdit, la victime n’a pas à avoir honte ; on en parle à un adulte, au 103 (Écoute-Enfants) ou au 116 000 (Child Focus), gratuits. Si un élève réagit fort ou se confie : l’écouter à part, après le cours."
       },
       {
         "type": "ecran",
@@ -2052,7 +2071,7 @@
           ],
           [
             "J’ajuste",
-            "J’attends, je relis, je soutiens. Si ça me dépasse : je bloque, je signale, j’en parle."
+            "J’attends, je relis, je soutiens. Une image intime ne s’envoie pas. Si ça me dépasse : je bloque, je signale, j’en parle."
           ]
         ],
         "exemple": "Un message envoyé ne se reprend pas."

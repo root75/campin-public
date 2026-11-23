@@ -84,7 +84,7 @@ assert.ok(sq.includes('"✗ La bonne réponse : "'),'un vote corrigé garde son 
 assert.ok(!/photo|smartphone|téléphone/i.test(JSON.stringify(seq)),'ni photo ni téléphone dans le déroulé');
 assert.ok(!/\b[123][A-H]\b|20\d\d(?!\))|lundi|mardi|mercredi|jeudi|vendredi/.test(JSON.stringify(seq).replace('(1980)','')),'le déroulé ne dépend pas de l\'année');
 
-// « Je m'entraîne » : dix situations en trois temps, sur les mêmes familles et les attendus cités.
+// « Je m'entraîne » : douze situations en trois temps, sur les mêmes familles et les attendus cités.
 const d=JSON.parse(lis('derriere-lecran/situations.json')),J=require('../derriere-lecran/jeu.js');
 assert.deepEqual(d.emotions.map(e=>[e.nom,e.couleur]),F.FAMILLES.map(f=>[f[0],f[1]]),'la roue de la page et celle du cours sont la même');
 const emos=new Set(d.emotions.map(e=>e.id)),ids=new Set();
@@ -113,4 +113,9 @@ const pj=lis('derriere-lecran/index.html'),js=lis('derriere-lecran/jeu.js');
 assert.ok(pj.includes('id="essentiel"')&&pj.includes('id="jeu"')&&pj.includes('« M. Louviaux »')&&pj.includes('ConnectÉmoi')&&pj.includes('Plutchik'),'ancres, signature, sources');
 assert.ok(!/smartphone|téléphone|selfie/i.test(pj+js)&&!/[a-z0-9.]+@arcampin\.be/i.test(pj),'ni téléphone ni adresse');
 assert.ok(!/innerHTML/.test(js),'le jeu n\'écrit que du texte');
+// L'image intime : dite dans le cours (étape 5), dans le déroulé et dans le jeu, avec le pourquoi et les numéros d'aide.
+assert.ok(/image intime/.test(F.BLOCS[4].essai.apres)&&/droit de dire non/.test(F.BLOCS[4].essai.apres)&&/pas ta faute/.test(F.BLOCS[4].essai.apres),'étape 5 : pourquoi rester vigilant');
+assert.ok(M.some(m=>/image intime/.test(m.titre)&&/116 000/.test(m.repere)&&/103/.test(m.repere)),'déroulé : mise en commun sur l\'image intime');
+['juste-pour-moi','elle-circule'].forEach(id=>assert.ok(d.situations.some(s=>s.id===id),'jeu : '+id));
+assert.ok(/116 000/.test(pj)&&/pas ta faute/.test(pj),'page élève : Child Focus et « pas ta faute »');
 console.log('OK : Vie en ligne 01 — '+F.BLOCS.length+' étapes ('+F.BLOCS.reduce((t,B)=>t+B.min,0)+' min de travail seul), '+M.length+' moments ('+M.reduce((t,m)=>t+m.min,0)+' min), '+d.situations.length+' situations d\'entraînement.');
