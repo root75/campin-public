@@ -41,23 +41,30 @@ function affiche(d){
     $("maintenant").hidden = false;
   }
   if(d.prof && d.tableau){ $("lien-prof").href = d.tableau; $("lien-prof").hidden = false; }
+  const annee = /^[123]/.test(d.classe || "") ? d.classe[0] : "";
+  if(annee) $("porte-revise").href = SITE + "revisions/?niveau=" + annee;
   mesRevisions(d.cours);
 }
 
 /* ----- Mes révisions : celles des cours ouverts pour la classe, dans l'ordre des cours. ----- */
 const REVISIONS = "https://root75.github.io/campin-public/revisions/revisions.json";
 const SITE = "https://root75.github.io/campin-public/";
-/** Les révisions à proposer : seulement les cours de l'élève, sans doublon, et des chemins du site (jamais une autre adresse). */
+/** Les révisions à proposer : seulement les cours de l'élève, sans doublon, et des chemins du site (jamais une autre adresse).
+ *  Rend [{ id, titre, activites: [{ genre, url, jeu }] }] ; « jeu » = l'activité s'ouvre dans le portail. */
 function revisionsDe(cours, table){
-  const vues = new Set(), liste = [];
+  const vus = new Set(), liste = [];
   for(const id of Array.isArray(cours) ? cours : []){
-    const r = table && Object.prototype.hasOwnProperty.call(table, id) ? table[id] : null;
-    for(const x of Array.isArray(r) ? r : []){
-      if(!x || typeof x.titre !== "string" || !x.titre || typeof x.chemin !== "string") continue;
-      if(!/^[a-z0-9][a-z0-9\-\/.]*(\?cours=[a-z0-9\-]+)?$/.test(x.chemin) || x.chemin.includes("..") || vues.has(x.chemin)) continue;
-      vues.add(x.chemin);
-      liste.push({ genre: typeof x.genre === "string" ? x.genre : "", titre: x.titre, url: SITE + x.chemin });
+    if(vus.has(id) || !table || !Object.prototype.hasOwnProperty.call(table, id)) continue;
+    vus.add(id);
+    const c = table[id];
+    if(!c || typeof c.titre !== "string" || !c.titre) continue;
+    const activites = [];
+    for(const x of Array.isArray(c.activites) ? c.activites : []){
+      if(!x || typeof x.genre !== "string" || !x.genre || typeof x.chemin !== "string") continue;
+      if(!/^[a-z0-9][a-z0-9\-\/.]*(\?(cours|jeu)=[a-z0-9\-]+)?(#[a-z]+)?$/.test(x.chemin) || x.chemin.includes("..")) continue;
+      activites.push({ genre: x.genre, url: SITE + x.chemin, jeu: x.jeu === "mots-croises" ? "mots-croises" : "" });
     }
+    if(activites.length) liste.push({ id, titre: c.titre, activites });
   }
   return liste;
 }
@@ -66,15 +73,57 @@ function mesRevisions(cours){
   fetch(REVISIONS).then(r => r.ok ? r.json() : Promise.reject()).then(t => {
     const liste = revisionsDe(cours, t.cours);
     if(!liste.length) return;
-    $("revisions-liste").replaceChildren(...liste.map(x => {
-      const a = document.createElement("a"); a.target = "_top"; a.href = x.url;
-      const g = document.createElement("small"); g.textContent = x.genre;
-      const b = document.createElement("b"); b.textContent = x.titre;
-      a.append(g, b); return a;
+    $("revisions-liste").replaceChildren(...liste.map(c => {
+      const carte = document.createElement("div"); carte.className = "revision";
+      const b = document.createElement("b"); b.textContent = c.titre;
+      const acts = document.createElement("div"); acts.className = "revision-activites";
+      for(const a of c.activites){
+        if(a.jeu){
+          // Les mots croisés se jouent ici même : l'élève ne quitte pas son portail.
+          const bouton = document.createElement("button"); bouton.type = "button"; bouton.className = "jouer"; bouton.textContent = a.genre + " ▸ jouer ici";
+          bouton.addEventListener("click", () => joue(c.id, c.titre, a.url));
+          acts.append(bouton);
+        } else {
+          const lien = document.createElement("a"); lien.target = "_top"; lien.href = a.url; lien.textContent = a.genre;
+          acts.append(lien);
+        }
+      }
+      carte.append(b, acts); return carte;
     }));
     $("revisions").hidden = false;
   }).catch(() => {});
 }
+
+/* ----- Jouer dans le portail : la grille du cours s'ouvre sous « Mes révisions ». ----- */
+const JEU = SITE + "mots-croises/";
+let outils = null;
+/** Charge une seule fois le jeu (ses styles, le calcul de la grille, l'écran) et les mots de tous les cours. */
+function outilsDuJeu(){
+  if(outils) return outils;
+  const script = src => new Promise((oui, non) => { const s = document.createElement("script"); s.src = src; s.onload = oui; s.onerror = non; document.head.append(s); });
+  const style = document.createElement("link"); style.rel = "stylesheet"; style.href = JEU + "jeu.css"; document.head.append(style);
+  outils = Promise.all([
+    fetch(JEU + "grilles.json").then(r => r.ok ? r.json() : Promise.reject()),
+    script(SITE + "assets/progres.js"), script(JEU + "grille.js").then(() => script(JEU + "jeu.js"))
+  ]).then(([d]) => d.grilles).catch(e => { outils = null; throw e; });
+  return outils;
+}
+function joue(id, titre, secours){
+  const zone = $("jeu-portail");
+  $("jeu-titre").textContent = "Mots croisés · " + titre;
+  $("jeu-zone").textContent = "Chargement…";
+  zone.hidden = false;
+  if(zone.scrollIntoView) zone.scrollIntoView({ behavior: "smooth", block: "start" });
+  outilsDuJeu().then(grilles => {
+    if(!Object.prototype.hasOwnProperty.call(grilles, id)) throw new Error("grille absente");
+    MotsCroises.monte($("jeu-zone"), id, grilles[id]);
+  }).catch(() => {
+    // Le jeu ne se charge pas ici : il reste sa page.
+    const a = document.createElement("a"); a.target = "_top"; a.href = secours; a.textContent = "Ouvrir la grille dans sa page ▸";
+    $("jeu-zone").replaceChildren("La grille ne s'ouvre pas ici. ", a);
+  });
+}
+$("jeu-fermer").addEventListener("click", () => { $("jeu-portail").hidden = true; $("jeu-zone").replaceChildren(); });
 function gras(t){ const b = document.createElement("b"); b.textContent = t; return b; }
 
 if(SUIVI){

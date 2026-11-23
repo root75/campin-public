@@ -1,101 +1,238 @@
 {
-  "note": "Par cours (identifiant de pas-a-pas/cours.json), ses pages de révision. Le portail les propose à l'élève dont la classe a ce cours ouvert. Ajouter une révision = une ligne ici, sans rien republier.",
+  "note": "Les révisions, par cours (identifiant de pas-a-pas/cours.json). La page revisions/ et le portail se construisent d'ici : ajouter une activité = une ligne, sans rien republier. « suivi » = la clé notée dans le navigateur quand l'activité est faite (assets/progres.js). « jeu » = l'activité s'ouvre aussi dans le portail, sans changer de page. « autres » = les entraînements qui ne dépendent pas d'un cours.",
   "cours": {
-    "rat-de-ville-formatif": [
-      {
-        "genre": "Je révise",
-        "titre": "Le rat de ville",
-        "chemin": "rat-de-ville/"
-      },
-      {
-        "genre": "Mots croisés",
-        "titre": "Le rat de ville",
-        "chemin": "mots-croises/?cours=rat-de-ville-formatif"
-      }
-    ],
-    "messagerie-1": [
-      {
-        "genre": "Je révise",
-        "titre": "Mon premier message",
-        "chemin": "messagerie/"
-      },
-      {
-        "genre": "Mots croisés",
-        "titre": "Mon premier message",
-        "chemin": "mots-croises/?cours=messagerie-1"
-      }
-    ],
-    "messagerie-2": [
-      {
-        "genre": "Je révise",
-        "titre": "Je réponds et je joins",
-        "chemin": "messagerie-2/"
-      },
-      {
-        "genre": "Mots croisés",
-        "titre": "Je réponds, je joins, je transfère",
-        "chemin": "mots-croises/?cours=messagerie-2"
-      }
-    ],
-    "messagerie-3": [
-      {
-        "genre": "Je révise",
-        "titre": "Bien communiquer en ligne",
-        "chemin": "messagerie-3/"
-      },
-      {
-        "genre": "Mots croisés",
-        "titre": "Bien communiquer en ligne",
-        "chemin": "mots-croises/?cours=messagerie-3"
-      }
-    ],
-    "python-1": [
-      {
-        "genre": "Je révise",
-        "titre": "Premiers pas en Python",
-        "chemin": "python-je-revise/"
-      },
-      {
-        "genre": "Mots croisés",
-        "titre": "Python 01 — Premiers pas",
-        "chemin": "mots-croises/?cours=python-1"
-      }
-    ],
-    "python-2": [
-      {
-        "genre": "Je révise",
-        "titre": "Python 02 — Lire les erreurs, commenter",
-        "chemin": "python-02-je-revise/"
-      },
-      {
-        "genre": "Mots croisés",
-        "titre": "Python 02 — Lire et corriger les erreurs",
-        "chemin": "mots-croises/?cours=python-2"
-      }
-    ],
-    "python-3": [
-      {
-        "genre": "Je révise",
-        "titre": "Python 03 — Texte, nombre et input()",
-        "chemin": "python-03-je-revise/"
-      },
-      {
-        "genre": "Mots croisés",
-        "titre": "Python 03 — Texte, nombre et input()",
-        "chemin": "mots-croises/?cours=python-3"
-      }
-    ],
-    "labo-07": [
-      {
-        "genre": "Je révise",
-        "titre": "Labo 07 — Dans les coulisses du PC",
-        "chemin": "labo-07/je-retiens.html"
-      },
-      {
-        "genre": "Mots croisés",
-        "titre": "Labo 07 — Dans les coulisses du PC",
-        "chemin": "mots-croises/?cours=labo-07"
-      }
-    ]
-  }
+    "rat-de-ville-formatif": {
+      "titre": "Le rat de ville",
+      "sujet": "Mise en forme dans Google Docs",
+      "niveau": 1,
+      "activites": [
+        {
+          "genre": "L'essentiel",
+          "chemin": "rat-de-ville/#resume"
+        },
+        {
+          "genre": "Quiz",
+          "chemin": "rat-de-ville/#quiz",
+          "suivi": "quiz:rat-de-ville-formatif"
+        },
+        {
+          "genre": "Cartes",
+          "chemin": "rat-de-ville/#cartes"
+        },
+        {
+          "genre": "Mots croisés",
+          "chemin": "mots-croises/?cours=rat-de-ville-formatif",
+          "suivi": "mots-croises:rat-de-ville-formatif",
+          "jeu": "mots-croises"
+        },
+        {
+          "genre": "Associe l'image",
+          "chemin": "associe/?jeu=docs",
+          "suivi": "associe:docs"
+        }
+      ]
+    },
+    "messagerie-1": {
+      "titre": "Messagerie 01 — Mon premier message",
+      "sujet": "La messagerie Outlook",
+      "niveau": 2,
+      "activites": [
+        {
+          "genre": "L'essentiel",
+          "chemin": "messagerie/#resume"
+        },
+        {
+          "genre": "Quiz",
+          "chemin": "messagerie/#quiz",
+          "suivi": "quiz:messagerie-1"
+        },
+        {
+          "genre": "Cartes",
+          "chemin": "messagerie/#cartes"
+        },
+        {
+          "genre": "Mots croisés",
+          "chemin": "mots-croises/?cours=messagerie-1",
+          "suivi": "mots-croises:messagerie-1",
+          "jeu": "mots-croises"
+        }
+      ]
+    },
+    "messagerie-2": {
+      "titre": "Messagerie 02 — Je réponds, je joins, je transfère",
+      "sujet": "Pièce jointe, Répondre, Transférer",
+      "niveau": 2,
+      "activites": [
+        {
+          "genre": "L'essentiel",
+          "chemin": "messagerie-2/#resume"
+        },
+        {
+          "genre": "Quiz",
+          "chemin": "messagerie-2/#quiz",
+          "suivi": "quiz:messagerie-2"
+        },
+        {
+          "genre": "Cartes",
+          "chemin": "messagerie-2/#cartes"
+        },
+        {
+          "genre": "Mots croisés",
+          "chemin": "mots-croises/?cours=messagerie-2",
+          "suivi": "mots-croises:messagerie-2",
+          "jeu": "mots-croises"
+        }
+      ]
+    },
+    "messagerie-3": {
+      "titre": "Messagerie 03 — Bien communiquer en ligne",
+      "sujet": "Spam, hameçonnage, nétiquette",
+      "niveau": 2,
+      "activites": [
+        {
+          "genre": "L'essentiel",
+          "chemin": "messagerie-3/#resume"
+        },
+        {
+          "genre": "Quiz",
+          "chemin": "messagerie-3/#quiz",
+          "suivi": "quiz:messagerie-3"
+        },
+        {
+          "genre": "Cartes",
+          "chemin": "messagerie-3/#cartes"
+        },
+        {
+          "genre": "Mots croisés",
+          "chemin": "mots-croises/?cours=messagerie-3",
+          "suivi": "mots-croises:messagerie-3",
+          "jeu": "mots-croises"
+        }
+      ]
+    },
+    "python-1": {
+      "titre": "Python 01 — Premiers pas",
+      "sujet": "print, variables et affectation",
+      "niveau": 3,
+      "activites": [
+        {
+          "genre": "L'essentiel",
+          "chemin": "python-je-revise/#resume"
+        },
+        {
+          "genre": "Quiz",
+          "chemin": "python-je-revise/#quiz",
+          "suivi": "quiz:python-1"
+        },
+        {
+          "genre": "Cartes",
+          "chemin": "python-je-revise/#cartes"
+        },
+        {
+          "genre": "Mots croisés",
+          "chemin": "mots-croises/?cours=python-1",
+          "suivi": "mots-croises:python-1",
+          "jeu": "mots-croises"
+        }
+      ]
+    },
+    "python-2": {
+      "titre": "Python 02 — Lire et corriger les erreurs",
+      "sujet": "SyntaxError, NameError, commentaires",
+      "niveau": 3,
+      "activites": [
+        {
+          "genre": "L'essentiel",
+          "chemin": "python-02-je-revise/#resume"
+        },
+        {
+          "genre": "Quiz",
+          "chemin": "python-02-je-revise/#quiz",
+          "suivi": "quiz:python-2"
+        },
+        {
+          "genre": "Cartes",
+          "chemin": "python-02-je-revise/#cartes"
+        },
+        {
+          "genre": "Mots croisés",
+          "chemin": "mots-croises/?cours=python-2",
+          "suivi": "mots-croises:python-2",
+          "jeu": "mots-croises"
+        }
+      ]
+    },
+    "python-3": {
+      "titre": "Python 03 — Texte, nombre et input()",
+      "sujet": "texte ou nombre, input(), int()",
+      "niveau": 3,
+      "activites": [
+        {
+          "genre": "L'essentiel",
+          "chemin": "python-03-je-revise/#resume"
+        },
+        {
+          "genre": "Quiz",
+          "chemin": "python-03-je-revise/#quiz",
+          "suivi": "quiz:python-3"
+        },
+        {
+          "genre": "Cartes",
+          "chemin": "python-03-je-revise/#cartes"
+        },
+        {
+          "genre": "Mots croisés",
+          "chemin": "mots-croises/?cours=python-3",
+          "suivi": "mots-croises:python-3",
+          "jeu": "mots-croises"
+        }
+      ]
+    },
+    "labo-07": {
+      "titre": "Labo 07 — Dans les coulisses du PC",
+      "sujet": "Machine, Windows, application et fichier",
+      "niveau": 3,
+      "activites": [
+        {
+          "genre": "Je retiens",
+          "chemin": "labo-07/je-retiens.html"
+        },
+        {
+          "genre": "Mots croisés",
+          "chemin": "mots-croises/?cours=labo-07",
+          "suivi": "mots-croises:labo-07",
+          "jeu": "mots-croises"
+        }
+      ]
+    }
+  },
+  "autres": [
+    {
+      "titre": "Associe l'image — Sur l'écran de l'ordinateur",
+      "sujet": "Reconnais ce que tu vois sur le bureau et dans le navigateur.",
+      "niveaux": [
+        1
+      ],
+      "chemin": "associe/?jeu=ecran",
+      "suivi": "associe:ecran"
+    },
+    {
+      "titre": "Nomme l'écran",
+      "sujet": "Bureau Windows, navigateur et Google Docs : le nom des éléments.",
+      "niveaux": [
+        1,
+        2,
+        3
+      ],
+      "chemin": "nomme-lecran/"
+    },
+    {
+      "titre": "Devine le poids",
+      "sujet": "Octets, Ko, Mo, Go et To : entraîne ton ordre de grandeur.",
+      "niveaux": [
+        3
+      ],
+      "chemin": "devine-le-poids/"
+    }
+  ]
 }

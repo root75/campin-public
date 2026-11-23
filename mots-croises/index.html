@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:wght@0,800&family=Atkinson+Hyperlegible:wght@0,400;0,700&display=swap">
 <link rel="stylesheet" href="https://root75.github.io/campin-public/assets/navigation.css">
+<link rel="stylesheet" href="jeu.css">
 <style>
 /* Mots croisés : une grille par cours, tirée du « je révise ». Rien n'est envoyé : la grille reste dans ce navigateur. */
 :root{
@@ -48,44 +49,8 @@ a.carte b{color:var(--encre-bouton);font-size:1.1rem}
 a.carte span{color:var(--doux);font-size:.95rem}
 a.carte:hover b{text-decoration:underline}
 
-/* Le jeu : la grille à gauche, les indices à droite ; l'un sous l'autre sur un écran étroit. */
-.jeu{display:grid;grid-template-columns:minmax(0,auto) minmax(16rem,1fr);gap:16px;align-items:start}
-@media (max-width:60rem){.jeu{grid-template-columns:minmax(0,1fr)}}
-.cote-grille{display:grid;gap:12px;justify-items:start;min-width:0}
-.indice-actif{background:var(--mot);border-radius:10px;padding:8px 12px;min-height:3.2em;width:100%;font-weight:700}
-.indice-actif small{display:block;font-weight:400;color:var(--doux);font-size:.85rem}
-.cadre-grille{max-width:100%;overflow-x:auto;padding:2px}
-.grille{display:grid;gap:2px;--case:clamp(1.3rem, calc((100vw - 40px - var(--colonnes) * 2px) / var(--colonnes)), 2.5rem);
-  grid-template-columns:repeat(var(--colonnes), var(--case));grid-auto-rows:var(--case)}
-.case{position:relative}
-.case input{width:100%;height:100%;border:2px solid var(--encre);border-radius:4px;background:var(--carte);color:var(--encre);
-  font:700 calc(var(--case) * .52)/1 var(--texte);text-align:center;text-transform:uppercase;padding:calc(var(--case) * .18) 0 0;caret-color:transparent}
-.case input:focus{outline:3px solid var(--fromage);outline-offset:-1px;background:var(--fromage-pale)}
-.case.du-mot input{background:var(--mot)}
-.case.du-mot input:focus{background:var(--fromage-pale)}
-.case.bon input{background:var(--juste-pale);border-color:var(--juste);color:var(--juste)}
-.case.pas-bon input{background:var(--faux-pale);border-color:var(--faux);border-style:dashed;color:var(--faux)}
-.case.donnee input{font-style:italic}
-.case .num{position:absolute;top:1px;left:3px;font-size:calc(var(--case) * .27);line-height:1;font-weight:700;color:var(--doux);pointer-events:none}
-.actions{display:flex;flex-wrap:wrap;gap:8px}
-.etat{font-weight:700;min-height:1.5em}
-.etat.fini{color:var(--juste)}
-.indices{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr))}
-.indices ol{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:4px}
-.indices button{font:inherit;text-align:left;width:100%;display:grid;grid-template-columns:1.9em 1fr auto;gap:4px;align-items:baseline;
-  background:transparent;color:var(--encre);border:1px solid transparent;border-radius:8px;padding:5px 8px;cursor:pointer;min-height:36px}
-.indices button:hover{border-color:var(--trait)}
-.indices button[aria-current="true"]{background:var(--mot);border-color:var(--encre-bouton)}
-.indices button b{color:var(--encre-bouton)}
-.indices button .long{color:var(--doux);font-size:.85rem;white-space:nowrap}
-.indices li.trouve button{color:var(--doux)}
-.indices li.trouve button .texte{text-decoration:line-through}
-.indices li.trouve button .long::before{content:"✓ ";color:var(--juste);font-weight:700}
-.coince{background:var(--fromage-pale);border-left:5px solid var(--fromage);border-radius:6px;padding:10px 14px;display:grid;gap:6px}
-.coince ul{margin:0;padding-left:1.2rem;display:grid;gap:4px}
 .signature{text-align:right;color:var(--doux);font-size:.9rem}
-@media print{.campin-navigation,.actions,.coince,.indice-actif,.retour{display:none!important} body{background:#fff}
-  .case input{border-color:#000;background:#fff!important;color:#000} .panneau{border:0;padding:0}}
+@media print{.campin-navigation,.retour{display:none!important} body{background:#fff}}
 </style>
 </head>
 <body>
@@ -117,37 +82,14 @@ a.carte:hover b{text-decoration:underline}
   <!-- Avec ?cours=… : la grille de ce cours. -->
   <main id="partie" hidden>
     <p id="consigne">Clique sur un indice, puis tape le mot. Les mots s'écrivent <b>sans accent</b> et sans espace.</p>
-    <div class="jeu">
-      <section class="cote-grille" aria-label="La grille">
-        <p class="indice-actif" id="indice-actif" aria-live="polite"></p>
-        <div class="cadre-grille"><div class="grille" id="grille" role="group" aria-label="Grille de mots croisés"></div></div>
-        <div class="actions">
-          <button class="btn" type="button" id="verifier">Vérifier ma grille</button>
-          <button class="btn vide" type="button" id="lettre">Donne-moi une lettre</button>
-          <button class="btn vide" type="button" id="recommencer">Recommencer</button>
-        </div>
-        <p class="etat" id="etat" role="status"></p>
-      </section>
-      <section class="panneau indices" aria-label="Les indices">
-        <div><h2>Horizontalement →</h2><ol id="indices-h"></ol></div>
-        <div><h2>Verticalement ↓</h2><ol id="indices-v"></ol></div>
-      </section>
-    </div>
-    <section class="coince">
-      <h2>Ça coince ?</h2>
-      <ul>
-        <li><b>Je ne trouve pas un mot.</b> Passe au suivant : ses lettres vont t'aider par croisement.</li>
-        <li><b>Mon mot ne rentre pas.</b> Compte les cases : le nombre de lettres est écrit à droite de l'indice. Pas d'accent, pas d'espace, pas de tiret.</li>
-        <li><b>Je veux changer de sens.</b> Clique une deuxième fois sur la même case.</li>
-        <li><b>Je suis bloqué·e.</b> Rouvre <a id="lien-revision" href="../revisions/">le « je révise » du cours</a>, ou demande à ton voisin : il explique, il ne tape pas à ta place.</li>
-        <li><b>Toujours bloqué·e.</b> Clique sur une case, puis sur <b>Donne-moi une lettre</b>.</li>
-      </ul>
-    </section>
+    <div id="jeu"></div>
     <p class="retour"><a href="./">← Toutes les grilles</a> · <a href="../revisions/">Révisions et entraînements</a></p>
   </main>
   <p class="signature">« M. Louviaux »</p>
 </div>
+<script src="../assets/progres.js"></script>
 <script src="grille.js"></script>
+<script src="jeu.js"></script>
 <script src="page.js"></script>
 </body>
 </html>

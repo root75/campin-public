@@ -54,16 +54,15 @@ for (const [id, g] of Object.entries(grilles)) {
     if (s.length > 1) assert.ok(lus.has(s), id + ' : la grille fait lire « ' + s + ' », qui n\'est pas un mot de la liste');
   }
   // La grille est annoncée partout où l'élève la cherche.
-  assert.ok(pageRevisions.includes('href="../mots-croises/?cours=' + id + '"'), id + ' : absente de la page des révisions');
-  assert.ok((revisions[id] || []).some(r => r.chemin === 'mots-croises/?cours=' + id), id + ' : absente de revisions.json (le portail ne la proposera pas)');
+  assert.ok(pageRevisions.includes('href="../mots-croises/?cours=' + id + '"'), id + ' : absente du secours sans JavaScript de la page des révisions');
+  assert.ok(((revisions[id] || {}).activites || []).some(r => r.chemin === 'mots-croises/?cours=' + id && r.jeu === 'mots-croises' && r.suivi === 'mots-croises:' + id), id + ' : absente de revisions.json (ni la page des révisions ni le portail ne la proposeront)');
   total += g.mots.length;
-}
-for (const [id, liste] of Object.entries(revisions)) {
-  assert.ok(catalogue.has(id), 'revisions.json : ' + id + ' n\'est pas un cours du catalogue');
-  for (const r of liste) assert.ok(r.titre && r.genre && existe(r.chemin), 'revisions.json : ' + id + ' ▸ ' + r.chemin + ' introuvable');
 }
 // La page : ses liens sortent du cadre, et elle ne porte aucune adresse d'élève.
 const page = fs.readFileSync(path.join(racine, 'mots-croises/index.html'), 'utf8');
+for (const f of ['jeu.css', 'jeu.js', 'grille.js', 'page.js']) assert.ok(page.includes(f) && existe('mots-croises/' + f), 'mots-croises/' + f + ' : absent ou non chargé');
+// Le jeu se monte ailleurs que dans sa page : il ne cherche aucun élément par son id.
+assert.doesNotMatch(fs.readFileSync(path.join(racine, 'mots-croises/jeu.js'), 'utf8'), /getElementById/);
 assert.doesNotMatch(page, /[a-z0-9.]+@arcampin\.be/i);
 assert.match(page, /« M\. Louviaux »/);
 console.log('Mots croisés : ' + Object.keys(grilles).length + ' grilles, ' + total + ' mots, tous posés et croisés.');

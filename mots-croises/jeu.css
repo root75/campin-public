@@ -1,0 +1,49 @@
+/* Mots croisés — l'habillage du jeu (mots-croises/jeu.js), commun à la page mots-croises/ et au portail.
+   La page qui l'accueille donne ses couleurs par les variables --mc-* ; sans elles, celles-ci servent. */
+.mc{--mc-carte:var(--carte,#fff);--mc-encre:var(--encre,#1f2a33);--mc-doux:var(--doux,#5b6873);--mc-trait:var(--trait,#d5dce2);
+  --mc-bouton:var(--encre-bouton,#1d5a73);--mc-actif:var(--fromage,#e3a922);--mc-actif-pale:var(--fromage-pale,#fbf0d4);
+  --mc-mot:var(--mot,#dcecf3);--mc-juste:var(--juste,#1f7a4d);--mc-juste-pale:var(--juste-pale,#e2f3ea);
+  --mc-faux:var(--faux,#b23a2e);--mc-faux-pale:var(--faux-pale,#f8e3e0);
+  display:grid;gap:16px;color:var(--mc-encre);container-type:inline-size}
+.mc *{box-sizing:border-box}
+.mc p{margin:0}
+.mc h3{font-size:1.15rem;margin:0}
+.mc-jeu{display:grid;grid-template-columns:minmax(0,auto) minmax(16rem,1fr);gap:16px;align-items:start}
+@container (max-width:54rem){.mc-jeu{grid-template-columns:minmax(0,1fr)}}
+.mc-cote{display:grid;gap:12px;justify-items:start;min-width:0}
+.mc-indice-actif{background:var(--mc-mot);border-radius:10px;padding:8px 12px;min-height:3.2em;width:100%;font-weight:700}
+.mc-indice-actif small{display:block;font-weight:400;color:var(--mc-doux);font-size:.85rem}
+.mc-cadre{max-width:100%;overflow-x:auto;padding:2px}
+.mc-grille{display:grid;gap:2px;--case:clamp(1.3rem, calc((100cqw - 8px - var(--colonnes) * 2px) / var(--colonnes)), 2.5rem);
+  grid-template-columns:repeat(var(--colonnes), var(--case));grid-auto-rows:var(--case)}
+.mc-case{position:relative}
+.mc-case input{width:100%;height:100%;border:2px solid var(--mc-encre);border-radius:4px;background:var(--mc-carte);color:var(--mc-encre);margin:0;
+  font:700 calc(var(--case) * .52)/1 inherit;font-family:inherit;text-align:center;text-transform:uppercase;padding:calc(var(--case) * .18) 0 0;caret-color:transparent}
+.mc-case input:focus{outline:3px solid var(--mc-actif);outline-offset:-1px;background:var(--mc-actif-pale)}
+.mc-case.mc-du-mot input{background:var(--mc-mot)}
+.mc-case.mc-du-mot input:focus{background:var(--mc-actif-pale)}
+.mc-case.mc-bon input{background:var(--mc-juste-pale);border-color:var(--mc-juste);color:var(--mc-juste)}
+.mc-case.mc-pas-bon input{background:var(--mc-faux-pale);border-color:var(--mc-faux);border-style:dashed;color:var(--mc-faux)}
+.mc-case.mc-donnee input{font-style:italic}
+.mc-num{position:absolute;top:1px;left:3px;font-size:calc(var(--case) * .27);line-height:1;font-weight:700;color:var(--mc-doux);pointer-events:none}
+.mc-actions{display:flex;flex-wrap:wrap;gap:8px}
+.mc-btn{font:inherit;font-weight:700;min-height:44px;padding:8px 16px;border-radius:10px;cursor:pointer;border:2px solid var(--mc-bouton);background:var(--mc-bouton);color:var(--mc-carte)}
+.mc-btn.mc-vide{background:transparent;color:var(--mc-bouton)}
+.mc-btn:focus-visible,.mc a:focus-visible,.mc-indices button:focus-visible{outline:3px solid var(--mc-actif);outline-offset:3px}
+.mc-etat{font-weight:700;min-height:1.5em}
+.mc-etat.mc-fini{color:var(--mc-juste)}
+.mc-indices{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));background:var(--mc-carte);border:1px solid var(--mc-trait);border-radius:14px;padding:16px}
+.mc-indices ol{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:4px}
+.mc-indices button{font:inherit;text-align:left;width:100%;display:grid;grid-template-columns:1.9em 1fr auto;gap:4px;align-items:baseline;
+  background:transparent;color:var(--mc-encre);border:1px solid transparent;border-radius:8px;padding:5px 8px;cursor:pointer;min-height:36px}
+.mc-indices button:hover{border-color:var(--mc-trait)}
+.mc-indices button[aria-current="true"]{background:var(--mc-mot);border-color:var(--mc-bouton)}
+.mc-indices button b{color:var(--mc-bouton)}
+.mc-long{color:var(--mc-doux);font-size:.85rem;white-space:nowrap}
+.mc-trouve button{color:var(--mc-doux)}
+.mc-trouve .mc-texte{text-decoration:line-through}
+.mc-trouve .mc-long::before{content:"✓ ";color:var(--mc-juste);font-weight:700}
+.mc-coince{background:var(--mc-actif-pale);border-left:5px solid var(--mc-actif);border-radius:6px;padding:10px 14px;display:grid;gap:6px}
+.mc-coince ul{margin:0;padding-left:1.2rem;display:grid;gap:4px}
+.mc a{color:var(--mc-bouton)}
+@media print{.mc-actions,.mc-coince,.mc-indice-actif{display:none!important} .mc-case input{border-color:#000;background:#fff!important;color:#000}}

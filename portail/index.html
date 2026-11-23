@@ -80,9 +80,23 @@ h1{font:800 clamp(28px,4.2vw,42px)/1.1 var(--titre);margin:0;text-wrap:balance}
 .petites b{display:block;font:600 17px var(--titre)}
 .petites span{color:var(--doux);font-size:14px}
 
-.mes-revisions h2{font:600 18px var(--titre);margin:0 0 8px;color:var(--ok)}
-.mes-revisions .petites a{flex:1 1 230px}
-.mes-revisions small{display:block;font-size:13px;color:var(--accent);text-transform:uppercase;letter-spacing:.06em}
+.mes-revisions h2,.jeu-tete h2{font:600 18px var(--titre);margin:0 0 8px;color:var(--ok)}
+.revisions-liste{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.revision{border:1px solid var(--trait);border-radius:14px;padding:12px 16px;background:var(--carte);display:grid;gap:8px;align-content:start}
+.revision b{font:600 17px var(--titre)}
+.revision-activites{display:flex;flex-wrap:wrap;gap:8px}
+.revision-activites a,.revision-activites button{font:inherit;font-size:15px;min-height:40px;display:inline-flex;align-items:center;padding:6px 12px;border-radius:10px;
+  border:1px solid var(--trait);background:var(--fond2);color:var(--texte);text-decoration:none;cursor:pointer}
+.revision-activites a:hover,.revision-activites button:hover{border-color:var(--accent)}
+.revision-activites .jouer{border-color:var(--accent);color:var(--accent);font-weight:700}
+.jeu-portail{border:1px solid var(--trait);border-radius:18px;padding:16px 18px;background:var(--fond2);scroll-margin-top:12px}
+.jeu-tete{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between;margin-bottom:10px}
+.jeu-tete h2{margin:0}
+/* Le jeu prend les couleurs du portail, en sombre comme en clair. */
+#jeu-zone.mc{--mc-carte:var(--carte);--mc-encre:var(--texte);--mc-doux:var(--doux);--mc-trait:var(--trait);--mc-bouton:var(--accent);
+  --mc-actif:var(--accent);--mc-actif-pale:#4a3d14;--mc-mot:#24407a;--mc-juste:var(--ok);--mc-juste-pale:#12423c;--mc-faux:var(--alerte);--mc-faux-pale:#4a2018}
+:root[data-theme="light"] #jeu-zone.mc{--mc-actif-pale:#fbf0d4;--mc-mot:#dbe6f5;--mc-juste-pale:#dff3ef;--mc-faux-pale:#f8e3e0}
+#jeu-zone .mc-btn{color:var(--sur-accent)} #jeu-zone .mc-btn.mc-vide{color:var(--accent)}
 
 .bas{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
 .panneau{border:1px dashed var(--trait);border-radius:18px;padding:16px 18px;min-width:0}
@@ -159,13 +173,19 @@ h1{font:800 clamp(28px,4.2vw,42px)/1.1 var(--titre);margin:0;text-wrap:balance}
     <a target="_top" href="https://drive.google.com/"><b>Drive</b><span>mes fichiers</span></a>
     <a target="_top" href="https://docs.google.com/document/"><b>Docs</b><span>écrire</span></a>
     <a target="_top" href="https://outlook.cloud.microsoft/"><b>Outlook</b><span>ma messagerie</span></a>
-    <a target="_top" href="https://root75.github.io/campin-public/revisions/"><b>Je révise</b><span>quiz, cartes et mots croisés</span></a>
+    <a target="_top" id="porte-revise" href="https://root75.github.io/campin-public/revisions/"><b>Je révise</b><span>quiz, mots croisés, jeux d'images</span></a>
   </nav>
 
   <!-- Connecté : les révisions des cours ouverts pour la classe (revisions/revisions.json). Sinon, rien. -->
   <section class="mes-revisions" id="revisions" hidden aria-labelledby="revisions-titre">
     <h2 id="revisions-titre">Mes révisions</h2>
-    <div class="petites" id="revisions-liste"></div>
+    <div class="revisions-liste" id="revisions-liste"></div>
+  </section>
+
+  <!-- La grille choisie dans « Mes révisions » se joue ici, sans quitter le portail (mots-croises/jeu.js). -->
+  <section class="jeu-portail" id="jeu-portail" hidden aria-labelledby="jeu-titre">
+    <div class="jeu-tete"><h2 id="jeu-titre">Mots croisés</h2><button class="pastille" id="jeu-fermer" type="button">Fermer la grille ✕</button></div>
+    <div id="jeu-zone"></div>
   </section>
 
   <section class="bas">
