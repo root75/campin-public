@@ -38,16 +38,20 @@ const FAMILLES = [
   ['Colère','#c8402f','agacé, frustré, traité injustement','une moquerie, une accusation'],
   ['Anticipation','#e07b28','curieux, impatient, dans l’attente','j’attends une réponse, une notification']
 ];
-const ROUE = '<table class="lettre"><tr><th>La famille</th><th>Je me sens…</th><th>En ligne, par exemple</th></tr>'+
-  FAMILLES.map(f => '<tr><td><span class="pastille-emo" style="background:'+f[1]+'" aria-hidden="true"></span><b>'+f[0]+'</b></td><td>'+f[2]+'</td><td>'+f[3]+'</td></tr>').join('')+
+/* La roue cliquable et ses personnages : derriere-lecran/emotions.js, chargé par la page avant ce fichier.
+   Sans lui (un test, un chargement raté), il reste le tableau, qui dit la même chose. */
+const ROUE_DESSIN = typeof Emotions === 'undefined' ? '' :
+  Emotions.roue(FAMILLES.map(f => ({ id:Emotions.cle(f[0]), nom:f[0], couleur:f[1], nuances:f[2], exemple:f[3] })));
+const ROUE = ROUE_DESSIN + '<table class="lettre"><tr><th>La famille</th><th>Je me sens…</th><th>En ligne, par exemple</th></tr>'+
+  FAMILLES.map(f => '<tr><td>'+(typeof Emotions === 'undefined' ? '<span class="pastille-emo" style="background:'+f[1]+'" aria-hidden="true"></span>' : Emotions.visage(Emotions.cle(f[0]), f[1], 30)+' ')+'<b>'+f[0]+'</b></td><td>'+f[2]+'</td><td>'+f[3]+'</td></tr>').join('')+
   '</table><p>Plusieurs émotions peuvent exister <b>en même temps</b>. Et deux personnes peuvent ressentir deux émotions différentes devant le même message.</p>';
 
 const BLOCS = [
  {partie:'A — Je perçois', titre:'La roue des émotions', min:5,
   veux:'Trouver le mot juste pour dire ce que je ressens devant un écran.',
   avant:ROUE,
-  gestes:['Lis les <b>huit familles</b> d’émotions, ligne par ligne.','Pense au dernier message qui t’a fait quelque chose : trouve <b>sa famille</b> dans le tableau.','Clique sur ✅ C’est vérifié : un <b>texte à compléter</b> t’attend.'],
-  vois:'Tu as trouvé dans le tableau la famille de ton émotion.',
+  gestes:['Clique sur chaque <b>famille</b> de la roue : son personnage apparaît au centre.','Lis les <b>huit familles</b> dans le tableau, ligne par ligne.','Pense au dernier message qui t’a fait quelque chose : trouve <b>sa famille</b>.','Clique sur ✅ C’est vérifié : un <b>texte à compléter</b> t’attend.'],
+  vois:'Tu as trouvé la famille de ton émotion, sur la roue ou dans le tableau.',
   coince:['Je ne trouve pas mon émotion : lis la colonne « Je me sens… », pas seulement le nom de la famille.','J’en ressens deux à la fois : c’est normal. Choisis la plus forte.','« Anticipation » : c’est quand on attend quelque chose, avec envie ou avec inquiétude.'],
   q:{serveur:true}},
  {partie:'A — Je perçois', titre:'Un message, deux lectures', min:6,

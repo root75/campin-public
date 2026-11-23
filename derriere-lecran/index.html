@@ -44,6 +44,12 @@ a{color:var(--encre-bouton)}
 .verbes b{color:var(--encre-bouton)}
 ul.liste{margin:0;padding-left:1.2rem;display:grid;gap:4px}
 #roue{margin:0;padding:0;list-style:none;display:grid;gap:4px;grid-template-columns:repeat(2,minmax(0,1fr))}
+#roue li{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+#roue li .doux{flex-basis:100%;padding-left:42px;margin-top:-10px;font-size:.95rem}
+#bande{min-height:44px;margin-top:8px}#bande .emo-bande{justify-content:flex-start}
+.roue-jeu{display:block}
+.retour.percu{display:flex;gap:10px;align-items:center;text-align:left}
+.percues{display:flex;gap:6px;flex-wrap:wrap}
 @media (max-width:34rem){#roue{grid-template-columns:minmax(0,1fr)}}
 .pastille{display:inline-block;flex:none;width:.9em;height:.9em;border-radius:50%;margin-right:8px}
 .btn{font:inherit;font-weight:700;min-height:44px;padding:8px 16px;border-radius:10px;cursor:pointer;border:2px solid var(--encre-bouton);background:var(--encre-bouton);color:var(--carte);justify-self:start}
@@ -109,6 +115,7 @@ ul.liste{margin:0;padding-left:1.2rem;display:grid;gap:4px}
   <header>
     <p class="surtitre">Je révise · Vie en ligne 01</p>
     <h1>Derrière l'écran</h1>
+    <div id="bande"></div>
   </header>
   <p>Un message lu sans réponse, un « Ok. » tout sec, une moquerie dans le groupe : en ligne aussi, on ressent des choses. Ici, tu t'entraînes à les <b>nommer</b>, à les <b>comprendre</b> et à bien <b>réagir</b>.</p>
 
@@ -120,6 +127,7 @@ ul.liste{margin:0;padding-left:1.2rem;display:grid;gap:4px}
       <li><b>3 · J'ajuste</b><span>Je choisis ma réaction.</span></li>
     </ul>
     <h3>Les huit familles d'émotions</h3>
+    <div id="roue-dessin"></div>
     <ul id="roue"></ul>
     <p class="doux">Plusieurs émotions peuvent exister en même temps. Deux personnes peuvent ressentir deux choses différentes devant le même message.</p>
     <h3>Ce qui déclenche souvent une émotion en ligne</h3>
@@ -160,7 +168,7 @@ ul.liste{margin:0;padding-left:1.2rem;display:grid;gap:4px}
   <section class="coince">
     <h2>Ça coince ?</h2>
     <ul>
-      <li><b>Je ne sais pas quelle émotion choisir.</b> Lis les petits mots sous chaque famille, et choisis la plus forte.</li>
+      <li><b>Je ne sais pas quelle émotion choisir.</b> Clique sur plusieurs familles de la roue : les petits mots sous la roue t'aident. Choisis la plus forte.</li>
       <li><b>Je me suis trompé·e.</b> Lis le retour sous les choix, puis clique une autre réponse.</li>
       <li><b>Un mot m'échappe.</b> Remonte à « L'essentiel », en haut de la page.</li>
       <li><b>Toujours bloqué·e.</b> Demande à ton voisin : il explique, il ne clique pas à ta place.</li>
@@ -179,6 +187,7 @@ ul.liste{margin:0;padding-left:1.2rem;display:grid;gap:4px}
   <p class="signature">« M. Louviaux »</p>
 </div>
 <script src="../assets/progres.js"></script>
-<script src="jeu.js"></script>
+<script src="emotions.js?v=20261123"></script>
+<script src="jeu.js?v=roue-20261123"></script>
 </body>
 </html>

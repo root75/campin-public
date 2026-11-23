@@ -20,10 +20,17 @@ if (typeof document === 'undefined') return;
 const $ = id => document.getElementById(id);
 const el = (tag, cls, texte) => { const n = document.createElement(tag); if (cls) n.className = cls; if (texte != null) n.textContent = texte; return n; };
 const SUIVI = 'derriere-lecran:manche';
+/* Les personnages et la roue viennent d'emotions.js (du SVG écrit par le site, jamais un texte venu d'ailleurs).
+   Si ce fichier n'a pas chargé, la page marche quand même : pastilles de couleur et boutons. */
+const E = window.Emotions;
+const dessin = (html, cls) => { const n = el('span', cls); n.innerHTML = html; return n; };
+const perso = (e, taille) => E ? dessin(E.visage(e.id, e.couleur, taille)) : pastille(e);
+const pastille = e => { const p = el('span', 'pastille'); p.style.background = e.couleur; p.setAttribute('aria-hidden', 'true'); return p; };
 
 fetch('situations.json').then(r => r.ok ? r.json() : Promise.reject()).then(d => {
   $('attente').hidden = true; $('contenu').hidden = false;
   roue($('roue'), d.emotions);
+  if (E) { $('bande').append(dessin(E.bande(d.emotions))); $('roue-dessin').append(dessin(E.roue(d.emotions), 'roue-jeu')); }
   let vues = [];
   const lance = () => {
     const tirees = tirage(d.situations, vues);
@@ -38,8 +45,7 @@ fetch('situations.json').then(r => r.ok ? r.json() : Promise.reject()).then(d =>
 /** La roue, à lire : une ligne par famille. */
 function roue(zone, emotions) {
   for (const e of emotions) {
-    const li = el('li'); const p = el('span', 'pastille'); p.style.background = e.couleur; p.setAttribute('aria-hidden', 'true');
-    li.append(p, el('b', null, e.nom), el('span', 'doux', ' ' + e.nuances)); zone.append(li);
+    const li = el('li'); li.append(perso(e, 34), el('b', null, e.nom), el('span', 'doux', ' ' + e.nuances)); zone.append(li);
   }
 }
 
@@ -85,19 +91,24 @@ function joue(d, tirees, rejouer) {
 
     function percevoir() {
       const t = entete(1, 'Je perçois', s.percevoir.question);
+      const retour = el('p', 'retour percu'); retour.setAttribute('role', 'status');
+      const choisie = e => {
+        percues.push(e.id);
+        retour.replaceChildren(perso(e, 64), el('span', null, 'Tu as choisi : ' + e.nom.toLowerCase() + '. ' + s.percevoir.pourquoi));
+        suite(t, 'Continuer', () => choix(2, 'Je comprends', s.comprendre, 'comprendre', () => choix(3, 'J’ajuste', s.ajuster, 'ajuster', retenir)));
+      };
+      if (E) {
+        t.append(el('p', 'doux', 'Clique sur une famille de la roue pour la découvrir, puis sur « Je choisis ». Ici, il n’y a pas de mauvaise réponse.'));
+        const r = dessin(E.roue(d.emotions, { choisir: true }), 'roue-jeu');
+        r.addEventListener('emotion-choisie', ev => choisie(d.emotions.find(e => e.id === ev.detail.id)));
+        t.append(r, retour); return;
+      }
       t.append(el('p', 'doux', 'Clique sur une famille d’émotions. Ici, il n’y a pas de mauvaise réponse.'));
       const g = el('div', 'familles'); g.setAttribute('role', 'group'); g.setAttribute('aria-label', 'Les huit familles d’émotions');
-      const retour = el('p', 'retour'); retour.setAttribute('role', 'status');
       for (const e of d.emotions) {
         const b = el('button', 'famille'); b.type = 'button';
-        const p = el('span', 'pastille'); p.style.background = e.couleur; p.setAttribute('aria-hidden', 'true');
-        b.append(p, el('b', null, e.nom), el('span', 'doux', e.nuances));
-        b.addEventListener('click', () => {
-          g.querySelectorAll('button').forEach(x => { x.disabled = true; }); b.classList.add('choisie');
-          percues.push(e.id);
-          retour.textContent = 'Tu as choisi : ' + e.nom.toLowerCase() + '. ' + s.percevoir.pourquoi;
-          suite(t, 'Continuer', () => choix(2, 'Je comprends', s.comprendre, 'comprendre', () => choix(3, 'J’ajuste', s.ajuster, 'ajuster', retenir)));
-        });
+        b.append(pastille(e), el('b', null, e.nom), el('span', 'doux', e.nuances));
+        b.addEventListener('click', () => { g.querySelectorAll('button').forEach(x => { x.disabled = true; }); b.classList.add('choisie'); choisie(e); });
         g.append(b);
       }
       t.append(g, retour);
@@ -141,7 +152,8 @@ function joue(d, tirees, rejouer) {
     ul.append(el('li', null, 'Je comprends : ' + b.comprendre + ' sur ' + b.situations + ' du premier coup.'),
       el('li', null, 'J’ajuste : ' + b.ajuster + ' sur ' + b.situations + ' du premier coup.'),
       el('li', null, 'Les émotions que tu as repérées : ' + [...new Set(percues)].map(nomDe).join(', ').toLowerCase() + '.'));
-    zone.append(ul, el('p', 'doux', 'Pour les émotions, il n’y avait pas de bonne réponse : deux personnes peuvent ressentir deux choses différentes devant le même message.'));
+    const vues = el('p', 'percues'); for (const id of new Set(percues)) vues.append(perso(d.emotions.find(e => e.id === id), 56));
+    zone.append(ul, vues, el('p', 'doux', 'Pour les émotions, il n’y avait pas de bonne réponse : deux personnes peuvent ressentir deux choses différentes devant le même message.'));
     const encore = el('button', 'btn', 'Une autre manche'); encore.type = 'button'; encore.addEventListener('click', rejouer);
     zone.append(encore); encore.focus();
     try { Progres.marque(SUIVI, 'fait'); } catch (e) {}

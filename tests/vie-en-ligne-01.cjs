@@ -112,10 +112,19 @@ assert.deepEqual(J.bilan([{comprendre:1,ajuster:2},{comprendre:3,ajuster:1}]),{s
 const pj=lis('derriere-lecran/index.html'),js=lis('derriere-lecran/jeu.js');
 assert.ok(pj.includes('id="essentiel"')&&pj.includes('id="jeu"')&&pj.includes('« M. Louviaux »')&&pj.includes('ConnectÉmoi')&&pj.includes('Plutchik'),'ancres, signature, sources');
 assert.ok(!/smartphone|téléphone|selfie/i.test(pj+js)&&!/[a-z0-9.]+@arcampin\.be/i.test(pj),'ni téléphone ni adresse');
-assert.ok(!/innerHTML/.test(js),'le jeu n\'écrit que du texte');
+assert.equal((js.match(/innerHTML/g)||[]).length,1,'le jeu n\'écrit que du texte, sauf les dessins d\'emotions.js (une seule porte : dessin)');
 // L'image intime : dite dans le cours (étape 5), dans le déroulé et dans le jeu, avec le pourquoi et les numéros d'aide.
 assert.ok(/image intime/.test(F.BLOCS[4].essai.apres)&&/droit de dire non/.test(F.BLOCS[4].essai.apres)&&/pas ta faute/.test(F.BLOCS[4].essai.apres),'étape 5 : pourquoi rester vigilant');
 assert.ok(M.some(m=>/image intime/.test(m.titre)&&/116 000/.test(m.repere)&&/103/.test(m.repere)),'déroulé : mise en commun sur l\'image intime');
 ['juste-pour-moi','elle-circule'].forEach(id=>assert.ok(d.situations.some(s=>s.id===id),'jeu : '+id));
 assert.ok(/116 000/.test(pj)&&/pas ta faute/.test(pj),'page élève : Child Focus et « pas ta faute »');
+// Les personnages et la roue : un visage par famille, huit pétales cliquables au clavier, rien d'injecté sans échappement.
+const EM=require(path.join(racine,'derriere-lecran/emotions.js'));
+d.emotions.forEach(e=>{assert.ok(EM.VISAGES[e.id],'un personnage pour '+e.id);assert.equal(EM.cle(e.nom),e.id,'clé de '+e.nom);});
+const rd=EM.roue(d.emotions,{choisir:true});
+assert.equal((rd.match(/class="emo-part"/g)||[]).length,8,'huit pétales');
+assert.equal((rd.match(/role="button" tabindex="0"/g)||[]).length,8,'pétales au clavier');
+assert.ok(/emo-valider/.test(rd)&&!/emo-valider/.test(EM.roue(d.emotions)),'bouton « Je choisis » seulement dans le jeu');
+assert.ok(!/<script/.test(EM.roue([{id:'joie',nom:'<script>x',couleur:'#e3a922',nuances:'"a"'}])),'textes échappés');
+assert.ok(/emotions\.js/.test(pj)&&/emotions\.js/.test(page),'emotions.js chargé par les deux pages');
 console.log('OK : Vie en ligne 01 — '+F.BLOCS.length+' étapes ('+F.BLOCS.reduce((t,B)=>t+B.min,0)+' min de travail seul), '+M.length+' moments ('+M.reduce((t,m)=>t+m.min,0)+' min), '+d.situations.length+' situations d\'entraînement.');
