@@ -188,6 +188,22 @@
         }
       ]
     },
+    "vie-en-ligne-1": {
+      "titre": "Vie en ligne 01 — Derrière l'écran",
+      "sujet": "Les émotions en ligne : percevoir, comprendre, ajuster",
+      "niveau": 1,
+      "activites": [
+        {
+          "genre": "L'essentiel",
+          "chemin": "derriere-lecran/#essentiel"
+        },
+        {
+          "genre": "Situations",
+          "chemin": "derriere-lecran/#jeu",
+          "suivi": "derriere-lecran:manche"
+        }
+      ]
+    },
     "labo-07": {
       "titre": "Labo 07 — Dans les coulisses du PC",
       "sujet": "Machine, Windows, application et fichier",

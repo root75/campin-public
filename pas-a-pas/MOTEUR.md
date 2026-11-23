@@ -23,6 +23,9 @@ Puis, si le cours a un moment collectif : son conducteur dans [`sequences.json`]
 Champ facultatif `rappel` : l'adresse d'une page à projeter en début de cours ; le tableau en met le lien en haut du
 cours collectif. Le bouton « Répéter sans les élèves » du tableau joue le conducteur sur le seul poste du professeur,
 sans séance : rien n'est envoyé, les réponses sont fictives.
+**Vote d'avis** (Vie en ligne 01) : un moment `vote` dont aucune situation ne porte `bonne` n'a ni juste ni faux. Au tableau,
+le bouton s'appelle « Montrer la mise en commun » et aucune barre n'est cochée ; sur le poste, « Ton choix : … » puis
+l'`explication` de la situation. Aucun changement de Code.gs.
 Puis un test `tests/<cours>.cjs` (modèle : [`tests/messagerie-02.cjs`](../tests/messagerie-02.cjs)).
 **Aucun Code.gs à redéployer** pour un nouveau cours : publier, puis tableau ▸ « Actualiser le catalogue ».
 Les liens prof du cours (fiche professeur, dossier Drive) : une ligne dans l'onglet « Liens prof » de la

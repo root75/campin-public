@@ -204,7 +204,7 @@
       zone.append(el("h2", "sq-grand", m.question));
       const ouvert = m.phase === "ouvert";
       zone.append(el("p", "sq-note", ouvert ? "Un clic par situation. Tu peux changer d'avis tant que le vote est ouvert."
-        : m.phase === "clos" ? "Le vote est clos. Regarde le tableau." : "Regarde le tableau : on corrige ensemble."));
+        : m.phase === "clos" ? "Le vote est clos. Regarde le tableau." : m.bonnes && m.bonnes.every(b => b == null) ? "Regarde le tableau : on en parle ensemble." : "Regarde le tableau : on corrige ensemble."));
       if(moi.enCours || moi.erreur) zone.append(el("p", "sq-note", moi.enCours ? "Enregistrement du choix…" : moi.erreur));
       const sup = support(m);
       m.situations.forEach((s, k) => {
@@ -226,7 +226,9 @@
         });
         if(m.bonnes){
           const bon = m.bonnes[k];
-          d.append(moi[k] == null ? el("p", "sq-res", "Bonne réponse : " + m.choix[bon])
+          // Vote d'avis (sequences.json : une situation sans « bonne ») : rien n'est juste ni faux, on rappelle le choix.
+          if(bon == null){ if(moi[k] != null) d.append(el("p", "sq-res", "Ton choix : " + m.choix[moi[k]])); }
+          else d.append(moi[k] == null ? el("p", "sq-res", "Bonne réponse : " + m.choix[bon])
             : moi[k] === bon ? el("p", "sq-res juste", "✓ Juste : " + m.choix[bon])
             : el("p", "sq-res faux", "✗ La bonne réponse : " + m.choix[bon]));
           const ex = sup && sup.situations && sup.situations[k] && sup.situations[k].explication;

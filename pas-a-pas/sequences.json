@@ -1724,5 +1724,349 @@
         ]
       }
     ]
+  },
+  "vie-en-ligne-1": {
+    "ecransSurPostes": true,
+    "titre": "Vie en ligne 01 — Derrière l’écran",
+    "objectif": "L’élève est capable de nommer l’émotion qu’un échange en ligne fait naître (percevoir), de trouver ce qui la déclenche (comprendre) et de choisir une réaction responsable (ajuster) : nétiquette d’un groupe de discussion, rôle du témoin, bloquer, signaler, en parler. Un sujet, environ deux heures de cours : à la sonnerie, reprendre la même séance au même moment. Rien n’est coté. Démarche inspirée du jeu « ConnectÉmoi » (Fédération Wallonie-Bruxelles, e-classe) ; roue des émotions de R. Plutchik (1980).",
+    "competences": [
+      "COM-SF-04 « Respecter, dans un environnement numérique d’interaction et de communication, une nétiquette définie. »",
+      "COM-SF-01 « Sélectionner un outil d’interaction adéquat en fonction des interlocuteurs. »",
+      "SEC-COMP-02 « Réagir, de manière responsable, face aux risques de cyberattaque, de cyberharcèlement, de cyberdépendance. »",
+      "« Proposer et mettre en place des actions pertinentes pour faire face à des situations de cyberattaque, de cyberharcèlement, de cybermanipulation. »",
+      "« Identifier les moyens de signaler ou bloquer un contenu partagé de manière inappropriée en ligne. »",
+      "« Reconnaitre l'importance du droit à la déconnexion, tant pour soi-même que pour les autres. »",
+      "« Reconnaitre l'importance de chercher de l'aide humaine plutôt que l’IA pour son bien-être numérique, psychologique et social. »"
+    ],
+    "preparation": [
+      "Tableau professeur → Ouvrir pour une classe… → Vie en ligne 01 — Derrière l’écran → la classe. Conserver la séance pour la reprise à l’heure suivante.",
+      "Dire le cadre avant de commencer : ce qu’un élève ressent ne se corrige pas, on ne se moque de la réponse de personne, et personne n’est obligé de raconter une histoire vraie.",
+      "Les mots, les votes et les phrases s’affichent sans nom. Ne jamais ouvrir le Journal au projecteur.",
+      "Si un élève confie une situation réelle et grave : l’écouter à part, après le cours, et suivre la procédure de l’école (éducateur, centre PMS).",
+      "Prévoir les trios du moment « À trois » : trois voisins, sans déplacer les postes."
+    ],
+    "moments": [
+      {
+        "type": "ecran",
+        "titre": "Accroche",
+        "min": 3,
+        "methode": "Question projetée, à l’oral",
+        "lignes": [
+          "Tu envoies un message à un ami.",
+          "Il l’a lu. Il ne répond pas."
+        ],
+        "questions": [
+          "Qu’est-ce que tu te dis ?",
+          "Qu’est-ce que tu ressens ?"
+        ],
+        "repere": "Trois ou quatre réponses, sans commenter. Faire remarquer que les réponses ne sont pas les mêmes : c’est le sujet du cours."
+      },
+      {
+        "type": "mots",
+        "titre": "Devant un écran, j’ai déjà ressenti…",
+        "min": 4,
+        "methode": "Individuel, sur le poste ; réponses sans nom au tableau",
+        "question": "Devant un écran, j’ai déjà ressenti…",
+        "max": 3,
+        "exemples": [
+          [
+            "de la joie",
+            5
+          ],
+          [
+            "de la colère",
+            5
+          ],
+          [
+            "du stress",
+            4
+          ],
+          [
+            "de la tristesse",
+            3
+          ],
+          [
+            "de la peur",
+            2
+          ],
+          [
+            "de la jalousie",
+            2
+          ],
+          [
+            "de la fierté",
+            2
+          ],
+          [
+            "de l’ennui",
+            2
+          ],
+          [
+            "de la honte",
+            1
+          ],
+          [
+            "de l’impatience",
+            1
+          ]
+        ],
+        "repere": "Un à trois mots. Laisser 2 min, puis « Montrer les mots ». Un mot déplacé : × pour le masquer (il reste dans le Journal)."
+      },
+      {
+        "type": "tri",
+        "titre": "Mise en commun — Agréable ou désagréable ?",
+        "min": 4,
+        "methode": "Collectif : chaque mot rangé est justifié",
+        "source": 1,
+        "colonnes": [
+          "Agréable",
+          "Ça dépend",
+          "Désagréable"
+        ],
+        "repere": "Prendre un mot, demander « dans quelle colonne, et dans quelle situation ? ». « Ça dépend » est la colonne intéressante : la surprise, l’attente. Conclure : il nous faut des mots plus précis, c’est la roue."
+      },
+      {
+        "type": "ecran",
+        "titre": "La roue des émotions",
+        "min": 4,
+        "methode": "Exposé bref",
+        "paires": [
+          [
+            "Joie",
+            "content, fier, soulagé"
+          ],
+          [
+            "Confiance",
+            "en sécurité, soutenu"
+          ],
+          [
+            "Peur",
+            "inquiet, nerveux"
+          ],
+          [
+            "Surprise",
+            "étonné, pris de court"
+          ],
+          [
+            "Tristesse",
+            "déçu, seul, mis à l’écart"
+          ],
+          [
+            "Dégoût",
+            "mal à l’aise, choqué"
+          ],
+          [
+            "Colère",
+            "agacé, traité injustement"
+          ],
+          [
+            "Anticipation",
+            "impatient, dans l’attente"
+          ]
+        ],
+        "exemple": "Plusieurs émotions peuvent exister en même temps.",
+        "repere": "Roue de R. Plutchik (1980), huit familles. Replacer deux ou trois mots de la récolte dans leur famille. Ne pas tout lire : la roue est aussi sur les postes et à l’étape 1."
+      },
+      {
+        "type": "vote",
+        "titre": "Que ressent-il ? Que ressent-elle ?",
+        "min": 6,
+        "methode": "Choix individuels, puis mise en commun : il n’y a pas de bonne réponse",
+        "question": "Pour chaque situation, choisis l’émotion la plus forte, puis regarde le tableau.",
+        "choix": [
+          "Joie",
+          "Confiance",
+          "Peur",
+          "Surprise",
+          "Tristesse",
+          "Dégoût",
+          "Colère",
+          "Anticipation"
+        ],
+        "situations": [
+          {
+            "texte": "Sacha propose un travail dans le groupe de ses amis. Quatre heures plus tard : « Vu par 5 », aucune réponse. Que ressent Sacha ?",
+            "explication": "Pas de bonne réponse : tristesse, peur, anticipation… « Vu » dit seulement que le message a été ouvert."
+          },
+          {
+            "texte": "Lina écrit un long message pour s’excuser. Tom répond : « Ok. » Que ressent Lina ?",
+            "explication": "Pas de bonne réponse : « Ok. » peut se lire comme un pardon ou comme un message froid. C’est un message ambigu."
+          }
+        ],
+        "questions": [
+          "Pourquoi n’avons-nous pas tous choisi la même émotion ?",
+          "Qui a hésité entre deux émotions ?"
+        ],
+        "repere": "Ouvrir le vote, clore, puis « Montrer la mise en commun » : aucune barre n’est marquée juste. Faire justifier deux barres différentes pour la même situation. Ne pas chercher l’accord : la diversité des réponses est le résultat attendu."
+      },
+      {
+        "type": "ecran",
+        "titre": "Trois verbes",
+        "min": 2,
+        "methode": "Exposé bref",
+        "paires": [
+          [
+            "Percevoir",
+            "Je nomme l’émotion."
+          ],
+          [
+            "Comprendre",
+            "Je cherche ce qui la déclenche."
+          ],
+          [
+            "Ajuster",
+            "Je choisis ma réaction."
+          ]
+        ],
+        "exemple": "Derrière chaque écran, il y a quelqu’un."
+      },
+      {
+        "type": "atelier",
+        "titre": "Seul — Je perçois, je comprends",
+        "min": 17,
+        "methode": "Travail autonome — fiches accessibles",
+        "blocs": [
+          1,
+          3
+        ],
+        "lignes": [
+          "Ouvre ta fiche : humeur du jour, puis étapes 1 à 3.",
+          "À l’étape 2, ta phrase s’affichera au tableau, sans ton nom."
+        ],
+        "repere": "Circuler. À l’étape 2, ouvrir au tableau le panneau « Leurs phrases » (noms masqués) : lire deux ou trois réécritures du « Ok. » de Tom et demander laquelle lève le doute, et pourquoi. Les variantes diffèrent entre voisins."
+      },
+      {
+        "type": "ecran",
+        "titre": "À trois — Trois points de vue",
+        "min": 8,
+        "methode": "Trios de voisins, à voix basse ; chacun prend un rôle",
+        "lignes": [
+          "Dans le groupe « La classe », 24 membres. Hugo écrit : « Devinez qui a ENCORE oublié son cours d’histoire ? Inès bien sûr 😂 ». Cinq personnes réagissent 😂. Inès ne répond pas.",
+          "Dans ton trio : un prend la place de Hugo, un celle d’Inès, un celle d’un témoin."
+        ],
+        "questions": [
+          "Hugo : quelle était ton intention ? Que ressens-tu en voyant les réactions ?",
+          "Inès : que ressens-tu ? Qu’est-ce qui fait le plus mal : le message, les réactions, ou que tout le groupe le voie ?",
+          "Témoin : que ressens-tu ? Que peux-tu faire ?"
+        ],
+        "repere": "3 min dans le rôle, puis chacun dit aux deux autres ce que son personnage ressent (une famille de la roue). Rappeler : on joue un personnage, on ne raconte pas sa vie. Passer dans les trios ; ne pas faire rejouer la scène devant la classe."
+      },
+      {
+        "type": "mots",
+        "titre": "Mise en commun — Que peut faire un témoin ?",
+        "min": 4,
+        "methode": "Individuel sur le poste, après l’échange en trio ; réponses sans nom",
+        "question": "Que peut faire un témoin ? Une idée par ligne.",
+        "max": 3,
+        "exemples": [
+          [
+            "écrire à Inès en privé",
+            5
+          ],
+          [
+            "prévenir un adulte",
+            4
+          ],
+          [
+            "ne pas réagir",
+            4
+          ],
+          [
+            "dire à Hugo d’arrêter",
+            3
+          ],
+          [
+            "rire aussi",
+            2
+          ],
+          [
+            "quitter le groupe",
+            2
+          ],
+          [
+            "signaler le message",
+            2
+          ],
+          [
+            "insulter Hugo",
+            1
+          ]
+        ],
+        "repere": "Toutes les idées sont récoltées, bonnes ou non : le tri vient après."
+      },
+      {
+        "type": "tri",
+        "titre": "Mise en commun — Ça apaise ou ça aggrave ?",
+        "min": 6,
+        "methode": "Collectif : chaque idée rangée est justifiée",
+        "source": 8,
+        "colonnes": [
+          "Ça apaise",
+          "On hésite",
+          "Ça aggrave"
+        ],
+        "repere": "Pour chaque idée : « pour Inès, ça change quoi ? ». Attendu : soutenir en privé et prévenir un adulte apaisent ; rire avec et insulter aggravent ; se taire va dans « On hésite » puis glisse vers « aggrave » (le silence ressemble à un accord). Prévenir un adulte n’est pas rapporter : c’est protéger."
+      },
+      {
+        "type": "atelier",
+        "titre": "Seul — J’ajuste",
+        "min": 18,
+        "methode": "Travail autonome — fiches accessibles",
+        "blocs": [
+          4,
+          6
+        ],
+        "lignes": [
+          "Reprends ta fiche : étapes 4 à 6.",
+          "À l’étape 6, tu écris une règle pour le groupe de la classe : elle s’affichera au tableau, sans ton nom."
+        ],
+        "repere": "Circuler. Ceux qui finissent : la page « Derrière l’écran — je m’entraîne » (lien de l’écran de fin), une manche de situations."
+      },
+      {
+        "type": "ecran",
+        "titre": "Mise en commun — Nos règles",
+        "min": 6,
+        "methode": "Collectif, à partir du panneau « Leurs phrases » du tableau",
+        "lignes": [
+          "Vos règles pour le groupe de la classe sont au tableau, sans les noms."
+        ],
+        "questions": [
+          "Quelles règles reviennent le plus souvent ?",
+          "Laquelle gardons-nous pour la classe ?"
+        ],
+        "repere": "Tableau ▸ panneau « Leurs phrases », étape 6, noms masqués. Regrouper à l’oral les règles proches, en faire choisir une à trois par la classe. Elles peuvent être reprises dans le flux Classroom (brouillon, publié par le professeur)."
+      },
+      {
+        "type": "ecran",
+        "titre": "Synthèse",
+        "min": 2,
+        "methode": "Exposé bref",
+        "paires": [
+          [
+            "Je perçois",
+            "Je nomme l’émotion, la mienne et celle de l’autre."
+          ],
+          [
+            "Je comprends",
+            "Le silence, l’urgence, le public : je cherche le déclencheur."
+          ],
+          [
+            "J’ajuste",
+            "J’attends, je relis, je soutiens. Si ça me dépasse : je bloque, je signale, j’en parle."
+          ]
+        ],
+        "exemple": "Un message envoyé ne se reprend pas."
+      },
+      {
+        "type": "fin",
+        "titre": "Où en es-tu ?",
+        "min": 3,
+        "methode": "Individuel, sur le poste : l’auto-évaluation de fin",
+        "lignes": [
+          "Sur ta fiche : réponds aux quatre questions « Où en es-tu ? ». Ce n’est pas coté.",
+          "La page « Derrière l’écran — je m’entraîne » reste ouverte pour rejouer des situations."
+        ]
+      }
+    ]
   }
 }
