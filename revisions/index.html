@@ -1,46 +1,121 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Révisions et entraînements — M. Louviaux</title>
-<style>body{font-family:Calibri,"Segoe UI",system-ui,sans-serif;background:#F4F6F9;color:#202020;margin:0;line-height:1.5}header{background:#1F4E79;color:#fff;padding:16px 22px}h1{margin:0;font-size:24px}main{max-width:720px;margin:0 auto;padding:24px 16px}h2{margin-top:28px;color:#1F4E79}a{color:#1F4E79}a.carte{display:block;background:#fff;border-radius:12px;padding:18px 20px;margin:12px 0;text-decoration:none;box-shadow:0 2px 10px rgba(0,0,0,.08)}a.carte b{font-size:20px}a.carte span{display:block;color:#515966;font-size:16px;margin-top:4px}a:hover{text-decoration:underline}a:focus-visible{outline:3px solid #1F4E79;outline-offset:4px}</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:wght@0,800&family=Atkinson+Hyperlegible:wght@0,400;0,700&display=swap">
+<link rel="stylesheet" href="https://root75.github.io/campin-public/assets/navigation.css">
+<style>
+/* Révisions : une carte par cours, ses activités, et ce qui est fait ou à faire (noté dans ce navigateur seulement). */
+:root{
+  --papier:#f3f5f7; --carte:#ffffff; --encre:#1f2a33; --doux:#5b6873;
+  --trait:#d5dce2; --encre-bouton:#1d5a73; --fromage:#e3a922; --fromage-pale:#fbf0d4;
+  --juste:#1f7a4d; --juste-pale:#e2f3ea;
+  --display:"Alegreya", Georgia, "Times New Roman", serif;
+  --texte:"Atkinson Hyperlegible", "Segoe UI", Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --papier:#141a1f; --carte:#1d252c; --encre:#e8edf1; --doux:#a3b0ba;
+  --trait:#33404a; --encre-bouton:#7cc3de; --fromage:#e9b84a; --fromage-pale:#3a3120;
+  --juste:#6fd0a0; --juste-pale:#183427; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --papier:#141a1f; --carte:#1d252c; --encre:#e8edf1; --doux:#a3b0ba;
+  --trait:#33404a; --encre-bouton:#7cc3de; --fromage:#e9b84a; --fromage-pale:#3a3120;
+  --juste:#6fd0a0; --juste-pale:#183427; color-scheme:dark }
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--papier);color:var(--encre);font-family:var(--texte);font-size:1.0625rem;line-height:1.5;
+  padding:0 max(16px, env(safe-area-inset-right, 0px)) 40px max(16px, env(safe-area-inset-left, 0px))}
+.page{max-width:56rem;margin:0 auto;display:grid;gap:16px}
+.campin-navigation{padding:12px 0 0;margin:0}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(1.7rem,4vw,2.3rem);margin:0;line-height:1.1;text-wrap:balance}
+h2{font-family:var(--display);font-weight:800;font-size:1.3rem;margin:0;line-height:1.2}
+p{margin:0}
+a{color:var(--encre-bouton)}
+.doux{color:var(--doux)}
+.panneau{background:var(--carte);border:1px solid var(--trait);border-radius:14px;padding:16px}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var(--fromage);outline-offset:3px}
+
+.annees{display:flex;flex-wrap:wrap;gap:8px}
+.annees button{font:inherit;font-weight:700;min-height:44px;padding:8px 18px;border-radius:999px;cursor:pointer;border:2px solid var(--encre-bouton);background:transparent;color:var(--encre-bouton)}
+.annees button[aria-pressed="true"]{background:var(--encre-bouton);color:var(--carte)}
+#cours{display:grid;gap:14px}
+.cours{background:var(--carte);border:1px solid var(--trait);border-left:6px solid var(--encre-bouton);border-radius:14px;padding:14px 18px;display:grid;gap:10px}
+.tete{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:baseline;justify-content:space-between}
+.sujet{color:var(--doux);font-size:.95rem}
+.avancement{display:flex;align-items:center;gap:10px;font-weight:700;font-size:.95rem;color:var(--doux);white-space:nowrap}
+.avancement.complet{color:var(--juste)}
+.barre{display:block;width:7rem;height:10px;border-radius:999px;background:var(--trait);overflow:hidden}
+.barre span{display:block;height:100%;background:var(--juste);border-radius:999px}
+.activites{display:flex;flex-wrap:wrap;gap:8px}
+.activite{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:6px 14px;border-radius:10px;border:2px solid var(--trait);background:var(--papier);color:var(--encre);text-decoration:none;font-weight:700}
+.activite:hover{border-color:var(--encre-bouton)}
+.activite small{font-weight:400;font-size:.8rem;color:var(--doux)}
+.activite .marque{font-size:1.1rem;line-height:1;color:var(--doux)}
+.activite.commence{border-color:var(--fromage)} .activite.commence .marque{color:var(--fromage)}
+.activite.fait{border-color:var(--juste);background:var(--juste-pale)} .activite.fait .marque,.activite.fait small{color:var(--juste)}
+#autres{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr))}
+.autre{display:grid;gap:2px;background:var(--carte);border:1px solid var(--trait);border-radius:12px;padding:12px 16px;text-decoration:none;color:var(--encre)}
+.autre b{color:var(--encre-bouton)} .autre span{color:var(--doux);font-size:.95rem}
+.autre:hover b{text-decoration:underline}
+.note{font-size:.9rem;color:var(--doux)}
+.signature{text-align:right;color:var(--doux);font-size:.9rem}
+</style>
 </head>
 <body>
-<header><h1>Révisions et entraînements</h1></header>
-<main>
-<a href="../">← Accueil</a>
-<p>Choisis ton niveau, puis une activité.</p>
-<section aria-labelledby="niveau-1">
-<h2 id="niveau-1">1re année</h2>
-<a class="carte" href="../rat-de-ville/"><b>Le rat de ville — je révise</b><span>Mise en forme dans Google Docs : l’essentiel, un quiz et des cartes.</span></a>
-<a class="carte" href="../nomme-lecran/"><b>Nomme l’écran</b><span>Bureau Windows, navigateur et Google Docs : apprends le nom des éléments.</span></a>
-<a class="carte" href="../mots-croises/?cours=rat-de-ville-formatif"><b>Mots croisés — Le rat de ville</b><span>Mise en forme dans Google Docs : 10 mots du cours à retrouver.</span></a>
-</section>
-<section aria-labelledby="niveau-2">
-<h2 id="niveau-2">2e année</h2>
-<a class="carte" href="../messagerie/"><b>Mon premier message — je révise</b><span>La messagerie Outlook : l’essentiel, un quiz et des cartes.</span></a>
-<a class="carte" href="../messagerie-2/"><b>Je réponds et je joins — je révise</b><span>Pièce jointe, Répondre, Transférer et Cc : quiz et cartes.</span></a>
-<a class="carte" href="../messagerie-3/"><b>Bien communiquer en ligne — je révise</b><span>Messagerie instantanée, spam, hameçonnage, Cci, nétiquette, verrouiller : quiz et cartes.</span></a>
-<a class="carte" href="../nomme-lecran/"><b>Nomme l’écran</b><span>Bureau Windows, navigateur et Google Docs : révise le vocabulaire des interfaces.</span></a>
-<a class="carte" href="../mots-croises/?cours=messagerie-1"><b>Mots croisés — Mon premier message</b><span>La messagerie Outlook : 10 mots du cours à retrouver.</span></a>
-<a class="carte" href="../mots-croises/?cours=messagerie-2"><b>Mots croisés — Je réponds, je joins, je transfère</b><span>Pièce jointe, Répondre, Transférer : 10 mots du cours à retrouver.</span></a>
-<a class="carte" href="../mots-croises/?cours=messagerie-3"><b>Mots croisés — Bien communiquer en ligne</b><span>Spam, hameçonnage, nétiquette : 11 mots du cours à retrouver.</span></a>
-</section>
-<section aria-labelledby="niveau-3">
-<h2 id="niveau-3">3e année</h2>
-<a class="carte" href="../python-je-revise/"><b>Premiers pas en Python — je révise</b><span>print, variables et affectation : l’essentiel, un quiz et des cartes.</span></a>
-<a class="carte" href="../python-02-je-revise/"><b>Python 02 — Lire les erreurs, commenter — je révise</b><span>SyntaxError, NameError, erreur de logique, commentaires # : l’essentiel, un quiz et des cartes.</span></a>
-<a class="carte" href="../python-03-je-revise/"><b>Python 03 — Texte, nombre et input() — je révise</b><span>texte ou nombre, input(), int() : l’essentiel, un quiz et des cartes.</span></a>
-<a class="carte" href="../labo-07/je-retiens.html"><b>Labo 07 — Dans les coulisses du PC — je retiens</b><span>Machine, Windows, application et fichier ; fenêtres ; OneDrive : trois situations, puis la synthèse des trois missions.</span></a>
-<a class="carte" href="../devine-le-poids/"><b>Devine le poids</b><span>3e TTR · Octets, Ko, Mo, Go et To : entraîne ton ordre de grandeur.</span></a>
-<a class="carte" href="../nomme-lecran/"><b>Nomme l’écran</b><span>Bureau Windows, navigateur et Google Docs : consolide le vocabulaire des interfaces.</span></a>
-<a class="carte" href="../mots-croises/?cours=python-1"><b>Mots croisés — Python 01 — Premiers pas</b><span>print, variables et affectation : 10 mots du cours à retrouver.</span></a>
-<a class="carte" href="../mots-croises/?cours=python-2"><b>Mots croisés — Python 02 — Lire et corriger les erreurs</b><span>SyntaxError, NameError, commentaires : 10 mots du cours à retrouver.</span></a>
-<a class="carte" href="../mots-croises/?cours=python-3"><b>Mots croisés — Python 03 — Texte, nombre et input()</b><span>texte ou nombre, input(), int() : 11 mots du cours à retrouver.</span></a>
-<a class="carte" href="../mots-croises/?cours=labo-07"><b>Mots croisés — Labo 07 — Dans les coulisses du PC</b><span>Machine, Windows, application et fichier : 12 mots du cours à retrouver.</span></a>
-</section>
-
-</main>
+<div class="page">
+  <nav class="campin-navigation" aria-label="Navigation du site">
+    <details class="campin-menu">
+      <summary>☰ Menu</summary>
+      <div class="campin-menu-liens">
+        <a href="https://root75.github.io/campin-public/portail/" target="_top">Mon portail</a>
+        <a href="https://root75.github.io/campin-public/cours/" target="_top">Mes cours</a>
+        <a href="https://root75.github.io/campin-public/" target="_top">Accueil</a>
+      </div>
+    </details>
+  </nav>
+  <header><h1>Révisions et entraînements</h1></header>
+  <p class="doux" id="attente">Chargement…</p>
+  <p class="panneau" id="panne" hidden>La liste ne se charge pas. Recharge la page (touche F5).</p>
+  <main id="contenu" hidden>
+    <div class="page">
+      <p>Choisis ton année, puis une activité de ton cours.</p>
+      <div class="annees" id="annees" role="group" aria-label="Mon année"></div>
+      <div id="cours"></div>
+      <h2 id="titre-autres">Autres entraînements</h2>
+      <div id="autres"></div>
+      <p class="note">○ à faire · ● commencé · ✓ fait. C'est noté sur cet ordinateur, dans ton profil Chrome : personne d'autre ne le voit, et rien n'est coté.</p>
+    </div>
+  </main>
+  <noscript>
+<h2>1re année</h2>
+<ul>
+<li><b>Le rat de ville</b> : <a href="../rat-de-ville/#resume">L'essentiel</a> · <a href="../rat-de-ville/#quiz">Quiz</a> · <a href="../rat-de-ville/#cartes">Cartes</a> · <a href="../mots-croises/?cours=rat-de-ville-formatif">Mots croisés</a> · <a href="../associe/?jeu=docs">Associe l'image</a></li>
+<li><a href="../associe/?jeu=ecran">Associe l'image — Sur l'écran de l'ordinateur</a></li>
+<li><a href="../nomme-lecran/">Nomme l'écran</a></li>
+</ul>
+<h2>2e année</h2>
+<ul>
+<li><b>Messagerie 01 — Mon premier message</b> : <a href="../messagerie/#resume">L'essentiel</a> · <a href="../messagerie/#quiz">Quiz</a> · <a href="../messagerie/#cartes">Cartes</a> · <a href="../mots-croises/?cours=messagerie-1">Mots croisés</a></li>
+<li><b>Messagerie 02 — Je réponds, je joins, je transfère</b> : <a href="../messagerie-2/#resume">L'essentiel</a> · <a href="../messagerie-2/#quiz">Quiz</a> · <a href="../messagerie-2/#cartes">Cartes</a> · <a href="../mots-croises/?cours=messagerie-2">Mots croisés</a></li>
+<li><b>Messagerie 03 — Bien communiquer en ligne</b> : <a href="../messagerie-3/#resume">L'essentiel</a> · <a href="../messagerie-3/#quiz">Quiz</a> · <a href="../messagerie-3/#cartes">Cartes</a> · <a href="../mots-croises/?cours=messagerie-3">Mots croisés</a></li>
+<li><a href="../nomme-lecran/">Nomme l'écran</a></li>
+</ul>
+<h2>3e année</h2>
+<ul>
+<li><b>Python 01 — Premiers pas</b> : <a href="../python-je-revise/#resume">L'essentiel</a> · <a href="../python-je-revise/#quiz">Quiz</a> · <a href="../python-je-revise/#cartes">Cartes</a> · <a href="../mots-croises/?cours=python-1">Mots croisés</a></li>
+<li><b>Python 02 — Lire et corriger les erreurs</b> : <a href="../python-02-je-revise/#resume">L'essentiel</a> · <a href="../python-02-je-revise/#quiz">Quiz</a> · <a href="../python-02-je-revise/#cartes">Cartes</a> · <a href="../mots-croises/?cours=python-2">Mots croisés</a></li>
+<li><b>Python 03 — Texte, nombre et input()</b> : <a href="../python-03-je-revise/#resume">L'essentiel</a> · <a href="../python-03-je-revise/#quiz">Quiz</a> · <a href="../python-03-je-revise/#cartes">Cartes</a> · <a href="../mots-croises/?cours=python-3">Mots croisés</a></li>
+<li><b>Labo 07 — Dans les coulisses du PC</b> : <a href="../labo-07/je-retiens.html">Je retiens</a> · <a href="../mots-croises/?cours=labo-07">Mots croisés</a></li>
+<li><a href="../nomme-lecran/">Nomme l'écran</a></li>
+<li><a href="../devine-le-poids/">Devine le poids</a></li>
+</ul>
+  </noscript>
+  <p class="signature">« M. Louviaux »</p>
+</div>
+<script src="../assets/progres.js"></script>
+<script src="revisions.js"></script>
 </body>
 </html>

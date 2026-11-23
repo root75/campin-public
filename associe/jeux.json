@@ -1,0 +1,41 @@
+{
+  "note": "Associe l'image : pour chaque jeu, des paires dessin ▸ nom. « image » est une clé de icones.js. « cours » rattache le jeu à un cours de pas-a-pas/cours.json (sinon le jeu vaut pour toute l'année). Les noms sont ceux du cours et de « Nomme l'écran ».",
+  "jeux": {
+    "docs": {
+      "titre": "Les boutons de Google Docs",
+      "sujet": "Reconnais les boutons de mise en forme.",
+      "niveau": 1,
+      "cours": "rat-de-ville-formatif",
+      "paires": [
+        { "image": "gras", "nom": "Gras", "aide": "Le texte sélectionné devient plus épais." },
+        { "image": "italique", "nom": "Italique", "aide": "Le texte sélectionné se penche." },
+        { "image": "souligne", "nom": "Souligné", "aide": "Un trait passe sous le texte sélectionné." },
+        { "image": "aligner-gauche", "nom": "Aligner à gauche", "aide": "Les lignes commencent toutes au bord gauche." },
+        { "image": "centrer", "nom": "Centrer", "aide": "Les lignes se placent au milieu de la page." },
+        { "image": "aligner-droite", "nom": "Aligner à droite", "aide": "Les lignes finissent toutes au bord droit." },
+        { "image": "puces", "nom": "Liste à puces", "aide": "Pour une liste quand l'ordre ne compte pas." },
+        { "image": "numeros", "nom": "Liste numérotée", "aide": "Pour une liste quand l'ordre compte." },
+        { "image": "annuler", "nom": "Annuler", "aide": "Il défait mon dernier geste." }
+      ]
+    },
+    "ecran": {
+      "titre": "Sur l'écran de l'ordinateur",
+      "sujet": "Reconnais ce que tu vois sur le bureau et dans le navigateur.",
+      "niveau": 1,
+      "paires": [
+        { "image": "dossier", "nom": "Un dossier", "aide": "Il range des fichiers." },
+        { "image": "fichier", "nom": "Un fichier", "aide": "Un document enregistré, avec son nom." },
+        { "image": "corbeille", "nom": "La corbeille", "aide": "Ce que je supprime y va d'abord." },
+        { "image": "pointeur", "nom": "Le pointeur de la souris", "aide": "Il suit la souris et montre où je clique." },
+        { "image": "curseur", "nom": "Le curseur", "aide": "Il clignote là où mon texte va s'écrire." },
+        { "image": "fermer", "nom": "Le bouton Fermer", "aide": "En haut à droite de la fenêtre." },
+        { "image": "reduire", "nom": "Le bouton Réduire", "aide": "La fenêtre descend dans la barre des tâches." },
+        { "image": "agrandir", "nom": "Le bouton Agrandir", "aide": "La fenêtre prend tout l'écran." },
+        { "image": "actualiser", "nom": "Le bouton Actualiser", "aide": "Il recharge la page web." },
+        { "image": "precedent", "nom": "Le bouton Précédent", "aide": "Il revient à la page d'avant." },
+        { "image": "onglet", "nom": "Un onglet", "aide": "Une page ouverte dans le navigateur." },
+        { "image": "loupe", "nom": "La barre de recherche", "aide": "J'y tape ce que je cherche." }
+      ]
+    }
+  }
+}

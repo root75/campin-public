@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Associe l'image — je révise</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:wght@0,800&family=Atkinson+Hyperlegible:wght@0,400;0,700&display=swap">
+<link rel="stylesheet" href="https://root75.github.io/campin-public/assets/navigation.css">
+<style>
+/* Associe l'image : pour les 1res, reconnaître un bouton ou un élément de l'écran et lui rendre son nom. */
+:root{
+  --papier:#f3f5f7; --carte:#ffffff; --encre:#1f2a33; --doux:#5b6873;
+  --trait:#d5dce2; --encre-bouton:#1d5a73; --fromage:#e3a922; --fromage-pale:#fbf0d4;
+  --juste:#1f7a4d; --juste-pale:#e2f3ea; --faux:#b23a2e; --faux-pale:#f8e3e0;
+  --display:"Alegreya", Georgia, "Times New Roman", serif;
+  --texte:"Atkinson Hyperlegible", "Segoe UI", Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --papier:#141a1f; --carte:#1d252c; --encre:#e8edf1; --doux:#a3b0ba;
+  --trait:#33404a; --encre-bouton:#7cc3de; --fromage:#e9b84a; --fromage-pale:#3a3120;
+  --juste:#6fd0a0; --juste-pale:#183427; --faux:#f08b7f; --faux-pale:#3d2120; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --papier:#141a1f; --carte:#1d252c; --encre:#e8edf1; --doux:#a3b0ba;
+  --trait:#33404a; --encre-bouton:#7cc3de; --fromage:#e9b84a; --fromage-pale:#3a3120;
+  --juste:#6fd0a0; --juste-pale:#183427; --faux:#f08b7f; --faux-pale:#3d2120; color-scheme:dark }
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--papier);color:var(--encre);font-family:var(--texte);font-size:1.0625rem;line-height:1.5;
+  padding:0 max(16px, env(safe-area-inset-right, 0px)) 40px max(16px, env(safe-area-inset-left, 0px))}
+.page{max-width:52rem;margin:0 auto;display:grid;gap:16px}
+.campin-navigation{padding:12px 0 0;margin:0}
+.surtitre{font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;color:var(--doux);margin:0}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(1.6rem,4vw,2.2rem);margin:0;line-height:1.1;text-wrap:balance}
+h2{font-family:var(--display);font-weight:800;font-size:1.25rem;margin:0}
+p{margin:0}
+a{color:var(--encre-bouton)}
+.doux{color:var(--doux)}
+.panneau{background:var(--carte);border:1px solid var(--trait);border-radius:14px;padding:16px}
+.niveau{display:grid;gap:10px}
+a.carte{display:grid;gap:2px;background:var(--carte);border:1px solid var(--trait);border-left:6px solid var(--encre-bouton);border-radius:12px;padding:12px 16px;text-decoration:none;color:var(--encre)}
+a.carte b{color:var(--encre-bouton);font-size:1.1rem}
+a.carte span{color:var(--doux);font-size:.95rem}
+a.carte:hover b{text-decoration:underline}
+
+.plateau{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:20px;align-items:start}
+.colonne{display:grid;gap:10px}
+#images{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (max-width:30rem){.plateau{gap:12px} #images{grid-template-columns:minmax(0,1fr)}}
+.tuile{font:inherit;font-weight:700;min-height:64px;border-radius:12px;border:2px solid var(--trait);background:var(--carte);color:var(--encre);cursor:pointer;padding:10px 14px;text-align:left}
+.tuile.image{display:grid;place-items:center;min-height:96px;color:var(--encre-bouton)}
+.tuile.image svg{width:60px;height:60px}
+.tuile:hover:not(:disabled){border-color:var(--encre-bouton)}
+.tuile:focus-visible,.btn:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid var(--fromage);outline-offset:3px}
+.tuile.choisie{border-color:var(--fromage);background:var(--fromage-pale);box-shadow:0 0 0 2px var(--fromage)}
+.tuile.trouvee{border-color:var(--juste);background:var(--juste-pale);color:var(--juste);cursor:default}
+.tuile.nom.trouvee::before{content:"✓ "}
+.tuile.rate{border-color:var(--faux);border-style:dashed;background:var(--faux-pale)}
+@media (prefers-reduced-motion:no-preference){.tuile.rate{animation:non .35s}}
+@keyframes non{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.etat{font-weight:700;min-height:3em}
+.etat.fini{color:var(--juste)}
+.btn{font:inherit;font-weight:700;min-height:44px;padding:8px 16px;border-radius:10px;cursor:pointer;border:2px solid var(--encre-bouton);background:var(--encre-bouton);color:var(--carte);justify-self:start}
+.coince{background:var(--fromage-pale);border-left:5px solid var(--fromage);border-radius:6px;padding:10px 14px;display:grid;gap:6px}
+.coince ul{margin:0;padding-left:1.2rem;display:grid;gap:4px}
+.signature{text-align:right;color:var(--doux);font-size:.9rem}
+</style>
+</head>
+<body>
+<div class="page">
+  <nav class="campin-navigation" aria-label="Navigation du site">
+    <details class="campin-menu">
+      <summary>☰ Menu</summary>
+      <div class="campin-menu-liens">
+        <a href="https://root75.github.io/campin-public/portail/" target="_top">Mon portail</a>
+        <a href="https://root75.github.io/campin-public/revisions/" target="_top">Révisions et entraînements</a>
+        <a href="https://root75.github.io/campin-public/associe/" target="_top">Tous les jeux d'images</a>
+      </div>
+    </details>
+  </nav>
+  <header>
+    <p class="surtitre">Je révise · associe l'image</p>
+    <h1 id="titre">Associe l'image</h1>
+  </header>
+  <p class="doux" id="attente">Chargement…</p>
+  <p class="panneau" id="panne" hidden>Le jeu ne se charge pas. Recharge la page (touche F5), ou reviens par <a href="../revisions/">Révisions et entraînements</a>.</p>
+
+  <main id="choix" hidden>
+    <p>Choisis un jeu : tu vois un dessin, tu retrouves son nom.</p>
+    <div id="liste" class="niveau"></div>
+  </main>
+
+  <main id="partie" hidden>
+    <p id="consigne"></p>
+    <div class="plateau">
+      <div class="colonne" id="images" role="group" aria-label="Les dessins"></div>
+      <div class="colonne" id="noms" role="group" aria-label="Les noms"></div>
+    </div>
+    <p class="etat" id="etat" role="status"></p>
+    <button class="btn" type="button" id="encore" hidden>Une autre manche</button>
+    <section class="coince">
+      <h2>Ça coince ?</h2>
+      <ul>
+        <li><b>Je ne reconnais pas un dessin.</b> Commence par ceux que tu connais : il restera moins de noms.</li>
+        <li><b>Je me suis trompé·e de carte.</b> Clique une autre carte de la même colonne : elle la remplace.</li>
+        <li><b>Je veux voir le vrai bouton.</b> Ouvre un document Google Docs et survole le bouton avec la souris : son nom s'affiche.</li>
+        <li><b>Toujours bloqué·e.</b> Demande à ton voisin : il explique, il ne clique pas à ta place.</li>
+      </ul>
+    </section>
+    <p><a href="./">← Tous les jeux d'images</a> · <a href="../revisions/">Révisions et entraînements</a></p>
+  </main>
+  <p class="signature">« M. Louviaux »</p>
+</div>
+<script src="../assets/progres.js"></script>
+<script src="icones.js"></script>
+<script src="jeu.js"></script>
+</body>
+</html>

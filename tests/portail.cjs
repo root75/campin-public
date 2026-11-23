@@ -83,10 +83,21 @@ console.log('portail : page publique, élève reconnu, hors école, redirection 
   const { revisionsDe } = lance({ email:'' }).ctx.PortailEssai;
   const table = JSON.parse(fs.readFileSync(require.resolve('../revisions/revisions.json'), 'utf8')).cours;
   const r = revisionsDe(['python-1', 'cours-inconnu', 'python-1'], table);
-  assert.equal(r.length, 2, 'python-1 : son « je révise » et ses mots croisés, une seule fois');
-  assert.equal(r[1].url, 'https://root75.github.io/campin-public/mots-croises/?cours=python-1');
+  assert.equal(r.length, 1, 'python-1, une seule fois, et rien pour un cours inconnu');
+  assert.deepEqual(Array.from(r[0].activites, a => a.genre), ["L'essentiel", 'Quiz', 'Cartes', 'Mots croisés']);
+  const grille = r[0].activites[3];
+  assert.equal(grille.url, 'https://root75.github.io/campin-public/mots-croises/?cours=python-1');
+  assert.equal(grille.jeu, 'mots-croises', 'Les mots croisés se jouent dans le portail');
+  assert.equal(r[0].activites[1].jeu, '', 'Le quiz reste un lien');
   assert.equal(revisionsDe([], table).length, 0); assert.equal(revisionsDe(undefined, table).length, 0);
-  assert.equal(revisionsDe(['x'], { x:[{ titre:'Piège', chemin:'//ailleurs.example/' }, { titre:'Piège', chemin:'../../x' }, { titre:'', chemin:'ok/' }] }).length, 0);
+  const piege = { x:{ titre:'Piège', activites:[{ genre:'A', chemin:'//ailleurs.example/' }, { genre:'B', chemin:'../../x' }, { genre:'', chemin:'ok/' }, { genre:'C', chemin:'javascript:alert(1)' }] } };
+  assert.equal(revisionsDe(['x'], piege).length, 0, 'Un cours dont aucune activité ne tient sur le site ne s\'affiche pas');
   assert.equal(revisionsDe(['__proto__'], table).length, 0);
   assert.match(html, /id="revisions" hidden/, 'Le panneau des révisions est caché tant que le serveur n\'a pas répondu');
+  assert.match(html, /id="jeu-portail" hidden/, 'La grille dans le portail est fermée au départ');
+}
+// « Je révise » mène à l'année de la classe.
+{
+  const q = lance({ email:'e@example.test', prenom:'A', classe:'2B', prof:false, mesCours:'https://x/exec', tableau:'', devoirs:'', cours:[], seance:null });
+  assert.equal(q.$('porte-revise').href, 'https://root75.github.io/campin-public/revisions/?niveau=2');
 }
