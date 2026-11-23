@@ -3,13 +3,15 @@
    Pour la 1re (FMTTN, volet Numérique) : ce qu'un message fait ressentir, ce qui le déclenche, comment réagir.
    Trois verbes : percevoir, comprendre, ajuster. La démarche s'inspire du jeu « ConnectÉmoi » (Fédération
    Wallonie-Bruxelles, e-classe) ; les situations, les textes et les dessins sont écrits pour ce site.
-   Les phrases libres des blocs 2 et 6 s'affichent au tableau (« Leurs phrases ») : c'est la mise en commun.
+   Deux mises en commun seulement, au tableau : l'image intime et « Nos règles ». Tout le reste se fait sur le poste,
+   chacun à son rythme : le vote d'avis est devenu l'étape 2 (la roue, puis le voisin).
+   Les phrases libres des blocs 3 et 7 s'affichent au tableau (« Leurs phrases »).
    Fiche prof : campin-pedagogique, cours/s1-fmttn/sequences/04-derriere-lecran/PROF.md. */
 const COURS = 'vie-en-ligne-1';
-const VERSION_PARCOURS = 'v1';
+const VERSION_PARCOURS = 'v2';   // v2 : sept étapes (« Que ressent-il ? » en 2)
 const PRESENTATION = 'missions';
 const METHODE = 'constate';   // je fais, la page constate, bravo : voir pas-a-pas/blocs.js (CONSTATE)
-const PREUVES = 'https://root75.github.io/campin-public/derriere-lecran/pas-a-pas/preuves.json?v=20261123';
+const PREUVES = 'https://root75.github.io/campin-public/derriere-lecran/pas-a-pas/preuves.json?v=20261123b';
 const HORS_SUIVI = 'Entraînement libre : rien n’est transmis au professeur. En classe, ouvre Mes cours avec ton compte scolaire.';
 const SEQUENCE = { contenus:true };
 
@@ -43,6 +45,10 @@ const FAMILLES = [
    Sans lui (un test, un chargement raté), il reste le tableau, qui dit la même chose. */
 const ROUE_DESSIN = typeof Emotions === 'undefined' ? '' :
   Emotions.roue(FAMILLES.map(f => ({ id:Emotions.cle(f[0]), nom:f[0], couleur:f[1], nuances:f[2], exemple:f[3] })));
+/* La même roue, où l'on choisit : un avis, sans bonne réponse (étape 2). */
+const ROUE_CHOIX = typeof Emotions === 'undefined' ? '' :
+  Emotions.roue(FAMILLES.map(f => ({ id:Emotions.cle(f[0]), nom:f[0], couleur:f[1], nuances:f[2], exemple:f[3] })),
+    { choisir:true, apres:'Il n’y a pas de bonne réponse : tristesse, peur, anticipation… « Vu » dit seulement que le message a été ouvert.' });
 const ROUE = ROUE_DESSIN + '<table class="lettre"><tr><th>La famille</th><th>Je me sens…</th><th>En ligne, par exemple</th></tr>'+
   FAMILLES.map(f => '<tr><td>'+(typeof Emotions === 'undefined' ? '<span class="pastille-emo" style="background:'+f[1]+'" aria-hidden="true"></span>' : Emotions.visage(Emotions.cle(f[0]), f[1], 30)+' ')+'<b>'+f[0]+'</b></td><td>'+f[2]+'</td><td>'+f[3]+'</td></tr>').join('')+
   '</table><p>Plusieurs émotions peuvent exister <b>en même temps</b>. Et deux personnes peuvent ressentir deux émotions différentes devant le même message.</p>';
@@ -54,6 +60,14 @@ const BLOCS = [
   gestes:[{geste:'Clique sur <b>quatre familles</b> de la roue : leur personnage apparaît au centre.', compte:{sel:'.emo-part', attr:'data-emo', n:4}},'Pense au dernier message qui t’a fait quelque chose : trouve <b>sa famille</b>, sur la roue ou dans le tableau.'],
   bravo:'tu sais retrouver la famille d’une émotion',
   coince:['Je ne trouve pas mon émotion : lis la colonne « Je me sens… », pas seulement le nom de la famille.','J’en ressens deux à la fois : c’est normal. Choisis la plus forte.','« Anticipation » : c’est quand on attend quelque chose, avec envie ou avec inquiétude.'],
+  q:{serveur:true}},
+ {partie:'A — Je perçois', titre:'Que ressent-il ?', min:5,
+  veux:'Me mettre à la place de quelqu’un, et voir que nous ne ressentons pas tous la même chose.',
+  avant:discussion('Groupe « Les amis »','6 membres',[['moi:Sacha','13:02','On fait le travail de sciences ensemble demain ? Je peux réserver une salle.'],'Vu par 5','Quatre heures plus tard : aucune réponse.'])+ROUE_CHOIX,
+  gestes:[ROUE_CHOIX ? {geste:'Sur la roue, clique sur l’émotion <b>la plus forte</b> pour Sacha, puis sur le bouton <b>« Je choisis »</b>.', compte:{sel:'.emo-valider', n:1}} : 'Choisis dans ta tête l’émotion <b>la plus forte</b> pour Sacha.',
+    'Demande à ton <b>voisin</b> ce qu’il a choisi, et pourquoi. Puis explique-lui ton choix.'],
+  bravo:'tu sais que deux personnes peuvent ressentir deux émotions différentes devant la même situation',
+  coince:['J’hésite entre deux émotions : c’est normal. Choisis la plus forte.','Mon voisin n’a pas choisi comme moi : personne ne se trompe. Chacun lit la situation à sa façon.','Le bouton « Je choisis » apparaît sous la roue quand tu as cliqué sur une famille.'],
   q:{serveur:true}},
  {partie:'A — Je perçois', titre:'Un message, deux lectures', min:6,
   veux:'Voir qu’un même message peut se comprendre de deux façons.',

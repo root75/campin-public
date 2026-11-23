@@ -43,7 +43,8 @@ function visage(id, couleur, taille = 56, nom) {
 }
 const clair = hex => { const n = parseInt(hex.slice(1), 16), r = n >> 16, v = n >> 8 & 255, b = n & 255; return (r * 299 + v * 587 + b * 114) / 1000 > 125; };
 const pt = (r, a) => (170 + r * Math.cos(a * Math.PI / 180)).toFixed(1) + ' ' + (170 + r * Math.sin(a * Math.PI / 180)).toFixed(1);
-/** La roue. emotions : [{id, nom, couleur, nuances, exemple?}], dans l'ordre de la roue. choisir : ajoute le bouton « Je choisis ». */
+/** La roue. emotions : [{id, nom, couleur, nuances, exemple?}], dans l'ordre de la roue. choisir : ajoute le bouton « Je choisis » ;
+    apres : la phrase écrite sous la roue une fois le choix fait (un avis, sans bonne réponse). */
 function roue(emotions, options = {}) {
   const pas = 360 / emotions.length, R1 = 60, R2 = 162, jeu = 1.6;
   const parts = emotions.map((e, i) => {
@@ -53,7 +54,7 @@ function roue(emotions, options = {}) {
       '<path d="M' + pt(R1, a) + ' L' + pt(R2, a) + ' A' + R2 + ' ' + R2 + ' 0 0 1 ' + pt(R2, b) + ' L' + pt(R1, b) + ' A' + R1 + ' ' + R1 + ' 0 0 0 ' + pt(R1, a) + 'Z" fill="' + ech(e.couleur) + '"/>' +
       '<text x="' + pt(114, m).split(' ')[0] + '" y="' + (parseFloat(pt(114, m).split(' ')[1]) + 4.5).toFixed(1) + '" text-anchor="middle" fill="' + (clair(e.couleur) ? TRAIT : '#fff') + '">' + ech(e.nom) + '</text></g>';
   }).join('');
-  return '<div class="emo-roue"' + (options.choisir ? ' data-choisir="1"' : '') + '>' +
+  return '<div class="emo-roue"' + (options.choisir ? ' data-choisir="1"' : '') + (options.apres ? ' data-apres="' + ech(options.apres) + '"' : '') + '>' +
     '<svg class="emo-disque" viewBox="0 0 340 340" role="group" aria-label="La roue des émotions : huit familles">' + parts +
     '<g class="emo-centre" transform="translate(120 120)">' + corps('neutre') + '</g></svg>' +
     '<p class="emo-detail" role="status">Clique sur une famille de la roue.</p>' +
@@ -120,6 +121,7 @@ document.addEventListener('click', e => {
   const part = e.target.closest && e.target.closest('.emo-part'); if (part) return montre(part);
   const bouton = e.target.closest && e.target.closest('.emo-valider');
   if (bouton) { const zone = bouton.closest('.emo-roue'); zone.classList.add('emo-fige'); zone.querySelectorAll('.emo-part').forEach(p => p.setAttribute('tabindex', '-1')); bouton.hidden = true;
+    if (zone.dataset.apres) { const detail = zone.querySelector('.emo-detail'), b = document.createElement('b'); b.textContent = 'Ton choix : ' + bouton.textContent.replace(/^Je choisis : /, '') + '.'; detail.replaceChildren(b, document.createTextNode(' ' + zone.dataset.apres)); }
     zone.dispatchEvent(new CustomEvent('emotion-choisie', { bubbles: true, detail: { id: bouton.dataset.emo } })); }
 });
 document.addEventListener('keydown', e => {
