@@ -9,6 +9,8 @@ est public. Les sources pédagogiques (fiches, mémoire) restent dans `campin-pe
 - `portail/` — « Mon portail », page d'accueil des profils élèves : publique ici (« Tu n'es pas connecté »), remplie pour l'élève quand Apps Script la sert (`…/exec?vue=portail`). Aucune donnée d'élève dans ces fichiers.
 - `portail/actus.json` — les titres de « Quelques nouvelles » du portail, relus chaque matin d'école dans les flux de 1jour1actu et du JDE par `outils/actus.cjs` (`.github/workflows/actus.yml`). Ajouter une source = une ligne dans `SOURCES`.
 - `revisions/` — révisions et entraînements regroupés par niveau (1re, 2e, 3e).
+- `revisions/revisions.json` — par cours, ses pages de révision ; le portail les propose à l'élève dont la classe a ce cours ouvert. Ajouter une révision = une ligne, sans rien republier.
+- `mots-croises/` — une grille de mots croisés par cours (`?cours=<id>`). Les mots et les indices sont dans `grilles.json` ; `grille.js` calcule la grille, toujours la même pour une même liste. Ajouter une grille = une entrée dans `grilles.json`, une carte dans `revisions/index.html` et une ligne dans `revisions.json` (`tests/mots-croises.cjs` vérifie les trois).
 - `prof/` — raccourci vers le tableau professeur du même déploiement (`?vue=prof`).
 
 - `devine-le-poids/` — 3e TTR, Labo 04 (M3, unités de mesure).

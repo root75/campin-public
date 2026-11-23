@@ -1,0 +1,153 @@
+{
+  "note": "Une grille par cours : la clé est l'identifiant du cours dans pas-a-pas/cours.json. Les mots viennent du « je révise » du cours. Dans la grille, un mot s'écrit en majuscules, sans accent ni espace.",
+  "grilles": {
+    "rat-de-ville-formatif": {
+      "titre": "Le rat de ville",
+      "sujet": "Mise en forme dans Google Docs",
+      "niveau": 1,
+      "revision": "rat-de-ville/",
+      "mots": [
+        { "mot": "sélectionner", "indice": "Ce que je fais d'abord, avant de cliquer sur un bouton." },
+        { "mot": "gras", "indice": "Le bouton B." },
+        { "mot": "italique", "indice": "Le bouton I." },
+        { "mot": "souligné", "indice": "Le bouton U." },
+        { "mot": "puces", "indice": "La liste quand l'ordre ne compte pas." },
+        { "mot": "numéros", "indice": "La liste quand l'ordre compte." },
+        { "mot": "aligner", "indice": "Ça se fait avec le bouton ≡, jamais en tapant des blancs." },
+        { "mot": "espaces", "indice": "Je ne m'en sers jamais pour déplacer un texte vers la droite." },
+        { "mot": "bouton", "indice": "Une vraie liste se fait avec lui, pas à la main." },
+        { "mot": "prénom", "indice": "Le nom de mon document finit par lui, puis par mon nom." }
+      ]
+    },
+    "messagerie-1": {
+      "titre": "Mon premier message",
+      "sujet": "La messagerie Outlook",
+      "niveau": 2,
+      "revision": "messagerie/",
+      "mots": [
+        { "mot": "objet", "indice": "Il dit de quoi parle le message." },
+        { "mot": "brouillons", "indice": "Le dossier des messages commencés mais pas partis." },
+        { "mot": "signature", "indice": "Prénom, nom, classe : à la fin du message." },
+        { "mot": "bonjour", "indice": "Le premier mot d'un message bien écrit." },
+        { "mot": "envoyer", "indice": "Le bouton à ne cliquer qu'après avoir relu." },
+        { "mot": "réception", "indice": "Boîte de … : ce que je reçois." },
+        { "mot": "adresse", "indice": "Elle s'écrit dans le champ À, comme sur une enveloppe." },
+        { "mot": "orthographe", "indice": "Clic droit sur un mot souligné en rouge ▸ …" },
+        { "mot": "Outlook", "indice": "La messagerie de l'école." },
+        { "mot": "relire", "indice": "À faire avant le départ du message : il ne se reprend pas." }
+      ]
+    },
+    "messagerie-2": {
+      "titre": "Je réponds, je joins, je transfère",
+      "sujet": "Pièce jointe, Répondre, Transférer",
+      "niveau": 2,
+      "revision": "messagerie-2/",
+      "mots": [
+        { "mot": "trombone", "indice": "L'icône 📎 pour ajouter un fichier au message." },
+        { "mot": "transférer", "indice": "Faire suivre un message, avec sa pièce jointe." },
+        { "mot": "répondre", "indice": "Écrire à celui qui m'a écrit." },
+        { "mot": "contacts", "indice": "L'icône pour retrouver une adresse sans la retaper." },
+        { "mot": "OneDrive", "indice": "La fiche reçue y est rangée, dans Attachments." },
+        { "mot": "fichier", "indice": "Avant d'ouvrir une pièce jointe, je regarde qui l'envoie et quel … c'est." },
+        { "mot": "tous", "indice": "Répondre à … : à chacun de ceux qui ont reçu le message." },
+        { "mot": "jointe", "indice": "Pièce … : ce qui voyage avec le message." },
+        { "mot": "navigateur", "indice": "Pour compléter la fiche reçue : Modifier dans le …" },
+        { "mot": "enregistrer", "indice": "Le dernier bouton quand je crée un nouveau contact." }
+      ]
+    },
+    "messagerie-3": {
+      "titre": "Bien communiquer en ligne",
+      "sujet": "Spam, hameçonnage, nétiquette",
+      "niveau": 2,
+      "revision": "messagerie-3/",
+      "mots": [
+        { "mot": "spam", "indice": "Il va dans Courrier indésirable." },
+        { "mot": "hameçonnage", "indice": "Un message qui veut mon mot de passe." },
+        { "mot": "nétiquette", "indice": "Les règles de politesse en ligne." },
+        { "mot": "majuscules", "indice": "Écrire tout avec elles, c'est crier." },
+        { "mot": "Cci", "indice": "Copie cachée : personne ne voit l'adresse." },
+        { "mot": "verrouiller", "indice": "Ctrl + Alt + Delete ▸ … : pour une pause." },
+        { "mot": "gras", "indice": "Un message non lu est écrit ainsi." },
+        { "mot": "courriel", "indice": "Pour écrire à un professeur ou à l'école." },
+        { "mot": "instantanée", "indice": "Messagerie … : pour écrire vite à des amis." },
+        { "mot": "émoticônes", "indice": "Je les garde pour les amis." },
+        { "mot": "signaler", "indice": "Clic droit ▸ … un message qui veut mon mot de passe." }
+      ]
+    },
+    "python-1": {
+      "titre": "Python 01 — Premiers pas",
+      "sujet": "print, variables et affectation",
+      "niveau": 3,
+      "revision": "python-je-revise/",
+      "mots": [
+        { "mot": "print", "indice": "L'instruction qui affiche." },
+        { "mot": "variable", "indice": "Une boîte qui porte un nom." },
+        { "mot": "guillemets", "indice": "Ils entourent un texte." },
+        { "mot": "égal", "indice": "Le signe qui range une valeur dans la boîte." },
+        { "mot": "gauche", "indice": "Dans vies = vies - 1, la boîte est toujours de ce côté." },
+        { "mot": "trace", "indice": "Je la fais pour prédire, ligne par ligne, ce qui va s'afficher." },
+        { "mot": "majuscule", "indice": "Vies n'est pas vies : la différence tient à une …" },
+        { "mot": "logigramme", "indice": "Le schéma où la flèche ← range une valeur." },
+        { "mot": "valeur", "indice": "Ce qu'on range dans la boîte." },
+        { "mot": "prédire", "indice": "À faire avant d'exécuter : dire ce qui va s'afficher." }
+      ]
+    },
+    "python-2": {
+      "titre": "Python 02 — Lire et corriger les erreurs",
+      "sujet": "SyntaxError, NameError, commentaires",
+      "niveau": 3,
+      "revision": "python-02-je-revise/",
+      "mots": [
+        { "mot": "SyntaxError", "indice": "Le message quand l'écriture est cassée." },
+        { "mot": "NameError", "indice": "Le message quand Python ne connaît pas un nom." },
+        { "mot": "logique", "indice": "Erreur de … : pas de ligne rouge, mais un résultat faux." },
+        { "mot": "commentaire", "indice": "Il commence par # et Python l'ignore." },
+        { "mot": "point", "indice": "Un nombre à virgule s'écrit avec lui : 0.9." },
+        { "mot": "ligne", "indice": "Dans le message d'erreur, je cherche laquelle est fautive." },
+        { "mot": "message", "indice": "Quand ça ne marche pas, je commence par le lire." },
+        { "mot": "trace", "indice": "Je la fais pour trouver un résultat faux sans ligne rouge." },
+        { "mot": "hasard", "indice": "Je ne corrige jamais au …" },
+        { "mot": "guillemets", "indice": "Sans eux, Python prend un texte pour un nom." }
+      ]
+    },
+    "python-3": {
+      "titre": "Python 03 — Texte, nombre et input()",
+      "sujet": "texte ou nombre, input(), int()",
+      "niveau": 3,
+      "revision": "python-03-je-revise/",
+      "mots": [
+        { "mot": "texte", "indice": "Entre guillemets, c'est un …" },
+        { "mot": "entier", "indice": "Un nombre sans virgule, comme 3." },
+        { "mot": "input", "indice": "Elle pose une question et attend la réponse." },
+        { "mot": "int", "indice": "Elle transforme un texte en nombre." },
+        { "mot": "TypeError", "indice": "Le message quand j'additionne un texte et un nombre." },
+        { "mot": "virgule", "indice": "Dans print(\"Vies :\", vies), elle sépare les deux choses à afficher." },
+        { "mot": "colle", "indice": "Avec deux textes, le signe + les … : \"3\" + \"4\" → 34." },
+        { "mot": "console", "indice": "Dans Thonny, c'est là que je tape ma réponse." },
+        { "mot": "Enter", "indice": "La touche qui valide ma réponse." },
+        { "mot": "calcule", "indice": "Avec deux nombres, le signe + … : 3 + 4 → 7." },
+        { "mot": "point", "indice": "Un nombre à virgule s'écrit avec lui : 3.5." }
+      ]
+    },
+    "labo-07": {
+      "titre": "Labo 07 — Dans les coulisses du PC",
+      "sujet": "Machine, Windows, application et fichier",
+      "niveau": 3,
+      "revision": "labo-07/je-retiens.html",
+      "mots": [
+        { "mot": "matériel", "indice": "Le PC, le clavier et l'écran en sont." },
+        { "mot": "Windows", "indice": "Le système d'exploitation de notre PC scolaire." },
+        { "mot": "application", "indice": "Un logiciel utilisé pour une tâche, comme Bloc-notes." },
+        { "mot": "clavier", "indice": "Il transmet une saisie : c'est une entrée." },
+        { "mot": "écran", "indice": "Il affiche le résultat : c'est une sortie." },
+        { "mot": "fichier", "indice": "Un texte enregistré en devient un, avec un nom et un emplacement." },
+        { "mot": "nuage", "indice": "Bleu, il dit que le contenu est uniquement en ligne." },
+        { "mot": "coche", "indice": "Verte, elle dit que le contenu est disponible sur ce PC." },
+        { "mot": "active", "indice": "La fenêtre qui reçoit ce que je tape est la fenêtre …" },
+        { "mot": "OneDrive", "indice": "Le dossier scolaire où chaque document porte un statut." },
+        { "mot": "périphérique", "indice": "La souris en est un, relié à la machine." },
+        { "mot": "hypothèse", "indice": "Je la propose, puis je la vérifie par un test simple." }
+      ]
+    }
+  }
+}

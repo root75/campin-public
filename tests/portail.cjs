@@ -77,3 +77,16 @@ for (const a of actus) { assert.match(a.lien, /^https:\/\/www\.(1jour1actu\.com|
 assert.equal(ciel(0), 'ciel dégagé'); assert.equal(ciel(61), 'pluie'); assert.equal(ciel(95), 'orage');
 assert.match(conseil(12, 61), /pluie/); assert.match(conseil(2, 3), /froid/); assert.equal(conseil(15, 1), '');
 console.log('portail : page publique, élève reconnu, hors école, redirection et météo vérifiés.');
+
+// Mes révisions : seulement celles des cours de l'élève, sans doublon, et jamais une adresse hors du site.
+{
+  const { revisionsDe } = lance({ email:'' }).ctx.PortailEssai;
+  const table = JSON.parse(fs.readFileSync(require.resolve('../revisions/revisions.json'), 'utf8')).cours;
+  const r = revisionsDe(['python-1', 'cours-inconnu', 'python-1'], table);
+  assert.equal(r.length, 2, 'python-1 : son « je révise » et ses mots croisés, une seule fois');
+  assert.equal(r[1].url, 'https://root75.github.io/campin-public/mots-croises/?cours=python-1');
+  assert.equal(revisionsDe([], table).length, 0); assert.equal(revisionsDe(undefined, table).length, 0);
+  assert.equal(revisionsDe(['x'], { x:[{ titre:'Piège', chemin:'//ailleurs.example/' }, { titre:'Piège', chemin:'../../x' }, { titre:'', chemin:'ok/' }] }).length, 0);
+  assert.equal(revisionsDe(['__proto__'], table).length, 0);
+  assert.match(html, /id="revisions" hidden/, 'Le panneau des révisions est caché tant que le serveur n\'a pas répondu');
+}
