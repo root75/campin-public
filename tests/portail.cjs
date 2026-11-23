@@ -128,7 +128,7 @@ console.log('portail : page publique, élève reconnu, hors école, redirection 
   const d = { email:'e@example.test', prenom:'A', classe:'3F', prof:false, mesCours:'https://x/exec', tableau:'', devoirs:'https://classroom.google.com/w/x/t/all', cours:[], seance:null };
   let q = lance(d, { devoirs:[{ titre:'Portrait', lien:'https://classroom.google.com/c/x/a/1', echeance:0, etat:'a-rendre' }] });
   assert.equal(q.$('devoirs').hidden, false); assert.equal(q.$('devoirs-liste').children.length, 1);
-  assert.match(html, /Pour les autres cours, ouvre <a target="_top" href="http://arcampin.ecoleenligne.be/">École en ligne<\/a>/);
+  assert.match(html, /Pour les autres cours, ouvre <a target="_top" href="http:\/\/arcampin\.ecoleenligne\.be\/">École en ligne<\/a>/);
   q = lance(d, { devoirs:[] }); assert.equal(q.$('devoirs').hidden, false, 'Liste vide : « Aucun devoir pour le moment »');
   q = lance(d, { devoirs:null }); assert.notEqual(q.$('devoirs').hidden, false, 'Sans service Classroom, pas de panneau');
   q = lance(d); assert.notEqual(q.$('devoirs').hidden, false, 'Ancien serveur sans mesDevoirs : pas d\'erreur, pas de panneau');
