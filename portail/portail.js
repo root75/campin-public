@@ -22,6 +22,10 @@ function dateNom(d){ return String(d.getFullYear()) + String(d.getMonth() + 1).p
 function dateJour(d){ const t = d.toLocaleDateString("fr-BE", { weekday:"long", day:"numeric", month:"long", year:"numeric" }); return t.charAt(0).toUpperCase() + t.slice(1); }
 { const d = new Date(); $("date-jour").textContent = dateJour(d); $("date-nom").textContent = dateNom(d); $("date").hidden = false; }
 
+/* Les cours (identifiants de pas-a-pas/cours.json) où l'élève crée un document et le nomme « AAAAMMJJ Titre – Prénom Nom ».
+   Ajouter un cours ici = la ligne « Pour nommer ton travail » apparaît pour les classes qui le suivent. */
+const NOMMER = ["rat-de-ville-formatif"];
+
 /* ----- État connecté : tout vient du serveur. ----- */
 function affiche(d){
   if(!d || !d.email) return;            // compte hors école : la page reste dans son état public
@@ -44,6 +48,8 @@ function affiche(d){
   const annee = /^[123]/.test(d.classe || "") ? d.classe[0] : "";
   if(annee) $("porte-revise").href = SITE + "revisions/?niveau=" + annee;
   mesRevisions(d.cours);
+  // La date sous la forme AAAAMMJJ : seulement pour une classe qui suit un cours où l'on crée et nomme un document.
+  if(Array.isArray(d.cours) && d.cours.some(c => NOMMER.includes(c))) $("date-nommer").hidden = false;
   if(!d.prof && d.devoirs && SUIVI){
     // Un serveur pas encore republié ne connaît pas mesDevoirs : la porte « Mes devoirs » suffit alors.
     try {
@@ -113,17 +119,63 @@ function annoncesA(liste){
   }
   return sortie.slice(0, 3);
 }
+/** La mise en page d'une annonce, sans jamais lire son texte comme du HTML : des blocs { type: "p" | "ul", lignes },
+ *  chaque ligne étant une suite de morceaux { t: "texte" | "gras" | "lien", v }. Reconnus : **gras**, les lignes qui
+ *  commencent par « - », « * » ou « • » (une liste), les adresses http(s) (un lien), une ligne vide (un nouveau paragraphe). */
+function morceaux(ligne){
+  const sortie = [], motif = /\*\*([^*\n]+?)\*\*|https?:\/\/[^\s<>"']+/g;
+  let fin = 0, m;
+  const texte = v => { if(v) sortie.push({ t: "texte", v }); };
+  while((m = motif.exec(ligne))){
+    texte(ligne.slice(fin, m.index));
+    if(m[1] !== undefined){ sortie.push({ t: "gras", v: m[1].trim() }); fin = motif.lastIndex; }
+    else {
+      const url = m[0].replace(/[.,;:!?)»…]+$/, "");   // la ponctuation de la phrase n'appartient pas à l'adresse
+      sortie.push({ t: "lien", v: url }); fin = m.index + url.length; motif.lastIndex = fin;
+    }
+  }
+  texte(ligne.slice(fin));
+  return sortie;
+}
+function miseEnForme(texte){
+  const blocs = [];
+  let courant = null;
+  for(const brute of String(texte || "").split("\n")){
+    const ligne = brute.trim();
+    if(!ligne){ courant = null; continue; }
+    const puce = /^[-*•]\s+(.*)$/.exec(ligne);
+    const type = puce ? "ul" : "p";
+    if(!courant || courant.type !== type){ courant = { type, lignes: [] }; blocs.push(courant); }
+    courant.lignes.push(morceaux(puce ? puce[1] : ligne));
+  }
+  return blocs;
+}
+function ecrisLigne(parent, ligne){
+  for(const x of ligne){
+    if(x.t === "gras"){ const b = document.createElement("b"); b.textContent = x.v; parent.append(b); }
+    else if(x.t === "lien"){ const a = document.createElement("a"); a.href = x.v; a.target = "_top"; a.rel = "noopener"; a.textContent = x.v; parent.append(a); }
+    else parent.append(x.v);
+  }
+}
 function montreAnnonces(liste, cours){
   const lignes = annoncesA(liste);
   if(!lignes.length) return;          // rien à lire, ou service en panne : pas de panneau vide
   $("annonces-liste").replaceChildren(...lignes.map(a => {
     const li = document.createElement("li");
-    const boite = document.createElement(a.lien ? "a" : "div");
-    if(a.lien){ boite.href = a.lien; boite.target = "_top"; } else boite.className = "annonce";
+    // Une boîte, pas un lien : l'annonce porte ses propres liens, et un lien dans un lien ne marche pas.
+    const boite = document.createElement("div"); boite.className = "annonce";
     if(a.quand){ const q = document.createElement("span"); q.className = "quand"; q.textContent = a.quand; boite.append(q); }
-    const p = document.createElement("span"); p.className = "texte"; p.textContent = a.texte;
-    boite.append(p);
-    if(a.lien){ const s = document.createElement("span"); s.className = "suite"; s.textContent = "Lire dans Classroom"; boite.append(s); }
+    const corps = document.createElement("div"); corps.className = "texte";
+    for(const bloc of miseEnForme(a.texte)){
+      const b = document.createElement(bloc.type);
+      bloc.lignes.forEach((ligne, i) => {
+        if(bloc.type === "ul"){ const item = document.createElement("li"); ecrisLigne(item, ligne); b.append(item); }
+        else { if(i) b.append(document.createElement("br")); ecrisLigne(b, ligne); }
+      });
+      corps.append(b);
+    }
+    boite.append(corps);
+    if(a.lien){ const s = document.createElement("a"); s.className = "suite"; s.href = a.lien; s.target = "_top"; s.textContent = "Lire dans Classroom"; boite.append(s); }
     li.append(boite); return li;
   }));
   $("annonces").hidden = false;
@@ -268,5 +320,5 @@ if(typeof fetch === "function"){
     montre();
   }).catch(() => {});
 }
-globalThis.PortailEssai = { tire, ciel, conseil, dateNom, dateJour, revisionsDe, devoirsA, annoncesA };
+globalThis.PortailEssai = { tire, ciel, conseil, dateNom, dateJour, revisionsDe, devoirsA, annoncesA, miseEnForme };
 })();
