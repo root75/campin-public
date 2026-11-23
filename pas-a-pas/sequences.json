@@ -1832,6 +1832,7 @@
         "titre": "La roue des émotions",
         "min": 4,
         "methode": "Exposé bref",
+        "visuel": "roue-emotions",
         "paires": [
           [
             "Joie",
@@ -1867,7 +1868,7 @@
           ]
         ],
         "exemple": "Plusieurs émotions peuvent exister en même temps.",
-        "repere": "Roue de R. Plutchik (1980), huit familles. Replacer deux ou trois mots de la récolte dans leur famille. Ne pas tout lire : la roue est aussi sur les postes et à l’étape 1."
+        "repere": "Roue de R. Plutchik (1980), huit familles. Cliquer sur un pétale : son personnage vient au centre. Replacer deux ou trois mots de la récolte dans leur famille. Ne pas tout lire : la roue est aussi sur les postes et à l’étape 1."
       },
       {
         "type": "vote",

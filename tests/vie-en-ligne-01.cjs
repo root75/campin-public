@@ -129,4 +129,10 @@ assert.equal((rd.match(/role="button" tabindex="0"/g)||[]).length,8,'pétales au
 assert.ok(/emo-valider/.test(rd)&&!/emo-valider/.test(EM.roue(d.emotions)),'bouton « Je choisis » seulement dans le jeu');
 assert.ok(!/<script/.test(EM.roue([{id:'joie',nom:'<script>x',couleur:'#e3a922',nuances:'"a"'}])),'textes échappés');
 assert.ok(/emotions\.js/.test(pj)&&/emotions\.js/.test(page),'emotions.js chargé par les deux pages');
+// Le visuel « roue-emotions » du déroulé : mêmes familles partout, chargé par le tableau et par la page du cours.
+assert.deepEqual(EM.FAMILLES.map(f=>[f.id,f.nom,f.couleur]),d.emotions.map(e=>[e.id,e.nom,e.couleur]),'emotions.js et situations.json : mêmes familles');
+assert.deepEqual(EM.FAMILLES.map(f=>[f.nom,f.couleur,f.nuances]),F.FAMILLES.map(f=>[f[0],f[1],f[2]]),'emotions.js et la fiche : mêmes familles');
+assert.ok(M.some(m=>m.visuel==='roue-emotions'&&m.paires&&m.paires.length===8),'la roue du déroulé : un visuel, et sa version texte');
+assert.ok(/'roue-emotions'/.test(lis('derriere-lecran/visuels.js')),'visuels.js définit roue-emotions');
+['pas-a-pas/tableau.html',base+'index.html'].forEach(f=>{const h=lis(f);assert.ok(h.indexOf('derriere-lecran/emotions.js')>0&&h.indexOf('derriere-lecran/emotions.js')<h.indexOf('derriere-lecran/visuels.js'),f+' : emotions.js puis visuels.js');});
 console.log('OK : Vie en ligne 01 — '+F.BLOCS.length+' étapes ('+F.BLOCS.reduce((t,B)=>t+B.min,0)+' min de travail seul), '+M.length+' moments ('+M.reduce((t,m)=>t+m.min,0)+' min), '+d.situations.length+' situations d\'entraînement.');

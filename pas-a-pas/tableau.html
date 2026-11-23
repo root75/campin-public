@@ -105,16 +105,16 @@ tr.fini td{color:var(--doux)}
 .seq-etat{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .apercu-marque{color:#b23a2e}
 .projection{position:fixed;inset:0;z-index:10;background:var(--papier);display:grid;grid-template-rows:1fr auto;overflow:hidden}
-.scene{overflow:auto;display:grid;place-items:center;padding:3vh 5vw;text-align:center}
+.scene{overflow:auto;display:grid;place-items:safe center;padding:3vh 5vw;text-align:center}
 .scene > div{width:100%;max-width:90rem;display:grid;gap:3.5vh;justify-items:center}
 .sur{font-size:clamp(1rem,1.8vw,1.6rem);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--doux)}
 .grand{font-family:var(--display);font-weight:800;font-size:clamp(2.2rem,5.5vw,5.5rem);line-height:1.08;margin:0;text-wrap:balance}
 .moyen{font-size:clamp(1.4rem,3.2vw,3rem);line-height:1.2;margin:0;text-wrap:balance}
 .compteur{font-family:var(--display);font-weight:800;font-size:clamp(4rem,14vw,12rem);line-height:1;color:var(--encre-bouton);font-variant-numeric:tabular-nums}
-.paires{display:grid;grid-template-columns:repeat(auto-fit,minmax(18rem,1fr));gap:3vw;width:100%}
-.paire{background:var(--carte);border:2px solid var(--trait);border-radius:20px;padding:3vh 2vw;display:grid;gap:1.5vh}
-.paire b{font-family:var(--display);font-size:clamp(2rem,5vw,4.5rem);line-height:1;color:var(--encre-bouton)}
-.paire span{font-size:clamp(1.2rem,2.4vw,2.2rem)}
+.paires{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,14rem),1fr));gap:min(3vw,3vh);width:100%}
+.paire{background:var(--carte);border:2px solid var(--trait);border-radius:20px;padding:2.2vh 2vw;display:grid;gap:1.5vh;min-width:0}
+.paire b{font-family:var(--display);font-size:clamp(1.2rem,min(3.4vw,6.5vh),4rem);line-height:1.05;color:var(--encre-bouton);overflow-wrap:anywhere;hyphens:auto}
+.paire span{font-size:clamp(.95rem,min(2vw,3.6vh),2rem);overflow-wrap:anywhere}
 .exemple{font-size:clamp(1.3rem,2.6vw,2.4rem);font-style:italic;color:var(--doux);margin:0}
 .ecrire-situation{font-size:clamp(1.05rem,1.7vw,1.6rem);line-height:1.35;margin:0;max-width:70rem;white-space:pre-line}
 .correction-texte{border-top:2px solid currentColor;padding-top:1vh;max-width:70rem;text-align:left}.correction-texte p{font-size:clamp(1.05rem,1.7vw,1.6rem);font-weight:600;line-height:1.35;margin:.2em 0}
@@ -305,7 +305,7 @@ body:not(.vue-onglet) #panneau-classes{display:none!important}
   </form>
 </dialog>
 
-<script defer src="https://root75.github.io/campin-public/messagerie/pas-a-pas/visuels.js?v=enveloppe-20261117"></script><script defer src="https://root75.github.io/campin-public/pas-a-pas/tableau.js?v=avis-20261123"></script>
+<script defer src="https://root75.github.io/campin-public/messagerie/pas-a-pas/visuels.js?v=enveloppe-20261117"></script><script defer src="https://root75.github.io/campin-public/derriere-lecran/emotions.js?v=20261123b"></script><script defer src="https://root75.github.io/campin-public/derriere-lecran/visuels.js?v=20261123"></script><script defer src="https://root75.github.io/campin-public/pas-a-pas/tableau.js?v=avis-20261123"></script>
 <script defer src="https://root75.github.io/campin-public/pas-a-pas/python-couleurs.js"></script>
 </body>
 </html>

@@ -63,9 +63,21 @@ function roue(emotions, options = {}) {
 function bande(emotions, taille = 44) {
   return '<span class="emo-bande" aria-hidden="true">' + emotions.map(e => visage(e.id, e.couleur, taille)).join('') + '</span>';
 }
-if (typeof module !== 'undefined') module.exports = { visage, roue, bande, corps, cle, VISAGES };
+/* Les huit familles, pour qui n'a pas situations.json sous la main (le tableau du professeur). Mêmes textes que
+   situations.json et que FAMILLES dans pas-a-pas/fiche.js : tests/vie-en-ligne-01.cjs le vérifie. */
+const FAMILLES = [
+  { id: 'joie', nom: 'Joie', couleur: '#e3a922', nuances: 'content, fier, soulagé, amusé' },
+  { id: 'confiance', nom: 'Confiance', couleur: '#7fbf5a', nuances: 'en sécurité, soutenu, reconnu' },
+  { id: 'peur', nom: 'Peur', couleur: '#2e7d4f', nuances: 'inquiet, nerveux, pas en sécurité' },
+  { id: 'surprise', nom: 'Surprise', couleur: '#4aa8d8', nuances: 'étonné, perdu, pris de court' },
+  { id: 'tristesse', nom: 'Tristesse', couleur: '#7a5ea8', nuances: 'déçu, seul, mis à l’écart' },
+  { id: 'degout', nom: 'Dégoût', couleur: '#d46a9c', nuances: 'mal à l’aise, choqué' },
+  { id: 'colere', nom: 'Colère', couleur: '#c8402f', nuances: 'agacé, frustré, traité injustement' },
+  { id: 'anticipation', nom: 'Anticipation', couleur: '#e07b28', nuances: 'curieux, impatient, dans l’attente' }
+];
+if (typeof module !== 'undefined') module.exports = { visage, roue, bande, corps, cle, VISAGES, FAMILLES };
 if (typeof document === 'undefined') return;
-window.Emotions = { visage, roue, bande, corps, cle };
+window.Emotions = { visage, roue, bande, corps, cle, FAMILLES };
 
 const style = document.createElement('style');
 style.textContent = [
