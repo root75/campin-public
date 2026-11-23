@@ -44,6 +44,55 @@ function affiche(d){
   const annee = /^[123]/.test(d.classe || "") ? d.classe[0] : "";
   if(annee) $("porte-revise").href = SITE + "revisions/?niveau=" + annee;
   mesRevisions(d.cours);
+  if(!d.prof && d.devoirs && SUIVI){
+    $("devoirs-classroom").href = d.devoirs;
+    // Un serveur pas encore republié ne connaît pas mesDevoirs : la porte « Mes devoirs » suffit alors.
+    try {
+      const appel = google.script.run.withSuccessHandler(r => montreDevoirs(r && r.liste)).withFailureHandler(() => {});
+      if(typeof appel.mesDevoirs === "function") appel.mesDevoirs();
+    } catch(e) {}
+  }
+}
+
+/* ----- Mes devoirs : la liste lue par le serveur dans le cours Classroom de la classe. ----- */
+const MOTS_DEVOIR = { "retard": "En retard", "a-rendre": "À rendre", "rendu": "Rendu", "corrige": "Corrigé" };
+/** Ce que le portail écrit pour chaque devoir : [{ titre, lien, classe, mot, quand }]. Un état inconnu ou un titre
+ *  vide sont écartés ; un lien qui ne mène pas à Classroom est retiré (la ligne reste, sans lien). */
+function devoirsA(liste, maintenant){
+  const sortie = [];
+  for(const x of Array.isArray(liste) ? liste : []){
+    if(!x || typeof x.titre !== "string" || !x.titre.trim() || !Object.prototype.hasOwnProperty.call(MOTS_DEVOIR, x.etat)) continue;
+    const fait = x.etat === "rendu" || x.etat === "corrige";
+    const e = Number(x.echeance) || 0;
+    let quand = "";
+    if(e && !fait){
+      const jour = new Intl.DateTimeFormat("fr-BE", { weekday: "long", day: "numeric", month: "long", timeZone: "Europe/Brussels" }).format(new Date(e));
+      const cle = t => new Intl.DateTimeFormat("fr-CA", { timeZone: "Europe/Brussels" }).format(new Date(t));
+      quand = cle(e) === cle(maintenant) ? "pour aujourd'hui" : cle(e) === cle(maintenant + 86400000) ? "pour demain" : (e < maintenant ? "c'était pour le " : "pour le ") + jour;
+    }
+    sortie.push({ titre: x.titre.trim(), lien: typeof x.lien === "string" && x.lien.startsWith("https://classroom.google.com/") ? x.lien : "",
+      classe: fait ? "fait" : x.etat, mot: MOTS_DEVOIR[x.etat], quand });
+  }
+  return sortie;
+}
+function montreDevoirs(liste){
+  if(!Array.isArray(liste)) return;   // service Classroom absent ou en panne : la porte « Mes devoirs » suffit
+  const lignes = devoirsA(liste, Date.now());
+  const ul = $("devoirs-liste");
+  if(!lignes.length){
+    const li = document.createElement("li"); li.className = "devoir"; li.textContent = "Aucun devoir pour le moment dans ce cours.";
+    ul.replaceChildren(li);
+  } else ul.replaceChildren(...lignes.map(d => {
+    const li = document.createElement("li"); li.className = d.classe;
+    const boite = document.createElement(d.lien ? "a" : "div");
+    if(d.lien){ boite.href = d.lien; boite.target = "_top"; } else boite.className = "devoir";
+    const etat = document.createElement("span"); etat.className = "etat"; etat.textContent = d.mot;
+    const b = document.createElement("b"); b.textContent = d.titre;
+    boite.append(etat, b);
+    if(d.quand){ const q = document.createElement("span"); q.className = "quand"; q.textContent = d.quand; boite.append(q); }
+    li.append(boite); return li;
+  }));
+  $("devoirs").hidden = false;
 }
 
 /* ----- Mes révisions : celles des cours ouverts pour la classe, dans l'ordre des cours. ----- */
@@ -185,5 +234,5 @@ if(typeof fetch === "function"){
     montre();
   }).catch(() => {});
 }
-globalThis.PortailEssai = { tire, ciel, conseil, dateNom, dateJour, revisionsDe };
+globalThis.PortailEssai = { tire, ciel, conseil, dateNom, dateJour, revisionsDe, devoirsA };
 })();
