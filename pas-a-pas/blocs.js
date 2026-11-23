@@ -41,6 +41,43 @@ const MISSIONS = typeof PRESENTATION!=="undefined" && PRESENTATION==="missions";
    const REPRISE = { titre, html, demos } : l'encadré affiché en haut quand l'élève rouvre le cours après une pause.
    État : etat.cases = { "étape.rang": true } (étape et rang à partir de 1), etat.moi = { critère: lettre }. */
 const DECLARATIF = typeof MODE!=="undefined" && MODE==="declaratif";
+/* Méthode « je fais, la page constate, bravo » (Vincent, 23/11/2026), au choix de la fiche : const METHODE = 'constate'.
+   Présentation « missions » seulement. Trois changements, et rien d'autre (le suivi, les preuves, le tableau restent) :
+   - une case peut se cocher toute seule quand la page voit le geste : {geste:'…', compte:{sel:'.emo-part', attr:'data-emo', n:3}}
+     = n éléments différents (par leur attribut attr) cliqués dans le bloc. La case affiche « 1 sur 3 » et ne se coche pas à la main.
+     Un geste que la page ne voit pas (lire, réfléchir, agir dans une autre application) garde sa case ordinaire ;
+   - plus de bouton « ✅ C'est vérifié » ni d'encadré « ✅ À vérifier » : la question arrive d'elle-même dès que toutes
+     les cases sont cochées (ou que l'essai a reçu une réponse) ;
+   - le bravo vient après la preuve, et nomme ce qui est vérifié : B.bravo = 'tu sais …' → « Bravo, tu as vérifié : tu sais … ». */
+const CONSTATE = typeof PRESENTATION!=="undefined" && PRESENTATION==="missions" && typeof METHODE!=="undefined" && METHODE==="constate";
+let finBloc = null;   // coupe, à chaque nouvel affichage, les écoutes posées sur #bloc par l'affichage d'avant
+/* Les cases que la page coche elle-même. Appelé à chaque affichage du bloc ; z = la zone du bloc. */
+function constateCases(z, B){
+  if(!document.getElementById("style-constate")){
+    const st = el("style"); st.id = "style-constate";
+    st.textContent = "ol.etapes li.auto label{cursor:default}ol.etapes li.auto input[type=checkbox]{cursor:default;border-style:dashed}ol.etapes li.auto input[type=checkbox]:checked{border-style:solid}"
+      +".compteur{display:inline-block;margin-left:8px;padding:1px 9px;border-radius:999px;border:2px solid var(--encre-bouton);font-weight:700;font-size:.9rem;white-space:nowrap}"
+      +"ol.etapes li:has(:checked) .compteur{border-color:var(--vert,#1f7a4d)}.a-toi{font-weight:700;margin:0}";
+    document.head.append(st);
+  }
+  const cases = [...z.querySelectorAll(".faire > ol.etapes > li")];
+  (B.gestes||[]).forEach((g,k)=>{
+    const C = g && g.compte, li = cases[k]; if(!C || !li) return;
+    const cb = li.querySelector("input[type=checkbox]"), vus = new Set(), dit = txt("span","compteur","0 sur "+C.n);
+    li.classList.add("auto"); li.querySelector("label > span").append(dit);
+    cb.setAttribute("aria-label","Se coche toute seule"); cb.tabIndex = -1;
+    cb.addEventListener("click", e=>{ e.preventDefault(); });   // jamais à la main : c'est le geste qui coche
+    const maj = () => { dit.textContent = cb.checked ? "✓ "+C.n+" sur "+C.n : vus.size+" sur "+C.n; };
+    cb.addEventListener("change", maj);   // une case recochée au retour sur le bloc
+    const voit = e => {
+      if(cb.checked || (e.type==="keydown" && e.key!=="Enter" && e.key!==" ")) return;
+      const cible = e.target.closest && e.target.closest(C.sel); if(!cible || !z.contains(cible)) return;
+      vus.add(C.attr ? cible.getAttribute(C.attr) : cible); maj();
+      if(vus.size>=C.n){ cb.checked = true; cb.dispatchEvent(new Event("change",{bubbles:true})); }
+    };
+    z.addEventListener("click", voit, {signal:finBloc.signal}); z.addEventListener("keydown", voit, {signal:finBloc.signal});
+  });
+}
 if(DECLARATIF){ etat.cases = etat.cases || {}; etat.moi = etat.moi || {}; ici = Math.min(BLOCS.length-1, Number(etat.ici)||0); }
 /* La grille « Moi » sert aussi à un cours à preuves (les Messagerie) : const GRILLE dans la fiche, « criteres » au catalogue. */
 if(typeof GRILLE!=="undefined") etat.moi = etat.moi || {};
@@ -531,6 +568,7 @@ function affiche(){
   partIci = 0; barre(); if(MISSIONS) bulle(); apercuDirect();
   queueMicrotask(recocheCases);   // une fois le bloc construit, ses animations comprises
   const z = document.getElementById("bloc"); z.replaceChildren();
+  if(CONSTATE){ if(finBloc) finBloc.abort(); finBloc = new AbortController(); }
   const liste = document.getElementById("coince-liste"); liste.replaceChildren();
   document.getElementById("coince").open = false;
   if(typeof DemoLecteur!=="undefined" && DemoLecteur.arrete) DemoLecteur.arrete();
@@ -541,6 +579,7 @@ function affiche(){
   if(enPause()){ pause(z); return; }
   if(ici >= BLOCS.length){ fin(z); return; }
   const B = blocVu(ici);
+  if(CONSTATE && B.bravo) B._bravo = "Bravo, tu as vérifié : "+B.bravo+".";   // dit après la preuve, et au retour sur le bloc
   let essaiFait = !(MISSIONS && B.essai), apresEssai = null;
 
   const num = el("div","numero");
@@ -579,7 +618,8 @@ function affiche(){
     if(B.essai) z.append(essaiHtml(B.essai, ()=>{ essaiFait = true; if(apresEssai) apresEssai(); }));
     else { z.append(el("div","faire",B.fais || gestesHtml(B.gestes))); entrainements(z, B); accordCases(z, B); }
     // Facultatif : quand la page contrôle elle-même le travail (bouton « Vérifier »), l'encadré ferait double emploi.
-    if(B.vois){ const v = el("aside","repere verification"); v.append(txt("h3",null,"✅ À vérifier"), el("p",null,B.vois)); z.append(v); }
+    if(CONSTATE && !B.essai) constateCases(z, B);
+    if(B.vois && !CONSTATE){ const v = el("aside","repere verification"); v.append(txt("h3",null,"✅ À vérifier"), el("p",null,B.vois)); z.append(v); }
   } else {
     const dl = el("dl","lignes");
     [["🎯 Je veux","veux",B.veux],["👉 Je fais","fais",B.fais],["👀 Je vois","vois",B.vois]].forEach(([t,c,h])=>{
@@ -614,7 +654,7 @@ function affiche(){
   } else if(fait && B.q.type==="code"){
     relecture(pr, B);
   } else if(fait){
-    pr.append(txt("p","retour juste",declare_ ? "✅ Étape déjà enregistrée. Les preuves du rapport restent à examiner par le professeur." : "✅ Bloc déjà validé."));
+    pr.append(txt("p","retour juste",declare_ ? "✅ Étape déjà enregistrée. Les preuves du rapport restent à examiner par le professeur." : B._bravo ? "✅ "+B._bravo : "✅ Bloc déjà validé."));
   } else if(B.cases){
     pr.append(txt("div","etiquette","✅ Les cinq points (mon message est noté sur 5)"));
     const ul = el("ul","cases");
@@ -626,6 +666,17 @@ function affiche(){
     pr.append(ul, go);
   } else if(["code","ordre","trace","ligne","redaction"].includes(B.q.type)){
     direct();
+  } else if(CONSTATE){
+    /* La question arrive d'elle-même : après l'essai, ou quand toutes les cases sont cochées (par le geste ou à la main). */
+    const attente = txt("p","note attente-preuve",B.essai ? "👆 Réponds d’abord à la question ci-dessus : la suite arrive ensuite." : "👆 Fais d’abord ce qui est demandé ci-dessus : la question arrive ensuite.");
+    let ouverte = false;
+    const ouvre = () => { if(ouverte) return; ouverte = true; attente.remove(); pr.prepend(txt("p","a-toi","👉 À toi maintenant")); preuve(pr,B); };
+    pr.append(attente);
+    if(B.essai) apresEssai = ouvre;
+    else {
+      const toutes = () => { const c = [...z.querySelectorAll(".faire > ol.etapes input[type=checkbox]")]; if(c.every(x=>x.checked)) ouvre(); };
+      z.addEventListener("change", toutes, {signal:finBloc.signal}); toutes();
+    }
   } else {
     const go = txt("button","btn plein ouvre-preuve",B.essai && B.essai.suite ? B.essai.suite : MISSIONS ? "✅ C’est vérifié" : "👀 Je vois ça"); go.type="button";
     if(!essaiFait){ go.disabled = true; apresEssai = ()=>{ go.disabled = false; }; }
@@ -923,7 +974,7 @@ function preuve(pr, B, apres){
 
   const reussi = (reponse) => {
     if(termine)return;termine=true;
-    retour.className="retour juste"; retour.replaceChildren(txt("strong",null,Q.type==="rapport" ? "Étape déclarée faite." : Q.type==="enquete" ? (SUIVI && !APERCU ? "Réponse enregistrée." : "Réponse saisie pour cet essai.") : "Oui, c'est ça."));
+    retour.className="retour juste"; retour.replaceChildren(txt("strong",null,Q.type==="rapport" ? "Étape déclarée faite." : Q.type==="enquete" ? (SUIVI && !APERCU ? "Réponse enregistrée." : "Réponse saisie pour cet essai.") : !apres && B._bravo ? "✅ "+B._bravo : "Oui, c'est ça."));
     if(Q.juste) retour.append(txt("p",null,Q.juste));
     retour.hidden=false;
     if(scene) scene.joue("juste");

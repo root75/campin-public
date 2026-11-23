@@ -8,6 +8,7 @@
 const COURS = 'vie-en-ligne-1';
 const VERSION_PARCOURS = 'v1';
 const PRESENTATION = 'missions';
+const METHODE = 'constate';   // je fais, la page constate, bravo : voir pas-a-pas/blocs.js (CONSTATE)
 const PREUVES = 'https://root75.github.io/campin-public/derriere-lecran/pas-a-pas/preuves.json?v=20261123';
 const HORS_SUIVI = 'Entraînement libre : rien n’est transmis au professeur. En classe, ouvre Mes cours avec ton compte scolaire.';
 const SEQUENCE = { contenus:true };
@@ -50,8 +51,8 @@ const BLOCS = [
  {partie:'A — Je perçois', titre:'La roue des émotions', min:5,
   veux:'Trouver le mot juste pour dire ce que je ressens devant un écran.',
   avant:ROUE,
-  gestes:['Clique sur chaque <b>famille</b> de la roue : son personnage apparaît au centre.','Lis les <b>huit familles</b> dans le tableau, ligne par ligne.','Pense au dernier message qui t’a fait quelque chose : trouve <b>sa famille</b>.','Clique sur ✅ C’est vérifié : un <b>texte à compléter</b> t’attend.'],
-  vois:'Tu as trouvé la famille de ton émotion, sur la roue ou dans le tableau.',
+  gestes:[{geste:'Clique sur <b>quatre familles</b> de la roue : leur personnage apparaît au centre.', compte:{sel:'.emo-part', attr:'data-emo', n:4}},'Pense au dernier message qui t’a fait quelque chose : trouve <b>sa famille</b>, sur la roue ou dans le tableau.'],
+  bravo:'tu sais retrouver la famille d’une émotion',
   coince:['Je ne trouve pas mon émotion : lis la colonne « Je me sens… », pas seulement le nom de la famille.','J’en ressens deux à la fois : c’est normal. Choisis la plus forte.','« Anticipation » : c’est quand on attend quelque chose, avec envie ou avec inquiétude.'],
   q:{serveur:true}},
  {partie:'A — Je perçois', titre:'Un message, deux lectures', min:6,
@@ -59,6 +60,7 @@ const BLOCS = [
   avant:discussion('Lina et Tom','discussion privée',[['moi:Lina','18:20','Tom, désolée pour ce matin, je n’aurais pas dû parler de ta note devant les autres. Tu m’en veux ?'],['Tom','18:47','Ok.']]),
   essai:{q:'Tom est-il encore fâché ?', choix:[['Oui, il est fâché','C’est une lecture possible : le message est très sec.'],['Non, c’est pardonné','C’est une autre lecture possible : « Ok » veut aussi dire « d’accord ».'],['Je ne sais pas','C’est la réponse la plus prudente : avec ce message seul, on ne peut pas savoir.']],
     apres:'<p>À l’écrit, on n’entend pas la <b>voix</b> et on ne voit pas le <b>visage</b>. Un message très court peut se lire de plusieurs façons : c’est un <b>message ambigu</b>.</p><p>Lina peut donc ressentir de la confiance (c’est pardonné) ou de la peur (il m’en veut encore). Pour un seul et même « Ok. ».</p>', suite:'👉 À toi'},
+  bravo:'tu sais qu’un message très court peut se lire de plusieurs façons',
   coince:['« Ambigu » : qui peut se comprendre de plusieurs façons.','Pour la phrase à écrire : imagine que tu es Tom, et que tu n’es plus fâché. Que dirais-tu en face ?'],
   q:{serveur:true}},
  {partie:'B — Je comprends', titre:'Qu’est-ce qui déclenche l’émotion ?', min:6,
@@ -67,6 +69,7 @@ const BLOCS = [
     '<aside class="repere"><h3>🔎 Trois déclencheurs fréquents en ligne</h3><ul><li>Le <b>silence</b> : « Vu », et pas de réponse.</li><li>L’<b>urgence</b> : « vite », « partagez », des majuscules.</li><li>Le <b>public</b> : tout le groupe voit, et réagit.</li></ul></aside>',
   essai:{q:'Pourquoi cette publication donne-t-elle envie de partager tout de suite ?', choix:[['Elle donne sa source','Regarde bien : elle ne dit ni qui parle, ni où vérifier.'],['Elle joue sur l’urgence et le secret','Oui : majuscules, « URGENT », « avant que ce soit supprimé ».'],['Je ne sais pas','Normal : relis l’encadré des trois déclencheurs.']],
     apres:'<p>Cette publication cherche une <b>émotion forte</b> : surprise, peur, ou même joie. Quand l’émotion monte, on réfléchit moins : c’est le but.</p><p>Une vraie information de l’école arrive <b>par l’école</b>. Je vérifie d’abord.</p>', suite:'👉 À toi'},
+  bravo:'tu sais repérer ce qui déclenche une émotion en ligne',
   coince:['« Déclencher » : faire démarrer. Ici : ce qui fait démarrer l’émotion.','Beaucoup de partages ne prouvent rien : une fausse nouvelle circule souvent plus vite qu’une vraie.'],
   q:{serveur:true}},
  {partie:'C — J’ajuste', titre:'Je suis témoin', min:6,
@@ -74,6 +77,7 @@ const BLOCS = [
   avant:discussion('Groupe « La classe »','24 membres',[['Hugo','16:42','Devinez qui a ENCORE oublié son cours d’histoire ? Inès bien sûr 😂'],'5 personnes ont réagi 😂','Inès ne répond pas.']),
   essai:{q:'Tu es dans ce groupe. Ajouter toi aussi un 😂, est-ce que ça change quelque chose ?', choix:[['Non, c’est juste un émoji','Pour Inès, c’est une personne de plus qui rit d’elle, devant toute la classe.'],['Oui, ça aggrave','Oui : chaque réaction rend la moquerie plus lourde.'],['Je ne sais pas','Normal : mets-toi à la place d’Inès, qui lit les réactions une par une.']],
     apres:'<p>Un témoin n’est jamais neutre. Il a trois chemins :</p><ul><li><b>Rire avec</b> : ça aggrave.</li><li><b>Se taire</b> : ça laisse faire. Pour Inès, le silence ressemble à un accord.</li><li><b>Soutenir</b> : un message en privé à Inès, et un adulte prévenu si ça continue. Ça apaise.</li></ul>', suite:'👉 À toi'},
+  bravo:'tu sais ce que peut faire un témoin',
   coince:['J’ai peur qu’on se moque de moi si je réagis : un message en privé à la personne blessée ne se voit pas dans le groupe.','Prévenir un adulte, ce n’est pas rapporter : c’est protéger quelqu’un.'],
   q:{serveur:true}},
  {partie:'C — J’ajuste', titre:'Avant d’envoyer, et quand ça me dépasse', min:8,
@@ -81,13 +85,14 @@ const BLOCS = [
   avant:discussion('Discussion privée','Maya et Léo',[['Léo','21:15','Envoie-moi une image de toi en sous-vêtements 😏'],['moi:Maya','21:16','Euh… je ne sais pas trop.'],['Léo','21:16','Allez, juste pour moi. Promis, je l’efface après.']]),
   essai:{q:'Si Maya l’envoie, peut-elle être sûre que l’image restera entre eux deux ?', choix:[['Oui, Léo a promis','Une promesse ne bloque rien : une capture d’écran prend une seconde, et l’image peut repartir ailleurs.'],['Non','Non : une fois envoyée, l’image ne dépend plus de Maya.'],['Je ne sais pas','Demande-toi : après l’envoi, qui décide de ce que devient l’image ?']],
     apres:'<aside class="repere"><h3>🔒 Une image intime : pourquoi rester vigilant</h3><p>Une <b>image intime</b> montre une personne dénudée ou en sous-vêtements. Un inconnu peut en demander une, mais aussi un ami ou un amoureux.</p><ul><li><b>Elle ne se reprend pas.</b> Une fois envoyée, elle peut être copiée, enregistrée, transférée, même si le message « disparaît ».</li><li><b>La confiance peut changer.</b> Après une dispute, l’image peut circuler dans toute l’école.</li><li><b>Elle peut servir à un chantage</b> : « envoie-m’en d’autres, ou de l’argent, sinon je la montre ».</li><li><b>On ne sait pas toujours qui écrit</b> : derrière un profil, un adulte peut se faire passer pour un jeune.</li></ul><p>Tu as toujours <b>le droit de dire non</b>. Quelqu’un qui te respecte n’insiste pas.</p><p><b>Et si c’est déjà arrivé ?</b> Ce n’est pas ta faute : celui qui fait circuler une image intime sans accord est en tort, et la loi l’interdit. N’envoie rien de plus, ne paie rien, bloque, signale, et parles-en tout de suite à un adulte.</p><p><b>Tu reçois l’image intime de quelqu’un d’autre ?</b> Tu ne la montres pas, tu ne la transfères pas, et tu préviens un adulte.</p></aside><aside class="repere"><h3>🧭 Trois réflexes, pour tous les messages</h3><ol><li><b>J’attends.</b> En colère, j’écris demain : la colère passe, le message reste.</li><li><b>Je relis</b> mon message comme si je le recevais, sans ma voix ni mon visage.</li><li><b>Ça me dépasse ?</b> Je bloque, je signale, et j’en parle à une personne qui me connaît : un parent, un ami, un éducateur, un professeur.</li></ol></aside>', suite:'👉 À toi'},
+  bravo:'tu sais pourquoi une image intime ne s’envoie pas, et quoi faire quand ça te dépasse',
   coince:['« Signaler » et « Bloquer » : deux boutons que presque toutes les applications proposent, souvent derrière les trois points ⋮ ou ⋯ d’un message ou d’un profil.','J’ai honte d’en parler : l’adulte à qui tu parles est là pour t’aider, pas pour te juger. Tu peux aussi appeler le 103 (Écoute-Enfants) ou le 116 000 (Child Focus) : c’est gratuit.','Une IA peut donner des idées, mais elle ne te connaît pas et ne ressent rien : quand ça ne va pas, parle à une personne.'],
   q:{serveur:true}},
  {partie:'D — Notre règle', titre:'Une règle pour le groupe de la classe', min:6,
   veux:'Proposer une règle qui rend un groupe de discussion plus agréable pour tout le monde.',
   avant:'<aside class="repere"><h3>🤝 La nétiquette</h3><p>La <b>nétiquette</b>, ce sont les règles de politesse d’internet. Un groupe de discussion en a besoin aussi : ce qu’on y écrit, tout le groupe le lit.</p></aside>',
-  gestes:['Repense aux <b>situations</b> de ce cours : le « Ok. », la moquerie dans le groupe, le « Vu » sans réponse.','Choisis <b>une règle</b> qui aurait évité un de ces problèmes.','Clique sur ✅ C’est vérifié, complète le texte, puis <b>écris ta règle</b>.'],
-  vois:'Ta règle est écrite : elle s’affichera au tableau de la classe, sans ton nom.',
+  gestes:['Repense aux <b>situations</b> de ce cours : le « Ok. », la moquerie dans le groupe, le « Vu » sans réponse.','Choisis dans ta tête <b>une règle</b> qui aurait évité un de ces problèmes : tu vas l’écrire juste après.'],
+  bravo:'tu sais proposer une règle pour mieux vivre ensemble en ligne',
   coince:['Je n’ai pas d’idée : commence par « Dans notre groupe, on… » ou « Avant d’envoyer, je… ».','Une règle se dit en une phrase, et tout le monde peut la suivre.'],
   q:{serveur:true}}
 ];

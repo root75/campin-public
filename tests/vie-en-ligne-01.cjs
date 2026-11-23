@@ -12,10 +12,12 @@ assert.equal(F.BLOCS.length,proofs.blocs.length,'un bloc par liste de preuves');
 F.BLOCS.forEach((B,i)=>{
   assert.ok(B.q&&B.q.serveur,'bloc '+(i+1)+' corrigé par le serveur');
   for(const k of ['partie','titre','min','veux','avant'])assert.ok(B[k],k+' '+(i+1));
-  assert.ok(B.essai ? !B.vois : B.vois && B.vois.length<130 && !/^Je sais|^Je peux/.test(B.vois),'à vérifier '+(i+1));
-  assert.ok(B.essai?(B.essai.q&&B.essai.choix.length===3&&B.essai.apres):(B.gestes.length>=2&&B.gestes.length<=6),'essai sur un exemple, ou 2 à 6 cases '+(i+1));
+  // Méthode « je fais, la page constate, bravo » : plus d'encadré « À vérifier », un bravo qui nomme l'acquis.
+  assert.ok(!B.vois && B.bravo && /^tu sais /.test(B.bravo) && B.bravo.length<110 && !/[.!]$/.test(B.bravo),'bravo '+(i+1));
+  assert.ok(!/C’est vérifié/.test(JSON.stringify(B)),'plus de bouton « C’est vérifié » dans les consignes '+(i+1));
+  assert.ok(B.essai?(B.essai.q&&B.essai.choix.length===3&&B.essai.apres):(B.gestes.length>=1&&B.gestes.length<=6),'essai sur un exemple, ou 2 à 6 cases '+(i+1));
   assert.ok(B.coince&&B.coince.length>=2,'Ça coince ? '+(i+1));
-  (B.gestes||[]).forEach(g=>{
+  (B.gestes||[]).map(g=>typeof g==='string'?g:(assert.ok(g.compte&&g.compte.sel&&g.compte.n>=2,'case comptée '+(i+1)),g.geste)).forEach(g=>{
     assert.ok(/<b[\s>]/.test(g),'case sans mot en gras : '+sansB(g).slice(0,60));
     assert.ok(!/(?:^|[.;:!?]\s+)(?:Ne|N[’'])\s?\S+ (?:pas|jamais|ni|aucun|rien)/.test(sansB(g)),'une interdiction dans une case : '+sansB(g).slice(0,60));
   });
