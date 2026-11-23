@@ -1,0 +1,101 @@
+{
+  "note": "Par cours (identifiant de pas-a-pas/cours.json), ses pages de révision. Le portail les propose à l'élève dont la classe a ce cours ouvert. Ajouter une révision = une ligne ici, sans rien republier.",
+  "cours": {
+    "rat-de-ville-formatif": [
+      {
+        "genre": "Je révise",
+        "titre": "Le rat de ville",
+        "chemin": "rat-de-ville/"
+      },
+      {
+        "genre": "Mots croisés",
+        "titre": "Le rat de ville",
+        "chemin": "mots-croises/?cours=rat-de-ville-formatif"
+      }
+    ],
+    "messagerie-1": [
+      {
+        "genre": "Je révise",
+        "titre": "Mon premier message",
+        "chemin": "messagerie/"
+      },
+      {
+        "genre": "Mots croisés",
+        "titre": "Mon premier message",
+        "chemin": "mots-croises/?cours=messagerie-1"
+      }
+    ],
+    "messagerie-2": [
+      {
+        "genre": "Je révise",
+        "titre": "Je réponds et je joins",
+        "chemin": "messagerie-2/"
+      },
+      {
+        "genre": "Mots croisés",
+        "titre": "Je réponds, je joins, je transfère",
+        "chemin": "mots-croises/?cours=messagerie-2"
+      }
+    ],
+    "messagerie-3": [
+      {
+        "genre": "Je révise",
+        "titre": "Bien communiquer en ligne",
+        "chemin": "messagerie-3/"
+      },
+      {
+        "genre": "Mots croisés",
+        "titre": "Bien communiquer en ligne",
+        "chemin": "mots-croises/?cours=messagerie-3"
+      }
+    ],
+    "python-1": [
+      {
+        "genre": "Je révise",
+        "titre": "Premiers pas en Python",
+        "chemin": "python-je-revise/"
+      },
+      {
+        "genre": "Mots croisés",
+        "titre": "Python 01 — Premiers pas",
+        "chemin": "mots-croises/?cours=python-1"
+      }
+    ],
+    "python-2": [
+      {
+        "genre": "Je révise",
+        "titre": "Python 02 — Lire les erreurs, commenter",
+        "chemin": "python-02-je-revise/"
+      },
+      {
+        "genre": "Mots croisés",
+        "titre": "Python 02 — Lire et corriger les erreurs",
+        "chemin": "mots-croises/?cours=python-2"
+      }
+    ],
+    "python-3": [
+      {
+        "genre": "Je révise",
+        "titre": "Python 03 — Texte, nombre et input()",
+        "chemin": "python-03-je-revise/"
+      },
+      {
+        "genre": "Mots croisés",
+        "titre": "Python 03 — Texte, nombre et input()",
+        "chemin": "mots-croises/?cours=python-3"
+      }
+    ],
+    "labo-07": [
+      {
+        "genre": "Je révise",
+        "titre": "Labo 07 — Dans les coulisses du PC",
+        "chemin": "labo-07/je-retiens.html"
+      },
+      {
+        "genre": "Mots croisés",
+        "titre": "Labo 07 — Dans les coulisses du PC",
+        "chemin": "mots-croises/?cours=labo-07"
+      }
+    ]
+  }
+}

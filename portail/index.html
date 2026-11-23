@@ -80,6 +80,10 @@ h1{font:800 clamp(28px,4.2vw,42px)/1.1 var(--titre);margin:0;text-wrap:balance}
 .petites b{display:block;font:600 17px var(--titre)}
 .petites span{color:var(--doux);font-size:14px}
 
+.mes-revisions h2{font:600 18px var(--titre);margin:0 0 8px;color:var(--ok)}
+.mes-revisions .petites a{flex:1 1 230px}
+.mes-revisions small{display:block;font-size:13px;color:var(--accent);text-transform:uppercase;letter-spacing:.06em}
+
 .bas{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
 .panneau{border:1px dashed var(--trait);border-radius:18px;padding:16px 18px;min-width:0}
 .panneau h2{font:600 18px var(--titre);margin:0 0 8px;color:var(--ok)}
@@ -155,8 +159,14 @@ h1{font:800 clamp(28px,4.2vw,42px)/1.1 var(--titre);margin:0;text-wrap:balance}
     <a target="_top" href="https://drive.google.com/"><b>Drive</b><span>mes fichiers</span></a>
     <a target="_top" href="https://docs.google.com/document/"><b>Docs</b><span>écrire</span></a>
     <a target="_top" href="https://outlook.cloud.microsoft/"><b>Outlook</b><span>ma messagerie</span></a>
-    <a target="_top" href="https://root75.github.io/campin-public/revisions/"><b>Je révise</b><span>quiz et cartes, sans connexion</span></a>
+    <a target="_top" href="https://root75.github.io/campin-public/revisions/"><b>Je révise</b><span>quiz, cartes et mots croisés</span></a>
   </nav>
+
+  <!-- Connecté : les révisions des cours ouverts pour la classe (revisions/revisions.json). Sinon, rien. -->
+  <section class="mes-revisions" id="revisions" hidden aria-labelledby="revisions-titre">
+    <h2 id="revisions-titre">Mes révisions</h2>
+    <div class="petites" id="revisions-liste"></div>
+  </section>
 
   <section class="bas">
     <div class="panneau" id="meteo" hidden>

@@ -41,6 +41,39 @@ function affiche(d){
     $("maintenant").hidden = false;
   }
   if(d.prof && d.tableau){ $("lien-prof").href = d.tableau; $("lien-prof").hidden = false; }
+  mesRevisions(d.cours);
+}
+
+/* ----- Mes révisions : celles des cours ouverts pour la classe, dans l'ordre des cours. ----- */
+const REVISIONS = "https://root75.github.io/campin-public/revisions/revisions.json";
+const SITE = "https://root75.github.io/campin-public/";
+/** Les révisions à proposer : seulement les cours de l'élève, sans doublon, et des chemins du site (jamais une autre adresse). */
+function revisionsDe(cours, table){
+  const vues = new Set(), liste = [];
+  for(const id of Array.isArray(cours) ? cours : []){
+    const r = table && Object.prototype.hasOwnProperty.call(table, id) ? table[id] : null;
+    for(const x of Array.isArray(r) ? r : []){
+      if(!x || typeof x.titre !== "string" || !x.titre || typeof x.chemin !== "string") continue;
+      if(!/^[a-z0-9][a-z0-9\-\/.]*(\?cours=[a-z0-9\-]+)?$/.test(x.chemin) || x.chemin.includes("..") || vues.has(x.chemin)) continue;
+      vues.add(x.chemin);
+      liste.push({ genre: typeof x.genre === "string" ? x.genre : "", titre: x.titre, url: SITE + x.chemin });
+    }
+  }
+  return liste;
+}
+function mesRevisions(cours){
+  if(!Array.isArray(cours) || !cours.length || typeof fetch !== "function") return;
+  fetch(REVISIONS).then(r => r.ok ? r.json() : Promise.reject()).then(t => {
+    const liste = revisionsDe(cours, t.cours);
+    if(!liste.length) return;
+    $("revisions-liste").replaceChildren(...liste.map(x => {
+      const a = document.createElement("a"); a.target = "_top"; a.href = x.url;
+      const g = document.createElement("small"); g.textContent = x.genre;
+      const b = document.createElement("b"); b.textContent = x.titre;
+      a.append(g, b); return a;
+    }));
+    $("revisions").hidden = false;
+  }).catch(() => {});
 }
 function gras(t){ const b = document.createElement("b"); b.textContent = t; return b; }
 
@@ -103,5 +136,5 @@ if(typeof fetch === "function"){
     montre();
   }).catch(() => {});
 }
-globalThis.PortailEssai = { tire,  ciel, conseil, dateNom, dateJour };
+globalThis.PortailEssai = { tire, ciel, conseil, dateNom, dateJour, revisionsDe };
 })();
