@@ -80,7 +80,7 @@ h1{font:800 clamp(28px,4.2vw,42px)/1.1 var(--titre);margin:0;text-wrap:balance}
 .petites b{display:block;font:600 17px var(--titre)}
 .petites span{color:var(--doux);font-size:14px}
 
-.mes-revisions h2,.jeu-tete h2{font:600 18px var(--titre);margin:0 0 8px;color:var(--ok)}
+.mes-devoirs h2,.mes-revisions h2,.jeu-tete h2{font:600 18px var(--titre);margin:0 0 8px;color:var(--ok)}
 .revisions-liste{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
 .revision{border:1px solid var(--trait);border-radius:14px;padding:12px 16px;background:var(--carte);display:grid;gap:8px;align-content:start}
 .revision b{font:600 17px var(--titre)}
@@ -89,6 +89,16 @@ h1{font:800 clamp(28px,4.2vw,42px)/1.1 var(--titre);margin:0;text-wrap:balance}
   border:1px solid var(--trait);background:var(--fond2);color:var(--texte);text-decoration:none;cursor:pointer}
 .revision-activites a:hover,.revision-activites button:hover{border-color:var(--accent)}
 .revision-activites .jouer{border-color:var(--accent);color:var(--accent);font-weight:700}
+.devoirs-liste{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.devoirs-liste a,.devoirs-liste .devoir{display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px;min-height:44px;padding:8px 14px;border:1px solid var(--trait);border-radius:12px;background:var(--carte);color:var(--texte);text-decoration:none}
+.devoirs-liste a:hover{border-color:var(--accent)}
+.devoirs-liste b{font:600 16px var(--titre);flex:1 1 12rem;overflow-wrap:anywhere}
+.devoirs-liste .etat{font-size:14px;font-weight:700;border:1px solid currentColor;border-radius:999px;padding:2px 10px;white-space:nowrap}
+.devoirs-liste .quand{font-size:14px;opacity:.85}
+.devoirs-liste .retard .etat{color:var(--alerte,#c0392b)}
+.devoirs-liste .a-rendre .etat{color:var(--accent)}
+.devoirs-liste .fait .etat{color:var(--ok)}
+.devoirs-note{font-size:14px;opacity:.85;margin:8px 0 0}
 .jeu-portail{border:1px solid var(--trait);border-radius:18px;padding:16px 18px;background:var(--fond2);scroll-margin-top:12px}
 .jeu-tete{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between;margin-bottom:10px}
 .jeu-tete h2{margin:0}
@@ -175,6 +185,13 @@ h1{font:800 clamp(28px,4.2vw,42px)/1.1 var(--titre);margin:0;text-wrap:balance}
     <a target="_top" href="https://outlook.cloud.microsoft/"><b>Outlook</b><span>ma messagerie</span></a>
     <a target="_top" id="porte-revise" href="https://root75.github.io/campin-public/revisions/"><b>Je révise</b><span>quiz, mots croisés, jeux d'images</span></a>
   </nav>
+
+  <!-- Connecté : les devoirs Classroom de l'élève dans le cours de sa classe (serveur : mesDevoirs). Sinon, rien. -->
+  <section class="mes-devoirs" id="devoirs" hidden aria-labelledby="devoirs-titre">
+    <h2 id="devoirs-titre">Mes devoirs</h2>
+    <ul class="devoirs-liste" id="devoirs-liste"></ul>
+    <p class="devoirs-note">Seulement les devoirs du cours de numérique. Pour les autres cours, ouvre <a id="devoirs-classroom" target="_top" href="https://classroom.google.com/">Classroom</a>.</p>
+  </section>
 
   <!-- Connecté : les révisions des cours ouverts pour la classe (revisions/revisions.json). Sinon, rien. -->
   <section class="mes-revisions" id="revisions" hidden aria-labelledby="revisions-titre">

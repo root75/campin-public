@@ -15,13 +15,14 @@ assert.match(html, /src="https:\/\/root75\.github\.io\/campin-public\/assets\/lo
 assert.ok(fs.existsSync(require.resolve('../assets/logo-campin.png')));
 assert.match(html, /id="bandeau-extension" hidden/);
 
-function noeud(id){ return { id, hidden: /^(compte|maintenant|meteo|lien-prof)$/.test(id), textContent:'', href:'', children:[],
+function noeud(id){ return { id, hidden: /^(compte|maintenant|meteo|lien-prof|devoirs)$/.test(id), textContent:'', href:'', children:[],
   addEventListener(){}, replaceChildren(...e){ this.children = e; } }; }
-function lance(reponse, { suivi = true } = {}){
+function lance(reponse, { suivi = true, devoirs } = {}){
   const els = new Map(), ajoutes = [];
   const $ = id => { if(!els.has(id)) els.set(id, noeud(id)); return els.get(id); };
   const pont = { withSuccessHandler(f){ this.f = f; return this; }, withFailureHandler(){ return this; }, portail(){ this.f(reponse); } };
-  const ctx = { document:{ documentElement:{ dataset:{} }, getElementById:$, createElement:t=>({ tag:t, textContent:'' }), head:{ append:s=>ajoutes.push(s) } },
+  if(devoirs !== undefined) pont.mesDevoirs = function(){ this.f({ liste: devoirs }); };
+  const ctx = { document:{ documentElement:{ dataset:{} }, getElementById:$, createElement:t=>({ tag:t, textContent:'', enfants:[], append(...e){ this.enfants.push(...e); } }), head:{ append:s=>ajoutes.push(s) } },
     location:{ protocol:'https:', search:'', replace(u){ ctx.parti = u; } }, localStorage:{ getItem(){ throw Error('bloqué'); }, setItem(){} } };
   ctx.window = ctx; ctx.globalThis = ctx;
   if(suivi) ctx.google = { script:{ run:pont } };
@@ -100,4 +101,36 @@ console.log('portail : page publique, élève reconnu, hors école, redirection 
 {
   const q = lance({ email:'e@example.test', prenom:'A', classe:'2B', prof:false, mesCours:'https://x/exec', tableau:'', devoirs:'', cours:[], seance:null });
   assert.equal(q.$('porte-revise').href, 'https://root75.github.io/campin-public/revisions/?niveau=2');
+}
+// Mes devoirs : ce que le portail écrit à partir de la liste du serveur.
+{
+  const { devoirsA } = lance({ email:'' }).ctx.PortailEssai;
+  const t = Date.UTC(2026, 10, 23, 9, 0);   // lundi 23 novembre 2026, 10 h à Bruxelles
+  const l = Array.from(devoirsA([
+    { titre:'Portrait', lien:'https://classroom.google.com/c/x/a/1', echeance:t - 3 * 86400000, etat:'retard' },
+    { titre:'Pour ce soir', lien:'https://classroom.google.com/c/x/a/2', echeance:t + 3600000, etat:'a-rendre' },
+    { titre:'Pour demain', lien:'https://ailleurs.example/', echeance:t + 86400000, etat:'a-rendre' },
+    { titre:'Sans date', lien:'', echeance:0, etat:'a-rendre' },
+    { titre:'Déjà rendu', lien:'https://classroom.google.com/c/x/a/5', echeance:t - 86400000, etat:'rendu' },
+    { titre:'Corrigé', lien:'https://classroom.google.com/c/x/a/6', echeance:0, etat:'corrige' },
+    { titre:'État inventé', lien:'', echeance:0, etat:'constructor' }, { titre:'  ', etat:'rendu' }, null
+  ], t), x => ({ ...x }));
+  assert.deepEqual(l.map(x => x.mot), ['En retard', 'À rendre', 'À rendre', 'À rendre', 'Rendu', 'Corrigé']);
+  assert.equal(l[0].quand, "c'était pour le vendredi 20 novembre"); assert.equal(l[1].quand, "pour aujourd'hui");
+  assert.equal(l[2].quand, 'pour demain'); assert.equal(l[2].lien, '', 'Un lien hors Classroom est retiré');
+  assert.equal(l[3].quand, ''); assert.equal(l[4].quand, '', 'Un devoir rendu ne rappelle plus son échéance');
+  assert.equal(l[4].classe, 'fait'); assert.equal(l[0].classe, 'retard');
+  assert.equal(devoirsA(null, t).length, 0);
+  assert.match(html, /id="devoirs" hidden/, 'Le panneau des devoirs est caché tant que le serveur n\'a rien donné');
+}
+// Le panneau s'ouvre quand le serveur donne une liste ; il reste caché sans service Classroom, et sur un ancien serveur.
+{
+  const d = { email:'e@example.test', prenom:'A', classe:'3F', prof:false, mesCours:'https://x/exec', tableau:'', devoirs:'https://classroom.google.com/w/x/t/all', cours:[], seance:null };
+  let q = lance(d, { devoirs:[{ titre:'Portrait', lien:'https://classroom.google.com/c/x/a/1', echeance:0, etat:'a-rendre' }] });
+  assert.equal(q.$('devoirs').hidden, false); assert.equal(q.$('devoirs-liste').children.length, 1);
+  assert.equal(q.$('devoirs-classroom').href, d.devoirs);
+  q = lance(d, { devoirs:[] }); assert.equal(q.$('devoirs').hidden, false, 'Liste vide : « Aucun devoir pour le moment »');
+  q = lance(d, { devoirs:null }); assert.notEqual(q.$('devoirs').hidden, false, 'Sans service Classroom, pas de panneau');
+  q = lance(d); assert.notEqual(q.$('devoirs').hidden, false, 'Ancien serveur sans mesDevoirs : pas d\'erreur, pas de panneau');
+  q = lance({ ...d, prof:true }, { devoirs:[] }); assert.notEqual(q.$('devoirs').hidden, false);
 }
