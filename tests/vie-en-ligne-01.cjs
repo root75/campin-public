@@ -17,7 +17,7 @@ F.BLOCS.forEach((B,i)=>{
   assert.ok(!/C’est vérifié/.test(JSON.stringify(B)),'plus de bouton « C’est vérifié » dans les consignes '+(i+1));
   assert.ok(B.essai?(B.essai.q&&B.essai.choix.length===3&&B.essai.apres):(B.gestes.length>=1&&B.gestes.length<=6),'essai sur un exemple, ou 2 à 6 cases '+(i+1));
   assert.ok(B.coince&&B.coince.length>=2,'Ça coince ? '+(i+1));
-  (B.gestes||[]).map(g=>typeof g==='string'?g:(assert.ok(g.compte&&g.compte.sel&&g.compte.n>=2,'case comptée '+(i+1)),g.geste)).forEach(g=>{
+  (B.gestes||[]).map(g=>typeof g==='string'?g:(assert.ok(g.compte&&g.compte.sel&&g.compte.n>=1,'case comptée '+(i+1)),g.geste)).forEach(g=>{
     assert.ok(/<b[\s>]/.test(g),'case sans mot en gras : '+sansB(g).slice(0,60));
     assert.ok(!/(?:^|[.;:!?]\s+)(?:Ne|N[’'])\s?\S+ (?:pas|jamais|ni|aucun|rien)/.test(sansB(g)),'une interdiction dans une case : '+sansB(g).slice(0,60));
   });
@@ -64,21 +64,24 @@ proofs.blocs.forEach((l,i)=>{
     }
   });
 });
-assert.deepEqual(proofs.blocs.map(l=>l[0].type),['trous','trous','qcm','qcm','qcm','trous']);
-// Les deux mises en commun par « Leurs phrases » : le « Ok. » réécrit (étape 2), la règle du groupe (étape 6).
-assert.deepEqual(proofs.blocs.map(l=>!!l[0].phrase),[false,true,false,false,false,true]);
+assert.deepEqual(proofs.blocs.map(l=>l[0].type),['trous','qcm','trous','qcm','qcm','qcm','trous']);
+// Les phrases libres (« Leurs phrases ») : le « Ok. » réécrit (étape 3), la règle du groupe (étape 7).
+assert.deepEqual(proofs.blocs.map(l=>!!l[0].phrase),[false,false,true,false,false,false,true]);
 
-// Le conducteur : des moments variés, deux ateliers qui couvrent toutes les étapes, des tris branchés sur une récolte.
+// Le conducteur : moins de tableau, plus d'autonomie. Un lancement, un seul atelier qui couvre toutes les étapes, et deux
+// mises en commun seulement (l'image intime, « Nos règles ») : ni récolte de mots, ni tri, ni vote au tableau.
 const seq=JSON.parse(lis('pas-a-pas/sequences.json'))['vie-en-ligne-1'],M=seq.moments;
 assert.ok(seq.ecransSurPostes===true&&seq.objectif.startsWith('L’élève est capable de')&&seq.competences.length>=4&&seq.preparation.length>=3);
-for(const t of ['ecran','mots','tri','vote','atelier','fin'])assert.ok(M.some(m=>m.type===t),'un moment '+t);
+assert.deepEqual(M.map(m=>m.type),['ecran','atelier','ecran','ecran','fin']);
+assert.deepEqual(M.filter(m=>/^Mise en commun/.test(m.titre)).map(m=>m.titre.replace(/^Mise en commun — /,'').split(' :')[0]),['Une image intime','Nos règles']);
 M.forEach((m,i)=>{assert.ok(m.titre&&m.min>0&&m.methode,'moment '+(i+1));if(m.type==='tri')assert.equal(M[m.source].type,'mots','le tri '+(i+1)+' range une récolte de mots');});
-assert.deepEqual(M.filter(m=>m.type==='atelier').map(m=>m.blocs),[[1,3],[4,6]]);
+assert.deepEqual(M.filter(m=>m.type==='atelier').map(m=>m.blocs),[[1,F.BLOCS.length]]);
+assert.ok(M[1].min>=F.BLOCS.reduce((t,B)=>t+B.min,0),'l\'atelier laisse le temps des étapes');
 assert.equal(M[M.length-1].type,'fin');
-// Le vote d'avis : huit familles, aucune « bonne », une explication par situation — et le moteur le sait.
-const vote=M.find(m=>m.type==='vote');
-assert.deepEqual(vote.choix,F.FAMILLES.map(f=>f[0]));
-vote.situations.forEach(s=>{assert.ok(!('bonne' in s)&&s.texte&&s.explication.startsWith('Pas de bonne réponse'));});
+// Le vote d'avis est passé sur le poste : l'étape 2, une case que la roue coche (« Je choisis »), puis le voisin.
+// Le moteur garde le vote d'avis du tableau, pour d'autres cours.
+assert.equal(F.BLOCS[1].titre,'Que ressent-il ?');assert.equal(F.BLOCS[1].gestes.length,2);assert.match(F.BLOCS[1].gestes[1],/voisin/);
+assert.match(lis(base+'fiche.js'),/compte:\{sel:'\.emo-valider', n:1\}/);assert.match(lis(base+'fiche.js'),/choisir:true, apres:'Il n’y a pas de bonne réponse/);
 assert.match(lis('pas-a-pas/tableau.js'),/s\.bonne != null\) \? "Montrer la bonne réponse" : "Montrer la mise en commun"/);
 const sq=lis('pas-a-pas/sequence-eleve.js');
 assert.match(sq,/if\(bon == null\)\{ if\(moi\[k\] != null\) d\.append\(el\("p", "sq-res", "Ton choix : "/);
@@ -115,8 +118,8 @@ const pj=lis('derriere-lecran/index.html'),js=lis('derriere-lecran/jeu.js');
 assert.ok(pj.includes('id="essentiel"')&&pj.includes('id="jeu"')&&pj.includes('« M. Louviaux »')&&pj.includes('ConnectÉmoi')&&pj.includes('Plutchik'),'ancres, signature, sources');
 assert.ok(!/smartphone|téléphone|selfie/i.test(pj+js)&&!/[a-z0-9.]+@arcampin\.be/i.test(pj),'ni téléphone ni adresse');
 assert.equal((js.match(/innerHTML/g)||[]).length,1,'le jeu n\'écrit que du texte, sauf les dessins d\'emotions.js (une seule porte : dessin)');
-// L'image intime : dite dans le cours (étape 5), dans le déroulé et dans le jeu, avec le pourquoi et les numéros d'aide.
-assert.ok(/image intime/.test(F.BLOCS[4].essai.apres)&&/droit de dire non/.test(F.BLOCS[4].essai.apres)&&/pas ta faute/.test(F.BLOCS[4].essai.apres),'étape 5 : pourquoi rester vigilant');
+// L'image intime : dite dans le cours (étape 6), dans le déroulé et dans le jeu, avec le pourquoi et les numéros d'aide.
+assert.ok(/image intime/.test(F.BLOCS[5].essai.apres)&&/droit de dire non/.test(F.BLOCS[5].essai.apres)&&/pas ta faute/.test(F.BLOCS[5].essai.apres),'étape 6 : pourquoi rester vigilant');
 assert.ok(M.some(m=>/image intime/.test(m.titre)&&/116 000/.test(m.repere)&&/103/.test(m.repere)),'déroulé : mise en commun sur l\'image intime');
 ['juste-pour-moi','elle-circule'].forEach(id=>assert.ok(d.situations.some(s=>s.id===id),'jeu : '+id));
 assert.ok(/116 000/.test(pj)&&/pas ta faute/.test(pj),'page élève : Child Focus et « pas ta faute »');
@@ -126,13 +129,13 @@ d.emotions.forEach(e=>{assert.ok(EM.VISAGES[e.id],'un personnage pour '+e.id);as
 const rd=EM.roue(d.emotions,{choisir:true});
 assert.equal((rd.match(/class="emo-part"/g)||[]).length,8,'huit pétales');
 assert.equal((rd.match(/role="button" tabindex="0"/g)||[]).length,8,'pétales au clavier');
-assert.ok(/emo-valider/.test(rd)&&!/emo-valider/.test(EM.roue(d.emotions)),'bouton « Je choisis » seulement dans le jeu');
+assert.ok(/emo-valider/.test(rd)&&!/emo-valider/.test(EM.roue(d.emotions)),'bouton « Je choisis » seulement là où l\'on choisit');
+assert.ok(/data-apres="&lt;b/.test(EM.roue(d.emotions,{choisir:true,apres:'<b'}))&&!/data-apres/.test(rd),'la phrase d\'après le choix, échappée');
 assert.ok(!/<script/.test(EM.roue([{id:'joie',nom:'<script>x',couleur:'#e3a922',nuances:'"a"'}])),'textes échappés');
 assert.ok(/emotions\.js/.test(pj)&&/emotions\.js/.test(page),'emotions.js chargé par les deux pages');
 // Le visuel « roue-emotions » du déroulé : mêmes familles partout, chargé par le tableau et par la page du cours.
 assert.deepEqual(EM.FAMILLES.map(f=>[f.id,f.nom,f.couleur]),d.emotions.map(e=>[e.id,e.nom,e.couleur]),'emotions.js et situations.json : mêmes familles');
 assert.deepEqual(EM.FAMILLES.map(f=>[f.nom,f.couleur,f.nuances]),F.FAMILLES.map(f=>[f[0],f[1],f[2]]),'emotions.js et la fiche : mêmes familles');
-assert.ok(M.some(m=>m.visuel==='roue-emotions'&&m.paires&&m.paires.length===8),'la roue du déroulé : un visuel, et sa version texte');
 assert.ok(/'roue-emotions'/.test(lis('derriere-lecran/visuels.js')),'visuels.js définit roue-emotions');
 ['pas-a-pas/tableau.html',base+'index.html'].forEach(f=>{const h=lis(f);assert.ok(h.indexOf('derriere-lecran/emotions.js')>0&&h.indexOf('derriere-lecran/emotions.js')<h.indexOf('derriere-lecran/visuels.js'),f+' : emotions.js puis visuels.js');});
 console.log('OK : Vie en ligne 01 — '+F.BLOCS.length+' étapes ('+F.BLOCS.reduce((t,B)=>t+B.min,0)+' min de travail seul), '+M.length+' moments ('+M.reduce((t,m)=>t+m.min,0)+' min), '+d.situations.length+' situations d\'entraînement.');
