@@ -16,7 +16,7 @@ for (const [id, c] of Object.entries(d.cours)) {
   assert.ok(c.activites.length >= 2, id + ' : au moins deux activités');
   for (const a of c.activites) {
     assert.ok(a.genre && cheminSur(a.chemin) && existe(a.chemin), id + ' ▸ ' + a.chemin + ' : page introuvable ou chemin refusé');
-    if (a.suivi) { assert.match(a.suivi, /^(quiz|mots-croises|associe):[a-z0-9\-]+$/); assert.ok(!suivis.has(a.suivi), a.suivi + ' : clé de suivi en double'); suivis.add(a.suivi); }
+    if (a.suivi) { assert.match(a.suivi, /^(quiz|mots-croises|associe|derriere-lecran):[a-z0-9\-]+$/); assert.ok(!suivis.has(a.suivi), a.suivi + ' : clé de suivi en double'); suivis.add(a.suivi); }
     // Sans JavaScript, la page garde un lien vers chaque activité.
     assert.ok(page.includes('href="../' + a.chemin + '"'), id + ' ▸ ' + a.chemin + ' : absent du secours sans JavaScript');
   }

@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<!-- Vie en ligne 01 — page faite à partir de pas-a-pas/modele/index.html (moteur pas-a-pas/blocs.js, mode d'emploi pas-a-pas/MOTEUR.md). -->
+<script>
+/* Une erreur JavaScript s'affiche en haut de la page : sur un téléphone ou un poste d'élève, pas de console. */
+addEventListener("error", e => {
+  if(e.target && e.target.tagName === "LINK") return;   // une police qui manque n'empêche rien
+  if(e.target && e.target.tagName === "IMG"){   // une image qui ne vient pas : jusqu'à 4 essais espacés (2, 5, 10, 20 s), sans alarmer l'élève
+    const im = e.target, n = +(im.dataset.reessai || 0), attente = [2000, 5000, 10000, 20000][n];
+    if(attente){ im.dataset.reessai = n + 1; setTimeout(() => { im.src = im.src.replace(/[?&]r=\d+$/, "") + (im.src.replace(/[?&]r=\d+$/, "").includes("?") ? "&" : "?") + "r=" + Date.now(); }, attente); }
+    return;
+  }
+  const p = document.createElement("p");
+  p.style.cssText = "background:#f8e3e0;color:#b23a2e;border-left:5px solid #b23a2e;padding:8px 12px;margin:8px 0;font:14px/1.4 Arial,sans-serif";
+  p.textContent = "⚠ Erreur dans la page : " + (e.message || (e.target && e.target.src ? "chargement de " + e.target.src : "inconnue")) + (e.lineno ? " (ligne " + e.lineno + ")" : "");
+  if(e.lineno){   // les lignes telles que la page les a reçues : ce que le serveur a pu y changer
+    const pre = document.createElement("pre");
+    pre.style.cssText = "white-space:pre-wrap;word-break:break-all;margin:6px 0 0;font:12px/1.35 monospace";
+    pre.textContent = document.documentElement.outerHTML.split("\n").slice(Math.max(0, e.lineno-4), e.lineno+2)
+      .map((l,i) => (Math.max(0, e.lineno-4)+i+1) + "│" + l).join("\n");
+    p.append(pre);
+  }
+  (document.body || document.documentElement).prepend(p);
+}, true);
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Vie en ligne 01 — Derrière l’écran — pas à pas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,600;0,800;1,600&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
+<link rel="stylesheet" href="https://root75.github.io/campin-public/pas-a-pas/fiche.css?v=rappels-20261112">
+<link rel="stylesheet" href="https://root75.github.io/campin-public/assets/navigation.css">
+<link rel="stylesheet" href="https://root75.github.io/campin-public/pas-a-pas/python-missions.css?v=communs-20261112">
+<style>
+/* Une discussion ou une publication dessinée : rien de réel, aucune application imitée. */
+.ecran-dessin{max-width:26rem;margin:0 auto;border:2px solid var(--trait);border-radius:18px;background:var(--carte);overflow:hidden;text-align:left}
+.ecran-dessin .haut{background:var(--encre-bouton);color:var(--carte);padding:8px 14px;display:grid}.ecran-dessin .haut b{font-size:1.05rem}.ecran-dessin .haut span{font-size:.85rem;opacity:.9}
+.ecran-dessin .fil{display:grid;gap:8px;padding:12px}
+.bulle-msg{justify-self:start;max-width:85%;background:var(--papier,#f3f5f7);border:1px solid var(--trait);border-radius:14px 14px 14px 4px;padding:6px 10px;display:grid;overflow-wrap:anywhere}
+.bulle-msg.moi{justify-self:end;border-radius:14px 14px 4px 14px;background:var(--fromage-pale)}
+.bulle-msg .qui{font-size:.8rem;font-weight:700;color:var(--encre-bouton)}.bulle-msg .heure{font-size:.75rem;color:var(--doux);justify-self:end}
+.bulle-msg.brouillon{border-style:dashed}
+.info-fil{justify-self:center;font-size:.85rem;color:var(--doux);text-align:center}
+.publi{padding:12px;display:grid;gap:8px}.publi .texte{font-size:1.1rem;font-weight:700;overflow-wrap:anywhere}.publi .bas{font-size:.85rem;color:var(--doux)}
+.avant{display:grid;gap:10px}
+table.lettre{border-collapse:collapse;width:100%;font-size:1rem}table.lettre th,table.lettre td{border:1px solid var(--trait);padding:6px 8px;text-align:left;vertical-align:top}
+.pastille-emo{display:inline-block;width:.85em;height:.85em;border-radius:50%;margin-right:6px;vertical-align:baseline}
+.repere ol,.repere ul{margin:6px 0 0;padding-left:1.3rem}
+</style>
+</head>
+<body>
+<nav class="campin-navigation" aria-label="Navigation du site">
+  <details class="campin-menu">
+    <summary>☰ Menu</summary>
+    <div class="campin-menu-liens">
+      <a href="https://root75.github.io/campin-public/portail/" target="_top">Mon portail</a>
+      <a href="https://root75.github.io/campin-public/cours/" target="_top">Mes cours</a>
+      <a href="https://root75.github.io/campin-public/revisions/" target="_top">Révisions et entraînements</a>
+      <a href="https://root75.github.io/campin-public/se-connecter/#rendre" target="_top">Rendre un devoir</a>
+      <a href="https://root75.github.io/campin-public/" target="_top">Accueil</a>
+    </div>
+  </details>
+</nav>
+
+<div class="page">
+  <header class="entete"><span class="mascotte" id="mascotte" aria-hidden="true" style="font-size:64px;line-height:1">💬</span><div>
+    <div class="surtitre">Numérique · 1re · Vie en ligne</div>
+    <h1>Vie en ligne 01 — Derrière l’écran</h1>
+    <p class="bulle" id="bulle">Aujourd’hui : ce qu’un message fait ressentir, pourquoi, et comment bien réagir.</p>
+  </div></header>
+  <p class="qui" id="qui"></p>
+
+  <section class="humeur" id="humeur" hidden aria-label="Humeur du jour"></section>
+
+  <div class="progres" id="progres" aria-hidden="true"></div>
+
+  <main class="panneau" id="bloc" aria-live="polite"></main>
+
+  <details class="coince" id="coince">
+    <summary>Ça coince ?</summary>
+    <ul id="coince-liste"></ul>
+    <p class="protocole">Toujours bloqué ? Relis le bloc → demande au voisin (il explique, il ne touche pas ta souris) → sonne la cloche 🔔, en haut à droite, et continue ce qui reste possible.</p>
+  </details>
+
+  <section id="aide" aria-label="Demander de l’aide"><button id="aide-btn" type="button" aria-label="J'attends de l'aide" title="Tu as relu « Ça coince ? » et demandé au voisin ? Sonne.">🔔<span class="mot">J'attends de l'aide</span></button><p id="aide-texte">Tu as relu « Ça coince ? » et demandé au voisin ? Sonne.</p></section>
+  <div id="bravo" role="status" aria-live="polite"></div>
+
+  <div class="actions">
+    <button class="btn vide" type="button" id="memo-btn">📌 Les repères</button>
+  </div>
+
+  <footer><span id="pied"></span><span class="auteur">M. Louviaux</span></footer>
+</div>
+
+<dialog id="memo">
+  <h3>📌 Les repères</h3>
+  <div class="encart" style="margin-top:10px">
+    <table><tr><th>Le verbe</th><th>Ce que je fais</th></tr><tr><td><b>Percevoir</b></td><td>je nomme l’émotion</td></tr><tr><td><b>Comprendre</b></td><td>je cherche ce qui la déclenche</td></tr><tr><td><b>Ajuster</b></td><td>je choisis ma réaction</td></tr></table>
+    <p style="margin-top:10px">Les huit familles : joie, confiance, peur, surprise, tristesse, dégoût, colère, anticipation.</p>
+    <p>Si ça me dépasse : je <b>bloque</b>, je <b>signale</b>, j’en <b>parle à un adulte</b>.</p>
+    <p>Une <b>image intime</b> envoyée ne se reprend pas : j’ai le droit de dire non. Celle d’un autre, je ne la transfère jamais.</p>
+    <p>Pour en parler, gratuitement : le <b>103</b> (Écoute-Enfants) ou le <b>116 000</b> (Child Focus).</p>
+  </div>
+  <form method="dialog" class="actions" style="margin-top:14px"><button class="btn plein">Fermer</button></form>
+</dialog>
+
+<!-- Ordre : sequence-eleve (différé), fiche.js (les données), phrase-fin, blocs.js (le moteur). -->
+<script defer src="https://root75.github.io/campin-public/pas-a-pas/recompense.js?v=tresor-20261117"></script>
+<script defer src="https://root75.github.io/campin-public/pas-a-pas/sequence-eleve.js?v=avis-20261123"></script>
+<script src="https://root75.github.io/campin-public/derriere-lecran/emotions.js?v=20261123"></script>
+<script src="https://root75.github.io/campin-public/derriere-lecran/pas-a-pas/fiche.js?v=constate-20261123"></script>
+<script defer src="https://root75.github.io/campin-public/pas-a-pas/campin-extension.js?v=cote-20261118"></script>
+<script src="https://root75.github.io/campin-public/pas-a-pas/phrase-fin.js?v=20261106"></script>
+<script src="https://root75.github.io/campin-public/pas-a-pas/cloche.js?v=annule-20261117"></script>
+<script src="https://root75.github.io/campin-public/pas-a-pas/blocs.js?v=constate-20261123"></script>
+</body>
+</html>

@@ -1,0 +1,436 @@
+{
+  "note": "Derrière l'écran : des situations en ligne, en trois temps (je perçois, je comprends, j'ajuste). Inspiré de la démarche du jeu « ConnectÉmoi » (Fédération Wallonie-Bruxelles, e-classe) ; les situations, les textes et les dessins sont écrits pour ce site. « attendu » = une clé de « attendus », cités mot pour mot du référentiel FMTTN. Au temps 1 il n'y a pas de mauvaise réponse : « souvent » ne sert qu'au retour. Aux temps 2 et 3, exactement trois choix, dont au moins un « bon ». Ajouter une situation = une entrée ici (tests/derriere-lecran.cjs la vérifie).",
+  "emotions": [
+    { "id": "joie", "nom": "Joie", "couleur": "#e3a922", "nuances": "content, fier, soulagé, amusé" },
+    { "id": "confiance", "nom": "Confiance", "couleur": "#7fbf5a", "nuances": "en sécurité, soutenu, reconnu" },
+    { "id": "peur", "nom": "Peur", "couleur": "#2e7d4f", "nuances": "inquiet, nerveux, pas en sécurité" },
+    { "id": "surprise", "nom": "Surprise", "couleur": "#4aa8d8", "nuances": "étonné, perdu, pris de court" },
+    { "id": "tristesse", "nom": "Tristesse", "couleur": "#7a5ea8", "nuances": "déçu, seul, mis à l'écart" },
+    { "id": "degout", "nom": "Dégoût", "couleur": "#d46a9c", "nuances": "mal à l'aise, choqué, écœuré" },
+    { "id": "colere", "nom": "Colère", "couleur": "#c8402f", "nuances": "agacé, frustré, traité injustement" },
+    { "id": "anticipation", "nom": "Anticipation", "couleur": "#e07b28", "nuances": "curieux, impatient, dans l'attente" }
+  ],
+  "attendus": {
+    "netiquette": "Respecter, dans un environnement numérique d’interaction et de communication, une nétiquette définie.",
+    "outil": "Sélectionner un outil d’interaction adéquat en fonction des interlocuteurs.",
+    "harcelement": "Proposer et mettre en place des actions pertinentes pour faire face à des situations de cyberattaque, de cyberharcèlement, de cybermanipulation.",
+    "dependance": "Réagir, de manière responsable, face aux risques de cyberattaque, de cyberharcèlement, de cyberdépendance.",
+    "deconnexion": "Reconnaitre l'importance du droit à la déconnexion, tant pour soi-même que pour les autres.",
+    "identite": "Gérer son identité numérique, ses traces, ses données personnelles, de manière responsable.",
+    "signaler": "Identifier les moyens de signaler ou bloquer un contenu partagé de manière inappropriée en ligne.",
+    "aide-humaine": "Reconnaitre l'importance de chercher de l'aide humaine plutôt que l’IA pour son bien-être numérique, psychologique et social."
+  },
+  "situations": [
+    {
+      "id": "blague-groupe",
+      "titre": "La blague dans le groupe",
+      "attendu": "harcelement",
+      "scene": {
+        "genre": "discussion", "lieu": "Groupe « La classe »", "detail": "24 membres",
+        "messages": [
+          { "de": "Hugo", "heure": "16:42", "texte": "Devinez qui a ENCORE oublié son cours d'histoire ? Inès bien sûr 😂" },
+          { "info": "5 personnes ont réagi 😂" },
+          { "info": "Inès ne répond pas." }
+        ]
+      },
+      "percevoir": {
+        "question": "Tu es dans ce groupe. Que peut ressentir Inès en lisant ça ?",
+        "souvent": ["tristesse", "colere"],
+        "pourquoi": "Beaucoup pensent à la tristesse (être montrée du doigt devant tout le monde) ou à la colère (c'est injuste)."
+      },
+      "comprendre": {
+        "question": "Qu'est-ce qui rend ce message si lourd pour Inès ?",
+        "choix": [
+          { "texte": "Toute la classe le voit, et les réactions 😂 s'ajoutent au message.", "bon": true, "retour": "Oui. En ligne, une moquerie reste affichée et chaque réaction la rend plus forte." },
+          { "texte": "Il a été envoyé après 16 h.", "bon": false, "retour": "L'heure ne change rien ici. Regarde plutôt qui voit le message." },
+          { "texte": "Il contient un émoji.", "bon": false, "retour": "Un émoji seul ne blesse pas. C'est de qui on rit, et devant qui, qui compte." }
+        ]
+      },
+      "ajuster": {
+        "question": "Toi, témoin dans le groupe, que peux-tu faire ?",
+        "choix": [
+          { "texte": "Ajouter moi aussi un 😂 : tout le monde le fait.", "bon": false, "retour": "Chaque réaction en plus dit à Inès que toute la classe rit d'elle." },
+          { "texte": "Ne rien faire : ça ne me regarde pas.", "bon": false, "retour": "Se taire ne blesse pas, mais pour Inès, le silence ressemble à un accord." },
+          { "texte": "Écrire à Inès en privé pour la soutenir, et si ça continue, prévenir un adulte.", "bon": true, "retour": "Oui. Un seul message de soutien change beaucoup, et un adulte peut arrêter la situation." }
+        ]
+      },
+      "retenir": "Un témoin n'est jamais neutre : réagir en riant aggrave, soutenir apaise."
+    },
+    {
+      "id": "vu-sans-reponse",
+      "titre": "Vu, mais pas de réponse",
+      "attendu": "deconnexion",
+      "scene": {
+        "genre": "discussion", "lieu": "Groupe « Les 6 du fond »", "detail": "6 membres",
+        "messages": [
+          { "de": "Sacha", "moi": true, "heure": "17:05", "texte": "On prépare l'exposé de géo ensemble mercredi ?" },
+          { "info": "Vu par 5 personnes" },
+          { "info": "21:10 — toujours aucune réponse." }
+        ]
+      },
+      "percevoir": {
+        "question": "Que peut ressentir Sacha à 21 h 10 ?",
+        "souvent": ["tristesse", "anticipation", "peur"],
+        "pourquoi": "On cite souvent la tristesse (se sentir ignoré), l'anticipation (attendre la notification) ou la peur d'avoir dit quelque chose de mal."
+      },
+      "comprendre": {
+        "question": "Que sait vraiment Sacha, avec ce « Vu » ?",
+        "choix": [
+          { "texte": "Que personne ne veut travailler avec lui.", "bon": false, "retour": "C'est une idée que Sacha se fait. « Vu » ne dit pas ce que les autres pensent." },
+          { "texte": "Seulement que le message a été ouvert. Pas pourquoi personne n'a répondu.", "bon": true, "retour": "Oui. Les autres peuvent être au sport, à table, ou attendre que quelqu'un réponde en premier." },
+          { "texte": "Que son message n'est pas arrivé.", "bon": false, "retour": "Il est bien arrivé : cinq personnes l'ont ouvert." }
+        ]
+      },
+      "ajuster": {
+        "question": "Que peut faire Sacha ?",
+        "choix": [
+          { "texte": "Écrire « Sympa de m'ignorer, merci les amis ».", "bon": false, "retour": "Un reproche lance une dispute, alors que personne n'a peut-être voulu le blesser." },
+          { "texte": "Envoyer « ??? » toutes les dix minutes.", "bon": false, "retour": "Insister met la pression : chacun a le droit de ne pas répondre tout de suite." },
+          { "texte": "Poser son appareil, et reposer la question demain en classe.", "bon": true, "retour": "Oui. Chacun a le droit d'être déconnecté, Sacha aussi. Demain, la réponse viendra en face." }
+        ]
+      },
+      "retenir": "« Vu » ne veut pas dire « je m'en moque ». Personne n'est obligé de répondre tout de suite."
+    },
+    {
+      "id": "ok-point",
+      "titre": "Juste « Ok. »",
+      "attendu": "netiquette",
+      "scene": {
+        "genre": "discussion", "lieu": "Lina et Tom", "detail": "discussion privée",
+        "messages": [
+          { "de": "Lina", "moi": true, "heure": "18:20", "texte": "Tom, désolée pour ce matin, je n'aurais pas dû parler de ta note devant les autres. Tu m'en veux ?" },
+          { "de": "Tom", "heure": "18:47", "texte": "Ok." }
+        ]
+      },
+      "percevoir": {
+        "question": "Que peut ressentir Lina en lisant « Ok. » ?",
+        "souvent": ["peur", "tristesse", "surprise"],
+        "pourquoi": "Certains y lisent un pardon (confiance), d'autres un message froid (peur, tristesse). Les deux lectures existent : c'est ça, un message ambigu."
+      },
+      "comprendre": {
+        "question": "Pourquoi « Ok. » est-il si difficile à comprendre ?",
+        "choix": [
+          { "texte": "Parce que Tom a mis 27 minutes à répondre.", "bon": false, "retour": "Le délai peut inquiéter, mais il ne dit rien non plus. Regarde le message lui-même." },
+          { "texte": "Parce que « Ok » est un mot anglais.", "bon": false, "retour": "Tout le monde le comprend. Ce qui manque, c'est autre chose." },
+          { "texte": "Parce qu'à l'écrit, on n'entend pas la voix et on ne voit pas le visage.", "bon": true, "retour": "Oui. Sans le ton ni le visage, un message très court peut se lire de plusieurs façons." }
+        ]
+      },
+      "ajuster": {
+        "question": "Tom n'est plus fâché. Quel message serait plus clair ?",
+        "choix": [
+          { "texte": "« Ok, merci de t'être excusée. C'est oublié 🙂 »", "bon": true, "retour": "Oui. Quelques mots de plus, et Lina sait exactement ce que Tom pense." },
+          { "texte": "« Ok… »", "bon": false, "retour": "Les points de suspension ajoutent encore du doute." },
+          { "texte": "« OK !!! »", "bon": false, "retour": "Des majuscules et trois points d'exclamation peuvent se lire comme un cri." }
+        ]
+      },
+      "retenir": "Avant d'envoyer un message très court, je me demande comment il sera lu sans ma voix."
+    },
+    {
+      "id": "bien-joue",
+      "titre": "« Bien joué… »",
+      "attendu": "netiquette",
+      "scene": {
+        "genre": "discussion", "lieu": "Groupe « Équipe basket »", "detail": "11 membres",
+        "messages": [
+          { "de": "Maël", "moi": true, "heure": "19:02", "texte": "J'ai raté le dernier panier, désolé l'équipe 😔" },
+          { "de": "Zoé", "heure": "19:03", "texte": "Bien joué…" }
+        ]
+      },
+      "percevoir": {
+        "question": "Que peut ressentir Maël en lisant la réponse de Zoé ?",
+        "souvent": ["tristesse", "colere", "surprise"],
+        "pourquoi": "Si Maël lit une moquerie : tristesse ou colère. S'il lit un encouragement : confiance. Le même message, deux émotions opposées."
+      },
+      "comprendre": {
+        "question": "Qu'est-ce qui permet de lire ce message de deux façons ?",
+        "choix": [
+          { "texte": "Les mots sont gentils, mais rien ne dit si Zoé est sincère ou ironique.", "bon": true, "retour": "Oui. À l'oral, le ton de la voix aurait tout dit. À l'écrit, il faut le remplacer." },
+          { "texte": "Zoé a répondu trop vite.", "bon": false, "retour": "La vitesse ne dit pas l'intention." },
+          { "texte": "Le message est écrit dans un groupe.", "bon": false, "retour": "Le groupe rend la chose plus gênante, mais le doute vient des mots eux-mêmes." }
+        ]
+      },
+      "ajuster": {
+        "question": "Zoé voulait encourager Maël. Que peut-elle écrire ?",
+        "choix": [
+          { "texte": "« Bien joué… 🙄 »", "bon": false, "retour": "Cet émoji transforme le message en moquerie : un émoji peut changer tout le sens." },
+          { "texte": "« Bien joué quand même ! Tu as marqué 8 points ce soir 💪 »", "bon": true, "retour": "Oui. Un fait précis et un émoji qui va dans le même sens : plus de doute." },
+          { "texte": "Ne rien ajouter : Maël comprendra.", "bon": false, "retour": "Peut-être, peut-être pas. Si un message peut blesser par erreur, je le précise." }
+        ]
+      },
+      "retenir": "L'ironie se lit mal à l'écrit. Un mot précis ou un émoji bien choisi remplace le ton de la voix."
+    },
+    {
+      "id": "inconnu",
+      "titre": "Le message d'un inconnu",
+      "attendu": "identite",
+      "scene": {
+        "genre": "discussion", "lieu": "lucas_2011", "detail": "Vous n'êtes pas amis",
+        "messages": [
+          { "de": "lucas_2011", "heure": "20:15", "texte": "Salut Nour ! J'adore tes dessins. On est dans la même ville je crois 😊" },
+          { "de": "lucas_2011", "heure": "20:16", "texte": "Tu es dans quelle école ? Tu m'envoies ton adresse, je passe te voir ?" }
+        ]
+      },
+      "percevoir": {
+        "question": "Que peut ressentir Nour ?",
+        "souvent": ["joie", "peur", "surprise"],
+        "pourquoi": "Souvent un mélange : la joie du compliment, et la peur ou la surprise devant les questions. Plusieurs émotions peuvent exister en même temps."
+      },
+      "comprendre": {
+        "question": "Qu'est-ce qui doit alerter Nour ?",
+        "choix": [
+          { "texte": "Le compliment sur ses dessins.", "bon": false, "retour": "Un compliment fait plaisir, et c'est normal. Regarde ce qui vient juste après." },
+          { "texte": "L'émoji 😊.", "bon": false, "retour": "L'émoji rend le message sympathique. Ce n'est pas lui le problème." },
+          { "texte": "Un inconnu demande son école et son adresse.", "bon": true, "retour": "Oui. Ce sont des données personnelles : on ne sait pas qui est vraiment derrière ce pseudo." }
+        ]
+      },
+      "ajuster": {
+        "question": "Que peut faire Nour ?",
+        "choix": [
+          { "texte": "Donner seulement le nom de son école, pas son adresse.", "bon": false, "retour": "Avec le nom de l'école, on peut déjà la retrouver." },
+          { "texte": "Ne rien donner, bloquer le compte et en parler à un adulte.", "bon": true, "retour": "Oui. Je garde mes données pour moi, je bloque, et je ne reste pas seule avec ça." },
+          { "texte": "Demander d'abord à lucas_2011 qui il est.", "bon": false, "retour": "Il peut répondre ce qu'il veut : en ligne, rien ne prouve ce qu'un inconnu raconte." }
+        ]
+      },
+      "retenir": "Un compliment ne donne pas droit à mes données personnelles : école, adresse, numéro restent chez moi."
+    },
+    {
+      "id": "alerte",
+      "titre": "« Partagez vite ! »",
+      "attendu": "harcelement",
+      "scene": {
+        "genre": "publication", "compte": "@alerte_info_direct",
+        "texte": "🚨 URGENT 🚨 Toutes les écoles ferment demain ! Ils ne veulent pas que ça se sache. PARTAGEZ avant que ce soit supprimé !!!",
+        "bas": "3 214 partages"
+      },
+      "percevoir": {
+        "question": "Elias découvre cette publication. Que peut-il ressentir ?",
+        "souvent": ["surprise", "peur", "joie"],
+        "pourquoi": "Surprise, peur de rater une information, ou même joie (pas d'école !). Ce genre de publication est fait pour déclencher une émotion forte."
+      },
+      "comprendre": {
+        "question": "Pourquoi cette publication pousse-t-elle à partager tout de suite ?",
+        "choix": [
+          { "texte": "Parce qu'elle donne la source de l'information.", "bon": false, "retour": "Justement, elle n'en donne aucune : ni qui le dit, ni où le vérifier." },
+          { "texte": "Parce qu'elle joue sur l'urgence et le secret : majuscules, « vite », « avant que ce soit supprimé ».", "bon": true, "retour": "Oui. Quand l'émotion monte, on réfléchit moins. C'est le but de ce message." },
+          { "texte": "Parce qu'elle a déjà beaucoup de partages.", "bon": false, "retour": "Beaucoup de partages ne prouve rien : une fausse nouvelle circule souvent plus vite qu'une vraie." }
+        ]
+      },
+      "ajuster": {
+        "question": "Que peut faire Elias ?",
+        "choix": [
+          { "texte": "Vérifier auprès de l'école ou d'un adulte avant de partager.", "bon": true, "retour": "Oui. Une vraie information de l'école arrive par l'école. Je vérifie d'abord, je partage ensuite, ou jamais." },
+          { "texte": "Partager dans le groupe de classe, au cas où ce serait vrai.", "bon": false, "retour": "« Au cas où », c'est comme ça qu'une fausse nouvelle fait le tour de l'école." },
+          { "texte": "Commenter « FAKE !!! » en majuscules.", "bon": false, "retour": "Commenter fait monter la publication, et Elias n'a encore rien vérifié." }
+        ]
+      },
+      "retenir": "Un message qui me presse (« vite », « urgent », « partagez ») cherche mon émotion, pas ma réflexion."
+    },
+    {
+      "id": "encore-une",
+      "titre": "Encore une partie",
+      "attendu": "dependance",
+      "scene": {
+        "genre": "discussion", "lieu": "Salon du jeu", "detail": "4 joueurs",
+        "messages": [
+          { "info": "23:10 — demain, il y a école." },
+          { "de": "Adam", "moi": true, "heure": "23:10", "texte": "Bon, j'arrête, je suis crevé." },
+          { "de": "Rayan", "heure": "23:10", "texte": "Nooon, encore une ! Sans toi on perd 😩" },
+          { "de": "Lou", "heure": "23:11", "texte": "Allez, tu vas pas nous lâcher maintenant ?" }
+        ]
+      },
+      "percevoir": {
+        "question": "Que peut ressentir Adam ?",
+        "souvent": ["joie", "peur", "colere"],
+        "pourquoi": "La joie d'être voulu dans l'équipe, la peur de décevoir ses amis, parfois l'agacement d'être poussé. Tout cela en même temps."
+      },
+      "comprendre": {
+        "question": "Qu'est-ce qui rend l'arrêt si difficile pour Adam ?",
+        "choix": [
+          { "texte": "Le jeu est trop compliqué.", "bon": false, "retour": "Ce n'est pas le jeu qui le retient ce soir." },
+          { "texte": "Il n'a pas sommeil.", "bon": false, "retour": "Il vient d'écrire qu'il est crevé." },
+          { "texte": "La pression du groupe : il a peur de laisser tomber ses amis.", "bon": true, "retour": "Oui. « Sans toi on perd » touche juste : personne n'aime décevoir." }
+        ]
+      },
+      "ajuster": {
+        "question": "Que peut écrire Adam ?",
+        "choix": [
+          { "texte": "« Ok, mais vraiment la dernière. »", "bon": false, "retour": "À 23 h 30, la même scène recommencera. Dire non une fois, c'est plus simple." },
+          { "texte": "« Je coupe, bonne partie ! On rejoue demain après les cours 👋 »", "bon": true, "retour": "Oui. Un non clair et amical, avec un rendez-vous : Adam se déconnecte sans se fâcher." },
+          { "texte": "Se déconnecter sans rien dire.", "bon": false, "retour": "Il a le droit d'arrêter, mais partir sans un mot laisse ses amis dans le doute." }
+        ]
+      },
+      "retenir": "J'ai le droit de me déconnecter. Un non clair et amical se dit en une phrase."
+    },
+    {
+      "id": "sans-demander",
+      "titre": "Publiée sans demander",
+      "attendu": "signaler",
+      "scene": {
+        "genre": "publication", "compte": "@camille.bdx",
+        "texte": "Sortie de classe, quelle journée 😂 Mention spéciale à Romane qui dort dans le car !",
+        "bas": "41 mentions « J'aime » · 12 commentaires"
+      },
+      "percevoir": {
+        "question": "Romane découvre qu'une image d'elle, endormie, est publiée. Que peut-elle ressentir ?",
+        "souvent": ["colere", "tristesse", "degout"],
+        "pourquoi": "On cite souvent la colère (on ne lui a rien demandé), la tristesse ou le malaise d'être vue ainsi par tout le monde."
+      },
+      "comprendre": {
+        "question": "Quel est le vrai problème ?",
+        "choix": [
+          { "texte": "Camille a publié une image de Romane sans lui demander son accord.", "bon": true, "retour": "Oui. Chacun décide de ce qui se publie avec son image : c'est le droit à l'image." },
+          { "texte": "La publication n'a pas assez de mentions « J'aime ».", "bon": false, "retour": "Au contraire : plus elle est vue, plus c'est lourd pour Romane." },
+          { "texte": "Romane n'aurait pas dû dormir dans le car.", "bon": false, "retour": "Dormir n'est pas une faute. La question est : qui a décidé de le montrer ?" }
+        ]
+      },
+      "ajuster": {
+        "question": "Que peut faire Romane ?",
+        "choix": [
+          { "texte": "Publier à son tour une image gênante de Camille.", "bon": false, "retour": "La vengeance fait deux personnes blessées au lieu d'une." },
+          { "texte": "Attendre que tout le monde oublie.", "bon": false, "retour": "Une publication reste en ligne tant que personne ne la retire." },
+          { "texte": "Demander à Camille de la retirer ; si elle refuse, utiliser « Signaler » et en parler à un adulte.", "bon": true, "retour": "Oui. D'abord demander, puis le bouton « Signaler » de l'application, qui sert à ça." }
+        ]
+      },
+      "retenir": "Avant de publier une image où l'on voit quelqu'un, je lui demande. Et le bouton « Signaler » existe."
+    },
+    {
+      "id": "ia-confidente",
+      "titre": "Demander à une IA",
+      "attendu": "aide-humaine",
+      "scene": {
+        "genre": "discussion", "lieu": "Assistant IA", "detail": "robot conversationnel",
+        "messages": [
+          { "de": "Noé", "moi": true, "heure": "22:30", "texte": "Je me suis disputé avec mon meilleur ami. Il ne me parle plus. Je fais quoi ?" },
+          { "de": "Assistant IA", "heure": "22:30", "texte": "Je suis désolé que tu vives cela. Voici 5 conseils pour te réconcilier avec ton ami…" }
+        ]
+      },
+      "percevoir": {
+        "question": "Que peut ressentir Noé en lisant la réponse ?",
+        "souvent": ["confiance", "tristesse", "joie"],
+        "pourquoi": "Un soulagement (on lui répond tout de suite, gentiment), mais la tristesse de la dispute est toujours là."
+      },
+      "comprendre": {
+        "question": "Que fait vraiment l'IA dans cette réponse ?",
+        "choix": [
+          { "texte": "Elle connaît l'ami de Noé et sait ce qu'il pense.", "bon": false, "retour": "Elle ne connaît ni Noé, ni son ami, ni leur histoire." },
+          { "texte": "Elle produit un texte qui ressemble à du réconfort. Elle ne ressent rien.", "bon": true, "retour": "Oui. La réponse peut donner des idées, mais derrière l'écran il n'y a personne qui tient à Noé." },
+          { "texte": "Elle prévient les parents de Noé.", "bon": false, "retour": "Non. Personne d'autre ne sait que Noé va mal." }
+        ]
+      },
+      "ajuster": {
+        "question": "Que peut faire Noé ?",
+        "choix": [
+          { "texte": "En parler aussi à quelqu'un qui le connaît : un parent, un ami, un éducateur.", "bon": true, "retour": "Oui. Une personne qui le connaît peut écouter, comprendre, et être encore là demain." },
+          { "texte": "Continuer à parler à l'IA toute la nuit.", "bon": false, "retour": "L'IA répondra toujours, mais Noé restera seul avec sa dispute, et fatigué." },
+          { "texte": "Copier les conseils de l'IA et les envoyer à son ami.", "bon": false, "retour": "Son ami attend les mots de Noé, pas ceux d'une machine." }
+        ]
+      },
+      "retenir": "Une IA peut donner des idées. Quand ça ne va pas, je parle à une personne."
+    },
+    {
+      "id": "a-chaud",
+      "titre": "Écrire à chaud",
+      "attendu": "outil",
+      "scene": {
+        "genre": "discussion", "lieu": "Groupe « La classe »", "detail": "24 membres",
+        "messages": [
+          { "info": "22:40 — Jeanne vient de voir sa note de mathématiques : 8 sur 20." },
+          { "de": "Jeanne", "moi": true, "heure": "22:41", "brouillon": true, "texte": "C'est N'IMPORTE QUOI cette interro, la prof est trop injuste !!!" },
+          { "info": "Le message n'est pas encore envoyé." }
+        ]
+      },
+      "percevoir": {
+        "question": "Que ressent Jeanne au moment d'écrire ?",
+        "souvent": ["colere", "tristesse"],
+        "pourquoi": "Surtout de la colère (un sentiment d'injustice), souvent mêlée de déception."
+      },
+      "comprendre": {
+        "question": "Que risque-t-il de se passer si Jeanne envoie ce message maintenant ?",
+        "choix": [
+          { "texte": "Sa note sera corrigée plus vite.", "bon": false, "retour": "Le groupe de classe ne peut rien changer à une note." },
+          { "texte": "Rien : un message, ça s'efface.", "bon": false, "retour": "Avant qu'elle l'efface, il peut être lu, copié ou montré." },
+          { "texte": "24 personnes le liront, et il restera après que sa colère sera passée.", "bon": true, "retour": "Oui. La colère dure quelques minutes, le message beaucoup plus longtemps." }
+        ]
+      },
+      "ajuster": {
+        "question": "Que peut faire Jeanne ?",
+        "choix": [
+          { "texte": "Envoyer le message, mais sans les majuscules.", "bon": false, "retour": "Le ton baisse un peu, mais le groupe de classe n'est toujours pas le bon endroit." },
+          { "texte": "L'envoyer plutôt en privé à toute la classe, un par un.", "bon": false, "retour": "C'est le même message, 24 fois." },
+          { "texte": "Effacer le brouillon, dormir, et demander demain à sa professeure d'expliquer la note, en face ou par un mail poli.", "bon": true, "retour": "Oui. Attendre laisse l'émotion redescendre, et la bonne personne reçoit la question par le bon outil." }
+        ]
+      },
+      "retenir": "Quand je suis en colère, j'écris demain. Et je choisis l'outil selon la personne à qui je parle."
+    },
+    {
+      "id": "juste-pour-moi",
+      "titre": "« Juste pour moi »",
+      "attendu": "identite",
+      "scene": {
+        "genre": "discussion", "lieu": "Discussion privée", "detail": "Lou et Nathan",
+        "messages": [
+          { "de": "Nathan", "heure": "21:15", "texte": "Tu me plais trop. Envoie-moi une image de toi en sous-vêtements 😏" },
+          { "de": "Lou", "moi": true, "heure": "21:16", "texte": "Je ne sais pas…" },
+          { "de": "Nathan", "heure": "21:16", "texte": "Juste pour moi. Promis, je l'efface après. Si tu m'aimes, tu le fais." }
+        ]
+      },
+      "percevoir": {
+        "question": "Lou lit les messages de Nathan. Que peut-elle ressentir ?",
+        "souvent": ["peur", "degout", "surprise"],
+        "pourquoi": "On cite souvent la peur ou le malaise (on lui demande quelque chose d'intime), et la surprise. Certains citent aussi la joie de plaire : plusieurs émotions peuvent se mélanger."
+      },
+      "comprendre": {
+        "question": "Qu'est-ce qui rend cette demande dangereuse ?",
+        "choix": [
+          { "texte": "Une fois envoyée, l'image ne dépend plus de Lou : elle peut être copiée, transférée, ou servir à un chantage.", "bon": true, "retour": "Oui. Une promesse n'empêche pas une capture d'écran, et la confiance peut changer après une dispute." },
+          { "texte": "Rien : Nathan a promis de l'effacer.", "bon": false, "retour": "Lou ne peut pas vérifier. Et « si tu m'aimes, tu le fais », c'est de la pression, pas de l'amour." },
+          { "texte": "Il est trop tard le soir pour écrire.", "bon": false, "retour": "L'heure ne change rien : c'est ce que Nathan demande qui pose problème." }
+        ]
+      },
+      "ajuster": {
+        "question": "Que peut faire Lou ?",
+        "choix": [
+          { "texte": "Envoyer une image où l'on ne voit pas son visage.", "bon": false, "retour": "Elle reste intime, et on peut reconnaître Lou autrement : sa chambre, son compte, la discussion." },
+          { "texte": "Dire non et ne rien envoyer. Si Nathan insiste : le bloquer et en parler à une personne de confiance.", "bon": true, "retour": "Oui. Lou a le droit de dire non, et quelqu'un qui la respecte n'insiste pas." },
+          { "texte": "L'envoyer, en lui faisant promettre encore une fois.", "bon": false, "retour": "Deux promesses ne protègent pas mieux qu'une : l'image serait déjà partie." }
+        ]
+      },
+      "retenir": "Une image intime envoyée ne se reprend pas. J'ai le droit de dire non : quelqu'un qui me respecte n'insiste pas."
+    },
+    {
+      "id": "elle-circule",
+      "titre": "L'image qui circule",
+      "attendu": "signaler",
+      "scene": {
+        "genre": "discussion", "lieu": "Groupe « Les potes »", "detail": "9 membres",
+        "messages": [
+          { "de": "Enzo", "heure": "20:02", "texte": "Regardez ce qu'on m'a envoyé 😳 une image de Clara en sous-vêtements" },
+          { "info": "3 personnes ont réagi 😂" },
+          { "de": "Enzo", "heure": "20:04", "texte": "Faites tourner !" }
+        ]
+      },
+      "percevoir": {
+        "question": "Tu es dans ce groupe. Que peux-tu ressentir ?",
+        "souvent": ["degout", "colere", "peur", "surprise"],
+        "pourquoi": "On cite souvent le malaise ou la colère (Clara n'a rien demandé), la surprise, et la peur de ce qui va arriver à Clara."
+      },
+      "comprendre": {
+        "question": "Quel est le vrai problème ?",
+        "choix": [
+          { "texte": "Clara n'avait qu'à ne pas l'envoyer.", "bon": false, "retour": "Clara a fait confiance à quelqu'un. Celui qui est en tort, c'est celui qui fait circuler l'image." },
+          { "texte": "Une image intime de Clara circule sans son accord : c'est grave, et la loi l'interdit.", "bon": true, "retour": "Oui. Chaque transfert blesse Clara un peu plus, et celui qui transfère est en tort lui aussi." },
+          { "texte": "Seulement trois personnes ont réagi.", "bon": false, "retour": "Une seule personne qui la voit sans l'accord de Clara, c'est déjà trop." }
+        ]
+      },
+      "ajuster": {
+        "question": "Que fais-tu ?",
+        "choix": [
+          { "texte": "Je ne la montre pas, je ne la transfère pas, et je préviens tout de suite un adulte.", "bon": true, "retour": "Oui. Un adulte peut faire retirer l'image et protéger Clara. Child Focus aide aussi, au 116 000 (gratuit)." },
+          { "texte": "Je quitte le groupe sans rien dire.", "bon": false, "retour": "Tu te protèges, mais l'image continue de circuler et Clara reste seule." },
+          { "texte": "Je la transfère à un seul ami, pour lui demander son avis.", "bon": false, "retour": "Un transfert de plus, c'est une personne de plus qui la voit. Demande plutôt l'avis d'un adulte." }
+        ]
+      },
+      "retenir": "L'image intime de quelqu'un d'autre : je ne la montre pas, je ne la transfère pas, je préviens un adulte."
+    }
+  ]
+}

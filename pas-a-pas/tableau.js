@@ -746,7 +746,7 @@ function action(){
   let t = "", f = null;
   if(m.type === "mots" && !SEQ.montre){ t = "Montrer les mots"; f = ()=>{ SEQ.montre = true; scene(); }; }
   if(m.type === "vote" && ph === "ouvert"){ t = "Clore le vote"; f = ()=>allerA(SEQ.etat.i, "clos"); }
-  if(m.type === "vote" && ph === "clos"){ t = "Montrer la bonne réponse"; f = ()=>allerA(SEQ.etat.i, "corrige"); }
+  if(m.type === "vote" && ph === "clos"){ t = m.situations.some(s => s.bonne != null) ? "Montrer la bonne réponse" : "Montrer la mise en commun"; f = ()=>allerA(SEQ.etat.i, "corrige"); }
   if(m.saisie){   // réponse écrite (saisie « texte ») : afficher, clore, corriger
     if(ph === 'corrige'){ t=''; f=null; }
     else if(ph === 'clos'){ t='Corriger ensemble'; f=()=>allerA(SEQ.etat.i,'corrige'); }

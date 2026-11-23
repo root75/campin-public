@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Derrière l'écran — je m'entraîne</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:wght@0,800&family=Atkinson+Hyperlegible:wght@0,400;0,700&display=swap">
+<link rel="stylesheet" href="https://root75.github.io/campin-public/assets/navigation.css">
+<style>
+/* Derrière l'écran : l'essentiel du cours « Vie en ligne 01 » et douze situations à jouer en trois temps. Pour les 1res. */
+:root{
+  --papier:#f3f5f7; --carte:#ffffff; --encre:#1f2a33; --doux:#5b6873;
+  --trait:#d5dce2; --encre-bouton:#1d5a73; --fromage:#e3a922; --fromage-pale:#fbf0d4;
+  --juste:#1f7a4d; --juste-pale:#e2f3ea; --faux:#b23a2e; --faux-pale:#f8e3e0;
+  --display:"Alegreya", Georgia, "Times New Roman", serif;
+  --texte:"Atkinson Hyperlegible", "Segoe UI", Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --papier:#141a1f; --carte:#1d252c; --encre:#e8edf1; --doux:#a3b0ba;
+  --trait:#33404a; --encre-bouton:#7cc3de; --fromage:#e9b84a; --fromage-pale:#3a3120;
+  --juste:#6fd0a0; --juste-pale:#183427; --faux:#f08b7f; --faux-pale:#3d2120; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --papier:#141a1f; --carte:#1d252c; --encre:#e8edf1; --doux:#a3b0ba;
+  --trait:#33404a; --encre-bouton:#7cc3de; --fromage:#e9b84a; --fromage-pale:#3a3120;
+  --juste:#6fd0a0; --juste-pale:#183427; --faux:#f08b7f; --faux-pale:#3d2120; color-scheme:dark }
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--papier);color:var(--encre);font-family:var(--texte);font-size:1.0625rem;line-height:1.5;
+  padding:0 max(16px, env(safe-area-inset-right, 0px)) 40px max(16px, env(safe-area-inset-left, 0px))}
+.page{max-width:46rem;margin:0 auto;display:grid;gap:16px}
+.campin-navigation{padding:12px 0 0;margin:0}
+.surtitre{font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;color:var(--doux);margin:0}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(1.6rem,4vw,2.2rem);margin:0;line-height:1.1;text-wrap:balance}
+h2{font-family:var(--display);font-weight:800;font-size:1.35rem;margin:0}
+h3{font-family:var(--display);font-weight:800;font-size:1.2rem;margin:0}
+p{margin:0}
+a{color:var(--encre-bouton)}
+.doux{color:var(--doux)}
+.panneau{background:var(--carte);border:1px solid var(--trait);border-radius:14px;padding:16px;display:grid;gap:12px}
+.verbes{display:grid;gap:8px;grid-template-columns:repeat(3,minmax(0,1fr));margin:0;padding:0;list-style:none}
+@media (max-width:34rem){.verbes{grid-template-columns:minmax(0,1fr)}}
+.verbes li{border:1px solid var(--trait);border-top:5px solid var(--encre-bouton);border-radius:10px;padding:8px 12px;display:grid}
+.verbes b{color:var(--encre-bouton)}
+ul.liste{margin:0;padding-left:1.2rem;display:grid;gap:4px}
+#roue{margin:0;padding:0;list-style:none;display:grid;gap:4px;grid-template-columns:repeat(2,minmax(0,1fr))}
+#roue li{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+#roue li .doux{flex-basis:100%;padding-left:42px;margin-top:-10px;font-size:.95rem}
+#bande{min-height:44px;margin-top:8px}#bande .emo-bande{justify-content:flex-start}
+.roue-jeu{display:block}
+.retour.percu{display:flex;gap:10px;align-items:center;text-align:left}
+.percues{display:flex;gap:6px;flex-wrap:wrap}
+@media (max-width:34rem){#roue{grid-template-columns:minmax(0,1fr)}}
+.pastille{display:inline-block;flex:none;width:.9em;height:.9em;border-radius:50%;margin-right:8px}
+.btn{font:inherit;font-weight:700;min-height:44px;padding:8px 16px;border-radius:10px;cursor:pointer;border:2px solid var(--encre-bouton);background:var(--encre-bouton);color:var(--carte);justify-self:start}
+.btn:focus-visible,.tuile:focus-visible,.famille:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid var(--fromage);outline-offset:3px}
+
+.ecran-dessin{width:100%;max-width:26rem;margin:0 auto;border:2px solid var(--trait);border-radius:18px;background:var(--carte);overflow:hidden}
+.ecran-dessin .haut{background:var(--encre-bouton);color:var(--carte);padding:8px 14px;display:grid}
+.ecran-dessin .haut span{font-size:.85rem;opacity:.9}
+.ecran-dessin .fil{display:grid;gap:8px;padding:12px}
+.bulle-msg{justify-self:start;max-width:85%;background:var(--papier);border:1px solid var(--trait);border-radius:14px 14px 14px 4px;padding:6px 10px;display:grid;overflow-wrap:anywhere}
+.bulle-msg.moi{justify-self:end;border-radius:14px 14px 4px 14px;background:var(--fromage-pale)}
+.bulle-msg.brouillon{border-style:dashed}
+.bulle-msg .qui{font-size:.8rem;font-weight:700;color:var(--encre-bouton)}
+.bulle-msg .heure{font-size:.75rem;color:var(--doux);justify-self:end}
+.info-fil{justify-self:center;font-size:.85rem;color:var(--doux);text-align:center}
+.publi{padding:12px;display:grid;gap:8px}
+.publi .texte{font-size:1.1rem;font-weight:700;overflow-wrap:anywhere}
+.publi .bas{font-size:.85rem;color:var(--doux)}
+
+#partie{display:grid;gap:12px}
+.temps{display:grid;gap:12px}
+.temps-bloc{border:1px solid var(--trait);border-left:6px solid var(--encre-bouton);border-radius:12px;padding:12px 14px;display:grid;gap:10px}
+.temps-bloc.retenir{border-left-color:var(--fromage);background:var(--fromage-pale)}
+.verbe{font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;color:var(--doux);font-weight:700}
+.question{font-weight:700;font-size:1.1rem}
+.attendu{font-size:.95rem}
+.familles{display:grid;gap:8px;grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (max-width:30rem){.familles{grid-template-columns:minmax(0,1fr)}}
+.famille{font:inherit;text-align:left;display:grid;grid-template-columns:auto 1fr;column-gap:2px;align-items:baseline;min-height:56px;border-radius:12px;border:2px solid var(--trait);background:var(--carte);color:var(--encre);cursor:pointer;padding:8px 12px}
+.famille .doux{grid-column:2;font-size:.9rem}
+.famille:hover:not(:disabled){border-color:var(--encre-bouton)}
+.famille:disabled{cursor:default;opacity:.6}
+.famille.choisie{opacity:1;border-color:var(--fromage);background:var(--fromage-pale);box-shadow:0 0 0 2px var(--fromage)}
+.choix{display:grid;gap:8px}
+.tuile{font:inherit;font-weight:700;min-height:52px;border-radius:12px;border:2px solid var(--trait);background:var(--carte);color:var(--encre);cursor:pointer;padding:10px 14px;text-align:left}
+.tuile:hover:not(:disabled){border-color:var(--encre-bouton)}
+.tuile:disabled{cursor:default}
+.tuile.trouvee{border-color:var(--juste);background:var(--juste-pale);color:var(--juste)}
+.tuile.rate{border-color:var(--faux);border-style:dashed;background:var(--faux-pale)}
+.retour{min-height:1.5em}
+.retour.juste{color:var(--juste);font-weight:700}
+.retour.faux{color:var(--faux);font-weight:700}
+.bilan{margin:0;padding-left:1.2rem;display:grid;gap:4px}
+.coince{background:var(--fromage-pale);border-left:5px solid var(--fromage);border-radius:6px;padding:10px 14px;display:grid;gap:6px}
+.coince ul{margin:0;padding-left:1.2rem;display:grid;gap:4px}
+.vrai{border-left:6px solid var(--juste)}
+.sources{font-size:.9rem;color:var(--doux)}
+.signature{text-align:right;color:var(--doux);font-size:.9rem}
+</style>
+</head>
+<body>
+<div class="page">
+  <nav class="campin-navigation" aria-label="Navigation du site">
+    <details class="campin-menu">
+      <summary>☰ Menu</summary>
+      <div class="campin-menu-liens">
+        <a href="https://root75.github.io/campin-public/portail/" target="_top">Mon portail</a>
+        <a href="https://root75.github.io/campin-public/cours/" target="_top">Mes cours</a>
+        <a href="https://root75.github.io/campin-public/revisions/" target="_top">Révisions et entraînements</a>
+      </div>
+    </details>
+  </nav>
+  <header>
+    <p class="surtitre">Je révise · Vie en ligne 01</p>
+    <h1>Derrière l'écran</h1>
+    <div id="bande"></div>
+  </header>
+  <p>Un message lu sans réponse, un « Ok. » tout sec, une moquerie dans le groupe : en ligne aussi, on ressent des choses. Ici, tu t'entraînes à les <b>nommer</b>, à les <b>comprendre</b> et à bien <b>réagir</b>.</p>
+
+  <section class="panneau" id="essentiel" aria-labelledby="t-essentiel">
+    <h2 id="t-essentiel">L'essentiel</h2>
+    <ul class="verbes">
+      <li><b>1 · Je perçois</b><span>Je nomme l'émotion.</span></li>
+      <li><b>2 · Je comprends</b><span>Je cherche ce qui la déclenche.</span></li>
+      <li><b>3 · J'ajuste</b><span>Je choisis ma réaction.</span></li>
+    </ul>
+    <h3>Les huit familles d'émotions</h3>
+    <div id="roue-dessin"></div>
+    <ul id="roue"></ul>
+    <p class="doux">Plusieurs émotions peuvent exister en même temps. Deux personnes peuvent ressentir deux choses différentes devant le même message.</p>
+    <h3>Ce qui déclenche souvent une émotion en ligne</h3>
+    <ul class="liste">
+      <li>Le <b>silence</b> : « Vu », et pas de réponse.</li>
+      <li>L'<b>urgence</b> : « vite », « partagez », des majuscules.</li>
+      <li>Le <b>public</b> : tout le groupe voit, et réagit.</li>
+      <li>Le message <b>ambigu</b> : sans la voix ni le visage, il se lit de plusieurs façons.</li>
+    </ul>
+    <h3>Trois réflexes</h3>
+    <ul class="liste">
+      <li><b>J'attends.</b> En colère, j'écris demain.</li>
+      <li><b>Je relis</b> mon message comme si je le recevais.</li>
+      <li><b>Ça me dépasse ?</b> Je bloque, je signale, j'en parle à un adulte.</li>
+    </ul>
+    <h3>Une image intime : je reste vigilant</h3>
+    <ul class="liste">
+      <li>Envoyée, elle <b>ne se reprend pas</b> : elle peut être copiée, transférée, ou servir à un chantage.</li>
+      <li>J'ai <b>le droit de dire non</b>. Quelqu'un qui me respecte n'insiste pas.</li>
+      <li>Celle de quelqu'un d'autre : je ne la montre pas, je ne la <b>transfère jamais</b>, je préviens un adulte.</li>
+    </ul>
+  </section>
+
+  <p class="doux" id="attente">Chargement…</p>
+  <p class="panneau" id="panne" hidden>Les situations ne se chargent pas. Recharge la page (touche F5), ou reviens par <a href="../revisions/">Révisions et entraînements</a>.</p>
+
+  <main class="panneau" id="jeu" aria-labelledby="t-jeu">
+    <h2 id="t-jeu">Les situations</h2>
+    <div id="contenu" hidden>
+      <div id="accueil-jeu" style="display:grid;gap:12px">
+        <p>Une manche = <b>quatre situations</b>, tirées au hasard. Pour chacune, trois temps : je perçois, je comprends, j'ajuste.</p>
+        <button class="btn" type="button" id="jouer">Jouer une manche</button>
+      </div>
+      <div id="partie" hidden></div>
+    </div>
+  </main>
+
+  <section class="coince">
+    <h2>Ça coince ?</h2>
+    <ul>
+      <li><b>Je ne sais pas quelle émotion choisir.</b> Clique sur plusieurs familles de la roue : les petits mots sous la roue t'aident. Choisis la plus forte.</li>
+      <li><b>Je me suis trompé·e.</b> Lis le retour sous les choix, puis clique une autre réponse.</li>
+      <li><b>Un mot m'échappe.</b> Remonte à « L'essentiel », en haut de la page.</li>
+      <li><b>Toujours bloqué·e.</b> Demande à ton voisin : il explique, il ne clique pas à ta place.</li>
+    </ul>
+  </section>
+
+  <section class="panneau vrai" aria-labelledby="t-vrai">
+    <h2 id="t-vrai">Et si ça t'arrive pour de vrai ?</h2>
+    <p>Les situations de cette page sont inventées. Si l'une d'elles te fait penser à ce que tu vis, <b>ne reste pas seul·e</b> : parles-en à un adulte en qui tu as confiance, à la maison ou à l'école (un professeur, un éducateur, le centre PMS).</p>
+    <p>Tu peux aussi appeler le <b>103</b>, Écoute-Enfants : c'est gratuit et anonyme.</p>
+    <p>Si une image intime de toi circule, ou si quelqu'un te menace de la montrer : <b>ce n'est pas ta faute</b>. Parles-en à un adulte, ou appelle Child Focus au <b>116 000</b> : c'est gratuit, de jour comme de nuit, et ils aident à faire retirer l'image.</p>
+  </section>
+
+  <p><a href="../revisions/?niveau=1">← Révisions et entraînements</a></p>
+  <p class="sources"><b>Sources.</b> La démarche en trois verbes (percevoir, comprendre, ajuster) vient du jeu éducatif « ConnectÉmoi » et de la publication « L'intelligence émotionnelle numérique », Fédération Wallonie-Bruxelles, Service général du Numérique éducatif (<a href="https://www.e-classe.be/" rel="noopener">e-classe.be</a>). Les huit familles d'émotions sont celles de la roue des émotions de Robert Plutchik (1980). Les situations et les dessins de cette page sont écrits pour ce cours.</p>
+  <p class="signature">« M. Louviaux »</p>
+</div>
+<script src="../assets/progres.js"></script>
+<script src="emotions.js?v=20261123"></script>
+<script src="jeu.js?v=roue-20261123"></script>
+</body>
+</html>

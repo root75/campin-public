@@ -23,6 +23,20 @@ Puis, si le cours a un moment collectif : son conducteur dans [`sequences.json`]
 Champ facultatif `rappel` : l'adresse d'une page à projeter en début de cours ; le tableau en met le lien en haut du
 cours collectif. Le bouton « Répéter sans les élèves » du tableau joue le conducteur sur le seul poste du professeur,
 sans séance : rien n'est envoyé, les réponses sont fictives.
+**Méthode « je fais, la page constate, bravo »** (Vie en ligne 01, à l'essai : Vincent, 23/11/2026). Au choix de la
+fiche, présentation « missions » : `const METHODE = 'constate';`. Trois changements, le suivi et les preuves ne bougent pas.
+(1) Une case peut se cocher toute seule quand la page voit le geste :
+`{geste:'Clique sur <b>quatre familles</b>…', compte:{sel:'.emo-part', attr:'data-emo', n:4}}` = `n` éléments différents
+(par leur attribut `attr`) cliqués dans le bloc ; la case affiche « 2 sur 4 » et ne se coche pas à la main. Un geste que la
+page ne voit pas (lire, réfléchir, agir dans une autre application) garde sa case ordinaire. (2) Plus de bouton
+« ✅ C'est vérifié » ni d'encadré « ✅ À vérifier » (`vois` n'est plus affiché) : la question arrive d'elle-même quand toutes
+les cases sont cochées, ou quand l'essai a reçu une réponse. (3) Le bravo vient après la preuve et nomme l'acquis :
+`bravo:'tu sais retrouver la famille d’une émotion'` → « ✅ Bravo, tu as vérifié : tu sais… », redit au retour sur le bloc.
+Sans `METHODE`, rien ne change pour les autres cours.
+
+**Vote d'avis** (Vie en ligne 01) : un moment `vote` dont aucune situation ne porte `bonne` n'a ni juste ni faux. Au tableau,
+le bouton s'appelle « Montrer la mise en commun » et aucune barre n'est cochée ; sur le poste, « Ton choix : … » puis
+l'`explication` de la situation. Aucun changement de Code.gs.
 Puis un test `tests/<cours>.cjs` (modèle : [`tests/messagerie-02.cjs`](../tests/messagerie-02.cjs)).
 **Aucun Code.gs à redéployer** pour un nouveau cours : publier, puis tableau ▸ « Actualiser le catalogue ».
 Les liens prof du cours (fiche professeur, dossier Drive) : une ligne dans l'onglet « Liens prof » de la
