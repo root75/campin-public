@@ -62,7 +62,7 @@
         "type": "saisie",
         "q": "Termine et signe.",
         "regle": {
-          "motif": "^(bonne journee|bonne soiree|a bientot|merci|cordialement|bien a|bon week).+\\|.+[12]\\s*[a-z]"
+          "motif": "^(bonne journee|bonne soiree|a bientot|merci|cordialement|bien a|bon week)[^|]*\\|[^a-z0-9'-]*[a-z0-9'-]+(?:[^a-z0-9'-]+[a-z0-9'-]+){2}"
         },
         "faux": "Ajoute une formule de fin et une signature avec ta classe."
       }

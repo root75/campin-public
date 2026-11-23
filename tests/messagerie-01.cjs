@@ -65,6 +65,17 @@ const regle=(r,rep)=>{x.rule=r;x.answer=String(rep).slice(0,190);return vm.runIn
   assert.ok(!regle(r,'n’importe quoi'),'bloc '+(i+1)+' : le serveur refuse n’importe quoi');}
  assert.equal(BLOCS[6].q.controle('',mauvais,{classe:'2B'}).length,6,'bloc 7 : les six champs fautifs nommés ensemble');
  assert.equal(BLOCS[6].q.reponse(mauvais,'',{classe:'2B',refus:true}),'a,objet,salutation,message,fin,signature','bloc 7 : un refus nomme les champs au Journal');}
+// Bloc 6, 23/11/2026 : le serveur refusait « Bonne journée, | Vincent Louviaux 3F » (règle limitée aux classes 1 et 2).
+// Ce que la page accepte, le serveur l'accepte aussi : toute classe de séance, avec ou sans virgule, casse et accents libres.
+{const q=BLOCS[5].q,r=proofs.blocs[5][0].regle;
+ for(const classe of ['1B','2F','2CB','3F','3TTF','4G','5GA','6TQ','7P','Test'])
+  for(const fin of ['Bonne journée,','bonne journee','BONNE JOURNÉE !','À bientôt,','Merci d’avance,','Cordialement,','Bien à vous,','Bon week-end,','  Bonne soirée ,  '])
+   for(const [nom,sig] of [['Vincent Louviaux','Vincent Louviaux '+classe],['Vincent Louviaux','Vincent Louviaux, '+classe],['Vincent Louviaux','vincent  LOUVIAUX ,'+classe.toLowerCase()],['Loïc Aubépine','Loic Aubepine - '+classe],['Dan Van Coquelicot','Dan Van Coquelicot ('+classe+')'],['Marie-Ève D’Hondt','Marie-Ève D’Hondt\n'+classe]]){
+    const d={...good,fin,nom,signature:sig},ctx={classe,refus:false};
+    assert.equal(q.controle('',d,ctx).length,0,'bloc 6 : la page accepte « '+fin+' | '+sig+' » en '+classe);
+    assert.ok(regle(r,q.reponse(d,'',ctx)),'bloc 6 : le serveur accepte « '+fin+' | '+sig+' » en '+classe);}
+ for(const rep of ['Bonne journée, | ','Bonne journée, | Vincent','Bonne journée, | Vincent Louviaux','Tchao | Vincent Louviaux 3F',' | Vincent Louviaux 3F','Vincent Louviaux 3F'])
+  assert.ok(!regle(r,rep),'bloc 6 : le serveur refuse « '+rep+' »');}
 // Règle anti-recopie : les preuves 8 à 12 ont 3 variantes du même type, chacune avec sa bonne réponse ; la réponse d'une variante ne valide pas les deux autres.
 const variantes={7:['Répondre','RE :','À'],8:['Bienvenue dans ta boîte de l’école','vlouviaux@arcampin.be','Quelle matière préfères-tu cette année, et pourquoi ?'],9:['Corps du message','objet','la ligne Cc'],10:['Éléments envoyés','Brouillons','Envoyer'],11:['Répondre à tous','Boîte de réception','au-dessus']};
 for(const [i,bons] of Object.entries(variantes)){const l=proofs.blocs[i];assert.equal(l.length,3,'3 variantes bloc '+(+i+1));assert.equal(new Set(l.map(v=>v.q)).size,3);

@@ -10,7 +10,7 @@ const HORS_SUIVI = 'Entraînement libre : rien n’est transmis au professeur. E
 const NORM_M2 = s => String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/[’]/g,"'").replace(/\s+/g,' ').trim();
 const FINS = ['bonne journee','bonne soiree','a bientot','merci','merci d\'avance','cordialement','bien a vous','bon week-end','bon weekend'];
 const SMS = /(^|[^a-z])(slt|bjr|stp|mrc|tkt|pk|pq|jsp|mdr|ptdr|wsh|bsr|dsl|koi|kan|bcp|tjr|jsuis|chui|svp)(?![a-z])/;
-const classeDe = s => (/(?:^|[\s,:])([12]\s*[a-z]\d?)(?=$|[\s,.;])/i.exec(String(s||''))||[])[1]||'';
+const classeDe = s => (/(?:^|[\s,:])([1-7]\s*[a-z]\d?)(?=$|[\s,.;])/i.exec(String(s||''))||[])[1]||'';
 function erreursReponse(texte, nom, classe){
   const t = String(texte||'').replace(/\r/g,'');
   const lignes = t.split('\n').map(l=>l.trim()).filter(Boolean);

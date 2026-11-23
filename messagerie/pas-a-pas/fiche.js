@@ -6,7 +6,7 @@ const COURS = 'messagerie-1';
 const VERSION_PARCOURS = 'v1';
 const PRESENTATION = 'missions';
 const CONFETTIS = true;
-const PREUVES = 'https://root75.github.io/campin-public/messagerie/pas-a-pas/preuves.json?v=20261105b';
+const PREUVES = 'https://root75.github.io/campin-public/messagerie/pas-a-pas/preuves.json?v=20261123';
 const HORS_SUIVI = 'Entraînement libre : aucun résultat ni appel à l’aide n’est transmis au professeur. En classe, ouvre Mes cours avec ton compte scolaire.';
 /* Mode séquence commun (pas-a-pas/sequence-eleve.js) : les textes des écrans viennent de sequences.json,
    les visuels « adresse » et « email » de visuels.js. */
