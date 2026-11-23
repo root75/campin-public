@@ -50,6 +50,11 @@ function affiche(d){
       const appel = google.script.run.withSuccessHandler(r => montreDevoirs(r && r.liste)).withFailureHandler(() => {});
       if(typeof appel.mesDevoirs === "function") appel.mesDevoirs();
     } catch(e) {}
+    // Les dernières annonces du flux du cours ; même prudence pour un serveur qui ne connaît pas mesAnnonces.
+    try {
+      const appel = google.script.run.withSuccessHandler(r => montreAnnonces(r && r.liste, d.devoirs)).withFailureHandler(() => {});
+      if(typeof appel.mesAnnonces === "function") appel.mesAnnonces();
+    } catch(e) {}
   }
 }
 
@@ -92,6 +97,36 @@ function montreDevoirs(liste){
     li.append(boite); return li;
   }));
   $("devoirs").hidden = false;
+}
+
+/* ----- Les annonces : les dernières du flux Classroom du cours, lues par le serveur. ----- */
+/** Ce que le portail écrit : [{ texte, quand, lien }], trois au plus. Une annonce sans texte est écartée ; un lien
+ *  qui ne mène pas à Classroom est retiré (l'annonce reste, sans lien). */
+function annoncesA(liste){
+  const sortie = [];
+  for(const x of Array.isArray(liste) ? liste : []){
+    if(!x || typeof x.texte !== "string" || !x.texte.trim()) continue;
+    const t = Number(x.date) || 0;
+    sortie.push({ texte: x.texte.trim(),
+      quand: t ? new Intl.DateTimeFormat("fr-BE", { weekday: "long", day: "numeric", month: "long", timeZone: "Europe/Brussels" }).format(new Date(t)) : "",
+      lien: typeof x.lien === "string" && x.lien.startsWith("https://classroom.google.com/") ? x.lien : "" });
+  }
+  return sortie.slice(0, 3);
+}
+function montreAnnonces(liste, cours){
+  const lignes = annoncesA(liste);
+  if(!lignes.length) return;          // rien à lire, ou service en panne : pas de panneau vide
+  $("annonces-liste").replaceChildren(...lignes.map(a => {
+    const li = document.createElement("li");
+    const boite = document.createElement(a.lien ? "a" : "div");
+    if(a.lien){ boite.href = a.lien; boite.target = "_top"; } else boite.className = "annonce";
+    if(a.quand){ const q = document.createElement("span"); q.className = "quand"; q.textContent = a.quand; boite.append(q); }
+    const p = document.createElement("span"); p.className = "texte"; p.textContent = a.texte;
+    boite.append(p);
+    if(a.lien){ const s = document.createElement("span"); s.className = "suite"; s.textContent = "Lire dans Classroom"; boite.append(s); }
+    li.append(boite); return li;
+  }));
+  $("annonces").hidden = false;
 }
 
 /* ----- Mes révisions : celles des cours ouverts pour la classe, dans l'ordre des cours. ----- */
@@ -233,5 +268,5 @@ if(typeof fetch === "function"){
     montre();
   }).catch(() => {});
 }
-globalThis.PortailEssai = { tire, ciel, conseil, dateNom, dateJour, revisionsDe, devoirsA };
+globalThis.PortailEssai = { tire, ciel, conseil, dateNom, dateJour, revisionsDe, devoirsA, annoncesA };
 })();

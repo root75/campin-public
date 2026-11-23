@@ -15,13 +15,14 @@ assert.match(html, /src="https:\/\/root75\.github\.io\/campin-public\/assets\/lo
 assert.ok(fs.existsSync(require.resolve('../assets/logo-campin.png')));
 assert.match(html, /id="bandeau-extension" hidden/);
 
-function noeud(id){ return { id, hidden: /^(compte|maintenant|meteo|lien-prof|devoirs)$/.test(id), textContent:'', href:'', children:[],
+function noeud(id){ return { id, hidden: /^(compte|maintenant|meteo|lien-prof|devoirs|annonces)$/.test(id), textContent:'', href:'', children:[],
   addEventListener(){}, replaceChildren(...e){ this.children = e; } }; }
-function lance(reponse, { suivi = true, devoirs } = {}){
+function lance(reponse, { suivi = true, devoirs, annonces } = {}){
   const els = new Map(), ajoutes = [];
   const $ = id => { if(!els.has(id)) els.set(id, noeud(id)); return els.get(id); };
   const pont = { withSuccessHandler(f){ this.f = f; return this; }, withFailureHandler(){ return this; }, portail(){ this.f(reponse); } };
   if(devoirs !== undefined) pont.mesDevoirs = function(){ this.f({ liste: devoirs }); };
+  if(annonces !== undefined) pont.mesAnnonces = function(){ this.f({ liste: annonces }); };
   const ctx = { document:{ documentElement:{ dataset:{} }, getElementById:$, createElement:t=>({ tag:t, textContent:'', enfants:[], append(...e){ this.enfants.push(...e); } }), head:{ append:s=>ajoutes.push(s) } },
     location:{ protocol:'https:', search:'', replace(u){ ctx.parti = u; } }, localStorage:{ getItem(){ throw Error('bloqué'); }, setItem(){} } };
   ctx.window = ctx; ctx.globalThis = ctx;
@@ -133,4 +134,24 @@ console.log('portail : page publique, élève reconnu, hors école, redirection 
   q = lance(d, { devoirs:null }); assert.notEqual(q.$('devoirs').hidden, false, 'Sans service Classroom, pas de panneau');
   q = lance(d); assert.notEqual(q.$('devoirs').hidden, false, 'Ancien serveur sans mesDevoirs : pas d\'erreur, pas de panneau');
   q = lance({ ...d, prof:true }, { devoirs:[] }); assert.notEqual(q.$('devoirs').hidden, false);
+}
+// Les annonces du flux : ce que le portail écrit, et quand le panneau s'ouvre.
+{
+  const { annoncesA } = lance({ email:'' }).ctx.PortailEssai;
+  const l = Array.from(annoncesA([
+    { texte:'Interro lundi', date:Date.UTC(2026, 10, 20, 8), lien:'https://classroom.google.com/c/x/p/1' },
+    { texte:'Lien douteux', date:0, lien:'https://ailleurs.example/' }, { texte:'  ' }, null,
+    { texte:'Trois', date:1, lien:'' }, { texte:'Quatre, de trop', date:1, lien:'' }
+  ]), x => ({ ...x }));
+  assert.deepEqual(l.map(x => x.texte), ['Interro lundi', 'Lien douteux', 'Trois']);
+  assert.equal(l[0].quand, 'vendredi 20 novembre'); assert.equal(l[1].quand, ''); assert.equal(l[1].lien, '', 'Un lien hors Classroom est retiré');
+  assert.match(html, /id="annonces" hidden/, 'Le panneau des annonces est caché tant que le serveur n\'a rien donné');
+  const d = { email:'e@example.test', prenom:'A', classe:'3F', prof:false, mesCours:'https://x/exec', tableau:'', devoirs:'https://classroom.google.com/w/x/t/all', cours:[], seance:null };
+  let q = lance(d, { annonces:[{ texte:'Interro lundi', date:1, lien:'https://classroom.google.com/c/x/p/1' }] });
+  assert.equal(q.$('annonces').hidden, false); assert.equal(q.$('annonces-liste').children.length, 1);
+  assert.equal(q.$('annonces-liste').children[0].enfants[0].tag, 'a');
+  q = lance(d, { annonces:[] }); assert.notEqual(q.$('annonces').hidden, false, 'Aucune annonce : pas de panneau vide');
+  q = lance(d, { annonces:null }); assert.notEqual(q.$('annonces').hidden, false);
+  q = lance(d); assert.notEqual(q.$('annonces').hidden, false, 'Ancien serveur sans mesAnnonces : pas d\'erreur, pas de panneau');
+  q = lance({ ...d, prof:true }, { annonces:[{ texte:'x', date:1, lien:'' }] }); assert.notEqual(q.$('annonces').hidden, false);
 }
