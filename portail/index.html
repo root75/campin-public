@@ -99,12 +99,15 @@ h1{font:800 clamp(28px,4.2vw,42px)/1.1 var(--titre);margin:0;text-wrap:balance}
 .devoirs-liste .a-rendre .etat{color:var(--accent)}
 .devoirs-liste .fait .etat{color:var(--ok)}
 .annonces-liste{list-style:none;margin:0;padding:0;display:grid;gap:8px}
-.annonces-liste a,.annonces-liste .annonce{display:grid;gap:4px;padding:10px 14px;border:1px solid var(--trait);border-radius:12px;background:var(--carte);color:var(--texte);text-decoration:none}
-.annonces-liste a:hover{border-color:var(--accent)}
+.annonces-liste .annonce{display:grid;gap:6px;padding:10px 14px;border:1px solid var(--trait);border-radius:12px;background:var(--carte);color:var(--texte)}
 .annonces-liste .quand{font-size:14px;opacity:.85}
 .annonces-liste .quand::first-letter{text-transform:uppercase}
-.annonces-liste .texte{font-size:16px;overflow-wrap:anywhere}
-.annonces-liste .suite{font-size:14px;font-weight:700;color:var(--accent)}
+.annonces-liste .texte{font-size:16px;line-height:1.45;overflow-wrap:anywhere;display:grid;gap:6px}
+.annonces-liste .texte p{margin:0}
+.annonces-liste .texte ul{margin:0;padding-left:1.3em;list-style:disc}
+.annonces-liste .texte a{color:var(--accent)}
+.annonces-liste .suite{font-size:14px;font-weight:700;color:var(--accent);text-decoration:none;justify-self:start}
+.annonces-liste .suite:hover{text-decoration:underline}
 .devoirs-note{font-size:14px;opacity:.85;margin:8px 0 0}
 .jeu-portail{border:1px solid var(--trait);border-radius:18px;padding:16px 18px;background:var(--fond2);scroll-margin-top:12px}
 .jeu-tete{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between;margin-bottom:10px}
@@ -142,7 +145,7 @@ h1{font:800 clamp(28px,4.2vw,42px)/1.1 var(--titre);margin:0;text-wrap:balance}
     <div class="marque"><img class="blason" src="https://root75.github.io/campin-public/assets/logo-campin.png" alt="Logo de l'Athénée royal Robert Campin : un hibou coiffé d'une toque" width="72" height="72">
       <div><b>Mon portail</b><span>Athénée royal Robert Campin · Informatique</span></div></div>
     <!-- La date du jour : l'élève en a besoin pour nommer son travail (AAAAMMJJ Titre – Prénom Nom). -->
-    <p class="date" id="date" hidden><b id="date-jour"></b><span>Pour nommer ton travail : <b id="date-nom"></b></span></p>
+    <p class="date" id="date" hidden><b id="date-jour"></b><span id="date-nommer" hidden>Pour nommer ton travail : <b id="date-nom"></b></span></p>
     <button class="pastille" id="theme" type="button">Mode clair</button>
   </header>
 

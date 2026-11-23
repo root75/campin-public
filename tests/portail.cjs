@@ -15,7 +15,7 @@ assert.match(html, /src="https:\/\/root75\.github\.io\/campin-public\/assets\/lo
 assert.ok(fs.existsSync(require.resolve('../assets/logo-campin.png')));
 assert.match(html, /id="bandeau-extension" hidden/);
 
-function noeud(id){ return { id, hidden: /^(compte|maintenant|meteo|lien-prof|devoirs|annonces)$/.test(id), textContent:'', href:'', children:[],
+function noeud(id){ return { id, hidden: /^(compte|maintenant|meteo|lien-prof|devoirs|annonces|date-nommer)$/.test(id), textContent:'', href:'', children:[],
   addEventListener(){}, replaceChildren(...e){ this.children = e; } }; }
 function lance(reponse, { suivi = true, devoirs, annonces } = {}){
   const els = new Map(), ajoutes = [];
@@ -149,9 +149,34 @@ console.log('portail : page publique, élève reconnu, hors école, redirection 
   const d = { email:'e@example.test', prenom:'A', classe:'3F', prof:false, mesCours:'https://x/exec', tableau:'', devoirs:'https://classroom.google.com/w/x/t/all', cours:[], seance:null };
   let q = lance(d, { annonces:[{ texte:'Interro lundi', date:1, lien:'https://classroom.google.com/c/x/p/1' }] });
   assert.equal(q.$('annonces').hidden, false); assert.equal(q.$('annonces-liste').children.length, 1);
-  assert.equal(q.$('annonces-liste').children[0].enfants[0].tag, 'a');
+  const boite = q.$('annonces-liste').children[0].enfants[0];
+  assert.equal(boite.tag, 'div', 'Une boîte, pas un lien : l\'annonce porte ses propres liens');
+  assert.equal(boite.enfants.at(-1).tag, 'a'); assert.equal(boite.enfants.at(-1).href, 'https://classroom.google.com/c/x/p/1');
+  // La mise en page : gras, paragraphes, puces, liens ; tout le reste est du texte, jamais du HTML.
+  const { miseEnForme } = q.ctx.PortailEssai;
+  const f = JSON.parse(JSON.stringify(miseEnForme('**Journal de classe 2F**\njeudi 26 novembre\n\n- Révise la feuille\n• et le site : https://root75.github.io/campin-public/x/.\n\n<img src=x onerror=alert(1)> **pas fermé')));
+  assert.deepEqual(f.map(b => b.type), ['p', 'ul', 'p']);
+  assert.deepEqual(f[0].lignes, [[{ t:'gras', v:'Journal de classe 2F' }], [{ t:'texte', v:'jeudi 26 novembre' }]]);
+  assert.deepEqual(f[1].lignes[1], [{ t:'texte', v:'et le site : ' }, { t:'lien', v:'https://root75.github.io/campin-public/x/' }, { t:'texte', v:'.' }], 'Le point final ne fait pas partie de l\'adresse');
+  assert.deepEqual(f[2].lignes, [[{ t:'texte', v:'<img src=x onerror=alert(1)> **pas fermé' }]], 'Du HTML dans une annonce reste du texte');
+  assert.ok(!/innerHTML|insertAdjacentHTML/.test(script), 'Le portail n\'écrit jamais de HTML à partir d\'un texte');
+  assert.equal(JSON.stringify(miseEnForme('javascript:alert(1) et ftp://x')).includes('"lien"'), false, 'Seules les adresses http(s) deviennent des liens');
+  q = lance(d, { annonces:[{ texte:'**Titre**\nligne\n- a\n- b', date:0, lien:'' }] });
+  const corps = q.$('annonces-liste').children[0].enfants[0].enfants[0];
+  assert.deepEqual(corps.enfants.map(x => x.tag), ['p', 'ul']); assert.deepEqual(corps.enfants[0].enfants.map(x => x.tag || x), ['b', 'br', 'ligne']);
+  assert.equal(corps.enfants[1].enfants.length, 2);
   q = lance(d, { annonces:[] }); assert.notEqual(q.$('annonces').hidden, false, 'Aucune annonce : pas de panneau vide');
   q = lance(d, { annonces:null }); assert.notEqual(q.$('annonces').hidden, false);
   q = lance(d); assert.notEqual(q.$('annonces').hidden, false, 'Ancien serveur sans mesAnnonces : pas d\'erreur, pas de panneau');
   q = lance({ ...d, prof:true }, { annonces:[{ texte:'x', date:1, lien:'' }] }); assert.notEqual(q.$('annonces').hidden, false);
+}
+// « Pour nommer ton travail » : seulement pour une classe qui suit un cours où l'on crée et nomme un document.
+{
+  const d = { email:'e@example.test', prenom:'A', classe:'1B', prof:false, mesCours:'https://x/exec', tableau:'', devoirs:'', seance:null };
+  assert.match(html, /id="date-nommer" hidden/);
+  let q = lance({ ...d, cours:['rat-de-ville-formatif'] }); assert.equal(q.$('date-nommer').hidden, false); assert.equal(q.$('date').hidden, false);
+  q = lance({ ...d, classe:'3F', cours:['python-1'] }); assert.equal(q.$('date-nommer').hidden, true, 'Pas de document à nommer en Python');
+  assert.equal(q.$('date').hidden, false, 'La date du jour reste pour tout le monde');
+  q = lance({ ...d, prof:true, cours:[] }); assert.equal(q.$('date-nommer').hidden, true);
+  q = lance({ email:'' }); assert.equal(q.$('date-nommer').hidden, true, 'Page publique : la date seule');
 }
