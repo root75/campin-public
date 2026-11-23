@@ -44,6 +44,12 @@
       "etapes": 16
     },
     {
+      "id": "python-bugs",
+      "titre": "Python — La chasse aux bugs",
+      "chemin": "python-bugs/pas-a-pas/",
+      "etapes": 10
+    },
+    {
       "id": "python-4",
       "titre": "Python 04 — Si… alors, sinon",
       "chemin": "python-4/pas-a-pas/",
