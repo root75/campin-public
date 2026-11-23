@@ -45,7 +45,6 @@ function affiche(d){
   if(annee) $("porte-revise").href = SITE + "revisions/?niveau=" + annee;
   mesRevisions(d.cours);
   if(!d.prof && d.devoirs && SUIVI){
-    $("devoirs-classroom").href = d.devoirs;
     // Un serveur pas encore republié ne connaît pas mesDevoirs : la porte « Mes devoirs » suffit alors.
     try {
       const appel = google.script.run.withSuccessHandler(r => montreDevoirs(r && r.liste)).withFailureHandler(() => {});
