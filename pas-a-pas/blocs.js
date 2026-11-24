@@ -1534,7 +1534,7 @@ if(SUIVI && !APERCU){
       if(!r || !r.ouvert) return retire();
       if(bulleChat) return bulleChat.signale(r.dernier);
       charge = charge || new Promise((ok,ko)=>{ if(window.CampinChat) return ok();
-        const s = document.createElement("script"); s.src = "https://root75.github.io/campin-public/chat/chat.js?v=direct-20261124"; s.onload = ok; s.onerror = ko; document.head.append(s); });
+        const s = document.createElement("script"); s.src = "https://root75.github.io/campin-public/chat/chat.js?v=ferme-20261124"; s.onload = ok; s.onerror = ko; document.head.append(s); });
       charge.then(()=>{ if(!bulleChat){ bulleChat = window.CampinChat.bulle({ appel, surFerme: retire }); bulleChat.signale(r.dernier); } }, ()=>{ charge = null; });
     }, ()=>{});
   };
