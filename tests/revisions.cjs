@@ -57,4 +57,40 @@ P.marque('__proto__', 'fait'); P.marque('a b', 'fait'); P.marque('quiz:x', 'gagn
 const bloque = progres({ getItem() { throw Error('bloqué'); }, setItem() { throw Error('bloqué'); } });
 bloque.marque('quiz:python-1', 'fait'); assert.equal(bloque.etat('quiz:python-1'), '');
 assert.doesNotMatch(page, /[a-z0-9.]+@arcampin\.be/i);
+
+// Le double sur le serveur : la page envoie ce que le serveur ignore, reprend ce qu'il sait, et ne casse rien sans lui.
+{
+  const stock = new Map(), scripts = [], evts = [], minuteries = [];
+  const ctx = { localStorage: { getItem: k => stock.get(k) || null, setItem: (k, v) => stock.set(k, v) }, location: { protocol: 'https:' },
+    document: { createElement: () => ({}), head: { append: x => scripts.push(x) }, dispatchEvent: e => evts.push(e.type), currentScript: null },
+    Event: function (t) { this.type = t; }, setTimeout: f => minuteries.push(f), encodeURIComponent };
+  ctx.globalThis = ctx;
+  stock.set('campin-progres', JSON.stringify({ 'quiz:python-1': 'commence' }));
+  vm.runInNewContext(lis('assets/progres.js'), ctx);
+  // À l'ouverture : un appel, qui porte ce que le navigateur sait et que le serveur n'a pas confirmé.
+  assert.equal(scripts.length, 1); assert.match(scripts[0].src, /\/exec\?vue=progres&m=quiz%3Apython-1~commence$/);
+  // Le serveur répond : un quiz fini sur un autre poste arrive ici, et la page est prévenue.
+  ctx.campinProgres({ 'quiz:python-1': 'fait', 'mots-croises:python-1': 'commence', '<b>': 'fait', 'quiz:x': 'gagné' });
+  assert.equal(ctx.Progres.etat('quiz:python-1'), 'fait'); assert.equal(ctx.Progres.etat('mots-croises:python-1'), 'commence');
+  assert.equal(Object.keys(ctx.Progres.lit()).length, 2, 'une clé ou un état bizarre venu du serveur est ignoré'); assert.deepEqual(evts, ['campin-progres']);
+  // Une activité finie ici part au serveur, une seule fois, après un court délai ; ce qu'il sait déjà ne repart pas.
+  assert.equal(minuteries.length, 0);
+  ctx.Progres.marque('mots-croises:python-1', 'fait'); ctx.Progres.marque('associe:rat', 'commence'); assert.equal(minuteries.length, 1, 'un seul envoi groupé');
+  minuteries.shift()(); assert.equal(scripts.length, 2);
+  assert.equal(decodeURIComponent(scripts[1].src.split('&m=')[1]), 'mots-croises:python-1~fait,associe:rat~commence');
+  ctx.campinProgres({ 'quiz:python-1': 'fait', 'mots-croises:python-1': 'fait', 'associe:rat': 'commence' });
+  assert.equal(evts.length, 1, 'rien de neuf pour la page : pas d\'évènement'); assert.equal(minuteries.length, 0, 'tout est su : plus d\'appel');
+  // Pas un compte de l'école (null), ou script qui ne se charge pas : la mémoire du navigateur reste telle quelle.
+  ctx.Progres.marque('quiz:python-2', 'commence'); minuteries.shift()(); ctx.campinProgres(null); assert.equal(ctx.Progres.etat('quiz:python-2'), 'commence');
+  ctx.Progres.marque('quiz:python-2', 'fait'); minuteries.shift()(); scripts.at(-1).onerror();
+  ctx.Progres.marque('quiz:python-3', 'commence'); assert.equal(minuteries.length, 1, 'après un échec, le prochain changement réessaie');
+  // Plus de 40 activités en attente : par lots.
+  for (let i = 0; i < 50; i++) ctx.Progres.marque('quiz:lot-' + i, 'fait');
+  minuteries.shift()(); assert.equal(decodeURIComponent(scripts.at(-1).src.split('&m=')[1]).split(',').length, 40);
+  // Page ouverte depuis un fichier, ou sans document : aucun appel.
+  const hors = { localStorage: ctx.localStorage, location: { protocol: 'file:' }, document: { head: { append() { throw Error('appel interdit'); } } } }; hors.globalThis = hors;
+  vm.runInNewContext(lis('assets/progres.js'), hors); hors.Progres.marque('quiz:python-4', 'fait');
+  assert.ok(lis('revisions/revisions.js').includes("document.addEventListener('campin-progres', affiche)"));
+  console.log('Progrès : double sur le serveur, par lots, sans rien casser quand il ne répond pas.');
+}
 console.log('Révisions : ' + Object.keys(d.cours).length + ' cours, ' + suivis.size + ' activités suivies, pages et clés vérifiées.');
