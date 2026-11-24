@@ -691,7 +691,9 @@ function rappelDeSeance(debut){
   place.innerHTML = RAPPEL_DEBUT_SEANCE;
 }
 
+let blocOuverture;
 function affiche(){
+  if(blocOuverture!==undefined && blocOuverture!==ici) blocOuverture = null;
   if(rappelCourant && rappelCourant.bloc!==ici) rappelCourant = null;
   if(DECLARATIF && ici!==placeNotee){   // la place de l'élève : gardée, et visible au tableau (« ouvert »)
     if(placeNotee>=0) envoie({ etape:Math.min(ici,BLOCS.length-1)+1, type:"ouvert" });
@@ -883,8 +885,12 @@ const apiBloc = z => ({ zone:z, suivi:!!SUIVI && !APERCU, valeurs:lisPartage, ga
    BAS_ETAPE = [{ classe, titre, gestes:[{ texte (HTML), note, demo (clé de Demo.cree) }] }]. */
 function basEtape(z){
   if(typeof BAS_ETAPE==="undefined") return;
+  // La première étape réellement affichée peut être celle que le serveur a gardée.
+  if(blocOuverture===undefined) blocOuverture = ici;
   BAS_ETAPE.forEach(E=>{
-    const a = el("aside","repere "+E.classe), ol = el("ol");
+    if(E.classe==="reprise" && ici!==blocOuverture) return;
+    const sonnerie = E.classe==="sonnerie";
+    const a = el(sonnerie ? "details" : "aside","repere "+E.classe), ol = el("ol");
     E.gestes.forEach(g=>{
       const li = el("li",null,g.texte);
       if(g.note) li.append(txt("p","note",g.note));
@@ -899,7 +905,10 @@ function basEtape(z){
       }
       ol.append(li);
     });
-    a.append(txt("h3",null,E.titre), ol); z.append(a);
+    a.append(txt(sonnerie ? "summary" : "h3",null,E.titre), ol); z.append(a);
+    if(sonnerie) a.addEventListener("toggle",()=>{
+      if(!a.open) ol.querySelectorAll("details[open]").forEach(d=>{ d.open = false; });
+    });
   });
 }
 

@@ -153,6 +153,7 @@ form.redaction{display:grid;gap:12px}form.redaction label{display:grid;gap:4px;f
 ol.etapes li>.attention{margin-left:42px}
 /* 🔁 Rappel d'une réponse donnée plus tôt (B.rappel, data-rappel) */
 .repere.rappel{border-left-color:var(--fromage)}.repere.rappel q{font-style:italic}
+.sonnerie > summary{cursor:pointer;font-weight:700}
 .rappele{background:var(--fromage-pale);border-radius:4px;padding:0 4px;font-weight:700;overflow-wrap:anywhere}
 /* Contrôle pendant la frappe, et tous les manques d'un coup */
 form.bilan .etat-champ{display:block;font-weight:400;color:var(--faux)}form.bilan .etat-champ.ok{color:var(--juste)}
