@@ -9,7 +9,7 @@ assert.match(html, /id="maintenant" hidden/);
 assert.doesNotMatch(html, /[a-z0-9.]+@arcampin\.be/i, 'Aucune adresse dans la page publique');
 // Dans l'iframe Apps Script, un lien sans target="_top" ne s'ouvre pas.
 for (const a of html.match(/<a\b[^>]*>/g)) assert.match(a, /target="_top"/, a);
-assert.match(html, /« M\. Louviaux »/);
+assert.match(html, /Professeur : M\. Louviaux/);
 // Le hibou de l'école, par son adresse absolue (la page est aussi servie par Apps Script), et la place de l'extension.
 assert.match(html, /src="https:\/\/root75\.github\.io\/campin-public\/assets\/logo-campin\.png"/);
 assert.ok(fs.existsSync(require.resolve('../assets/logo-campin.png')));

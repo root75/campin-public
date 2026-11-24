@@ -25,6 +25,6 @@ for (const [id, j] of Object.entries(jeux)) {
 }
 assert.equal(dessin('inconnu'), ''); assert.equal(dessin('__proto__'), '');
 const page = fs.readFileSync(path.join(racine, 'associe/index.html'), 'utf8');
-assert.match(page, /« M\. Louviaux »/); assert.doesNotMatch(page, /[a-z0-9.]+@arcampin\.be/i);
+assert.match(page, /Professeur : M\. Louviaux/); assert.doesNotMatch(page, /[a-z0-9.]+@arcampin\.be/i);
 assert.doesNotMatch(page + fs.readFileSync(path.join(racine, 'associe/jeu.js'), 'utf8'), /photo|smartphone|téléphone/i, 'Ni photo ni téléphone dans une consigne');
 console.log('Associe l\'image : ' + Object.keys(jeux).length + ' jeux, ' + total + ' paires, chaque dessin présent et muet.');

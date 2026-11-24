@@ -64,5 +64,5 @@ for (const f of ['jeu.css', 'jeu.js', 'grille.js', 'page.js']) assert.ok(page.in
 // Le jeu se monte ailleurs que dans sa page : il ne cherche aucun élément par son id.
 assert.doesNotMatch(fs.readFileSync(path.join(racine, 'mots-croises/jeu.js'), 'utf8'), /getElementById/);
 assert.doesNotMatch(page, /[a-z0-9.]+@arcampin\.be/i);
-assert.match(page, /« M\. Louviaux »/);
+assert.match(page, /Professeur : M\. Louviaux/);
 console.log('Mots croisés : ' + Object.keys(grilles).length + ' grilles, ' + total + ' mots, tous posés et croisés.');
