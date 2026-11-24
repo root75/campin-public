@@ -125,8 +125,12 @@ function devoirsA(liste, maintenant){
   }
   return sortie;
 }
+/* Les points sont repliés à chaque ouverture de la page (Vincent, 24/11/2026 : « ils vont être trop focus sur leurs
+   points ») : le devoir et son état restent visibles, la cote n'apparaît qu'après « Voir mes points ». */
+let POINTS_VUS = false, DEVOIRS_LUS = null;
 function montreDevoirs(liste){
   if(!Array.isArray(liste)) return;   // service Classroom absent ou en panne : la porte « Mes devoirs » suffit
+  DEVOIRS_LUS = liste;
   const lignes = devoirsA(liste, Date.now());
   const ul = $("devoirs-liste");
   if(!lignes.length){
@@ -140,11 +144,18 @@ function montreDevoirs(liste){
     const b = document.createElement("b"); b.textContent = d.titre;
     boite.append(etat, b);
     if(d.quand){ const q = document.createElement("span"); q.className = "quand"; q.textContent = d.quand; boite.append(q); }
-    if(d.cote){ const c = document.createElement("span"); c.className = "cote"; c.textContent = d.cote; boite.append(c); }
+    if(d.cote && POINTS_VUS){ const c = document.createElement("span"); c.className = "cote"; c.textContent = d.cote; boite.append(c); }
     li.append(boite); return li;
   }));
   // Dès qu'une cote est affichée, la page dit d'où elle vient et où lire le commentaire.
-  if($("devoirs-points")) $("devoirs-points").hidden = !lignes.some(d => d.cote);
+  const cotes = lignes.some(d => d.cote), voir = $("devoirs-voir");
+  if($("devoirs-points")) $("devoirs-points").hidden = !(cotes && POINTS_VUS);
+  if($("devoirs-plie")) $("devoirs-plie").hidden = !cotes;
+  if(voir){
+    voir.textContent = POINTS_VUS ? "Cacher mes points" : "Voir mes points";
+    if(voir.setAttribute) voir.setAttribute("aria-expanded", String(POINTS_VUS));
+    voir.onclick = () => { POINTS_VUS = !POINTS_VUS; montreDevoirs(DEVOIRS_LUS); };
+  }
   $("devoirs").hidden = false;
 }
 

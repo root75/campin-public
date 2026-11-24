@@ -199,18 +199,20 @@ h1{font:800 clamp(28px,4.2vw,42px)/1.1 var(--titre);margin:0;text-wrap:balance}
     <a target="_top" id="porte-revise" href="https://root75.github.io/campin-public/revisions/"><b>Je révise</b><span>quiz, mots croisés, jeux d'images</span></a>
   </nav>
 
-  <!-- Connecté : les devoirs Classroom de l'élève dans le cours de sa classe (serveur : mesDevoirs). Sinon, rien. -->
-  <section class="mes-devoirs" id="devoirs" hidden aria-labelledby="devoirs-titre">
-    <h2 id="devoirs-titre">Mes devoirs et mes points</h2>
-    <ul class="devoirs-liste" id="devoirs-liste"></ul>
-    <p class="devoirs-note" id="devoirs-points" hidden>Tes points : toi seul les vois ici. Pour lire le commentaire du professeur, clique sur le devoir : il s'ouvre dans Classroom.</p>
-    <p class="devoirs-note">Seulement les devoirs du cours de numérique. Pour les autres cours, ouvre <a target="_top" href="http://arcampin.ecoleenligne.be/">École en ligne</a>.</p>
-  </section>
-
   <!-- Connecté : les dernières annonces du flux Classroom du cours de la classe (serveur : mesAnnonces). Sinon, rien. -->
   <section class="mes-devoirs" id="annonces" hidden aria-labelledby="annonces-titre">
     <h2 id="annonces-titre">Les annonces du cours de numérique</h2>
     <ul class="annonces-liste" id="annonces-liste"></ul>
+  </section>
+
+  <!-- Connecté : les devoirs Classroom de l'élève dans le cours de sa classe (serveur : mesDevoirs). Sinon, rien. -->
+  <section class="mes-devoirs" id="devoirs" hidden aria-labelledby="devoirs-titre">
+    <h2 id="devoirs-titre">Mes devoirs et mes points</h2>
+    <ul class="devoirs-liste" id="devoirs-liste"></ul>
+    <!-- Les points restent repliés à chaque ouverture (Vincent, 24/11/2026) : l'élève regarde d'abord ce qu'il a à faire. -->
+    <p class="devoirs-note" id="devoirs-plie" hidden><button class="pastille" id="devoirs-voir" type="button" aria-expanded="false">Voir mes points</button></p>
+    <p class="devoirs-note" id="devoirs-points" hidden>Tes points : toi seul les vois ici. Pour lire le commentaire du professeur, clique sur le devoir : il s'ouvre dans Classroom.</p>
+    <p class="devoirs-note">Seulement les devoirs du cours de numérique. Pour les autres cours, ouvre <a target="_top" href="http://arcampin.ecoleenligne.be/">École en ligne</a>.</p>
   </section>
 
   <!-- Connecté : les révisions des cours ouverts pour la classe (revisions/revisions.json). Sinon, rien. -->
