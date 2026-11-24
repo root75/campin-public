@@ -111,7 +111,7 @@ tr.fini td{color:var(--doux)}
 .cl-mode{display:flex;flex-wrap:wrap;align-items:center;gap:6px;min-width:0}
 .cl-mode select{padding:4px 6px;max-width:100%}.cl-mode .cl-mode-quoi{flex:1 1 9rem;min-width:0}
 .cl-etiquette{font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;color:var(--doux);flex-basis:100%}
-.cl-chat-fil{flex-basis:100%;min-width:0}.mot-eleve,.mot-prof{display:block;margin:4px 0;font-weight:700;overflow-wrap:anywhere}.mot-prof{font-weight:400;color:var(--doux)}.cl-mode .mode-actif{font-weight:700}.cl-mode-cours{flex:1 1 9rem;min-width:0}
+.cl-chat-fil{flex-basis:100%;min-width:0}.chat-seance,.chat-seance-classe{display:inline-flex;flex-wrap:wrap;align-items:center;gap:6px}.chat-seance[hidden]{display:none}.chat-seance .mode-actif{font-weight:700}.mot-eleve,.mot-prof{display:block;margin:4px 0;font-weight:700;overflow-wrap:anywhere}.mot-prof{font-weight:400;color:var(--doux)}.cl-mode .mode-actif{font-weight:700}.cl-mode-cours{flex:1 1 9rem;min-width:0}
 .cl-ouverts{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
 .cl-ouverts li{font-size:.9rem;padding:2px 10px;border-radius:999px;border:1px solid var(--trait);background:var(--carte)}
 .cl-ouverts li.vide{border:0;background:none;padding:0}
@@ -230,6 +230,7 @@ body:not(.vue-onglet) #panneau-classes{display:none!important}
       <button class="btn" type="button" id="nouvelle" title="Reprend la séance de la classe (même avancement des élèves) ou la crée la première fois">Ouvrir pour une classe…</button>
       <button class="btn vide" type="button" id="terminer" hidden>Terminer la séance</button>
       <button class="btn" type="button" id="reprendre-seance" hidden>Rouvrir la séance</button>
+      <span class="chat-seance" id="chat-seance" hidden></span>
       <span class="seq-etat" id="seq-etat" hidden></span>
       <details class="plus" id="plus"><summary class="btn vide" title="Gérer les élèves, cours et classes, ressources, parcours">⚙ Plus</summary>
       <div class="outils-secondaires"><a class="btn vide" id="gestion-eleves-lien" target="_blank" rel="noopener">Gérer les élèves ↗</a><a class="btn vide" id="gestion-classes-lien" target="_blank" rel="noopener">Cours et classes ↗</a>
@@ -240,6 +241,7 @@ body:not(.vue-onglet) #panneau-classes{display:none!important}
       <span class="maj" id="maj"></span>
     </div>
   </header>
+  <section class="panneau" id="chat-seance-fil" hidden></section>
   <p class="demo" id="demo" hidden>APERÇU FICTIF — aucune donnée réelle, aucune commande enregistrée. Le vrai tableau s'ouvre par l'adresse Apps Script, suivie de <b>?vue=prof</b>.</p>
 
   <section class="panneau" id="conducteur" hidden>
@@ -319,6 +321,8 @@ body:not(.vue-onglet) #panneau-classes{display:none!important}
     <h2>Ouvrir le cours</h2>
     <p>Coche la classe — ou les deux, quand vous les prenez ensemble. Une classe qui a déjà commencé ce cours cette année <b>reprend où elle en était</b> : même avancement, même suivi. La première fois, la séance est créée.</p>
     <fieldset id="dlg-classes" class="reglages" style="border:0;padding:0;margin:8px 0"><legend>Classes</legend></fieldset>
+    <label class="filtre-aide"><input type="checkbox" id="dlg-chat" checked><span>💬 Ouvrir aussi le chat de la classe</span></label>
+    <p class="astuce">Le chat se ferme quand tu termines la séance. Décoche la case pour une évaluation.</p>
     <div class="reglages"><button class="btn" value="ok">Ouvrir</button><button class="btn vide" value="annuler" formnovalidate>Annuler</button></div>
     <details style="margin-top:12px"><summary>Recommencer à zéro…</summary>
       <p class="astuce">Rare : refaire tout le cours avec la classe cochée. Ses élèves <b>repartent du bloc 1</b> et le tableau est vide ; dans un cours à cases (Le rat de ville), leurs cases et leurs lettres « Moi » sont vidées. Rien n'est effacé : l'ancienne séance reste dans la liste et dans la feuille.</p>
@@ -327,7 +331,7 @@ body:not(.vue-onglet) #panneau-classes{display:none!important}
   </form>
 </dialog>
 
-<script defer src="https://root75.github.io/campin-public/messagerie/pas-a-pas/visuels.js?v=enveloppe-20261117"></script><script defer src="https://root75.github.io/campin-public/derriere-lecran/emotions.js?v=20261123b"></script><script defer src="https://root75.github.io/campin-public/derriere-lecran/visuels.js?v=20261123"></script><script defer src="https://root75.github.io/campin-public/pas-a-pas/tableau.js?v=devoir-20261124"></script>
+<script defer src="https://root75.github.io/campin-public/messagerie/pas-a-pas/visuels.js?v=enveloppe-20261117"></script><script defer src="https://root75.github.io/campin-public/derriere-lecran/emotions.js?v=20261123b"></script><script defer src="https://root75.github.io/campin-public/derriere-lecran/visuels.js?v=20261123"></script><script defer src="https://root75.github.io/campin-public/pas-a-pas/tableau.js?v=chat-seance-20261124"></script>
 <script defer src="https://root75.github.io/campin-public/pas-a-pas/python-couleurs.js"></script>
 </body>
 </html>
