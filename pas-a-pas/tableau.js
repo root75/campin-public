@@ -202,6 +202,7 @@ function signaleCloches(n){
 }
 function dessine(d){
   dernieresDonnees = d;
+  dessineChatSeance(d);
   signaleCloches((d.eleves||[]).filter(e=>e.aide).length);
   if($("ramener-classe"))$("ramener-classe").hidden=true;
   if(!$("filtre-aide")){
@@ -483,6 +484,7 @@ function charge(){
     return Promise.all([s].concat(autres).map(x=>serveur("donnees", cours, x.debut, x.fin, x.classe))).then(l=>{
       if(demande!==numeroChargement || $("cours").value!==cours || choisie().debut!==s.debut) return;
       const d = l[0]; d._allerRetour = Date.now() - depart; d.eleves.forEach(e=>{ e.classe = s.classe; });
+      d._chats = [[s.classe, d]].concat(l.slice(1).map((dk,k)=>[autres[k].classe, dk]));
       l.slice(1).forEach((dk,k)=>{
         dk.eleves.forEach(e=>{ e.classe = autres[k].classe; e._seance = autres[k]; e._d = dk; });
         d.eleves = d.eleves.concat(dk.eleves);
@@ -547,6 +549,7 @@ $("nouvelle").addEventListener("click", async()=>{
     zone.replaceChildren(txt("legend",null,"Classes"),...noms.map(n=>{
       const lab=txt("label","filtre-aide"),cb=txt("input");
       cb.type="checkbox";cb.name="classe";cb.value=n;lab.append(cb,txt("span",null,n));return lab;}));
+    if($("dlg-chat"))$("dlg-chat").checked=true;
     $("dlg").returnValue="";$("dlg").showModal();zone.querySelector("input").focus();
   }finally{bouton.disabled=false;}
 });
@@ -598,8 +601,10 @@ $("dlg").addEventListener("close", async()=>{
   const b=$("nouvelle");b.disabled=true;
   try{
     let l;
-    if(zero)for(const c of choix)l=await serveur("nouvelleSeance",cours,c);
-    else l=await serveur("ouvrirSeances",cours,choix);
+    /* Le chat de la classe s'ouvre avec la séance, sauf case décochée (une évaluation, par exemple). */
+    const sansChat=!!$("dlg-chat")&&!$("dlg-chat").checked;
+    if(zero)for(const c of choix)l=await serveur("nouvelleSeance",cours,c,sansChat);
+    else l=await serveur("ouvrirSeances",cours,choix,sansChat);
     affiche(l);
   }catch(e){
     erreur(/ouvrirSeances/.test(String(e&&e.message||e))?Error("le serveur Apps Script n'est pas à jour : redéploie Code.gs (branche main), puis recharge le tableau."):e);
@@ -1040,6 +1045,47 @@ function chargeChat(){
   if(window.CampinChat) return Promise.resolve();
   return new Promise((ok, ko) => { const s = document.createElement("script");
     s.src = "https://root75.github.io/campin-public/chat/chat.js?v=ferme-20261124"; s.onload = ok; s.onerror = ko; document.head.append(s); });
+}
+/* Vue cours : le chat suit la séance (Vincent, 24/11/2026). Ouvrir ou rouvrir une séance ouvre le chat de sa classe ;
+   l'interrupteur est ici, à côté de « Terminer la séance », avec « Lire et modérer ». Une ligne par classe affichée.
+   Le serveur dit l'état dans donnees() (d.chat) : rien ne s'affiche tant qu'il n'est pas republié. */
+var chatSeance = null, chatSeanceVu = "";
+function arreteChatSeance(){ if(chatSeance){ chatSeance.fil.arrete(); chatSeance = null; } $("chat-seance-fil").hidden = true; $("chat-seance-fil").replaceChildren(); }
+function dessineChatSeance(d){
+  const z = $("chat-seance"); if(!z) return;
+  const liste = SUIVI && typeof google.script.run.chatFermer === "function"
+    ? (d._chats || [[(choisie()||{}).classe, d]]).filter(x=>x[0] && x[1] && x[1].peutCloreAide && "chat" in x[1]) : [];
+  z.hidden = !liste.length;
+  const plusieurs = liste.length > 1, pieces = [];
+  liste.forEach(([n, dk])=>{
+    const boite = txt("span", "chat-seance-classe");
+    const agit = (b, fn, ...args)=>{ b.disabled = true; serveurCl(fn, n, ...args).then(()=>charge(), e=>{ b.disabled = false; erreur(e); }); };
+    if(!dk.chat){
+      if(chatSeanceVu === n) chatSeanceVu = "";
+      const b = txt("button", "btn vide", "💬 Ouvrir le chat" + (plusieurs ? " " + n : "")); b.type = "button";
+      b.title = "Les élèves de " + n + " voient le chat sur leur portail et dans leurs cours. Il se ferme quand tu termines la séance.";
+      b.addEventListener("click", ()=>agit(b, "chatOuvrir", 180));
+      boite.append(b);
+    } else {
+      const vu = chatSeanceVu === n;
+      const voir = txt("button", "btn vide", vu ? "Replier" : "Lire et modérer"), fermer = txt("button", "btn vide", "Fermer le chat"); voir.type = fermer.type = "button";
+      voir.setAttribute("aria-label", (vu ? "Replier" : "Lire et modérer") + " le chat de " + n); fermer.setAttribute("aria-label", "Fermer le chat de " + n);
+      fermer.title = "Les élèves ne voient plus le chat ni ses messages. Tout reste dans la feuille « Chat ».";
+      voir.addEventListener("click", ()=>{ chatSeanceVu = vu ? "" : n; dessineChatSeance(dernieresDonnees); });
+      fermer.addEventListener("click", ()=>{ if(chatSeanceVu === n) chatSeanceVu = ""; agit(fermer, "chatFermer"); });
+      boite.append(txt("span", "mode-actif", "💬 Chat " + (plusieurs ? n + " " : "") + "ouvert"), voir, fermer);
+    }
+    pieces.push(boite);
+  });
+  z.replaceChildren(...pieces);
+  /* Le fil vit dans sa propre boîte, gardée d'un dessin à l'autre : le tableau se redessine sans cesse. */
+  const ouvert = liste.some(([n, dk])=>n === chatSeanceVu && dk.chat);
+  if(!ouvert){ if(chatSeance || !$("chat-seance-fil").hidden) arreteChatSeance(); return; }
+  if(chatSeance && chatSeance.classe === chatSeanceVu) return;
+  arreteChatSeance();
+  const n = chatSeanceVu, zone = txt("div", "cl-chat-fil"); chatSeance = { classe: n, fil: { arrete(){} } };
+  $("chat-seance-fil").replaceChildren(txt("h2", null, "Chat de la classe " + n), zone); $("chat-seance-fil").hidden = false;
+  chargeChat().then(()=>{ if(chatSeance && chatSeance.classe === n) chatSeance.fil = window.CampinChat.monte(zone, { appel: serveurCl, classe: n, prof: true }); }, erreur);
 }
 function caseChat(n, d){
   if(!d.chats) return null;
