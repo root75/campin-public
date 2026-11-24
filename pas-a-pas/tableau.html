@@ -45,8 +45,8 @@ dialog form{display:grid;gap:12px}
 dialog input,dialog select{font:inherit;padding:8px 10px;border-radius:8px;border:2px solid var(--trait);background:var(--carte);color:var(--encre)}
 .demo{background:var(--fromage-pale);border-left:5px solid var(--fromage);border-radius:6px;padding:8px 12px}
 
-.chiffres{display:grid;grid-template-columns:repeat(auto-fit,minmax(8rem,1fr));gap:10px}
-.chiffre{background:var(--carte);border:1px solid var(--trait);border-radius:12px;padding:10px 14px}
+.chiffres{display:flex;flex-wrap:wrap;gap:10px}
+.chiffre{flex:1 1 8rem;min-width:0;background:var(--carte);border:1px solid var(--trait);border-radius:12px;padding:10px 14px}
 .chiffre b{display:block;font-family:var(--display);font-size:2rem;line-height:1.1;font-variant-numeric:tabular-nums}
 .chiffre.alerte{border-color:var(--fromage);background:var(--fromage-pale)}
 button.chiffre{font:inherit;color:inherit;text-align:left;cursor:pointer}
@@ -234,7 +234,10 @@ header{display:grid;grid-template-columns:minmax(0,1fr);gap:12px;align-items:str
 .case .btn{padding:4px 10px;font-size:.95rem}
 .case .cl-mode .cl-etiquette:empty{display:none}
 .case .seq-etat .maj{flex-basis:100%;font-size:1rem;color:var(--encre);font-weight:700}
-.chiffre.tresor{border-radius:12px;white-space:normal;font-weight:400}
+.chiffre.tresor{flex-basis:100%;display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px;
+  padding:5px 12px;border-radius:10px;white-space:normal;font-weight:400}
+.chiffre.tresor b{font-size:1.15rem;white-space:nowrap}
+.chiffre.tresor .btn{margin-inline-start:auto;padding:3px 10px;font-size:.9rem}
 </style>
 </head>
 <body>
