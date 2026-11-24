@@ -246,7 +246,7 @@ Modèle : [`messagerie/pas-a-pas/fiche.js`](../messagerie/pas-a-pas/fiche.js) ; 
   dans la page seulement — Classroom laisse rendre à tout moment.
   Plusieurs cases d'accord par cours ; `accord:{ bouton, attente, ok }` change les trois textes. Les cases grisées
   restent lisibles, animations comprises.
-- **Sous chaque bloc** : `BAS_ETAPE` (« À la sonnerie », « Je reprends mon cours »), comme pour tous les cours.
+- Dans `BAS_ETAPE`, « À la sonnerie » est replié au bas de chaque bloc. « Je reprends mon cours » apparaît uniquement sur le premier bloc affiché à l’ouverture de la fiche, même si l’élève reprend en cours de parcours.
 - **`const REPRISE = { titre, html, demos }`** : l'encadré affiché en haut quand l'élève rouvre le cours plus de
   5 min après son dernier geste, avec le bouton « C'est fait : je reprends à l'étape N ».
 - `coince` accepte `{ html:'<b>…</b>' }` à côté des textes simples ; `veux` est facultatif.
