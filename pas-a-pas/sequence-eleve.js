@@ -19,7 +19,25 @@
 (function(){
   const RYTHME = 5000;
   const css = `
-.en-sequence .page > :not(header):not(#seq):not(.aide-fixe){display:none!important}
+.en-sequence .page > :not(header):not(#seq):not(#seq-commun):not(.aide-fixe){display:none!important}
+#seq-commun{background:var(--carte);border:1px solid var(--trait);border-radius:14px;padding:18px clamp(16px,4vw,32px);display:grid;gap:12px;margin-top:12px}
+#seq-commun .sq-sur{font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;color:var(--doux);font-weight:700;margin:0;text-align:center}
+#seq-commun h3{margin:0;font-size:1.2rem}#seq-commun p{margin:0}
+#seq-commun .sq-nuage,#seq-commun .sq-jetons{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+#seq-commun .sq-jetons{justify-content:flex-start}
+#seq-commun .sq-mot{border:1px solid var(--trait);border-radius:999px;padding:4px 12px;font-weight:700;overflow-wrap:anywhere}
+#seq-commun .sq-mot sup{font-weight:400;color:var(--doux);margin-left:3px}
+#seq-commun .sq-colonnes{display:grid;grid-template-columns:repeat(auto-fit,minmax(11rem,1fr));gap:10px}
+#seq-commun .sq-colonne{border:1px solid var(--trait);border-radius:10px;padding:10px;display:grid;gap:8px;align-content:start}
+#seq-commun .sq-vote{display:grid;gap:6px;border-top:1px solid var(--trait);padding-top:10px}
+#seq-commun .sq-vb{display:grid;grid-template-columns:minmax(6rem,14rem) 1fr auto;gap:8px;align-items:center}
+#seq-commun .sq-vb.bonne{font-weight:700;color:var(--juste)}
+#seq-commun .sq-jauge{height:14px;border-radius:7px;background:var(--trait);overflow:hidden}
+#seq-commun .sq-jauge i{display:block;height:100%;background:var(--encre-bouton,#1f4e79)}
+#seq-commun .sq-vb.bonne .sq-jauge i{background:var(--juste)}
+#seq-commun .sq-programme{white-space:pre;overflow-x:auto;font-family:"SFMono-Regular",Consolas,"Liberation Mono",monospace;background:#111827;color:#e5e7eb;border-radius:10px;padding:10px;margin:0}
+#seq-commun .sq-paires{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;margin:0}#seq-commun .sq-paires dt{font-weight:700}#seq-commun .sq-paires dd{margin:0}
+#seq-commun ul{margin:0;padding-left:1.2em;display:grid;gap:4px}
 #seq{background:var(--carte);border:1px solid var(--trait);border-radius:14px;padding:28px clamp(16px,4vw,32px);display:grid;gap:18px;text-align:center}
 #seq .sq-sur{font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;color:var(--doux);font-weight:700;margin:0}
 #seq .sq-grand{font-family:var(--display);font-weight:800;font-size:clamp(2rem,6vw,2.8rem);line-height:1.1;margin:0}
@@ -56,6 +74,11 @@
     const zone = el("section"); zone.id = "seq"; if(o.classe) zone.classList.add(o.classe); zone.hidden = true; zone.setAttribute("aria-live", "polite");
     const page = document.querySelector(".page"), tete = page.querySelector("header");
     tete ? tete.after(zone) : page.prepend(zone);
+    // La mise en commun partagée par le professeur (« Aussi sur les postes ») : une boîte à part, sous le moment,
+    // pour ne jamais toucher à ce que l'élève est en train de taper.
+    const boite = el("section"); boite.id = "seq-commun"; boite.hidden = true; boite.setAttribute("aria-live", "polite");
+    zone.after(boite);
+    let sigCommun = "";
 
     let cle = "", courant = null, hors = null, contenus = null;
     const mes = {};   // ce que l'élève a envoyé, par moment de cette séquence
@@ -76,14 +99,60 @@
       if(!m || m.type === "fin" || m.type === "atelier"){
         if(hors !== true && o.horsSequence) o.horsSequence();
         hors = true;
+        commun(null);
         if(cle){ cle = ""; zone.hidden = true; document.body.classList.remove("en-sequence"); scrollTo(0, 0); }
         return;
       }
       hors = false;
+      commun(m);
       const k = m.lance + ":" + m.n + ":" + m.phase;
       if(k === cle) return;            // rien n'a changé : on ne touche pas à ce qu'il tape
       cle = k; zone.hidden = false; document.body.classList.add("en-sequence");
       dessine(m);
+    }
+
+    /* Ce que le professeur projette et partage. Rien tant que l'élève n'a pas envoyé sa propre réponse (sinon il
+       recopie celle des autres) ; l'écran d'un cours qui affiche déjà son texte sur le poste n'est pas répété. */
+    function commun(m){
+      const c = m && m.commun, moi = (m && mes[m.lance + ":" + m.n]) || {};
+      const ferme = m && (m.phase === "clos" || m.phase === "corrige");
+      const attend = m && m.type === "mots" && !ferme && (!(moi.mots || moi.reponse) || moi.modifier);
+      const blocs = [];
+      if(c && !attend){
+        const mot = x => { const s = el("span", "sq-mot", x.texte); if(x.n > 1) s.append(el("sup", null, "×" + x.n)); return s; };
+        const e = c.ecran;
+        if(e && !support(m) && !m.lignes && !m.questions){
+          (e.lignes || []).forEach((l, k) => blocs.push(el(k ? "p" : "h3", null, l)));
+          if(e.paires && e.paires.length){ const g = el("dl", "sq-paires"); e.paires.forEach(([a, b]) => g.append(el("dt", null, a), el("dd", null, b))); blocs.push(g); }
+          if(e.exemple) blocs.push(el("p", "sq-note", e.exemple));
+          if(e.questions && e.questions.length){ const q = el("ul"); e.questions.forEach(t => q.append(el("li", null, t))); blocs.push(q); }
+        }
+        if(c.mots){ const n = el("div", "sq-nuage"); c.mots.forEach(x => n.append(mot(x))); blocs.push(c.mots.length ? n : el("p", "sq-note", "Pas encore de mot.")); }
+        if(c.tri){
+          if(c.tri.reserve.length){ const r = el("div", "sq-nuage"); c.tri.reserve.forEach(x => r.append(mot(x))); blocs.push(el("p", "sq-note", "À ranger :"), r); }
+          const cols = el("div", "sq-colonnes");
+          c.tri.colonnes.forEach(k => { const d = el("div", "sq-colonne"), j = el("div", "sq-jetons"); k.mots.forEach(x => j.append(mot(x))); d.append(el("h3", null, k.titre), j); cols.append(d); });
+          blocs.push(cols);
+        }
+        if(c.votes && m.situations && m.choix) m.situations.forEach((s, k) => {
+          const d = el("div", "sq-vote"), l = c.votes[k] || [], tot = m.choix.reduce((a, _, j) => a + (l[j] || 0), 0);
+          if(o.cours.startsWith("python-")){ const pre = el("pre", "sq-programme"); pre.append(el("code", null, s)); d.append(el("p", null, "Programme " + (k+1)), pre); }
+          else d.append(el("p", null, (k+1) + ". " + s));
+          m.choix.forEach((t, j) => {
+            const v = l[j] || 0, ligne = el("div", "sq-vb" + (m.bonnes && m.bonnes[k] === j ? " bonne" : "")), jauge = el("div", "sq-jauge"), i = el("i");
+            i.style.width = (tot ? v / tot * 100 : 0) + "%"; jauge.append(i);
+            ligne.append(el("span", null, (m.bonnes && m.bonnes[k] === j ? "✓ " : "") + t), jauge, el("span", null, v + (tot ? " · " + Math.round(v / tot * 100) + " %" : "")));
+            d.append(ligne);
+          });
+          blocs.push(d);
+        });
+      }
+      // Même contenu qu'au dernier appel : on ne redessine pas (toutes les 5 s, l'écran ne doit pas sauter).
+      const sig = blocs.length ? JSON.stringify(c) + "|" + (m.bonnes ? m.bonnes.join() : "") : "";
+      if(sig === sigCommun) return;
+      sigCommun = sig;
+      boite.hidden = !blocs.length;
+      boite.replaceChildren(...(blocs.length ? [el("p", "sq-sur", "Au tableau en ce moment"), ...blocs] : []));
     }
 
     function dessine(m){
