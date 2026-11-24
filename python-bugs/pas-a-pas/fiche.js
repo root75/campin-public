@@ -30,7 +30,6 @@ const LISTE_FAMILLES = `<div class="encart"><p><b>Les cinq familles de bugs :</b
 
 /* A1. Un signe oublié : SyntaxError. Le print doit garder la boîte (pas de réponse écrite en dur). */
 const signe = (depart, attendu, boite) => ({
-  vois:`La console affiche ${attendu}, sans ligne rouge.`,
   extra: DOIT(`afficher <b>${attendu}</b>.`),
   coince:["La ligne rouge donne un numéro de ligne : le signe oublié est sur cette ligne, ou juste avant.",
           "Un texte s'ouvre ET se ferme par un guillemet. Une parenthèse ouverte se referme.",
@@ -45,7 +44,6 @@ const signe = (depart, attendu, boite) => ({
 
 /* A2. Un nom mal écrit : NameError. Créer une deuxième boîte au mauvais nom n'est pas une réparation. */
 const nom = (depart, attendu, faux, bon) => ({
-  vois:`La console affiche ${attendu}, sans ligne rouge.`,
   extra: DOIT(`afficher <b>${attendu}</b>.`),
   coince:["NameError veut dire : Python ne connaît pas ce nom. La ligne rouge cite le nom qu'il ne trouve pas.",
           "Compare ce nom, lettre par lettre, à celui de la boîte créée plus haut.",
@@ -60,7 +58,6 @@ const nom = (depart, attendu, faux, bon) => ({
 
 /* A3. Texte au lieu de nombre : TypeError. Deux essais : le nombre tapé change, le résultat aussi. */
 const type_ = (depart, tapes, attendus, aide) => ({
-  vois:`On tape ${tapes[0]} : la dernière ligne de la console affiche ${attendus[0]}. On tape ${tapes[1]} : ${attendus[1]}.`,
   extra: DOIT(`on tape <b>${tapes[0]}</b>, il affiche <b>${attendus[0]}</b> ; on tape <b>${tapes[1]}</b>, il affiche <b>${attendus[1]}</b>.`),
   coince:["TypeError veut dire : Python ne peut pas faire cette opération entre un texte et un nombre.",
           "input( ) rend toujours un TEXTE, même si on tape des chiffres.", aide],
@@ -85,7 +82,6 @@ const fou = (n, k) => ({
 
 /* B2. Le mauvais calcul : aucun message, un résultat faux. La réparation garde les boîtes. */
 const calcul = (depart, quoi, attendu, motif, garde) => ({
-  vois:`La console affiche ${attendu}.`,
   extra: DOIT(`${quoi} Il doit afficher <b>${attendu}</b>.`),
   coince:["Pas de ligne rouge : Python a fait exactement ce qui est écrit. C'est ce qui est écrit qui est faux.",
           "Exécute, puis compare ce qui s'affiche avec ce qui est attendu.",
@@ -99,7 +95,6 @@ const calcul = (depart, quoi, attendu, motif, garde) => ({
 
 /* B3. Les lignes dans le mauvais ordre. `lignes` est donné dans le bon ordre ; la page les mélange. */
 const bonOrdre = (lignes, quoi, attendu) => ({
-  vois:`La console affiche ${attendu}.`,
   extra: DOIT(`${quoi} Il doit afficher <b>${attendu}</b>.`),
   coince:["Python exécute les lignes de haut en bas, une à la fois.",
           "Une boîte doit être créée AVANT d'être utilisée : sinon, NameError.",
@@ -113,7 +108,6 @@ const bonOrdre = (lignes, quoi, attendu) => ({
 
 /* B4. Deux bugs dans le même programme : un qui crie, un silencieux. */
 const deux = (depart, quoi, tapes, attendus) => ({
-  vois:`On tape ${tapes[0]} : la dernière ligne affiche ${attendus[0]}. On tape ${tapes[1]} : ${attendus[1]}.`,
   extra: DOIT(`${quoi} On tape <b>${tapes[0]}</b>, il affiche <b>${attendus[0]}</b> ; on tape <b>${tapes[1]}</b>, il affiche <b>${attendus[1]}</b>.`),
   coince:["Commence par le bug qui crie : la ligne rouge te donne sa ligne et son nom.",
           "Quand il n'y a plus de ligne rouge, ce n'est pas fini : compare ce qui s'affiche avec ce qui est attendu.",
@@ -181,7 +175,6 @@ const BLOCS = [
     veux:"Prédire ce qu'affiche un programme qui s'exécute sans ligne rouge, mais qui a un bug.",
     fais:CASES("Lis <b>le programme</b> ci-dessous, ligne par ligne.", "Dis <b>ta prédiction</b> à ton binôme, à voix basse. Il te dit la sienne.",
                "Clique sur <span class=\"chemin\">✅ <b>C'est vérifié</b></span> : réponds seul à la question."),
-    vois:"Chacun a dit sa prédiction avant de répondre.",
     coince:["Que rend input( ) : un texte ou un nombre ?", "Python sait multiplier un texte par un nombre : essaie d'imaginer \"ha\" * 3."],
     ...fou(7, 3), variantes:[fou(5, 2), fou(4, 3)] },
 
@@ -224,7 +217,7 @@ const BLOCS = [
                {geste:"Cache <b>un seul bug</b> de cette famille dans le programme.", attention:"⚠️ Un seul bug, et pas de ligne effacée : ton binôme doit pouvoir le réparer."},
                `Exécute (<span class="chemin">▶</span> ou <b>F5</b>) : vérifie que <b>le bug est bien là</b>. Puis enregistre (<b>Ctrl + S</b>).`,
                "Clique sur <span class=\"chemin\">✅ <b>C'est vérifié</b></span> : réponds seul à la question."),
-    vois:"L'onglet de Thonny affiche 02_Le-bug_ et ton nom. Le programme a un bug, un seul. Ton fichier 02_Le-score_ n'a pas changé.",
+    vois:"Dans Thonny, l'onglet au-dessus de ton programme affiche 02_Le-bug_ suivi de ton nom.",
     extra: LISTE_FAMILLES + `<p>Le programme « Le score », sans bug :</p>` + CODE(SCORE),
     coince:["Pas de fichier 02_Le-score_ dans Documents ▸ Python : dans la fenêtre Ouvrir, tape 02_Le-score dans la case Rechercher, en haut à droite, puis Enter. Toujours rien : tape le programme de l'encadré dans un nouveau fichier.",
             "Tu as enregistré le bug dans 02_Le-score_ : annule avec Ctrl + Z jusqu'au programme sans bug, Ctrl + S, puis reprends à Enregistrer sous…",
@@ -245,7 +238,7 @@ const BLOCS = [
                "Dans TON fichier, tout en haut, écris <b>trois commentaires</b> (le # est AltGr + 3) : <code># Bug caché :</code> … <code># Trouvé par :</code> … <code># Réparation :</code> …",
                "Exécute (F5) pour vérifier, puis enregistre (<b>Ctrl + S</b>).",
                "Clique sur <span class=\"chemin\">✅ <b>C'est vérifié</b></span> : complète la méthode."),
-    vois:"Ton fichier 02_Le-bug_ s'exécute : on tape 7, il affiche 70. Ses trois premières lignes sont tes trois commentaires.",
+    vois:"Dans Thonny, ton fichier 02_Le-bug_ s'exécute : tu tapes 7, la console du bas affiche 70.",
     extra:`<div class="encart"><p><b>Tes trois commentaires, tout en haut de ton fichier :</b></p>
   <p><code># Bug caché :</code> la famille du bug que tu avais caché, et sa ligne.<br><code># Trouvé par :</code> le prénom de ton binôme, et ce qui l'a mis sur la piste.<br><code># Réparation :</code> ce qui a été changé, avec tes mots.</p></div>`,
     coince:["Le bug de ton binôme est introuvable après 5 minutes : il te donne la FAMILLE du bug, pas la ligne.",

@@ -50,7 +50,7 @@ const SOLUTION_BONUS = 'pieces = int(input("Combien de pièces ? "))\n# le bonus
 const SOLUTIONS = {
   5: b => { const [, bonus, seuil] = b.q.q.match(/bonus de (\d+) si energie > (\d+)/); return b.q.depart.replace('\n\n', `\nif energie > ${seuil}:\n    energie = energie + ${bonus}\n`); },
   7: b => `vies = int(input("Vies ? "))\nif vies == 0:\n    print("${b.q.q.match(/Il affiche (.*?) quand/)[1]}")`,
-  8: b => { const [, bon, oui, , non] = b.vois.match(/On tape (.*?) : la console affiche (.*?)\. On tape (.*?) : (.*)$/);
+  8: b => { const bon = b.q.essais[0][0], oui = b.q.scene.ouvre, non = b.q.scene.ferme;   // l'encadré « À vérifier » n'existe plus sous un cadre de code
              const nom = b.q.depart.split(' = ')[0];
              return b.q.depart + `if ${nom} == "${bon}":\n    print("${oui}")\nelse:\n    print("${non}")`; },
   9: b => b.q.depart + 'if vies <= 0:\n    print("Game over")\nelse:\n    print("Il te reste", vies, "vies")',

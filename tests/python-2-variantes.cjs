@@ -68,14 +68,14 @@ console.log('OK Python 2 : '+cases.length+' cases, chacune avec son mot-clé en 
 /* « À vérifier » (24/11/2026) : jamais sous un cadre que la page corrige elle-même (code, ligne), ni pour dire ce
    qu'on sait. Ailleurs, une phrase qui dit où regarder hors de la page : « Dans Thonny, … », « Dans Classroom, … ». */
 let encadres = 0;
-for (const [cours, n] of [['python-2', 11], ['python-3', 16]]) {
+for (const [cours, n] of [['python-1', 13], ['python-2', 11], ['python-3', 16], ['python-4', 15], ['python-bugs', 10]]) {
   const b = charge(cours);
   for (let i=1; i<=n; i++) for (let v=1; v<=3; v++) {
     let B; try { B = b(i, v); } catch (e) { continue; }   // un bloc sans variantes n'a que sa version 1
-    if (['code','ligne'].includes(B.q.type)) assert.ok(!B.vois, `${cours} ${i}/${v}: pas d'encadré sous un cadre corrigé par la page`);
-    else if (B.vois) { if (v===1) encadres++; assert.ok(/^Dans (Thonny|Classroom|l'onglet du quiz), /.test(B.vois) && B.vois.length<130, `${cours} ${i}/${v}: « ${B.vois} »`); }
+    if (['code','ligne','ordre','trace'].includes(B.q.type)) assert.ok(!B.vois, `${cours} ${i}/${v}: pas d'encadré sous un cadre corrigé par la page`);
+    else if (B.vois) { if (v===1) encadres++; assert.ok(/^Dans (Thonny|Classroom|l'onglet du quiz|l'Explorateur de fichiers), /.test(B.vois) && B.vois.length<130, `${cours} ${i}/${v}: « ${B.vois} »`); }
     if (B.q.type==='ligne') assert.ok(/doit (valoir|afficher)/.test(B.q.q), `${cours} ${i}/${v}: l'énoncé est dans la question`);
   }
 }
-assert.equal(encadres, 10, 'dix encadrés gardés');
-console.log('À vérifier : 10 encadrés gardés, tous hors de la page');
+assert.equal(encadres, 22, '22 encadrés gardés dans les cinq fiches');
+console.log('À vérifier : 22 encadrés gardés dans les cinq fiches Python, tous hors de la page');

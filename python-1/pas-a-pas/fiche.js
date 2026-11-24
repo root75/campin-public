@@ -55,7 +55,6 @@ const EXECUTER = `Clique sur <span class="chemin">▶ Exécuter</span> (ou <b>Ct
 const afficheExact = (t, detail) => ({
   titre:"Afficher « "+t+" »",
   fais:CASES(`Écris UNE ligne qui affiche exactement <b>${t}</b>.`, EXECUTER),
-  vois:"Le cadre affiche "+t+", à la lettre près, et la fiche dit « Oui, c'est ça ».",
   coince:["Ligne rouge : il manque les guillemets ou une parenthèse.",
           "Python affiche autre chose : compare lettre par lettre. "+detail[0].toUpperCase()+detail.slice(1)+"."],
   q:{ type:"code", q:"Écris la ligne qui affiche "+t, depart:"",
@@ -72,7 +71,6 @@ const xFactor = (a, b) => ({
             "Ligne 3 : avant, x vaut "+(2*a)+" (pas "+a+" : la ligne 2 l'a changé). On enlève "+b+"."],
       juste:a+", puis "+a+" + "+a+" = "+(2*a)+", puis "+(2*a)+" − "+b+" = "+(2*a-b)+". La valeur finale de x est "+(2*a-b)+"." } });
 const cartes = n => ({
-  vois:`Avec ${n} paquets : ${4*n} rois, ${12*n} figures, ${52*n} cartes. Et si on remplace paquets = ${n} par paquets = 5, tout suit.`,
   q:{ type:"code", q:"Complète les trois lignes.", depart:"paquets = "+n+"\nrois = \nfigures = \ncartes = \nprint(rois, figures, cartes)",
       test: r => {
         if(r.erreur) return r.erreur.type==="SyntaxError" ? "Lis la <b>ligne rouge</b> : une ligne n'a rien à droite du =. Complète-la avec un calcul."
@@ -84,7 +82,6 @@ const cartes = n => ({
       },
       juste:"Le programme marche pour n'importe quel nombre de paquets : c'est tout l'intérêt d'une variable." } });
 const tickets = (prix, nombre) => ({
-  vois:`Le programme affiche ${prix*nombre} : le prix total de ${nombre} tickets à ${prix} €.`,
   q:{ type:"ordre", q:"Remets les lignes dans l'ordre.", lignes:["prix = "+prix,"nombre = "+nombre,"total = prix * nombre","print(total)"],
       test: r => r.erreur ? (r.erreur.type==="NameError" ? "Ligne "+r.erreur.ligne+" : Python ne connaît pas encore ce nom. La variable doit être créée AVANT, plus haut." : "Lis la <b>ligne rouge</b>.")
                : SORTIE(r)===String(prix*nombre) ? true : "Python affiche « "+SORTIE(r)+" » : on veut "+(prix*nombre)+". Vérifie l'ordre.",
@@ -95,7 +92,6 @@ const echange = (a, b) => ({
              "Construis l’échange avec une <b>troisième boîte</b>, <code>temp</code>.",
              "Vérifie avec <b>d’autres valeurs</b>.",
              "<b>Explique ton idée</b> à ton voisin, sans lui dicter le code."),
-  vois:"Tu sais dire ce qu’une affectation remplace, et pourquoi une valeur doit d’abord être mise à l’abri.",
   indices:true,
   coince:["Une affectation copie la valeur de droite dans la boîte de gauche. La valeur précédente de cette boîte est remplacée.","Représente trois boîtes sur une feuille. Mets une valeur à l’abri avant de remplacer le contenu d’une boîte."],
   q:{type:"code",q:"Échanger deux variables : comprendre avant de valider.",initialA:a,initialB:b,guide:echangeGuide,
@@ -115,7 +111,6 @@ const BLOCS = [
     veux:"Voir ce qu'un programme affiche.",
     fais:CASES(`Sous « Mon programme », clique sur <span class="chemin">▶ Exécuter</span> (ou <b>Ctrl + Enter</b>).`,
                "La première fois, <b>attends quelques secondes</b> : Python se prépare."),
-    vois:"Dans le cadre du dessous, le texte écrit par le programme : Bonjour !",
     coince:["Rien ne s'affiche après une minute : recharge la page (touche F5), puis clique de nouveau sur Exécuter.",
             "« Le moteur Python ne se charge pas » : sonne la cloche 🔔, en haut à droite. En attendant, passe à Thonny avec le professeur."],
     q:{ type:"code", q:"Exécute le programme.", depart:'print("Bonjour !")',
@@ -126,7 +121,6 @@ const BLOCS = [
     bulle:"Un message d'erreur n'est pas grave : il dit où regarder.",
     veux:"Voir à quoi ressemble un message d'erreur, et à quoi servent les guillemets.",
     fais:CASES(`Efface les deux guillemets <b>"</b>.`, EXECUTER, "Lis la <b>ligne rouge</b> à voix haute à ton voisin."),
-    vois:"Une ligne rouge : le numéro de la ligne fautive, puis le nom de l'erreur.",
     coince:["Le guillemet \" est la touche 3 du clavier, sans Shift.",
             "Le programme marche encore : il reste un guillemet. Efface les deux."],
     q:{ type:"code", q:"Efface les guillemets, puis exécute.", depart:'print("Bonjour !")',
@@ -148,7 +142,6 @@ const BLOCS = [
     veux:"Apprendre en prédisant, pas en cliquant au hasard.",
     fais:CASES("Lis l'<b>encadré</b> ci-dessous.",
                "À chaque programme, <b>prédis</b> ce qui va s'afficher AVANT de cliquer sur Exécuter, comme pour une trace."),
-    vois:"Tu sais redire la règle : prédire, puis exécuter.",
     extra:`<div class="encart"><p><b>Une variable, c'est une boîte qui porte un nom.</b> <code>=</code> range une valeur dedans : c'est la flèche ← du logigramme. À droite, on calcule ; à gauche, on range.</p></div>`,
     coince:["Le bouton 🐍 « Du logigramme à Python », en bas de la page, redit tout."],
     q:{ type:"qcm", q:"Quelle est la règle de toute la leçon ?",
@@ -160,7 +153,6 @@ const BLOCS = [
     veux:"Suivre la valeur de x ligne par ligne, sans rien exécuter.",
     fais:CASES("<b>Suis avec le professeur</b>, au projecteur.",
                "Pour chaque ligne, écris <b>la valeur de x</b> APRÈS cette ligne, comme dans un tableau de trace de LogProg 03."),
-    vois:"La dernière case donne la valeur finale de x.",
     coince:["= n'est pas une égalité : à droite, calcule avec la valeur d'avant ; à gauche, range.",
             "Descends ligne par ligne : la valeur de la ligne d'avant sert au calcul de la ligne suivante."],
     ...xFactor(10, 5),
@@ -202,7 +194,7 @@ const BLOCS = [
                `Dans la colonne de gauche, clique sur <b class="chemin">Documents</b>.`,
                `En haut à gauche, clique sur <span class="chemin">⊕ Nouveau ▸ Dossier</span> (ou <b>Ctrl + Shift + N</b>).`,
                "Tape <b>Python</b>, puis appuie sur <b>Enter</b>."),
-    vois:"Un dossier <b>Python</b> dans Documents.",
+    vois:"Dans l'Explorateur de fichiers, le dossier Documents contient un dossier Python.",
     coince:["Le dossier s'appelle « Nouveau dossier » : clic droit dessus ▸ Renommer (touche F2) ▸ tape Python ▸ Enter.",
             "Pas de bouton Nouveau : clic droit dans une zone vide de Documents ▸ Nouveau ▸ Dossier.",
             "Le dossier Python existe déjà : rien à refaire, passe à la suite."],
@@ -225,7 +217,7 @@ const BLOCS = [
                `Dans la fenêtre qui s'ouvre : <b class="chemin">Documents ▸ double-clic sur Python</b>.`,
                `Dans <span class="chemin">Nom du fichier</span>, tape <b>01_Les-vies_Nom.py</b>, avec TON nom à la place de Nom.`,
                `Clique sur <b class="chemin">Enregistrer</b>.`),
-    vois:"L'onglet, en haut de Thonny, affiche le nom de ton fichier.",
+    vois:"Dans Thonny, l'onglet au-dessus de ton programme affiche le nom de ton fichier.",
     coince:["Thonny ne se lance pas : nouvel onglet (Ctrl + T) ▸ barre d’adresse ▸ https://cscircles.cemc.uwaterloo.ca/dev/console-fr/ ▸ Enter. Sonne la cloche 🔔 : le professeur organise la sauvegarde avant que tu continues le défi dans cette console de secours. Ne recopie pas un nom de fichier fictif pour valider ce bloc.",
             "Sans .py à la fin, Thonny n'exécute pas comme attendu : Fichier ▸ Enregistrer sous… et corrige le nom.",
             "Deux signes différents : le tiret - entre Les et vies, le trait de soulignement _ partout ailleurs."],
@@ -244,7 +236,7 @@ const BLOCS = [
                "Écris <b>une ligne par forme</b> du logigramme, en suivant les flèches.",
                `Enregistre : <span class="chemin">icône disquette « Enregistrer »</span> (ou <b>Ctrl + S</b>).`,
                { geste:"<b>Prédis</b> le résultat, ci-dessous.", attention:"⚠️ N'exécute pas encore : tu exécutes au bloc suivant, après ta prédiction." }),
-    vois:"Trois lignes de Python, une par forme du milieu.",
+    vois:"Dans Thonny, ton programme compte trois lignes : une par forme du milieu du logigramme.",
     extra: LOGIGRAMME_VIES + `<div class="encart"><table>
   <tr><th>Dans le logigramme</th><th>En Python</th></tr>
   <tr><td>la flèche ←</td><td><b>=</b></td></tr>
@@ -269,7 +261,7 @@ const BLOCS = [
                "Lis le nombre affiché dans la <b>console du bas</b>.",
                "Compare-le avec <b>ta prédiction</b> du bloc 11.",
                "Réponds ci-dessous. Ensuite, <b>montre ton programme à ton voisin</b> : il vérifie qu'il suit le logigramme, ligne par ligne."),
-    vois:"Dans la console du bas, le nombre {R}.",
+    vois:"Dans Thonny, la console du bas affiche un nombre, sans ligne rouge.",
     coince:["NameError : Python ne connaît pas un nom. Vérifie les majuscules : vies partout.",
             "SyntaxError : c'est l'écriture. Vérifie les parenthèses de print( ).",
             "Thonny demande d'enregistrer : clique sur Oui (ou Ctrl + S, puis F5)."],
