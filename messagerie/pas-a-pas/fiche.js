@@ -44,10 +44,14 @@ const M1 = (() => {
     const v = propre(reponse), mots = propre(d.nom).split(/[^a-z0-9'-]+/).filter(Boolean);
     const cl = classeDe(d, classe) || (CLASSE.exec(String(reponse||'').trim())||[])[1] || '';
     const c = (nom, err) => ({ nom, err:err||'' });
+    /* La phrase sur le loisir (24/11/2026) : « moi, je fait du vélo. » était refusée, la liste ne connaissant ni
+       « faire » ni aucun nom de sport. Une phrase compte si elle nomme un loisir OU si l'élève dit ce qu'il fait
+       (je fais, je joue, je vais à…). L'orthographe n'est pas jugée ici : « je fait » passe. Hors sujet = refusé. */
+    const LOISIR = /loisir|sport|activite|passion|hobby|club|entraine|match|pratique|aime|adore|prefere|joue|jouer|lecture|lire|\blis\b|musique|chant|guitare|piano|batterie|dessin|peinture|danse|anime|manga|jeu|cuisin|brico|jardin|peche|foot|basket|volley|hand|rugby|tennis|ping|badminton|natation|nage|piscine|velo|vtt|cycl|course|courir|\bcours\b|athle|gym|judo|karate|boxe|escrime|equitation|cheval|ski|skate|trottinette|roller|escalade|hockey|golf|fitness|muscu|yoga|theatre|scout|photo|film|cinema|serie|video|\bje (fais|fait|vais|monte|roule|regarde|collectionne)\b/;
     return [
       c('« Bonjour Camille, » au début', erreurSalutation(reponse, false)),
-      c('Une phrase complète sur ton sport ou ton loisir', !/loisir|sport|activite|pratique|aime|joue|lecture|lire|musique|dessin|danse|anime/.test(v) ? 'Réponds à la question de Camille : écris une phrase complète sur ton sport ou ton loisir, par exemple « Je pratique le football. »' : v.length<35 ? 'Ta réponse est trop courte. Il faut, dans l’ordre : la salutation, une phrase complète sur ton loisir, une formule de fin et ta signature.' : ''),
-      c('Une formule de fin : « Bonne journée, »', !/bonne journee|a bientot|merci|cordialement|bonne soiree/.test(v) ? 'Avant ta signature, ajoute une formule de fin du modèle : « Bonne journée, » ou « À bientôt, » (Merci, Cordialement ou Bonne soirée conviennent aussi).' : ''),
+      c('Une phrase complète sur ton sport ou ton loisir', !LOISIR.test(v) ? 'Réponds à la question de Camille : écris une phrase complète sur ton sport ou ton loisir, par exemple « Je pratique le football. » ou « Je fais du vélo. »' : v.length<35 ? 'Ta réponse est trop courte. Il faut, dans l’ordre : la salutation, une phrase complète sur ton loisir, une formule de fin et ta signature.' : ''),
+      c('Une formule de fin, comme « Bonne journée, » ou « À bientôt, »', !/bonne journee|a bientot|merci|cordialement|bonne soiree/.test(v) ? 'Avant ta signature, ajoute une formule de fin du modèle : « Bonne journée, » ou « À bientôt, » (Merci, Cordialement ou Bonne soirée conviennent aussi).' : ''),
       c('Ta signature : ton prénom et ton nom', !mots.length ? 'Écris d’abord ton prénom et ton nom dans la case « Ton prénom et ton nom », juste au-dessus de ta réponse.' : !mots.every(m=>v.split(/[^a-z0-9'-]+/).includes(m)) ? 'Dans ta signature, reprends le prénom et le nom du bloc 6 : '+String(d.nom).trim()+'.' : ''),
       c('Ta classe, après ton nom', !cl ? 'Ajoute ta classe dans ta signature, après ton prénom et ton nom (exemple : 2B).' : !v.replace(/\s/g,'').includes(propre(cl).replace(/\s/g,'')) ? 'Dans ta signature, reprends la classe du bloc 6 : '+cl+'.' : '')
     ];
@@ -296,7 +300,7 @@ const BLOCS = [
   q:{serveur:true, type:'mixte', colle:true, ouvre:'↶ Répondre à Camille',
      activite:{type:'redaction', commun:true, etiquette:'Ma réponse à Camille', q:'Écris ta réponse. La liste, en dessous, se coche pendant que tu écris.',
        champs:[{cle:'nom', siVide:true, nom:'Ton prénom et ton nom', aide:'Tu reprends sur un autre poste : écris-les ici, ta signature sera vérifiée avec eux.', max:120}],
-       zone:{cle:'reponse', nom:'Corps de ta réponse', aide:'Commence par la salutation du modèle, « Bonjour Camille, ». Réponds à sa question par une phrase complète, puis ajoute une formule de fin (« Bonne journée, ») et ta signature.', lignes:6, max:700},
+       zone:{cle:'reponse', nom:'Corps de ta réponse', aide:'Commence par la salutation du modèle, « Bonjour Camille, ». Réponds à sa question par une phrase complète, puis ajoute une formule de fin (« Bonne journée, » ou « À bientôt, ») et ta signature.', lignes:6, max:700},
        criteres:(texte, d, ctx)=>M1.criteresReponse(texte, d, ctx.classe), bouton:'Vérifier ma réponse',
        juste:'Les cinq points y sont. Une dernière question, juste en dessous.'},
      validation:{juste:'Tu as préparé les parties de ta réponse. Explique au professeur comment tu réponds à la question de Camille.'}}},
