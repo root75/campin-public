@@ -15,7 +15,7 @@ assert.match(html, /src="https:\/\/root75\.github\.io\/campin-public\/assets\/lo
 assert.ok(fs.existsSync(require.resolve('../assets/logo-campin.png')));
 assert.match(html, /id="bandeau-extension" hidden/);
 
-function noeud(id){ return { id, hidden: /^(compte|maintenant|meteo|lien-prof|devoirs|annonces|date-nommer)$/.test(id), textContent:'', href:'', children:[],
+function noeud(id){ return { id, hidden: /^(compte|maintenant|meteo|lien-prof|devoirs|annonces|date-nommer|devoirs-plie)$/.test(id), textContent:'', href:'', children:[],
   addEventListener(){}, replaceChildren(...e){ this.children = e; } }; }
 function lance(reponse, { suivi = true, devoirs, annonces } = {}){
   const els = new Map(), ajoutes = [];
@@ -143,8 +143,15 @@ console.log('portail : page publique, élève reconnu, hors école, redirection 
   assert.equal(q.$('devoirs').hidden, false); assert.equal(q.$('devoirs-liste').children.length, 1);
   assert.equal(q.$('devoirs-points').hidden, true, 'Aucune cote : pas de phrase sur les points');
   q = lance(d, { devoirs:[{ titre:'Portrait', lien:'https://classroom.google.com/c/x/a/1', echeance:0, etat:'corrige', note:8, sur:10 }] });
-  assert.equal(q.$('devoirs-points').hidden, false);
+  // Les points sont repliés à l'ouverture : le devoir et son état se lisent, la cote attend « Voir mes points ».
+  assert.equal(q.$('devoirs-plie').hidden, false); assert.equal(q.$('devoirs-voir').textContent, 'Voir mes points');
+  assert.equal(q.$('devoirs-points').hidden, true); assert.ok(!JSON.stringify(q.$('devoirs-liste').children).includes('8 / 10'), 'Repliés : aucune cote à l\'écran');
+  assert.ok(JSON.stringify(q.$('devoirs-liste').children).includes('Corrigé'));
+  q.$('devoirs-voir').onclick();
+  assert.equal(q.$('devoirs-points').hidden, false); assert.equal(q.$('devoirs-voir').textContent, 'Cacher mes points');
   assert.ok(JSON.stringify(q.$('devoirs-liste').children).includes('8 / 10'), 'La cote est écrite dans la ligne du devoir');
+  q.$('devoirs-voir').onclick(); assert.ok(!JSON.stringify(q.$('devoirs-liste').children).includes('8 / 10'));
+  assert.ok(html.indexOf('id="annonces"') < html.indexOf('id="devoirs"'), 'Les annonces passent avant les devoirs et les points');
   assert.match(html, /Pour les autres cours, ouvre <a target="_top" href="http:\/\/arcampin\.ecoleenligne\.be\/">École en ligne<\/a>/);
   q = lance(d, { devoirs:[] }); assert.equal(q.$('devoirs').hidden, false, 'Liste vide : « Aucun devoir pour le moment »');
   q = lance(d, { devoirs:null }); assert.notEqual(q.$('devoirs').hidden, false, 'Sans service Classroom, pas de panneau');
