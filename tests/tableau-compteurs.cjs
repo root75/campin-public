@@ -31,3 +31,13 @@ console.log('Compteurs et bandeau : coincés sans sonner, inactifs, butent, bloc
   assert.match(f({_allerRetour:900}),/^ · 0,9 s$/,'ancien serveur sans mesure : l’aller-retour seul');
   console.log('Mesure du chargement : affichage vérifié.');
 }
+{ // Grille « Qui a rendu ? » : le nom sans le suffixe du compte, la cote seulement si on la demande.
+  const g=vm.createContext({});vm.runInContext(bout('const DEVOIRS_VUS','let POINTS_VISIBLES')+bout('const frCote','function chargeDevoirs'),g);
+  const r={travaux:[{id:'a',titre:'Labo 05',sur:20}],eleves:[{nom:'Aaron MALIGO (élève)',remises:{a:{etat:'corrige',note:8}}},{nom:'Charly CARON (student)',remises:{a:{etat:'retard'}}},{nom:'Léa Dupont',remises:{}}]};
+  const f=vm.runInContext('grilleDevoirs',g);
+  assert.deepEqual(f(r,false).eleves.map(e=>e.nom),['Aaron MALIGO','Charly CARON','Léa Dupont']);
+  assert.deepEqual(f(r,false).eleves.map(e=>e.cases[0].mot),['Corrigé','En retard','—']);
+  assert.equal(f(r,true).eleves[0].cases[0].mot,'8 / 20');assert.equal(f(r,true).travaux[0].rendus,1);
+  assert.match(source,/th\.title = w\.titre/,'le titre entier au survol');
+  console.log('Grille des devoirs : noms sans suffixe, cotes sur demande.');
+}
