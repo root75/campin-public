@@ -973,7 +973,7 @@ let CL = null;
 const DEMO_CL = {
   fil: [],
   d: { cours:[],
-       classes:{ "2B":["messagerie-1"], "2E":["messagerie-1"], "3F":["python-1"] },
+       classes:{ "1C":["messagerie-1"], "2B":["messagerie-1"], "2E":["messagerie-1"], "3F":["python-1"] },
        modes:{}, chats:{}, classroom:["2B","3F"], progres:true,
        eleves:[{email:"lea.dupont@arcampin.be",classe:"2B"},{email:"noah.martin@arcampin.be",classe:"2E"},{email:"sami.benali@arcampin.be",classe:"2B"}] },
   classesEtCours(){ return this.d; },
@@ -1081,6 +1081,7 @@ function dessineChatSeance(d){
     pieces.push(boite);
   });
   z.replaceChildren(...pieces);
+  dessineBlocSeance();
   /* Le fil vit dans sa propre boîte, gardée d'un dessin à l'autre : le tableau se redessine sans cesse. */
   const ouvert = liste.some(([n, dk])=>n === chatSeanceVu && dk.chat);
   if(!ouvert){ if(chatSeance || !$("chat-seance-fil").hidden) arreteChatSeance(); return; }
@@ -1121,6 +1122,40 @@ function caseChat(n, d){
     boite.append(filChat.zone);
   } else if(filChat && filChat.classe === n){ filChat.fil.arrete(); filChat = null; }
   return boite;
+}
+/* Vue cours : le même bloc que sur la carte de classe (Vincent, 24/11/2026 : « la même vue sur la page qui lance
+   les cours »). Mode cours et chat de la classe de la séance choisie, plus celles de « Voir aussi », sous le menu.
+   Séance en cours : le chat est celui de la séance (« Fermer le chat »), rangé ici ; sinon l'interrupteur avec durée.
+   Le bloc n'est reconstruit que si quelque chose a changé : le tableau se redessine toutes les 15 s, et un menu
+   de durée en train d'être choisi ne doit pas se refermer. Créé ici : la page gardée en cache ne le porte pas. */
+let signatureBloc = null;
+function dessineBlocSeance(){
+  if(document.body.classList.contains("vue-onglet") || !$("chat-seance")) return;
+  let z = $("bloc-seance");
+  if(!z){
+    z = txt("section", "panneau"); z.id = "bloc-seance"; z.hidden = true;
+    const modes = txt("div", "cl-actions"), ligne = txt("div", "cl-mode"), chats = txt("div", "cl-actions");
+    modes.id = "bloc-seance-modes"; ligne.id = "bloc-seance-chat"; chats.id = "bloc-seance-chats";
+    ligne.append(txt("span", "cl-etiquette", "Chat de la classe"), $("chat-seance"));
+    z.append(modes, ligne, chats);
+    $("chat-seance-fil").before(z);
+  }
+  const enSeance = !$("chat-seance").hidden, cours = $("cours").value, maintenant = Date.now();
+  const classes = CL && CL.classes ? [choisie().classe].concat(autresSeances().map(x=>x.classe)).filter((c, i, l)=>c && CL.classes[c] && l.indexOf(c) === i) : [];
+  /* Un mode cours dont l'heure est passée est tombé seul : on ne l'affiche plus, sans attendre le serveur. */
+  const d = CL ? Object.assign({}, CL, CL.modes ? { modes: Object.fromEntries(Object.entries(CL.modes).filter(([, m])=>Number(m.jusqua) > maintenant)) } : {}) : null;
+  const signature = JSON.stringify([cours, enSeance, classes.map(c=>[c, d.classes[c], d.modes && d.modes[c], !enSeance && d.chats && d.chats[c], CHATS_VUS.has(c)])]);
+  $("bloc-seance-chat").hidden = !enSeance;
+  if(signature !== signatureBloc){
+    signatureBloc = signature;
+    const plusieurs = classes.length > 1, nomme = (boite, quoi, c)=>{
+      let e = boite.querySelector(".cl-etiquette");
+      if(!e){ e = txt("span", "cl-etiquette"); boite.prepend(e); }
+      e.textContent = quoi + (plusieurs ? " — " + c : ""); return boite; };
+    $("bloc-seance-modes").replaceChildren(...classes.map(c=>{ const b = caseModeCours(c, d); return b && nomme(b, "Mode cours", c); }).filter(Boolean));
+    $("bloc-seance-chats").replaceChildren(...(enSeance ? [] : classes.map(c=>{ const b = caseChat(c, d); return b && nomme(b, "Chat de la classe", c); }).filter(Boolean)));
+  }
+  z.hidden = !enSeance && !$("bloc-seance-modes").childNodes.length && !$("bloc-seance-chats").childNodes.length;
 }
 /* Les devoirs Classroom de la classe : qui a rendu quoi. Le tableau se projette parfois devant la classe : les
    points sont cachés tant que la case « Montrer les points » n'est pas cochée, et elle repart décochée à chaque
@@ -1313,6 +1348,8 @@ function dessineClasses(d){
   filtre.value = [...filtre.options].some(o=>o.value===avant) ? avant : "";
   dessineEleves();
   $("panneau-classes").hidden = false;
+  signatureBloc = null;   // les cartes viennent de reprendre le fil du chat : le bloc de la vue cours le récupère
+  dessineBlocSeance();
   $("eleves-statut").textContent="Liste à jour. Les changements de classe sont enregistrés après confirmation du serveur.";
 }
 /* « Je m'occupe » : une case 🎁 à côté du nom. Cochée = la récompense est ouverte une heure pour cet élève.
