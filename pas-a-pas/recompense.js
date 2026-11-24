@@ -24,14 +24,47 @@ const Tresor = (() => {
 #tresor.coffre{background:var(--fromage,#e3a922);color:#1f2a33}
 @keyframes tresor-saut{0%{transform:scale(1)}40%{transform:scale(1.5) rotate(-6deg)}100%{transform:scale(1)}}
 @media (prefers-reduced-motion:reduce){#tresor.gagne b{animation:none}}
-body.en-sequence #tresor{display:none}
+body.en-sequence #tresor:not(.pot-classe){display:none}
 @media print{#tresor{display:none}}`;
-    zone = document.createElement('p'); zone.id = 'tresor'; zone.setAttribute('role', 'status');
+    zone = document.createElement('div'); zone.id = 'tresor'; zone.setAttribute('role', 'status');
     const qui = document.getElementById('qui');
     if (qui) qui.after(zone); else document.body.prepend(zone);
     document.head.append(s);
   }
+  let precedent = null;
+  const surprises = ['🌠 Pluie d’étoiles','🪐 Une planète découverte','🌌 Une nouvelle constellation','🚀 Décollage collectif'];
+  function dessinePot(r){
+    const ancien = precedent;
+    if(ancien && ['tresorSeance','tresor','tresorPresents','tresorPaliers'].every(k=>r[k]===ancien[k])) return;
+    precedent = r;
+    if(!zone) cree();
+    zone.setAttribute('role','region'); zone.setAttribute('aria-label','Le pot de la classe');
+    const projection = document.getElementById('seq');
+    if(projection && projection.previousElementSibling!==zone) projection.before(zone);
+    zone.hidden = false;
+    clearTimeout(minuterie);
+    const memeSeance = ancien && ancien.tresorSeance===r.tresorSeance;
+    const ouvre = memeSeance && r.tresorPaliers>ancien.tresorPaliers;
+    const gagne = memeSeance && r.tresor>ancien.tresor;
+    const pot = document.createElement('span'); pot.className='bocal'; pot.setAttribute('aria-hidden','true');
+    const niveau = document.createElement('i'); niveau.style.height=(100*r.tresorPot/r.tresorPresents)+'%';
+    const piece = document.createElement('span'); piece.textContent='★'; pot.append(niveau,piece);
+    const titre = document.createElement('strong'); titre.textContent='Le pot de la classe';
+    const compte = document.createElement('span'); compte.textContent=r.tresorPot+' / '+r.tresorPresents+' étoiles pour la prochaine surprise';
+    const groupe = document.createElement('small'); groupe.textContent=r.tresorPresents+' élève'+(r.tresorPresents>1?'s':'')+' en séance · '+r.tresor+' ⭐ au total';
+    const texte = document.createElement('span'); texte.className='pot-texte'; texte.append(titre,compte,groupe);
+    if(r.tresorPaliers){
+      const prix=document.createElement('span'); prix.className='pot-prix';
+      prix.textContent='Surprise '+r.tresorPaliers+' · '+surprises[(r.tresorPaliers-1)%surprises.length]; texte.append(prix);
+      const choix=document.createElement('small'); choix.textContent='Jeu collectif disponible pour la fin de l’heure.'; texte.append(choix);
+    }
+    zone.className='pot-classe'+(ouvre?' pot-ouvert':gagne?' pot-gain':'');
+    zone.replaceChildren(pot,texte);
+
+  }
   function montre(r) {
+    if(r && r.tresorPresents>0){ dessinePot(r); return; }
+    if(precedent && !r){ zone.hidden=true; precedent=null; vu=0; return; }
     const n = Math.floor(Number(r && r.tresor)) || 0;
     if (n <= 0 || n === vu) return;
     if (!zone) cree();

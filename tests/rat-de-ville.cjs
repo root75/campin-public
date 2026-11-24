@@ -45,7 +45,8 @@ assert.deepEqual(BAS.map(e=>e.classe),['sonnerie','reprise'],'« Je reprends » 
 assert.deepEqual(BAS.flatMap(e=>e.gestes.map(g=>g.demo)),['fermer','deconnecter','retrouver','cote']);
 assert.ok(!/\bconst REPRISE\b/.test(fiche),'pas d’encadré « Je reprends » en haut de l’étape');
 // « À moi dans Docs ! » : un encadré, avec l'icône Annuler de la barre d'outils (pas un caractère ↶).
-assert.equal(BLOCS.filter(B=>B.avant.includes('class="repere agir"')).length,9);assert.ok(!fiche.includes('↶'),'↶ : mettre l’icône annuler.png');assert.ok(fs.existsSync(base+'icones/annuler.png'));
+assert.equal(BLOCS.filter(B=>B.avant.includes('class="repere agir"')).length,0,'le rappel est présenté en début de séance');
+assert.match(new Function(fiche+';return RAPPEL_DEBUT_SEANCE;')(),/annuler\.png.*Ctrl.*Z/);assert.ok(!fiche.includes('↶'),'↶ : mettre l’icône annuler.png');assert.ok(fs.existsSync(base+'icones/annuler.png'));
 // La grille « Moi » : une carte par critère, on clique sur la phrase de son niveau. Pas de tableau : à cinq colonnes
 // il demandait 1 047 px dans une page de 648 px, donc un défilement de côté (mesuré dans Chromium le 17/11/2026).
 const moteur=fs.readFileSync(__dirname+'/../pas-a-pas/blocs.js','utf8'),gm=moteur.slice(moteur.indexOf('function grilleMoi'),moteur.indexOf('/* Humeur du jour'));

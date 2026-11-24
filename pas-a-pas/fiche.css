@@ -163,3 +163,51 @@ form.bilan label.manque{color:var(--faux)}
 /* Déclaration à liste (q.liste) : une case par point, alignée sur son texte */
 form.bilan label:has(>input[type=checkbox]){display:flex;gap:10px;align-items:flex-start}
 form.bilan label>input[type=checkbox]{width:24px;height:24px;flex:none;margin:1px 0 0;accent-color:var(--juste)}
+
+/* Le geste en cours, avec une vue complète disponible à tout moment. */
+.rythme-gestes{border:1px solid var(--trait);border-radius:12px;padding:10px 14px;margin:12px 0;background:var(--carte)}
+.rythme-statut{margin:0 0 8px;font-weight:700}
+.rythme-gestes .actions{margin:0;flex-wrap:wrap;gap:8px}
+#bloc ol.gestes-progressifs>li[hidden]{display:none!important}
+#bloc ol.gestes-progressifs>li.geste-actuel{outline:2px solid var(--fromage);outline-offset:3px;border-radius:8px}
+#bloc ol.gestes-progressifs>li.geste-accompli>label{color:var(--juste)}
+.prochaine-etape{font-weight:700;overflow-wrap:anywhere}
+@media(prefers-reduced-motion:reduce){.rythme-gestes~ol.etapes *{animation:none!important;transition:none!important}}
+
+.piste-gestes{display:flex;align-items:center;gap:4px;margin:0 0 10px}
+.segment-geste{position:relative;flex:1;height:7px;border-radius:4px;background:var(--trait);overflow:hidden}
+.segment-geste.rempli{background:var(--juste)}
+.etoile-gestes{position:relative;line-height:1;color:var(--trait)}
+.etoile-gestes.complete{color:var(--fromage);text-shadow:0 1px 1px var(--encre)}
+@media(prefers-reduced-motion:no-preference){
+  .segment-geste.vient-de-remplir::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent,#ffffffb3,transparent);animation:eclat-geste .38s ease-out both}
+  .etoile-gestes.celebre{animation:salut-etoile .52s ease-out}
+  .etoile-gestes.celebre::before,.etoile-gestes.celebre::after{content:"✦";position:absolute;top:0;left:25%;font-size:.6em;color:var(--encre-bouton);animation:etincelle-geste .5s ease-out both;--ecart:-9px}
+  .etoile-gestes.celebre::after{--ecart:10px}
+  @keyframes eclat-geste{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+  @keyframes salut-etoile{35%{transform:translateY(-3px) rotate(16deg) scale(1.25)}70%{transform:rotate(-8deg)}}
+  @keyframes etincelle-geste{from{opacity:0}25%{opacity:1}to{opacity:0;transform:translate(var(--ecart),-10px)}}
+}
+
+/* Le niveau du bocal représente le palier en cours. */
+#tresor.pot-classe{display:flex;gap:16px;align-items:center;border:2px solid #c89128;border-radius:17px;background:linear-gradient(110deg,#fff2c9,#fffaf0);color:#342a1c;padding:12px 18px}
+#tresor[hidden]{display:none!important}
+body.en-sequence #tresor.pot-classe{padding:8px 14px}
+.pot-texte{display:grid;gap:2px}.pot-texte strong{font:800 1.25rem var(--display,Georgia,serif)}.pot-prix{font-weight:700;color:#6b4212}
+.bocal{position:relative;isolation:isolate;flex:none;width:49px;height:53px;box-sizing:border-box;border:3px solid #825a24;border-radius:8px 8px 16px 16px;background:#fffef3;box-shadow:inset 4px 0 #f1e7ca}
+.bocal::before{position:absolute;content:"";left:-3px;right:-3px;top:-7px;height:8px;border-radius:4px;background:#81512a;transform-origin:left bottom}
+.bocal i{position:absolute;z-index:-1;bottom:0;left:0;right:0;border-radius:0 0 12px 12px;background:repeating-linear-gradient(145deg,#f7c74b 0 8px,#f3b533 8px 12px)}
+.bocal span{position:absolute;inset:0;display:grid;place-items:center;color:#97620e;font-size:1.65rem}
+.decouverte-icone{display:inline-block;margin-right:.45em;font-size:1.85em;vertical-align:middle}
+@media(prefers-reduced-motion:no-preference){
+  .pot-gain .bocal span,.pot-ouvert .bocal span{animation:piece-pot 1.15s ease-out}
+  .pot-ouvert .bocal::before{animation:couvercle-pot 1.65s ease-in-out}
+  .pot-ouvert .pot-prix,.decouverte-icone{animation:decouvre-objet 1.25s ease-out}
+  @keyframes piece-pot{0%{transform:translateY(-30px) rotate(-35deg);opacity:0}30%{opacity:1}65%{transform:translateY(6px)}85%{transform:translateY(-3px)}}
+  @keyframes couvercle-pot{28%,65%{transform:translateY(-6px) rotate(-32deg)}}
+  @keyframes decouvre-objet{0%{transform:translateY(10px) scale(.6);opacity:.3}38%{transform:translateY(-5px) scale(1.22) rotate(-6deg)}70%{transform:rotate(4deg)}}
+  .mail-rate .rate-ligne.reparee{animation:reparation-mail .85s ease-out}
+  @keyframes reparation-mail{25%{transform:translateX(5px);box-shadow:0 0 0 3px #ddb448}75%{transform:translateX(-2px)}}
+}
+
+@media print{#tresor.pot-classe{display:none}}

@@ -136,7 +136,7 @@ function declareCase(cb){
   ecrit(etat); barre();
   declare({ etape:ici+1, type:"case", reponse:j+":"+(cb.checked ? 1 : 0) });
   if(!cb.checked) return;
-  if(!avant && complet(ici)){ bravo("⭐ Étape "+(ici+1)+" réussie : « "+BLOCS[ici].titre+" » !", true); confettis(); }
+  if(!avant && complet(ici)){ bravo("⭐ Étape "+(ici+1)+" réussie : « "+BLOCS[ici].titre+" » !", true); decouvreEtape(ici); confettis(); }
   else bravo(BRAVOS[Math.floor(Math.random()*BRAVOS.length)], false);
 }
 
@@ -226,6 +226,16 @@ function suite(){
 function bulle(){
   const b = document.getElementById("bulle"), g = groupeCourant();
   if(b) b.textContent = ici>=BLOCS.length ? (FIN.bulle || FIN.titre) : (g && g.bulle) || (BLOCS[ici] && BLOCS[ici].bulle) || b.textContent;
+}
+// Une découverte par étape terminée (jamais à la simple coche d'un geste).
+const decouvertesVues = new Set();
+function decouvreEtape(i){
+  if(typeof DECOUVERTES==="undefined" || !DECOUVERTES[i] || decouvertesVues.has(i)) return;
+  decouvertesVues.add(i);
+  const [icone,legende] = DECOUVERTES[i];
+  bravo(legende,true);
+  const b = document.getElementById("bravo");
+  if(b){ const image = txt("span","decouverte-icone",icone); image.setAttribute("aria-hidden","true"); b.prepend(image); }
 }
 let minuterieBravo;
 function bravo(t, grand){
@@ -440,7 +450,7 @@ function pause(z){
   /* Les prolongements vivent hors du fil des blocs (<details id="plus-loin"> de la page) : l'attente y mène. */
   const loin = document.getElementById("plus-loin");
   if(loin){ loin.hidden = false; const b = txt("button","btn vide","⚡ En attendant : un prolongement"); b.type = "button";
-    b.addEventListener("click",()=>{ loin.open = true; loin.scrollIntoView({ behavior:"smooth", block:"start" }); }); nav.append(b); }
+    b.addEventListener("click",()=>{ loin.open = true; loin.scrollIntoView({ behavior:matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block:"start" }); }); nav.append(b); }
   z.append(nav);
   document.body.dataset.pret = "1";
 }
@@ -449,10 +459,69 @@ function pause(z){
    Un geste peut porter son « ne fais pas » : {geste:'…', attention:'⚠️ …'}, un encadré sous la case, jamais dans son texte.
    {geste:'…', sous:'<img …>'} : du HTML sous la case (un extrait à recopier, une aide repliée).
    {geste:'…', trous:{ titre, intro, bravo, variantes:[{ texte, mots, pieges }] }} : un texte à trous d'entraînement sous
-   la case, corrigé dans la page, jamais enregistré, qui ne bloque rien ; une variante tirée au hasard à chaque affichage.
+   la case, corrigé dans la page. En mode déclaratif, sa réussite permet de cocher le geste effectué dans Docs.
    {geste:'…', accord:true} (mode déclaratif) : la case de l'accord du professeur, voir accordCases(). */
 const gestesHtml = l => !l ? "" : '<ol class="etapes">'+l.map(g=>{const [t,a,s]=typeof g==="string"?[g,"",""]:[g.geste,g.attention,g.sous];
   return '<li><label><input type="checkbox"><span>'+t+'</span></label>'+(a?'<p class="attention">'+a+'</p>':'')+(s?'<div class="sous-case">'+s+'</div>':'')+'</li>';}).join("")+'</ol>';
+/* Un geste à la fois : les cases et leurs aides restent les mêmes, seul leur affichage change.
+   La vue complète est toujours accessible ; aucune validation supplémentaire ni appel au serveur. */
+let tousLesGestes = false;
+function rythmeGestes(z){
+  const liste = z.querySelector(".faire > ol.etapes, .fais ol.etapes");
+  if(!liste || liste.children.length<2) return;
+  liste.classList.add("gestes-progressifs");
+  const lignes = [...liste.children];
+  const cases = lignes.map(li=>li.querySelector("label input[type=checkbox]"));
+  if(cases.some(c=>!c)) return;
+  const outils = el("div","rythme-gestes");
+  const statut = txt("p","rythme-statut",""); statut.setAttribute("role","status");
+  const piste = el("div","piste-gestes");
+  piste.setAttribute("aria-hidden","true"); // Le statut annonce déjà la progression.
+  const segments = cases.map(()=>el("span","segment-geste"));
+  const etoile = txt("span","etoile-gestes","★");
+  piste.append(...segments, etoile);
+  const actions = el("div","actions");
+  const vue = txt("button","btn vide",""); vue.type = "button";
+  const aide = txt("button","btn vide","Un coup de pouce"); aide.type = "button";
+  actions.append(vue, aide); outils.append(statut, piste, actions); liste.before(outils);
+  const consignes = BLOCS[ici].libelleConsigne;
+  const maj = (deplace=false, gesteCoche=null)=>{
+    const courant = cases.findIndex(c=>!c.checked), faits = cases.filter(c=>c.checked).length;
+    statut.textContent = courant<0 ? (consignes ? "Toutes les consignes sont cochées." : "Tous les gestes sont cochés.")
+      : (consignes || "Geste")+" "+(courant+1)+" sur "+cases.length+" · "+faits+(consignes ? " accomplie" : " accompli")+(faits>1 ? "s" : "")+". Coche après avoir fait l’action.";
+    vue.textContent = tousLesGestes ? (consignes ? "Une consigne à la fois" : "Un geste à la fois") : (consignes ? "Voir toutes les consignes" : "Voir tous les gestes");
+    vue.setAttribute("aria-pressed",String(tousLesGestes));
+    lignes.forEach((li,k)=>{
+      li.value = k+1;
+      li.hidden = !tousLesGestes && courant>=0 && k!==courant;
+      if(li.hidden) li.querySelectorAll("details.demo-case[open]").forEach(d=>{ d.open = false; });
+      li.classList.toggle("geste-actuel",k===courant);
+      li.classList.toggle("geste-accompli",cases[k].checked);
+    });
+    segments.forEach((segment,k)=>{
+      segment.classList.toggle("rempli",cases[k].checked);
+      segment.classList.toggle("vient-de-remplir",cases[k]===gesteCoche);
+    });
+    etoile.classList.toggle("complete",courant<0);
+    etoile.classList.toggle("celebre",courant<0 && gesteCoche!==null);
+    aide.hidden = courant<0;
+    if(deplace && !tousLesGestes){
+      const cible = courant<0 ? vue : cases[courant].disabled ? lignes[courant].querySelector("button") || vue : cases[courant];
+      cible.focus({preventScroll:true});
+    }
+  };
+  vue.addEventListener("click",()=>{ tousLesGestes = !tousLesGestes; maj(); });
+  aide.addEventListener("click",()=>{
+    const courant = cases.findIndex(c=>!c.checked);
+    const demo = courant<0 ? null : lignes[courant].querySelector("details.demo-case");
+    const cible = demo || document.getElementById("coince");
+    if(cible){ cible.open = true; const titre = cible.querySelector("summary"); if(titre) titre.focus(); cible.scrollIntoView({block:"nearest",behavior:matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"}); }
+  });
+  liste.addEventListener("change",e=>{
+    if(cases.includes(e.target)) maj(e.isTrusted, e.isTrusted && e.target.checked ? e.target : null);
+  });
+  maj();
+}
 /* La case de l'accord du professeur (mode déclaratif, Rat de ville, Vincent, 20/11/2026) : {geste:'…', accord:true}.
    L'élève ne la coche pas lui-même : le bouton « Je demande l'accord du professeur » sonne la cloche avec le motif
    « accord » (pastille verte au tableau, hors « Où le groupe bute », hors limite des 3 sonneries). Quand le professeur
@@ -529,7 +598,7 @@ function accordRecu(cle){
   const avant = complet(e-1);
   etat.cases[cle] = true; ecrit(etat); barre();
   declare({ etape:e, type:"case", reponse:r+":1" });
-  if(!avant && complet(e-1)){ bravo("⭐ Étape "+e+" réussie : « "+BLOCS[e-1].titre+" » !", true); confettis(); }
+  if(!avant && complet(e-1)){ bravo("⭐ Étape "+e+" réussie : « "+BLOCS[e-1].titre+" » !", true); decouvreEtape(e-1); confettis(); }
   else bravo("✅ Le professeur a regardé ton document : accord donné !", true);
   if(ici===e-1) redessine();
 }
@@ -542,7 +611,33 @@ function entrainements(z, B){
     if(T.titre) boite.append(txt("h3",null,T.titre));
     if(T.intro) boite.append(txt("p",null,T.intro));
     boite.append(zone, dit); lis[k].append(boite);
-    trous(zone, V, ()=>{ dit.textContent = T.bravo || "Juste !"; boite.classList.add("reussi"); }, m=>{ dit.textContent = m; });
+    const caseDocs = lis[k].querySelector("label input[type=checkbox]");
+    if(T.ligneDocs){
+      const etiquette = caseDocs.closest("label");
+      const titre = txt("h3",null,"Ici · Complète la phrase");
+      boite.prepend(titre);
+      const dansDocs = (annoncer)=>{
+        let mot = 0;
+        const phrase = V.texte.replace(/___/g,()=>V.mots[mot++]).replace(/ +([.,])/g,"$1");
+        titre.textContent = "Dans Docs · Écris cette phrase à la ligne "+T.ligneDocs;
+        zone.replaceChildren(txt("p","phrase-a-reporter",phrase));
+        if(T.modeleApres) zone.append(el("div",null,T.modeleApres));
+        dit.textContent = "";
+        etiquette.querySelector("span").textContent = "Ma ligne "+T.ligneDocs+" est écrite";
+        caseDocs.disabled = false; etiquette.hidden = false;
+        if(annoncer){ titre.tabIndex=-1; titre.focus({preventScroll:true}); }
+      };
+      boite.after(etiquette);
+      if(etat.cases[(ici+1)+"."+(k+1)]){ dansDocs(false); return; }
+      etiquette.hidden = true; caseDocs.disabled = true;
+      trous(zone,V,()=>dansDocs(true),message=>{ dit.textContent=message; });
+      return;
+    }
+    if(DECLARATIF && !etat.cases[(ici+1)+"."+(k+1)]){
+      caseDocs.disabled = true;
+      dit.textContent = "Complète la phrase pour pouvoir cocher le geste réalisé dans Docs.";
+    }
+    trous(zone, V, ()=>{ caseDocs.disabled = false; dit.textContent = T.bravo || "Juste !"; boite.classList.add("reussi"); }, m=>{ dit.textContent = m; });
   });
 }
 /* const REPRISE (voir le mode déclaratif) : les gestes pour retrouver son travail, puis un bouton vers la première étape pas finie. */
@@ -568,7 +663,36 @@ function essaiHtml(E, fini){
     ch.append(b); });
   d.append(ch, r); return d;
 }
+// La séance suivie est identifiée par le serveur. En accès libre, une séance dure le temps de l’onglet.
+let seanceDuRappel, rappelCourant = null;
+const rappelsAffiches = new Set();
+function rappelDeSeance(debut){
+  if(typeof RAPPEL_DEBUT_SEANCE==="undefined") return;
+  if(debut) seanceDuRappel = debut;
+  const place = document.getElementById("rappel-debut-seance");
+  if(!place || (SUIVI && !APERCU && !emailMoteur)) return;
+  const suivi = SUIVI && !APERCU;
+  if(suivi && seanceDuRappel===undefined) return;
+  const cle = CLE+":rappel:"+(suivi ? emailMoteur : APERCU ? "apercu" : "libre");
+  const session = String(suivi && seanceDuRappel ? seanceDuRappel : "onglet");
+  const identifiant = cle+":"+session;
+  if(rappelCourant && rappelCourant.id===identifiant && rappelCourant.bloc===ici){
+    if(!place.firstChild) place.innerHTML = RAPPEL_DEBUT_SEANCE;
+    return;
+  }
+  if(rappelsAffiches.has(identifiant)) return;
+  try {
+    const stockage = suivi && seanceDuRappel ? localStorage : sessionStorage;
+    if(stockage.getItem(cle)===session) return;
+    stockage.setItem(cle,session);
+  } catch(e){ /* Stockage indisponible : une fois pendant cette ouverture de la fiche. */ }
+  rappelsAffiches.add(identifiant);
+  rappelCourant = {id:identifiant, bloc:ici};
+  place.innerHTML = RAPPEL_DEBUT_SEANCE;
+}
+
 function affiche(){
+  if(rappelCourant && rappelCourant.bloc!==ici) rappelCourant = null;
   if(DECLARATIF && ici!==placeNotee){   // la place de l'élève : gardée, et visible au tableau (« ouvert »)
     if(placeNotee>=0) envoie({ etape:Math.min(ici,BLOCS.length-1)+1, type:"ouvert" });
     placeNotee = ici; etat.ici = ici; ecrit(etat);
@@ -588,7 +712,7 @@ function affiche(){
   if(ici >= BLOCS.length){ fin(z); return; }
   const B = blocVu(ici);
   if(CONSTATE && B.bravo) B._bravo = "Bravo, tu as vérifié : "+B.bravo+".";   // dit après la preuve, et au retour sur le bloc
-  let essaiFait = !(MISSIONS && B.essai), apresEssai = null;
+  let apresEssai = null;
 
   const num = el("div","numero");
   const groupe=groupeCourant();
@@ -598,6 +722,9 @@ function affiche(){
   }
   else num.append(txt("span",null,"Bloc "+(ici+1)+" sur "+BLOCS.length+" · Partie "+B.partie.split(" — ")[0]), txt("span",null,"⏱ "+B.min+" min"));
   z.append(num, txt("h2",null,groupe ? B.titre : (ici+1)+". "+B.titre));
+  if(typeof RAPPEL_DEBUT_SEANCE!=="undefined"){
+    const place = el("div"); place.id = "rappel-debut-seance"; z.append(place); rappelDeSeance();
+  }
   const avecReprise = repriseVue && typeof REPRISE!=="undefined";
   if(avecReprise) z.append(boiteReprise());
   if(APERCU && B._n>1){
@@ -623,11 +750,9 @@ function affiche(){
     if(demo) z.append(demo);
     /* B.essai = une question d'essai sur ce qui est montré dans `avant`, À LA PLACE des cases : l'élève se prononce
        (« Je ne sais pas » compris), puis lit l'analyse. Rien n'est noté ni envoyé : la preuve vient après. */
-    if(B.essai) z.append(essaiHtml(B.essai, ()=>{ essaiFait = true; if(apresEssai) apresEssai(); }));
+    if(B.essai) z.append(essaiHtml(B.essai, ()=>{ if(apresEssai){ apresEssai(); apresEssai = null; } }));
     else { z.append(el("div","faire",B.fais || gestesHtml(B.gestes))); entrainements(z, B); accordCases(z, B); }
-    // Facultatif : quand la page contrôle elle-même le travail (bouton « Vérifier »), l'encadré ferait double emploi.
     if(CONSTATE && !B.essai) constateCases(z, B);
-    if(B.vois && !CONSTATE){ const v = el("aside","repere verification"); v.append(txt("h3",null,"✅ À vérifier"), el("p",null,B.vois)); z.append(v); }
   } else {
     const dl = el("dl","lignes");
     [["🎯 Je veux","veux",B.veux],["👉 Je fais","fais",B.fais],["👀 Je vois","vois",B.vois]].forEach(([t,c,h])=>{
@@ -636,7 +761,11 @@ function affiche(){
     z.append(dl);
   }
   if(B.extra) z.append(el("div",null,B.extra));
-  if(B.stop) z.append(txt("p","stop",MISSIONS ? "🛑 STOP — ne continue pas avant d’avoir vérifié." : "🛑 STOP — je ne continue pas tant que je ne vois pas ça."));
+  if(MISSIONS && B.vois){
+    const repere = el("li");
+    repere.append(txt("strong",null,"Résultat attendu. "), el("span",null,B.vois));
+    liste.append(repere);
+  }
 
   B.coince.forEach((c,i)=>{
     if(!B.indices){ liste.append(c && c.html ? el("li",null,c.html) : txt("li",null,c)); return; }   // {html:'…'} : une aide avec du gras ou des touches
@@ -657,6 +786,9 @@ function affiche(){
   const declare_ = ["enquete","rapport"].includes(B.q && B.q.type==="mixte" && B.q.validation ? B.q.validation.type : B.q && B.q.type);   // étape déclarée, pas corrigée
   if(DECLARATIF){
     /* Pas de preuve : les cases sont la déclaration, et on avance librement. */
+  } else if(!fait && B.exerciceAvantPreuve){
+    const exercice = z.querySelector(B.exerciceAvantPreuve);
+    exercice.addEventListener("exercice-reussi",direct,{once:true});
   } else if(!fait && ["enquete","rapport","mixte"].includes(B.q.type)){
     direct();
   } else if(fait && B.q.type==="code"){
@@ -685,11 +817,10 @@ function affiche(){
       const toutes = () => { const c = [...z.querySelectorAll(".faire > ol.etapes input[type=checkbox]")]; if(c.every(x=>x.checked)) ouvre(); };
       z.addEventListener("change", toutes, {signal:finBloc.signal}); toutes();
     }
+  } else if(MISSIONS && B.essai){
+    apresEssai = direct;
   } else {
-    const go = txt("button","btn plein ouvre-preuve",B.essai && B.essai.suite ? B.essai.suite : MISSIONS ? "✅ C’est vérifié" : "👀 Je vois ça"); go.type="button";
-    if(!essaiFait){ go.disabled = true; apresEssai = ()=>{ go.disabled = false; }; }
-    go.addEventListener("click",()=>{ go.remove(); preuve(pr,B); });
-    pr.append(go);
+    direct();
   }
   /* q.colle (12/11/2026) : la question et sa zone de réponse juste sous les cases, sans « À vérifier » ni encadrés
      entre les deux : « à ton avis… » et « mon hypothèse » se lisent d'un seul tenant. Le reste du bloc suit. */
@@ -710,6 +841,7 @@ function affiche(){
   demosSousCases(z, Object.assign({}, B.demos, avecReprise ? REPRISE.demos : null));
   // Avec l'encadré « Je reprends », aucune animation de case ne s'ouvre seule : pas deux animations à la fois.
   if(avecReprise) z.querySelectorAll(".faire details.demo-case[open]").forEach(d=>{ d.open = false; });
+  rythmeGestes(z);
   z.append(nav);
   basEtape(z);
   if(typeof B.arrive==="function"){ try { B.arrive(apiBloc(z)); } catch(e){} }   // au choix du bloc : brancher un jeu, demander une donnée au serveur
@@ -990,7 +1122,7 @@ function sceneBloc(S){
 function preuve(pr, B, apres){
   const Q = B.q;
   const v = r => (B._n>1 ? "v"+B._v+":" : "") + (r==null ? "" : r);   // le Journal note la version
-  if(Q.type!=="mixte") pr.append(txt("div","etiquette", Q.etiquette ? Q.etiquette : ["code","ordre"].includes(Q.type) ? "Mon programme" : Q.type==="trous" ? "J’explique" : Q.type==="rapport" ? "Mon rapport individuel" : typeof PARCOURS!=="undefined" ? "Je vérifie mon raisonnement" : "Je prouve que j’ai fait le bloc"));
+  if(Q.type!=="mixte") pr.append(txt("div","etiquette", Q.etiquette ? Q.etiquette : ["code","ordre"].includes(Q.type) ? "Mon programme" : Q.type==="trous" ? "J’explique" : Q.type==="rapport" ? "Mon rapport individuel" : typeof PARCOURS!=="undefined" ? "Je vérifie mon raisonnement" : "À toi de jouer"));
   if(Q.q) pr.append(txt("p","question",Q.q));
   if(Q.serveur && Q.aide) pr.append(txt("p","note",Q.aide));
   const retour = el("div","retour"); retour.hidden = true;
@@ -1018,11 +1150,13 @@ function preuve(pr, B, apres){
       if(g0 && etat.atteint===g0.fin) bravo("⭐ "+g0.titre+" : terminé !", true);
       else bravo(["Bien joué !","C’est enregistré, continue !","Une étape de plus !"][ici%3], false);
     }
+    if(etat.atteint>avant) decouvreEtape(ici);
     if(etat.atteint>avant && typeof CONFETTIS!=="undefined" && CONFETTIS) confettis();   // au choix de la fiche : const CONFETTIS = true
     if(etat.atteint>avant && typeof BLOCS[ici].fete==="function"){ try { BLOCS[ici].fete(); } catch(e){} }   // au choix du bloc : une animation à sa première réussite
     if(enAide) basculeAide();
     const s = txt("button","btn plein",typeof PARCOURS!=="undefined" ? suite() : (ici+1<BLOCS.length ? "Bloc suivant →" : "J'ai fini ✓")); s.type="button";
     s.addEventListener("click",()=>{ ici++; affiche(); });
+    if(ici+1<BLOCS.length) pr.append(txt("p","prochaine-etape","À suivre : "+BLOCS[ici+1].titre));
     pr.append(s); s.focus();
   };
   /* contenu (facultatif) = tout ce que l'élève a écrit, quand la réponse notée n'en est qu'une partie : une
@@ -1110,24 +1244,28 @@ function preuve(pr, B, apres){
     // Chaque champ dit, pendant la frappe, s'il est rempli ; un envoi incomplet nomme TOUS les manques d'un coup
     // (12/11/2026, après l'étape 8 de Messagerie 01 : un manque à la fois fait buter de correction en correction).
     const MIN=3, propre=t=>t.value.trim().replace(/\s+/g," ");
-    const f=el("form","bilan"), etats=[], champs=Q.champs.map(c=>{
+    const valide = (ta,i)=> Q.champs[i].pourcent
+      ? /^\d{1,3}(?:[.,]\d+)?\s*%?$/.test(propre(ta)) && parseFloat(propre(ta).replace(",","."))<=100
+      : propre(ta).length>=MIN;
+    const f=el("form","bilan"), etats=[], champs=Q.champs.map((c,i)=>{
       const label=el("label"), ta=el("textarea"), signe=txt("small","etat-champ",""); ta.rows=2; ta.maxLength=c.max; ta.placeholder=c.exemple || "";
-      const suit=()=>{ const n=propre(ta).length; signe.textContent=(n>=MIN ? "✓ écrit" : "✗ encore vide")+" · "+n+" / "+c.max+" caractères"; signe.classList.toggle("ok",n>=MIN); if(n>=MIN) label.classList.remove("manque"); };
+      if(c.pourcent) ta.inputMode = "decimal";
+      const suit=()=>{ const n=propre(ta).length, ok=valide(ta,i); signe.textContent=c.pourcent ? (ok ? "✓ Valeur saisie" : "Entre une valeur entre 0 et 100 %.") : (ok ? "✓ écrit" : "✗ encore vide")+" · "+n+" / "+c.max+" caractères"; signe.classList.toggle("ok",ok); if(ok) label.classList.remove("manque"); };
       ta.addEventListener("input",suit); suit();
       label.append(txt("span",null,c.nom),ta,signe);
       f.append(label); etats.push(label); return ta;
     });
     const ok=txt("button","btn plein",SUIVI && !APERCU ? "Enregistrer ma réponse" : "Garder pour cet essai"); ok.type="submit";
     const manque=el("div","retour faux manques"); manque.hidden=true;
-    const statut=txt("p","note","La fiche vérifie seulement que les champs sont remplis. Le professeur examine ton raisonnement.");
+    const statut=txt("p","note",Q.champs.some(c=>c.pourcent) ? "Utilise les valeurs de ton propre poste." : "La fiche vérifie seulement que les champs sont remplis. Le professeur examine ton raisonnement.");
     f.append(manque,statut,ok); zone.append(f);
-    f.addEventListener("input",()=>{ if(!manque.hidden && champs.every(t=>propre(t).length>=MIN)) manque.hidden=true; });
+    f.addEventListener("input",()=>{ if(!manque.hidden && champs.every(valide)) manque.hidden=true; });
     f.addEventListener("submit",e=>{
       e.preventDefault();
       const r=champs.map((t,i)=>Q.champs[i].cle+":"+propre(t)).join(" | ");
-      const manques=champs.map((t,i)=>propre(t).length<MIN ? "« "+Q.champs[i].nom+" » : encore vide." : null).filter(Boolean);
+      const manques=champs.map((t,i)=>!valide(t,i) ? "« "+Q.champs[i].nom+" » : "+(Q.champs[i].pourcent ? "indique un pourcentage de 0 à 100." : "encore vide.") : null).filter(Boolean);
       if(r.length>200) manques.push("Trop long : "+r.length+" caractères au total, 200 au plus. Raccourcis "+(champs.length>1 ? "un des champs." : "ta réponse."));
-      etats.forEach((l,i)=>l.classList.toggle("manque",propre(champs[i]).length<MIN));
+      etats.forEach((l,i)=>l.classList.toggle("manque",!valide(champs[i],i)));
       if(manques.length){
         const ul=el("ul"); manques.forEach(t=>ul.append(txt("li",null,t)));
         manque.replaceChildren(txt("strong",null,manques.length===1 ? "Il manque une chose :" : "Il manque "+manques.length+" choses :"), ul);
@@ -1498,6 +1636,7 @@ if(APERCU){
      (après 2 s, puis 5 s) avant d'afficher la fiche sans la reprise du serveur. */
   const chargeEtat = essai => google.script.run.withSuccessHandler(s=>{
     if(s && s.email){ emailMoteur = s.email; if(typeof EMAIL!=="undefined") EMAIL = s.email; }
+    if(s && seanceDuRappel===undefined) seanceDuRappel = s.debutSeance || 0;
     if(s && s.classe) classeMoteur = String(s.classe).trim();
     if(s && s.email){ qui.textContent = "Connecté : "; qui.append(txt("strong",null,s.email)); if(s.classe) qui.append(" · "+s.classe); }
     if(preuvesRatees) qui.append(" — "+preuvesRatees);   // l'avertissement ne disparaît pas quand le suivi répond après lui
@@ -1520,7 +1659,7 @@ if(APERCU){
   }).etat(COURS);
   chargeEtat(0);
   /* const SEQUENCE = { contenus:true, classe:"…" } dans la fiche : les champs facultatifs décrits en tête de sequence-eleve.js. */
-  window.PAS_A_PAS = Object.assign({ cours: COURS, envoie, plafond: recoitPlafond }, typeof SEQUENCE!=="undefined" ? SEQUENCE : null);   // lu par sequence-eleve.js (chargé en différé : il ne bloque jamais la fiche)
+  window.PAS_A_PAS = Object.assign({ cours: COURS, envoie, plafond: recoitPlafond, rappelDeSeance }, typeof SEQUENCE!=="undefined" ? SEQUENCE : null);   // lu par sequence-eleve.js (chargé en différé : il ne bloque jamais la fiche)
 } else {
   qui.textContent = typeof HORS_SUIVI!=="undefined" ? HORS_SUIVI : "Garde deux fenêtres : cette fiche, et Thonny quand elle le demande.";
   pied.textContent = "Ton avancement reste sur cet ordinateur. Aucune donnée n'est envoyée.";

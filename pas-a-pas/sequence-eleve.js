@@ -19,7 +19,7 @@
 (function(){
   const RYTHME = 5000;
   const css = `
-.en-sequence .page > :not(header):not(#seq):not(#seq-commun):not(.aide-fixe){display:none!important}
+.en-sequence .page > :not(header):not(#seq):not(#seq-commun):not(.aide-fixe):not(#tresor.pot-classe){display:none!important}
 #seq-commun{background:var(--carte);border:1px solid var(--trait);border-radius:14px;padding:18px clamp(16px,4vw,32px);display:grid;gap:12px;margin-top:12px}
 #seq-commun .sq-sur{font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;color:var(--doux);font-weight:700;margin:0;text-align:center}
 #seq-commun h3{margin:0;font-size:1.2rem}#seq-commun p{margin:0}
@@ -95,6 +95,7 @@
     function recoit(m){
       courant = m;
       if(window.Recompense) Recompense.montre(m);   // « Je m'occupe » ouvert : bandeau en bas (recompense.js)
+      if(o.rappelDeSeance && m && m.tresorSeance) o.rappelDeSeance(m.tresorSeance);
       if(o.plafond) o.plafond(m && m.plafond);   // la classe s'arrête après un bloc
       if(!m || m.type === "fin" || m.type === "atelier"){
         if(hors !== true && o.horsSequence) o.horsSequence();
