@@ -138,7 +138,6 @@ const POTION_V = [{m:20,b:50},{m:15,b:30},{m:25,b:40}];
 const potion = ({m,b}) => {
   const s = 3*m, att = [5*m+b, 2*m, 3*m];
   return {
-    vois:`On tape 5 : la console affiche ${att[0]}. On tape 2 : ${att[1]}. On tape 3 : ${att[2]}, sans bonus.`,
     extra: logiBonus("potions", `energie ← potions × ${m}`, `energie > ${s}`, `energie ← energie + ${b}`, "Le logigramme de la super-potion")
          + `<div class="encart"><p>Un losange devient un <b>if</b>. Un exemple, dans un autre jeu :</p>${CODE(`if temperature &gt; 30:\n    soif = soif + 2`)}
   <p>Les <b>deux-points</b> <code>:</code> à la fin de la ligne <code>if</code>. La ligne en dessous est <b>décalée de 4 espaces</b> : ${TAB}. Elle ne s'exécute QUE si la condition est vraie.</p></div>`
@@ -167,7 +166,6 @@ const potion = ({m,b}) => {
 const range_ = ({depart, cond, oui, non, fin, quand}) => {
   const attendu = [cond.vrai ? oui : non, fin];
   return {
-    vois:`La console affiche deux lignes : le message de la branche qui s'exécute, puis ${fin}.`,
     extra:`<div class="encart"><p><b>Ce que le programme doit faire :</b> ${quand}, il affiche <b>${oui}</b> ; sinon, il affiche <b>${non}</b>. Dans tous les cas, ensuite, il affiche <b>${fin}</b>.</p>
   <p>Regarde le <b>début de chaque ligne</b> : les lignes décalées vont juste sous un if ou un else.</p></div>`,
     coince:["La 1re ligne crée la boîte : sans elle, la condition ne peut pas être testée (NameError).",
@@ -186,7 +184,6 @@ const range_ = ({depart, cond, oui, non, fin, quand}) => {
 
 /* C. Réparer un si : deux erreurs par version (= au lieu de ==, deux-points, décalage). */
 const repare = (depart, msg) => ({
-  vois:`On tape 0 : la console affiche ${msg}. On tape 2 : rien de plus.`,
   coince:["Lis la ligne rouge : elle donne le numéro de la ligne et le nom de l'erreur. Répare, exécute, puis lis la suivante.",
           "Comparer, c'est == (deux signes). Un seul = range une valeur : Python refuse un = dans un if.",
           "La ligne if finit par deux-points : et la ligne en dessous est décalée de 4 espaces (Tab)."],
@@ -203,7 +200,6 @@ const repare = (depart, msg) => ({
 
 /* D. Si… sinon : la porte (et ses deux cousines). Un texte se compare entre guillemets. */
 const porte = ({nom, question, bon, mauvais, oui, non, decor}) => ({
-  vois:`On tape ${bon} : la console affiche ${oui}. On tape ${mauvais} : ${non}`,
   extra: logiSinon(nom, `${nom} = "${bon}"`, oui, non, "Deux branches : OUI → if, NON → else")
        + `<div class="encart"><p>Le <b>else</b> (sinon) donne une ligne à la branche NON. Il est collé à gauche, sous le if, avec ses <b>deux-points</b>. Un exemple, dans un autre jeu :</p>${CODE(`if meteo == "pluie":\n    print("Parapluie !")\nelse:\n    print("Lunettes !")`)}
   <p>input( ) rend un texte : on le compare à un texte, <b>entre guillemets</b>.</p></div>`
@@ -251,7 +247,6 @@ const rendreBonus = ({n,r}) => ({
 
 /* F. Défi : le distributeur (logigramme de l'activité 4 de LogProg 03). */
 const distributeur = prix => ({
-  vois:`Avec 5 pièces : « Voici ta boisson », puis la monnaie, ${5-prix}. Avec 1 pièce : il manque ${prix-1}. Avec ${prix} pièces, pile le prix : la boisson, et 0 de monnaie.`,
   extra: PLUS("Un 2e choix : le distributeur demande d'abord « eau ou soda ? », et le soda coûte une pièce de plus. Deux input( ), deux if."),
   coince:["Même plan que la porte : un input, un if, un else. Mais ici, la condition compare deux nombres : les pièces tapées et le prix.",
           "Assez de pièces, c'est AUTANT ou plus que le prix : >=, pas >.",
@@ -359,7 +354,6 @@ const BLOCS = [
     fais:CASES("Le joueur a <b>{D} vies</b> ; le programme lit les <b>dégâts</b> et les retire.",
                "Ajoute le <b>losange</b> : plus de vies ? alors Game over.",
                "Sinon, <b>affiche</b> les vies qui restent.", EXECUTER),
-    vois:"La fiche tape {K} : il te reste {R} vies. Puis elle tape {D} : Game over.",
     extra:`<div class="encart"><p>Dans LogProg 03, le losange disait <b>vies = 0 ?</b>. En Python, on compare avec <b>==</b>… ou avec <b>&lt;= 0</b>, qui marche aussi quand les dégâts dépassent les vies.</p></div>`
          + PLUS("Et si les dégâts tapés sont négatifs ? Le joueur gagnerait des vies ! Ajoute un if qui refuse un nombre plus petit que 0."),
     coince:["Les dégâts ont déjà été retirés : il reste à tester vies, puis à afficher selon le cas.",
@@ -386,7 +380,7 @@ const BLOCS = [
                `Puis <span class="chemin">menu <b>Fichier ▸ Enregistrer sous…</b></span> (ou <b>Ctrl + Shift + S</b>).`,
                `Dans <span class="chemin">Nom du fichier</span>, tape <b>03_Le-bonus_Nom.py</b>, avec TON nom à la place de Nom.`,
                `Clique sur <b class="chemin">Enregistrer</b>.`),
-    vois:"L'onglet, en haut de Thonny, affiche 03_Le-bonus_ et ton nom. Ton fichier 02_Le-score reste intact, déjà rendu.",
+    vois:"Dans Thonny, l'onglet au-dessus de ton programme affiche 03_Le-bonus_ suivi de ton nom.",
     coince:["Thonny ne se lance pas : nouvel onglet (Ctrl + T) ▸ barre d’adresse ▸ https://cscircles.cemc.uwaterloo.ca/dev/console-fr/ ▸ Enter. Rien n’y est enregistré : sonne la cloche 🔔 ; le professeur organise la sauvegarde.",
             "Pas de fichier 02_Le-score dans Documents ▸ Python : menu Fichier ▸ Nouveau, et recopie les trois lignes de Python 03 : pieces = int(input(\"Combien de pièces ? \")) / score = pieces * 10 / print(score).",
             "Deux signes différents : le tiret - entre Le et bonus, le trait de soulignement _ partout ailleurs."],
@@ -406,7 +400,7 @@ const BLOCS = [
                `<b>Enregistre</b> : <span class="chemin">icône disquette « Enregistrer »</span> (ou <b>Ctrl + S</b>).`,
                { geste:"<b>Prédis</b> le résultat, ci-dessous.", attention:"⚠️ Exécute seulement après ta prédiction : d'abord prédire, ensuite F5." },
                `Puis <span class="chemin">icône ▶ verte</span> (ou <b>F5</b>) : clique dans la console du bas, tape ton nombre, puis <b>Enter</b>.`),
-    vois:"Cinq lignes de Python. La console pose la question, attend ta réponse, puis affiche le score, avec ou sans bonus.",
+    vois:"Dans Thonny, la console du bas pose la question, attend ton nombre, puis affiche le score, avec ou sans bonus.",
     extra: LOGIGRAMME_SCORE + `<p>Dans Thonny, après les deux-points et Enter, la ligne suivante est <b>déjà décalée</b> : Thonny le fait pour toi. Pour revenir à gauche : <b>Backspace</b>.</p>`
          + PLUS("Ajoute un else : quand il n'y a pas de bonus, le programme affiche « Encore un effort ! » avant le score."),
     coince:["Le losange devient une ligne if, avec la condition du losange et les deux-points au bout — et la flèche OUI, une ligne décalée en dessous.",
@@ -420,7 +414,6 @@ const BLOCS = [
     veux:"Montrer que ton programme donne le bonus seulement quand il le faut.",
     fais:CASES("Dans Thonny, <b>sélectionne tout</b> ton programme (<b>Ctrl + A</b>) et copie-le (<b>Ctrl + C</b>).",
                "Clique dans le <b>cadre</b> ci-dessous et colle (<b>Ctrl + V</b>).", EXECUTER),
-    vois:"La fiche essaie 7 pièces (170), 3 pièces (30), puis 5 pièces (50 : pas de bonus).",
     coince:["Avec 5 pièces, 150 au lieu de 50 : ta condition est >= ; le logigramme dit > .",
             "Avec 3 pièces, 130 : la ligne du bonus n'est pas sous le if. Décale-la.",
             "Corrige aussi dans Thonny, puis Ctrl + S : c'est ce fichier-là qui sera rendu."],
@@ -443,7 +436,7 @@ const BLOCS = [
                "<b>À deux</b>, sur ton poste : tu expliques ton programme ; ton voisin vérifie les trois critères de l'encadré.",
                "Il te dit <b>une chose réussie</b> et une chose à corriger. Puis vous <b>inversez les rôles</b>.",
                "<b>Corrige toi-même</b> s'il y a lieu, puis Ctrl + S."),
-    vois:"Ton voisin a tapé 5 : 50, sans bonus. Tes trois commentaires disent QUAND et POURQUOI, avec tes mots.",
+    vois:"Dans Thonny, la console du bas affiche 50 quand ton voisin tape 5 : pas de bonus.",
     extra:`<div class="encart"><p><b>Le voisin vérifie — trois critères :</b></p><ol>
   <li>Il tape <b>5</b> : la console affiche <b>50</b>, sans bonus.</li>
   <li>La ligne du bonus est <b>décalée</b> sous le if ; le print est collé à gauche.</li>
