@@ -122,7 +122,7 @@ function caseAutresClasses(){
   let z = $("autres-classes-label");
   if(!z){
     z = txt("div","filtre-aide"); z.id = "autres-classes-label"; z.style.cssText = "display:flex;flex-wrap:wrap;gap:4px 14px;align-items:center;width:100%;font-weight:700";
-    $("seance").after(z);
+    if($("quoi")) $("quoi").append(z); else $("seance").after(z);
     $("seance").addEventListener("change", caseAutresClasses);
   }
   const possibles = classesPossibles();
@@ -171,7 +171,7 @@ function dessinePlafond(){
       serveur("plafonnerSeance", $("cours").value, s.debut, n, msg.value).then(l=>{ clePlafond = ""; remplitSeances(l, s.debut); })
         .catch(e=>{ clePlafond = ""; dessinePlafond(); erreur(e); }); };
     tout.addEventListener("click",()=>z.ouvre(0));
-    z.append(titre, rang, tout, dl, msg, etat); document.querySelector("header .reglages").after(z);
+    z.append(titre, rang, tout, dl, msg, etat); ($("bande") || document.querySelector("header .reglages")).after(z);
   }
   const i = Number($("seance").value), s = SEANCES[i] || {}, cours = $("cours").value;
   z.hidden = !SUIVI || !enCours(s,i);
@@ -241,6 +241,10 @@ function dessine(d){
   }), txt("div","chiffre"));
   const [eff, med] = [$("chiffres").firstChild, $("chiffres").lastChild];
   eff.append(txt("b",null,el.length), txt("span",null,"Élèves")); med.append(txt("b",null,median+" / "+n), txt("span",null,"Bloc médian validé"));
+  /* Le trésor de la classe se lit avec les compteurs, plus dans le menu. */
+  const etoiles = Number(d.tresor)||0;
+  if(etoiles){ const t = txt("div","chiffre tresor"); t.id = "tresor"; t.title = "Trésor de classe : une étoile par bloc réussi par un élève, pour cette séance. Les élèves voient le même nombre sur leur fiche.";
+    t.append(txt("b",null,"⭐ "+etoiles), txt("span",null,"Trésor de la classe")); $("chiffres").append(t); }
 
   const tb = $("lignes"); tb.replaceChildren();
   if(!el.length){ const tr=txt("tr"); const td=txt("td","vide","Personne n'a encore ouvert la fiche sur cette période."); td.colSpan=8; tr.append(td); tb.append(tr); }
@@ -312,8 +316,8 @@ function dessine(d){
 
   syntheses(d, el, n);
   ouEstLaClasse(d, el, n);
-  const s = choisie(); $("titre-classe").textContent = d._classes ? d._classes.join(" + ") + " · " : s.classe ? s.classe + " · " : "";
-  if($("tresor")){ const t = Number(d.tresor)||0; $("tresor").hidden = !t; $("tresor").textContent = t ? "⭐ "+t+(t>1?" étoiles":" étoile")+" · trésor de la classe" : ""; }
+  if($("titre-classe")){ const s = choisie(); $("titre-classe").textContent = d._classes ? d._classes.join(" + ") + " · " : s.classe ? s.classe + " · " : ""; }   // page en cache
+  etatTerminer();
   $("maj").textContent = "Mis à jour à " + new Date(d.maintenant).toLocaleTimeString("fr-BE",{hour:"2-digit",minute:"2-digit",second:"2-digit"}) + mesure(d);
 }
 
@@ -560,6 +564,13 @@ function etatTerminer(){
   /* Reprendre : la plus récente DE SA CLASSE, expirée (3 h) ou terminée, redevient la séance de ses élèves, même suivi. */
   $("reprendre-seance").hidden=!(s.debut && derniere(s,i) && s.active===false);
   $("reprendre-seance").textContent="Rouvrir pour "+(s.classe||"la classe");
+  /* La case « Séance » dit l'état ; un seul bouton plein, celui du geste attendu. */
+  const etat=$("etat-seance");if(!etat)return;
+  const ouverte=enCours(s,i),classes=dernieresDonnees&&dernieresDonnees._classes?dernieresDonnees._classes.join(" + "):s.classe;
+  etat.textContent=ouverte?"▶ "+classes+" en cours":s.debut?s.classe+" · séance terminée":"Aucune séance pour ce cours";
+  etat.classList.toggle("calme",!ouverte);$("case-seance").classList.toggle("actif",ouverte);
+  $("nouvelle").textContent=ouverte?"Ouvrir pour une autre classe…":"Ouvrir pour une classe…";
+  $("nouvelle").classList.toggle("vide",ouverte);$("reprendre-seance").classList.add("vide");
 }
 $("seance").addEventListener("change", ()=>{etatTerminer();chargeSequence();});
 $("terminer").addEventListener("click", ()=>{
@@ -653,15 +664,17 @@ const DEMO_SEQ = {
 function dessineEtatSeq(){
   const z = $("seq-etat"); z.replaceChildren();
   dessineConducteur();
+  if($("case-collectif")) $("case-collectif").hidden = !SEQ.contenu;
   if(!SEQ.contenu){ z.hidden = true; return; }
   z.hidden = false;
+  const k = Number($("seance").value), ouverte = !$("bande") || enCours(SEANCES[k] || {}, k);   // hors séance, le bouton plein est « Ouvrir pour une classe… »
   const b = (t, cls, f) => { const x = txt("button", "btn "+cls, t); x.type = "button"; x.addEventListener("click", f); z.append(x); };
   if(SEQ.apercu){ z.append(txt("span","maj","Répétition en cours, sans les élèves")); return; }
   if(SEQ.etat){
     z.append(txt("span","maj","Cours collectif en cours · moment "+(SEQ.etat.i+1)+" / "+SEQ.contenu.moments.length));
     b("Reprendre le cours collectif", "", ()=>serveur("reprendreSequence", $("cours").value, choisie().classe).then(e=>{ SEQ.etat = e; ouvreProjection(); }).catch(erreur));
     b("Arrêter", "vide", ()=>serveur("arreterSequence", $("cours").value, choisie().classe).then(()=>{ SEQ.etat = null; dessineEtatSeq(); }).catch(erreur));
-  } else if(SEANCES.length) b("Lancer le cours collectif", "", ()=>allerA(0, "", true));
+  } else if(SEANCES.length) b("Lancer le cours collectif", ouverte ? "" : "vide", ()=>allerA(0, "", true));
   else z.append(txt("span","maj","Pour lancer avec la classe : Ouvrir pour une classe…"));
   b("Répéter sans les élèves", "vide", repeter);
 }
@@ -1012,7 +1025,7 @@ const appelCl = (fn, ...args) => serveurCl(fn, ...args).then(dessineClasses, err
    Un serveur antérieur n'envoie pas « modes » : la colonne reste vide, sans erreur. */
 const DUREES_MODE = [25, 50, 100];
 const libelleMode = m => "🔒 jusqu’à " + new Date(m.jusqua).toLocaleTimeString("fr-BE",{hour:"2-digit",minute:"2-digit"});
-function caseModeCours(n, d){
+function caseModeCours(n, d, impose){
   const boite = txt("div", "cl-mode"), m = d.modes && d.modes[n];
   if(!d.modes) return null;
   if(m){
@@ -1030,6 +1043,8 @@ function caseModeCours(n, d){
   quoi.replaceChildren(...(ouverts.length ? ouverts.map(c=>[c.cle, c.titre]) : [["", "Aucun cours ouvert"]]).map(([v, t])=>{ const o = txt("option", null, t); o.value = v; return o; }));
   const haut = $("cours") ? $("cours").value : "", garde = CHOIX_MODE[n];
   quoi.value = ouverts.some(c=>c.cle === garde) ? garde : ouverts.some(c=>c.cle === haut) ? haut : ouverts.length ? ouverts[ouverts.length - 1].cle : "";
+  /* Vue cours : le cours est celui du menu du haut, on ne le redemande pas (s'il est ouvert à la classe). */
+  if(impose && ouverts.some(c=>c.cle === impose)){ quoi.value = impose; quoi.hidden = true; }
   quoi.addEventListener("change", ()=>{ CHOIX_MODE[n] = quoi.value; });
   quoi.setAttribute("aria-label", "Cours du mode cours pour " + n);
   sel.replaceChildren(...DUREES_MODE.map(v=>{ const o = txt("option", null, v + " min"); o.value = v; return o; }));
@@ -1123,39 +1138,37 @@ function caseChat(n, d){
   } else if(filChat && filChat.classe === n){ filChat.fil.arrete(); filChat = null; }
   return boite;
 }
-/* Vue cours : le même bloc que sur la carte de classe (Vincent, 24/11/2026 : « la même vue sur la page qui lance
-   les cours »). Mode cours et chat de la classe de la séance choisie, plus celles de « Voir aussi », sous le menu.
-   Séance en cours : le chat est celui de la séance (« Fermer le chat »), rangé ici ; sinon l'interrupteur avec durée.
-   Le bloc n'est reconstruit que si quelque chose a changé : le tableau se redessine toutes les 15 s, et un menu
-   de durée en train d'être choisi ne doit pas se refermer. Créé ici : la page gardée en cache ne le porte pas. */
+/* Vue cours : les cases « Mode cours » et « Chat de la classe » de la bande du haut (Vincent, 24/11/2026 : « la même
+   vue sur la page qui lance les cours », puis la refonte du menu). Mêmes commandes que sur la carte de classe, pour la
+   classe de la séance choisie et celles de « Voir aussi ». Le cours du mode cours est celui du menu du haut.
+   Séance en cours : le chat est celui de la séance (« Fermer le chat ») ; sinon l'interrupteur avec durée.
+   Reconstruit seulement si quelque chose a changé : le tableau se redessine toutes les 15 s, et un menu de durée en
+   train d'être choisi ne doit pas se refermer. Une page gardée en cache (10 min) n'a pas la bande : rien ne s'affiche. */
 let signatureBloc = null;
 function dessineBlocSeance(){
-  if(document.body.classList.contains("vue-onglet") || !$("chat-seance")) return;
-  let z = $("bloc-seance");
-  if(!z){
-    z = txt("section", "panneau"); z.id = "bloc-seance"; z.hidden = true;
-    const modes = txt("div", "cl-actions"), ligne = txt("div", "cl-mode"), chats = txt("div", "cl-actions");
-    modes.id = "bloc-seance-modes"; ligne.id = "bloc-seance-chat"; chats.id = "bloc-seance-chats";
-    ligne.append(txt("span", "cl-etiquette", "Chat de la classe"), $("chat-seance"));
-    z.append(modes, ligne, chats);
-    $("chat-seance-fil").before(z);
-  }
+  if(document.body.classList.contains("vue-onglet") || !$("bande")) return;
   const enSeance = !$("chat-seance").hidden, cours = $("cours").value, maintenant = Date.now();
   const classes = CL && CL.classes ? [choisie().classe].concat(autresSeances().map(x=>x.classe)).filter((c, i, l)=>c && CL.classes[c] && l.indexOf(c) === i) : [];
   /* Un mode cours dont l'heure est passée est tombé seul : on ne l'affiche plus, sans attendre le serveur. */
   const d = CL ? Object.assign({}, CL, CL.modes ? { modes: Object.fromEntries(Object.entries(CL.modes).filter(([, m])=>Number(m.jusqua) > maintenant)) } : {}) : null;
   const signature = JSON.stringify([cours, enSeance, classes.map(c=>[c, d.classes[c], d.modes && d.modes[c], !enSeance && d.chats && d.chats[c], CHATS_VUS.has(c)])]);
-  $("bloc-seance-chat").hidden = !enSeance;
   if(signature !== signatureBloc){
     signatureBloc = signature;
-    const plusieurs = classes.length > 1, nomme = (boite, quoi, c)=>{
+    /* La case porte déjà le titre : l'étiquette de chaque ligne ne dit plus que la classe, s'il y en a plusieurs. */
+    const plusieurs = classes.length > 1, nomme = (boite, c)=>{
       let e = boite.querySelector(".cl-etiquette");
       if(!e){ e = txt("span", "cl-etiquette"); boite.prepend(e); }
-      e.textContent = quoi + (plusieurs ? " — " + c : ""); return boite; };
-    $("bloc-seance-modes").replaceChildren(...classes.map(c=>{ const b = caseModeCours(c, d); return b && nomme(b, "Mode cours", c); }).filter(Boolean));
-    $("bloc-seance-chats").replaceChildren(...(enSeance ? [] : classes.map(c=>{ const b = caseChat(c, d); return b && nomme(b, "Chat de la classe", c); }).filter(Boolean)));
+      e.textContent = plusieurs ? c : ""; return boite; };
+    $("bloc-seance-modes").replaceChildren(...classes.map(c=>{ const b = caseModeCours(c, d, cours); return b && nomme(b, c); }).filter(Boolean));
+    $("bloc-seance-chats").replaceChildren(...(enSeance ? [] : classes.map(c=>{ const b = caseChat(c, d); return b && nomme(b, c); }).filter(Boolean)));
+    /* « Lire et modérer » hors séance : le fil prend toute la largeur, sous la bande, pas la case étroite. */
+    const fil = $("bloc-seance-chats").querySelector(".cl-chat-fil"), large = $("chat-classe-fil");
+    if(large){ large.hidden = !fil; large.replaceChildren(...(fil ? [txt("h2", null, "Chat de la classe " + filChat.classe), fil] : [])); }
   }
-  z.hidden = !enSeance && !$("bloc-seance-modes").childNodes.length && !$("bloc-seance-chats").childNodes.length;
+  const modes = $("bloc-seance-modes"), chats = $("bloc-seance-chats");
+  $("case-mode").hidden = !modes.childNodes.length; $("case-chat").hidden = !enSeance && !chats.childNodes.length;
+  $("case-mode").classList.toggle("actif", !!modes.querySelector(".actif"));
+  $("case-chat").classList.toggle("actif", !!chats.querySelector(".actif") || !!$("chat-seance").querySelector(".mode-actif"));
 }
 /* Les devoirs Classroom de la classe : qui a rendu quoi. Le tableau se projette parfois devant la classe : les
    points sont cachés tant que la case « Montrer les points » n'est pas cochée, et elle repart décochée à chaque
@@ -1460,21 +1473,33 @@ async function chargeCatalogue(frais=false){
 actualiser.addEventListener("click",()=>chargeCatalogue(true));
 if(!SUIVI){document.title="APERÇU FICTIF — tableau professeur";$("demo").hidden=false;}
 const ADRESSE_TABLEAU='https://script.google.com/a/macros/arcampin.be/s/AKfycbyOPTaq-L1PuittB1rkkiL9OOtShFc2WpiD8H_pH_INaw9ePWenCzhlIPlHu4zBOgLk/exec?vue=prof';
-/* Trois pages : le tableau du cours ; ?onglet=eleves (la classe de chaque élève) ;
-   ?onglet=classes (les cours ouverts à chaque classe). Même script, mêmes droits professeur. */
-const ONGLETS={eleves:{id:'gestion-eleves',titre:'Gestion des élèves',autre:'classes',autreTitre:'Cours et classes'},
-  classes:{id:'panneau-classes',titre:'Cours et classes',autre:'eleves',autreTitre:'Gestion des élèves'}};
+/* Trois onglets dans la même page : Séance (le tableau du cours), Cours et classes, Élèves. On passe de l'un à
+   l'autre sans recharger : le suivi continue, et les cloches restent comptées dans le titre de l'onglet du navigateur.
+   ?onglet=classes ou ?onglet=eleves ouvre directement cet onglet. Même script, mêmes droits professeur. */
+const ONGLETS={seance:{lien:'onglet-seance'},classes:{id:'panneau-classes',lien:'gestion-classes-lien'},eleves:{id:'gestion-eleves',lien:'gestion-eleves-lien'}};
+function montreOnglet(nom){
+  const o=ONGLETS[nom]||ONGLETS.seance;
+  document.body.classList.toggle('vue-onglet',!!o.id);
+  Object.values(ONGLETS).forEach(x=>{
+    if(x.id){$(x.id).classList.toggle('onglet-actif',x===o);if(x===o)$(x.id).hidden=false;}
+    const a=$(x.lien);if(a){a.classList.toggle('ici',x===o);if(x===o)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');}
+  });
+  /* Le fil du chat n'existe qu'une fois : il suit l'onglet affiché (carte de classe ou case du haut). */
+  signatureBloc=null;
+  if(CL){if(o.id)dessineClasses(CL);else dessineBlocSeance();}
+  else if(o.id)chargeClasses();   // même si le catalogue ne répond pas
+  try{if(SUIVI&&google.script.history)google.script.history.replace(null,o.id?{onglet:nom}:{},'');}catch(e){}
+}
 function ouvreVueProf(parametres){
-  const lien=o=>SUIVI?ADRESSE_TABLEAU+'&onglet='+o:location.pathname+'?onglet='+o;
-  $("gestion-eleves-lien").href=lien('eleves');$("gestion-classes-lien").href=lien('classes');
-  const o=ONGLETS[parametres.onglet];
-  if(!o){chargeCatalogue();return;}
-  document.body.classList.add('vue-onglet');$(o.id).classList.add('onglet-actif');document.title=o.titre+' — Mes cours';
-  document.querySelector('header h1').textContent=o.titre;
-  const navigation=txt('nav','navigation-eleves'),retour=txt('a','btn vide','← Retour au tableau'),autre=txt('a','btn vide',o.autreTitre+' →');
-  retour.href=SUIVI?ADRESSE_TABLEAU:location.pathname;retour.target='_top';autre.href=lien(o.autre);autre.target='_top';
-  navigation.append(retour,autre);document.querySelector('header').append(navigation);
-  $(o.id).hidden=false;chargeClasses();
+  const lien=o=>SUIVI?ADRESSE_TABLEAU+(o?'&onglet='+o:''):location.pathname+(o?'?onglet='+o:'');
+  for(const [nom,o] of Object.entries(ONGLETS)){
+    const a=$(o.lien);if(!a)continue;
+    a.href=lien(o.id?nom:'');a.target='_top';
+    /* Avec la bande du haut, un clic change d'onglet sur place ; sur une page en cache, le lien recharge. */
+    if($("onglets"))a.addEventListener('click',ev=>{if(ev.ctrlKey||ev.metaKey||ev.shiftKey)return;ev.preventDefault();montreOnglet(nom);});
+  }
+  montreOnglet(parametres.onglet);
+  chargeCatalogue();
 }
 // L'URL extérieure est obtenue par le pont Apps Script, sans modifier les droits professeur.
 if(SUIVI&&google.script.url?.getLocation)google.script.url.getLocation(l=>ouvreVueProf(l.parameter||{}));

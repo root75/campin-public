@@ -44,5 +44,5 @@ const fiches = fs.readdirSync(__dirname + '/..').filter(d => fs.existsSync(__dir
 assert.ok(fiches.length >= 10);
 for (const f of fiches) assert.match(lis(f), /recompense\.js\?v=tresor-20261117/, f + ' charge le trésor');
 assert.match(lis('pas-a-pas/tableau.js'), /d\.tresor/, 'le tableau affiche le trésor');
-assert.match(lis('pas-a-pas/tableau.html'), /id="tresor"/);
+assert.match(lis('pas-a-pas/tableau.js'), /t\.id = "tresor"/, 'le trésor est une tuile, avec les compteurs');
 console.log('tresor : OK');
