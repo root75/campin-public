@@ -907,9 +907,10 @@ $("conducteur-actualiser").addEventListener("click",()=>chargeSequence(true));
 /* ===== Mes cours : classes, cours ouverts, classe de chaque élève ===== */
 let CL = null;
 const DEMO_CL = {
+  fil: [],
   d: { cours:[],
        classes:{ "2B":["messagerie-1"], "2E":["messagerie-1"], "3F":["python-1"] },
-       modes:{},
+       modes:{}, chats:{},
        eleves:[{email:"lea.dupont@arcampin.be",classe:"2B"},{email:"noah.martin@arcampin.be",classe:"2E"},{email:"sami.benali@arcampin.be",classe:"2B"}] },
   classesEtCours(){ return this.d; },
   ajouterClasse(c){ this.d.classes[c] = this.d.classes[c] || []; return this.d; },
@@ -917,6 +918,14 @@ const DEMO_CL = {
   activerCours(c, k, oui){ const l = this.d.classes[c].filter(x=>x!==k); if(oui) l.push(k); this.d.classes[c] = l; return this.d; },
   modeCours(c, k, min){ this.d.modes[c] = { debut: Date.now(), jusqua: Date.now() + min * 60000, cours: k }; return this.d; },
   arreterModeCours(c){ delete this.d.modes[c]; return this.d; },
+  chatOuvrir(c, min){ this.d.chats[c] = { debut: Date.now(), jusqua: Date.now() + min * 60000, muets: [] }; this.fil = []; return this.d.chats; },
+  chatFermer(c){ delete this.d.chats[c]; return this.d.chats; },
+  chatLire(depuis, c){ const s = this.d.chats[c]; if(!s) return { ouvert:false };
+    return { ouvert:true, classe:c, salon:s.debut, jusqua:s.jusqua, muet:false, muets:s.muets, dernier:this.fil.length,
+      masques:this.fil.filter(m=>m.masque).map(m=>m.id), messages:this.fil.filter(m=>m.id > depuis).map(m=>({ ...m })) }; },
+  chatEcrire(t, depuis, c){ this.fil.push({ id:this.fil.length + 1, t:Date.now(), nom:"Le professeur", email:"prof@arcampin.be", texte:t, moi:true, masque:false }); return this.chatLire(depuis, c); },
+  chatMasquer(c, id, oui){ this.fil.find(m=>m.id === id).masque = oui; return this.chatLire(0, c); },
+  chatParole(c, e, oui){ const s = this.d.chats[c]; s.muets = s.muets.filter(x=>x !== e); if(oui) s.muets.push(e); return this.chatLire(0, c); },
   changerClasse(e, c){ if(c) this.d.eleves.find(x=>x.email===e).classe = c; else this.d.eleves = this.d.eleves.filter(x=>x.email!==e); return this.d; }
 };
 function serveurCl(fn, ...args){
@@ -960,9 +969,44 @@ function caseModeCours(n, d){
 }
 /* Le chat de classe : un interrupteur par classe, rangé à côté du mode cours. Rend null tant que le serveur
    n'envoie pas « chats » : rien ne s'affiche, la place reste prête. */
+const DUREES_CHAT = [15, 25, 50, 100], CHATS_VUS = new Set();
+let filChat = null;
+function chargeChat(){
+  if(window.CampinChat) return Promise.resolve();
+  return new Promise((ok, ko) => { const s = document.createElement("script");
+    s.src = "https://root75.github.io/campin-public/chat/chat.js?v=20261124"; s.onload = ok; s.onerror = ko; document.head.append(s); });
+}
 function caseChat(n, d){
   if(!d.chats) return null;
-  return null;
+  const boite = txt("div", "cl-mode cl-chat"), c = d.chats[n];
+  if(!c){
+    CHATS_VUS.delete(n);
+    const sel = txt("select"), b = txt("button", "btn vide", "💬 Ouvrir"); b.type = "button";
+    sel.replaceChildren(...DUREES_CHAT.map(v=>{ const o = txt("option", null, v + " min"); o.value = v; return o; }));
+    sel.value = 50; sel.setAttribute("aria-label", "Durée du chat pour " + n);
+    b.setAttribute("aria-label", "Ouvrir le chat de " + n);
+    b.title = "Les élèves de " + n + " voient le chat sur leur portail. Il se ferme seul à la fin de la durée, ou quand tu termines la séance.";
+    b.addEventListener("click", ()=>{ b.disabled = true; CHATS_VUS.add(n); serveurCl("chatOuvrir", n, Number(sel.value)).then(chats=>{ CL.chats = chats; dessineClasses(CL); }, erreur); });
+    boite.append(txt("span", "cl-etiquette", "Chat de la classe"), sel, b);
+    return boite;
+  }
+  const fermer = txt("button", "btn vide", "Fermer"), voir = txt("button", "btn vide", CHATS_VUS.has(n) ? "Replier" : "Lire et modérer"); fermer.type = voir.type = "button";
+  fermer.setAttribute("aria-label", "Fermer le chat de " + n); voir.setAttribute("aria-label", (CHATS_VUS.has(n) ? "Replier" : "Lire et modérer") + " le chat de " + n);
+  fermer.addEventListener("click", ()=>{ fermer.disabled = true; CHATS_VUS.delete(n); serveurCl("chatFermer", n).then(chats=>{ CL.chats = chats; dessineClasses(CL); }, erreur); });
+  voir.addEventListener("click", ()=>{ if(CHATS_VUS.has(n)) CHATS_VUS.delete(n); else CHATS_VUS.add(n); dessineClasses(CL); });
+  boite.classList.add("actif");
+  boite.append(txt("span", "cl-etiquette", "Chat de la classe"),
+    txt("span", "mode-actif", "💬 ouvert jusqu’à " + new Date(c.jusqua).toLocaleTimeString("fr-BE",{hour:"2-digit",minute:"2-digit"})), voir, fermer);
+  if(CHATS_VUS.has(n)){
+    /* Le fil vit dans sa propre boîte, gardée d'un dessin à l'autre : redessiner les cartes ne le vide pas. */
+    if(!filChat || filChat.classe !== n){
+      if(filChat) filChat.fil.arrete();
+      const zone = txt("div", "cl-chat-fil"); filChat = { classe: n, zone, fil: { arrete(){} } };
+      chargeChat().then(()=>{ if(filChat && filChat.zone === zone) filChat.fil = window.CampinChat.monte(zone, { appel: serveurCl, classe: n, prof: true }); }, erreur);
+    }
+    boite.append(filChat.zone);
+  } else if(filChat && filChat.classe === n){ filChat.fil.arrete(); filChat = null; }
+  return boite;
 }
 /* Une carte par classe : le nom, puis les actions (mode cours, chat), puis ses cours ouverts. La liste complète
    des cours reste repliée : elle s'allonge au fil de l'année, les actions ne doivent pas partir au bout de la ligne. */
