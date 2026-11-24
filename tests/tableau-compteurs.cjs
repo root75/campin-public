@@ -51,3 +51,18 @@ console.log('Compteurs et bandeau : coincés sans sonner, inactifs, butent, bloc
   assert.deepEqual(f(r2,false).eleves.map(e=>e.nom)[0],'Zoé A','toute la grille : l’ordre du serveur');
   console.log('Grille des devoirs : noms sans suffixe, cotes sur demande, un devoir à la fois.');
 }
+{ // « Où en sont-ils ? » : les révisions de la classe, d'après la feuille « Progrès ».
+  const g=vm.createContext({});vm.runInContext(bout('function nomsRevisions','function chargeRevisions'),g);
+  const noms=vm.runInContext('nomsRevisions',g)(JSON.parse(fs.readFileSync(require.resolve('../revisions/revisions.json'),'utf8')));
+  assert.deepEqual({...noms['quiz:python-1']},{cours:'Python 01',genre:'Quiz'});
+  const f=vm.runInContext('grilleRevisions',g);
+  const r={activites:['quiz:python-1','mots-croises:python-1','inconnue:x'],eleves:[{nom:'Zoé A',etats:{}},{nom:'Basil B',etats:{'quiz:python-1':'commence'}},
+    {nom:'Alex C',etats:{'quiz:python-1':'fait','mots-croises:python-1':'fait'}},{nom:'Yan D',etats:{'quiz:python-1':'fait'}}]};
+  const u=f(r,noms);
+  assert.deepEqual(u.eleves.map(e=>e.nom),['Alex C','Yan D','Basil B','Zoé A'],'les plus avancés en haut, ceux qui n’ont rien ouvert en bas');
+  assert.equal(u.muets,1);assert.deepEqual(u.activites.map(a=>a.cours+'|'+a.genre+'|'+a.faits),['inconnue:x||0','Python 01|Mots croisés|1','Python 01|Quiz|2']);
+  assert.deepEqual(u.eleves[2].cases.map(c=>c.mot),['—','—','Commencé']);assert.deepEqual(u.eleves[0].cases.map(c=>c.mot),['—','✓ Fait','✓ Fait']);
+  assert.equal(f({activites:[],eleves:[{nom:'A',etats:{}}]},{}).activites.length,0);
+  assert.match(source,/if\(!d\.progres\) return null/,'serveur pas encore republié : pas de bouton');
+  console.log('Révisions de la classe : avancement par élève vérifié.');
+}

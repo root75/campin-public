@@ -93,6 +93,9 @@ console.log('portail : page publique, élève reconnu, hors école, redirection 
   assert.equal(grille.jeu, 'mots-croises', 'Les mots croisés se jouent dans le portail');
   assert.equal(r[0].activites[1].jeu, '', 'Le quiz reste un lien');
   assert.equal(revisionsDe([], table).length, 0); assert.equal(revisionsDe(undefined, table).length, 0);
+  // Chaque activité suivie porte la clé de son « fait / à faire » ; une clé bizarre est écartée.
+  assert.equal(r[0].activites.find(a => a.genre === 'Quiz').suivi, 'quiz:python-1'); assert.equal(r[0].activites.find(a => a.genre === "L'essentiel").suivi, '');
+  assert.equal(revisionsDe(['x'], { x:{ titre:'X', activites:[{ genre:'Quiz', chemin:'x/', suivi:'<b>' }] } })[0].activites[0].suivi, '');
   const piege = { x:{ titre:'Piège', activites:[{ genre:'A', chemin:'//ailleurs.example/' }, { genre:'B', chemin:'../../x' }, { genre:'', chemin:'ok/' }, { genre:'C', chemin:'javascript:alert(1)' }] } };
   assert.equal(revisionsDe(['x'], piege).length, 0, 'Un cours dont aucune activité ne tient sur le site ne s\'affiche pas');
   assert.equal(revisionsDe(['__proto__'], table).length, 0);

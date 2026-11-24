@@ -239,7 +239,8 @@ function montreAnnonces(liste, cours){
 const REVISIONS = "https://root75.github.io/campin-public/revisions/revisions.json";
 const SITE = "https://root75.github.io/campin-public/";
 /** Les révisions à proposer : seulement les cours de l'élève, sans doublon, et des chemins du site (jamais une autre adresse).
- *  Rend [{ id, titre, activites: [{ genre, url, jeu }] }] ; « jeu » = l'activité s'ouvre dans le portail. */
+ *  Rend [{ id, titre, activites: [{ genre, url, jeu, suivi }] }] ; « jeu » = l'activité s'ouvre dans le portail,
+ *  « suivi » = la clé de son « fait / à faire ». */
 function revisionsDe(cours, table){
   const vus = new Set(), liste = [];
   for(const id of Array.isArray(cours) ? cours : []){
@@ -251,35 +252,77 @@ function revisionsDe(cours, table){
     for(const x of Array.isArray(c.activites) ? c.activites : []){
       if(!x || typeof x.genre !== "string" || !x.genre || typeof x.chemin !== "string") continue;
       if(!/^[a-z0-9][a-z0-9\-\/.]*(\?(cours|jeu)=[a-z0-9\-]+)?(#[a-z]+)?$/.test(x.chemin) || x.chemin.includes("..")) continue;
-      activites.push({ genre: x.genre, url: SITE + x.chemin, jeu: x.jeu === "mots-croises" ? "mots-croises" : "" });
+      activites.push({ genre: x.genre, url: SITE + x.chemin, jeu: x.jeu === "mots-croises" ? "mots-croises" : "",
+        suivi: typeof x.suivi === "string" && /^[a-z0-9:\-]{1,80}$/.test(x.suivi) ? x.suivi : "" });
     }
     if(activites.length) liste.push({ id, titre: c.titre, activites });
   }
   return liste;
+}
+/* Le « fait / à faire » de l'élève (Vincent, 24/11/2026 : « les 2 », dans « Mes révisions » et dans son tableau).
+   Il vient du serveur (monProgres : ce qu'il a fait sur n'importe quel poste) et de ce navigateur (assets/progres.js,
+   quand une grille vient d'être jouée ici). Une activité faite porte « ✓ », chaque carte dit où il en est. */
+let PROGRES_SERVEUR = {}, REVISIONS_PEINTES = [];
+function etatRevision(cle){
+  let ici = ""; try { if(globalThis.Progres) ici = globalThis.Progres.etat(cle); } catch(e) {}
+  const la = PROGRES_SERVEUR[cle];
+  return ici === "fait" || la === "fait" ? "fait" : ici === "commence" || la === "commence" ? "commence" : "";
+}
+function peintRevisions(){
+  for(const c of REVISIONS_PEINTES){
+    let faits = 0;
+    for(const a of c.activites){
+      const e = etatRevision(a.suivi); if(e === "fait") faits++;
+      a.noeud.textContent = (e === "fait" ? "✓ " : "") + a.texte;
+      a.noeud.className = [a.classe, e].filter(Boolean).join(" ");
+    }
+    const total = c.activites.length;
+    c.avancement.hidden = !total;
+    c.avancement.textContent = faits === total ? "✓ Tout est fait" : faits + " sur " + total + " fait" + (faits > 1 ? "s" : "");
+    c.avancement.className = "revision-avancement" + (faits === total ? " complet" : "");
+  }
+}
+/** Note sur le serveur (« a~fait,b~commence », ou rien pour seulement lire) et repeint avec la réponse. */
+function monProgres(m){
+  return new Promise((ok, ko) => {
+    let pont = null; try { pont = google.script.run.withSuccessHandler(ok).withFailureHandler(ko); } catch(e) {}
+    if(pont && typeof pont.monProgres === "function") pont.monProgres(m || ""); else ko(new Error("pas de serveur"));   // serveur pas encore republié
+  }).then(r => { if(r && typeof r === "object") { PROGRES_SERVEUR = r; peintRevisions(); } return r; });
 }
 function mesRevisions(cours){
   if(!Array.isArray(cours) || !cours.length || typeof fetch !== "function") return;
   fetch(REVISIONS).then(r => r.ok ? r.json() : Promise.reject()).then(t => {
     const liste = revisionsDe(cours, t.cours);
     if(!liste.length) return;
+    REVISIONS_PEINTES = [];
     $("revisions-liste").replaceChildren(...liste.map(c => {
       const carte = document.createElement("div"); carte.className = "revision";
       const b = document.createElement("b"); b.textContent = c.titre;
       const acts = document.createElement("div"); acts.className = "revision-activites";
+      const avancement = document.createElement("span"), suivies = [];
+      REVISIONS_PEINTES.push({ avancement, activites: suivies });
+      const suit = (noeud, a, classe) => { if(a.suivi) suivies.push({ noeud, suivi: a.suivi, texte: noeud.textContent, classe }); };
       for(const a of c.activites){
         if(a.jeu){
           // Les mots croisés se jouent ici même : l'élève ne quitte pas son portail.
           const bouton = document.createElement("button"); bouton.type = "button"; bouton.className = "jouer"; bouton.textContent = a.genre + " ▸ jouer ici";
           bouton.addEventListener("click", () => joue(c.id, c.titre, a.url));
-          acts.append(bouton);
+          acts.append(bouton); suit(bouton, a, "jouer");
         } else {
           const lien = document.createElement("a"); lien.target = "_top"; lien.href = a.url; lien.textContent = a.genre;
-          acts.append(lien);
+          acts.append(lien); suit(lien, a, "");
         }
       }
-      carte.append(b, acts); return carte;
+      carte.append(b, avancement, acts); return carte;
     }));
     $("revisions").hidden = false;
+    peintRevisions();
+    if(SUIVI){
+      monProgres("").catch(() => {});
+      // Une grille finie ici : assets/progres.js l'envoie par ce pont, et la carte se met à jour.
+      globalThis.ProgresPont = m => monProgres(m);
+      if(document.addEventListener) document.addEventListener("campin-progres", peintRevisions);
+    }
   }).catch(() => {});
 }
 
