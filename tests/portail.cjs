@@ -122,6 +122,17 @@ console.log('portail : page publique, élève reconnu, hors école, redirection 
   assert.equal(l[2].quand, 'pour demain'); assert.equal(l[2].lien, '', 'Un lien hors Classroom est retiré');
   assert.equal(l[3].quand, ''); assert.equal(l[4].quand, '', 'Un devoir rendu ne rappelle plus son échéance');
   assert.equal(l[4].classe, 'fait'); assert.equal(l[0].classe, 'retard');
+  // La cote : seulement sur un devoir corrigé, avec son total ; écrite à la française.
+  const { cote } = lance({ email:'' }).ctx.PortailEssai;
+  assert.equal(cote(7.5, 10), '7,5 / 10'); assert.equal(cote(0, 10), '0 / 10'); assert.equal(cote(16, 20), '16 / 20');
+  for (const [n, s] of [[undefined, 10], [null, 10], ['7', 10], [7, 0], [7, undefined], [-1, 10], [NaN, 10]]) assert.equal(cote(n, s), '');
+  const c = Array.from(devoirsA([
+    { titre:'Corrigé coté', lien:'', echeance:0, etat:'corrige', note:7.5, sur:10 },
+    { titre:'Corrigé sans cote', lien:'', echeance:0, etat:'corrige' },
+    { titre:'Rendu, cote glissée par erreur', lien:'', echeance:0, etat:'rendu', note:4, sur:10 }], t), x => x.cote);
+  assert.deepEqual(c, ['7,5 / 10', '', ''], 'Pas de cote hors d\'un devoir corrigé');
+  assert.ok(l.every(x => x.cote === ''));
+  assert.match(html, /id="devoirs-points" hidden/, 'La phrase sur les points reste cachée tant qu\'aucune cote n\'est affichée');
   assert.equal(devoirsA(null, t).length, 0);
   assert.match(html, /id="devoirs" hidden/, 'Le panneau des devoirs est caché tant que le serveur n\'a rien donné');
 }
@@ -130,6 +141,10 @@ console.log('portail : page publique, élève reconnu, hors école, redirection 
   const d = { email:'e@example.test', prenom:'A', classe:'3F', prof:false, mesCours:'https://x/exec', tableau:'', devoirs:'https://classroom.google.com/w/x/t/all', cours:[], seance:null };
   let q = lance(d, { devoirs:[{ titre:'Portrait', lien:'https://classroom.google.com/c/x/a/1', echeance:0, etat:'a-rendre' }] });
   assert.equal(q.$('devoirs').hidden, false); assert.equal(q.$('devoirs-liste').children.length, 1);
+  assert.equal(q.$('devoirs-points').hidden, true, 'Aucune cote : pas de phrase sur les points');
+  q = lance(d, { devoirs:[{ titre:'Portrait', lien:'https://classroom.google.com/c/x/a/1', echeance:0, etat:'corrige', note:8, sur:10 }] });
+  assert.equal(q.$('devoirs-points').hidden, false);
+  assert.ok(JSON.stringify(q.$('devoirs-liste').children).includes('8 / 10'), 'La cote est écrite dans la ligne du devoir');
   assert.match(html, /Pour les autres cours, ouvre <a target="_top" href="http:\/\/arcampin\.ecoleenligne\.be\/">École en ligne<\/a>/);
   q = lance(d, { devoirs:[] }); assert.equal(q.$('devoirs').hidden, false, 'Liste vide : « Aucun devoir pour le moment »');
   q = lance(d, { devoirs:null }); assert.notEqual(q.$('devoirs').hidden, false, 'Sans service Classroom, pas de panneau');

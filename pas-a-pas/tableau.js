@@ -926,9 +926,15 @@ const DEMO_CL = {
   fil: [],
   d: { cours:[],
        classes:{ "2B":["messagerie-1"], "2E":["messagerie-1"], "3F":["python-1"] },
-       modes:{}, chats:{},
+       modes:{}, chats:{}, classroom:["2B","3F"],
        eleves:[{email:"lea.dupont@arcampin.be",classe:"2B"},{email:"noah.martin@arcampin.be",classe:"2E"},{email:"sami.benali@arcampin.be",classe:"2B"}] },
   classesEtCours(){ return this.d; },
+  devoirsClasse(c){ const j = 86400000, t = Date.now();
+    return { classe:c, lien:"https://classroom.google.com/", travaux:[
+        { id:"b", titre:"Mon premier message", echeance:t + 2 * j, sur:10, lien:"" }, { id:"a", titre:"Le tour de Drive", echeance:t - 5 * j, sur:20, lien:"" }],
+      eleves:[{ nom:"Léa Dupont", remises:{ a:{ etat:"corrige", note:16.5 }, b:{ etat:"rendu" } } },
+        { nom:"Noah Martin", remises:{ a:{ etat:"retard" }, b:{ etat:"a-rendre" } } },
+        { nom:"Sami Benali", remises:{ a:{ etat:"corrige", note:11 } } }] }; },
   ajouterClasse(c){ this.d.classes[c] = this.d.classes[c] || []; return this.d; },
   retirerClasse(c){ delete this.d.classes[c]; return this.d; },
   activerCours(c, k, oui){ const l = this.d.classes[c].filter(x=>x!==k); if(oui) l.push(k); this.d.classes[c] = l; return this.d; },
@@ -1024,7 +1030,69 @@ function caseChat(n, d){
   } else if(filChat && filChat.classe === n){ filChat.fil.arrete(); filChat = null; }
   return boite;
 }
-/* Une carte par classe : le nom, puis les actions (mode cours, chat), puis ses cours ouverts. La liste complète
+/* Les devoirs Classroom de la classe : qui a rendu quoi. Le tableau se projette parfois devant la classe : les
+   points sont cachés tant que la case « Montrer les points » n'est pas cochée, et elle repart décochée à chaque
+   ouverture de la page. Rend null tant que le serveur n'envoie pas « classroom », ou pour une classe sans cours noté. */
+const DEVOIRS_VUS = new Set(), DEVOIRS = {}, MOTS_REMISE = { "retard":"En retard", "a-rendre":"À rendre", "rendu":"Rendu", "corrige":"Corrigé" };
+let POINTS_VISIBLES = false;
+const RAISONS_DEVOIRS = {
+  "sans-cours": "Cette classe n’a pas de cours Classroom noté sur le serveur.",
+  "service": "Le service Classroom n’est pas ajouté au projet : Apps Script ▸ Services ▸ + ▸ Google Classroom API ▸ Ajouter.",
+  "refus": "Classroom n’a pas répondu. La première fois, il faut accepter l’autorisation : éditeur Apps Script ▸ choisir la fonction « devoirsClasse » ▸ Exécuter ▸ Examiner les autorisations ▸ Autoriser."
+};
+const frCote = v => String(Math.round(v * 100) / 100).replace(".", ",");
+/** Ce que le tableau écrit : par devoir, le compte des rendus ; par élève et par devoir, un mot et une classe.
+ *  La cote ne remplace « Corrigé » que si « points » est vrai. */
+function grilleDevoirs(r, points){
+  const travaux = (r.travaux || []).map(w=>{
+    const cases = (r.eleves || []).map(e=>e.remises && e.remises[w.id]).filter(Boolean);
+    return { ...w, attendus: cases.length, rendus: cases.filter(c=>c.etat === "rendu" || c.etat === "corrige").length };
+  });
+  const eleves = (r.eleves || []).map(e=>({ nom: e.nom, cases: travaux.map(w=>{
+    const c = e.remises && e.remises[w.id];
+    if(!c || !MOTS_REMISE[c.etat]) return { mot: "—", classe: "absent" };
+    const note = points && c.etat === "corrige" && typeof c.note === "number" && w.sur > 0 ? frCote(c.note) + " / " + frCote(w.sur) : "";
+    return { mot: note || MOTS_REMISE[c.etat], classe: c.etat };
+  }) }));
+  return { travaux, eleves };
+}
+function chargeDevoirs(n, frais){
+  DEVOIRS[n] = { attente: true };
+  serveurCl("devoirsClasse", n, !!frais).then(r=>{ DEVOIRS[n] = r || { travaux: null, raison: "refus" }; dessineClasses(CL); },
+    ()=>{ DEVOIRS[n] = { travaux: null, raison: "refus" }; dessineClasses(CL); });
+}
+function caseDevoirs(n, d){
+  if(!Array.isArray(d.classroom) || !d.classroom.includes(n)) return null;
+  const boite = txt("div", "cl-mode cl-devoirs"), ouvert = DEVOIRS_VUS.has(n);
+  const voir = txt("button", "btn vide", ouvert ? "Replier" : "📋 Qui a rendu ?"); voir.type = "button";
+  voir.setAttribute("aria-label", (ouvert ? "Replier les devoirs de " : "Voir les devoirs de ") + n);
+  voir.addEventListener("click", ()=>{ if(ouvert) DEVOIRS_VUS.delete(n); else { DEVOIRS_VUS.add(n); chargeDevoirs(n); } dessineClasses(CL); });
+  boite.append(txt("span", "cl-etiquette", "Devoirs Classroom"), voir);
+  if(!ouvert) return boite;
+  const r = DEVOIRS[n] || { attente: true }, zone = txt("div", "cl-devoirs-zone");
+  boite.append(zone);
+  if(r.attente){ zone.append(txt("p", "moyen", "Lecture de Classroom…")); return boite; }
+  if(!Array.isArray(r.travaux)){ zone.append(txt("p", "moyen", RAISONS_DEVOIRS[r.raison] || RAISONS_DEVOIRS.refus)); return boite; }
+  const outils = txt("div", "cl-devoirs-outils"), l = txt("label", "cl-points"), cb = txt("input"), relire = txt("button", "btn vide", "Relire Classroom");
+  cb.type = "checkbox"; cb.checked = POINTS_VISIBLES; relire.type = "button";
+  cb.addEventListener("change", ()=>{ POINTS_VISIBLES = cb.checked; dessineClasses(CL); });
+  relire.addEventListener("click", ()=>{ chargeDevoirs(n, true); dessineClasses(CL); });
+  l.append(cb, document.createTextNode("Montrer les points"));
+  outils.append(l, relire);
+  if(r.lien){ const a = txt("a", null, "Ouvrir dans Classroom ▸"); a.href = r.lien; a.target = "_blank"; a.rel = "noopener"; outils.append(a); }
+  zone.append(outils);
+  const g = grilleDevoirs(r, POINTS_VISIBLES);
+  if(!g.travaux.length || !g.eleves.length){ zone.append(txt("p", "moyen", g.travaux.length ? "Aucun élève dans ce cours Classroom." : "Aucun devoir publié dans ce cours.")); return boite; }
+  const table = txt("table", "cl-devoirs-table"), tete = txt("tr");
+  tete.append(txt("th", null, "Élève"), ...g.travaux.map(w=>{
+    const th = txt("th"), quand = w.echeance ? new Date(w.echeance).toLocaleDateString("fr-BE", { day: "numeric", month: "short" }) : "sans date";
+    th.append(txt("b", null, w.titre), txt("span", "maj", quand + " · " + w.rendus + " / " + w.attendus + " rendus")); return th; }));
+  table.append(tete, ...g.eleves.map(e=>{
+    const tr = txt("tr"); tr.append(txt("th", null, e.nom), ...e.cases.map(c=>txt("td", "remise " + c.classe, c.mot))); return tr; }));
+  const defile = txt("div", "cl-devoirs-defile"); defile.append(table); zone.append(defile);
+  return boite;
+}
+/* Une carte par classe : le nom, puis les actions (mode cours, chat, devoirs), puis ses cours ouverts. La liste complète
    des cours reste repliée : elle s'allonge au fil de l'année, les actions ne doivent pas partir au bout de la ligne. */
 const CHOIX_MODE = {}, PLIS_CL = new Set();
 function carteClasse(n, d){
@@ -1034,7 +1102,8 @@ function carteClasse(n, d){
   x.setAttribute("aria-label", "Retirer la classe " + n);
   x.addEventListener("click", ()=>{ if(confirm("Retirer la classe " + n + " ? Ses élèves ne verront plus aucun cours tant que tu ne les as pas déplacés.")) appelCl("retirerClasse", n); });
   tete.append(txt("h3", "nom", n), txt("span", "maj", nb + " élève" + (nb > 1 ? "s" : "")), x);
-  actions.append(...[caseModeCours(n, d), caseChat(n, d)].filter(Boolean));
+  actions.append(...[caseModeCours(n, d), caseChat(n, d), caseDevoirs(n, d)].filter(Boolean));
+  if(DEVOIRS_VUS.has(n)) carte.classList.add("large");   // le tableau des devoirs prend toute la largeur
   const puces = txt("ul", "cl-ouverts");
   puces.replaceChildren(...ouverts.map(c=>{ const li = txt("li", null, c.titre); li.title = c.cle; return li; }));
   if(!ouverts.length) puces.append(txt("li", "vide", "Aucun cours ouvert pour l’instant."));
