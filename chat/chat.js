@@ -96,7 +96,10 @@
     function recoit(r, tout){
       if(arrete || !r) return;
       if(!r.ouvert){
-        if(ouvert !== false){ if(ouvert) info("Le chat est fermé."); verrou(true, "Le chat est fermé."); }
+        // Salon fermé : plus rien à lire, ni ici ni après un rechargement (Vincent, 24/11/2026 : pas de messages
+        // d'autres élèves à l'écran une fois le cours fini, à la maison notamment). Le serveur, lui, ne les rend plus.
+        if(ouvert !== false){ fil.replaceChildren(); lignes.clear(); dernier = 0; salon = 0; if(prof) muets.replaceChildren();
+          if(ouvert) info("Le chat est fermé."); verrou(true, "Le chat est fermé."); }
         ouvert = false; if(o.surEtat) o.surEtat(false); return;
       }
       const bas = fil.scrollHeight - fil.scrollTop - fil.clientHeight < 40;

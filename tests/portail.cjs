@@ -198,7 +198,7 @@ console.log('portail : page publique, élève reconnu, hors école, redirection 
   let monte = null; q.ctx.CampinChat = { monte: (zone, o) => { monte = { zone, o }; return { arrete(){ monte.arrete = true; } }; } };
   s.onload(); assert.equal(q.$('chat').hidden, false); assert.equal(monte.zone, q.$('chat-zone'));
   // Le professeur ferme : le fil s'arrête et le portail repasse à une question par minute.
-  monte.o.surEtat(false); assert.equal(monte.arrete, true); assert.deepEqual(q.ctx.guets.map(g => g.ms), [60000]);
+  monte.o.surEtat(false); assert.equal(monte.arrete, true); assert.equal(q.$('chat').hidden, true, 'chat fermé : la section disparaît'); assert.equal(q.$('chat-zone').children.length, 0, 'et les messages avec'); assert.deepEqual(q.ctx.guets.map(g => g.ms), [60000]);
   // Le professeur et l'élève sans classe n'ont pas de chat sur le portail.
   assert.equal(lance({ ...d, prof:true, chat:true }).ajoutes.some(x => /chat\.js/.test(x.src || '')), false);
   assert.equal(lance({ ...d, classe:'', chat:true }).ajoutes.some(x => /chat\.js/.test(x.src || '')), false);

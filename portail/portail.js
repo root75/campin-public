@@ -84,11 +84,11 @@ function chatPortail(d){
     if(fil) return;
     const monte = () => {
       $("chat").hidden = false;
-      fil = window.CampinChat.monte($("chat-zone"), { appel, surEtat: oui => { if(!oui && fil){ fil.arrete(); fil = null; guette(); } } });
+      fil = window.CampinChat.monte($("chat-zone"), { appel, surEtat: oui => { if(!oui && fil){ fil.arrete(); fil = null; $("chat").hidden = true; $("chat-zone").replaceChildren(); guette(); } } });   // fermé : la section disparaît, messages compris
     };
     if(window.CampinChat) return monte();
     const s = document.createElement("script");
-    s.src = SITE + "chat/chat.js?v=direct-20261124"; s.onload = monte;
+    s.src = SITE + "chat/chat.js?v=ferme-20261124"; s.onload = monte;
     document.head.append(s);
   }
   if(d.chat) ouvre(); else guette();

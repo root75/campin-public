@@ -990,7 +990,7 @@ let filChat = null;
 function chargeChat(){
   if(window.CampinChat) return Promise.resolve();
   return new Promise((ok, ko) => { const s = document.createElement("script");
-    s.src = "https://root75.github.io/campin-public/chat/chat.js?v=direct-20261124"; s.onload = ok; s.onerror = ko; document.head.append(s); });
+    s.src = "https://root75.github.io/campin-public/chat/chat.js?v=ferme-20261124"; s.onload = ok; s.onerror = ko; document.head.append(s); });
 }
 function caseChat(n, d){
   if(!d.chats) return null;
