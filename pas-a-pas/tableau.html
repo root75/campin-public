@@ -100,6 +100,14 @@ tr.fini td{color:var(--doux)}
 .cl-tete h3{font-family:var(--display);font-weight:800;font-size:1.5rem;line-height:1;margin:0}
 .cl-tete .retirer{margin-left:auto;font-size:.85rem}
 .cl-actions{display:grid;gap:8px}
+.cl-carte.large{grid-column:1/-1}.cl-devoirs-zone{flex-basis:100%;min-width:0;display:grid;gap:8px}
+.cl-devoirs-outils{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px}.cl-points{display:inline-flex;align-items:center;gap:6px;font-weight:700}
+.cl-devoirs-defile{overflow-x:auto;max-width:100%}.cl-devoirs-table{border-collapse:collapse;font-size:.9rem}
+.cl-devoirs-table th,.cl-devoirs-table td{border:1px solid var(--trait);padding:4px 8px;text-align:left;vertical-align:top}
+.cl-devoirs-table tr>th:first-child{position:sticky;left:0;background:var(--papier);white-space:nowrap}
+.cl-devoirs-table thead th b,.cl-devoirs-table tr:first-child th b{display:block;max-width:14rem;overflow-wrap:anywhere}.cl-devoirs-table th .maj{display:block;font-weight:400}
+.cl-devoirs-table th{text-transform:none;letter-spacing:0;font-size:inherit;color:inherit}.cl-devoirs-table td.remise{white-space:nowrap}.cl-devoirs-table td.retard{font-weight:700;color:var(--faux)}
+.cl-devoirs-table td.a-rendre,.cl-devoirs-table td.absent{color:var(--doux)}.cl-devoirs-table td.corrige{font-weight:700}
 .cl-mode{display:flex;flex-wrap:wrap;align-items:center;gap:6px;min-width:0}
 .cl-mode select{padding:4px 6px;max-width:100%}.cl-mode .cl-mode-quoi{flex:1 1 9rem;min-width:0}
 .cl-etiquette{font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;color:var(--doux);flex-basis:100%}
@@ -319,7 +327,7 @@ body:not(.vue-onglet) #panneau-classes{display:none!important}
   </form>
 </dialog>
 
-<script defer src="https://root75.github.io/campin-public/messagerie/pas-a-pas/visuels.js?v=enveloppe-20261117"></script><script defer src="https://root75.github.io/campin-public/derriere-lecran/emotions.js?v=20261123b"></script><script defer src="https://root75.github.io/campin-public/derriere-lecran/visuels.js?v=20261123"></script><script defer src="https://root75.github.io/campin-public/pas-a-pas/tableau.js?v=mot-20261124"></script>
+<script defer src="https://root75.github.io/campin-public/messagerie/pas-a-pas/visuels.js?v=enveloppe-20261117"></script><script defer src="https://root75.github.io/campin-public/derriere-lecran/emotions.js?v=20261123b"></script><script defer src="https://root75.github.io/campin-public/derriere-lecran/visuels.js?v=20261123"></script><script defer src="https://root75.github.io/campin-public/pas-a-pas/tableau.js?v=devoirs-20261124"></script>
 <script defer src="https://root75.github.io/campin-public/pas-a-pas/python-couleurs.js"></script>
 </body>
 </html>

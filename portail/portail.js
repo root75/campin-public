@@ -96,8 +96,16 @@ function chatPortail(d){
 
 /* ----- Mes devoirs : la liste lue par le serveur dans le cours Classroom de la classe. ----- */
 const MOTS_DEVOIR = { "retard": "En retard", "a-rendre": "À rendre", "rendu": "Rendu", "corrige": "Corrigé" };
-/** Ce que le portail écrit pour chaque devoir : [{ titre, lien, classe, mot, quand }]. Un état inconnu ou un titre
- *  vide sont écartés ; un lien qui ne mène pas à Classroom est retiré (la ligne reste, sans lien). */
+/** Une cote comme on l'écrit en classe : « 7,5 / 10 ». Rend "" si ce n'est pas une cote sur un total. */
+function cote(note, sur){
+  const n = Number(note), t = Number(sur);
+  if(typeof note !== "number" || !Number.isFinite(n) || n < 0 || !Number.isFinite(t) || t <= 0) return "";
+  const fr = v => String(Math.round(v * 100) / 100).replace(".", ",");
+  return fr(n) + " / " + fr(t);
+}
+/** Ce que le portail écrit pour chaque devoir : [{ titre, lien, classe, mot, quand, cote }]. Un état inconnu ou un titre
+ *  vide sont écartés ; un lien qui ne mène pas à Classroom est retiré (la ligne reste, sans lien). La cote ne s'écrit
+ *  que sur un devoir corrigé : c'est celle que le professeur a rendue dans Classroom. */
 function devoirsA(liste, maintenant){
   const sortie = [];
   for(const x of Array.isArray(liste) ? liste : []){
@@ -111,7 +119,7 @@ function devoirsA(liste, maintenant){
       quand = cle(e) === cle(maintenant) ? "pour aujourd'hui" : cle(e) === cle(maintenant + 86400000) ? "pour demain" : (e < maintenant ? "c'était pour le " : "pour le ") + jour;
     }
     sortie.push({ titre: x.titre.trim(), lien: typeof x.lien === "string" && x.lien.startsWith("https://classroom.google.com/") ? x.lien : "",
-      classe: fait ? "fait" : x.etat, mot: MOTS_DEVOIR[x.etat], quand });
+      classe: fait ? "fait" : x.etat, mot: MOTS_DEVOIR[x.etat], quand, cote: x.etat === "corrige" ? cote(x.note, x.sur) : "" });
   }
   return sortie;
 }
@@ -130,8 +138,11 @@ function montreDevoirs(liste){
     const b = document.createElement("b"); b.textContent = d.titre;
     boite.append(etat, b);
     if(d.quand){ const q = document.createElement("span"); q.className = "quand"; q.textContent = d.quand; boite.append(q); }
+    if(d.cote){ const c = document.createElement("span"); c.className = "cote"; c.textContent = d.cote; boite.append(c); }
     li.append(boite); return li;
   }));
+  // Dès qu'une cote est affichée, la page dit d'où elle vient et où lire le commentaire.
+  if($("devoirs-points")) $("devoirs-points").hidden = !lignes.some(d => d.cote);
   $("devoirs").hidden = false;
 }
 
@@ -350,5 +361,5 @@ if(typeof fetch === "function"){
     montre();
   }).catch(() => {});
 }
-globalThis.PortailEssai = { tire, ciel, conseil, dateNom, dateJour, revisionsDe, devoirsA, annoncesA, miseEnForme };
+globalThis.PortailEssai = { tire, ciel, conseil, dateNom, dateJour, revisionsDe, devoirsA, annoncesA, miseEnForme, cote };
 })();
