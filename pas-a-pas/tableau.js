@@ -618,7 +618,7 @@ const ecritSeq = (quoi, v) => { try { localStorage.setItem(cleSeq(quoi), JSON.st
 /* Un seul chemin vers le serveur ; sans Apps Script, une imitation pour l'aperçu.
    « Répéter sans les élèves » (SEQ.apercu) : le pilotage reste sur ce poste, même dans le tableau scolaire.
    Aucune séance n'est nécessaire, rien n'est écrit, aucun poste élève ne change ; les réponses sont fictives. */
-const PILOTAGE = ["piloter", "reprendreSequence", "arreterSequence", "reponses"];
+const PILOTAGE = ["piloter", "reprendreSequence", "arreterSequence", "reponses", "partagerCommun"];
 function serveur(fn, ...args){
   if(SUIVI && !(SEQ.apercu && PILOTAGE.includes(fn))) return new Promise((ok, ko) => google.script.run.withSuccessHandler(ok).withFailureHandler(ko)[fn](...args));
   return Promise.resolve(DEMO_SEQ[fn](...args));
@@ -632,6 +632,7 @@ const DEMO_SEQ = {
     return DEMO_ETAT;
   },
   reprendreSequence: () => DEMO_ETAT,
+  partagerCommun: () => false,
   arreterSequence: () => { DEMO_ETAT = null; return null; },
   reponses: (cours, i) => {
     const m = SEQ.contenu.moments[i], t = Math.floor((Date.now() - DEMO_ETAT.lance) / 4000);
@@ -772,8 +773,50 @@ function action(){
   a.hidden = !f; a.textContent = t; a.onclick = f;
 }
 
+/* « Aussi sur les postes » : ce qui est projeté part aussi vers les postes des élèves (cours à distance, ou élève
+   qui voit mal le tableau). Exactement l'écran projeté, rien de plus : les mots seulement une fois montrés, sans les
+   mots masqués ; les barres seulement une fois le vote clos. Éteint, les postes ne reçoivent rien.
+   Le choix est gardé sur ce navigateur ; allumé par défaut (Vincent, 24/11/2026). */
+const PARTAGE = { actif: true, dernier: "" };
+try { PARTAGE.actif = localStorage.getItem("pas-a-pas-partage") !== "non"; } catch(e){}
+function communCourant(){
+  if(!PARTAGE.actif || !SEQ.etat) return null;
+  const m = momentCourant(), r = SEQ.rep, ph = SEQ.etat.phase || "", c = { i: SEQ.etat.i, phase: ph };
+  const masques = litSeq("masques", []), visibles = r ? r.mots.filter(x=>!masques.includes(x.cle)) : [];
+  const mot = x => ({ texte: x.texte, n: x.n });
+  if(m.type === "ecran" && !m.visuel && !SEQ.contenu.ecransSurPostes)
+    c.ecran = { lignes: m.lignes || [], questions: m.questions || [], paires: m.paires || [], exemple: m.exemple || "" };
+  if(m.type === "mots" && SEQ.montre && r) c.mots = visibles.map(mot);
+  if(m.type === "tri" && r){
+    const place = litSeq("tri", {});
+    c.tri = { reserve: visibles.filter(x=>place[x.cle] == null).map(mot),
+      colonnes: m.colonnes.map((titre, k)=>({ titre, mots: visibles.filter(x=>place[x.cle] === k).map(mot) })) };
+  }
+  if(m.type === "vote" && ph !== "ouvert" && r) c.votes = m.situations.map((_, k)=>m.choix.map((_, j)=>(r.votes[k] || [])[j] || 0));
+  return c;
+}
+function pousseCommun(){
+  if(!SEQ.etat || SEQ.apercu) return;
+  // Un serveur pas encore republié ne connaît pas partagerCommun : on se tait.
+  if(SUIVI && typeof google.script.run.partagerCommun !== "function") return;
+  const snap = communCourant(), cle = $("cours").value + "|" + choisie().classe + "|" + SEQ.etat.lance + "|" + JSON.stringify(snap);
+  if(cle === PARTAGE.dernier) return;
+  PARTAGE.dernier = cle;
+  serveur("partagerCommun", $("cours").value, choisie().classe, snap).catch(()=>{ PARTAGE.dernier = ""; });
+}
+/* L'interrupteur vit dans la barre de commande de la projection ; posé ici pour qu'une page gardée en cache l'ait aussi. */
+function interrupteurPartage(){
+  if($("seq-partage") || !$("seq-action")) return;
+  const l = txt("label", "partage"), cb = txt("input"); cb.type = "checkbox"; cb.id = "seq-partage"; cb.checked = PARTAGE.actif;
+  l.title = "Ce qui est projeté s’affiche aussi sur les postes des élèves. Décoche pour garder tous les regards au tableau.";
+  cb.addEventListener("change", ()=>{ PARTAGE.actif = cb.checked; try { localStorage.setItem("pas-a-pas-partage", cb.checked ? "oui" : "non"); } catch(e){} pousseCommun(); });
+  l.append(cb, document.createTextNode(" Aussi sur les postes"));
+  $("seq-action").before(l);
+}
+
 function scene(){
   const m = momentCourant(), n = SEQ.contenu.moments.length, r = SEQ.rep;
+  interrupteurPartage();
   const box = txt("div");
   if(SEQ.contenu.classe) box.classList.add(SEQ.contenu.classe);   // l'habillage du cours (sequences.json)
   // Un moment peut porter un « visuel » (Visuels[nom], chargé par la page) : il remplace ses lignes et sa correction,
@@ -837,7 +880,7 @@ function scene(){
   if(m.type === "tri") box.append(tri(m, r));
   if(m.type === "vote") box.append(vote(m, r, SEQ.etat.phase));
   $("scene").replaceChildren(box);
-  action(); chrono();
+  action(); chrono(); pousseCommun();
 }
 
 /* Mise en commun : glisser un mot dans une colonne, ou cliquer le mot puis la colonne. */
