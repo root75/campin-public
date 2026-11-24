@@ -705,31 +705,27 @@ function affiche(){
   z.append(nav);
   basEtape(z);
   if(typeof B.arrive==="function"){ try { B.arrive(apiBloc(z)); } catch(e){} }   // au choix du bloc : brancher un jeu, demander une donnée au serveur
-  liensDevoir(z);
+  liensClassroom(z);
   if(DECLARATIF) nav.after(txt("p","note","Tu peux continuer même si une case reste vide. Coche quand tu as terminé ; le professeur examine ton document."));
 }
 
-/* Lien direct vers un devoir Classroom (Rat de ville, étape 10, Vincent, 24/11/2026 : la gaufre n'est pas toujours
-   visible chez les élèves). La fiche écrit <a data-devoir="titre exact du devoir" href="https://classroom.google.com/">.
-   Chaque classe a son cours Classroom, donc son adresse : le serveur (mesDevoirs, déjà lu par le portail) donne à
-   l'élève le lien de SON devoir, retrouvé par le titre. Hors suivi, serveur muet ou devoir introuvable : le lien garde
+/* Lien vers « Travaux et devoirs » de la classe (Rat de ville, étape 10, Vincent, 24/11/2026 : la gaufre n'est pas
+   toujours visible chez les élèves). La fiche écrit <a data-classroom="travaux" href="https://classroom.google.com/">.
+   Chaque classe a son cours Classroom, donc son adresse : le serveur la donne à l'élève (portail().devoirs, la même
+   que la porte « Mes devoirs » du portail). Hors suivi, aperçu, serveur muet ou classe sans cours : le lien garde
    son adresse d'origine, l'accueil de Classroom, et l'aide sous la case donne le chemin. */
-const cleDevoir = t => String(t||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/\s+/g," ").trim();
-function lienDevoir(liste, titre){
-  const cle = cleDevoir(titre);
-  const d = cle && (Array.isArray(liste) ? liste : []).find(x => x && cleDevoir(x.titre) === cle);
-  return d && typeof d.lien === "string" && d.lien.startsWith("https://classroom.google.com/") ? d.lien : "";
-}
-let DEVOIRS_ELEVE = null;
-function liensDevoir(z){
+const lienTravaux = d => d && typeof d.devoirs === "string" && d.devoirs.startsWith("https://classroom.google.com/") ? d.devoirs : "";
+let TRAVAUX_CLASSE = null;
+function liensClassroom(z){
   let liens = [];
-  try { liens = [...z.querySelectorAll("a[data-devoir]")]; } catch(e){}
+  try { liens = [...z.querySelectorAll('a[data-classroom="travaux"]')]; } catch(e){}
   if(!liens.length) return;
-  DEVOIRS_ELEVE = DEVOIRS_ELEVE || apiBloc(z).serveur("mesDevoirs");
-  DEVOIRS_ELEVE.then(r => {
-    if(!r || !Array.isArray(r.liste)){ DEVOIRS_ELEVE = null; return; }   // service en panne : on redemandera au prochain affichage
-    liens.forEach(a => { const l = lienDevoir(r.liste, a.dataset.devoir); if(l) a.href = l; });
-  }).catch(() => { DEVOIRS_ELEVE = null; });
+  TRAVAUX_CLASSE = TRAVAUX_CLASSE || apiBloc(z).serveur("portail");
+  TRAVAUX_CLASSE.then(d => {
+    const l = lienTravaux(d);
+    if(!l){ TRAVAUX_CLASSE = null; return; }   // pas de réponse utile : on redemandera au prochain affichage
+    liens.forEach(a => { a.href = l; });
+  }).catch(() => { TRAVAUX_CLASSE = null; });
 }
 
 /* Ce qu'un bloc reçoit dans B.arrive(api), à chaque affichage : sa zone, l'état partagé, les rappels à redessiner,

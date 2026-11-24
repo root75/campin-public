@@ -54,18 +54,17 @@ assert.ok(!/el\("(table|select)"\)|overflow/.test(gm),'grille « Moi » : ni tab
 assert.ok(!/colonne/.test(FIN.texte)&&!actions.some(([,t])=>/colonne « Moi »/.test(t)),'la fiche ne parle plus de colonnes');
 // Légende : chaque couleur du bulletin est une pastille de sa couleur (Vincent, 17/11/2026).
 ['bleu','vert','jaune','orange'].forEach(c=>{assert.ok(GRILLE.legende.includes('class="couleur '+c+'"'),'légende : pastille '+c);assert.ok(gm.includes('.grille-moi .'+c+'{background:'),'moteur : couleur '+c);});
-// Étape 10 : un lien direct vers le devoir, en plus du chemin par les menus (Vincent, 24/11/2026 : la gaufre n'est pas
-// toujours visible). Le moteur remplace l'adresse par celle du devoir de l'élève, retrouvé par son titre exact.
+// Étape 10 : un bouton vers « Travaux et devoirs » de la classe, en plus du chemin par les menus (Vincent, 24/11/2026 :
+// la gaufre n'est pas toujours visible). Le moteur remplace l'adresse par celle du cours Classroom de la classe.
 {
   const remise=BLOCS[9].gestes[1];
-  assert.match(remise.sous,/<a [^>]*data-devoir="03 EVAL Formatif Le rat de ville"[^>]*href="https:\/\/classroom\.google\.com\/"[^>]*target="_blank"/,'étape 10 : le lien du devoir');
+  assert.match(remise.sous,/<a [^>]*data-classroom="travaux"[^>]*href="https:\/\/classroom\.google\.com\/"[^>]*target="_blank"/,'étape 10 : le lien Travaux et devoirs');
+  assert.ok(/03 EVAL Formatif Le rat de ville/.test(remise.geste),'étape 10 : la case nomme le devoir à ouvrir');
   assert.ok(/gaufre/.test(remise.sous)&&/classroom\.google\.com<\/b>/.test(remise.sous),'étape 10 : la gaufre et l’adresse restent en secours');
   const moteur=fs.readFileSync(__dirname+'/../pas-a-pas/blocs.js','utf8');
-  const src=moteur.slice(moteur.indexOf('const cleDevoir'),moteur.indexOf('let DEVOIRS_ELEVE'));
-  const lienDevoir=new Function(src+';return lienDevoir;')();
-  const liste=[{titre:'02 Autre devoir',lien:'https://classroom.google.com/c/1/a/2/details'},{titre:' 03 EVAL formatif  Le Rat de ville',lien:'https://classroom.google.com/c/1/a/3/details'}];
-  assert.equal(lienDevoir(liste,'03 EVAL Formatif Le rat de ville'),'https://classroom.google.com/c/1/a/3/details');
-  assert.equal(lienDevoir(liste,'04 Inconnu'),'');assert.equal(lienDevoir(null,'x'),'');
-  assert.equal(lienDevoir([{titre:'x',lien:'https://ailleurs.example/'}],'x'),'','un lien hors Classroom est refusé');
-  assert.ok(/liensDevoir\(z\);/.test(moteur)&&page.includes('blocs.js?v=lien-devoir-20261124'),'le moteur branche les liens, la page charge la nouvelle version');
+  const lienTravaux=new Function(moteur.match(/const lienTravaux = .*\n/)[0]+';return lienTravaux;')();
+  assert.equal(lienTravaux({devoirs:'https://classroom.google.com/w/ABC/t/all'}),'https://classroom.google.com/w/ABC/t/all');
+  assert.equal(lienTravaux({devoirs:''}),'');assert.equal(lienTravaux(null),'');
+  assert.equal(lienTravaux({devoirs:'https://ailleurs.example/'}),'','un lien hors Classroom est refusé');
+  assert.ok(/liensClassroom\(z\);/.test(moteur)&&page.includes('blocs.js?v=lien-travaux-20261124'),'le moteur branche les liens, la page charge la nouvelle version');
 }
