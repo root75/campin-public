@@ -15,7 +15,7 @@ assert.match(html, /src="https:\/\/root75\.github\.io\/campin-public\/assets\/lo
 assert.ok(fs.existsSync(require.resolve('../assets/logo-campin.png')));
 assert.match(html, /id="bandeau-extension" hidden/);
 
-function noeud(id){ return { id, hidden: /^(compte|maintenant|meteo|lien-prof|devoirs|annonces|date-nommer|chat)$/.test(id), textContent:'', href:'', children:[],
+function noeud(id){ return { id, hidden: /^(compte|maintenant|meteo|lien-prof|devoirs|annonces|date-nommer)$/.test(id), textContent:'', href:'', children:[],
   addEventListener(){}, replaceChildren(...e){ this.children = e; } }; }
 function lance(reponse, { suivi = true, devoirs, annonces } = {}){
   const els = new Map(), ajoutes = [];
@@ -198,24 +198,36 @@ console.log('portail : page publique, élève reconnu, hors école, redirection 
 }
 
 /* ----- Le chat de la classe : le portail (page d'accueil de toute l'école) n'interroge pas le serveur sans raison. ----- */
-{
-  assert.match(html, /<section class="mes-devoirs" id="chat" hidden/);
+(async () => {
+  assert.doesNotMatch(html, /id="chat"/, 'plus de section dans la page : le chat est un bouton en bas à droite');
   const d = { email:'eleve@example.test', prenom:'Camille', classe:'1B', prof:false, mesCours:'https://x/exec', cours:[] };
+  const tic = () => new Promise(r => setImmediate(r));
   // Ni chat ni séance : rien n'est chargé, rien n'est programmé.
-  let q = lance(d); assert.equal(q.ctx.guets.length, 0); assert.equal(q.$('chat').hidden, true);
+  let q = lance(d); assert.equal(q.ctx.guets.length, 0);
   assert.ok(!q.ajoutes.some(s => /chat\.js/.test(s.src || '')));
   // Séance en cours, chat fermé : une question par minute, et le script du chat n'est pas chargé.
   q = lance({ ...d, seance:{ titre:'Messagerie 01', url:'https://x' } });
   assert.deepEqual(q.ctx.guets.map(g => g.ms), [60000]); assert.ok(!q.ajoutes.some(s => /chat\.js/.test(s.src || '')));
-  // Chat ouvert : le script est chargé depuis le site, et la section apparaît quand il est là.
+  // Chat ouvert : le script est chargé depuis le site, et le bouton « 💬 Chat » est posé (pas de fil dans la page).
   q = lance({ ...d, chat:true });
+  assert.deepEqual(q.ctx.guets.map(g => g.ms), [60000], 'toujours une seule question par minute');
   const s = q.ajoutes.find(x => /^https:\/\/root75\.github\.io\/campin-public\/chat\/chat\.js/.test(x.src || '')); assert.ok(s, 'chat.js chargé à la demande');
-  let monte = null; q.ctx.CampinChat = { monte: (zone, o) => { monte = { zone, o }; return { arrete(){ monte.arrete = true; } }; } };
-  s.onload(); assert.equal(q.$('chat').hidden, false); assert.equal(monte.zone, q.$('chat-zone'));
-  // Le professeur ferme : le fil s'arrête et le portail repasse à une question par minute.
-  monte.o.surEtat(false); assert.equal(monte.arrete, true); assert.equal(q.$('chat').hidden, true, 'chat fermé : la section disparaît'); assert.equal(q.$('chat-zone').children.length, 0, 'et les messages avec'); assert.deepEqual(q.ctx.guets.map(g => g.ms), [60000]);
+  let bulle = null; q.ctx.CampinChat = { monte(){ throw Error('le fil ne se monte plus dans la page'); },
+    bulle: o => (bulle = { o, vus:[], signale(n){ this.vus.push(n); }, retire(){ this.retiree = true; } }) };
+  s.onload(); await tic(); assert.ok(bulle, 'bouton en bas à droite'); assert.deepEqual(bulle.vus, [0]);
+  // La question de la minute : du nouveau ▸ la pastille ; le professeur a fermé ▸ le bouton disparaît.
+  let rep = { ouvert:true, dernier:7 }; const lus = [];
+  q.ctx.google.script.run.chatLire = function(depuis){ lus.push(depuis); this.f(rep); };
+  q.ctx.guets[0].f(); await tic(); assert.deepEqual(lus, [1e9], 'on ne demande que le numéro du dernier message'); assert.deepEqual(bulle.vus, [0, 7]);
+  rep = { ouvert:false }; q.ctx.guets[0].f(); await tic(); assert.equal(bulle.retiree, true, 'chat fermé : le bouton disparaît');
+  // Le salon se ferme pendant que le panneau est ouvert : même effet.
+  const premier = bulle; rep = { ouvert:true, dernier:9 }; q.ctx.guets[0].f(); await tic(); assert.notEqual(bulle, premier, 'rouvert : un nouveau bouton');
+  bulle.o.surFerme(); assert.equal(bulle.retiree, true);
+  // Onglet caché : aucune question.
+  q.ctx.document.hidden = true; q.ctx.guets[0].f(); await tic(); assert.equal(lus.length, 3);
   // Le professeur et l'élève sans classe n'ont pas de chat sur le portail.
   assert.equal(lance({ ...d, prof:true, chat:true }).ajoutes.some(x => /chat\.js/.test(x.src || '')), false);
   assert.equal(lance({ ...d, classe:'', chat:true }).ajoutes.some(x => /chat\.js/.test(x.src || '')), false);
-}
-console.log('Portail : chat de la classe chargé seulement quand il est ouvert.');
+  console.log('Portail : chat de la classe en bas à droite, chargé seulement quand il est ouvert.');
+})().catch(e => { console.error(e); process.exit(1); });
+

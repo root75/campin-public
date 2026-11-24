@@ -66,32 +66,34 @@ function affiche(d){
 }
 
 /* ----- Le chat de la classe : ouvert et fermé par le professeur. -----
+   Comme dans les cours (Vincent, 24/11/2026 : « en bas à droite aussi là ») : un bouton « 💬 Chat » en bas à droite,
+   qui ouvre le fil dans un panneau par-dessus la page ; une pastille dit qu'il y a du nouveau.
    Le portail est la page d'accueil de toute l'école : il ne doit pas interroger le serveur en continu. Donc :
-   chat ouvert (d.chat) ▸ on monte le fil, qui se relit toutes les 5 s ; chat fermé mais séance en cours ▸ une
-   question par minute ; ni l'un ni l'autre ▸ rien du tout (l'élève recharge la page quand le professeur ouvre). */
+   chat ouvert ou séance en cours ▸ une question par minute (le fil, lui, ne se relit toutes les 5 s que panneau
+   ouvert) ; ni l'un ni l'autre ▸ rien du tout (l'élève recharge la page quand le professeur ouvre). */
 const GUET_CHAT = 60000;
 function chatPortail(d){
   if(!SUIVI || d.prof || !d.classe || (!d.chat && !d.seance)) return;
-  let fil = null, guet = 0;
+  let bulle = null, charge = null;
   const appel = (fn, ...args) => new Promise((ok, ko) => {
     const pont = google.script.run.withSuccessHandler(ok).withFailureHandler(ko);
     // Un serveur pas encore republié ne connaît pas le chat : on se tait.
     if(typeof pont[fn] === "function") pont[fn](...args); else ko(new Error("Le chat n'est pas encore disponible."));
   });
-  const guette = () => { if(!guet) guet = setInterval(() => { if(!document.hidden) appel("chatLire", 0).then(r => { if(r && r.ouvert) ouvre(); }, () => {}); }, GUET_CHAT); };
-  function ouvre(){
-    clearInterval(guet); guet = 0;
-    if(fil) return;
-    const monte = () => {
-      $("chat").hidden = false;
-      fil = window.CampinChat.monte($("chat-zone"), { appel, surEtat: oui => { if(!oui && fil){ fil.arrete(); fil = null; $("chat").hidden = true; $("chat-zone").replaceChildren(); guette(); } } });   // fermé : la section disparaît, messages compris
-    };
-    if(window.CampinChat) return monte();
-    const s = document.createElement("script");
-    s.src = SITE + "chat/chat.js?v=ferme-20261124"; s.onload = monte;
-    document.head.append(s);
+  const retire = () => { if(bulle){ bulle.retire(); bulle = null; } };   // fermé : le bouton disparaît, messages compris
+  function montre(dernier){
+    if(bulle) return bulle.signale(dernier);
+    charge = charge || new Promise((ok, ko) => {
+      if(window.CampinChat) return ok();
+      const s = document.createElement("script");
+      s.src = SITE + "chat/chat.js?v=ferme-20261124"; s.onload = ok; s.onerror = ko;
+      document.head.append(s);
+    });
+    charge.then(() => { if(!bulle){ bulle = window.CampinChat.bulle({ appel, surFerme: retire }); bulle.signale(dernier); } }, () => { charge = null; });
   }
-  if(d.chat) ouvre(); else guette();
+  const regarde = () => { if(!document.hidden) appel("chatLire", 1e9).then(r => { if(r && r.ouvert) montre(r.dernier); else retire(); }, () => {}); };
+  setInterval(regarde, GUET_CHAT);
+  if(d.chat) montre(0);
 }
 
 /* ----- Mes devoirs : la liste lue par le serveur dans le cours Classroom de la classe. ----- */
