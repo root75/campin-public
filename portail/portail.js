@@ -88,7 +88,7 @@ function chatPortail(d){
     };
     if(window.CampinChat) return monte();
     const s = document.createElement("script");
-    s.src = SITE + "chat/chat.js?v=20261124"; s.onload = monte;
+    s.src = SITE + "chat/chat.js?v=direct-20261124"; s.onload = monte;
     document.head.append(s);
   }
   if(d.chat) ouvre(); else guette();

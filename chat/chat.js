@@ -1,4 +1,5 @@
-/* Chat de la classe : un fil très simple, façon IRC — l'heure, le nom, le message. Texte et smileys seulement.
+/* Chat de la classe : un fil de discussion en direct, comme sous une vidéo — le prénom en couleur, puis le message
+   (Vincent, 24/11/2026 : « comme si on était en live, juste les prénoms »). Texte et smileys seulement.
    Le même script sert l'élève (portail) et le professeur (tableau : masquer, couper la parole).
    Le serveur ne pousse rien : la page redemande les nouveaux messages toutes les RYTHME ms, seulement tant que
    l'onglet est visible. Rien de ce qu'un élève tape n'est lu comme du HTML : tout passe par textContent.
@@ -6,21 +7,39 @@
      CampinChat.monte(element, { appel, classe, prof, rythme })
        appel(fn, ...args) ▸ Promise : chatLire(depuis, classe), chatEcrire(texte, depuis, classe),
                                       chatMasquer(classe, id, oui), chatParole(classe, adresse, coupee)
-       rend { arrete() }                                                                                        */
+       rend { arrete() }
+     CampinChat.bulle({ appel, classe }) ▸ { retire(), signale(dernier) }
+       Dans une page de cours : un bouton « 💬 Chat » en bas à droite, qui ouvre le fil dans un panneau par-dessus
+       la fiche. Le fil ne se relit que panneau ouvert ; fermé, la page qui l'héberge appelle signale(dernier) quand
+       elle sait qu'il y a du nouveau, et le bouton porte une pastille.                                              */
 (function(racine){
   "use strict";
   const RYTHME = 5000, LONGUEUR = 300, SMILEYS = ["🙂", "😀", "😅", "🤔", "👍", "👏", "🙏", "❤️"];
-  const STYLE = ".chat{display:grid;gap:8px;font:inherit;text-align:left}"
-    + ".chat-fil{list-style:none;margin:0;padding:8px 10px;height:16rem;overflow-y:auto;border:1px solid rgba(128,128,128,.45);border-radius:8px;"
-    + "font-family:ui-monospace,Consolas,Menlo,monospace;font-size:.95rem;line-height:1.45;overflow-wrap:anywhere;background:rgba(128,128,128,.08)}"
-    + ".chat-fil li{margin:0;padding:1px 0}.chat-fil time{opacity:.7;margin-right:.5em}.chat-fil b{margin-right:.4em}"
-    + ".chat-fil .moi b{text-decoration:underline}.chat-fil .masque .chat-texte{text-decoration:line-through;opacity:.6}"
-    + ".chat-fil .info{opacity:.75;font-style:italic}"
+  /* Une couleur par prénom, toujours la même : on suit qui parle sans lire. Teintes lisibles sur fond clair et sombre. */
+  const TEINTES = [200, 28, 150, 280, 340, 95, 230, 50, 175, 310];
+  function teinte(nom){ let h = 0; for(const c of String(nom)) h = (h * 31 + c.codePointAt(0)) % 9973; return TEINTES[h % TEINTES.length]; }
+  const STYLE = ".chat{display:grid;gap:8px;font:inherit;text-align:left}.chat [hidden],.chat-panneau[hidden]{display:none!important}"
+    + ".chat-fil{list-style:none;margin:0;padding:10px 12px;height:17rem;overflow-y:auto;border:1px solid rgba(128,128,128,.45);border-radius:12px;"
+    + "font-size:1rem;line-height:1.4;overflow-wrap:anywhere;background:rgba(128,128,128,.1);display:flex;flex-direction:column;gap:4px}"
+    + ".chat-fil li{margin:0;padding:2px 6px;border-radius:6px}.chat-fil li:first-child{margin-top:auto}"
+    + ".chat-fil time{float:right;opacity:.55;font-size:.75rem;margin-left:.6em}"
+    + ".chat-fil b{margin-right:.4em;color:hsl(var(--t,200) 70% 38%)}"
+    + "@media (prefers-color-scheme:dark){.chat-fil b{color:hsl(var(--t,200) 80% 72%)}}"
+    + ":root[data-theme=dark] .chat-fil b{color:hsl(var(--t,200) 80% 72%)}:root[data-theme=light] .chat-fil b{color:hsl(var(--t,200) 70% 38%)}"
+    + ".chat-fil .moi{background:rgba(128,128,128,.16)}.chat-fil .prof{border-left:3px solid currentColor}.chat-fil .prof b{color:inherit}"
+    + ".chat-fil .masque .chat-texte{text-decoration:line-through;opacity:.6}"
+    + ".chat-fil .info{opacity:.75;font-style:italic;font-size:.85rem;text-align:center}"
     + ".chat-fil button,.chat-muets button{font:inherit;font-size:.8rem;margin-left:.5em;padding:1px 6px;cursor:pointer}"
-    + ".chat-saisie{display:flex;gap:6px;flex-wrap:wrap}.chat-saisie input{flex:1 1 12rem;min-width:0;font:inherit;padding:8px 10px;border-radius:8px;border:1px solid rgba(128,128,128,.6)}"
-    + ".chat-saisie button{font:inherit;padding:8px 14px;border-radius:8px;cursor:pointer}"
+    + ".chat-saisie{display:flex;gap:6px;flex-wrap:wrap}.chat-saisie input{flex:1 1 12rem;min-width:0;font:inherit;padding:8px 12px;border-radius:20px;border:1px solid rgba(128,128,128,.6)}"
+    + ".chat-saisie button{font:inherit;font-weight:700;padding:8px 16px;border-radius:20px;cursor:pointer}"
     + ".chat-smileys{display:flex;gap:4px;flex-wrap:wrap}.chat-smileys button{font:inherit;font-size:1.15rem;padding:2px 6px;background:none;border:1px solid rgba(128,128,128,.4);border-radius:6px;cursor:pointer}"
-    + ".chat-note,.chat-etat,.chat-muets{margin:0;font-size:.85rem}.chat-note{opacity:.8}.chat-etat{min-height:1.2em;font-weight:700}";
+    + ".chat-note,.chat-etat,.chat-muets{margin:0;font-size:.85rem}.chat-note{opacity:.8}.chat-etat{min-height:1.2em;font-weight:700}"
+    + ".chat-bulle{position:fixed;right:max(12px,env(safe-area-inset-right,0px));bottom:12px;z-index:19;font:inherit;font-weight:700;padding:10px 16px;border-radius:24px;"
+    + "border:2px solid var(--encre-bouton,#1d5a73);background:var(--carte,#fff);color:var(--encre-bouton,#1d5a73);cursor:pointer;box-shadow:0 4px 14px #0003}"
+    + ".chat-bulle.neuf::after{content:'';display:inline-block;width:.6em;height:.6em;border-radius:50%;background:#d6336c;margin-left:.5em;vertical-align:middle}"
+    + ".chat-panneau{position:fixed;right:max(12px,env(safe-area-inset-right,0px));bottom:64px;z-index:19;width:min(24rem,calc(100vw - 24px));max-height:calc(100vh - 90px);overflow:auto;"
+    + "background:var(--carte,#fff);color:var(--encre,#1f2a33);border:2px solid var(--encre-bouton,#1d5a73);border-radius:14px;padding:12px;box-shadow:0 8px 28px #0004}"
+    + ".chat-panneau h2{margin:0 0 8px;font-size:1.05rem}.chat-panneau .chat-fil{height:min(15rem,40vh)}";
   function el(tag, classe, texte){ const e = document.createElement(tag); if(classe) e.className = classe; if(texte != null) e.textContent = texte; return e; }
   function heure(t){ const d = new Date(t); return String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0"); }
   function style(){
@@ -45,7 +64,7 @@
     saisie.append(champ, envoyer);
     const note = el("p", "chat-note", prof
       ? "Les élèves voient ton message sous le nom « Le professeur ». Un message masqué reste dans la feuille « Chat »."
-      : "Ton nom est affiché à côté de chaque message. Tout ce qui s'écrit ici est enregistré, et ton professeur le lit.");
+      : "Ton prénom est affiché à côté de chaque message. Tout ce qui s'écrit ici est enregistré, et ton professeur le lit.");
     boite.classList.add("chat");
     boite.replaceChildren(fil, smileys, saisie, etat, ...(prof ? [muets] : []), note);
 
@@ -55,9 +74,11 @@
       return b;
     }
     function dessine(m){
-      const li = el("li", (m.moi ? "moi " : "") + (m.masque ? "masque" : ""));
-      const t = el("time", null, heure(m.t)), texte = el("span", "chat-texte", m.texte);
-      li.append(t, el("b", null, m.nom + " :"), texte);
+      const duProf = m.nom === "Le professeur";
+      const li = el("li", (m.moi ? "moi " : "") + (duProf ? "prof " : "") + (m.masque ? "masque" : ""));
+      const t = el("time", null, heure(m.t)), qui = el("b", null, m.nom), texte = el("span", "chat-texte", m.texte);
+      qui.style.setProperty("--t", teinte(m.nom));
+      li.append(t, qui, texte);
       if(prof){
         li.append(bouton(m.masque ? "Réafficher" : "Masquer", (m.masque ? "Réafficher" : "Masquer") + " le message de " + m.nom, ["chatMasquer", classe, m.id, !m.masque]));
         if(!m.moi && m.email) li.append(bouton("Couper la parole", "Couper la parole à " + m.nom, ["chatParole", classe, m.email, true]));
@@ -119,5 +140,21 @@
     lis();
     return { arrete(){ arrete = true; clearInterval(minuterie); document.removeEventListener("visibilitychange", visible); } };
   }
-  racine.CampinChat = { monte, RYTHME };
+  function bulle(o){
+    style();
+    const b = el("button", "chat-bulle", "💬 Chat"), p = el("section", "chat-panneau"), zone = el("div");
+    let fil = null, lu = 0, vu = 0;
+    b.type = "button"; b.setAttribute("aria-expanded", "false"); b.setAttribute("aria-label", "Ouvrir le chat de la classe");
+    p.hidden = true; p.setAttribute("aria-label", "Le chat de la classe"); p.append(el("h2", null, "Le chat de la classe"), zone);
+    const ferme = () => { p.hidden = true; b.setAttribute("aria-expanded", "false"); b.setAttribute("aria-label", "Ouvrir le chat de la classe"); if(fil){ fil.arrete(); fil = null; } lu = vu; };
+    const ouvre = () => { p.hidden = false; b.classList.remove("neuf"); b.setAttribute("aria-expanded", "true"); b.setAttribute("aria-label", "Fermer le chat de la classe");
+      fil = monte(zone, { appel: o.appel, classe: o.classe, surEtat: oui => { if(!oui && o.surFerme) o.surFerme(); } });
+      const champ = zone.querySelector("input"); if(champ) champ.focus(); };
+    b.addEventListener("click", () => { if(p.hidden) ouvre(); else ferme(); });
+    document.addEventListener("keydown", e => { if(e.key === "Escape" && !p.hidden){ ferme(); b.focus(); } });
+    document.body.append(p, b);
+    return { retire(){ ferme(); p.remove(); b.remove(); },
+      signale(dernier){ vu = Math.max(vu, Number(dernier) || 0); if(p.hidden && vu > lu) b.classList.add("neuf"); if(!p.hidden) lu = vu; } };
+  }
+  racine.CampinChat = { monte, bulle, RYTHME };
 })(typeof window !== "undefined" ? window : globalThis);
