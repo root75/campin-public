@@ -7,14 +7,19 @@
    Dans une case : <b>…</b> = le mot-clé ; <span class="a-ecrire"> = à écrire exactement.
    « demos » : "N" (N-ième case) → [clé de l'animation dans demos.js, numéros des images à montrer sous cette case]. */
 const COURS = 'rat-de-ville-formatif';
+const DECOUVERTES = [["📜", "Manuscrit ouvert"], ["🐀", "Les rats entrent en scène"], ["🧱", "Strophes en place"], ["🖋️", "Auteur signé"], ["🎨", "Polices choisies"], ["🔸", "Liste à puces"], ["🔢", "Gestes en ordre"], ["💬", "Méthode expliquée"], ["🔎", "Relecture terminée"], ["📚", "Fable remise"]];
 const PRESENTATION = 'missions';
 const MODE = 'declaratif';
 const HORS_SUIVI = 'Aperçu libre — ouvre Mes cours avec ton compte scolaire pour retrouver ta progression.';
 const BASE = 'https://root75.github.io/campin-public/rat-de-ville/pas-a-pas/', ICONES = BASE + 'icones/';
-/* Avant les cases des étapes où l'on agit dans Docs : le signal « à moi », et le bouton Annuler tel qu'il est dans la barre d'outils. */
+/* Repère de début de séance, y compris quand la classe reprend au milieu de la fable. */
 const ICO_ANNULER = '<img class="ico" src="' + ICONES + 'annuler.png" alt="">';
-const A_MOI = '<aside class="repere agir"><h3>✋ À moi dans Docs !</h3><p>Je fais, puis je coche.</p>'
+const RAPPEL_DEBUT_SEANCE = '<aside class="repere agir"><h3>✋ À moi dans Docs !</h3><p>Je fais, puis je coche.</p>'
   + '<p class="annuler">' + ICO_ANNULER + '<span><b>Je me suis trompé ?</b> Tout de suite : <b>Annuler</b> (<kbd>Ctrl</kbd> + <kbd>Z</kbd>), la flèche tout à gauche de la barre d’outils.</span></p></aside>';
+
+const FIN_DE_LISTE = '<figure class="modele-fin-liste"><figcaption>Dans ton document Docs</figcaption>'
+  + '<ol start="6"><li>J’ai sélectionné la strophe 1, puis j’ai choisi la police EB Garamond et la taille 14.</li></ol>'
+  + '<p>Pour changer une seule strophe, je…</p></figure>';
 
 const BLOCS = [
  {
@@ -22,7 +27,7 @@ const BLOCS = [
   "titre": "Je crée et je nomme",
   "min": 5,
   "bulle": "Salut ! On va mettre une fable en forme, case par case.",
-  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>Je repère le nom du document en haut à gauche dans Docs.</p></aside>" + A_MOI,
+  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>Je repère le nom du document en haut à gauche dans Docs.</p></aside>",
   "gestes": [
    "Menu Google (la gaufre) ▸ Docs ▸ <b>Créer un document</b> ▸ Vierge.",
    "Clique sur « <b>Document sans titre</b> » et tape : <span class=\"a-ecrire\" aria-label=\"À écrire exactement : AAAAMMJJ Le rat de ville – Prénom Nom\">AAAAMMJJ Le rat de ville – Prénom Nom</span> AAAAMMJJ : année, mois, jour de la date d’aujourd’hui.",
@@ -61,7 +66,7 @@ const BLOCS = [
   "titre": "Je recopie la fable",
   "min": 30,
   "bulle": "Bon début ! Regarde bien les animations.",
-  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>J’ouvre l’image de la fiche. Je repère le titre, les vers et l’auteur avant de recopier.</p></aside><p class=\"note\">Un vers = une ligne : touche Enter au bout de chaque vers. Après le titre et au bout du 4e vers de chaque strophe, j’appuie <b>deux fois</b> sur Enter : une ligne vide sépare le titre, chaque strophe et l’auteur.</p>" + A_MOI,
+  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>J’ouvre l’image de la fiche. Je repère le titre, les vers et l’auteur avant de recopier.</p></aside><p class=\"note\">Un vers = une ligne : touche Enter au bout de chaque vers. Après le titre et au bout du 4e vers de chaque strophe, j’appuie <b>deux fois</b> sur Enter : une ligne vide sépare le titre, chaque strophe et l’auteur.</p>",
   "gestes": [
    {
     "geste": "Tape le <b>titre</b>. Puis Enter <b>deux fois</b> : une ligne vide.",
@@ -125,7 +130,7 @@ const BLOCS = [
   "titre": "Je structure",
   "min": 10,
   "bulle": "Tu es lancé(e) !",
-  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>Une strophe regroupe quatre vers. Une ligne vide sépare deux strophes.</p></aside>" + A_MOI,
+  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>Une strophe regroupe quatre vers. Une ligne vide sépare deux strophes.</p></aside>",
   "gestes": [
    {
     "geste": "Mets une <b>majuscule</b> à la première lettre de chaque vers.",
@@ -159,7 +164,7 @@ const BLOCS = [
   "titre": "Titre, texte, auteur",
   "min": 10,
   "bulle": "Tu es lancé(e) !",
-  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>Je compare les trois zones du modèle : le titre, les strophes et l’auteur.</p><div class=\"apercu-document\" aria-label=\"Modèle de présentation des trois zones\"><p class=\"exemple-titre\">TITRE DE LA FABLE</p><p class=\"exemple-strophe\">Les strophes sont centrées.</p><p class=\"exemple-auteur\">Jean de La Fontaine</p></div></aside>" + A_MOI,
+  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>Je compare les trois zones du modèle : le titre, les strophes et l’auteur.</p><div class=\"apercu-document\" aria-label=\"Modèle de présentation des trois zones\"><p class=\"exemple-titre\">TITRE DE LA FABLE</p><p class=\"exemple-strophe\">Les strophes sont centrées.</p><p class=\"exemple-auteur\">Jean de La Fontaine</p></div></aside>",
   "gestes": [
    "<img class=\"ico\" src=\"" + ICONES + "centrer.png\" alt=\"\">Sélectionne le <b>titre</b>. Clique sur <b>Centrer</b> (Ctrl + Shift + E).",
    "<img class=\"ico\" src=\"" + ICONES + "gras.png\" alt=\"\">Le titre toujours sélectionné, clique sur <b>Gras</b> (Ctrl + B).",
@@ -222,7 +227,7 @@ const BLOCS = [
   "titre": "Une police par strophe",
   "min": 12,
   "bulle": "Déjà la moitié ! Le rat est fier de toi.",
-  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>Je repère le numéro de la strophe avant de choisir sa police et sa taille.</p><table class=\"repere-polices\"><caption>Police et taille attendues</caption><tr><th>Strophes</th><th>Police</th><th>Taille</th></tr><tr><td>1 et 2</td><td>EB Garamond</td><td>14</td></tr><tr><td>3 et 4</td><td>Arial</td><td>12</td></tr><tr><td>5</td><td>Calibri</td><td>10</td></tr><tr><td>6 et 7</td><td>Arial Black</td><td>8</td></tr></table></aside><p class=\"note\">Pour chaque strophe : je la sélectionne seule, je choisis la police dans le menu des polices, puis je tape la taille dans la case du nombre.</p>" + A_MOI,
+  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>Je repère le numéro de la strophe avant de choisir sa police et sa taille.</p><table class=\"repere-polices\"><caption>Police et taille attendues</caption><tr><th>Strophes</th><th>Police</th><th>Taille</th></tr><tr><td>1 et 2</td><td>EB Garamond</td><td>14</td></tr><tr><td>3 et 4</td><td>Arial</td><td>12</td></tr><tr><td>5</td><td>Calibri</td><td>10</td></tr><tr><td>6 et 7</td><td>Arial Black</td><td>8</td></tr></table></aside><p class=\"note\">Pour chaque strophe : je la sélectionne seule, je choisis la police dans le menu des polices, puis je tape la taille dans la case du nombre.</p>",
   "gestes": [
    "<img class=\"ico\" src=\"" + ICONES + "police.png\" alt=\"\"><img class=\"ico\" src=\"" + ICONES + "taille.png\" alt=\"\">Sélectionne seulement la <b>strophe 1</b> : <b>EB Garamond, taille 14</b>.",
    "<img class=\"ico\" src=\"" + ICONES + "police.png\" alt=\"\"><img class=\"ico\" src=\"" + ICONES + "taille.png\" alt=\"\">Sélectionne seulement la <b>strophe 2</b> : <b>EB Garamond, taille 14</b>.",
@@ -250,7 +255,7 @@ const BLOCS = [
   "titre": "Mon bloc-notes : la liste à puces",
   "min": 5,
   "bulle": "Déjà la moitié ! Le rat est fier de toi.",
-  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>Des puces quand l’ordre ne compte pas : les choses du festin.</p></aside>" + A_MOI,
+  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>Des puces quand l’ordre ne compte pas : les choses du festin.</p></aside>",
   "gestes": [
    {
     "geste": "Clique à la fin de la fable, après l’auteur. Insertion ▸ Saut ▸ <b>Saut de page</b> (Ctrl + Enter). Sur la nouvelle page, écris : <span class=\"a-ecrire\" aria-label=\"À écrire exactement : Mon bloc-notes\">Mon bloc-notes</span>",
@@ -302,10 +307,11 @@ const BLOCS = [
  },
  {
   "partie": "B — La mise en forme",
-  "titre": "Mes gestes : la liste numérotée",
+  "libelleConsigne": "Consigne",
+  "titre": "Écrire les six lignes de « Mes gestes »",
   "min": 10,
   "bulle": "Presque fini, courage !",
-  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>Des numéros quand l’ordre compte : je raconte mes gestes dans l’ordre où je les ai faits.</p></aside><p class=\"note\">Je raconte six gestes de mise en forme, un par un. Un geste complet dit deux choses : ce que j’ai sélectionné, puis le bouton ou le menu utilisé.</p>" + A_MOI,
+  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>Dans Docs, ma liste « Mes gestes » va de 1 à 6. Chaque numéro raconte une action que j’ai faite sur la fable.</p></aside><p class=\"note\">Je raconte six gestes de mise en forme, un par un. Un geste complet dit deux choses : ce que j’ai sélectionné, puis le bouton ou le menu utilisé.</p>",
   "gestes": [
    {
     "geste": "Sous tes puces, sur une <b>nouvelle ligne</b>, écris : <span class=\"a-ecrire\" aria-label=\"À écrire exactement : Mes gestes\">Mes gestes</span>",
@@ -313,9 +319,9 @@ const BLOCS = [
    },
    "<img class=\"ico\" src=\"" + ICONES + "numeros.png\" alt=\"\">Enter, puis clique sur <b>Liste numérotée</b> (Ctrl + Shift + 7) : le numéro 1 apparaît.",
    {
-    "geste": "<b>Geste 1</b> : complète la phrase, puis écris-la dans Docs, à côté du numéro 1. Enter.",
+    "geste": "Complète la phrase ici, puis écris-la à la <b>ligne 1</b> de ta liste dans Docs. Enter.",
     "trous": {
-     "bravo": "Juste ! J’écris cette phrase dans Docs, à côté de son numéro.",
+     "ligneDocs": 1,
      "variantes": [
       {
        "texte": "J’ai ___ le titre, puis j’ai cliqué sur ___ .",
@@ -332,9 +338,9 @@ const BLOCS = [
     }
    },
    {
-    "geste": "<b>Geste 2</b> : complète la phrase, puis écris-la dans Docs, à côté du numéro 2. Enter.",
+    "geste": "Complète la phrase ici, puis écris-la à la <b>ligne 2</b> de ta liste dans Docs. Enter.",
     "trous": {
-     "bravo": "Juste ! J’écris cette phrase dans Docs, à côté de son numéro.",
+     "ligneDocs": 2,
      "variantes": [
       {
        "texte": "J’ai gardé le titre ___ , puis j’ai cliqué sur ___ .",
@@ -351,9 +357,9 @@ const BLOCS = [
     }
    },
    {
-    "geste": "<b>Geste 3</b> : complète la phrase, puis écris-la dans Docs, à côté du numéro 3. Enter.",
+    "geste": "Complète la phrase ici, puis écris-la à la <b>ligne 3</b> de ta liste dans Docs. Enter.",
     "trous": {
-     "bravo": "Juste ! J’écris cette phrase dans Docs, à côté de son numéro.",
+     "ligneDocs": 3,
      "variantes": [
       {
        "texte": "Pour mettre le titre en majuscules, j’ai ouvert le menu ___ ▸ Texte ▸ Minuscules/majuscules ▸ ___ .",
@@ -370,9 +376,9 @@ const BLOCS = [
     }
    },
    {
-    "geste": "<b>Geste 4</b> : complète la phrase, puis écris-la dans Docs, à côté du numéro 4. Enter.",
+    "geste": "Complète la phrase ici, puis écris-la à la <b>ligne 4</b> de ta liste dans Docs. Enter.",
     "trous": {
-     "bravo": "Juste ! J’écris cette phrase dans Docs, à côté de son numéro.",
+     "ligneDocs": 4,
      "variantes": [
       {
        "texte": "J’ai sélectionné les 7 ___ , puis j’ai cliqué sur ___ .",
@@ -389,9 +395,9 @@ const BLOCS = [
     }
    },
    {
-    "geste": "<b>Geste 5</b> : complète la phrase, puis écris-la dans Docs, à côté du numéro 5. Enter.",
+    "geste": "Complète la phrase ici, puis écris-la à la <b>ligne 5</b> de ta liste dans Docs. Enter.",
     "trous": {
-     "bravo": "Juste ! J’écris cette phrase dans Docs, à côté de son numéro.",
+     "ligneDocs": 5,
      "variantes": [
       {
        "texte": "J’ai sélectionné ___ , puis j’ai cliqué sur ___ .",
@@ -408,9 +414,10 @@ const BLOCS = [
     }
    },
    {
-    "geste": "<b>Geste 6</b> : complète la phrase, puis écris-la dans Docs, à côté du numéro 6.",
+    "geste": "Complète la phrase ici, puis écris-la à la <b>ligne 6</b> de ta liste dans Docs.",
     "trous": {
-     "bravo": "Juste ! J’écris cette phrase dans Docs, à côté de son numéro.",
+     "ligneDocs": 6,
+     "modeleApres": FIN_DE_LISTE,
      "variantes": [
       {
        "texte": "J’ai sélectionné la strophe 1, puis j’ai choisi la ___ EB Garamond et la ___ 14.",
@@ -441,13 +448,14 @@ const BLOCS = [
  },
  {
   "partie": "B — La mise en forme",
-  "titre": "Ma phrase : j’explique",
+  "libelleConsigne": "Consigne",
+  "titre": "Expliquer pourquoi je sélectionne une seule strophe",
   "min": 5,
   "bulle": "Presque fini, courage !",
-  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>Docs modifie seulement le texte sélectionné.</p></aside>" + A_MOI,
+  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>La liste de six lignes est terminée. Sous cette liste, tu vas écrire une seule phrase pour expliquer pourquoi les autres strophes gardent leur police.</p></aside>" + FIN_DE_LISTE,
   "gestes": [
    {
-    "geste": "Complète l’<b>explication</b> ci-dessous.",
+    "geste": "Sur le site, complète la <b>phrase d’entraînement</b>.",
     "trous": {
      "titre": "Pourquoi sélectionner d’abord ?",
      "intro": "Je complète l’explication avec les mots de la banque.",
@@ -496,8 +504,8 @@ const BLOCS = [
     }
    },
    {
-    "geste": "Dans Docs, sous ta liste, écris <b>une phrase avec tes mots</b> qui répond à : comment changer la police d’une seule strophe sans toucher aux autres ?",
-    "sous": "<details><summary>Qu’expliquer dans ma phrase ?</summary><p>Je réponds avec mes mots à la question : « Comment je change la police d’une seule strophe sans toucher aux autres ? » J’explique ce que je sélectionne et ce que je modifie. J’utilise les mots sélectionner, police et taille.</p><blockquote>Début possible à compléter : « Pour changer une seule strophe, je… »</blockquote><p class=\"note\">J’écris ma phrase dans le document Docs, sous la liste de mes gestes. Je ne recopie pas le texte à trous : je le dis à ma façon.</p></details>"
+    "geste": "Dans Docs, place le curseur à la fin de la ligne 6. Appuie deux fois sur <b>Enter</b> pour quitter la liste. Sur la ligne sans numéro, explique avec tes mots pourquoi seule la strophe sélectionnée change de police.",
+    "sous": "<details><summary>Qu’expliquer dans ma phrase ?</summary><p>Je réponds avec mes mots à la question : « Comment je change la police d’une seule strophe sans toucher aux autres ? » J’explique pourquoi les autres strophes gardent leur police quand je change la police ou la taille de celle que j’ai sélectionnée.</p><blockquote>Début possible à compléter : « Pour changer une seule strophe, je… »</blockquote><p class=\"note\">J’écris ma phrase dans le document Docs, sous la liste de mes gestes. Je ne recopie pas le texte à trous : je le dis à ma façon.</p></details>"
    }
   ],
   "vois": "Dans Docs : une phrase sous ma liste, écrite avec mes mots, avec sélectionner, police et taille.<br><span class=\"note\">Expliquer pourquoi, c’est montrer que j’ai compris, pas seulement que j’ai fini.</span>",
@@ -516,7 +524,7 @@ const BLOCS = [
   "court": "Je vérifie",
   "min": 10,
   "bulle": "Avant de remettre : je vérifie tout, une chose par case.",
-  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>J’ouvre la grille : les critères avec une étoile sont incontournables.</p></aside><p class=\"note\">Je vérifie une chose par case, dans mon document. Si une chose manque, je la corrige avant de cocher.</p>" + A_MOI,
+  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>J’ouvre la grille : les critères avec une étoile sont incontournables.</p></aside><p class=\"note\">Je vérifie une chose par case, dans mon document. Si une chose manque, je la corrige avant de cocher.</p>",
   "gestes": [
    "<img class=\"ico\" src=\"" + ICONES + "orthographe.png\" alt=\"\">Clique sur <b>Vérifier l’orthographe</b> (Ctrl + Alt + X) et corrige.",
    "Vérifie le <b>nom</b> : <span class=\"a-ecrire\" aria-label=\"À écrire exactement : AAAAMMJJ Le rat de ville – Prénom Nom\">AAAAMMJJ Le rat de ville – Prénom Nom</span>",
@@ -631,7 +639,6 @@ const FIN = {
 };
 
 /* « Ça coince ? » : les aides de l'étape affichée. */
-const AIDE_ANNULER = { html: '<b>Je me suis trompé ?</b><br>Tout de suite : ' + ICO_ANNULER + '<b>Annuler</b> (<kbd>Ctrl</kbd> + <kbd>Z</kbd>), la flèche tout à gauche de la barre d’outils. Je peux appuyer plusieurs fois.' };
 const AIDE_RETROUVER = { html: '<b>Je ne retrouve pas mon document ?</b><br>Menu Google (la gaufre) ▸ <b>Drive</b> ▸ <b>Récents</b>.' };
 const AIDES_FRAPPE = [
   { html: '<b>Un accent circonflexe : ê, ô ?</b><br>La touche <kbd>^</kbd> à droite du P (rien ne s’affiche), <b>puis</b> la voyelle.' },
@@ -667,5 +674,5 @@ const BAS_ETAPE = [
 ];
 
 BLOCS.forEach((B, i) => {
-  B.coince = [AIDE_ANNULER].concat(i === 1 || i === 2 ? AIDES_FRAPPE : [], i >= 3 && i < 9 ? AIDES_FORME : [], i === 9 ? AIDES_REMISE : [], [AIDE_RETROUVER]);
+  B.coince = [].concat(i === 1 || i === 2 ? AIDES_FRAPPE : [], i >= 3 && i < 9 ? AIDES_FORME : [], i === 9 ? AIDES_REMISE : [], [AIDE_RETROUVER]);
 });

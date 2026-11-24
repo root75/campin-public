@@ -66,13 +66,13 @@ const Demo = (() => {
       doc([L('Mon bloc-notes', 'gras'), L('le tapis', 'sel'), L('…', 'sel'), L('…', 'sel')], { cible: 'puces', legende: 'Bouton Liste à puces (Ctrl + Shift + 8).' }),
       doc([L('Mon bloc-notes', 'gras'), L('le tapis', 'puce'), L('…', 'puce'), L('…', 'puce')], { cible: 'L1', ok: 1, legende: 'Un rond noir devant chaque ligne : c’est une liste à puces.' })
     ] },
-    etape10: { titre: 'Mes gestes : la liste numérotée', images: [
+    etape10: { titre: 'Écrire les six lignes de « Mes gestes »', images: [
       doc([L('Mon bloc-notes', 'gras'), L('le tapis', 'puce'), L('…', 'puce'), L('…', 'puce'), L('Mes gestes', 'gras'), L('', 'sel')], { cible: 'numeros', legende: 'Sous « Mes gestes », Enter ▸ Liste numérotée (Ctrl + Shift + 7).' }),
       doc([L('Mon bloc-notes', 'gras'), L('le tapis', 'puce'), L('…', 'puce'), L('…', 'puce'), L('Mes gestes', 'gras'), L('', 'num')], { cible: 'L5', legende: 'Le numéro 1 apparaît : j’écris mon geste 1 à côté.' }),
       doc([L('Mon bloc-notes', 'gras'), L('le tapis', 'puce'), L('…', 'puce'), L('…', 'puce'), L('Mes gestes', 'gras'), L('J’ai sélectionné le titre, puis Centrer.', 'num'), L('', 'num')], { cible: 'L6', ok: 1, legende: 'Enter : le numéro 2 apparaît tout seul.' })
     ] },
-    etape11: { titre: 'Ma phrase : j’explique', images: [
-      doc([L('Mon bloc-notes', 'gras'), L('le tapis', 'puce'), L('…', 'puce'), L('…', 'puce'), L('Mes gestes', 'gras'), L('J’ai sélectionné le titre, puis Centrer.', 'num'), L('…', 'num'), L('Pour changer une seule strophe, je…')], { cible: 'L7', ok: 1, legende: 'Et ma phrase pour finir.' })
+    etape11: { titre: 'Écrire la phrase sous la liste', images: [
+      doc([L('Mon bloc-notes', 'gras'), L('le tapis', 'puce'), L('…', 'puce'), L('…', 'puce'), L('Mes gestes', 'gras'), L('J’ai sélectionné le titre, puis Centrer.', 'num'), L('…', 'num'), L('Pour changer une seule strophe, je…')], { cible: 'L7', ok: 1, legende: 'À la fin du numéro 6, Enter deux fois. J’écris mon explication sur la ligne sans numéro.' })
     ] },
     etape9: { titre: 'Je vérifie et je remets', images: [
       doc(base('centre gras capitales', 'centre garamond', 'droite italique souligne'), { cible: 'orthographe', legende: 'Vérifier l’orthographe (Ctrl + Alt + X).' }),
