@@ -46,7 +46,6 @@ const portemonNom = f => { const n = nomsEleve(); return !n.length || n.some(m =
 
 /* Deux textes collés : "3" + "4" → 34. */
 const colle = (a, b) => ({
-  vois:`Le compteur affiche ${a+b}.`,
   coince:[`Entre guillemets, "${a}" est un texte : + colle les deux textes, il ne calcule pas.`,
           "Deux façons de réparer : enlever les guillemets, ou transformer chaque texte en nombre avec int( )."],
   q:{ type:"code", q:`Répare le compteur de pièces : ${a} pièces et ${b} pièces font ${a+b}, pas ${a}${b}.`,
@@ -60,7 +59,6 @@ const colle = (a, b) => ({
 
 /* Texte + nombre : TypeError. On répare avec la virgule de print. */
 const melangeTexte = (texte, nom, val) => ({
-  vois:`Le programme affiche ${texte} : ${val}`,
   coince:["TypeError : on additionne un texte et un nombre. Python refuse de deviner.",
           `Dans print( ), la virgule sépare deux choses à afficher et met un espace entre elles : le texte entre guillemets, une virgule, la boîte sans guillemets.`],
   q:{ type:"code", q:`Répare le programme : il doit afficher ${texte} : ${val}`,
@@ -101,7 +99,6 @@ const ENCART_INPUT = `<div class="encart"><p>Dans le logigramme, <b>Lire</b> dev
   <p>Dans la console, la ligne tapée reste affichée, comme dans Thonny.</p></div>`;
 const salue = mot => ({
   extra: logiSalue(mot) + ENCART_INPUT,
-  vois:`Quand on tape Léa, la console affiche ${mot} Léa.`,
   q:{ type:"code", q:`Complète le programme : il demande un prénom, puis affiche ${mot} et ce prénom.`,
       depart:`prenom = input("Ton prénom ? ")\n`, essais:[["Léa"],["Sam"]], scene:{ decor:"salut", ouvre:[`${mot} Léa`,`${mot} Sam`] },
       test: r => r.erreur ? (r.erreur.type==="NameError" ? "NameError : prenom s'écrit sans accent, exactement comme à la 1re ligne." : "Lis la <b>ligne rouge</b> : guillemets et parenthèses vont par paires.")
@@ -114,7 +111,6 @@ const salue = mot => ({
 
 /* Echo (leçon 5) : un seul input(), une variable, plusieurs print. Fil rouge : l'écho de la grotte. */
 const echo = n => ({
-  vois:`Quand le héros crie Echo, la console affiche Echo ${n} fois (plus la ligne tapée).`,
   coince:["EOFError : le programme veut lire une 2e réponse, mais on n'a tapé qu'une seule ligne. Chaque input( ) attend une nouvelle réponse.",
           "Lis UNE fois et range la réponse dans une boîte, comme la boîte prenom du programme précédent. Puis affiche la boîte autant de fois qu'il faut."],
   q:{ type:"code", q:`Dans la grotte, le héros crie UN mot et l'écho le répète. Répare le programme : il lit UNE ligne et l'affiche ${n} fois.`,
@@ -139,7 +135,6 @@ const piegeQ = ({n,m}) => ({
 const piegeCode = ({n,m}) => {
   const autre = n===3 ? 8 : n===5 ? 2 : 4;
   return {
-    vois:`Le joueur tape ${n} potions : la console affiche ${n*m}. Il en tape ${autre} : elle affiche ${autre*m}.`,
     coince:["int( ) transforme un texte en nombre entier : int(\"3\") vaut 3.",
             "Deux endroits possibles pour int( ) : autour de input( ), à la lecture, ou autour de la boîte potions, juste avant le calcul."],
     q:{ type:"code", q:`Répare le programme du marchand : pour ${n} potions à ${m} pièces, il doit afficher ${n*m}.`,
@@ -310,7 +305,7 @@ const BLOCS = [
                `Dans la fenêtre qui s'ouvre : <b class="chemin">Documents ▸ double-clic sur Python</b>.`,
                `Dans <span class="chemin">Nom du fichier</span>, tape <b>02_Le-score_Nom.py</b>, avec TON nom à la place de Nom.`,
                `Clique sur <b class="chemin">Enregistrer</b>.`),
-    vois:"L'onglet, en haut de Thonny, affiche 02_Le-score_ et ton nom.",
+    vois:"Dans Thonny, l'onglet au-dessus de ton programme affiche 02_Le-score_ suivi de ton nom.",
     coince:["Thonny ne se lance pas : nouvel onglet (Ctrl + T) ▸ barre d’adresse ▸ https://cscircles.cemc.uwaterloo.ca/dev/console-fr/ ▸ Enter. Rien n’y est enregistré : sonne la cloche 🔔 ; le professeur organise la sauvegarde.",
             "Ton dossier Python n'est pas dans Documents : crée-le. Documents ▸ ⊕ Nouveau ▸ Dossier ▸ Python ▸ Enter.",
             "Deux signes différents : le tiret - entre Le et score, le trait de soulignement _ partout ailleurs."],
@@ -330,7 +325,7 @@ const BLOCS = [
                `Enregistre : <span class="chemin">icône disquette « Enregistrer »</span> (ou <b>Ctrl + S</b>).`,
                { geste:"<b>Prédis</b> le résultat, ci-dessous.", attention:"⚠️ N'exécute pas encore : d'abord ta prédiction, ensuite F5." },
                `Puis <span class="chemin">icône ▶ verte</span> (ou <b>F5</b>) : clique dans la console du bas, tape ton nombre, puis <b>Enter</b>.`),
-    vois:"Trois lignes de Python. La console pose la question, attend ta réponse, puis affiche le score.",
+    vois:"Dans Thonny, la console du bas pose la question, attend ton nombre, puis affiche le score.",
     extra: LOGIGRAMME_SCORE + `<div class="encart"><table>
   <tr><th>Dans le logigramme</th><th>En Python</th></tr>
   <tr><td>Lire (parallélogramme)</td><td><b>int(input(…))</b>, rangé dans une boîte</td></tr>
@@ -349,7 +344,6 @@ const BLOCS = [
     veux:"Montrer que ton programme marche pour n'importe quel nombre de pièces.",
     fais:CASES("Dans Thonny, sélectionne tout ton programme (<b>Ctrl + A</b>) et copie-le (<b>Ctrl + C</b>).",
                "Clique dans le cadre ci-dessous et colle (<b>Ctrl + V</b>).", EXECUTER),
-    vois:"La fiche essaie avec 3 pièces, puis avec 12 : 30, puis 120.",
     coince:["ValueError : int( ) a reçu autre chose qu'un nombre entier. Ici, la fiche tape 3 puis 12 : regarde ta ligne input.",
             "Le cadre affiche le nombre de pièces au lieu du score : print doit afficher la boîte score.",
             "Tu peux afficher le score seul, ou le mot Score suivi du score : les deux sont acceptés."],
@@ -369,7 +363,7 @@ const BLOCS = [
                "Réponds <b>seul</b> à la question ci-dessous.",
                "<b>Échange de poste</b> avec ton voisin : il lit tes commentaires, exécute ton programme avec un nombre de son choix, et te dit une chose réussie et une chose à corriger.",
                "<b>Corrige toi-même</b> s'il y a lieu, puis Ctrl + S."),
-    vois:"Six lignes : trois commentaires, trois instructions. Ton voisin a testé avec SON nombre.",
+    vois:"Dans Thonny, ton programme compte six lignes : une ligne # au-dessus de chaque instruction.",
     extra: CODE(`# on demande le nombre de pièces\npieces = int(input("Combien de pièces ? "))\n# …\n# …`),
     coince:["Le # est AltGr + 3.", "Le voisin regarde et parle ; c'est toi qui tapes sur ton clavier."],
     ...tapeQ("trois, en lettres", ["Une erreur ValueError : int( ) ne sait pas lire « trois ».","Il affiche 30.","Il affiche troistroistrois…","Il affiche 0."],
@@ -412,7 +406,6 @@ const BLOCS = [
     fais:CASES("Le joueur commence avec <b>{D} vies</b>.",
                "Le programme demande les <b>dégâts reçus</b>, puis affiche les <b>vies qui restent</b>.",
                "Écris-le dans le cadre ci-dessous, <b>sans modèle</b>.", EXECUTER),
-    vois:"La fiche tape {K} : il reste {R} vies. Puis elle tape 1 : il en reste une de moins que {D}.",
     coince:["Même plan que « Le score » : une boîte de départ, un int(input(…)), un calcul, un print.",
             "Des noms sans accent : degats, pas dégâts.",
             "Toujours bloqué après ton voisin : relis ton programme « Les vies » de Python 01 et ajoute un int(input(…))."],
