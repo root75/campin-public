@@ -10,7 +10,7 @@ const Demo = (() => {
       { ...NOUVEAU, cible: 'ligne-a', legende: 'Un nouveau message s’ouvre. Je clique dans la ligne À.' },
       { ...NOUVEAU, dans: 'a', tape: 'lucas', props: [[CAMARADE + ' · lucas.martin@arcampin.be', 'prop-a', 1]], cible: 'prop-a', legende: 'Je tape le début du nom de mon camarade. Outlook propose son adresse : je clique dessus.' },
       { ...NOUVEAU, a: [CAMARADE], cible: 'ligne-cc', legende: 'Mon camarade est dans À. Je clique dans la ligne Cc, juste en dessous.' },
-      { ...NOUVEAU, a: [CAMARADE], dans: 'cc', tape: 'Dupont', props: [[PROF + ' · dupont@arcampin.be', 'prop-cc', 1], [PROF + ' · Externe'], ['dupont@arcampin.com']], cible: 'prop-cc', legende: 'Je tape le nom de mon professeur. Je clique sur la ligne qui finit par @arcampin.be : pas « Externe », pas @arcampin.com.' },
+      { ...NOUVEAU, a: [CAMARADE], dans: 'cc', tape: 'Dupont', props: [[PROF + ' · dupont@arcampin.be', 'prop-cc', 1], [PROF + ' · Externe'], ['dupont@example.org']], cible: 'prop-cc', legende: 'Je tape le nom de mon professeur. Je clique sur la ligne qui finit par @arcampin.be.' },
       { ...NOUVEAU, a: [CAMARADE], cc: [PROF], cible: 'objet', legende: 'Mon professeur est en Cc. Je clique dans « Ajouter un objet ».' },
       { ...NOUVEAU, a: [CAMARADE], cc: [PROF], objet: 'Une question pour toi', cible: 'objet', ok: 1, legende: 'J’écris un titre court. Ensuite le corps du message. ⚠️ Je n’envoie pas encore : je relis d’abord.' }
     ] },

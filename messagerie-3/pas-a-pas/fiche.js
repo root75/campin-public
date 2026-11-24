@@ -20,7 +20,7 @@ function carteMail(t){
 const DROIT = '<span class="droit">🖱️ clic <b>DROIT</b></span>';
 const AIDE_DROIT = 'Le clic DROIT : le bouton de DROITE de la souris, sous ton majeur. Le menu s’ouvre à côté du pointeur. Sur un pavé tactile : appuie avec deux doigts.';
 const REEL = '<p class="reel"><span>Ici, <b>tout est réel</b> : tu travailles dans Outlook. Garde deux onglets : cette fiche et Courrier.</span> <a class="btn vide" data-a-cote href="https://outlook.cloud.microsoft/mail/" target="_blank" rel="noopener">Ouvrir Courrier ↗</a></p><details class="cote"><summary>🪟 Mettre le cours et Courrier côte à côte</summary><ol class="etapes"><li>Clique sur l’onglet de <b>ce cours</b>, en haut de Chrome.</li><li>'+DROIT+' sur l’onglet de <b>Courrier</b> ▸ <b>Ajouter l’onglet à une nouvelle vue fractionnée</b>.</li><li>Le cours et Courrier s’affichent côte à côte, dans la même fenêtre. Clique dans Courrier pour y travailler.</li></ol></details>';
-const OUVRIR = 'Ouvre Courrier : le bouton ci-dessus, ou barre de favoris ▸ <b>Favoris du domaine arcampin.com</b> ▸ <b>Microsoft 365</b> ▸ <b>Courrier</b>.';
+const OUVRIR = 'Ouvre Courrier : le bouton ci-dessus, ou barre de favoris ▸ <b>Favoris du domaine arcampin.be</b> ▸ <b>Microsoft 365</b> ▸ <b>Courrier</b>.';
 
 /* Le simulateur de l'étape 3 : une Boîte de réception où l'élève fait LUI-MÊME le clic DROIT ▸ Signaler du courrier
    indésirable sur le bon message. Rien ne part au serveur ; la preuve de l'étape porte sur ce qu'il a fait (Vincent, 12/11/2026 :
@@ -58,15 +58,31 @@ const SIMULATEUR = '<div class="sim" data-sim aria-label="Simulateur : une Boît
     menu.style.left = Math.max(0, Math.min(e.clientX - r.left, r.width - menu.offsetWidth - 4)) + 'px';
     menu.style.top = Math.max(0, Math.min(e.clientY - r.top, r.height - menu.offsetHeight - 4)) + 'px';
   });
+  function ouvreMenuAccessible(msg){
+    const r = msg.getBoundingClientRect();
+    msg.dispatchEvent(new MouseEvent('contextmenu',{bubbles:true,cancelable:true,clientX:r.left,clientY:r.bottom}));
+    msg.closest('[data-sim]').querySelector('[data-item]').focus();
+  }
+  document.addEventListener('keydown',e=>{
+    if(e.target.matches('.sim-msg') && ['Enter',' '].includes(e.key)){ e.preventDefault(); ouvreMenuAccessible(e.target); }
+  });
   document.addEventListener('click', e => {
     const sim = e.target.closest && e.target.closest('[data-sim]'); if(!sim) return;
     const dos = e.target.closest('.sim-dos'), item = e.target.closest('[data-item]'), msg = e.target.closest('.sim-msg');
-    if(dos){ ferme(sim); etat.dossier = dos.dataset.dos; peint(sim); return; }
+    if(dos){
+      ferme(sim); etat.dossier = dos.dataset.dos; peint(sim);
+      if(etat.dossier==='indesirable' && etat.indesirable.some(k=>SIM_MSGS[k].spam)){
+        dit(sim, 'Tu as retrouvé le message signalé. Réponds à la question sous le simulateur.', true);
+        sim.dispatchEvent(new Event('exercice-reussi'));
+      }
+      return;
+    }
     if(item){ ferme(sim); const k = etat.vise, m = SIM_MSGS[k], t = item.dataset.item;
       if(t !== 'Signaler du courrier indésirable'){ dit(sim, 'Pas « '+esc(t)+' » : cherche <b>Signaler du courrier indésirable</b>, en bas du menu.', false); return; }
       if(!m.spam){ dit(sim, 'Attention : ce message vient de <b>@arcampin.be</b>, l’école. Ce n’est pas un spam. Cherche l’autre.', false); return; }
       etat.indesirable.push(k); peint(sim);
       dit(sim, '✅ Signalé ! Le message est parti dans <b>Courrier indésirable</b>. Clique sur ce dossier pour le voir.', true); return; }
+    if(msg && matchMedia('(pointer: coarse)').matches){ ouvreMenuAccessible(msg); return; }
     if(msg){ ferme(sim); dit(sim, 'C’est le clic <b>DROIT</b> qu’il faut : le bouton de <b>droite</b> de la souris. Sur un pavé tactile : deux doigts.', false); return; }
     ferme(sim);
   });
@@ -92,7 +108,7 @@ const BLOCS = [
   veux:'Savoir où Outlook range les messages douteux, et ne pas me faire avoir.',
   avant:'<aside class="repere"><h3>📮 Le spam</h3><p>Un <b>spam</b>, c’est un message envoyé à des milliers de personnes : publicité, faux cadeau, arnaque. Outlook le range souvent tout seul dans le dossier <b>Courrier indésirable</b>.</p><p>Un spam est arrivé dans ta Boîte de réception ? '+DROIT+' dessus ▸ <b>Signaler du courrier indésirable</b>.</p></aside>',
   gestes:['Dans Courrier, à gauche, clique sur <b>Courrier indésirable</b>. Regarde la liste, n’ouvre rien.','Retourne dans <b>Boîte de réception</b>.','Dans le simulateur ci-dessous, trouve le <b>message douteux</b> : lis l’adresse de chaque expéditeur.',DROIT+' sur ce message ▸ <b>Signaler du courrier indésirable</b>.','Clique sur le dossier <b>Courrier indésirable</b> du simulateur : ton message y est.'],
-  extra:SIMULATEUR,
+  extra:SIMULATEUR, exerciceAvantPreuve:"[data-sim]",
   demos:{'4':['signaler']},
   vois:'Dans le simulateur, le message douteux est dans Courrier indésirable.',
   coince:[AIDE_DROIT,'Les mêmes boutons sont dans le ruban : onglet <b>Accueil</b> ▸ groupe Signaler ▸ <b>Signaler du courrier indésirable</b> ou <b>Signaler un hameçonnage</b>.','Je ne vois pas Courrier indésirable : dans la colonne des dossiers, à gauche, sous Éléments supprimés. Si la colonne est repliée, clique sur les trois traits ☰ en haut à gauche.','Un message de mon professeur est dans Courrier indésirable : ne fais rien, montre-le-lui à la fin du cours.'],
@@ -118,7 +134,7 @@ const BLOCS = [
   gestes:[OUVRIR,'Clique sur le bouton bleu <b>Nouveau message</b> (touche N).','Dans <b>À</b>, tape ton propre nom ▸ clique sur la ligne qui finit par <b>@arcampin.be</b>.','Au bout de la ligne À, à droite, clique sur <b>Cci</b> : une nouvelle ligne apparaît.','Dans <b>Cci</b>, tape le nom d’un camarade ▸ sa ligne en @arcampin.be. Puis un deuxième camarade.',{geste:'Dans <b>Ajouter un objet</b>, tape : Essai de copie cachée.',attention:'⚠️ N’envoie pas encore : tu écris le message au bloc suivant.'}],
   vois:'Dans Outlook, avant d’envoyer : ton adresse dans À, tes deux camarades dans Cci, l’objet « Essai de copie cachée ».',
   demos:{'4':['cci'],'cote 1.2':['cote']},
-  coince:['Je ne vois pas Cci : il est au bout de la ligne À, à droite. Clique dans la ligne À d’abord.','Outlook propose plusieurs lignes : choisis celle qui finit par @arcampin.be. Pas « Externe », pas @arcampin.com.'],
+  coince:['Je ne vois pas Cci : il est au bout de la ligne À, à droite. Clique dans la ligne À d’abord.','Outlook propose plusieurs lignes : choisis celle qui finit par @arcampin.be. Évite la ligne marquée « Externe ».'],
   q:{serveur:true}},
  {partie:'C — Écrire à plusieurs', titre:'Envoyer et vérifier avec un camarade', min:4,
   veux:'Envoyer mon message, puis vérifier avec un camarade que la copie cachée a marché.',
@@ -136,7 +152,7 @@ const BLOCS = [
  {partie:'D — Je quitte mon poste', titre:'Verrouiller ou se déconnecter ?', min:5,
   veux:'Que personne n’utilise mon compte quand je quitte mon ordinateur.',
   avant:'<table class="lettre"><tr><th>Quand ?</th><th>Je fais</th><th>Le chemin</th></tr><tr><td>Une <b>pause</b> : je me lève quelques minutes</td><td>🔒 Je <b>verrouille</b></td><td><b>Ctrl + Alt + Delete</b> ▸ <b>Verrouiller</b> (ou touche Windows ⊞ + L)</td></tr><tr><td>La <b>fin de l’heure</b> de cours</td><td>🚪 Je me <b>déconnecte</b></td><td>Touche Windows ⊞ ▸ clic sur <b>mon nom</b>, en bas à gauche du menu ▸ <b>Se déconnecter</b> (ou <b>Ctrl + Alt + Delete</b> ▸ <b>Se déconnecter</b>)</td></tr></table><p>Sinon, l’élève suivant arrive dans <b>ma</b> session : mes courriels, mon Drive, en mon nom.</p>',
-  gestes:['Appuie en même temps sur <b>Ctrl + Alt + Delete</b>.','Clique sur <b>Verrouiller</b> : l’écran de verrouillage s’affiche.','Appuie sur une touche, tape ton mot de passe, puis <b>Enter</b>.','Tu <b>retrouves cette fiche</b>, ouverte : rien n’est perdu.','Retiens : à la fin de l’heure, touche Windows ⊞ ▸ ton nom (en bas à gauche du menu) ▸ <b>Se déconnecter</b>. Puis clique sur ✅ C’est vérifié.'],
+  gestes:['Appuie en même temps sur <b>Ctrl + Alt + Delete</b>.','Clique sur <b>Verrouiller</b> : l’écran de verrouillage s’affiche.','Appuie sur une touche, tape ton mot de passe, puis <b>Enter</b>.','Tu <b>retrouves cette fiche</b>, ouverte : rien n’est perdu.','Retiens : à la fin de l’heure, touche Windows ⊞ ▸ ton nom (en bas à gauche du menu) ▸ <b>Se déconnecter</b>.'],
   vois:'Ton poste s’est verrouillé, puis tu as retrouvé cette fiche, ouverte.',
   coince:['Le bouton ⏻ du menu Démarrer propose Verrouiller, Arrêter, Redémarrer : pas « Se déconnecter ». Pour te déconnecter, clique sur ton nom, en bas à gauche du menu. N’arrête pas l’ordinateur.','Ctrl + Alt + Delete : trois touches en même temps. Garde Ctrl et Alt enfoncées, puis appuie sur Delete.','Mon mot de passe ne passe pas : vérifie que Caps Lock est éteint.'],
   scene:{avant:['🔓','Ton poste est ouvert…'],juste:['🔒','Poste protégé : personne n’entre dans ton compte.'],faux:['🔓','Le poste est toujours ouvert. Relis le tableau.']},

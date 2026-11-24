@@ -1,6 +1,7 @@
 /* Préparer le rapport, trois missions, un défi final, remettre le rapport. Onze étapes internes réutilisent le suivi existant.
  * Trois hypothèses sur le site ; tableau/capture et écrits courts dans le rapport ; entraide guidée et contrôle individuel final par le professeur. */
 const COURS = 'labo-07';
+const DECOUVERTES = [["📓", "Carnet ouvert"], ["💡", "Hypothèse posée"], ["🔬", "Première mesure"], ["📊", "Relevés comparés"], ["📸", "Indice capturé"], ["☁️", "Piste du nuage"], ["📁", "Fichier retrouvé"], ["🔧", "Panne analysée"], ["🧭", "Test choisi"], ["🔍", "Décision expliquée"], ["📦", "Rapport remis"]];
 const VERSION_PARCOURS = 'missions-6';   // 12/11/2026 (soir) : relevés en deux blocs (11 blocs), hypothèses sous leur question ; 12/11 : cases regroupées en gestes (les cases gardées sur le poste repartent de zéro) ; 06/11 : « Préparer » et « Remettre », mission 1 en trois étapes
 const PRESENTATION = 'missions';   // blocs.js : cloche en haut à droite, bulle, bravo, sans « Je veux / Je fais / Je vois »
 const HORS_SUIVI = 'Essai local : aucune réponse envoyée. En classe, ouvre Mes cours avec ton compte scolaire.';
@@ -198,16 +199,25 @@ const BLOCS = [
     },
     "indices": true,
     "q": {
-      "type": "rapport",
-      "q": "Ton tableau est prêt, GIMP garde la grande image. Pas de phrase à écrire ici.",
-      "confirmation": "J’ai préparé mon tableau, rempli la ligne Avant et ouvert la grande image dans GIMP.",
-      "trace": "rapport:1 — Relevé Avant, GIMP ouvert",
-      "juste": "GIMP reste ouvert : l’étape suivante fait calculer le PC.",
-      "liste": [
-        "La ligne « Deux applications identifiées » est complétée.",
-        "Mon tableau a ses en-têtes, et sa ligne Avant est remplie.",
-        "GIMP est ouvert, avec l’image grise de 10000 × 10000."
-      ]
+      "type": "enquete",
+      "colle": true,
+      "etiquette": "Mon relevé",
+      "q": "Recopie les deux pourcentages de la ligne « Avant » de ton tableau.",
+      "champs": [
+        {
+          "cle": "CPU",
+          "nom": "Processeur (%)",
+          "max": 10,
+          "pourcent": true
+        },
+        {
+          "cle": "MEM",
+          "nom": "Mémoire (%)",
+          "max": 10,
+          "pourcent": true
+        }
+      ],
+      "juste": "Relevé enregistré."
     }
   },
   {
@@ -265,15 +275,25 @@ const BLOCS = [
     },
     "indices": true,
     "q": {
-      "type": "rapport",
-      "q": "Tes quatre relevés sont dans le tableau du rapport. Pas de phrase à écrire ici.",
-      "confirmation": "J’ai relevé les deux totaux quatre fois, pris ma capture et complété le tableau de mon rapport.",
-      "trace": "rapport:1 — Relevés pendant et après",
-      "juste": "Le professeur examine les preuves et les gestes. Cette déclaration ne constitue ni une correction ni une remise.",
-      "liste": [
-        "Mon tableau a ses quatre relevés : Avant, Pendant le calcul, Après 1 min, Après fin de tâche.",
-        "Ma capture est prise, GIMP encore ouvert : je la colle à l’étape suivante."
-      ]
+      "type": "enquete",
+      "colle": true,
+      "etiquette": "Mon relevé",
+      "q": "Recopie les deux pourcentages de la ligne « Après fin de tâche » de ton tableau.",
+      "champs": [
+        {
+          "cle": "CPU",
+          "nom": "Processeur (%)",
+          "max": 10,
+          "pourcent": true
+        },
+        {
+          "cle": "MEM",
+          "nom": "Mémoire (%)",
+          "max": 10,
+          "pourcent": true
+        }
+      ],
+      "juste": "Relevé enregistré."
     },
     "extra": "<p class=\"attention\">⚠️ Sur le Banc d’essai, seulement ▶ Lancer le calcul et ■ Arrêter : ne clique sur aucun autre bouton pendant les relevés.</p>"
   },

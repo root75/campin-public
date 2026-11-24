@@ -55,7 +55,7 @@ est aussi servie par Apps Script, où une adresse relative ne mène nulle part.
   essai:{ q:'…', choix:[['libellé','retour'],…], apres:'<p>…</p>', suite:'👉 À toi' },   // facultatif : À LA PLACE des cases, une question d'essai sur `avant` (avec « Je ne sais pas »), puis l'analyse ; rien n'est noté
   gestes:['Une action par ligne, à l’impératif, avec le <b>chemin de clics</b>.', '…'],  // une case par geste, au moins un mot-clé en <b>
           // un geste peut porter son « ne fais pas » : {geste:'…', attention:'⚠️ …'} (encadré sous la case, jamais dans son texte)
-  vois:'Ce qui est à l’écran quand c’est fait.',   // encadré « ✅ À vérifier ». À omettre quand la page contrôle elle-même
+  vois:'Ce qui est à l’écran quand c’est fait.',   // repère dans « Ça coince ? ». À omettre quand la page contrôle elle-même
                                                    // le travail (rédaction avec bouton « Vérifier ») : il ferait double emploi
   stop:true,                   // facultatif : 🛑 ne continue pas avant d'avoir vérifié
   extra:'<aside class="repere">…</aside>',          // facultatif : HTML sous les cases
@@ -66,9 +66,7 @@ est aussi servie par Apps Script, où une adresse relative ne mène nulle part.
   q:{ … } }                    // la preuve, ci-dessous
 ```
 
-**Une case ne demande jamais de lire ce qui n'est pas encore à l'écran.** La question de preuve n'apparaît qu'après
-« ✅ C'est vérifié » : ce que l'élève doit lire d'abord (exemple, tableau) va dans `avant`, et la dernière case
-annonce la question (« Clique sur ✅ C'est vérifié : … »).
+La question corrigée apparaît directement sous le travail ou après le choix dans un essai. Pour une manipulation contrôlée dans la page, `exerciceAvantPreuve` désigne son élément par un sélecteur CSS. Il émet `exercice-reussi` quand le résultat demandé est atteint. Cela ouvre la question une seule fois. La réussite du bloc suit ensuite la correction habituelle.
 
 `fais:'<ol class="etapes">…</ol>'` reste accepté à la place de `gestes` (fiches plus anciennes).
 
@@ -78,6 +76,17 @@ Pas de gras dans un attribut ni dans un `<span data-rappel>`, que le moteur remp
 le vérifie ; un test qui cherche une phrase de case telle quelle la compare sans balises.
 Une interdiction n'est jamais une case : on ne coche pas « je n'ai pas fait ». Elle va dans l'encadré ⚠️ du geste
 (`{geste, attention}` dans `gestes`, ou dans `CASES` des fiches Python), et les tests de cours le vérifient aussi.
+
+## Un geste à la fois
+
+Le moteur affiche un geste à la fois dans les listes à cases des consignes (au moins deux gestes),
+avec le nombre de gestes accomplis. Cocher révèle le premier geste encore à faire ; les cases gardées
+sont reprises au rechargement. « Voir tous les gestes » permet de relire la liste et de décocher une
+case ; ce choix reste actif pendant la navigation dans la fiche. Les avertissements et les animations
+restent attachés au geste. « Un coup de pouce » ouvre son animation, ou « Ça coince ? » en l’absence
+d’animation. Les accords du professeur et les règles de validation restent inchangés.
+Les exercices, exemples et simulateurs gardent leur présentation propre. Après une preuve réussie,
+le titre de l’étape suivante annonce la suite du parcours.
 
 ## Les preuves
 

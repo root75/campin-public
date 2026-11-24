@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="fr"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Défi du pot · Campin</title>
+<style>
+:root{color-scheme:light;--encre:#1e3440;--bleu:#175d74;--trait:#d7dcda;--papier:#fffefa}*{box-sizing:border-box}body{margin:0;background:#f5f4ec;color:var(--encre);font:clamp(1.05rem,2.15vw,1.6rem)/1.45 "Atkinson Hyperlegible",system-ui,sans-serif}main{max-width:58rem;margin:clamp(24px,8vh,80px) auto;padding:0 clamp(16px,4vw,48px)}h1,h2{font-family:Alegreya,Georgia,serif;line-height:1.05;text-wrap:balance}h1{font-size:clamp(2.5rem,6vw,5rem);margin:0 0 .35em}p{margin:.5em 0 1em}.cartes{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,16rem),1fr));gap:16px}
+button{font:inherit;font-weight:700;cursor:pointer;color:var(--bleu);border:2px solid var(--bleu);border-radius:12px;background:var(--papier);padding:.55em .9em}button:focus-visible{outline:4px solid #ce861b;outline-offset:3px}.cartes button{text-align:left;padding:1em;border-color:var(--trait);border-bottom:5px solid var(--bleu)}.cartes .mystere{background:#153e51;color:#fff;border-color:#153e51}.pixel-jeu{text-align:center}.pixel-jeu canvas{width:min(100%,290px);height:auto;image-rendering:pixelated;background:#142d40;border-radius:9px}.pixel-jeu p{margin:.4em 0}.variantes{margin-top:1em}.variantes summary{cursor:pointer}.variantes .cartes{margin-top:.6em}.symboles{font-size:clamp(1.5rem,7vw,3.25rem);letter-spacing:.08em;text-align:center}.cartes button:hover{border-color:var(--bleu)}.icone{display:block;font-size:1.65em;margin-bottom:.35em}.piece,.solution{background:var(--papier);border:1px solid var(--trait);border-radius:14px;padding:clamp(14px,3vw,28px);margin:1em 0}.piece p:last-child,.solution p:last-child{margin-bottom:0}.solution{border-left:6px solid #258263}.solution h2{font-size:1.3em;margin:0}.actions{display:flex;align-items:center;flex-wrap:wrap;gap:12px}.principal{background:var(--bleu);color:white}.temps{font-variant-numeric:tabular-nums;font-weight:700}.retour{font-size:.8em;margin-bottom:1em}.question{font-weight:700}.page-doc{max-width:32rem}.page-doc ol{margin:0;padding-left:2.1em}.page-doc ol li{margin-bottom:.45em}[hidden]{display:none!important}
+</style>
+<main>
+<section id="choix"><h1>Quel défi ouvre-t-on ?</h1>
+<p>Votez à main levée. Votre professeur ouvre la carte choisie.</p>
+<div class="cartes"><button class="mystere" data-carte="pixel"><span class="icone" aria-hidden="true">👾</span>Pixel mystère</button><button data-carte="flash"><span class="icone" aria-hidden="true">⚡</span>Flash mémoire</button></div><details class="variantes"><summary>Variantes du cours</summary><div class="cartes"><button data-carte="mail"><span class="icone" aria-hidden="true">✉️</span>Réparer un mail mystère</button><button data-carte="document"><span class="icone" aria-hidden="true">📄</span>Retrouver l’erreur dans un document</button></div></details></section>
+<section id="jeu" hidden><button class="retour" id="retour">← Revenir au choix</button><h1 id="titre" tabindex="-1"></h1>
+<div id="flash" hidden><p>Regardez les cinq symboles pendant cinq secondes.</p><div class="piece symboles" id="symboles" aria-live="polite">Prêts ?</div><p class="question" id="question-flash" hidden>Quel symbole était au milieu ?</p></div>
+<div id="pixel" class="pixel-jeu" hidden><p>Une image se dessine. Que représente-t-elle ?</p>
+<canvas id="dessin" width="20" height="16" aria-label="Image mystère partiellement dévoilée" role="img"></canvas>
+<p id="indice" aria-live="polite"></p><button id="morceau">Dévoiler un morceau</button></div>
+<div id="mail" hidden><div class="piece"><div><strong>À</strong> · Professeur d’informatique</div><div><strong>Objet</strong> · Bonjour</div><hr><p>Bonjour Monsieur,<br>Je serai à la visite de vendredi. À quelle heure part le bus ?<br>Merci,<br>Lina, 2B</p></div>
+<p class="question">Quel objet permettrait au professeur de comprendre la demande avant d’ouvrir le mail ?</p></div>
+<div id="document" hidden><div class="piece page-doc"><strong>Mes gestes</strong><ol start="6"><li>J’ai sélectionné la strophe et changé sa police.</li><li>Seule la partie sélectionnée change de police.</li></ol></div><p class="question">La liste devait contenir six gestes. Quel détail cloche et comment le corriger dans Docs ?</p></div>
+<div class="actions"><button id="lancer">Lancer la minute</button><span class="temps" id="temps" role="timer"></span><button class="principal" id="reponse">Voir une réponse possible</button></div>
+<div id="solution" class="solution" hidden tabindex="-1"><h2>Une réponse possible</h2><p id="explication"></p></div></section>
+</main>
+<script>
+const champ=id=>document.getElementById(id);
+const solutions={mail:'« Visite de vendredi – heure de départ du bus ». Le professeur repère la sortie et la question dans sa boîte de réception. D’autres objets précis conviennent.',document:'La phrase d’explication porte le numéro 7. Pour séparer les deux, on termine la ligne 6, on appuie deux fois sur Enter pour quitter la liste, puis on écrit son explication sur la ligne sans numéro.'};
+// Chaque groupe de pixels apparaît une seule fois. Le dernier morceau complète le dessin.
+const motifs=[
+  {nom:'Une manette de jeu vidéo',indices:['Elle tient dans les mains.','On s’en sert avec les deux pouces.','Une croix à gauche, des boutons à droite.'],lignes:[
+    '       ww','        w','     cccccccccc','   cccccccccccccc','  cccccccccccccccc','  cccwccccccccrccc',' ccwww wcccccbccrcc',' ccccwccccccccbccccc',' ccccccwwccwwccccccc',' ccccccccccccccccccc',' ccccccc    ccccccc','  ccccc      ccccc','   ccc        ccc']},
+  {nom:'Saturne',indices:['On peut la voir de très loin.','Elle tourne autour du Soleil.','Elle porte de grands anneaux.'],lignes:[
+    '','        yyyy','      yyyyyyyy','     yyooooooyy','    yyyyyyyyyyyy  ww','    oooooooooyywww','   yyyyyyyyywwwyyy','   yyoooowwwwoyyyy','    yywwwwyyyyyyy','   wwwyyyyooooyyy',' www yyyyyyyyyyy','ww    yyooooyyy','        yyyyy']},
+  {nom:'Un appareil photo',indices:['On peut le tenir dans la main.','Il garde le souvenir d’un instant.','Il a un objectif.'],lignes:[
+    '','      ccccccc','   rr ccwwwccc','  cccccccccccccccc','  cccccccccccccccc','  ccccccwwwwwccwwc','  cccccwwbbbwwcccc','  cccccwbbbbbwcccc','  cccccwbwwbbwcccc','  cccccwwbbbwwcccc','  ccccccwwwwwccccc','  cccccccccccccccc','   cccccccccccccc']}
+];
+const couleurs={c:'#648daf',w:'#f2eee2',r:'#ff7e78',b:'#37bdd2',y:'#ffcf69',o:'#de914e'};
+let motif,numeroMotif=Math.floor(Math.random()*motifs.length),niveau=0;
+function pixels(n){
+  niveau=n;
+  const ctx=champ('dessin').getContext('2d');
+  ctx.clearRect(0,0,20,16);
+  motif.lignes.forEach((ligne,y)=>[...ligne].forEach((couleur,x)=>{
+    if(couleurs[couleur] && (x*3+y*7+x*y)%5<=niveau){
+      ctx.fillStyle=couleurs[couleur];ctx.fillRect(x,y,1,1);
+    }
+  }));
+  champ('indice').textContent=niveau<4?motif.indices[Math.min(2,niveau)]:'L’image est complète.';
+  champ('morceau').hidden=niveau>=4;
+}
+champ('morceau').onclick=()=>pixels(Math.min(4,niveau+1));
+const objets=[['🎸','guitare'],['🚀','fusée'],['🐙','pieuvre'],['🎲','dé'],['🍉','pastèque'],['🤖','robot'],['🛹','skateboard'],['🧲','aimant'],['🦋','papillon']];
+let serie=[],carte,intervalle;
+function tireSerie(){
+  const sac=objets.slice();
+  for(let i=sac.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[sac[i],sac[j]]=[sac[j],sac[i]]}
+  return sac.slice(0,5);
+}
+function montreSerie(){champ('symboles').textContent=serie.map(x=>x[0]).join(' ');champ('symboles').setAttribute('aria-label',serie.map(x=>x[1]).join(', '));}
+const jeuCourt=()=>carte==='flash'||carte==='pixel';
+function arrete(){clearInterval(intervalle);champ('temps').textContent='';}
+document.querySelectorAll('[data-carte]').forEach(b=>b.onclick=()=>{
+  carte=b.dataset.carte; arrete(); champ('choix').hidden=true; champ('jeu').hidden=false;
+  champ('titre').textContent=b.lastChild.textContent; champ('titre').focus();
+  for(const id of ["pixel","flash",...Object.keys(solutions)]) champ(id).hidden=id!==carte;
+  if(carte==='pixel'){motif=motifs[numeroMotif++%motifs.length];pixels(0);}
+  if(carte==='flash'){serie=tireSerie();champ('symboles').textContent='Prêts ?';champ('symboles').removeAttribute('aria-label');champ('question-flash').hidden=true;}
+  champ('lancer').textContent=jeuCourt()?'Lancer la manche · 30 s':'Lancer la minute';
+  champ('reponse').textContent=carte==='flash'?'Revoir la série':carte==='pixel'?'Révéler le mystère':'Voir une réponse possible';
+  champ('solution').querySelector('h2').textContent=carte==='flash'?'Le symbole du milieu':carte==='pixel'?'Le pixel mystère':'Une réponse possible';
+  champ('solution').hidden=true; champ('lancer').hidden=false; champ('reponse').hidden=carte==='flash';
+});
+champ('lancer').onclick=()=>{const duree=jeuCourt()?30:60,fin=Date.now()+duree*1000;if(carte==='flash')montreSerie();champ('lancer').hidden=true;
+  const affiche=()=>{const s=Math.max(0,Math.ceil((fin-Date.now())/1000));champ('temps').textContent=s?s+' s':'Temps écoulé.';if(carte==='pixel'){const palier=Math.floor((duree-s)*4/duree);if(palier>niveau)pixels(palier);}if(carte==='flash' && duree-s>=5 && champ('question-flash').hidden){champ('symboles').textContent='?';champ('symboles').removeAttribute('aria-label');champ('question-flash').hidden=false;champ('reponse').hidden=false;}if(!s){clearInterval(intervalle);if(jeuCourt())champ('reponse').click();}};
+  affiche();intervalle=setInterval(affiche,250);
+};
+champ('reponse').onclick=()=>{arrete();champ('reponse').hidden=true;champ('lancer').hidden=true;
+  if(carte==='pixel')pixels(4);if(carte==='flash')montreSerie();champ('explication').textContent=carte==='flash'?serie[2].join(' '):carte==='pixel'?motif.nom:solutions[carte];champ('solution').hidden=false;champ('solution').focus();
+};
+champ('retour').onclick=()=>{arrete();champ('jeu').hidden=true;champ('choix').hidden=false;document.querySelector('[data-carte="'+carte+'"]').focus();};
+</script></html>

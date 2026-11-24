@@ -3,6 +3,7 @@
    Questions de preuve : preuves.json, corrigées par le serveur (blocs 8 à 12 : 3 variantes, une par élève).
    Le mail d'entraînement se construit de bloc en bloc : état partagé du moteur (PARTAGE, rédactions « commun »). */
 const COURS = 'messagerie-1';
+const DECOUVERTES = [["🧰", "Mail réparé"], ["📬", "Bonne boîte"], ["🏷️", "Objet trouvé"], ["👋", "Premier bonjour"], ["💬", "Question prête"], ["✒️", "Signature posée"], ["✉️", "Brouillon bouclé"], ["↩️", "Réponse prête"], ["🔎", "Question retrouvée"], ["📝", "Message composé"], ["📤", "Envoi retrouvé"], ["🤝", "Conversation terminée"]];
 const VERSION_PARCOURS = 'v1';
 const PRESENTATION = 'missions';
 const CONFETTIS = true;
@@ -63,7 +64,7 @@ const M1 = (() => {
     if(k==='locale') return v==='camille.martin' ? '' : 'La partie locale est ce qui se trouve avant @ : elle identifie la boîte dans ce domaine.';
     if(k==='domaine') return v==='example.org' ? '' : 'Le domaine est ce qui se trouve après @. Ici, recopie example.org.';
     if(k==='reponse') return (criteresReponse(d.reponse, d, classe).find(c=>c.err)||{}).err || '';
-    if(k==='questionProf') return String(d.questionProf).trim().length>=8 ? '' : 'Recopie la question du message de ton professeur, en entier : elle te sera rappelée à l’étape suivante.';
+    if(k==='questionProf') return /\S.+\s+.+\?$/u.test(String(d.questionProf).trim()) ? '' : 'Recopie la question du message de ton professeur, en entier : elle te sera rappelée à l’étape suivante.';
     if(k==='a') return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.a.trim()) && d.a.trim().toLowerCase()===DEST ? '' : 'Écris l’adresse de Camille indiquée dans la mission. Vérifie chaque lettre : un @ et une adresse plausible ne suffisent pas.';
     if(k==='objet'){
       if(!v) return 'Ajoute un titre qui annonce le sujet.';
@@ -138,7 +139,7 @@ const M1 = (() => {
         if(perdu()) return;
         if(fini() || b.classList.contains('reparee') || b.classList.contains('juste')){ dit.textContent = role; return; }   // déjà vue, ou partie gagnée : on relit, sans rien dépenser
         clics--;
-        if(bon){ texte.textContent = bon; b.classList.add('reparee'); trouve++; dit.textContent = role; if(fini() && typeof confettis==='function') confettis(); }
+        if(bon){ texte.textContent = bon; b.classList.add('reparee'); trouve++; dit.textContent = role; if(fini()){ cible.dispatchEvent(new Event("exercice-reussi")); if(typeof confettis==='function') confettis(); } }
         else { b.classList.add('juste'); dit.textContent = 'Un clic perdu. '+role; }
         maj();
       });
@@ -222,6 +223,7 @@ const champMail = (etiquette, champs, controle, reponse, juste, plus) => Object.
 const BLOCS = [
  {partie:'A — Je comprends', titre:'Réparer un mail raté', min:3,
   veux:'Avant de toucher Outlook : reconnaître les parties d’un mail et les deux parties d’une adresse.',
+  exerciceAvantPreuve:".mail-rate",
   arrive:api=>M1.mailRate(api.zone),
   avant:'<p><b>Lina a écrit ce mail trop vite.</b> Quatre lignes sont à réparer, et tu as <b>quatre clics</b>, pas un de plus. Lis d’abord tout le mail. Un clic sur une ligne fautive la répare ; un clic sur une ligne juste est perdu.</p><div class="email mail-rate"><div class="ligne-mail"><b>À</b><span>camille.martin@example.org</span></div><div class="ligne-mail"><b>Objet</b><span>Une question sur tes loisirs</span></div><div class="corps"><p>Bonjour Camille,\n\nQuel sport ou quel loisir pratiques-tu ?\n\nBonne journée,\nLina Dupont, 2B</p></div></div><p class="note">Le corps du mail réunit la salutation, le message, la formule de fin et la signature.</p>'
    +'<h3>Comprendre une adresse email</h3><div class="email"><div class="ligne-mail"><b>camille.martin</b><b>@</b><b>example.org</b></div></div><ul><li><b>Partie locale :</b> avant @, elle identifie une boîte dans le domaine. Ce peut être une personne ou un service, comme secretariat.</li><li><b>@, l’arobase :</b> sépare les deux parties ; on peut le lire « chez ».</li><li><b>Domaine :</b> après @, il indique le domaine auquel appartient la boîte. Il n’est pas nécessairement le nom du serveur technique.</li></ul><p>Dans ton adresse scolaire, le domaine est <b>arcampin.be</b>. Recopie l’adresse fournie exactement, sans ajouter d’espace. Une adresse bien écrite ne prouve pas que la boîte existe ni que son propriétaire est fiable.</p><p class="note">example.org est utilisé ici pour les personnages fictifs. On ne lui envoie aucun message réel.</p>',
@@ -330,7 +332,7 @@ const BLOCS = [
   gestes:[{geste:'Lis le nom et l’<b>adresse scolaire</b> de ton correspondant, dans l’encadré 🎲 juste au-dessus.', attention:'⚠️ N’utilise pas l’adresse fictive de Camille : tu écris à un vrai camarade.'},
    'Outlook ▸ onglet <b>Accueil</b> ▸ bouton bleu <b>Nouveau message</b> (touche N).',
    'Dans <b>À</b>, écris l’adresse de ton correspondant et choisis-la dans la liste proposée.',
-   {geste:'Dans <b>Cc</b>, juste sous la ligne À, tape simplement le <b>nom</b> de ton professeur : '+PROF_M1+'. Outlook te propose plusieurs lignes : clique sur celle dont l’adresse finit par <b>@arcampin.be</b>. Pas une ligne marquée « Externe », pas une adresse en @arcampin.com ou @gmail.com.',
+   {geste:'Dans <b>Cc</b>, juste sous la ligne À, tape simplement le <b>nom</b> de ton professeur : '+PROF_M1+'. Outlook te propose plusieurs lignes : clique sur celle dont l’adresse finit par <b>@arcampin.be</b>. Évite les lignes marquées « Externe ».',
     sous:'<p class="note"><b>Pour écrire à n’importe quel professeur de l’école</b> : tape son nom dans À ou dans Cc, puis choisis dans la liste la ligne dont l’adresse finit par <b>@arcampin.be</b>. Outlook trouve son adresse tout seul : pas besoin de la connaître par cœur.</p>'},
    'Laisse <b>Cci</b> vide.',
    'Dans <b>Objet</b>, écris un titre court qui annonce ta question.',
