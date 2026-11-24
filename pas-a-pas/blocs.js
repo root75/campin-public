@@ -466,6 +466,13 @@ const gestesHtml = l => !l ? "" : '<ol class="etapes">'+l.map(g=>{const [t,a,s]=
 const ACCORD_TEXTES = { bouton:"🔔 Je demande l’accord du professeur", attente:"✋ Ton professeur sait que tu attends son accord. En attendant, relis ton document : cette case se cochera toute seule.", ok:"✅ Le professeur a donné son accord : tu peux rendre." };
 const ACCORD_ATTEND = "✋ Ton professeur sait que tu attends qu’il regarde ton document.";
 let attendAccord = null;   // "étape.rang" de la case d'accord en attente
+/* La demande est-elle arrivée au serveur ? Tant que non, l'état lu par la relève des 15 s est celui d'AVANT le clic :
+   un accord déjà donné à une autre étape, ou une ancienne cloche fermée. Le 24/11/2026, chez eleve.test, la case 10.1
+   s'est cochée seule ainsi (accord de l'étape 3 encore dans le cache, écriture de la nouvelle demande pas finie). */
+let accordPose = false;
+/* L'état rendu par etatAide vaut-il accord pour la case `cle` ? Le serveur dit « accord » et l'étape : un accord donné
+   pour une autre étape ne compte pas. Un serveur d'avant le 20/11/2026 ne dit pas « accord » : fermé = accordé. */
+const accordPour = (r, cle) => !!r && r.accord!==false && (r.accord!==true || !r.bloc || String(r.bloc)===String(cle).split(".")[0]);
 /* Plusieurs étapes peuvent porter une case d'accord (Rat de ville : après la structure, puis avant la remise).
    casesAccord() = leurs clés ; caseAccord(bloc) = celle de l'étape `bloc` donnée par le serveur (etatAide), sinon,
    pour un serveur qui ne la donne pas : la seule case d'accord du cours, ou rien (on ne devine pas laquelle). */
@@ -502,10 +509,10 @@ function demandeAccord(cle){
   if(enAide && attendAccord===cle) return;
   const ancre = document.getElementById("aide"), commun = typeof Cloche!=="undefined";
   if(commun) Cloche.ferme(ancre);
-  attendAccord = cle; allumeAide(true);
+  attendAccord = cle; accordPose = false; allumeAide(true);
   document.getElementById("aide-texte").textContent = ACCORD_ATTEND;
   redessine();
-  google.script.run.withSuccessHandler(()=>{})
+  google.script.run.withSuccessHandler(()=>{ if(attendAccord===cle) accordPose = true; })
     .withFailureHandler(err=>{
       attendAccord = null; allumeAide(false); redessine();
       if(commun) Cloche.refuse({ ancre, plein: /sonneries/.test(String(err && err.message || "")), coince: document.getElementById("coince"),
@@ -1471,7 +1478,7 @@ function restaureAide(){
   google.script.run.withSuccessHandler(r=>{
     if(r && r.active===false && r.accord===true && DECLARATIF) accordRecu(caseAccord(r.bloc));   // accordé pendant que la fiche était fermée
     if(!r || r.active!==true || enAide) return;
-    if(r.motif==="accord" && DECLARATIF){ const c = caseAccord(r.bloc) || caseAccord(ici+1); if(c && !etat.cases[c]){ attendAccord = c; allumeAide(true); document.getElementById("aide-texte").textContent = ACCORD_ATTEND; redessine(); return; } }
+    if(r.motif==="accord" && DECLARATIF){ const c = caseAccord(r.bloc) || caseAccord(ici+1); if(c && !etat.cases[c]){ attendAccord = c; accordPose = true; allumeAide(true); document.getElementById("aide-texte").textContent = ACCORD_ATTEND; redessine(); return; } }
     enAide = true; document.getElementById("aide").classList.add("active"); libelleAide("Je me suis débloqué");
     document.getElementById("aide-texte").textContent = (MISSIONS ? "🔔 Le professeur sait que tu attends. " : "✋ Ton professeur sait que tu attends. ")+"Continue ce qui reste possible.";
     motCloche(r);
@@ -1529,12 +1536,13 @@ if(SUIVI && !APERCU){
     google.script.run.withSuccessHandler(r=>{
       if(r && r.active===true && enAide && r.reponse) motCloche(r);   // la réponse du professeur, cloche encore allumée
       if(!r || r.active!==false || !enAide)return;
+      if(attendAccord && !accordPose)return;   // la demande d'accord n'est pas encore écrite : cet état date d'avant le clic
       enAide=false; motCloche(r);
       document.getElementById("aide").classList.remove("active");
       libelleAide("J’attends de l’aide");
       document.getElementById("aide-texte").textContent="Demande traitée. Tu peux sonner à nouveau si besoin.";
       // Fermée par le professeur pendant une demande d'accord : c'est l'accord. Un serveur d'avant le 20/11/2026 ne dit pas « accord ».
-      if(attendAccord){ if(r.accord!==false) accordRecu(attendAccord); else { attendAccord = null; redessine(); } }
+      if(attendAccord){ if(accordPour(r, attendAccord)) accordRecu(attendAccord); else { attendAccord = null; redessine(); } }
     }).withFailureHandler(()=>{}).etatAide(COURS);
   },15000);
 }
