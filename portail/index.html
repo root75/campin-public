@@ -175,6 +175,12 @@ h1{font:800 clamp(28px,4.2vw,42px)/1.1 var(--titre);margin:0;text-wrap:balance}
 
   <!-- Place réservée à l'extension « Campin — cours » : elle y posera le bandeau « Je m'occupe » des élèves qui y ont droit.
        Le portail ne le construit pas et n'y écrit rien. -->
+  <!-- Le chat de la classe : caché tant que le professeur ne l'a pas ouvert. Rempli par chat/chat.js, chargé à la demande. -->
+  <section class="mes-devoirs" id="chat" hidden aria-labelledby="chat-titre">
+    <h2 id="chat-titre">Le chat de la classe</h2>
+    <div id="chat-zone"></div>
+  </section>
+
   <div id="bandeau-extension" hidden></div>
 
   <nav class="portes" aria-label="Mes accès">

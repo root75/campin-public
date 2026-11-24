@@ -15,7 +15,7 @@ assert.match(html, /src="https:\/\/root75\.github\.io\/campin-public\/assets\/lo
 assert.ok(fs.existsSync(require.resolve('../assets/logo-campin.png')));
 assert.match(html, /id="bandeau-extension" hidden/);
 
-function noeud(id){ return { id, hidden: /^(compte|maintenant|meteo|lien-prof|devoirs|annonces|date-nommer)$/.test(id), textContent:'', href:'', children:[],
+function noeud(id){ return { id, hidden: /^(compte|maintenant|meteo|lien-prof|devoirs|annonces|date-nommer|chat)$/.test(id), textContent:'', href:'', children:[],
   addEventListener(){}, replaceChildren(...e){ this.children = e; } }; }
 function lance(reponse, { suivi = true, devoirs, annonces } = {}){
   const els = new Map(), ajoutes = [];
@@ -25,6 +25,7 @@ function lance(reponse, { suivi = true, devoirs, annonces } = {}){
   if(annonces !== undefined) pont.mesAnnonces = function(){ this.f({ liste: annonces }); };
   const ctx = { document:{ documentElement:{ dataset:{} }, getElementById:$, createElement:t=>({ tag:t, textContent:'', enfants:[], append(...e){ this.enfants.push(...e); } }), head:{ append:s=>ajoutes.push(s) } },
     location:{ protocol:'https:', search:'', replace(u){ ctx.parti = u; } }, localStorage:{ getItem(){ throw Error('bloqué'); }, setItem(){} } };
+  ctx.guets = []; ctx.setInterval = (f, ms) => ctx.guets.push({ f, ms }); ctx.clearInterval = () => {}; ctx.document.hidden = false;
   ctx.window = ctx; ctx.globalThis = ctx;
   if(suivi) ctx.google = { script:{ run:pont } };
   vm.runInNewContext(script, ctx);
@@ -180,3 +181,26 @@ console.log('portail : page publique, élève reconnu, hors école, redirection 
   q = lance({ ...d, prof:true, cours:[] }); assert.equal(q.$('date-nommer').hidden, true);
   q = lance({ email:'' }); assert.equal(q.$('date-nommer').hidden, true, 'Page publique : la date seule');
 }
+
+/* ----- Le chat de la classe : le portail (page d'accueil de toute l'école) n'interroge pas le serveur sans raison. ----- */
+{
+  assert.match(html, /<section class="mes-devoirs" id="chat" hidden/);
+  const d = { email:'eleve@example.test', prenom:'Camille', classe:'1B', prof:false, mesCours:'https://x/exec', cours:[] };
+  // Ni chat ni séance : rien n'est chargé, rien n'est programmé.
+  let q = lance(d); assert.equal(q.ctx.guets.length, 0); assert.equal(q.$('chat').hidden, true);
+  assert.ok(!q.ajoutes.some(s => /chat\.js/.test(s.src || '')));
+  // Séance en cours, chat fermé : une question par minute, et le script du chat n'est pas chargé.
+  q = lance({ ...d, seance:{ titre:'Messagerie 01', url:'https://x' } });
+  assert.deepEqual(q.ctx.guets.map(g => g.ms), [60000]); assert.ok(!q.ajoutes.some(s => /chat\.js/.test(s.src || '')));
+  // Chat ouvert : le script est chargé depuis le site, et la section apparaît quand il est là.
+  q = lance({ ...d, chat:true });
+  const s = q.ajoutes.find(x => /^https:\/\/root75\.github\.io\/campin-public\/chat\/chat\.js/.test(x.src || '')); assert.ok(s, 'chat.js chargé à la demande');
+  let monte = null; q.ctx.CampinChat = { monte: (zone, o) => { monte = { zone, o }; return { arrete(){ monte.arrete = true; } }; } };
+  s.onload(); assert.equal(q.$('chat').hidden, false); assert.equal(monte.zone, q.$('chat-zone'));
+  // Le professeur ferme : le fil s'arrête et le portail repasse à une question par minute.
+  monte.o.surEtat(false); assert.equal(monte.arrete, true); assert.deepEqual(q.ctx.guets.map(g => g.ms), [60000]);
+  // Le professeur et l'élève sans classe n'ont pas de chat sur le portail.
+  assert.equal(lance({ ...d, prof:true, chat:true }).ajoutes.some(x => /chat\.js/.test(x.src || '')), false);
+  assert.equal(lance({ ...d, classe:'', chat:true }).ajoutes.some(x => /chat\.js/.test(x.src || '')), false);
+}
+console.log('Portail : chat de la classe chargé seulement quand il est ouvert.');

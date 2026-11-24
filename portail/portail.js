@@ -62,6 +62,36 @@ function affiche(d){
       if(typeof appel.mesAnnonces === "function") appel.mesAnnonces();
     } catch(e) {}
   }
+  chatPortail(d);
+}
+
+/* ----- Le chat de la classe : ouvert et fermé par le professeur. -----
+   Le portail est la page d'accueil de toute l'école : il ne doit pas interroger le serveur en continu. Donc :
+   chat ouvert (d.chat) ▸ on monte le fil, qui se relit toutes les 5 s ; chat fermé mais séance en cours ▸ une
+   question par minute ; ni l'un ni l'autre ▸ rien du tout (l'élève recharge la page quand le professeur ouvre). */
+const GUET_CHAT = 60000;
+function chatPortail(d){
+  if(!SUIVI || d.prof || !d.classe || (!d.chat && !d.seance)) return;
+  let fil = null, guet = 0;
+  const appel = (fn, ...args) => new Promise((ok, ko) => {
+    const pont = google.script.run.withSuccessHandler(ok).withFailureHandler(ko);
+    // Un serveur pas encore republié ne connaît pas le chat : on se tait.
+    if(typeof pont[fn] === "function") pont[fn](...args); else ko(new Error("Le chat n'est pas encore disponible."));
+  });
+  const guette = () => { if(!guet) guet = setInterval(() => { if(!document.hidden) appel("chatLire", 0).then(r => { if(r && r.ouvert) ouvre(); }, () => {}); }, GUET_CHAT); };
+  function ouvre(){
+    clearInterval(guet); guet = 0;
+    if(fil) return;
+    const monte = () => {
+      $("chat").hidden = false;
+      fil = window.CampinChat.monte($("chat-zone"), { appel, surEtat: oui => { if(!oui && fil){ fil.arrete(); fil = null; guette(); } } });
+    };
+    if(window.CampinChat) return monte();
+    const s = document.createElement("script");
+    s.src = SITE + "chat/chat.js?v=20261124"; s.onload = monte;
+    document.head.append(s);
+  }
+  if(d.chat) ouvre(); else guette();
 }
 
 /* ----- Mes devoirs : la liste lue par le serveur dans le cours Classroom de la classe. ----- */
