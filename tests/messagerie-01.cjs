@@ -20,6 +20,12 @@ for(const [k,v] of Object.entries({locale:'camille',domaine:'@example.org',a:'ca
 assert.match(verifie('reponse',{...good,reponse:'Coucou Camille, je pratique le dessin. Bonne journée, Lina Dupont, 2B'}),/salutation du modèle/);
 assert.match(verifie('reponse',{...good,reponse:'Bonjour Camille, je suis en vacances demain. Bonne journée, Lina Dupont, 2B'}),/question de Camille/);
 assert.match(verifie('reponse',{...good,reponse:'Bonjour Camille, je pratique le dessin le mercredi. Lina Dupont, 2B'}),/formule de fin/);
+// La phrase sur le loisir (24/11/2026) : « moi, je fait du vélo. » restait non cochée. Un sport nommé ou « je fais… » suffit ; le hors-sujet reste refusé.
+for(const phrase of ['moi, je fait du vélo.','Je fais de l’escrime le samedi.','Je nage deux fois par semaine.','Mon truc, c’est le judo.','Je vais à la piscine.','Je regarde des séries.'])
+  assert.equal(M1.criteresReponse('Bonjour Camille,\n\n'+phrase+'\n\nà bientôt,\n\nLina Dupont 2B',good,'2B').filter(c=>c.err).length,0,phrase);
+for(const phrase of ['Je suis en vacances demain.','Ça va bien, et toi ?'])
+  assert.match(M1.criteresReponse('Bonjour Camille,\n\n'+phrase+'\n\nBonne journée,\n\nLina Dupont 2B',good,'2B')[1].err,/question de Camille/,phrase);
+{const fin=M1.criteresReponse(good.reponse,good,'2B')[2].nom; assert.ok(/Bonne journée/.test(fin)&&/À bientôt/.test(fin),'le libellé de la formule de fin annonce les deux exemples acceptés');}
 assert.match(verifie('reponse',{...good,reponse:'bonjour camille, je pratique le dessin. Bonne journée, Lina Dupont, 2B'}),/majuscule/);
 assert.match(verifie('salutation',{...good,salutation:'Coucou Camille'}),/salutation du modèle/);
 for(const [sal,motif] of [['bonjour Camille,',/majuscule : « Bonjour »/],['Bonjour camille,',/prénom prend une majuscule/],['Bonjour Camille',/virgule/],['Bonjour,',/écris le prénom/],['Bonjour Lucas,',/Salue Camille/],['Salut Camille,',/^$/],['Bonjour Camille, ça va ?',/seulement la salutation/]])assert.match(verifie('salutation',{...good,salutation:sal}),motif,sal);
