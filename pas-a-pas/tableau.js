@@ -283,6 +283,22 @@ function dessine(d){
         });
         etat.append(b);
       }
+      /* Écrire au professeur passe par la cloche : le mot de l'élève se lit ici, dans la file, et la réponse part
+         d'une petite fenêtre (le tableau se redessine sans cesse : un champ dans la ligne perdrait ce qu'on y tape). */
+      if(e.aide.mot) etat.append(txt("span","mot-eleve","« "+e.aide.mot+" »"));
+      if(e.aide.reponse) etat.append(txt("span","mot-prof","↳ "+e.aide.reponse));
+      if(SUIVI && (e._d||d).peutCloreAide && e.aide.motif!=="accord" && typeof google.script.run.repondreAide==="function"){
+        const cours=$("cours").value, r=txt("button","btn vide",e.aide.reponse?"Répondre encore":"Répondre");r.type="button";
+        r.setAttribute("aria-label","Répondre par écrit à "+nom(e.email));
+        r.title="Une ligne, que cet élève seul lit sous sa cloche. La cloche reste allumée.";
+        r.addEventListener("click",()=>{
+          const t=(prompt("Réponse à "+nom(e.email)+" (une ligne, 200 caractères au plus) :"+(e.aide.mot?"\n\nSon mot : « "+e.aide.mot+" »":""),"")||"").trim();
+          if(!t)return;
+          r.disabled=true;
+          google.script.run.withSuccessHandler(()=>charge()).withFailureHandler(err=>{r.disabled=false;erreur(err);}).repondreAide(cours,e.email,e.aide.bloc,t.slice(0,200));
+        });
+        etat.append(r);
+      }
     }
     else if(e.fini) etat.append(txt("span","pastille fini","✓ fini"));
     else if(e.erreursIci>=3) etat.append(txt("span","pastille bute","bute"));
@@ -974,7 +990,7 @@ let filChat = null;
 function chargeChat(){
   if(window.CampinChat) return Promise.resolve();
   return new Promise((ok, ko) => { const s = document.createElement("script");
-    s.src = "https://root75.github.io/campin-public/chat/chat.js?v=20261124"; s.onload = ok; s.onerror = ko; document.head.append(s); });
+    s.src = "https://root75.github.io/campin-public/chat/chat.js?v=direct-20261124"; s.onload = ok; s.onerror = ko; document.head.append(s); });
 }
 function caseChat(n, d){
   if(!d.chats) return null;

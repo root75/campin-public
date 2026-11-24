@@ -1381,6 +1381,18 @@ function allumeAide(on){
     ? (MISSIONS ? "🔔 Le professeur sait que tu attends" : "✋ Ton professeur sait que tu attends")+" "+(groupeCourant() ? "dans « "+groupeCourant().titre+" »" : "au bloc "+(ici+1))+". "+(MISSIONS ? "Continue ce qui reste possible et relis « Ça coince ? »." : "Je continue ailleurs, et en attendant je relis « Ça coince ? ».")
     : (MISSIONS ? AIDE_REPOS : "Je suis bloqué malgré « Ça coince ? » et mon voisin :");
   libelleAide(enAide ? "Je me suis débloqué" : "J'attends de l'aide");
+  motCloche();
+}
+/* « Un mot pour le professeur » : seulement sous une cloche allumée, jamais pour une demande d'accord, et seulement
+   si le serveur connaît motAide (un serveur pas encore republié : rien ne s'affiche). r = l'état rendu par etatAide. */
+function motCloche(r){
+  if(typeof Cloche==="undefined" || !Cloche.mot) return;
+  const ancre = document.getElementById("aide");
+  let ok = enAide && !attendAccord && SUIVI && !APERCU;
+  try { ok = ok && typeof google.script.run.motAide==="function"; } catch(e) { ok = false; }
+  Cloche.mot(ancre, ok ? { mot: r && r.mot, reponse: r && r.reponse,
+    envoie: t => new Promise((oui,non)=>google.script.run.withSuccessHandler(oui).withFailureHandler(non).motAide(COURS, Math.min(ici,BLOCS.length-1)+1, t)) } : null);
+  if(!ok && r && r.reponse) Cloche.reponse(ancre, r.reponse);
 }
 /* À la sonnerie, « Ça coince ? » de l'étape s'ouvre dans une fenêtre (Vincent, 20/11/2026 : replié en bas de page,
    il n'était jamais lu). La cloche reste allumée ; l'élève ferme la fenêtre quand il veut. Rien si l'étape n'a pas d'aide. */
@@ -1413,6 +1425,7 @@ function basculeAide(){
     if(commun && Cloche.restantes().n<=0){ refus(true); return; }
     allumeAide(true); if(commun) Cloche.sonnee(); fenetreCoince(); return;
   }
+  if(commun && Cloche.oublie) Cloche.oublie(ancre);   // nouvelle sonnerie : le mot et la réponse d'avant s'effacent
   allumeAide(true); fenetreCoince();
   google.script.run.withSuccessHandler(()=>{ if(commun) Cloche.sonnee(); })
     .withFailureHandler(err=>refus(/sonneries/.test(String(err && err.message || ""))))
@@ -1441,6 +1454,7 @@ function restaureAide(){
     if(r.motif==="accord" && DECLARATIF){ const c = caseAccord(r.bloc) || caseAccord(ici+1); if(c && !etat.cases[c]){ attendAccord = c; allumeAide(true); document.getElementById("aide-texte").textContent = ACCORD_ATTEND; redessine(); return; } }
     enAide = true; document.getElementById("aide").classList.add("active"); libelleAide("Je me suis débloqué");
     document.getElementById("aide-texte").textContent = (MISSIONS ? "🔔 Le professeur sait que tu attends. " : "✋ Ton professeur sait que tu attends. ")+"Continue ce qui reste possible.";
+    motCloche(r);
   }).withFailureHandler(()=>{}).etatAide(COURS);
 }
 if(APERCU){
@@ -1493,8 +1507,9 @@ if(SUIVI && !APERCU){
   setInterval(()=>{
     if(!enAide)return;
     google.script.run.withSuccessHandler(r=>{
+      if(r && r.active===true && enAide && r.reponse) motCloche(r);   // la réponse du professeur, cloche encore allumée
       if(!r || r.active!==false || !enAide)return;
-      enAide=false;
+      enAide=false; motCloche(r);
       document.getElementById("aide").classList.remove("active");
       libelleAide("J’attends de l’aide");
       document.getElementById("aide-texte").textContent="Demande traitée. Tu peux sonner à nouveau si besoin.";
@@ -1504,3 +1519,24 @@ if(SUIVI && !APERCU){
   },15000);
 }
 
+/* Le chat de la classe, dans le cours (Vincent, 24/11/2026). Rien tant que le professeur ne l'a pas ouvert : ni
+   bouton, ni script chargé. La fiche pose UNE question par minute (onglet visible) ; chat ouvert, un bouton
+   « 💬 Chat » apparaît en bas à droite, et le fil ne se relit toutes les 5 s que panneau ouvert (chat/chat.js).
+   Un serveur pas encore republié ne connaît pas chatLire : il ne se passe rien. */
+if(SUIVI && !APERCU){
+  let bulleChat = null, charge = null, connu = false;
+  try { connu = typeof google.script.run.chatLire==="function"; } catch(e) {}
+  const appel = (fn, ...args) => new Promise((ok,ko)=>google.script.run.withSuccessHandler(ok).withFailureHandler(ko)[fn](...args));
+  const retire = () => { if(bulleChat){ bulleChat.retire(); bulleChat = null; } };
+  const regarde = () => {
+    if(document.hidden) return;
+    appel("chatLire", 1e9).then(r=>{
+      if(!r || !r.ouvert) return retire();
+      if(bulleChat) return bulleChat.signale(r.dernier);
+      charge = charge || new Promise((ok,ko)=>{ if(window.CampinChat) return ok();
+        const s = document.createElement("script"); s.src = "https://root75.github.io/campin-public/chat/chat.js?v=direct-20261124"; s.onload = ok; s.onerror = ko; document.head.append(s); });
+      charge.then(()=>{ if(!bulleChat){ bulleChat = window.CampinChat.bulle({ appel, surFerme: retire }); bulleChat.signale(r.dernier); } }, ()=>{ charge = null; });
+    }, ()=>{});
+  };
+  if(connu){ regarde(); setInterval(regarde, 60000); }
+}
