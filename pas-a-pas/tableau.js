@@ -1086,8 +1086,13 @@ const RAISONS_DEVOIRS = {
 const frCote = v => String(Math.round(v * 100) / 100).replace(".", ",");
 /** Ce que le tableau écrit : par devoir, le compte des rendus ; par élève et par devoir, un mot et une classe.
  *  La cote ne remplace « Corrigé » que si « points » est vrai. */
-function grilleDevoirs(r, points){
-  const travaux = (r.travaux || []).map(w=>{
+/* Un seul devoir choisi dans la liste déroulante (Vincent, 24/11/2026 : « choisir le devoir à vérifier pour avoir une
+   vue directement, sinon je passe par Classroom ») : sa colonne seule, et les élèves rangés par ce qu'il reste à
+   faire, ceux qui n'ont pas rendu en haut. Le choix est gardé par classe, le temps que la page reste ouverte. */
+const DEVOIR_CHOISI = {}, ORDRE_REMISE = { "retard":0, "a-rendre":1, "rendu":2, "corrige":3, "absent":4 };
+function grilleDevoirs(r, points, choisi){
+  const seul = choisi && (r.travaux || []).some(w=>String(w.id) === String(choisi));
+  const travaux = (r.travaux || []).filter(w=>!seul || String(w.id) === String(choisi)).map(w=>{
     const cases = (r.eleves || []).map(e=>e.remises && e.remises[w.id]).filter(Boolean);
     return { ...w, attendus: cases.length, rendus: cases.filter(c=>c.etat === "rendu" || c.etat === "corrige").length };
   });
@@ -1098,7 +1103,13 @@ function grilleDevoirs(r, points){
     const note = points && c.etat === "corrige" && typeof c.note === "number" && w.sur > 0 ? frCote(c.note) + " / " + frCote(w.sur) : "";
     return { mot: note || MOTS_REMISE[c.etat], classe: c.etat };
   }) }));
-  return { travaux, eleves };
+  if(!seul) return { travaux, eleves };
+  const rang = e=>ORDRE_REMISE[e.cases[0].classe];
+  eleves.sort((a, b)=>rang(a) - rang(b) || a.nom.localeCompare(b.nom, "fr"));
+  const compte = c=>eleves.filter(e=>e.cases[0].classe === c).length;
+  const bilan = [["retard", "en retard"], ["a-rendre", "à rendre"], ["rendu", "rendu"], ["corrige", "corrigé"]]
+    .map(([c, mot])=>[compte(c), mot]).filter(x=>x[0]).map(x=>x[0] + " " + x[1] + (x[0] > 1 && !/retard|rendre/.test(x[1]) ? "s" : "")).join(" · ");
+  return { travaux, eleves, seul: travaux[0], bilan };
 }
 function chargeDevoirs(n, frais){
   DEVOIRS[n] = { attente: true };
@@ -1124,8 +1135,20 @@ function caseDevoirs(n, d){
   l.append(cb, document.createTextNode("Montrer les points"));
   outils.append(l, relire);
   if(r.lien){ const a = txt("a", null, "Ouvrir dans Classroom ▸"); a.href = r.lien; a.target = "_blank"; a.rel = "noopener"; outils.append(a); }
+  if(r.travaux.length > 1){
+    const choix = txt("select"); choix.setAttribute("aria-label", "Devoir à vérifier pour " + n);
+    choix.append(new Option("Tous les devoirs", ""), ...r.travaux.map(w=>new Option(w.titre, w.id)));
+    choix.value = r.travaux.some(w=>String(w.id) === String(DEVOIR_CHOISI[n])) ? DEVOIR_CHOISI[n] : "";
+    choix.addEventListener("change", ()=>{ DEVOIR_CHOISI[n] = choix.value; dessineClasses(CL); });
+    outils.prepend(choix);
+  }
   zone.append(outils);
-  const g = grilleDevoirs(r, POINTS_VISIBLES);
+  const g = grilleDevoirs(r, POINTS_VISIBLES, DEVOIR_CHOISI[n]);
+  if(g.seul){
+    const p = txt("p", "cl-devoirs-bilan", g.bilan || "Personne n’a encore ce devoir.");
+    if(g.seul.lien){ const a = txt("a", null, "Ouvrir ce devoir dans Classroom ▸"); a.href = g.seul.lien; a.target = "_blank"; a.rel = "noopener"; p.append(" ", a); }
+    zone.append(p);
+  }
   if(!g.travaux.length || !g.eleves.length){ zone.append(txt("p", "moyen", g.travaux.length ? "Aucun élève dans ce cours Classroom." : "Aucun devoir publié dans ce cours.")); return boite; }
   const table = txt("table", "cl-devoirs-table"), tete = txt("tr");
   tete.append(txt("th", null, "Élève"), ...g.travaux.map(w=>{
