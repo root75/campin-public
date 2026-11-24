@@ -468,7 +468,8 @@ const ACCORD_ATTEND = "✋ Ton professeur sait que tu attends qu’il regarde to
 let attendAccord = null;   // "étape.rang" de la case d'accord en attente
 /* La demande est-elle arrivée au serveur ? Tant que non, l'état lu par la relève des 15 s est celui d'AVANT le clic :
    un accord déjà donné à une autre étape, ou une ancienne cloche fermée. Le 24/11/2026, chez eleve.test, la case 10.1
-   s'est cochée seule ainsi (accord de l'étape 3 encore dans le cache, écriture de la nouvelle demande pas finie). */
+   s'est cochée seule ainsi : le Journal montre « aide accord » à 14:40:27 et « case 1:1 » à 14:40:28, l'état lu étant
+   celui de sa cloche éteinte à l'étape 2 ({active:false}, que la page prenait pour un accord). */
 let accordPose = false;
 /* L'état rendu par etatAide vaut-il accord pour la case `cle` ? Le serveur dit « accord » et l'étape : un accord donné
    pour une autre étape ne compte pas. Un serveur d'avant le 20/11/2026 ne dit pas « accord » : fermé = accordé. */
@@ -1533,10 +1534,11 @@ if(APERCU){
 if(SUIVI && !APERCU){
   setInterval(()=>{
     if(!enAide)return;
+    const poseAvant = accordPose;   // la demande d'accord était-elle écrite AVANT cette lecture ? (une lecture lancée plus tôt peut répondre après)
     google.script.run.withSuccessHandler(r=>{
       if(r && r.active===true && enAide && r.reponse) motCloche(r);   // la réponse du professeur, cloche encore allumée
       if(!r || r.active!==false || !enAide)return;
-      if(attendAccord && !accordPose)return;   // la demande d'accord n'est pas encore écrite : cet état date d'avant le clic
+      if(attendAccord && !poseAvant)return;   // la demande d'accord n'est pas encore écrite : cet état date d'avant le clic
       enAide=false; motCloche(r);
       document.getElementById("aide").classList.remove("active");
       libelleAide("J’attends de l’aide");

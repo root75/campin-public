@@ -66,7 +66,7 @@ assert.ok(!/colonne/.test(FIN.texte)&&!actions.some(([,t])=>/colonne « Moi »/.
   assert.equal(lienTravaux({devoirs:'https://classroom.google.com/w/ABC/t/all'}),'https://classroom.google.com/w/ABC/t/all');
   assert.equal(lienTravaux({devoirs:''}),'');assert.equal(lienTravaux(null),'');
   assert.equal(lienTravaux({devoirs:'https://ailleurs.example/'}),'','un lien hors Classroom est refusé');
-  assert.ok(/liensClassroom\(z\);/.test(moteur)&&page.includes('blocs.js?v=accord-pose-20261124'),'le moteur branche les liens, la page charge la nouvelle version');
+  assert.ok(/liensClassroom\(z\);/.test(moteur)&&page.includes('blocs.js?v=accord-pose2-20261124'),'le moteur branche les liens, la page charge la nouvelle version');
 }
 // Accord du professeur : un accord donné pour une autre étape ne vaut pas pour celle qu'on attend (24/11/2026 : la case
 // 10.1 s'était cochée seule avec l'accord de l'étape 3). L'essai complet, écriture lente comprise : essai-rat.js (dépôt privé).
@@ -77,5 +77,5 @@ assert.ok(!/colonne/.test(FIN.texte)&&!actions.some(([,t])=>/colonne « Moi »/.
   assert.equal(accordPour({active:false,accord:true,bloc:3},'10.1'),false,'l’accord de l’étape 3 ne vaut pas pour la remise');
   assert.equal(accordPour({active:false,accord:false,bloc:10},'10.1'),false,'une aide traitée n’est pas un accord');
   assert.equal(accordPour({active:false},'10.1'),true,'ancien serveur : fermé = accordé');
-  assert.ok(/if\(attendAccord && !accordPose\)return;/.test(moteur),'un état lu avant l’écriture de la demande est ignoré');
+  assert.ok(/const poseAvant = accordPose;/.test(moteur)&&/if\(attendAccord && !poseAvant\)return;/.test(moteur),'un état lu avant l’écriture de la demande est ignoré');
 }
