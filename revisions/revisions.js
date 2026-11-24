@@ -80,6 +80,8 @@ fetch('revisions.json').then(r => r.ok ? r.json() : Promise.reject()).then(d => 
   }
   $('attente').hidden = true; $('contenu').hidden = false;
   affiche();
+  // Le serveur vient d'apprendre à la page ce qui a été fait sur un autre poste (assets/progres.js) : on redessine.
+  document.addEventListener('campin-progres', affiche);
   // En revenant d'une activité (bouton Précédent), l'avancement se remet à jour.
   addEventListener('pageshow', affiche);
 }).catch(() => { $('attente').hidden = true; $('panne').hidden = false; });
