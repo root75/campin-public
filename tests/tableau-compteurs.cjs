@@ -39,5 +39,15 @@ console.log('Compteurs et bandeau : coincés sans sonner, inactifs, butent, bloc
   assert.deepEqual(f(r,false).eleves.map(e=>e.cases[0].mot),['Corrigé','En retard','—']);
   assert.equal(f(r,true).eleves[0].cases[0].mot,'8 / 20');assert.equal(f(r,true).travaux[0].rendus,1);
   assert.match(source,/th\.title = w\.titre/,'le titre entier au survol');
-  console.log('Grille des devoirs : noms sans suffixe, cotes sur demande.');
+  // Un devoir choisi : sa colonne seule, ceux qui n'ont pas rendu en haut, et le bilan en une ligne.
+  const r2={travaux:[{id:'a',titre:'Labo 05',sur:20},{id:'b',titre:'Python 02',sur:0,lien:'https://classroom.google.com/c/x/a/b'}],eleves:[
+    {nom:'Zoé A',remises:{a:{etat:'rendu'},b:{etat:'corrige'}}},{nom:'Basil B',remises:{a:{etat:'rendu'},b:{etat:'rendu'}}},{nom:'Alex C',remises:{a:{etat:'rendu'},b:{etat:'rendu'}}},
+    {nom:'Yan D',remises:{b:{etat:'a-rendre'}}},{nom:'Aaron E',remises:{b:{etat:'retard'}}},{nom:'Hors F',remises:{a:{etat:'rendu'}}}]};
+  const u=f(r2,false,'b');
+  assert.deepEqual(u.travaux.map(w=>w.id),['b']);assert.equal(u.seul.lien,'https://classroom.google.com/c/x/a/b');
+  assert.deepEqual(u.eleves.map(e=>e.nom),['Aaron E','Yan D','Alex C','Basil B','Zoé A','Hors F']);
+  assert.equal(u.bilan,'1 en retard · 1 à rendre · 2 rendus · 1 corrigé');
+  assert.equal(f(r2,false,'').travaux.length,2);assert.equal(f(r2,false,'disparu').seul,undefined,'devoir inconnu : toute la grille');
+  assert.deepEqual(f(r2,false).eleves.map(e=>e.nom)[0],'Zoé A','toute la grille : l’ordre du serveur');
+  console.log('Grille des devoirs : noms sans suffixe, cotes sur demande, un devoir à la fois.');
 }
