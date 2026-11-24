@@ -974,7 +974,7 @@ const DEMO_CL = {
   fil: [],
   d: { cours:[],
        classes:{ "2B":["messagerie-1"], "2E":["messagerie-1"], "3F":["python-1"] },
-       modes:{}, chats:{}, classroom:["2B","3F"],
+       modes:{}, chats:{}, classroom:["2B","3F"], progres:true,
        eleves:[{email:"lea.dupont@arcampin.be",classe:"2B"},{email:"noah.martin@arcampin.be",classe:"2E"},{email:"sami.benali@arcampin.be",classe:"2B"}] },
   classesEtCours(){ return this.d; },
   devoirsClasse(c){ const j = 86400000, t = Date.now();
@@ -983,6 +983,9 @@ const DEMO_CL = {
       eleves:[{ nom:"Léa Dupont", remises:{ a:{ etat:"corrige", note:16.5 }, b:{ etat:"rendu" } } },
         { nom:"Noah Martin", remises:{ a:{ etat:"retard" }, b:{ etat:"a-rendre" } } },
         { nom:"Sami Benali", remises:{ a:{ etat:"corrige", note:11 } } }] }; },
+  progresClasse(c){ return { classe:c, activites:["mots-croises:messagerie-1","quiz:messagerie-1","quiz:python-1"], eleves:[
+      { nom:"Léa Dupont", etats:{ "quiz:messagerie-1":"fait", "mots-croises:messagerie-1":"fait", "quiz:python-1":"commence" } },
+      { nom:"Noah Martin", etats:{ "quiz:messagerie-1":"commence" } }, { nom:"Sami Benali", etats:{} }] }; },
   ajouterClasse(c){ this.d.classes[c] = this.d.classes[c] || []; return this.d; },
   retirerClasse(c){ delete this.d.classes[c]; return this.d; },
   activerCours(c, k, oui){ const l = this.d.classes[c].filter(x=>x!==k); if(oui) l.push(k); this.d.classes[c] = l; return this.d; },
@@ -1207,6 +1210,65 @@ function caseDevoirs(n, d){
   const defile = txt("div", "cl-devoirs-defile"); defile.append(table); zone.append(defile);
   return boite;
 }
+/* Les révisions de la classe (Vincent, 24/11/2026) : où en est chaque élève dans ce qu'il révise seul sur le site
+   (quiz, mots croisés, « Associe l'image »…), d'après la feuille « Progrès ». Ce n'est pas une cote : une case dit
+   seulement « fait » ou « commencé ». Les élèves les plus avancés en haut ; ceux qui n'ont rien ouvert ferment la
+   liste. Rend null sur un serveur qui n'envoie pas « progres ». */
+const REVISIONS_VUES = new Set(), REVISIONS_CL = {};
+let NOMS_REVISIONS = null;
+/** clé de suivi ▸ { cours, genre }, lu une fois dans revisions/revisions.json ; sans lui, la clé s'affiche telle quelle. */
+function nomsRevisions(table){
+  const noms = {};
+  for(const c of Object.values((table && table.cours) || {})) for(const a of (c && c.activites) || [])
+    if(a && typeof a.suivi === "string") noms[a.suivi] = { cours: String(c.titre || "").split(" — ")[0], genre: String(a.genre || "") };
+  for(const a of (table && table.autres) || []) if(a && typeof a.suivi === "string") noms[a.suivi] = { cours: String(a.titre || ""), genre: "" };
+  return noms;
+}
+function grilleRevisions(r, noms){
+  const activites = (r.activites || []).map(cle=>{
+    const n = (noms || {})[cle], faits = (r.eleves || []).filter(e=>e.etats && e.etats[cle] === "fait").length;
+    return { cle, cours: n ? n.cours : cle, genre: n ? n.genre : "", faits };
+  }).sort((a, b)=>a.cours.localeCompare(b.cours, "fr") || a.genre.localeCompare(b.genre, "fr"));
+  const eleves = (r.eleves || []).map(e=>{
+    const cases = activites.map(a=>{ const x = e.etats && e.etats[a.cle]; return x === "fait" ? { mot: "✓ Fait", classe: "corrige" } : x === "commence" ? { mot: "Commencé", classe: "a-rendre" } : { mot: "—", classe: "absent" }; });
+    return { nom: e.nom, cases, faits: cases.filter(c=>c.classe === "corrige").length, ouverts: cases.filter(c=>c.classe !== "absent").length };
+  }).sort((a, b)=>b.faits - a.faits || b.ouverts - a.ouverts || a.nom.localeCompare(b.nom, "fr"));
+  return { activites, eleves, muets: eleves.filter(e=>!e.ouverts).length };
+}
+function chargeRevisions(n){
+  REVISIONS_CL[n] = { attente: true };
+  if(!NOMS_REVISIONS) NOMS_REVISIONS = (typeof fetch === "function" ? fetch("https://root75.github.io/campin-public/revisions/revisions.json").then(r=>r.ok ? r.json() : {}) : Promise.resolve({})).then(nomsRevisions, ()=>({}));
+  Promise.all([serveurCl("progresClasse", n), NOMS_REVISIONS]).then(([r, noms])=>{ REVISIONS_CL[n] = r ? { r, noms } : { refus: true }; dessineClasses(CL); },
+    ()=>{ REVISIONS_CL[n] = { refus: true }; dessineClasses(CL); });
+}
+function caseRevisions(n, d){
+  if(!d.progres) return null;
+  const boite = txt("div", "cl-mode cl-devoirs cl-revisions"), ouvert = REVISIONS_VUES.has(n);
+  const voir = txt("button", "btn vide", ouvert ? "Replier" : "📈 Où en sont-ils ?"); voir.type = "button";
+  voir.setAttribute("aria-label", (ouvert ? "Replier les révisions de " : "Voir les révisions de ") + n);
+  voir.addEventListener("click", ()=>{ if(ouvert) REVISIONS_VUES.delete(n); else { REVISIONS_VUES.add(n); chargeRevisions(n); } dessineClasses(CL); });
+  boite.append(txt("span", "cl-etiquette", "Révisions sur le site"), voir);
+  if(!ouvert) return boite;
+  const x = REVISIONS_CL[n] || { attente: true }, zone = txt("div", "cl-devoirs-zone");
+  boite.append(zone);
+  if(x.attente){ zone.append(txt("p", "moyen", "Lecture de la feuille « Progrès »…")); return boite; }
+  if(x.refus){ zone.append(txt("p", "moyen", "La feuille « Progrès » n’a pas répondu. Réessaie dans un instant.")); return boite; }
+  const outils = txt("div", "cl-devoirs-outils"), relire = txt("button", "btn vide", "Relire"); relire.type = "button";
+  relire.addEventListener("click", ()=>{ chargeRevisions(n); dessineClasses(CL); });
+  outils.append(relire); zone.append(outils);
+  const g = grilleRevisions(x.r, x.noms);
+  if(!g.eleves.length){ zone.append(txt("p", "moyen", "Aucun élève dans cette classe.")); return boite; }
+  if(!g.activites.length){ zone.append(txt("p", "moyen", "Personne dans cette classe n’a encore ouvert une révision.")); return boite; }
+  zone.append(txt("p", "cl-devoirs-bilan", (g.eleves.length - g.muets) + " élève" + (g.eleves.length - g.muets > 1 ? "s ont" : " a") + " ouvert au moins une révision · " + g.muets + " n’" + (g.muets > 1 ? "ont" : "a") + " encore rien ouvert"));
+  const table = txt("table", "cl-devoirs-table"), tete = txt("tr");
+  tete.append(txt("th", null, "Élève"), ...g.activites.map(a=>{
+    const th = txt("th"); th.title = a.cours + (a.genre ? " · " + a.genre : "");
+    th.append(txt("b", null, a.cours), txt("span", "maj", a.genre || " "), txt("span", "maj", a.faits + " / " + g.eleves.length + " faits")); return th; }));
+  table.append(tete, ...g.eleves.map(e=>{
+    const tr = txt("tr"); tr.append(txt("th", null, e.nom), ...e.cases.map(c=>txt("td", "remise " + c.classe, c.mot))); return tr; }));
+  const defile = txt("div", "cl-devoirs-defile"); defile.append(table); zone.append(defile);
+  return boite;
+}
 /* Une carte par classe : le nom, puis les actions (mode cours, chat, devoirs), puis ses cours ouverts. La liste complète
    des cours reste repliée : elle s'allonge au fil de l'année, les actions ne doivent pas partir au bout de la ligne. */
 const CHOIX_MODE = {}, PLIS_CL = new Set();
@@ -1217,7 +1279,7 @@ function carteClasse(n, d){
   x.setAttribute("aria-label", "Retirer la classe " + n);
   x.addEventListener("click", ()=>{ if(confirm("Retirer la classe " + n + " ? Ses élèves ne verront plus aucun cours tant que tu ne les as pas déplacés.")) appelCl("retirerClasse", n); });
   tete.append(txt("h3", "nom", n), txt("span", "maj", nb + " élève" + (nb > 1 ? "s" : "")), x);
-  actions.append(...[caseModeCours(n, d), caseChat(n, d), caseDevoirs(n, d)].filter(Boolean));
+  actions.append(...[caseModeCours(n, d), caseChat(n, d), caseDevoirs(n, d), caseRevisions(n, d)].filter(Boolean));
   if(DEVOIRS_VUS.has(n)) carte.classList.add("large");   // le tableau des devoirs prend toute la largeur
   const puces = txt("ul", "cl-ouverts");
   puces.replaceChildren(...ouverts.map(c=>{ const li = txt("li", null, c.titre); li.title = c.cle; return li; }));

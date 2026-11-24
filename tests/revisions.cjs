@@ -78,8 +78,9 @@ assert.doesNotMatch(page, /[a-z0-9.]+@arcampin\.be/i);
   ctx.Progres.marque('mots-croises:python-1', 'fait'); ctx.Progres.marque('associe:rat', 'commence'); assert.equal(minuteries.length, 1, 'un seul envoi groupé');
   minuteries.shift()(); assert.equal(scripts.length, 2);
   assert.equal(decodeURIComponent(scripts[1].src.split('&m=')[1]), 'mots-croises:python-1~fait,associe:rat~commence');
+  assert.equal(evts.length, 3, 'chaque changement fait ici prévient la page');
   ctx.campinProgres({ 'quiz:python-1': 'fait', 'mots-croises:python-1': 'fait', 'associe:rat': 'commence' });
-  assert.equal(evts.length, 1, 'rien de neuf pour la page : pas d\'évènement'); assert.equal(minuteries.length, 0, 'tout est su : plus d\'appel');
+  assert.equal(evts.length, 3, 'rien de neuf venu du serveur : pas d\'évènement'); assert.equal(minuteries.length, 0, 'tout est su : plus d\'appel');
   // Pas un compte de l'école (null), ou script qui ne se charge pas : la mémoire du navigateur reste telle quelle.
   ctx.Progres.marque('quiz:python-2', 'commence'); minuteries.shift()(); ctx.campinProgres(null); assert.equal(ctx.Progres.etat('quiz:python-2'), 'commence');
   ctx.Progres.marque('quiz:python-2', 'fait'); minuteries.shift()(); scripts.at(-1).onerror();
@@ -90,6 +91,15 @@ assert.doesNotMatch(page, /[a-z0-9.]+@arcampin\.be/i);
   // Page ouverte depuis un fichier, ou sans document : aucun appel.
   const hors = { localStorage: ctx.localStorage, location: { protocol: 'file:' }, document: { head: { append() { throw Error('appel interdit'); } } } }; hors.globalThis = hors;
   vm.runInNewContext(lis('assets/progres.js'), hors); hors.Progres.marque('quiz:python-4', 'fait');
+  // Dans le portail servi par « Mes cours » : l'envoi passe par le pont de la page, pas par un script.
+  (async () => { const st = new Map(), sc = [], mn = [], recus = [], tic = () => new Promise(r => setImmediate(r));
+    const c2 = { localStorage: { getItem: k => st.get(k) || null, setItem: (k, v) => st.set(k, v) }, location: { protocol: 'https:' },
+      document: { createElement: () => ({}), head: { append: x => sc.push(x) }, dispatchEvent() {}, currentScript: null }, Event: function () {}, setTimeout: f => mn.push(f), encodeURIComponent, Promise,
+      ProgresPont: m => { recus.push(m); return Promise.resolve({ 'quiz:python-1': 'fait' }); } };
+    c2.globalThis = c2; vm.runInNewContext(lis('assets/progres.js'), c2);
+    await tic(); assert.deepEqual(recus, ['']); assert.equal(sc.length, 0, 'aucun script chargé'); assert.equal(c2.Progres.etat('quiz:python-1'), 'fait');
+    c2.Progres.marque('mots-croises:python-1', 'fait'); mn.shift()(); assert.deepEqual(recus, ['', 'mots-croises:python-1~fait']);
+    console.log('Progrès : le portail connecté passe par son pont.'); })().catch(e => { console.error(e); process.exit(1); });
   assert.ok(lis('revisions/revisions.js').includes("document.addEventListener('campin-progres', affiche)"));
   console.log('Progrès : double sur le serveur, par lots, sans rien casser quand il ne répond pas.');
 }

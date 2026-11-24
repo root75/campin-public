@@ -8,7 +8,8 @@
    Elle y envoie ce que le serveur ne sait pas encore et reçoit campinProgres({ activité: état }) : tout ce que l'élève
    a déjà fait, sur n'importe quel poste. Élève non connecté, serveur pas encore republié, réseau coupé : le script
    ne se charge pas, il ne se passe rien, et la mémoire du navigateur continue de servir seule.
-   Quand le serveur apprend quelque chose à la page, elle émet l'évènement « campin-progres » sur document. */
+   Quand une activité change d'état, ici ou par le serveur, la page émet l'évènement « campin-progres » sur document.
+   Le portail servi par « Mes cours » fournit globalThis.ProgresPont : l'envoi passe alors par google.script.run. */
 (function () {
   const CLE = 'campin-progres';
   function lit() { try { const v = JSON.parse(localStorage.getItem(CLE) || '{}'); return v && typeof v === 'object' && !Array.isArray(v) ? v : {}; } catch (e) { return {}; } }
@@ -20,8 +21,11 @@
     if (tout[cle] === 'fait' || tout[cle] === quoi) return;
     tout[cle] = quoi;
     try { localStorage.setItem(CLE, JSON.stringify(tout)); } catch (e) {}
+    previent();
     bientot();
   }
+  /** La page qui affiche un « fait / à faire » (révisions, portail) se redessine. */
+  function previent() { try { document.dispatchEvent(new Event('campin-progres')); } catch (e) {} }
 
   /* ----- Le double sur le serveur. ----- */
   const EXEC = 'https://script.google.com/a/macros/arcampin.be/s/AKfycbyOPTaq-L1PuittB1rkkiL9OOtShFc2WpiD8H_pH_INaw9ePWenCzhlIPlHu4zBOgLk/exec';
@@ -47,15 +51,21 @@
       if (tout[c] !== 'fait' && tout[c] !== e) { tout[c] = e; neuf = true; }
     }
     try { localStorage.setItem(SU, JSON.stringify(su)); if (neuf) localStorage.setItem(CLE, JSON.stringify(tout)); } catch (e) {}
-    if (neuf) try { document.dispatchEvent(new Event('campin-progres')); } catch (e) {}
+    if (neuf) previent();
     if (aEnvoyer().length) bientot();   // plus de LOT activités en attente : le reste part à l'appel suivant
   }
   function synchro() {
     attente = 0;
     if (!web || enVol) return;
     enVol = true;
+    const m = aEnvoyer();
+    // Dans le portail servi par « Mes cours », la page a son pont Apps Script : ProgresPont('a~fait,b~commence') ▸ Promise.
+    if (typeof globalThis.ProgresPont === 'function') {
+      try { Promise.resolve(globalThis.ProgresPont(m.join(','))).then(recoit, () => { enVol = false; }); } catch (e) { enVol = false; }
+      return;
+    }
     globalThis.campinProgres = recoit;
-    const s = document.createElement('script'), m = aEnvoyer();
+    const s = document.createElement('script');
     s.src = EXEC + '?vue=progres' + (m.length ? '&m=' + encodeURIComponent(m.join(',')) : '');
     s.async = true; s.onerror = () => { enVol = false; };
     document.head.append(s);
