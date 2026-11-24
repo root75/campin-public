@@ -1091,7 +1091,8 @@ function grilleDevoirs(r, points){
     const cases = (r.eleves || []).map(e=>e.remises && e.remises[w.id]).filter(Boolean);
     return { ...w, attendus: cases.length, rendus: cases.filter(c=>c.etat === "rendu" || c.etat === "corrige").length };
   });
-  const eleves = (r.eleves || []).map(e=>({ nom: e.nom, cases: travaux.map(w=>{
+  // Classroom rend le nom du compte, suffixe compris : « Prénom NOM (élève) », « (student) » sur les anciens comptes.
+  const eleves = (r.eleves || []).map(e=>({ nom: String(e.nom || "").replace(/\s*\((élève|eleve|student)\)\s*$/i, ""), cases: travaux.map(w=>{
     const c = e.remises && e.remises[w.id];
     if(!c || !MOTS_REMISE[c.etat]) return { mot: "—", classe: "absent" };
     const note = points && c.etat === "corrige" && typeof c.note === "number" && w.sur > 0 ? frCote(c.note) + " / " + frCote(w.sur) : "";
@@ -1129,7 +1130,9 @@ function caseDevoirs(n, d){
   const table = txt("table", "cl-devoirs-table"), tete = txt("tr");
   tete.append(txt("th", null, "Élève"), ...g.travaux.map(w=>{
     const th = txt("th"), quand = w.echeance ? new Date(w.echeance).toLocaleDateString("fr-BE", { day: "numeric", month: "short" }) : "sans date";
-    th.append(txt("b", null, w.titre), txt("span", "maj", quand + " · " + w.rendus + " / " + w.attendus + " rendus")); return th; }));
+    // Titre sur deux lignes au plus (le titre entier au survol) : douze devoirs tiennent à l'écran sans mot coupé.
+    th.title = w.titre;
+    th.append(txt("b", null, w.titre), txt("span", "maj", quand), txt("span", "maj", w.rendus + " / " + w.attendus + " rendus")); return th; }));
   table.append(tete, ...g.eleves.map(e=>{
     const tr = txt("tr"); tr.append(txt("th", null, e.nom), ...e.cases.map(c=>txt("td", "remise " + c.classe, c.mot))); return tr; }));
   const defile = txt("div", "cl-devoirs-defile"); defile.append(table); zone.append(defile);

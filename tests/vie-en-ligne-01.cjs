@@ -115,7 +115,7 @@ const m1=J.tirage(d.situations,[],J.MANCHE,hasard),m2=J.tirage(d.situations,m1.m
 assert.equal(new Set(m1.concat(m2).map(s=>s.id)).size,2*J.MANCHE,'deux manches de suite sans répétition');
 assert.deepEqual(J.bilan([{comprendre:1,ajuster:2},{comprendre:3,ajuster:1}]),{situations:2,comprendre:1,ajuster:1});
 const pj=lis('derriere-lecran/index.html'),js=lis('derriere-lecran/jeu.js');
-assert.ok(pj.includes('id="essentiel"')&&pj.includes('id="jeu"')&&pj.includes('« M. Louviaux »')&&pj.includes('ConnectÉmoi')&&pj.includes('Plutchik'),'ancres, signature, sources');
+assert.ok(pj.includes('id="essentiel"')&&pj.includes('id="jeu"')&&pj.includes('Professeur : M. Louviaux')&&pj.includes('ConnectÉmoi')&&pj.includes('Plutchik'),'ancres, signature, sources');
 assert.ok(!/smartphone|téléphone|selfie/i.test(pj+js)&&!/[a-z0-9.]+@arcampin\.be/i.test(pj),'ni téléphone ni adresse');
 assert.equal((js.match(/innerHTML/g)||[]).length,1,'le jeu n\'écrit que du texte, sauf les dessins d\'emotions.js (une seule porte : dessin)');
 // L'image intime : dite dans le cours (étape 6), dans le déroulé et dans le jeu, avec le pourquoi et les numéros d'aide.
