@@ -931,46 +931,77 @@ const appelCl = (fn, ...args) => serveurCl(fn, ...args).then(dessineClasses, err
 const DUREES_MODE = [25, 50, 100];
 const libelleMode = m => "🔒 jusqu’à " + new Date(m.jusqua).toLocaleTimeString("fr-BE",{hour:"2-digit",minute:"2-digit"});
 function caseModeCours(n, d){
-  const td = txt("td", "mode-cours"), m = d.modes && d.modes[n];
-  if(!d.modes) return td;
+  const boite = txt("div", "cl-mode"), m = d.modes && d.modes[n];
+  if(!d.modes) return null;
   if(m){
     const b = txt("button", "btn vide", "Arrêter"); b.type = "button";
+    const c = m.cours && d.cours.find(x=>x.cle === m.cours);
     b.setAttribute("aria-label", "Arrêter le mode cours de " + n);
     b.addEventListener("click", ()=>{ b.disabled = true; appelCl("arreterModeCours", n); });
-    td.append(txt("span", "mode-actif", libelleMode(m) + " "), b);
-    return td;
+    boite.classList.add("actif");
+    boite.append(txt("span", "mode-actif", libelleMode(m)), ...(c ? [txt("span", "cl-mode-cours", c.titre)] : []), b);
+    return boite;
   }
-  const sel = txt("select"), b = txt("button", "btn vide", "🔒 Lancer"); b.type = "button";
+  /* Le cours se choisit ici, parmi ceux ouverts à la classe : sur cette page, le menu du haut du tableau n'est pas affiché. */
+  const ouverts = d.cours.filter(c=>d.classes[n].includes(c.cle));
+  const quoi = txt("select", "cl-mode-quoi"), sel = txt("select"), b = txt("button", "btn vide", "🔒 Lancer"); b.type = "button";
+  quoi.replaceChildren(...(ouverts.length ? ouverts.map(c=>[c.cle, c.titre]) : [["", "Aucun cours ouvert"]]).map(([v, t])=>{ const o = txt("option", null, t); o.value = v; return o; }));
+  const haut = $("cours") ? $("cours").value : "", garde = CHOIX_MODE[n];
+  quoi.value = ouverts.some(c=>c.cle === garde) ? garde : ouverts.some(c=>c.cle === haut) ? haut : ouverts.length ? ouverts[ouverts.length - 1].cle : "";
+  quoi.addEventListener("change", ()=>{ CHOIX_MODE[n] = quoi.value; });
+  quoi.setAttribute("aria-label", "Cours du mode cours pour " + n);
   sel.replaceChildren(...DUREES_MODE.map(v=>{ const o = txt("option", null, v + " min"); o.value = v; return o; }));
   sel.value = 50; sel.setAttribute("aria-label", "Durée du mode cours pour " + n);
   b.setAttribute("aria-label", "Lancer le mode cours pour " + n);
-  b.title = "Le Chrome des élèves de " + n + " ouvre le cours choisi en haut du tableau et ne laisse passer que ses sites.";
-  b.addEventListener("click", ()=>{
-    const cours = $("cours") ? $("cours").value : "";
-    b.disabled = true;
-    appelCl("modeCours", n, d.classes[n].includes(cours) ? cours : "", Number(sel.value));
-  });
-  td.append(sel, document.createTextNode(" "), b);
-  return td;
+  b.title = "Le Chrome des élèves de " + n + " ouvre ce cours et ne laisse passer que ses sites.";
+  b.addEventListener("click", ()=>{ b.disabled = true; appelCl("modeCours", n, quoi.value, Number(sel.value)); });
+  boite.append(txt("span", "cl-etiquette", "Mode cours"), quoi, sel, b);
+  return boite;
+}
+/* Le chat de classe : un interrupteur par classe, rangé à côté du mode cours. Rend null tant que le serveur
+   n'envoie pas « chats » : rien ne s'affiche, la place reste prête. */
+function caseChat(n, d){
+  if(!d.chats) return null;
+  return null;
+}
+/* Une carte par classe : le nom, puis les actions (mode cours, chat), puis ses cours ouverts. La liste complète
+   des cours reste repliée : elle s'allonge au fil de l'année, les actions ne doivent pas partir au bout de la ligne. */
+const CHOIX_MODE = {}, PLIS_CL = new Set();
+function carteClasse(n, d){
+  const carte = txt("article", "cl-carte"), tete = txt("div", "cl-tete"), actions = txt("div", "cl-actions");
+  const ouverts = d.cours.filter(c=>d.classes[n].includes(c.cle)), nb = d.eleves.filter(e=>e.classe === n).length;
+  const x = txt("button", "retirer", "Retirer"); x.type = "button";
+  x.setAttribute("aria-label", "Retirer la classe " + n);
+  x.addEventListener("click", ()=>{ if(confirm("Retirer la classe " + n + " ? Ses élèves ne verront plus aucun cours tant que tu ne les as pas déplacés.")) appelCl("retirerClasse", n); });
+  tete.append(txt("h3", "nom", n), txt("span", "maj", nb + " élève" + (nb > 1 ? "s" : "")), x);
+  actions.append(...[caseModeCours(n, d), caseChat(n, d)].filter(Boolean));
+  const puces = txt("ul", "cl-ouverts");
+  puces.replaceChildren(...ouverts.map(c=>{ const li = txt("li", null, c.titre); li.title = c.cle; return li; }));
+  if(!ouverts.length) puces.append(txt("li", "vide", "Aucun cours ouvert pour l’instant."));
+  const pli = txt("details", "cl-tous"), resume = txt("summary", null, "Choisir les cours — " + ouverts.length + " ouvert" + (ouverts.length > 1 ? "s" : "") + " sur " + d.cours.length);
+  pli.open = PLIS_CL.has(n);
+  pli.addEventListener("toggle", ()=>{ if(pli.open) PLIS_CL.add(n); else PLIS_CL.delete(n); });
+  const choix = txt("div", "cl-choix");
+  choix.replaceChildren(...d.cours.map(c=>{
+    const l = txt("label"), cb = txt("input"); cb.type = "checkbox"; cb.checked = d.classes[n].includes(c.cle);
+    l.title = c.cle;
+    cb.setAttribute("aria-label", c.titre + " pour " + n);
+    cb.addEventListener("change", ()=>appelCl("activerCours", n, c.cle, cb.checked));
+    l.append(cb, document.createTextNode(c.titre)); return l; }));
+  pli.append(resume, choix);
+  carte.append(tete, ...(actions.childNodes.length ? [actions] : []), puces, pli);
+  if(d.modes && d.modes[n]) carte.classList.add("en-mode");
+  return carte;
 }
 function dessineClasses(d){
   CL = d;
   if($("seance")) caseAutresClasses();   // les classes qui ont ce cours ouvert viennent d'arriver
   const noms = Object.keys(d.classes).sort();
-  const tete = txt("tr"); tete.append(txt("th", null, "Classe"), ...d.cours.map(c=>{ const th = txt("th", null, c.titre); th.title = c.cle; return th; }), txt("th", null, d.modes ? "Mode cours" : ""), txt("th"));
-  $("cl-tete").replaceChildren(tete);
-  $("cl-corps").replaceChildren(...noms.map(n=>{
-    const tr = txt("tr"); tr.append(txt("td", "nom", n));
-    d.cours.forEach(c=>{
-      const td = txt("td"), cb = txt("input"); cb.type = "checkbox"; cb.checked = d.classes[n].includes(c.cle);
-      cb.setAttribute("aria-label", c.titre + " pour " + n);
-      cb.addEventListener("change", ()=>appelCl("activerCours", n, c.cle, cb.checked));
-      td.append(cb); tr.append(td); });
-    tr.append(caseModeCours(n, d));
-    const td = txt("td"), x = txt("button", "retirer", "Retirer"); x.type = "button";
-    x.addEventListener("click", ()=>{ if(confirm("Retirer la classe " + n + " ? Ses élèves ne verront plus aucun cours tant que tu ne les as pas déplacés.")) appelCl("retirerClasse", n); });
-    td.append(x); tr.append(td); return tr; }));
-  if(!noms.length) $("cl-corps").replaceChildren(Object.assign(txt("tr"), { innerHTML:'<td colspan="9" class="vide">Aucune classe : ajoute-en une ci-dessous.</td>' }));
+  /* Une page gardée en cache par le serveur porte encore l'ancien tableau : on le remplace sur place. */
+  let liste = $("cl-liste");
+  if(!liste){ liste = txt("div", "cl-liste"); liste.id = "cl-liste"; $("cl-corps").closest(".defile").replaceWith(liste); }
+  liste.replaceChildren(...noms.map(n=>carteClasse(n, d)));
+  if(!noms.length) liste.replaceChildren(txt("p", "vide", "Aucune classe : ajoute-en une ci-dessous."));
   const filtre = $("el-filtre"), avant = filtre.value;
   filtre.replaceChildren(...[["", "Toutes les classes"], ...noms.map(n=>[n, n]), ["?", "Classe retirée"]].map(([v, t])=>{ const o = txt("option", null, t); o.value = v; return o; }));
   filtre.value = [...filtre.options].some(o=>o.value===avant) ? avant : "";
