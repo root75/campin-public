@@ -1,5 +1,5 @@
 {
- "maj": "2026-11-22",
+ "maj": "2026-11-24",
  "actus": [
   {
    "titre": "Tes 3 infos de la semaine : les Restos du cœur, l’eau manque en Guyane, le succès mondial du jeu vidéo GTA 6",
@@ -42,6 +42,11 @@
    "source": "1jour1actu"
   },
   {
+   "titre": "Si tu avais une baguette magique…",
+   "lien": "https://www.lejde.be/belgique/2026/11/23/si-tu-avais-une-baguette-magique-47885/",
+   "source": "Le JDE"
+  },
+  {
    "titre": "Dans le secrétariat de saint Nicolas (vidéo)",
    "lien": "https://www.lejde.be/uncategorized/2026/11/19/dans-le-secretariat-de-saint-nicolas-video-47788/",
    "source": "Le JDE"
@@ -74,11 +79,6 @@
   {
    "titre": "Gaston en Équateur: de la forêt amazonienne aux sommets des volcans",
    "lien": "https://www.lejde.be/monde/2026/11/17/gaston-en-equateur-de-la-foret-amazonienne-aux-sommets-des-volcans-47702/",
-   "source": "Le JDE"
-  },
-  {
-   "titre": "Qui est Jean Dujardin ?",
-   "lien": "https://www.lejde.be/culture/2026/11/12/qui-est-jean-dujardin-47620/",
    "source": "Le JDE"
   }
  ]
