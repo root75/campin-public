@@ -5,7 +5,7 @@
    Pas de fiche élève : blocs écrits depuis le déroulé de « LogProg04_PROF_Premiers-pas-en-Python ».
    Exercices inspirés de la leçon 1E de Cercles informatiques (CEMC, Université de Waterloo,
    CC BY-NC-SA 3.0), réécrits et exécutés dans la page. Thonny reste pour « Les vies ».
-   Chaque bloc : veux (le but, une phrase) / fais (les cases, à l'impératif) / vois (« À vérifier »), bulle, stop, minutes, coince (les pièges de CE bloc), et une preuve :
+   Chaque bloc : veux (le but, une phrase) / fais (les cases, à l'impératif) / vois (« À vérifier », facultatif : seulement ce qu'on voit hors de la page, « Dans Thonny, … »), bulle, stop, minutes, coince (les pièges de CE bloc), et une preuve :
    QCM (bonne réponse TOUJOURS en premier, mélangée à l'affichage, p = ce qu'on dit au piège),
    saisie (ok = test, faux = texte ou fonction de la réponse), code (depart = programme de départ,
    test(r) = true ou l'explication ; r = { sortie, erreur:{type,ligne,message}, vars, code }),
@@ -44,7 +44,6 @@ const EXECUTER = `Clique sur <span class="chemin">▶ Exécuter</span> (ou <b>Ct
 const additionneur = n => {
   const somme = n*(n+1)/2, termes = Array.from({length:n},(_,i)=>i+1).join(" + ");
   return {
-    vois:"Le programme affiche "+somme+".",
     q:{ type:"code", q:"Répare le programme.", depart:"print("+termes+" +)",
         test: r => r.erreur ? "Lis la <b>ligne rouge</b> : une SyntaxError, c'est un caractère de trop ou de moins. Regarde juste avant la parenthèse finale."
                  : SORTIE(r)===String(somme) ? true : "Python affiche « "+SORTIE(r)+" » : un nombre a disparu. ↺ Code de départ, et n'enlève qu'UN caractère.",
@@ -52,7 +51,6 @@ const additionneur = n => {
 };
 const bonjour = nom => ({
   titre:"Bonjour "+nom,
-  vois:"Le programme affiche Bonjour "+nom+".",
   coince:["NameError : Python cherche une variable qui n'existe pas. "+nom+", c'est un texte ou un nom de variable ?",
           "Deux caractères à ajouter, pas à enlever."],
   q:{ type:"code", q:"Répare le programme.", depart:"nom = "+nom+'\nprint("Bonjour", nom)',
@@ -65,7 +63,6 @@ const soldes = (prix, pct) => {
   return {
     fais:CASES(`Lis : un pull à ${prix} €, soldé à −${pct} %, doit coûter <b>${reste} €</b>.`, EXECUTER,
                `Compare le résultat avec <b>${reste}</b>.`, "Trouve la <b>ligne qui calcule faux</b>, puis corrige-la."),
-    vois:`Le programme affiche ${reste}.0.`,
     extra:`<div class="encart"><h3>Pourquoi ${reste}.0 ?</h3><p>Dès qu'un calcul utilise un nombre à virgule, Python donne un nombre à virgule : ${reste}.0. Une virgule s'écrit avec un POINT en Python.</p></div>`,
     coince:[`prix * ${faux}, c'est ${pct} % du prix : ${fr(prix*faux)} €. Ce qu'on garde, c'est ${100-pct} % du prix.`,
             `Écris ${100-pct} % comme un nombre à virgule, sur le modèle du nombre déjà dans le programme : un seul caractère à changer.`],
@@ -89,7 +86,7 @@ const BLOCS = [
                `Clique sur <b class="chemin">l'onglet Quiz ▸ Commencer le quiz</b>.`,
                "Réponds aux <b>cinq questions</b>.",
                "<b>Reviens à cette fiche</b> (son onglet, en haut de Chrome) et regarde le projecteur : le professeur reprend la question la plus ratée."),
-    vois:"Ton score sur 5, et la trace au projecteur.",
+    vois:"Dans l'onglet du quiz, ton score sur 5 est affiché.",
     coince:["Garde deux onglets : celui-ci pour la fiche, l'autre pour le quiz. Pour revenir à la fiche : clic sur son onglet, en haut de Chrome.",
             "Le lien ne s'ouvre pas : nouvel onglet (Ctrl + T) ▸ barre d'adresse ▸ root75.github.io/campin-public/python-je-revise/ ▸ Enter.",
             "Un trou de mémoire : l'onglet « L'essentiel » de la même page redit tout en cinq lignes."],
@@ -109,7 +106,6 @@ const BLOCS = [
     veux:"Réparer un programme en lisant, pas en changeant au hasard.",
     fais:CASES("Lis l'<b>encadré</b> ci-dessous.",
                "Devant un programme cassé : exécute, lis la <b>ligne rouge</b>, dis à ton voisin quelle ligne est fautive, et SEULEMENT ensuite touche au code."),
-    vois:"Tu sais nommer les trois sortes d'erreurs.",
     extra:`<div class="encart"><p>Trois sortes d'erreurs : <b>SyntaxError</b> (l'écriture est cassée), une erreur <b>pendant l'exécution</b> (NameError : un nom inconnu), et l'erreur <b>de logique</b> (pas de ligne rouge, mais le résultat est faux).</p></div>`,
     coince:["Perdu dans un programme : bouton ↺ Code de départ, sous le cadre."],
     /* Essai du texte à trous (10/11/2026) : trois versions corrigées par la fiche, puis la même phrase
@@ -153,23 +149,20 @@ const BLOCS = [
     bulle:"Pas de ligne rouge… et pourtant c'est faux !",
     veux:"Trouver une erreur de logique en lisant, sans exécuter.",
     fais:CASES("Lis le programme <b>ligne par ligne</b>, comme une trace.", "Clique sur la <b>ligne fautive</b>."),
-    vois:"Le score doit valoir 15 : 10 points, plus un bonus de 5. Le programme affiche 5.",
     coince:["Aucune ligne rouge ici : le programme tourne, mais il calcule faux. C'est une erreur de logique.",
             "Fais la trace : que vaut score après chaque ligne ?"],
-    q:{ type:"ligne", q:"Clique sur la <b>ligne fautive</b>.", code:["score = 10","bonus = 5","score = score - bonus","print(score)"], bonne:3,
+    q:{ type:"ligne", q:"Le score doit valoir 15 : 10 points, plus un bonus de 5. Le programme affiche 5. Clique sur la <b>ligne fautive</b>.", code:["score = 10","bonus = 5","score = score - bonus","print(score)"], bonne:3,
         p:["score = 10 : le score de départ est bien 10.","bonus = 5 : le bonus vaut bien 5.",null,"print(score) affiche bien le score. Le problème est dans le calcul, juste avant."],
         juste:"Le signe − enlève le bonus au lieu de l'ajouter : score = score + bonus." },
     variantes:[
-      { vois:"Le total doit valoir 24 : 3 objets à 8 €. Le programme affiche 11.",
-        coince:["Aucune ligne rouge ici : le programme tourne, mais il calcule faux. C'est une erreur de logique.",
+      { coince:["Aucune ligne rouge ici : le programme tourne, mais il calcule faux. C'est une erreur de logique.",
                 "Fais la trace : que vaut total après chaque ligne ?"],
-        q:{ type:"ligne", q:"Clique sur la <b>ligne fautive</b>.", code:["prix = 8","quantite = 3","total = prix + quantite","print(total)"], bonne:3,
+        q:{ type:"ligne", q:"Le total doit valoir 24 : 3 objets à 8 €. Le programme affiche 11. Clique sur la <b>ligne fautive</b>.", code:["prix = 8","quantite = 3","total = prix + quantite","print(total)"], bonne:3,
             p:["prix = 8 : un objet coûte bien 8 €.","quantite = 3 : on en achète bien 3.",null,"print(total) affiche bien le total. Le problème est dans le calcul, juste avant."],
             juste:"Le + additionne le prix et la quantité au lieu de les multiplier : total = prix * quantite." } },
-      { vois:"Le programme doit afficher la température après la baisse : 15. Il affiche 5.",
-        coince:["Aucune ligne rouge ici : le programme tourne, mais il affiche faux. C'est une erreur de logique.",
+      { coince:["Aucune ligne rouge ici : le programme tourne, mais il affiche faux. C'est une erreur de logique.",
                 "Fais la trace : que vaut temperature après chaque ligne ? Et quelle boîte la dernière ligne affiche-t-elle ?"],
-        q:{ type:"ligne", q:"Clique sur la <b>ligne fautive</b>.", code:["temperature = 20","baisse = 5","temperature = temperature - baisse","print(baisse)"], bonne:4,
+        q:{ type:"ligne", q:"Le programme doit afficher la température après la baisse : 15. Il affiche 5. Clique sur la <b>ligne fautive</b>.", code:["temperature = 20","baisse = 5","temperature = temperature - baisse","print(baisse)"], bonne:4,
             p:["temperature = 20 : la température de départ est bien 20.","baisse = 5 : la baisse vaut bien 5.","temperature - baisse = 15, rangé dans temperature : le calcul est juste.",null],
             juste:"Le calcul est juste, mais la dernière ligne affiche la mauvaise boîte : print(temperature)." } } ] },
 
@@ -186,7 +179,7 @@ const BLOCS = [
                `Dans Thonny : <span class="chemin">menu Fichier ▸ Ouvrir…</span> (ou <b>Ctrl + O</b>).`,
                `<b class="chemin">Documents ▸ double-clic sur Python ▸ 01_Les-vies_Nom.py ▸ Ouvrir</b>.`,
                `Exécute : <span class="chemin">icône ▶ verte « Exécuter le script courant »</span> (ou <b>F5</b>).`),
-    vois:"Tes trois lignes, comme le modèle ci-dessous, et {R} dans la console du bas.",
+    vois:"Dans Thonny, tes trois lignes ressemblent au modèle ci-dessous, et la console du bas affiche {R}.",
     extra: VIES,
     coince:["Ton fichier n'est pas là : recrée-le. Documents ▸ bouton Nouveau ▸ Dossier ▸ Python ; puis dans Thonny, Fichier ▸ Enregistrer sous… (Ctrl + Shift + S) ▸ 01_Les-vies_Nom.py, et tape les trois lignes du modèle.",
             "Thonny ne se lance pas : nouvel onglet (Ctrl + T) ▸ barre d’adresse ▸ https://cscircles.cemc.uwaterloo.ca/dev/console-fr/ ▸ Enter. Tape les trois lignes du modèle dans la console de secours et exécute. Rien n’y est enregistré : sonne la cloche 🔔 ; le professeur vérifie le résultat et organise la sauvegarde. Puis reviens à cette fiche."],
@@ -201,7 +194,7 @@ const BLOCS = [
                "Réponds à la question ci-dessous <b>AVANT</b> de faire F5.",
                "Puis <b>F5</b> : lis le message d'erreur.",
                "<b>Répare</b> (vies en minuscules), puis F5."),
-    vois:"Un message d'erreur, puis de nouveau {R} après la réparation.",
+    vois:"Dans Thonny, la console du bas affiche de nouveau {R}, sans ligne rouge.",
     coince:["Le message est long : lis la dernière ligne, c'est elle qui donne le nom de l'erreur."],
     q:{ type:"qcm", q:"Prédis : avec print(Vies), que va-t-il se passer ?",
         c:["Une erreur NameError : Python ne connaît pas Vies.","Il affiche {R}.","Il affiche Vies.","Une erreur SyntaxError."],
@@ -231,7 +224,7 @@ const BLOCS = [
                "Réponds à la question ci-dessous <b>AVANT</b> de faire F5.",
                "Puis <b>F5</b> : lis le message d'erreur.",
                "<b>Remets la parenthèse</b>, puis F5."),
-    vois:"Un message d'erreur, puis de nouveau {R} après la réparation.",
+    vois:"Dans Thonny, la console du bas affiche de nouveau {R}, sans ligne rouge.",
     coince:["La parenthèse ) est la touche à droite du 0, sans Shift."],
     q:{ type:"qcm", q:"Prédis : avec print(vies sans la parenthèse finale, quelle erreur ?",
         c:["SyntaxError : une faute d'écriture.","NameError : un nom inconnu.","Aucune : il affiche {R}.","Il affiche vies."],
@@ -260,7 +253,7 @@ const BLOCS = [
                `Enregistre : <span class="chemin">icône disquette « Enregistrer »</span> (ou <b>Ctrl + S</b>).`,
                `Exécute : <span class="chemin">icône ▶ verte</span> (ou <b>F5</b>).`,
                "Réponds ci-dessous. Ensuite, <b>montre ton programme à ton voisin</b> : il lit tes commentaires et te dit s'il comprend chaque ligne. Il ne les recopie pas : chacun écrit les siens, avec ses mots."),
-    vois:"Six lignes : trois commentaires, trois instructions. La console affiche toujours {R}.",
+    vois:"Dans Thonny, ton programme compte six lignes : une ligne # au-dessus de chaque instruction.",
     extra: CODE("# on range {D} dans la boîte vies\nvies = {D}\n# …\nvies = vies - {K}\n# …\nprint(vies)"),
     coince:["Le # est AltGr + 3.",
             "Pas d'idée de commentaire : dis ce que fait la ligne, comme dans le logigramme (on range, on calcule, on affiche)."],
