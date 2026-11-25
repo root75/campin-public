@@ -30,7 +30,6 @@ const NOMMER = ["rat-de-ville-formatif"];
 function affiche(d){
   if(!d || !d.email) return;            // compte hors école : la page reste dans son état public
   $("non-connecte").hidden = true;
-  $("coince-compte").hidden = true;
   $("bonjour").textContent = "Bonjour " + (d.prenom || "") + ", par où commences-tu ?";
   $("compte").replaceChildren("Connecté avec ", gras(d.email), d.prof ? " · professeur" : d.classe ? " · classe " : " · classe à choisir dans « Mes cours »", d.prof || !d.classe ? "" : gras(d.classe));
   $("compte").hidden = false;
@@ -63,6 +62,7 @@ function affiche(d){
     } catch(e) {}
   }
   chatPortail(d);
+  defiConnecte(d);
 }
 
 /* ----- Le chat de la classe : ouvert et fermé par le professeur. -----
@@ -358,6 +358,108 @@ function joue(id, titre, secours){
 $("jeu-fermer").addEventListener("click", () => { $("jeu-portail").hidden = true; $("jeu-zone").replaceChildren(); });
 function gras(t){ const b = document.createElement("b"); b.textContent = t; return b; }
 
+/* ----- Le défi du jour (Vincent, 25/11/2026). -----
+   Un défi de logique maison, le même pour tout le monde, qui change chaque jour d'école (lundi-vendredi ; le
+   week-end garde celui du vendredi). Corrigé ici, sur la page : trois essais, puis la solution. Connecté, un défi
+   réussi est noté sur le serveur (monProgres, clé « defi:AAAAMMJJ ») : un point portail, que l'élève et le
+   professeur voient, et qui ne compte jamais dans une cote. « Pour aller plus loin » : une tâche du lab beOI,
+   une par jour à tour de rôle (un lien, rien n'est recopié). */
+const DEFIS = SITE + "defi/defis.json", DEFI_ESSAIS = 3;
+/** Le jour d'école dont c'est le défi (samedi et dimanche ▸ le vendredi) et son rang depuis le lundi 31/08/2026. */
+function jourDefi(d){
+  const j = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  const s = j.getDay(); if(s === 6) j.setDate(j.getDate() - 1); else if(s === 0) j.setDate(j.getDate() - 2);
+  const jours = Math.round((Date.UTC(j.getFullYear(), j.getMonth(), j.getDate()) - Date.UTC(2026, 7, 31)) / 864e5);
+  const semaines = Math.floor(jours / 7);
+  return { jour: j, rang: semaines * 5 + (jours - semaines * 7), cle: "defi:" + dateNom(j) };
+}
+function aTour(liste, rang){ const n = Array.isArray(liste) ? liste.length : 0; return n ? liste[((rang % n) + n) % n] : null; }
+/** Une réponse comme on la compare : sans majuscules, accents, espaces ni ponctuation. */
+function normalise(t){ return String(t == null ? "" : t).normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]/g, ""); }
+function reponseJuste(defi, r){
+  if(!defi) return false;
+  if(defi.type === "choix") return r === defi.reponse;
+  if(defi.type === "nombre"){ const n = Number(String(r).trim().replace(",", ".")); return String(r).trim() !== "" && n === Number(defi.reponse); }
+  return normalise(r) !== "" && normalise(r) === normalise(defi.reponse);
+}
+/** Le nombre de défis réussis, d'après ce que le serveur sait de l'élève. */
+function pointsDefis(etats){ return Object.keys(etats || {}).filter(k => /^defi:\d{8}$/.test(k) && etats[k] === "fait").length; }
+
+let DEFI = null, DEFI_ELEVE = false;
+function etatDefiLocal(){ try { const x = JSON.parse(localStorage.getItem("portail-defi") || "null"); if(x && DEFI && x.cle === DEFI.cle) return x; } catch(e) {} return DEFI ? { cle: DEFI.cle, essais: 0, fini: "" } : null; }
+function gardeDefi(x){ try { localStorage.setItem("portail-defi", JSON.stringify(x)); } catch(e) {} }
+function peintDefi(){
+  if(!DEFI) return;
+  const d = DEFI.defi, local = etatDefiLocal(), serveur = PROGRES_SERVEUR[DEFI.cle] === "fait";
+  const fini = serveur ? "reussi" : local.fini, form = $("defi-form"), retour = $("defi-retour");
+  $("defi-titre").textContent = d.titre;
+  $("defi-enonce").replaceChildren(...d.enonce.map(l => { const p = document.createElement("p"); p.textContent = l; return p; }));
+  if(fini){
+    form.replaceChildren(); form.hidden = true;
+    retour.className = "defi-retour " + (fini === "reussi" ? "bravo" : "encore");
+    retour.replaceChildren(gras(fini === "reussi" ? "Bravo, défi réussi ! " : "La réponse était : " + d.reponse + ". "), d.explication || "",
+      fini === "reussi" && !DEFI_ELEVE ? " Connecte-toi avec ton compte de l'école pour gagner ton point." : "", " Un nouveau défi t'attend au prochain jour d'école.");
+    retour.hidden = false;
+  } else {
+    form.hidden = false;
+    let champ = null;
+    const valide = r => {
+      const x = etatDefiLocal();
+      if(reponseJuste(d, r)){
+        x.fini = "reussi"; gardeDefi(x);
+        if(DEFI_ELEVE) monProgres(DEFI.cle + "~fait").catch(() => {});
+      } else {
+        x.essais++; if(x.essais >= DEFI_ESSAIS) x.fini = "rate"; gardeDefi(x);
+        if(!x.fini){
+          retour.className = "defi-retour encore";
+          retour.replaceChildren(gras("Pas encore. "), "Indice : " + (d.indice || "relis l'énoncé ligne par ligne.") + " (" + (DEFI_ESSAIS - x.essais) + " essai" + (DEFI_ESSAIS - x.essais > 1 ? "s" : "") + " restant" + (DEFI_ESSAIS - x.essais > 1 ? "s" : "") + ")");
+          retour.hidden = false;
+          if(champ){ champ.value = ""; if(champ.focus) champ.focus(); }
+          return;
+        }
+      }
+      peintDefi();
+    };
+    if(d.type === "choix"){
+      form.replaceChildren(...d.choix.map(c => { const b = document.createElement("button"); b.type = "button"; b.textContent = c; b.addEventListener("click", () => valide(c)); return b; }));
+      form.onsubmit = e => e.preventDefault();
+    } else {
+      champ = document.createElement("input"); champ.type = "text"; champ.setAttribute("aria-label", "Ta réponse");
+      if(d.type === "nombre") champ.setAttribute("inputmode", "numeric");
+      champ.placeholder = "Ta réponse";
+      const b = document.createElement("button"); b.type = "submit"; b.className = "valider"; b.textContent = "Vérifier";
+      form.replaceChildren(champ, b);
+      form.onsubmit = e => { e.preventDefault(); valide(champ.value); };
+    }
+  }
+  const pts = pointsDefis(PROGRES_SERVEUR);
+  $("defi-points").textContent = "🧩 " + pts + " point" + (pts > 1 ? "s" : "") + " défi" + (pts > 1 ? "s" : "") + " · ils ne comptent pas dans tes cotes";
+  $("defi-points").hidden = !DEFI_ELEVE;
+  $("defi").hidden = false;
+}
+function chargeDefi(maintenant){
+  if(typeof fetch !== "function") return;
+  fetch(DEFIS).then(r => r.ok ? r.json() : Promise.reject()).then(t => {
+    const j = jourDefi(maintenant), defi = aTour(t.defis, j.rang);
+    if(!defi || typeof defi.titre !== "string" || !Array.isArray(defi.enonce)) return;
+    DEFI = { cle: j.cle, defi };
+    const b = aTour(t.beoi, j.rang);
+    if(b && typeof b.url === "string" && b.url.startsWith("https://lab.be-oi.be/")){
+      $("defi-beoi").href = b.url; $("defi-beoi").textContent = b.titre + (b.annee ? " (Olympiade " + b.annee + ")" : "") + " ▸";
+      $("defi-plus").hidden = false;
+    }
+    peintDefi();
+  }).catch(() => {});
+}
+/** Connecté : l'élève gagne son point ; ses points viennent du serveur. Un professeur joue sans point. */
+function defiConnecte(d){
+  if(d.prof || !SUIVI) return;
+  DEFI_ELEVE = true;
+  monProgres("").then(peintDefi, () => {});
+  peintDefi();
+}
+chargeDefi(new Date());
+
 if(SUIVI){
   google.script.run.withSuccessHandler(affiche).withFailureHandler(() => {}).portail();
 } else if(location.protocol === "https:" && !/[?&]public\b/.test(location.search)){
@@ -417,5 +519,5 @@ if(typeof fetch === "function"){
     montre();
   }).catch(() => {});
 }
-globalThis.PortailEssai = { tire, ciel, conseil, dateNom, dateJour, revisionsDe, devoirsA, annoncesA, miseEnForme, cote };
+globalThis.PortailEssai = { tire, ciel, conseil, dateNom, dateJour, revisionsDe, devoirsA, annoncesA, miseEnForme, cote, jourDefi, aTour, reponseJuste, normalise, pointsDefis };
 })();

@@ -63,6 +63,11 @@ console.log('Compteurs et bandeau : coincés sans sonner, inactifs, butent, bloc
   assert.equal(u.muets,1);assert.deepEqual(u.activites.map(a=>a.cours+'|'+a.genre+'|'+a.faits),['inconnue:x||0','Python 01|Mots croisés|1','Python 01|Quiz|2']);
   assert.deepEqual(u.eleves[2].cases.map(c=>c.mot),['—','—','Commencé']);assert.deepEqual(u.eleves[0].cases.map(c=>c.mot),['—','✓ Fait','✓ Fait']);
   assert.equal(f({activites:[],eleves:[{nom:'A',etats:{}}]},{}).activites.length,0);
+  // Les défis du jour : pas de colonne par jour, un compte par élève ; ils ne font pas « avancer » les révisions.
+  const dj=f({activites:['quiz:python-1','defi:20261125','defi:20261126'],eleves:[{nom:'A',etats:{'defi:20261125':'fait','defi:20261126':'fait'}},{nom:'B',etats:{'quiz:python-1':'fait'}}]},noms);
+  assert.deepEqual(dj.activites.map(a=>a.cle),['quiz:python-1']);assert.equal(dj.defis,true);
+  assert.deepEqual(dj.eleves.map(e=>e.nom+':'+e.defis),['B:0','A:2']);
+  assert.equal(f({activites:['quiz:python-1'],eleves:[{nom:'A',etats:{}}]},noms).defis,false);
   assert.match(source,/if\(!d\.progres\) return null/,'serveur pas encore republié : pas de bouton');
   console.log('Révisions de la classe : avancement par élève vérifié.');
 }

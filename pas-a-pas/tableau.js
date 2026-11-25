@@ -1285,15 +1285,17 @@ function nomsRevisions(table){
   return noms;
 }
 function grilleRevisions(r, noms){
-  const activites = (r.activites || []).map(cle=>{
+  // Les défis du jour du portail (clés « defi:AAAAMMJJ ») ne sont pas des révisions : une seule colonne, le nombre réussi.
+  const activites = (r.activites || []).filter(cle=>!/^defi:/.test(cle)).map(cle=>{
     const n = (noms || {})[cle], faits = (r.eleves || []).filter(e=>e.etats && e.etats[cle] === "fait").length;
     return { cle, cours: n ? n.cours : cle, genre: n ? n.genre : "", faits };
   }).sort((a, b)=>a.cours.localeCompare(b.cours, "fr") || a.genre.localeCompare(b.genre, "fr"));
   const eleves = (r.eleves || []).map(e=>{
     const cases = activites.map(a=>{ const x = e.etats && e.etats[a.cle]; return x === "fait" ? { mot: "✓ Fait", classe: "corrige" } : x === "commence" ? { mot: "Commencé", classe: "a-rendre" } : { mot: "—", classe: "absent" }; });
-    return { nom: e.nom, cases, faits: cases.filter(c=>c.classe === "corrige").length, ouverts: cases.filter(c=>c.classe !== "absent").length };
+    const defis = Object.keys(e.etats || {}).filter(k=>/^defi:\d{8}$/.test(k) && e.etats[k] === "fait").length;
+    return { nom: e.nom, cases, defis, faits: cases.filter(c=>c.classe === "corrige").length, ouverts: cases.filter(c=>c.classe !== "absent").length };
   }).sort((a, b)=>b.faits - a.faits || b.ouverts - a.ouverts || a.nom.localeCompare(b.nom, "fr"));
-  return { activites, eleves, muets: eleves.filter(e=>!e.ouverts).length };
+  return { activites, eleves, muets: eleves.filter(e=>!e.ouverts).length, defis: eleves.some(e=>e.defis) };
 }
 function chargeRevisions(n){
   REVISIONS_CL[n] = { attente: true };
@@ -1318,14 +1320,18 @@ function caseRevisions(n, d){
   outils.append(relire); zone.append(outils);
   const g = grilleRevisions(x.r, x.noms);
   if(!g.eleves.length){ zone.append(txt("p", "moyen", "Aucun élève dans cette classe.")); return boite; }
-  if(!g.activites.length){ zone.append(txt("p", "moyen", "Personne dans cette classe n’a encore ouvert une révision.")); return boite; }
+  if(!g.activites.length && !g.defis){ zone.append(txt("p", "moyen", "Personne dans cette classe n’a encore ouvert une révision.")); return boite; }
   zone.append(txt("p", "cl-devoirs-bilan", (g.eleves.length - g.muets) + " élève" + (g.eleves.length - g.muets > 1 ? "s ont" : " a") + " ouvert au moins une révision · " + g.muets + " n’" + (g.muets > 1 ? "ont" : "a") + " encore rien ouvert"));
   const table = txt("table", "cl-devoirs-table"), tete = txt("tr");
   tete.append(txt("th", null, "Élève"), ...g.activites.map(a=>{
     const th = txt("th"); th.title = a.cours + (a.genre ? " · " + a.genre : "");
     th.append(txt("b", null, a.cours), txt("span", "maj", a.genre || " "), txt("span", "maj", a.faits + " / " + g.eleves.length + " faits")); return th; }));
+  if(g.defis){ const th = txt("th"); th.title = "Défis du jour réussis sur le portail : un point chacun, jamais coté";
+    th.append(txt("b", null, "🧩 Défis"), txt("span", "maj", "du jour"), txt("span", "maj", "réussis")); tete.append(th); }
   table.append(tete, ...g.eleves.map(e=>{
-    const tr = txt("tr"); tr.append(txt("th", null, e.nom), ...e.cases.map(c=>txt("td", "remise " + c.classe, c.mot))); return tr; }));
+    const tr = txt("tr"); tr.append(txt("th", null, e.nom), ...e.cases.map(c=>txt("td", "remise " + c.classe, c.mot)));
+    if(g.defis) tr.append(txt("td", "remise " + (e.defis ? "corrige" : "absent"), e.defis ? String(e.defis) : "—"));
+    return tr; }));
   const defile = txt("div", "cl-devoirs-defile"); defile.append(table); zone.append(defile);
   return boite;
 }
