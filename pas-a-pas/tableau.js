@@ -265,6 +265,7 @@ function dessine(d){
     if(d._classes){ const c = txt("span","qui"," · "+e.classe); c.style.cssText = "color:var(--doux);font-weight:400"; n1.append(c); }
     if(SUIVI&&(e._d||d).reprisesParSuivi&&(e._d||d).peutReprendre){const cours=$("cours").value,seance=e._seance||choisie();const r=txt("button","btn vide","Recommencer");r.type="button";r.setAttribute("aria-label","Faire recommencer "+nom(e.email));r.addEventListener("click",()=>{choisirEtape(nom(e.email),NB_BLOCS[cours]||n,e.atteint).then(bloc=>{if(!bloc)return;r.disabled=true;google.script.run.withSuccessHandler(()=>{charge();}).withFailureHandler(err=>{r.disabled=false;erreur(err);}).noter(cours,{type:'prof-reprise',email:e.email,debut:seance.debut,bloc:bloc});});});n1.append(r);}
     n1.append(caseRecompense(e));
+    const bi = boutonIntervention(e, d); if(bi) n1.append(bi);
     const h = td("hum", e.humeur ? e.humeur.split(" ")[0] : ""); if(e.humeur) h.title = e.humeur;
     const b = txt("div","barre");
     for(let i=0;i<n;i++){ const s=txt("span");
@@ -529,7 +530,7 @@ function rafraichitSelonOnglet(){
 /* Données fictives : l'aperçu hors Apps Script. */
 function demo(){
   const t = Date.now(), m = 60000;
-  const e = (email, atteint, erreurs, erreursIci, derniere, extra) => Object.assign({email, atteint, erreurs, erreursIci, aide:null, fini:false, derniere:t-derniere*m, humeur:"", avis:null}, extra||{});
+  const e = (email, atteint, erreurs, erreursIci, derniere, extra) => Object.assign({email, atteint, erreurs, erreursIci, aide:null, fini:false, derniere:t-derniere*m, humeur:"", avis:null, interventions:DEMO_INTERVENTIONS.par[email]||[]}, extra||{});
   const vr = (...l) => l.map(([erreurs,eleves],k)=>({v:k+1, erreurs, eleves}));
   return { maintenant:t, tresor:57, tresorPresents:8, tresorPot:1, tresorPaliers:7, parBloc:{1:2,4:5,5:3,6:9,8:4,9:6,10:2,12:1},
     variantes:{1:vr([1,3],[1,2],[0,3]), 4:vr([1,3],[4,3],[0,2]), 6:vr([2,3],[1,2],[6,3]), 9:vr([2,2],[2,3],[2,3])}, eleves:[
@@ -1021,6 +1022,8 @@ const DEMO_CL = {
   chatEcrire(t, depuis, c){ this.fil.push({ id:this.fil.length + 1, t:Date.now(), nom:"Le professeur", email:"prof@arcampin.be", texte:t, moi:true, masque:false }); return this.chatLire(depuis, c); },
   chatMasquer(c, id, oui){ this.fil.find(m=>m.id === id).masque = oui; return this.chatLire(0, c); },
   chatParole(c, e, oui){ const s = this.d.chats[c]; s.muets = s.muets.filter(x=>x !== e); if(oui) s.muets.push(e); return this.chatLire(0, c); },
+  interventionsEleves(){ const t = Date.now(), j = 86400000;
+    return { depuis: t - 80 * j, eleves: { "lea.dupont@arcampin.be":[{ t:t - 2 * j, cours:"messagerie-1", bloc:4, motif:"consigne" }, { t:t - 9 * j, cours:"messagerie-1", bloc:2, motif:"cloche" }, { t:t - 9 * j + 600000, cours:"messagerie-1", bloc:3, motif:"comportement" }] } }; },
   changerClasse(e, c){ if(c) this.d.eleves.find(x=>x.email===e).classe = c; else this.d.eleves = this.d.eleves.filter(x=>x.email!==e); return this.d; }
 };
 function serveurCl(fn, ...args){
@@ -1404,7 +1407,35 @@ function dessineEleves(){
     sel.replaceChildren(...options.map(([v, t])=>{ const o = txt("option", null, t); o.value = v; return o; }));
     sel.value = e.classe; sel.setAttribute("aria-label", "Classe de " + nom(e.email));
     sel.addEventListener("change", ()=>appelCl("changerClasse", e.email, sel.value));
-    td.append(sel); tr.append(nomEl, td); return tr; }));
+    td.append(sel); tr.append(nomEl, td);
+    if(INTERV) tr.append(caseInterventions(e.email));
+    return tr; }));
+  const th = $("el-corps").closest("table").querySelector("thead tr");   // la page en cache n'a pas la colonne
+  if(th && INTERV && th.children.length < 3) th.append(txt("th", null, "Interventions"));
+  if(th && th.children[2]) th.children[2].hidden = !INTERV;
+}
+/* Onglet Élèves : les interventions de l'année, par élève (« J'ai intervenu » et « Aide traitée »). Lues à l'ouverture
+   de l'onglet, une minute de cache côté serveur. Un clic sur le nombre déplie la liste. */
+let INTERV = null; const INTERV_VUS = new Set();
+const DATE_COURTE = t => new Date(t).toLocaleString("fr-BE",{weekday:"short",day:"numeric",month:"numeric",hour:"2-digit",minute:"2-digit"});
+function caseInterventions(email){
+  const td = txt("td"), l = (INTERV.eleves[email] || []).slice().sort((a, b)=>b.t - a.t);
+  if(!l.length){ td.append(txt("span", "vide", "—")); return td; }
+  const parMotif = Object.keys(MOTIFS_INTERVENTION).map(m=>[m, l.filter(x=>x.motif === m).length]).filter(x=>x[1]);
+  const b = txt("button", "btn vide", "🤝 " + l.length); b.type = "button";
+  b.setAttribute("aria-expanded", String(INTERV_VUS.has(email)));
+  b.addEventListener("click", ()=>{ if(INTERV_VUS.has(email)) INTERV_VUS.delete(email); else INTERV_VUS.add(email); dessineEleves(); });
+  td.append(b, txt("span", "maj", " " + parMotif.map(([m, k])=>MOTIFS_INTERVENTION[m].toLowerCase() + " " + k).join(" · ")));
+  if(INTERV_VUS.has(email)){
+    const ul = txt("ul", "liste-interventions");
+    ul.replaceChildren(...l.map(x=>txt("li", null, DATE_COURTE(x.t) + " · " + (TITRES_COURS[x.cours] || x.cours) + (x.bloc ? " · bloc " + x.bloc : "") + " · " + (MOTIFS_INTERVENTION[x.motif] || x.motif))));
+    td.append(ul);
+  }
+  return td;
+}
+function chargeInterventions(){
+  if(SUIVI && typeof google.script.run.interventionsEleves !== "function") return;
+  serveurCl("interventionsEleves").then(r=>{ INTERV = r; if(CL) dessineEleves(); }, erreur);
 }
 $("el-filtre").addEventListener("change", dessineEleves);
 $("cl-ajout").addEventListener("submit", ev=>{ ev.preventDefault(); const n = $("cl-nom").value.trim(); if(n){ $("cl-nom").value = ""; appelCl("ajouterClasse", n); } });
@@ -1497,6 +1528,7 @@ function montreOnglet(nom){
   signatureBloc=null;
   if(CL){if(o.id)dessineClasses(CL);else dessineBlocSeance();}
   else if(o.id)chargeClasses();   // même si le catalogue ne répond pas
+  if(nom==='eleves')chargeInterventions();
   try{if(SUIVI&&google.script.history)google.script.history.replace(null,o.id?{onglet:nom}:{},'');}catch(e){}
 }
 function ouvreVueProf(parametres){
@@ -1516,6 +1548,63 @@ else ouvreVueProf(Object.fromEntries(new URLSearchParams(location.search)));
 
 
 
+
+/* « J'ai intervenu » (Vincent, 25/11/2026) : sur chaque ligne, qu'il ait sonné ou non. Un clic, puis le motif dans
+   une petite fenêtre (le tableau se redessine toutes les 15 s : un menu dans la ligne se refermerait). Pendant
+   10 s, « Annuler » sous le menu. « 🤝 n » = les passages de la séance, cloches traitées comprises. Un serveur
+   antérieur ne connaît pas intervenir : pas de bouton. */
+const MOTIFS_INTERVENTION = { consigne:"Consigne", technique:"Technique", comportement:"Comportement", cloche:"Sur cloche" };
+function boutonIntervention(e, d){
+  if(SUIVI && typeof google.script.run.intervenir !== "function") return null;
+  const liste = e.interventions || [], b = txt("button", "btn vide intervenir", "🤝" + (liste.length ? " " + liste.length : ""));
+  b.type = "button";
+  const parMotif = Object.keys(MOTIFS_INTERVENTION).map(m=>[m, liste.filter(x=>x.motif === m).length]).filter(x=>x[1]);
+  b.title = "J’ai intervenu auprès de cet élève" + (liste.length ? " — déjà " + parMotif.map(([m, k])=>MOTIFS_INTERVENTION[m].toLowerCase() + " " + k).join(", ") : "");
+  b.setAttribute("aria-label", "J’ai intervenu auprès de " + nom(e.email) + (liste.length ? " (" + liste.length + " cette séance)" : ""));
+  b.addEventListener("click", ()=>choisirMotif(nom(e.email)).then(motif=>{
+    if(!motif) return;
+    const cours = $("cours").value, seance = e._seance || choisie(), bloc = blocDe(Object.assign({}, e, { aide:null }));
+    b.disabled = true;
+    const appel = SUIVI ? new Promise((ok, ko)=>google.script.run.withSuccessHandler(ok).withFailureHandler(ko).intervenir(cours, e.email, seance.debut, bloc, motif))
+      : Promise.resolve(DEMO_INTERVENTIONS.ajoute(e, motif));
+    appel.then(r=>{ annonceIntervention(e, cours, r.id, motif); charge(); }, err=>{ b.disabled = false; erreur(err); });
+  }));
+  return b;
+}
+function choisirMotif(qui){
+  let d = $("dlg-intervention");
+  if(!d){
+    d = document.createElement("dialog"); d.id = "dlg-intervention";
+    d.innerHTML = '<form method="dialog"><h2>J’ai intervenu</h2><p id="dlg-intervention-qui"></p><div class="reglages">'
+      + '<button class="btn" value="consigne">Consigne</button><button class="btn" value="technique">Technique</button>'
+      + '<button class="btn" value="comportement">Comportement</button></div>'
+      + '<p class="astuce">Consigne : il ne savait pas quoi faire. Technique : un clic, un menu, l’ordinateur. Comportement : un recadrage.</p>'
+      + '<div class="reglages"><button class="btn vide" value="" formnovalidate>Annuler</button></div></form>';
+    document.body.append(d);
+  }
+  d.querySelector("#dlg-intervention-qui").textContent = "Auprès de " + qui + ". Pourquoi ?";
+  return new Promise(ok=>{ d.onclose = ()=>ok(d.returnValue || ""); d.returnValue = ""; d.showModal(); d.querySelector("button").focus(); });
+}
+/* Le bandeau « Annuler » vit sous le menu, pas dans la ligne : il survit au rafraîchissement. */
+let minuterieIntervention = 0;
+function annonceIntervention(e, cours, id, motif){
+  let z = $("intervention-notee");
+  if(!z){ z = txt("p", "demo"); z.id = "intervention-notee"; z.setAttribute("role", "status"); $("chiffres").before(z); }
+  const annuler = txt("button", "btn vide", "Annuler"); annuler.type = "button";
+  z.replaceChildren(document.createTextNode("🤝 Intervention notée pour " + nom(e.email) + " (" + MOTIFS_INTERVENTION[motif].toLowerCase() + "). "), annuler);
+  z.hidden = false; clearTimeout(minuterieIntervention);
+  minuterieIntervention = setTimeout(()=>{ z.hidden = true; }, 10000);
+  annuler.addEventListener("click", ()=>{
+    annuler.disabled = true; clearTimeout(minuterieIntervention);
+    const appel = SUIVI ? new Promise((ok, ko)=>google.script.run.withSuccessHandler(ok).withFailureHandler(ko).annulerIntervention(cours, e.email, id))
+      : Promise.resolve(DEMO_INTERVENTIONS.retire(e, id));
+    appel.then(()=>{ z.textContent = "Intervention annulée."; minuterieIntervention = setTimeout(()=>{ z.hidden = true; }, 3000); charge(); }, erreur);
+  });
+}
+/* Aperçu fictif : les interventions restent dans la page. */
+const DEMO_INTERVENTIONS = { par:{ "adam.peeters@arcampin.be":[{ t:Date.now() - 600000, motif:"technique", id:"i1" }, { t:Date.now() - 300000, motif:"cloche", id:"" }] },
+  ajoute(e, motif){ const id = "i" + Date.now(); (this.par[e.email] = this.par[e.email] || []).push({ t:Date.now(), motif, id }); return { id }; },
+  retire(e, id){ this.par[e.email] = (this.par[e.email] || []).filter(x=>x.id !== id); return { annulee:true }; } };
 
 /* « Recommencer » : une petite fenêtre demande à quelle étape l'élève reprend. Les étapes d'avant restent validées ;
    celle-ci et les suivantes sont à refaire. Rend le numéro choisi, ou 0 si on annule. */

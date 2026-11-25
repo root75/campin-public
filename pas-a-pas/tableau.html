@@ -211,6 +211,9 @@ details.replie .resume{color:var(--doux);font-size:.95rem}
 .filtre-aide{display:inline-flex;gap:8px;align-items:center;font-size:.9rem;cursor:pointer}
 .filtre-aide input{accent-color:var(--encre-bouton);width:17px;height:17px}
 #erreur-tableau{color:var(--faux);font-weight:600}
+.nom .intervenir{font-size:.85rem;padding:2px 8px;margin-left:8px;border-width:1px;color:var(--encre-bouton)}
+.liste-interventions{margin:6px 0 0;padding-left:1.1rem;font-size:.9rem;color:var(--doux)}
+#intervention-notee .btn{margin-left:8px;padding:2px 10px}
 @media(max-width:640px){.outils-secondaires>details{min-width:100%}.chiffres{position:static}.entete-panneau h2{font-size:1.15rem}}
 .vue-onglet .page> :not(header):not(.onglet-actif):not(#demo){display:none!important}
 .vue-onglet .page>header>:not(.onglets){display:none!important}
@@ -331,7 +334,7 @@ header{display:grid;grid-template-columns:minmax(0,1fr);gap:12px;align-items:str
     <p class="astuce" id="eleves-statut" role="status">Chargement de la liste…</p>
     <p class="astuce">L'élève choisit sa classe au premier passage. Une erreur ? Change-la ici. « À choisir » = il la choisira à son prochain passage.</p>
     <div class="ajout"><select id="el-filtre" aria-label="Filtrer par classe"></select><span class="maj" id="el-compte"></span></div>
-    <div class="defile"><table><thead><tr><th>Élève</th><th>Classe</th></tr></thead><tbody id="el-corps"></tbody></table></div>
+    <div class="defile"><table><thead><tr><th>Élève</th><th>Classe</th><th>Interventions</th></tr></thead><tbody id="el-corps"></tbody></table></div>
   </section>
 </div>
 
@@ -365,7 +368,7 @@ header{display:grid;grid-template-columns:minmax(0,1fr);gap:12px;align-items:str
   </form>
 </dialog>
 
-<script defer src="https://root75.github.io/campin-public/messagerie/pas-a-pas/visuels.js?v=enveloppe-20261117"></script><script defer src="https://root75.github.io/campin-public/derriere-lecran/emotions.js?v=20261123b"></script><script defer src="https://root75.github.io/campin-public/derriere-lecran/visuels.js?v=20261123"></script><script defer src="https://root75.github.io/campin-public/pas-a-pas/tableau.js?v=menu-20261124"></script>
+<script defer src="https://root75.github.io/campin-public/messagerie/pas-a-pas/visuels.js?v=enveloppe-20261117"></script><script defer src="https://root75.github.io/campin-public/derriere-lecran/emotions.js?v=20261123b"></script><script defer src="https://root75.github.io/campin-public/derriere-lecran/visuels.js?v=20261123"></script><script defer src="https://root75.github.io/campin-public/pas-a-pas/tableau.js?v=intervenir-20261125"></script>
 <script defer src="https://root75.github.io/campin-public/pas-a-pas/python-couleurs.js"></script>
 </body>
 </html>
