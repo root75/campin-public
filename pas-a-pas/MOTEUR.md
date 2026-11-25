@@ -92,6 +92,9 @@ le titre de l’étape suivante annonce la suite du parcours.
 le titre, puis Centrer, Gras, MAJUSCULES. `ensembles:[[1,2,3],[4],[5,6,7]]` dans un bloc affiche ces cases sur une
 même vue ; le statut dit alors « Partie 1 sur 3 ». Les cases et leurs clés « étape.rang » ne changent pas : rien à
 toucher au Journal, à `cours.json` ni à Code.gs. Une case absente des ensembles forme une vue à elle seule.
+Dans une vue de plusieurs cases, les gestes sont numérotés sans case et **un seul bouton « C'est fait »** coche en
+coulisse toutes les cases de la vue (Vincent, 25/11/2026) ; grisé tant qu'une case est verrouillée. Une vue qui porte
+un accord du professeur garde ses cases.
 Un texte à trous peut porter `effacer:'<p>…</p>'` : une fois réussi, ce HTML remplace la phrase, pour que l'élève
 écrive ensuite avec ses mots au lieu de recopier (Rat de ville, étape 8, les deux cases sur une vue).
 
