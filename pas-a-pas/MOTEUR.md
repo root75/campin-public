@@ -88,6 +88,18 @@ d’animation. Les accords du professeur et les règles de validation restent in
 Les exercices, exemples et simulateurs gardent leur présentation propre. Après une preuve réussie,
 le titre de l’étape suivante annonce la suite du parcours.
 
+**Vues regroupées** (`ensembles`, Vincent, 25/11/2026). Un geste de sens peut demander plusieurs cases : sélectionner
+le titre, puis Centrer, Gras, MAJUSCULES. `ensembles:[[1,2,3],[4],[5,6,7]]` dans un bloc affiche ces cases sur une
+même vue ; le statut dit alors « Partie 1 sur 3 ». Les cases et leurs clés « étape.rang » ne changent pas : rien à
+toucher au Journal, à `cours.json` ni à Code.gs. Une case absente des ensembles forme une vue à elle seule.
+Un texte à trous peut porter `effacer:'<p>…</p>'` : une fois réussi, ce HTML remplace la phrase, pour que l'élève
+écrive ensuite avec ses mots au lieu de recopier (Rat de ville, étape 8, les deux cases sur une vue).
+
+**Écran léger** (`const ECRAN_LEGER = true` dans la fiche, Rat de ville). Le moins possible d'autres éléments
+pendant l'action : le titre de l'étape n'est écrit qu'une fois, la ligne « Bloc N sur M · Partie » disparaît,
+« À observer » se replie au premier geste coché. Un panneau de la page marqué `data-etapes="2"` ne s'affiche
+qu'à cette étape (le texte à recopier du Rat). Les autres cours ne sont pas concernés.
+
 ## Les preuves
 
 | `q.type` | L'élève… | Corrigé |
