@@ -502,19 +502,41 @@ function rythmeGestes(z){
      case, et un seul bouton « C'est fait » coche en coulisse toutes les cases de la vue. Les cases d'origine restent
      (clés « étape.rang », serveur, tableau) : seule leur case disparaît de l'écran. Une vue qui porte un accord du
      professeur garde ses cases. Le bouton est grisé tant qu'une case de la vue est verrouillée (accord, texte à trous). */
-  const boutonDe = cases.map(()=>null), majBoutons = [];
+  const boutonDe = cases.map(()=>null), majBoutons = [], demoDe = cases.map(()=>null);
+  const fusionneDemos = (v, b)=>{
+    const demos = BLOCS[ici].demos||{}, avec = v.filter(k=>demos[String(k+1)] && lignes[k].querySelector(":scope > details.demo-case"));
+    if(avec.length<2 || typeof Demo==="undefined" || !Demo.cree) return;
+    const morceaux = [];
+    avec.forEach(k=>{ const [cle, images] = demos[String(k+1)], dernier = morceaux[morceaux.length-1];
+      if(dernier && dernier[0]===cle && dernier[1] && images) dernier[1] = dernier[1].concat(images); else morceaux.push([cle, images ? images.slice() : images]);
+      lignes[k].querySelector(":scope > details.demo-case").remove(); });
+    const d = el("details","demo-case demo-vue"); let boites = null;
+    d.append(txt("summary",null,"👀 Regarde comment faire"));
+    d.addEventListener("toggle",()=>{
+      if(d.open){ if(typeof DemoLecteur!=="undefined" && DemoLecteur.arrete) DemoLecteur.arrete();
+        if(!boites){ boites = morceaux.map(([cle, images])=>Demo.cree(cle, true, images)).filter(Boolean); d.append(...boites); } else boites.forEach(x=>x.joue()); }
+      else if(boites) boites.forEach(x=>x.stop());
+    });
+    b.before(d); v.forEach(k=>{ demoDe[k] = d; });
+  };
   vues.forEach(v=>{
     if(v.length<2 || v.some(k=>{ const g = (BLOCS[ici].gestes||[])[k]; return g && g.accord; })) return;
     v.forEach((k,r)=>{ lignes[k].classList.add("sous-geste"); lignes[k].querySelector(":scope > label").dataset.n = (r+1)+"."; });
     const b = el("button","fait-vue"); b.type = "button"; b.setAttribute("role","checkbox");
     b.append(el("span","boite"), txt("span",null,"C’est fait")); b.firstChild.setAttribute("aria-hidden","true");
     lignes[v[v.length-1]].append(b); v.forEach(k=>{ boutonDe[k] = b; });
+    /* Un seul bloc par vue (Vincent, 25/11/2026 : « fait qu'un seul bloc pour les 3 et un regarde comment faire avec
+       les 2 ») : les lignes de la vue se soudent en une carte, et leurs « Regarde comment faire » n'en font qu'un, placé
+       au-dessus du bouton. Deux animations de la même clé se mettent bout à bout (images [0,1] + [2,3]). */
+    v.forEach((k,r)=>{ if(r>0) lignes[k].classList.add("vue-suite"); if(r<v.length-1) lignes[k].classList.add("vue-avant"); });
+    fusionneDemos(v, b);
     const etatBouton = ()=>{ const tout = v.every(k=>cases[k].checked); b.setAttribute("aria-checked",String(tout)); b.classList.toggle("coche",tout);
       b.disabled = !tout && v.some(k=>cases[k].disabled && !cases[k].checked); };
     b.addEventListener("click",()=>{
       const val = !v.every(k=>cases[k].checked);
       v.forEach(k=>{ if(cases[k].checked!==val && !cases[k].disabled){ cases[k].checked = val; cases[k].dispatchEvent(new Event("change",{bubbles:true})); } });
       etatBouton(); maj(true, val ? cases[v[v.length-1]] : null);
+      if(val){ const suite = cases.findIndex(c=>!c.checked); if(suite>=0 && demoDe[suite] && !demoDe[suite].open) demoDe[suite].open = true; }
     });
     const obs = new MutationObserver(etatBouton); v.forEach(k=>obs.observe(cases[k],{attributes:true,attributeFilter:["disabled"]}));
     majBoutons.push(etatBouton);
@@ -552,7 +574,7 @@ function rythmeGestes(z){
   vue.addEventListener("click",()=>{ tousLesGestes = !tousLesGestes; maj(); });
   aide.addEventListener("click",()=>{
     const courant = cases.findIndex(c=>!c.checked);
-    const demo = courant<0 ? null : lignes[courant].querySelector("details.demo-case");
+    const demo = courant<0 ? null : demoDe[courant] || lignes[courant].querySelector("details.demo-case");
     const cible = demo || document.getElementById("coince");
     if(cible){ cible.open = true; const titre = cible.querySelector("summary"); if(titre) titre.focus(); cible.scrollIntoView({block:"nearest",behavior:matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"}); }
   });
@@ -565,7 +587,7 @@ function rythmeGestes(z){
   if(LEGER){
     const c = cases.findIndex(x=>!x.checked);
     lignes.forEach((li,k)=>{ const d = li.querySelector(":scope > details.demo-case"); if(d && d.open && k!==c) d.open = false; });
-    const d0 = c>=0 ? lignes[c].querySelector(":scope > details.demo-case") : null; if(d0 && !d0.open) d0.open = true;
+    const d0 = c<0 ? null : demoDe[c] || lignes[c].querySelector(":scope > details.demo-case"); if(d0 && !d0.open) d0.open = true;
   }
 }
 /* La case de l'accord du professeur (mode déclaratif, Rat de ville, Vincent, 20/11/2026) : {geste:'…', accord:true}.

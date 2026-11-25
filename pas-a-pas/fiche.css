@@ -173,6 +173,9 @@ form.bilan label>input[type=checkbox]{width:24px;height:24px;flex:none;margin:1p
 #bloc ol.gestes-progressifs>li.geste-actuel{outline:2px solid var(--fromage);outline-offset:3px;border-radius:8px}
 #bloc ol.etapes>li.sous-geste>label>input{display:none}
 #bloc ol.etapes>li.sous-geste>label::before{content:attr(data-n);font-weight:700;min-width:1.6em;color:var(--encre-bouton,#1f5c73)}
+#bloc ol.etapes>li.vue-avant{border-bottom-left-radius:0;border-bottom-right-radius:0;padding-bottom:4px}
+#bloc ol.etapes>li.vue-suite{margin-top:-10px;border-top-left-radius:0;border-top-right-radius:0;padding-top:4px}
+#bloc .demo-vue .demo+.demo{margin-top:10px}
 #bloc .fait-vue{display:flex;align-items:center;gap:10px;margin:12px 0 2px;padding:8px 16px;font:inherit;font-weight:700;border:2px solid var(--fromage,#b7791f);border-radius:10px;background:var(--carte,#fff);color:var(--encre,#1b2a33);cursor:pointer}
 #bloc .fait-vue .boite{width:22px;height:22px;border:2px solid currentColor;border-radius:6px;display:inline-grid;place-items:center}
 #bloc .fait-vue.coche .boite::after{content:"✓";font-weight:800}
