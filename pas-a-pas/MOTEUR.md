@@ -98,7 +98,9 @@ Un texte à trous peut porter `effacer:'<p>…</p>'` : une fois réussi, ce HTML
 **Écran léger** (`const ECRAN_LEGER = true` dans la fiche, Rat de ville). Le moins possible d'autres éléments
 pendant l'action : le titre de l'étape n'est écrit qu'une fois, la ligne « Bloc N sur M · Partie » disparaît,
 « À observer » se replie au premier geste coché. Un panneau de la page marqué `data-etapes="2"` ne s'affiche
-qu'à cette étape (le texte à recopier du Rat). Les autres cours ne sont pas concernés.
+qu'à cette étape (le texte à recopier du Rat). Les autres cours ne sont pas concernés. À l'ouverture d'une vue, seule
+l'animation de la case à faire est ouverte. Hors mode déclaratif (Messagerie 02), « À observer » reste ouvert au retour sur
+un bloc : les cases n'y sont gardées que sur le poste.
 
 ## Les preuves
 
