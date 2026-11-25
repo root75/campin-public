@@ -1,5 +1,5 @@
 {
- "maj": "2026-11-24",
+ "maj": "2026-11-25",
  "actus": [
   {
    "titre": "Tes 3 infos de la semaine : les Restos du cœur, l’eau manque en Guyane, le succès mondial du jeu vidéo GTA 6",
@@ -42,6 +42,16 @@
    "source": "1jour1actu"
   },
   {
+   "titre": "Eddy Merckx a été reçu par le pape Léon XIV au Vatican",
+   "lien": "https://www.lejde.be/monde/2026/11/25/eddy-merckx-a-ete-recu-par-le-pape-leon-xiv-au-vatican-47901/",
+   "source": "Le JDE"
+  },
+  {
+   "titre": "À Gembloux, des enfants ont découvert la vie d’enfants résistants chez nous (Vidéo)",
+   "lien": "https://www.lejde.be/belgique/2026/11/25/a-gembloux-des-enfants-ont-decouvert-la-vie-denfants-resistants-chez-nous-video-47889/",
+   "source": "Le JDE"
+  },
+  {
    "titre": "Si tu avais une baguette magique…",
    "lien": "https://www.lejde.be/belgique/2026/11/23/si-tu-avais-une-baguette-magique-47885/",
    "source": "Le JDE"
@@ -69,16 +79,6 @@
   {
    "titre": "Nelle, 16 ans, veut faire entendre la voix des jeunes dans sa chanson",
    "lien": "https://www.lejde.be/belgique/2026/11/18/nelle-16-ans-veut-faire-entendre-la-voix-des-jeunes-dans-sa-chanson-47733/",
-   "source": "Le JDE"
-  },
-  {
-   "titre": "Les droits de l’Enfant expliqués par Jonathan Crickx, de l’UNICEF, invité du JDE en classe (vidéo)",
-   "lien": "https://www.lejde.be/monde/2026/11/18/les-droits-de-lenfant-expliques-par-jonathan-crickx-de-lunicef-invite-du-jde-en-classe-video-47690/",
-   "source": "Le JDE"
-  },
-  {
-   "titre": "Gaston en Équateur: de la forêt amazonienne aux sommets des volcans",
-   "lien": "https://www.lejde.be/monde/2026/11/17/gaston-en-equateur-de-la-foret-amazonienne-aux-sommets-des-volcans-47702/",
    "source": "Le JDE"
   }
  ]
