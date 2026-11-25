@@ -1,0 +1,556 @@
+{
+  "note": "Le défi du jour du portail (portail/portail.js). Défis écrits pour le site : aucun énoncé beOI ni Castor recopié. Un défi change chaque jour d'école (lundi-vendredi), dans l'ordre de la liste, puis la liste recommence. Ajouter un défi = un objet en fin de liste. type : « nombre », « mot » (comparé sans majuscules, accents ni espaces) ou « choix » (reponse = le texte exact d'un des choix). « beoi » : les tâches du lab beOI vers lesquelles pointe « Pour aller plus loin », une par jour, à tour de rôle ; liens seulement. Liste relevée sur lab.be-oi.be (Épreuve logique) le 25/11/2026.",
+  "beoi": [
+    {
+      "titre": "Construction d'Aqueducs",
+      "annee": "2026",
+      "url": "https://lab.be-oi.be/fr/a/7689663970697417919;p=1,7122528748040789673,4429983549991579600,398292481587261741;pa=0"
+    },
+    {
+      "titre": "Dessin de chenilles",
+      "annee": "2026",
+      "url": "https://lab.be-oi.be/fr/a/4800714035277318569;p=1,7122528748040789673,4429983549991579600,398292481587261741;pa=0"
+    },
+    {
+      "titre": "Ecureuil",
+      "annee": "2026",
+      "url": "https://lab.be-oi.be/fr/a/7871533486360963184;p=1,7122528748040789673,4429983549991579600,398292481587261741;pa=0"
+    },
+    {
+      "titre": "Collecte de fleurs en drone",
+      "annee": "2026",
+      "url": "https://lab.be-oi.be/fr/a/561139162296992139;p=1,7122528748040789673,4429983549991579600,398292481587261741;pa=0"
+    },
+    {
+      "titre": "Propagation de rumeur",
+      "annee": "2026",
+      "url": "https://lab.be-oi.be/fr/a/8427022839807945710;p=1,7122528748040789673,4429983549991579600,398292481587261741;pa=0"
+    },
+    {
+      "titre": "Jardin Potager",
+      "annee": "2025",
+      "url": "https://lab.be-oi.be/fr/a/8917571622281739712;p=1,7122528748040789673,4429983549991579600,5630113392634216631;pa=0"
+    },
+    {
+      "titre": "Dans le noir",
+      "annee": "2025",
+      "url": "https://lab.be-oi.be/fr/a/2115998377475179901;p=1,7122528748040789673,4429983549991579600,5630113392634216631;pa=0"
+    },
+    {
+      "titre": "Moutons",
+      "annee": "2025",
+      "url": "https://lab.be-oi.be/fr/a/1951066926096378049;p=1,7122528748040789673,4429983549991579600,5630113392634216631;pa=0"
+    },
+    {
+      "titre": "Pixels",
+      "annee": "2025",
+      "url": "https://lab.be-oi.be/fr/a/321813872389245573;p=1,7122528748040789673,4429983549991579600,5630113392634216631;pa=0"
+    },
+    {
+      "titre": "Rivière",
+      "annee": "2025",
+      "url": "https://lab.be-oi.be/fr/a/6491352114587091062;p=1,7122528748040789673,4429983549991579600,5630113392634216631;pa=0"
+    },
+    {
+      "titre": "Pipes",
+      "annee": "2024",
+      "url": "https://lab.be-oi.be/fr/a/5169009206310298744;p=1,7122528748040789673,4429983549991579600,4736949435726225208;pa=0"
+    },
+    {
+      "titre": "Caméléons",
+      "annee": "2024",
+      "url": "https://lab.be-oi.be/fr/a/1780378110258388033;p=1,7122528748040789673,4429983549991579600,4736949435726225208;pa=0"
+    },
+    {
+      "titre": "Mining",
+      "annee": "2024",
+      "url": "https://lab.be-oi.be/fr/a/211238183304460402;p=1,7122528748040789673,4429983549991579600,4736949435726225208;pa=0"
+    },
+    {
+      "titre": "Panneaux de redirection",
+      "annee": "2024",
+      "url": "https://lab.be-oi.be/fr/a/6180041273616159440;p=1,7122528748040789673,4429983549991579600,4736949435726225208;pa=0"
+    },
+    {
+      "titre": "Railroad",
+      "annee": "2024",
+      "url": "https://lab.be-oi.be/fr/a/5742113957590858103;p=1,7122528748040789673,4429983549991579600,4736949435726225208;pa=0"
+    },
+    {
+      "titre": "Binary Shift",
+      "annee": "2024",
+      "url": "https://lab.be-oi.be/fr/a/7485897687803735875;p=1,7122528748040789673,4429983549991579600,4736949435726225208;pa=0"
+    },
+    {
+      "titre": "Développeurs",
+      "annee": "2023",
+      "url": "https://lab.be-oi.be/fr/a/3444439624433943908;p=1,7122528748040789673,4429983549991579600,4859952709750544137;pa=0"
+    },
+    {
+      "titre": "Dessin interactif",
+      "annee": "2023",
+      "url": "https://lab.be-oi.be/fr/a/1521956955367658125;p=1,7122528748040789673,4429983549991579600,4859952709750544137;pa=0"
+    },
+    {
+      "titre": "Différence de taille",
+      "annee": "2023",
+      "url": "https://lab.be-oi.be/fr/a/8139576605625458741;p=1,7122528748040789673,4429983549991579600,4859952709750544137;pa=0"
+    },
+    {
+      "titre": "Chocolat aux noisettes",
+      "annee": "2023",
+      "url": "https://lab.be-oi.be/fr/a/260640428008412804;p=1,7122528748040789673,4429983549991579600,4859952709750544137;pa=0"
+    },
+    {
+      "titre": "Escape Game",
+      "annee": "2023",
+      "url": "https://lab.be-oi.be/fr/a/7276559136288207882;p=1,7122528748040789673,4429983549991579600,4859952709750544137;pa=0"
+    },
+    {
+      "titre": "Constructions de formes",
+      "annee": "2023",
+      "url": "https://lab.be-oi.be/fr/a/7632643564338185720;p=1,7122528748040789673,4429983549991579600,4859952709750544137;pa=0"
+    },
+    {
+      "titre": "Téléportation",
+      "annee": "2023",
+      "url": "https://lab.be-oi.be/fr/a/441951195638186298;p=1,7122528748040789673,4429983549991579600,4859952709750544137;pa=0"
+    },
+    {
+      "titre": "Des hauts et des bas",
+      "annee": "2022",
+      "url": "https://lab.be-oi.be/fr/a/9169216995645274882;p=1,7122528748040789673,4429983549991579600,9213374170631325640;pa=0"
+    },
+    {
+      "titre": "Tours identiques",
+      "annee": "2022",
+      "url": "https://lab.be-oi.be/fr/a/3893945251386257228;p=1,7122528748040789673,4429983549991579600,9213374170631325640;pa=0"
+    },
+    {
+      "titre": "Frog",
+      "annee": "2022",
+      "url": "https://lab.be-oi.be/fr/a/8686620504012247069;p=1,7122528748040789673,4429983549991579600,9213374170631325640;pa=0"
+    },
+    {
+      "titre": "Gestion client",
+      "annee": "2022",
+      "url": "https://lab.be-oi.be/fr/a/5782213900483945627;p=1,7122528748040789673,4429983549991579600,9213374170631325640;pa=0"
+    },
+    {
+      "titre": "Boîtes",
+      "annee": "2022",
+      "url": "https://lab.be-oi.be/fr/a/2768081333060566675;p=1,7122528748040789673,4429983549991579600,9213374170631325640;pa=0"
+    },
+    {
+      "titre": "Billes renversantes",
+      "annee": "2022",
+      "url": "https://lab.be-oi.be/fr/a/5340637174518436676;p=1,7122528748040789673,4429983549991579600,9213374170631325640;pa=0"
+    },
+    {
+      "titre": "Poursuite",
+      "annee": "2022",
+      "url": "https://lab.be-oi.be/fr/a/1820501093760704765;p=1,7122528748040789673,4429983549991579600,9213374170631325640;pa=0"
+    },
+    {
+      "titre": "Balance Asymétrique",
+      "annee": "2019",
+      "url": "https://lab.be-oi.be/fr/a/2042297459471772374;p=1,7122528748040789673,4429983549991579600,6074694859858701157;pa=0"
+    },
+    {
+      "titre": "Attraper le monstre",
+      "annee": "2019",
+      "url": "https://lab.be-oi.be/fr/a/4932416434129832371;p=1,7122528748040789673,4429983549991579600,6074694859858701157;pa=0"
+    },
+    {
+      "titre": "Terriers",
+      "annee": "2019",
+      "url": "https://lab.be-oi.be/fr/a/7592804107679064369;p=1,7122528748040789673,4429983549991579600,6074694859858701157;pa=0"
+    },
+    {
+      "titre": "Chemins distincts",
+      "annee": "2019",
+      "url": "https://lab.be-oi.be/fr/a/7185300479114156856;p=1,7122528748040789673,4429983549991579600,6074694859858701157;pa=0"
+    },
+    {
+      "titre": "Potions Magiques",
+      "annee": "2019",
+      "url": "https://lab.be-oi.be/fr/a/4451969252286176361;p=1,7122528748040789673,4429983549991579600,6074694859858701157;pa=0"
+    },
+    {
+      "titre": "Labyrinthe",
+      "annee": "2019",
+      "url": "https://lab.be-oi.be/fr/a/3856610305555765783;p=1,7122528748040789673,4429983549991579600,6074694859858701157;pa=0"
+    },
+    {
+      "titre": "Rectangles inversés",
+      "annee": "2018",
+      "url": "https://lab.be-oi.be/fr/a/1442126640266958298;p=1,7122528748040789673,4429983549991579600,6672101407745832741;pa=0"
+    },
+    {
+      "titre": "Langage de formes",
+      "annee": "2018",
+      "url": "https://lab.be-oi.be/fr/a/1604752087518878667;p=1,7122528748040789673,4429983549991579600,6672101407745832741;pa=0"
+    },
+    {
+      "titre": "Tour infernale",
+      "annee": "2018",
+      "url": "https://lab.be-oi.be/fr/a/7060306083615445280;p=1,7122528748040789673,4429983549991579600,6672101407745832741;pa=0"
+    },
+    {
+      "titre": "Points de départ",
+      "annee": "2018",
+      "url": "https://lab.be-oi.be/fr/a/4509827120919514154;p=1,7122528748040789673,4429983549991579600,6672101407745832741;pa=0"
+    },
+    {
+      "titre": "Variables",
+      "annee": "2017",
+      "url": "https://lab.be-oi.be/fr/a/5492388120176427003;p=1,7122528748040789673,4429983549991579600,4852546573863309097;pa=0"
+    },
+    {
+      "titre": "Annuaire téléphonique",
+      "annee": "2017",
+      "url": "https://lab.be-oi.be/fr/a/3845361964310319223;p=1,7122528748040789673,4429983549991579600,4852546573863309097;pa=0"
+    },
+    {
+      "titre": "Planet Express",
+      "annee": "2017",
+      "url": "https://lab.be-oi.be/fr/a/9079614649053085495;p=1,7122528748040789673,4429983549991579600,4852546573863309097;pa=0"
+    },
+    {
+      "titre": "Automate postal",
+      "annee": "2017",
+      "url": "https://lab.be-oi.be/fr/a/2477537870695929381;p=1,7122528748040789673,4429983549991579600,4852546573863309097;pa=0"
+    }
+  ],
+  "defis": [
+    {
+      "id": "robot-ligne",
+      "titre": "Le robot sur la ligne",
+      "enonce": [
+        "Un robot est sur la case 0 d'une longue ligne de cases numérotées.",
+        "Il suit ce programme : avance de 3, recule de 1, avance de 3, recule de 1, avance de 3.",
+        "Sur quelle case s'arrête-t-il ?"
+      ],
+      "type": "nombre",
+      "reponse": "7",
+      "indice": "Écris la case après chaque ordre : 3, puis 2, puis…",
+      "explication": "3 − 1 + 3 − 1 + 3 = 7. Il s'arrête sur la case 7."
+    },
+    {
+      "id": "repete",
+      "titre": "Répète 5 fois",
+      "enonce": [
+        "Le robot part de la case 0.",
+        "Programme : RÉPÈTE 5 FOIS [ avance de 3, recule de 1 ].",
+        "Sur quelle case s'arrête-t-il ?"
+      ],
+      "type": "nombre",
+      "reponse": "10",
+      "indice": "Un tour de la boucle fait gagner combien de cases ?",
+      "explication": "Un tour fait gagner 3 − 1 = 2 cases. 5 tours : 5 × 2 = 10."
+    },
+    {
+      "id": "pile",
+      "titre": "La pile d'assiettes",
+      "enonce": [
+        "On empile des assiettes : A, puis B, puis C.",
+        "On retire une assiette, on pose D, puis E.",
+        "On retire encore deux assiettes.",
+        "Quelle assiette est maintenant tout en haut ?"
+      ],
+      "type": "choix",
+      "choix": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "reponse": "B",
+      "indice": "On ne peut retirer que l'assiette du dessus.",
+      "explication": "On retire C : il reste A, B. On pose D et E : A, B, D, E. On retire E puis D : il reste A, B. B est en haut."
+    },
+    {
+      "id": "file",
+      "titre": "La file du self",
+      "enonce": [
+        "Dans la file du self : Ana, Ben, Chloé (Ana est la première).",
+        "Dan arrive, puis Éva. On sert deux personnes.",
+        "Fred arrive. On sert encore une personne.",
+        "Qui est maintenant le premier de la file ?"
+      ],
+      "type": "choix",
+      "choix": [
+        "Chloé",
+        "Dan",
+        "Éva",
+        "Fred"
+      ],
+      "reponse": "Dan",
+      "indice": "Dans une file, on sert toujours celui qui est arrivé le premier.",
+      "explication": "On sert Ana et Ben : Chloé, Dan, Éva. Fred arrive derrière. On sert Chloé : Dan est le premier."
+    },
+    {
+      "id": "cesar",
+      "titre": "Le message codé",
+      "enonce": [
+        "Pour coder un mot, on remplace chaque lettre par la suivante dans l'alphabet : A devient B, B devient C… et Z devient A.",
+        "Le message codé est : DIBU",
+        "Quel est le mot d'origine ?"
+      ],
+      "type": "mot",
+      "reponse": "chat",
+      "indice": "Pour décoder, remplace chaque lettre par celle qui la précède.",
+      "explication": "D → C, I → H, B → A, U → T : CHAT."
+    },
+    {
+      "id": "poids",
+      "titre": "Les poids",
+      "enonce": [
+        "Tu as quatre poids : 1 kg, 2 kg, 4 kg et 8 kg (un de chaque).",
+        "Tu veux exactement 13 kg sur un seul plateau.",
+        "Combien de poids faut-il utiliser ?"
+      ],
+      "type": "nombre",
+      "reponse": "3",
+      "indice": "Commence par le plus gros poids qui ne dépasse pas 13.",
+      "explication": "8 + 4 + 1 = 13 : trois poids. C'est comme ça qu'un ordinateur écrit 13 en binaire : 1101."
+    },
+    {
+      "id": "rang",
+      "titre": "Qui est premier ?",
+      "enonce": [
+        "Lina, Tom, Zoé et Max font la file.",
+        "Lina n'est pas la première.",
+        "Tom est juste derrière Lina.",
+        "Zoé est la dernière.",
+        "Qui est le premier ?"
+      ],
+      "type": "choix",
+      "choix": [
+        "Lina",
+        "Tom",
+        "Zoé",
+        "Max"
+      ],
+      "reponse": "Max",
+      "indice": "Place d'abord Zoé, puis le duo Lina-Tom.",
+      "explication": "Zoé est 4e. Lina et Tom se suivent et Lina n'est pas 1re : Lina 2e, Tom 3e. Max est premier."
+    },
+    {
+      "id": "cadenas",
+      "titre": "Le cadenas",
+      "enonce": [
+        "Un cadenas a un code de trois chiffres.",
+        "Les trois chiffres sont différents, rangés du plus petit au plus grand, et aucun n'est 0.",
+        "Leur somme fait 6.",
+        "Quel est le code ?"
+      ],
+      "type": "nombre",
+      "reponse": "123",
+      "indice": "Cherche trois chiffres différents, sans 0, qui font 6 ensemble.",
+      "explication": "Le seul trio possible est 1, 2, 3 (1 + 2 + 3 = 6). Le code est 123."
+    },
+    {
+      "id": "chemin",
+      "titre": "Le plus court chemin",
+      "enonce": [
+        "Temps à vélo entre des villages :",
+        "A–B : 4 min · B–D : 3 min · A–C : 2 min · C–D : 6 min · C–B : 1 min",
+        "Combien de minutes faut-il, au minimum, pour aller de A à D ?"
+      ],
+      "type": "nombre",
+      "reponse": "6",
+      "indice": "Le chemin le plus court n'est pas toujours celui qui passe par le moins de villages.",
+      "explication": "A → C → B → D : 2 + 1 + 3 = 6 minutes. A → B → D fait 7, A → C → D fait 8."
+    },
+    {
+      "id": "echanges",
+      "titre": "Ranger en échangeant",
+      "enonce": [
+        "Trois cartes sont posées dans cet ordre : 3 1 2",
+        "À chaque coup, tu peux échanger deux cartes voisines.",
+        "Combien de coups faut-il, au minimum, pour obtenir 1 2 3 ?"
+      ],
+      "type": "nombre",
+      "reponse": "2",
+      "indice": "Le 3 doit aller tout à droite : combien de cartes doit-il dépasser ?",
+      "explication": "3 1 2 → 1 3 2 → 1 2 3 : deux coups."
+    },
+    {
+      "id": "pixels",
+      "titre": "La ligne de pixels",
+      "enonce": [
+        "Une ligne de pixels est écrite en abrégé : « 2B 3N 1B » veut dire blanc, blanc, noir, noir, noir, blanc.",
+        "Voici une autre ligne : 1N 4B 2N 1B 3N",
+        "Combien de pixels noirs compte-t-elle ?"
+      ],
+      "type": "nombre",
+      "reponse": "6",
+      "indice": "N veut dire noir. Additionne seulement les nombres devant un N.",
+      "explication": "1 + 2 + 3 = 6 pixels noirs. Cette façon d'abréger sert à compresser les images."
+    },
+    {
+      "id": "si-sinon",
+      "titre": "Si… sinon…",
+      "enonce": [
+        "x vaut 5.",
+        "Règle : si x est pair, x devient x ÷ 2 ; sinon, x devient x + 1.",
+        "On applique la règle trois fois de suite.",
+        "Que vaut x à la fin ?"
+      ],
+      "type": "nombre",
+      "reponse": "4",
+      "indice": "5 est impair : on commence donc par ajouter 1.",
+      "explication": "5 → 6 → 3 → 4. x vaut 4."
+    },
+    {
+      "id": "billes",
+      "titre": "La bille trop lourde",
+      "enonce": [
+        "Tu as 9 billes identiques, sauf une, un peu plus lourde.",
+        "Tu as une balance à deux plateaux (elle dit seulement quel côté est le plus lourd).",
+        "Combien de pesées faut-il, au minimum, pour être sûr de trouver la lourde ?"
+      ],
+      "type": "nombre",
+      "reponse": "2",
+      "indice": "Fais trois groupes de trois.",
+      "explication": "Pesée 1 : trois billes contre trois. Tu sais dans quel groupe de trois est la lourde. Pesée 2 : une contre une, dans ce groupe. Deux pesées suffisent."
+    },
+    {
+      "id": "motif",
+      "titre": "Le motif",
+      "enonce": [
+        "Le motif se répète : ▲ ● ■ ▲ ● ■ ▲ ● ■ …",
+        "Quel symbole est en 20e position ?"
+      ],
+      "type": "choix",
+      "choix": [
+        "▲",
+        "●",
+        "■"
+      ],
+      "reponse": "●",
+      "indice": "Le motif revient toutes les 3 positions. Où tombe la 18e ?",
+      "explication": "La 18e position est un ■ (18 = 6 × 3). La 19e est un ▲, la 20e un ●."
+    },
+    {
+      "id": "tournoi",
+      "titre": "Le tournoi",
+      "enonce": [
+        "16 joueurs s'affrontent. À chaque match, le perdant est éliminé.",
+        "Combien de matchs faut-il pour avoir un seul vainqueur ?"
+      ],
+      "type": "nombre",
+      "reponse": "15",
+      "indice": "Chaque match élimine exactement un joueur. Combien faut-il en éliminer ?",
+      "explication": "Il faut éliminer 15 joueurs, et chaque match en élimine un : 15 matchs."
+    },
+    {
+      "id": "variables",
+      "titre": "Les deux boîtes",
+      "enonce": [
+        "Au départ, a = 3 et b = 7.",
+        "On fait, dans l'ordre : a prend la valeur a + b ; puis b prend la valeur a − b ; puis a prend la valeur a − b.",
+        "Que vaut a à la fin ?"
+      ],
+      "type": "nombre",
+      "reponse": "7",
+      "indice": "Note a et b après chaque ligne.",
+      "explication": "a = 10 ; puis b = 10 − 7 = 3 ; puis a = 10 − 3 = 7. Les deux valeurs ont été échangées !"
+    },
+    {
+      "id": "menteurs",
+      "titre": "Qui dit vrai ?",
+      "enonce": [
+        "Alice dit : « Bob ment. »",
+        "Bob dit : « Chloé ment. »",
+        "Chloé dit : « Alice et Bob mentent tous les deux. »",
+        "Chacun dit toujours vrai ou ment toujours. Qui dit vrai ?"
+      ],
+      "type": "choix",
+      "choix": [
+        "Alice seule",
+        "Bob seul",
+        "Chloé seule",
+        "Alice et Chloé"
+      ],
+      "reponse": "Bob seul",
+      "indice": "Suppose que Chloé dit vrai, et regarde ce que ça donne pour Alice.",
+      "explication": "Si Chloé disait vrai, Alice mentirait, donc Bob dirait vrai : impossible. Chloé ment, donc Bob dit vrai, donc Alice ment."
+    },
+    {
+      "id": "grille",
+      "titre": "Le robot sur la grille",
+      "enonce": [
+        "Une grille a des colonnes A à E (de gauche à droite) et des lignes 1 à 5 (de bas en haut).",
+        "Le robot part de A1. Il suit : ↑ ↑ → → → ↓",
+        "Sur quelle case arrive-t-il ? (exemple de réponse : B4)"
+      ],
+      "type": "mot",
+      "reponse": "d2",
+      "indice": "↑ change le numéro de ligne, → change la lettre de colonne.",
+      "explication": "↑ ↑ : A3. → → → : D3. ↓ : D2."
+    },
+    {
+      "id": "chemins",
+      "titre": "Combien de chemins ?",
+      "enonce": [
+        "Un quartier a 3 rues horizontales et 3 rues verticales (comme un carré coupé en 4).",
+        "Tu vas du coin en haut à gauche au coin en bas à droite, en allant seulement vers la droite ou vers le bas.",
+        "Combien de chemins différents existent ?"
+      ],
+      "type": "nombre",
+      "reponse": "6",
+      "indice": "Chaque chemin fait 2 pas à droite et 2 pas vers le bas. Dans quel ordre ?",
+      "explication": "Il faut placer 2 « droite » parmi 4 pas : DDBB, DBDB, DBBD, BDDB, BDBD, BBDD. 6 chemins."
+    },
+    {
+      "id": "parite",
+      "titre": "Le message abîmé ?",
+      "enonce": [
+        "On envoie 4 chiffres (0 ou 1), puis un 5e chiffre choisi pour que le nombre de 1 soit toujours pair.",
+        "Tu reçois : 1 0 1 1 0",
+        "Que peux-tu dire ?"
+      ],
+      "type": "choix",
+      "choix": [
+        "Le message est correct",
+        "Il y a une erreur"
+      ],
+      "reponse": "Il y a une erreur",
+      "indice": "Compte les 1.",
+      "explication": "Il y a trois 1 : c'est impair. Un chiffre a été abîmé en route. Les ordinateurs utilisent ce « bit de parité » pour repérer les erreurs."
+    },
+    {
+      "id": "dictionnaire",
+      "titre": "Dans le dictionnaire",
+      "enonce": [
+        "On range ces mots dans l'ordre du dictionnaire : CHIEN, CANARD, CHAT, CERF.",
+        "Quel mot arrive en 2e position ?"
+      ],
+      "type": "choix",
+      "choix": [
+        "CHIEN",
+        "CANARD",
+        "CHAT",
+        "CERF"
+      ],
+      "reponse": "CERF",
+      "indice": "Tous commencent par C : compare la deuxième lettre.",
+      "explication": "CANARD (A), CERF (E), CHAT puis CHIEN (H, puis A avant I). CERF est 2e."
+    },
+    {
+      "id": "devinette",
+      "titre": "Plus grand, plus petit",
+      "enonce": [
+        "Je pense à un nombre entre 1 et 100.",
+        "À chaque essai, je te dis seulement « plus grand », « plus petit » ou « trouvé ».",
+        "Combien d'essais te faut-il, au minimum, pour être sûr de trouver, même si tu n'as pas de chance ?"
+      ],
+      "type": "nombre",
+      "reponse": "7",
+      "indice": "Commence par 50 : à chaque essai, tu peux couper ce qui reste en deux.",
+      "explication": "En coupant en deux à chaque essai : 100 → 50 → 25 → 12 → 6 → 3 → 1. Sept essais suffisent toujours, six non."
+    }
+  ]
+}
