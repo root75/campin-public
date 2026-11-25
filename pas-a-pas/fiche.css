@@ -168,10 +168,6 @@ form.bilan label>input[type=checkbox]{width:24px;height:24px;flex:none;margin:1p
 /* Le geste en cours, avec une vue complète disponible à tout moment. */
 .rythme-gestes{border:1px solid var(--trait);border-radius:12px;padding:10px 14px;margin:12px 0;background:var(--carte)}
 .rythme-statut{margin:0 0 8px;font-weight:700}
-.rythme-gestes.leger{display:grid;grid-template-columns:1fr auto;column-gap:10px;align-items:start}
-.rythme-gestes.leger .piste-gestes{grid-column:1/-1}
-.rythme-gestes .indice-gestes{font:inherit;font-size:1.15rem;line-height:1;width:34px;height:34px;padding:0;border:1px solid var(--trait);border-radius:50%;background:transparent;cursor:pointer;opacity:.75}
-.rythme-gestes .indice-gestes:hover,.rythme-gestes .indice-gestes:focus-visible{opacity:1;outline:2px solid var(--fromage,#b7791f);outline-offset:2px}
 .rythme-gestes .actions{margin:0;flex-wrap:wrap;gap:8px}
 #bloc ol.gestes-progressifs>li[hidden]{display:none!important}
 #bloc ol.gestes-progressifs>li.geste-actuel{outline:2px solid var(--fromage);outline-offset:3px;border-radius:8px}
