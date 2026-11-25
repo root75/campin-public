@@ -171,6 +171,14 @@ form.bilan label>input[type=checkbox]{width:24px;height:24px;flex:none;margin:1p
 .rythme-gestes .actions{margin:0;flex-wrap:wrap;gap:8px}
 #bloc ol.gestes-progressifs>li[hidden]{display:none!important}
 #bloc ol.gestes-progressifs>li.geste-actuel{outline:2px solid var(--fromage);outline-offset:3px;border-radius:8px}
+#bloc ol.etapes>li.sous-geste>label>input{display:none}
+#bloc ol.etapes>li.sous-geste>label::before{content:attr(data-n);font-weight:700;min-width:1.6em;color:var(--encre-bouton,#1f5c73)}
+#bloc .fait-vue{display:flex;align-items:center;gap:10px;margin:12px 0 2px;padding:8px 16px;font:inherit;font-weight:700;border:2px solid var(--fromage,#b7791f);border-radius:10px;background:var(--carte,#fff);color:var(--encre,#1b2a33);cursor:pointer}
+#bloc .fait-vue .boite{width:22px;height:22px;border:2px solid currentColor;border-radius:6px;display:inline-grid;place-items:center}
+#bloc .fait-vue.coche .boite::after{content:"✓";font-weight:800}
+#bloc .fait-vue.coche{border-color:var(--juste,#2f8f5b);color:var(--juste,#2f8f5b)}
+#bloc .fait-vue:disabled{opacity:.5;cursor:not-allowed}
+#bloc .fait-vue:focus-visible{outline:3px solid var(--fromage,#b7791f);outline-offset:2px}
 #bloc details.avant-repliable>summary{cursor:pointer;font-weight:700;margin:0 0 6px}
 #bloc details.avant-repliable:not([open]){margin-bottom:8px}
 #bloc details.avant-repliable>div>.repere.observation>h3:first-child{display:none}

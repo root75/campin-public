@@ -96,3 +96,8 @@ assert.ok(!/colonne/.test(FIN.texte)&&!actions.some(([,t])=>/colonne « Moi »/.
   assert.ok(/id="texte" data-etapes="2"/.test(page),'le texte à recopier ne s’affiche qu’à l’étape 2');
   console.log('OK Rat de ville : '+vues+' vues.');
 }
+// Une seule case par vue (Vincent, 25/11/2026) : le bouton « C'est fait » coche en coulisse les cases d'origine ;
+// une vue qui porte l'accord du professeur garde ses cases.
+{const moteur=fs.readFileSync(__dirname+'/../pas-a-pas/blocs.js','utf8');
+assert.ok(/"fait-vue"/.test(moteur)&&/g && g\.accord; \}\)\) return;/.test(moteur),'le moteur : une case par vue, sauf accord');
+BLOCS.forEach((b,i)=>(b.ensembles||[]).forEach(e=>{if(e.length>1)assert.ok(!e.some(n=>b.gestes[n-1].accord),'étape '+(i+1)+' : l’accord reste seul dans sa vue');}));}

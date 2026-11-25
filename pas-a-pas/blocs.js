@@ -498,11 +498,33 @@ function rythmeGestes(z){
   (BLOCS[ici].ensembles||[]).forEach(e=>{ const v = e.map(n=>n-1).filter(k=>k>=0 && k<cases.length && vueDe[k]<0); if(v.length){ v.forEach(k=>{ vueDe[k] = vues.length; }); vues.push(v); } });
   cases.forEach((c,k)=>{ if(vueDe[k]<0){ vueDe[k] = vues.length; vues.push([k]); } });
   vues.sort((a,b)=>a[0]-b[0]); vues.forEach((v,i)=>v.forEach(k=>{ vueDe[k] = i; }));
+  /* Une seule case par vue (Vincent, 25/11/2026) : dans une vue de plusieurs cases, les gestes sont numérotés sans
+     case, et un seul bouton « C'est fait » coche en coulisse toutes les cases de la vue. Les cases d'origine restent
+     (clés « étape.rang », serveur, tableau) : seule leur case disparaît de l'écran. Une vue qui porte un accord du
+     professeur garde ses cases. Le bouton est grisé tant qu'une case de la vue est verrouillée (accord, texte à trous). */
+  const boutonDe = cases.map(()=>null), majBoutons = [];
+  vues.forEach(v=>{
+    if(v.length<2 || v.some(k=>{ const g = (BLOCS[ici].gestes||[])[k]; return g && g.accord; })) return;
+    v.forEach((k,r)=>{ lignes[k].classList.add("sous-geste"); lignes[k].querySelector(":scope > label").dataset.n = (r+1)+"."; });
+    const b = el("button","fait-vue"); b.type = "button"; b.setAttribute("role","checkbox");
+    b.append(el("span","boite"), txt("span",null,"C’est fait")); b.firstChild.setAttribute("aria-hidden","true");
+    lignes[v[v.length-1]].append(b); v.forEach(k=>{ boutonDe[k] = b; });
+    const etatBouton = ()=>{ const tout = v.every(k=>cases[k].checked); b.setAttribute("aria-checked",String(tout)); b.classList.toggle("coche",tout);
+      b.disabled = !tout && v.some(k=>cases[k].disabled && !cases[k].checked); };
+    b.addEventListener("click",()=>{
+      const val = !v.every(k=>cases[k].checked);
+      v.forEach(k=>{ if(cases[k].checked!==val && !cases[k].disabled){ cases[k].checked = val; cases[k].dispatchEvent(new Event("change",{bubbles:true})); } });
+      etatBouton(); maj(true, val ? cases[v[v.length-1]] : null);
+    });
+    const obs = new MutationObserver(etatBouton); v.forEach(k=>obs.observe(cases[k],{attributes:true,attributeFilter:["disabled"]}));
+    majBoutons.push(etatBouton);
+  });
   const maj = (deplace=false, gesteCoche=null)=>{
     const courant = cases.findIndex(c=>!c.checked), faits = cases.filter(c=>c.checked).length;
     const vue_ = courant<0 ? -1 : vueDe[courant], groupe = vues.length<cases.length;
+    const vuesFaites = vues.filter(v=>v.every(k=>cases[k].checked)).length;
     statut.textContent = courant<0 ? (consignes ? "Toutes les consignes sont cochées." : "Tous les gestes sont cochés.")
-      : groupe ? "Partie "+(vue_+1)+" sur "+vues.length+" · "+faits+" case"+(faits>1 ? "s" : "")+" cochée"+(faits>1 ? "s" : "")+" sur "+cases.length+". Coche après avoir fait chaque action."
+      : groupe ? "Partie "+(vue_+1)+" sur "+vues.length+" · "+vuesFaites+" faite"+(vuesFaites>1 ? "s" : "")+". Fais les gestes dans l’ordre, puis coche."
       : (consignes || "Geste")+" "+(courant+1)+" sur "+cases.length+" · "+faits+(consignes ? " accomplie" : " accompli")+(faits>1 ? "s" : "")+". Coche après avoir fait l’action.";
     vue.textContent = tousLesGestes ? (consignes ? "Une consigne à la fois" : "Un geste à la fois") : (consignes ? "Voir toutes les consignes" : "Voir tous les gestes");
     vue.setAttribute("aria-pressed",String(tousLesGestes));
@@ -510,19 +532,20 @@ function rythmeGestes(z){
       li.value = k+1;
       li.hidden = !tousLesGestes && courant>=0 && vueDe[k]!==vue_;
       if(li.hidden) li.querySelectorAll("details.demo-case[open]").forEach(d=>{ d.open = false; });
-      li.classList.toggle("geste-actuel",k===courant);
+      li.classList.toggle("geste-actuel",k===courant && !boutonDe[k]);
       li.classList.toggle("geste-accompli",cases[k].checked);
     });
     segments.forEach((segment,k)=>{
       segment.classList.toggle("rempli",cases[k].checked);
       segment.classList.toggle("vient-de-remplir",cases[k]===gesteCoche);
     });
+    majBoutons.forEach(f=>f());
     if(gesteCoche){ const av = z.querySelector("details.avant-repliable"); if(av) av.open = false; }   // écran léger : « À observer » se replie au premier geste
     etoile.classList.toggle("complete",courant<0);
     etoile.classList.toggle("celebre",courant<0 && gesteCoche!==null);
     aide.hidden = courant<0;
     if(deplace && !tousLesGestes){
-      const cible = courant<0 ? vue : cases[courant].disabled ? lignes[courant].querySelector("button") || vue : cases[courant];
+      const cible = courant<0 ? vue : boutonDe[courant] && !boutonDe[courant].disabled ? boutonDe[courant] : cases[courant].disabled ? lignes[courant].querySelector("button") || vue : cases[courant];
       cible.focus({preventScroll:true});
     }
   };
