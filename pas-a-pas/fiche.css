@@ -226,3 +226,11 @@ body.en-sequence #tresor.pot-classe{padding:8px 14px}
 }
 
 @media print{#tresor.pot-classe{display:none}}
+
+/* Grille critériée d'un mail coté (Messagerie 02, 25/11/2026) : un critère par ligne, ses points à droite. */
+#bloc .grille-mail ol{list-style:none;padding:0;margin:6px 0 0;display:grid;gap:4px}
+#bloc .grille-mail li,#bloc .grille-mail .total{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:5px 0;border-bottom:1px solid var(--trait)}
+#bloc .grille-mail .critere{flex:1;display:grid;grid-template-columns:7.5em 1fr;column-gap:10px}
+#bloc .grille-mail .pt{font-weight:800;white-space:nowrap;color:var(--fromage,#b7791f)}
+#bloc .grille-mail .total{border-bottom:0;margin:2px 0 0;font-weight:800}
+@media(max-width:560px){#bloc .grille-mail .critere{grid-template-columns:1fr}}

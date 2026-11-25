@@ -56,7 +56,21 @@ function carteMail(t){
 }
 
 const PROF = 'tape <b>Louviaux</b> (2B, 2F) ou <b>Michiels</b> (2E)';
-const COTE = '<aside class="repere cote"><h3>⚠ Ta réponse au professeur est cotée sur 5</h3><ol><li>C’est une <b>réponse</b> à son message (bouton Répondre) : l’objet commence par <b>RE:</b>.</li><li>Ta fiche <b>complétée</b> est <b>jointe</b> : sa carte est sous l’objet.</li><li>Le texte commence par « <b>Bonjour Monsieur,</b> » (2E : « <b>Bonjour Madame,</b> »).</li><li>Des <b>phrases complètes</b>, avec une majuscule et un point ; pas de langage SMS.</li><li>Le message finit par ton <b>prénom</b>, ton <b>nom</b> et ta <b>classe</b>.</li></ol></aside>';
+/* Les mails cotés (Vincent, 25/11/2026) : une petite grille critériée sous l'avertissement, un point par critère,
+   pour que l'élève sache comment obtenir tous ses points. La réponse (blocs 8 et 9) sur 5, le transfert (bloc 10) sur 3. */
+const grilleMail = (titre, criteres) => '<aside class="repere cote grille-mail"><h3>⚠ '+titre+'</h3><ol>'
+  +criteres.map(([nom, texte])=>'<li><span class="critere"><b class="nom">'+nom+'</b><span>'+texte+'</span></span><span class="pt">/1</span></li>').join('')
+  +'</ol><p class="total"><span>Total</span><span class="pt">/'+criteres.length+'</span></p></aside>';
+const COTE = grilleMail('Ta réponse au professeur est cotée sur 5', [
+  ['Objet', 'C’est une <b>réponse</b> à son message (bouton Répondre) : l’objet commence par <b>RE:</b>.'],
+  ['Pièce jointe', 'Ta fiche <b>complétée</b> est <b>jointe</b> : sa carte est sous l’objet.'],
+  ['Salutation', 'Le texte commence par « <b>Bonjour Monsieur,</b> » (2E : « <b>Bonjour Madame,</b> »).'],
+  ['Phrases', 'Des <b>phrases complètes</b>, avec une majuscule et un point ; pas de langage SMS.'],
+  ['Signature', 'Le message finit par ton <b>prénom</b>, ton <b>nom</b> et ta <b>classe</b>.']]);
+const COTE_TR = grilleMail('Ton transfert est coté sur 3', [
+  ['Objet', 'C’est un <b>transfert</b> (bouton Transférer) : l’objet commence par <b>TR:</b>.'],
+  ['Pièce jointe', 'La <b>fiche</b> part avec le message : sa carte est sous l’objet.'],
+  ['Destinataires', 'Ton <b>voisin</b> est dans <b>À</b>, ton <b>professeur</b> dans <b>Cc</b>, deux adresses en <b>@arcampin.be</b>.']]);
 const REEL = '<p class="reel"><span>À partir d’ici, <b>tout est réel</b> : tu travailles dans Outlook. Garde deux onglets : cette fiche et Courrier.</span> <a class="btn vide" href="https://outlook.cloud.microsoft/mail/" target="_blank" rel="noopener">Ouvrir Courrier ↗</a></p>';
 
 const BLOCS = [
@@ -128,7 +142,8 @@ const BLOCS = [
   scene:{avant:['📤','Dernière vérification avant de souffler…'],juste:['📬','Vérifié : tout est bien parti.'],faux:['🔎','Pas encore : regarde à nouveau dans Outlook.']},
   q:{serveur:true}},
  {partie:'D — Je transfère', titre:'Transférer au voisin, professeur en Cc', min:8, ensembles:[[1,2],[3,4],[5,6]],
-  veux:'Faire suivre le message de mon professeur à mon voisin, avec la fiche. Mon professeur est en copie (Cc) : il voit que je sais transférer. Pas de cote.',
+  veux:'Faire suivre le message de mon professeur à mon voisin, avec la fiche. Mon professeur est en copie (Cc) : il voit que je sais transférer.',
+  extra:COTE_TR,
   gestes:['À gauche, <b>Boîte de réception</b> ▸ ouvre le message « Ta fiche à compléter ».','Clique sur <b>↪ Transférer</b> (touche Shift+F) : sous le message, ou l’icône en haut à droite du message.','Dans <b>À</b>, tape le nom de ton voisin ▸ clique sur la ligne qui finit par <b>@arcampin.be</b>.','Dans <b>Cc</b>, '+PROF+' ▸ clique sur la ligne qui finit par <b>@arcampin.be</b>.','Au-dessus du message, écris : « <b>Bonjour</b> » et le prénom de ton voisin, puis « Voici la fiche que nous avons reçue. », puis ton prénom.','Clique sur <b>Envoyer</b>.'],
   vois:'Dans Outlook, avant d’envoyer : l’objet commence par <b>TR:</b> et la carte de la fiche est là.',
   coince:['Le nom de mon voisin ne s’affiche pas : tape son adresse en entier, prenom.nom@arcampin.be, vérifiée avec lui.','Outlook propose plusieurs lignes pour mon professeur : choisis celle qui finit par @arcampin.be. Évite la ligne marquée « Externe ».'],
@@ -174,7 +189,7 @@ const GRILLE = {
 const FIN = {
   titre:'Bravo : tu sais ouvrir, répondre, joindre et transférer',
   bulle:'Parcours terminé !',
-  texte:'Ton professeur a reçu ta réponse (cotée sur 5) et ton transfert en copie. Ton voisin est dans tes contacts.',
+  texte:'Ton professeur a reçu ta réponse (cotée sur 5) et ton transfert en copie (coté sur 3). Ton voisin est dans tes contacts.',
   revision:{titre:'Je réponds et je joins — je révise ↗', texte:'Un quiz de 6 questions, 18 cartes, et ta fiche de révision à imprimer.', url:'https://root75.github.io/campin-public/messagerie-2/'},
   citation:{texte:'Verba volant, scripta manent.', auteur:'Proverbe latin', source:'« Les paroles s’envolent, les écrits restent. »', lien:'Un mail envoyé reste : on le relit avant de cliquer sur Envoyer.'},
   plus:'Ajoute un deuxième camarade dans tes contacts, comme au bloc 11. Si ton professeur te le propose, deviens aidant : va voir un camarade qui a sonné la cloche 🔔, explique avec des mots, ne touche pas sa souris.',
