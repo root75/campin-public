@@ -537,6 +537,13 @@ function rythmeGestes(z){
     if(cases.includes(e.target)) maj(e.isTrusted, e.isTrusted && e.target.checked ? e.target : null);
   });
   maj();
+  /* Écran léger : à l'ouverture, seule l'animation de la case à faire est ouverte. Le lecteur ouvre la première
+     animation de la liste, qui peut être celle d'une case cochée ou d'une autre case de la vue (25/11/2026). */
+  if(LEGER){
+    const c = cases.findIndex(x=>!x.checked);
+    lignes.forEach((li,k)=>{ const d = li.querySelector(":scope > details.demo-case"); if(d && d.open && k!==c) d.open = false; });
+    const d0 = c>=0 ? lignes[c].querySelector(":scope > details.demo-case") : null; if(d0 && !d0.open) d0.open = true;
+  }
 }
 /* La case de l'accord du professeur (mode déclaratif, Rat de ville, Vincent, 20/11/2026) : {geste:'…', accord:true}.
    L'élève ne la coche pas lui-même : le bouton « Je demande l'accord du professeur » sonne la cloche avec le motif
@@ -655,7 +662,7 @@ function entrainements(z, B){
     }
     /* T.effacer = du HTML qui remplace la phrase réussie : l'élève écrit ensuite avec ses mots, sans l'avoir sous les yeux. */
     const efface = () => { if(!T.effacer) return; zone.replaceChildren(el("div","apres-trous",T.effacer)); boite.querySelectorAll(":scope>p:not(.note)").forEach(p=>p.remove()); };
-    if(etat.cases[(ici+1)+"."+(k+1)] && T.effacer){ efface(); dit.textContent = T.bravo || "Juste !"; boite.classList.add("reussi"); return; }
+    if(T.effacer && (etat.cases||{})[(ici+1)+"."+(k+1)]){ efface(); dit.textContent = T.bravo || "Juste !"; boite.classList.add("reussi"); return; }
     trous(zone, V, ()=>{ caseDocs.disabled = false; dit.textContent = T.bravo || "Juste !"; boite.classList.add("reussi"); efface(); }, m=>{ dit.textContent = m; });
   });
 }
@@ -768,7 +775,7 @@ function affiche(){
     if(B.avant && LEGER && B.gestes){
       /* Écran léger : replié dès qu'une case de l'étape est cochée ; l'élève l'a lu avant de commencer. */
       const d = el("details","avant avant-repliable"), s = txt("summary",null,"À observer");
-      d.open = !B.gestes.some((g,k)=>etat.cases[(ici+1)+"."+(k+1)]);
+      d.open = !B.gestes.some((g,k)=>(etat.cases||{})[(ici+1)+"."+(k+1)]);   // hors mode déclaratif, pas de etat.cases : ouvert
       d.append(s, el("div",null,B.avant)); z.append(d);
     }
     else if(B.avant) z.append(el("div","avant",B.avant));

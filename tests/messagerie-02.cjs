@@ -123,3 +123,6 @@ cases.forEach(c=>assert.ok(/<b[\s>]/.test(c),'Messagerie 02, case sans mot en gr
 const interdit=/(?:^|[.;:!?]\s+)(?:Ne|N[’'])\s?\S+ (?:pas|jamais|ni|aucun|rien)/,sansB=c=>c.replace(/<[^>]+>/g,'').replace(/\*\*/g,'').replace(/\s+/g,' ').trim();
 cases.forEach(c=>assert.ok(!interdit.test(sansB(c))&&!/^⚠|class="attention"/.test(sansB(c)+c),'Messagerie 02, une interdiction dans une case : '+sansB(c).slice(0,70)));
 console.log('OK Messagerie 02 : '+cases.length+' cases, chacune avec son mot-clé en gras.');}
+// Un geste de sens par vue (Vincent, 25/11/2026) : survoler la carte, ▾, Modifier dans le navigateur = une vue.
+{let vues=0;F.BLOCS.forEach((B,i)=>{if(!B.gestes)return;const vu=new Set();(B.ensembles||[]).forEach(e=>e.forEach((n,k)=>{assert.ok(n>=1&&n<=B.gestes.length&&!vu.has(n),'bloc '+(i+1)+' : case '+n);assert.ok(k===0||n===e[k-1]+1,'bloc '+(i+1)+' : cases qui se suivent');vu.add(n);}));vues+=(B.ensembles||[]).length+B.gestes.length-vu.size;});
+assert.equal(vues,17,'vues de Messagerie 02');console.log('OK Messagerie 02 : '+vues+' vues.');}
