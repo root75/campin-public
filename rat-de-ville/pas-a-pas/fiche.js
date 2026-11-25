@@ -10,6 +10,9 @@ const COURS = 'rat-de-ville-formatif';
 const DECOUVERTES = [["📜", "Manuscrit ouvert"], ["🐀", "Les rats entrent en scène"], ["🧱", "Strophes en place"], ["🖋️", "Auteur signé"], ["🎨", "Polices choisies"], ["🔸", "Liste à puces"], ["🔢", "Gestes en ordre"], ["💬", "Méthode expliquée"], ["🔎", "Relecture terminée"], ["📚", "Fable remise"]];
 const PRESENTATION = 'missions';
 const MODE = 'declaratif';
+/* Pendant l'action, le moins possible d'autres éléments à l'écran (Vincent, 25/11/2026) : voir ECRAN_LEGER dans blocs.js.
+   « ensembles » d'une étape = les cases d'un même geste de sens, affichées sur une seule vue (61 cases, 45 vues). */
+const ECRAN_LEGER = true;
 const HORS_SUIVI = 'Aperçu libre — ouvre Mes cours avec ton compte scolaire pour retrouver ta progression.';
 const BASE = 'https://root75.github.io/campin-public/rat-de-ville/pas-a-pas/', ICONES = BASE + 'icones/';
 /* Repère de début de séance, y compris quand la classe reprend au milieu de la fable. */
@@ -66,7 +69,7 @@ const BLOCS = [
   "titre": "Je recopie la fable",
   "min": 30,
   "bulle": "Bon début ! Regarde bien les animations.",
-  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>J’ouvre l’image de la fiche. Je repère le titre, les vers et l’auteur avant de recopier.</p></aside><p class=\"note\">Un vers = une ligne : touche Enter au bout de chaque vers. Après le titre et au bout du 4e vers de chaque strophe, j’appuie <b>deux fois</b> sur Enter : une ligne vide sépare le titre, chaque strophe et l’auteur.</p>",
+  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>Je repère le titre, les vers et l’auteur avant de recopier. Un vers = une ligne : touche Enter au bout de chaque vers.</p></aside>",
   "gestes": [
    {
     "geste": "Tape le <b>titre</b>. Puis Enter <b>deux fois</b> : une ligne vide.",
@@ -163,6 +166,7 @@ const BLOCS = [
   "partie": "B — La mise en forme",
   "titre": "Titre, texte, auteur",
   "min": 10,
+  "ensembles": [[1, 2, 3], [4], [5, 6, 7]],
   "bulle": "Tu es lancé(e) !",
   "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>Je compare les trois zones du modèle : le titre, les strophes et l’auteur.</p><div class=\"apercu-document\" aria-label=\"Modèle de présentation des trois zones\"><p class=\"exemple-titre\">TITRE DE LA FABLE</p><p class=\"exemple-strophe\">Les strophes sont centrées.</p><p class=\"exemple-auteur\">Jean de La Fontaine</p></div></aside>",
   "gestes": [
@@ -254,6 +258,7 @@ const BLOCS = [
   "partie": "B — La mise en forme",
   "titre": "Mon bloc-notes : la liste à puces",
   "min": 5,
+  "ensembles": [[3, 4]],
   "bulle": "Déjà la moitié ! Le rat est fier de toi.",
   "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>Des puces quand l’ordre ne compte pas : les choses du festin.</p></aside>",
   "gestes": [
@@ -310,6 +315,7 @@ const BLOCS = [
   "libelleConsigne": "Consigne",
   "titre": "Écrire les six lignes de « Mes gestes »",
   "min": 10,
+  "ensembles": [[1, 2]],
   "bulle": "Presque fini, courage !",
   "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>Dans Docs, ma liste « Mes gestes » va de 1 à 6. Chaque numéro raconte une action que j’ai faite sur la fable.</p></aside><p class=\"note\">Je raconte six gestes de mise en forme, un par un. Un geste complet dit deux choses : ce que j’ai sélectionné, puis le bouton ou le menu utilisé.</p>",
   "gestes": [
@@ -451,6 +457,7 @@ const BLOCS = [
   "libelleConsigne": "Consigne",
   "titre": "Expliquer pourquoi je sélectionne une seule strophe",
   "min": 5,
+  "ensembles": [[1, 2]],
   "bulle": "Presque fini, courage !",
   "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>La liste de six lignes est terminée. Sous cette liste, tu vas écrire une seule phrase pour expliquer pourquoi les autres strophes gardent leur police.</p></aside>" + FIN_DE_LISTE,
   "gestes": [
@@ -459,7 +466,8 @@ const BLOCS = [
     "trous": {
      "titre": "Pourquoi sélectionner d’abord ?",
      "intro": "Je complète l’explication avec les mots de la banque.",
-     "bravo": "Juste ! Maintenant, la case suivante : ma phrase à moi, dans Docs.",
+     "bravo": "Juste ! Maintenant, ta phrase à toi, dans Docs, juste en dessous.",
+     "effacer": "<p>Dans Docs, commence ta phrase par :</p><blockquote>Pour changer une seule strophe, je…</blockquote><p class=\"note\">Avec tes mots : sélectionner, police, taille.</p>",
      "variantes": [
       {
        "texte": "Docs modifie seulement le texte ___ . Donc je sélectionne d’abord ___ , puis je choisis la ___ .",
@@ -523,6 +531,7 @@ const BLOCS = [
   "titre": "Je vérifie mon document",
   "court": "Je vérifie",
   "min": 10,
+  "ensembles": [[1, 2], [3, 4, 5], [6, 7, 8, 9], [10], [11]],
   "bulle": "Avant de remettre : je vérifie tout, une chose par case.",
   "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>J’ouvre la grille : les critères avec une étoile sont incontournables.</p></aside><p class=\"note\">Je vérifie une chose par case, dans mon document. Si une chose manque, je la corrige avant de cocher.</p>",
   "gestes": [
@@ -548,6 +557,7 @@ const BLOCS = [
   "titre": "Je remets mon document",
   "court": "Je remets",
   "min": 10,
+  "ensembles": [[3, 4, 5], [6, 7]],
   "bulle": "Le professeur dit oui, puis je remets dans Classroom.",
   "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>Dans Classroom, le cadre <b>Vos devoirs</b> est à droite du devoir. Il dit <b>Attribué</b> avant la remise, <b>Remis</b> après.</p></aside><p class=\"note\">Une fois remis, mon document ne se modifie plus : c’est le professeur qui l’a.</p>",
   "gestes": [

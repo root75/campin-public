@@ -80,3 +80,19 @@ assert.ok(!/colonne/.test(FIN.texte)&&!actions.some(([,t])=>/colonne « Moi »/.
   assert.equal(accordPour({active:false},'10.1'),true,'ancien serveur : fermé = accordé');
   assert.ok(/const poseAvant = accordPose;/.test(moteur)&&/if\(attendAccord && !poseAvant\)return;/.test(moteur),'un état lu avant l’écriture de la demande est ignoré');
 }
+// Vues regroupées (Vincent, 25/11/2026) : un geste de sens = une vue. Les cases ne bougent pas (clés « étape.rang »),
+// seules leurs vues changent : 61 cases sur 45 vues. Une case appartient à une seule vue.
+{
+  let vues=0;
+  BLOCS.forEach((b,i)=>{
+    const vu=new Set();
+    (b.ensembles||[]).forEach(e=>e.forEach(n=>{assert.ok(Number.isInteger(n)&&n>=1&&n<=b.gestes.length,'étape '+(i+1)+' : case '+n+' hors de l’étape');assert.ok(!vu.has(n),'étape '+(i+1)+' : case '+n+' dans deux vues');vu.add(n);}));
+    vues+=(b.ensembles||[]).length+b.gestes.length-vu.size;
+    (b.ensembles||[]).forEach(e=>assert.ok(e.every((n,k)=>k===0||n===e[k-1]+1),'étape '+(i+1)+' : une vue = des cases qui se suivent'));
+  });
+  assert.equal(vues,45,'vues du Rat de ville');
+  const moteur=fs.readFileSync(__dirname+'/../pas-a-pas/blocs.js','utf8');
+  assert.ok(/BLOCS\[ici\]\.ensembles/.test(moteur)&&/ECRAN_LEGER/.test(moteur)&&/ECRAN_LEGER = true/.test(fiche),'le moteur lit les ensembles ; le Rat est en écran léger');
+  assert.ok(/id="texte" data-etapes="2"/.test(page),'le texte à recopier ne s’affiche qu’à l’étape 2');
+  console.log('OK Rat de ville : '+vues+' vues.');
+}

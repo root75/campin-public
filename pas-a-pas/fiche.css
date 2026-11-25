@@ -171,6 +171,9 @@ form.bilan label>input[type=checkbox]{width:24px;height:24px;flex:none;margin:1p
 .rythme-gestes .actions{margin:0;flex-wrap:wrap;gap:8px}
 #bloc ol.gestes-progressifs>li[hidden]{display:none!important}
 #bloc ol.gestes-progressifs>li.geste-actuel{outline:2px solid var(--fromage);outline-offset:3px;border-radius:8px}
+#bloc details.avant-repliable>summary{cursor:pointer;font-weight:700;margin:0 0 6px}
+#bloc details.avant-repliable:not([open]){margin-bottom:8px}
+#bloc details.avant-repliable>div>.repere.observation>h3:first-child{display:none}
 #bloc ol.gestes-progressifs>li.geste-accompli>label{color:var(--juste)}
 .prochaine-etape{font-weight:700;overflow-wrap:anywhere}
 @media(prefers-reduced-motion:reduce){.rythme-gestes~ol.etapes *{animation:none!important;transition:none!important}}

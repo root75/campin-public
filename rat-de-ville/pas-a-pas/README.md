@@ -9,6 +9,11 @@
 > relire les anciennes lignes du Journal. Retirés avec l'ancien moteur : la jauge « missions », le bouton
 > « Affichage compact », « Voir toutes les aides ». **La suite de ce fichier décrit l'ancien moteur : historique.**
 
+**25/11/2026 — un geste de sens par vue (Vincent).** 61 cases, 45 vues (`ensembles` de chaque étape) : titre /
+strophes / auteur à l'étape 4, sélectionner + Liste à puces à l'étape 6, « Mes gestes » + Liste numérotée à l'étape 7,
+trous + phrase dans Docs à l'étape 8, cinq vérifications par zone à l'étape 9, joindre puis rendre à l'étape 10.
+Écran léger (`ECRAN_LEGER`), texte à recopier seulement à l'étape 2. Aucune clé de case ne change.
+
 **20/11/2026, suite.** Case 3.3 : accord intermédiaire, le professeur regarde le texte avant la mise en forme
 (l'élève continue sans attendre). Étape 10 : la procédure de remise reste lisible avant l'accord, seules les cases
 sont grisées ; « Ça coince ? » y parle de Classroom. À la sonnerie, « Ça coince ? » s'ouvre en fenêtre. 61 cases.

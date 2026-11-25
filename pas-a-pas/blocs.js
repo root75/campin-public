@@ -41,6 +41,11 @@ const MISSIONS = typeof PRESENTATION!=="undefined" && PRESENTATION==="missions";
    const REPRISE = { titre, html, demos } : l'encadré affiché en haut quand l'élève rouvre le cours après une pause.
    État : etat.cases = { "étape.rang": true } (étape et rang à partir de 1), etat.moi = { critère: lettre }. */
 const DECLARATIF = typeof MODE!=="undefined" && MODE==="declaratif";
+/* const ECRAN_LEGER = true dans la fiche (Rat de ville, Vincent, 25/11/2026) : pendant l'action, le moins possible
+   d'autres éléments au-dessus de la case. Le titre de l'étape n'est écrit qu'une fois (plus sous les pastilles), la
+   ligne « Bloc N sur M · Partie » disparaît, et « À observer » (B.avant) se replie dès la première case cochée de
+   l'étape (un clic le rouvre). Les autres cours gardent leur affichage. */
+const LEGER = typeof ECRAN_LEGER!=="undefined" && ECRAN_LEGER;
 /* Méthode « je fais, la page constate, bravo » (Vincent, 23/11/2026), au choix de la fiche : const METHODE = 'constate'.
    Présentation « missions » seulement. Trois changements, et rien d'autre (le suivi, les preuves, le tableau restent) :
    - une case peut se cocher toute seule quand la page voit le geste : {geste:'…', compte:{sel:'.emo-part', attr:'data-emo', n:3}}
@@ -279,7 +284,7 @@ function barre(){
     g.addEventListener("click",()=>{ if(ici>=BLOCS.length) return; ici = BLOCS.length; affiche(); scrollTo(0,0); });
     b.append(g);
   }
-  if(nomIci) b.append(txt("p","nom-etape",nomIci));
+  if(nomIci && !LEGER) b.append(txt("p","nom-etape",nomIci));
   /* Les étapes de la mission affichée, par leur nom : un clic mène droit à « Relever la mémoire » sans passer par
      « Étape précédente ». Seulement quand la mission a plusieurs étapes. Nom court : B.court, sinon le titre
      jusqu'au premier « : » ou à la première virgule. */
@@ -485,15 +490,25 @@ function rythmeGestes(z){
   const aide = txt("button","btn vide","Un coup de pouce"); aide.type = "button";
   actions.append(vue, aide); outils.append(statut, piste, actions); liste.before(outils);
   const consignes = BLOCS[ici].libelleConsigne;
+  /* B.ensembles = [[1,2,3],[4],[5,6,7]] : les cases d'un même geste de sens s'affichent ensemble, sur une seule vue
+     (Rat de ville, Vincent, 25/11/2026 : « je complète la phrase puis je la recopie » tient sur la même vue). Les
+     cases restent les mêmes, avec les mêmes clés « étape.rang » : rien ne change au Journal ni à cours.json.
+     Une case absente des ensembles forme une vue à elle seule. */
+  const vues = []; const vueDe = cases.map(()=>-1);
+  (BLOCS[ici].ensembles||[]).forEach(e=>{ const v = e.map(n=>n-1).filter(k=>k>=0 && k<cases.length && vueDe[k]<0); if(v.length){ v.forEach(k=>{ vueDe[k] = vues.length; }); vues.push(v); } });
+  cases.forEach((c,k)=>{ if(vueDe[k]<0){ vueDe[k] = vues.length; vues.push([k]); } });
+  vues.sort((a,b)=>a[0]-b[0]); vues.forEach((v,i)=>v.forEach(k=>{ vueDe[k] = i; }));
   const maj = (deplace=false, gesteCoche=null)=>{
     const courant = cases.findIndex(c=>!c.checked), faits = cases.filter(c=>c.checked).length;
+    const vue_ = courant<0 ? -1 : vueDe[courant], groupe = vues.length<cases.length;
     statut.textContent = courant<0 ? (consignes ? "Toutes les consignes sont cochées." : "Tous les gestes sont cochés.")
+      : groupe ? "Partie "+(vue_+1)+" sur "+vues.length+" · "+faits+" case"+(faits>1 ? "s" : "")+" cochée"+(faits>1 ? "s" : "")+" sur "+cases.length+". Coche après avoir fait chaque action."
       : (consignes || "Geste")+" "+(courant+1)+" sur "+cases.length+" · "+faits+(consignes ? " accomplie" : " accompli")+(faits>1 ? "s" : "")+". Coche après avoir fait l’action.";
     vue.textContent = tousLesGestes ? (consignes ? "Une consigne à la fois" : "Un geste à la fois") : (consignes ? "Voir toutes les consignes" : "Voir tous les gestes");
     vue.setAttribute("aria-pressed",String(tousLesGestes));
     lignes.forEach((li,k)=>{
       li.value = k+1;
-      li.hidden = !tousLesGestes && courant>=0 && k!==courant;
+      li.hidden = !tousLesGestes && courant>=0 && vueDe[k]!==vue_;
       if(li.hidden) li.querySelectorAll("details.demo-case[open]").forEach(d=>{ d.open = false; });
       li.classList.toggle("geste-actuel",k===courant);
       li.classList.toggle("geste-accompli",cases[k].checked);
@@ -502,6 +517,7 @@ function rythmeGestes(z){
       segment.classList.toggle("rempli",cases[k].checked);
       segment.classList.toggle("vient-de-remplir",cases[k]===gesteCoche);
     });
+    if(gesteCoche){ const av = z.querySelector("details.avant-repliable"); if(av) av.open = false; }   // écran léger : « À observer » se replie au premier geste
     etoile.classList.toggle("complete",courant<0);
     etoile.classList.toggle("celebre",courant<0 && gesteCoche!==null);
     aide.hidden = courant<0;
@@ -637,7 +653,10 @@ function entrainements(z, B){
       caseDocs.disabled = true;
       dit.textContent = "Complète la phrase pour pouvoir cocher le geste réalisé dans Docs.";
     }
-    trous(zone, V, ()=>{ caseDocs.disabled = false; dit.textContent = T.bravo || "Juste !"; boite.classList.add("reussi"); }, m=>{ dit.textContent = m; });
+    /* T.effacer = du HTML qui remplace la phrase réussie : l'élève écrit ensuite avec ses mots, sans l'avoir sous les yeux. */
+    const efface = () => { if(!T.effacer) return; zone.replaceChildren(el("div","apres-trous",T.effacer)); boite.querySelectorAll(":scope>p:not(.note)").forEach(p=>p.remove()); };
+    if(etat.cases[(ici+1)+"."+(k+1)] && T.effacer){ efface(); dit.textContent = T.bravo || "Juste !"; boite.classList.add("reussi"); return; }
+    trous(zone, V, ()=>{ caseDocs.disabled = false; dit.textContent = T.bravo || "Juste !"; boite.classList.add("reussi"); efface(); }, m=>{ dit.textContent = m; });
   });
 }
 /* const REPRISE (voir le mode déclaratif) : les gestes pour retrouver son travail, puis un bouton vers la première étape pas finie. */
@@ -723,7 +742,10 @@ function affiche(){
     if(groupe.fin-groupe.debut>1)num.append(txt("span",null,"Étape "+(ici-groupe.debut+1)+" sur "+(groupe.fin-groupe.debut)));
   }
   else num.append(txt("span",null,"Bloc "+(ici+1)+" sur "+BLOCS.length+" · Partie "+B.partie.split(" — ")[0]), txt("span",null,"⏱ "+B.min+" min"));
-  z.append(num, txt("h2",null,groupe ? B.titre : (ici+1)+". "+B.titre));
+  if(!LEGER || groupe) z.append(num);
+  z.append(txt("h2",null,groupe ? B.titre : (ici+1)+". "+B.titre));
+  /* Un panneau de la page marqué data-etapes="2 3" ne s'affiche qu'à ces étapes (le texte à recopier du Rat). */
+  document.querySelectorAll("[data-etapes]").forEach(d=>{ const vu = d.dataset.etapes.split(/\s+/).includes(String(ici+1)); d.hidden = !vu; if(!vu && d.open) d.open = false; });
   if(typeof RAPPEL_DEBUT_SEANCE!=="undefined"){
     const place = el("div"); place.id = "rappel-debut-seance"; z.append(place); rappelDeSeance();
   }
@@ -743,7 +765,13 @@ function affiche(){
     const rappel = encadreRappel(B); if(rappel) z.append(rappel);
     /* B.avant = ce qu'il faut avoir sous les yeux AVANT de cocher (un exemple analysé, un tableau à lire) : les
        cases ne demandent jamais de lire ce qui n'est pas encore à l'écran, comme la question de preuve. */
-    if(B.avant) z.append(el("div","avant",B.avant));
+    if(B.avant && LEGER && B.gestes){
+      /* Écran léger : replié dès qu'une case de l'étape est cochée ; l'élève l'a lu avant de commencer. */
+      const d = el("details","avant avant-repliable"), s = txt("summary",null,"À observer");
+      d.open = !B.gestes.some((g,k)=>etat.cases[(ici+1)+"."+(k+1)]);
+      d.append(s, el("div",null,B.avant)); z.append(d);
+    }
+    else if(B.avant) z.append(el("div","avant",B.avant));
     /* Démo animée « Regarde comment faire ». Deux façons, au choix de la fiche :
        - un bloc porte `demos` (Labo 07) : une animation sous chaque case qu'elle montre (voir demosSousCases) ;
        - sinon, une démo par étape avant les cases : Demo.pour (Python, pas-a-pas/demos-python.js).
