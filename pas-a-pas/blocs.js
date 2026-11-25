@@ -488,13 +488,11 @@ function rythmeGestes(z){
   const actions = el("div","actions");
   const vue = txt("button","btn vide",""); vue.type = "button";
   const aide = txt("button","btn vide","Un coup de pouce"); aide.type = "button";
-  /* Écran léger (Vincent, 25/11/2026 : « que l'élève n'ait que la consigne ») : pas de « Voir tous les gestes », qui
-     prêtait à confusion (ce qui doit se voir ensemble est regroupé en une vue), et le coup de pouce devient une petite
-     ampoule 💡 discrète à droite du statut. */
-  if(LEGER){
-    aide.textContent = "💡"; aide.className = "indice-gestes"; aide.setAttribute("aria-label","Un coup de pouce"); aide.title = "Un coup de pouce";
-    outils.classList.add("leger"); outils.append(statut, aide, piste);
-  } else { actions.append(vue, aide); outils.append(statut, piste, actions); }
+  /* Écran léger (Vincent, 25/11/2026 : « que l'élève n'ait que la consigne ») : ni « Voir tous les gestes », qui
+     prêtait à confusion (ce qui doit se voir ensemble est regroupé en une vue), ni « Un coup de pouce », qui faisait
+     double emploi : l'animation du geste en cours est déjà ouverte, et l'aide écrite reste « Ça coince ? », puis la cloche. */
+  if(LEGER) outils.append(statut, piste);
+  else { actions.append(vue, aide); outils.append(statut, piste, actions); }
   liste.before(outils);
   const consignes = BLOCS[ici].libelleConsigne;
   /* B.ensembles = [[1,2,3],[4],[5,6,7]] : les cases d'un même geste de sens s'affichent ensemble, sur une seule vue
