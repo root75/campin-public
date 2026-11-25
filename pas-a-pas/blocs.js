@@ -488,7 +488,14 @@ function rythmeGestes(z){
   const actions = el("div","actions");
   const vue = txt("button","btn vide",""); vue.type = "button";
   const aide = txt("button","btn vide","Un coup de pouce"); aide.type = "button";
-  actions.append(vue, aide); outils.append(statut, piste, actions); liste.before(outils);
+  /* Écran léger (Vincent, 25/11/2026 : « que l'élève n'ait que la consigne ») : pas de « Voir tous les gestes », qui
+     prêtait à confusion (ce qui doit se voir ensemble est regroupé en une vue), et le coup de pouce devient une petite
+     ampoule 💡 discrète à droite du statut. */
+  if(LEGER){
+    aide.textContent = "💡"; aide.className = "indice-gestes"; aide.setAttribute("aria-label","Un coup de pouce"); aide.title = "Un coup de pouce";
+    outils.classList.add("leger"); outils.append(statut, aide, piste);
+  } else { actions.append(vue, aide); outils.append(statut, piste, actions); }
+  liste.before(outils);
   const consignes = BLOCS[ici].libelleConsigne;
   /* B.ensembles = [[1,2,3],[4],[5,6,7]] : les cases d'un même geste de sens s'affichent ensemble, sur une seule vue
      (Rat de ville, Vincent, 25/11/2026 : « je complète la phrase puis je la recopie » tient sur la même vue). Les
@@ -567,8 +574,8 @@ function rythmeGestes(z){
     etoile.classList.toggle("celebre",courant<0 && gesteCoche!==null);
     aide.hidden = courant<0;
     if(deplace && !tousLesGestes){
-      const cible = courant<0 ? vue : boutonDe[courant] && !boutonDe[courant].disabled ? boutonDe[courant] : cases[courant].disabled ? lignes[courant].querySelector("button") || vue : cases[courant];
-      cible.focus({preventScroll:true});
+      const cible = courant<0 ? (LEGER ? null : vue) : boutonDe[courant] && !boutonDe[courant].disabled ? boutonDe[courant] : cases[courant].disabled ? lignes[courant].querySelector("button") || vue : cases[courant];
+      if(cible) cible.focus({preventScroll:true});
     }
   };
   vue.addEventListener("click",()=>{ tousLesGestes = !tousLesGestes; maj(); });

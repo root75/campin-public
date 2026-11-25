@@ -104,6 +104,9 @@ pendant l'action : le titre de l'étape n'est écrit qu'une fois, la ligne « Bl
 qu'à cette étape (le texte à recopier du Rat). Les autres cours ne sont pas concernés. À l'ouverture d'une vue, seule
 l'animation de la case à faire est ouverte. Hors mode déclaratif (Messagerie 02), « À observer » reste ouvert au retour sur
 un bloc : les cases n'y sont gardées que sur le poste.
+Pas de bouton « Voir tous les gestes » (ce qui doit se voir ensemble est regroupé en une vue), et « Un coup de pouce »
+devient une petite ampoule 💡 à droite du statut (Vincent, 25/11/2026). Une vue de plusieurs gestes forme une seule
+carte, avec un seul « Regarde comment faire » qui enchaîne leurs animations.
 
 ## Les preuves
 
