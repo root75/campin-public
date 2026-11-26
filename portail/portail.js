@@ -63,8 +63,66 @@ function affiche(d){
       if(typeof appel.mesAnnonces === "function") appel.mesAnnonces();
     } catch(e) {}
   }
-  chatPortail(d);
-  defiConnecte(d);
+  // Le cours s'ouvre seul : ni chat ni défi du portail derrière lui (le cours a les siens).
+  const suite = () => { chatPortail(d); defiConnecte(d); guetteSeance(d); };
+  if(seanceAOuvrir(d)) ouvreSeance(d.seance).then(ouvert => { if(!ouvert) suite(); });
+  else suite();
+}
+
+/* ----- La séance s'ouvre seule (Vincent, 26/11/2026 : « la séance devrait s'ouvrir », pas attendre un clic sur
+   « Ouvrir ma séance »). Les élèves arrivent ici par ?vue=portail (lien « Me connecter », page publique redirigée) :
+   ce n'est pas un choix de quitter le cours. Donc :
+   - séance déjà ouverte au chargement ▸ le cours s'ouvre tout de suite ;
+   - séance ouverte APRÈS l'arrivée ▸ en journée de classe, une question toutes les 30 s pendant l'heure qui suit le
+     chargement, onglet visible seulement (même appel que « Mes cours », qui le fait toutes les 5 s).
+   Une seule fois par cours et par jour dans cet onglet : l'élève qui revient au portail par « Mon portail » y reste,
+   avec le bloc « En ce moment · Ouvrir ma séance ▸ » en haut. */
+const GUET_SEANCE = 30000, GUET_SEANCE_MAX = 60 * 60000;
+const heureDeClasse = t => { const d = new Date(t), h = d.getHours() + d.getMinutes() / 60; return d.getDay() >= 1 && d.getDay() <= 5 && h >= 7.5 && h < 17.5; };
+const appelServeur = fn => new Promise((ok, ko) => {
+  const pont = google.script.run.withSuccessHandler(ok).withFailureHandler(ko);
+  if(typeof pont[fn] === "function") pont[fn](); else ko(new Error(fn));
+});
+const cleOuverte = s => "seance-ouverte:" + s.url + ":" + new Date().toDateString();
+function dejaOuverte(s){ try { return sessionStorage.getItem(cleOuverte(s)) === "1"; } catch(e) { return false; } }
+function ouvreSeance(s){
+  if(dejaOuverte(s)) return Promise.resolve(false);
+  try { sessionStorage.setItem(cleOuverte(s), "1"); } catch(e) {}
+  return appelServeur("rejoindreSeance").then(html => html ? ouvreFiche(html).then(() => true) : false).catch(() => false);
+}
+const seanceAOuvrir = d => !!(SUIVI && d.seance && !d.prof && d.classe && !d.apercu && !dejaOuverte(d.seance));
+function guetteSeance(d){
+  if(!SUIVI || d.prof || !d.classe || d.seance || d.apercu) return;
+  const depart = Date.now();
+  let enCours = false, minuterie = 0;
+  const regarde = () => {
+    if(enCours || document.hidden || !heureDeClasse(Date.now())) return;
+    if(Date.now() - depart > GUET_SEANCE_MAX){ clearInterval(minuterie); return; }
+    enCours = true;
+    appelServeur("mesCours").then(r => {
+      if(!r || !r.seance) return;
+      clearInterval(minuterie);
+      $("seance-titre").textContent = r.seance.titre; $("seance-lien").href = r.seance.url; $("maintenant").hidden = false;
+      return ouvreSeance(r.seance).then(ouvert => { if(!ouvert) chatPortail(Object.assign({}, d, { seance: r.seance })); });
+    }).catch(() => {}).finally(() => { enCours = false; });
+  };
+  minuterie = setInterval(regarde, GUET_SEANCE);
+}
+/* La fiche remplace la page sans document.open : le pont Google garde ses écouteurs (même geste que « Mes cours »). */
+async function ouvreFiche(html){
+  const page = new DOMParser().parseFromString(html, "text/html");
+  const scripts = [...page.querySelectorAll("script")];
+  scripts.forEach(s => s.remove());
+  document.head.replaceChildren(...page.head.childNodes);
+  document.body.replaceChildren(...page.body.childNodes);
+  for(const original of [...scripts.filter(s => !s.defer), ...scripts.filter(s => s.defer)]){
+    const s = document.createElement("script");
+    for(const a of original.attributes) s.setAttribute(a.name, a.value);
+    s.removeAttribute("defer"); s.async = false;
+    s.textContent = original.textContent;
+    if(s.src) await new Promise((ok, ko) => { s.onload = ok; s.onerror = ko; document.body.append(s); });
+    else document.body.append(s);
+  }
 }
 
 /* ----- Le chat de la classe : ouvert et fermé par le professeur. -----

@@ -24,13 +24,16 @@ function serveur(fn, ...args){
 }
 
 const choixExplicite = document.body?.dataset?.choixCours === "true";
-let choisie = "", consultation = false, rejoint = false;
+let choisie = "", consultation = false, rejoint = false, seanceAuChargement = null;
 async function actualise(){
   if(consultation || rejoint || !$("confirmer").hidden) return;
   consultation = true;
   try {
     const d = await serveur("mesCours");
-    if(d.seance && !choixExplicite){
+    /* « Mes cours » choisi exprès (?vue=cours) : l'élève peut y regarder un autre cours pendant la séance. Mais une
+       séance ouverte APRÈS l'arrivée sur la page l'y emmène quand même (Vincent, 26/11/2026 : « ouvrir ma séance ne se
+       fait pas automatiquement ») : l'élève attendait le professeur, il n'a rien choisi. */
+    if(d.seance && (!choixExplicite || !seanceAuChargement)){
       const html = await serveur("rejoindreSeance");
       if(html){
         rejoint = true;
@@ -117,6 +120,7 @@ $("oui").addEventListener("click", ()=>{
 if(!SUIVI) $("demo").hidden = false;
 let minuterie;
 serveur("mesCours").then(d=>{
+  seanceAuChargement = d.seance || null;
   affiche(d);
   if(SUIVI) minuterie = setInterval(actualise, 5000);
 }, echec);
