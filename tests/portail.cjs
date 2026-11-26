@@ -212,15 +212,15 @@ console.log('portail : page publique, élève reconnu, hors école, redirection 
   assert.doesNotMatch(html, /id="chat"/, 'plus de section dans la page : le chat est un bouton en bas à droite');
   const d = { email:'eleve@example.test', prenom:'Camille', classe:'1B', prof:false, mesCours:'https://x/exec', cours:[] };
   const tic = () => new Promise(r => setImmediate(r));
-  // Ni chat ni séance : rien n'est chargé, rien n'est programmé.
-  let q = lance(d); assert.equal(q.ctx.guets.length, 0);
+  // Ni chat ni séance : rien n'est chargé ; seule la guette de la séance (30 s, l'heure qui suit) est programmée.
+  let q = lance(d); assert.deepEqual(q.ctx.guets.map(g => g.ms), [30000]);
   assert.ok(!q.ajoutes.some(s => /chat\.js/.test(s.src || '')));
   // Séance en cours, chat fermé : une question par minute, et le script du chat n'est pas chargé.
-  q = lance({ ...d, seance:{ titre:'Messagerie 01', url:'https://x' } });
+  q = lance({ ...d, seance:{ titre:'Messagerie 01', url:'https://x' } }); await tic(); await tic();
   assert.deepEqual(q.ctx.guets.map(g => g.ms), [60000]); assert.ok(!q.ajoutes.some(s => /chat\.js/.test(s.src || '')));
   // Chat ouvert : le script est chargé depuis le site, et le bouton « 💬 Chat » est posé (pas de fil dans la page).
   q = lance({ ...d, chat:true });
-  assert.deepEqual(q.ctx.guets.map(g => g.ms), [60000], 'toujours une seule question par minute');
+  assert.deepEqual(q.ctx.guets.map(g => g.ms), [60000, 30000], 'une question par minute pour le chat, la guette de la séance à côté');
   const s = q.ajoutes.find(x => /^https:\/\/root75\.github\.io\/campin-public\/chat\/chat\.js/.test(x.src || '')); assert.ok(s, 'chat.js chargé à la demande');
   let bulle = null; q.ctx.CampinChat = { monte(){ throw Error('le fil ne se monte plus dans la page'); },
     bulle: o => (bulle = { o, vus:[], signale(n){ this.vus.push(n); }, retire(){ this.retiree = true; } }) };
@@ -239,5 +239,61 @@ console.log('portail : page publique, élève reconnu, hors école, redirection 
   assert.equal(lance({ ...d, prof:true, chat:true }).ajoutes.some(x => /chat\.js/.test(x.src || '')), false);
   assert.equal(lance({ ...d, classe:'', chat:true }).ajoutes.some(x => /chat\.js/.test(x.src || '')), false);
   console.log('Portail : chat de la classe en bas à droite, chargé seulement quand il est ouvert.');
+
+  /* ----- La séance s'ouvre seule (Vincent, 26/11/2026), une fois par cours et par jour dans l'onglet. ----- */
+  const fiche = '<html><head><title>Messagerie 02</title></head><body><p>cours</p></body></html>';
+  const avecPage = q => { const remplace = []; q.ctx.DOMParser = class { parseFromString(){ return { querySelectorAll(){ return []; },
+      head:{ childNodes:['tête'] }, body:{ childNodes:['corps'] } }; } };
+    q.ctx.document.head.replaceChildren = (...n) => remplace.push(['head', ...n]);
+    q.ctx.document.body = { replaceChildren:(...n) => remplace.push(['body', ...n]), append(){} };
+    return remplace; };
+  const stockage = () => { const m = new Map(); return { getItem:k => m.has(k) ? m.get(k) : null, setItem:(k, v) => m.set(k, String(v)), m }; };
+  // Séance ouverte au chargement : le cours remplace le portail, sans chat ni guette derrière lui.
+  const seance = { titre:'Messagerie 02', url:'https://x/exec?cours=messagerie-2' };
+  {
+    const ss = stockage(), demandes = [];
+    const els = new Map(), $ = id => { if(!els.has(id)) els.set(id, noeud(id)); return els.get(id); };
+    const pont = { withSuccessHandler(f){ this.f = f; return this; }, withFailureHandler(){ return this; },
+      portail(){ this.f({ ...d, seance }); }, rejoindreSeance(){ demandes.push(1); this.f(fiche); } };
+    const ctx = { document:{ documentElement:{ dataset:{} }, getElementById:$, createElement:t=>({ tag:t, textContent:'', enfants:[], append(){} }), head:{ append(){} } },
+      location:{ protocol:'https:', search:'' }, localStorage:{ getItem(){ return null; }, setItem(){} }, sessionStorage:ss, guets:[],
+      google:{ script:{ run:pont } } };
+    ctx.setInterval = (f, ms) => ctx.guets.push({ f, ms }); ctx.clearInterval = () => {};
+    const remplace = avecPage({ ctx });
+    ctx.window = ctx; ctx.globalThis = ctx;
+    vm.runInNewContext(script, ctx); await tic(); await tic();
+    assert.equal(demandes.length, 1, 'le cours est demandé tout de suite');
+    assert.deepEqual(remplace, [['head', 'tête'], ['body', 'corps']], 'le cours remplace le portail');
+    assert.deepEqual(ctx.guets.map(g => g.ms).filter(ms => ms === 60000), [], 'pas de chat du portail derrière le cours');
+    // Revenu au portail (« Mon portail ») : il y reste, avec le bouton « Ouvrir ma séance ▸ ».
+    const ctx2 = { ...ctx, guets:[], document:{ ...ctx.document, head:{ append(){} } } };
+    ctx2.setInterval = (f, ms) => ctx2.guets.push({ f, ms }); ctx2.window = ctx2; ctx2.globalThis = ctx2;
+    vm.runInNewContext(script, ctx2); await tic(); await tic();
+    assert.equal(demandes.length, 1, 'une seule fois par cours et par jour');
+    assert.equal($('maintenant').hidden, false); assert.equal($('seance-lien').href, seance.url);
+  }
+  // Séance ouverte APRÈS l'arrivée : la guette de 30 s la trouve et ouvre le cours, en journée de classe.
+  {
+    q = lance(d); const remplace = avecPage(q); q.ctx.sessionStorage = stockage();
+    let rep = { seance:null }, demandes = 0;
+    q.ctx.google.script.run.mesCours = function(){ this.f(rep); };
+    q.ctx.google.script.run.rejoindreSeance = function(){ demandes++; this.f(fiche); };
+    const RealDate = Date;
+    const horloge = t => { q.ctx.Date = class extends RealDate { constructor(...a){ super(...(a.length ? a : [t])); } static now(){ return t; } }; };
+    const guette = q.ctx.guets[0]; assert.equal(guette.ms, 30000);
+    // Le dimanche (hors journée de classe) : aucune question.
+    let lues = 0; q.ctx.google.script.run.mesCours = function(){ lues++; this.f(rep); };
+    horloge(new RealDate(2026, 10, 29, 10, 0).getTime()); guette.f(); await tic(); assert.equal(lues, 0, 'hors journée de classe : rien');
+    // Un jeudi à 10 h, pas encore de séance : on attend.
+    horloge(new RealDate(2026, 10, 26, 10, 0).getTime()); guette.f(); await tic(); await tic(); assert.equal(lues, 1); assert.equal(demandes, 0);
+    // Le professeur ouvre la séance : le cours s'ouvre seul.
+    rep = { seance }; guette.f(); for(let i = 0; i < 5; i++) await tic();
+    assert.equal(demandes, 1, 'le cours est demandé'); assert.deepEqual(remplace, [['head', 'tête'], ['body', 'corps']]);
+    q.ctx.document.hidden = true; const avant = demandes; guette.f(); await tic(); assert.equal(demandes, avant, 'onglet caché : aucune question');
+  }
+  // Le professeur et l'aperçu « Voir en tant que » ne sont jamais emmenés.
+  assert.equal(lance({ ...d, prof:true }).ctx.guets.length, 0);
+  assert.equal(lance({ ...d, apercu:'1B' }).ctx.guets.length, 0);
+  console.log('Portail : la séance de la classe s\'ouvre seule, une fois par cours et par jour.');
 })().catch(e => { console.error(e); process.exit(1); });
 
