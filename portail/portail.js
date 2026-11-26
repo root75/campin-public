@@ -474,7 +474,7 @@ function defiConnecte(d){
 chargeDefi(new Date());
 
 if(SUIVI){
-  google.script.run.withSuccessHandler(affiche).withFailureHandler(() => {}).portail(document.body.dataset.apercu || "");
+  google.script.run.withSuccessHandler(affiche).withFailureHandler(() => {}).portail((document.body && document.body.dataset && document.body.dataset.apercu) || "");
 } else if(location.protocol === "https:" && !/[?&]public\b/.test(location.search)){
   // « ?public » garde la page publique, pour la montrer sans être redirigé.
   // Sans compte de l'école, Google répond par sa page de connexion : le navigateur la refuse comme script, rien ne se passe.
