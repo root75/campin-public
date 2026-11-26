@@ -20,6 +20,7 @@
   const RYTHME = 5000;
   const css = `
 .en-sequence .page > :not(header):not(#seq):not(#seq-commun):not(.aide-fixe):not(#tresor.pot-classe){display:none!important}
+#seq.sq-partage .sq-regarde{display:none}
 #seq-commun{background:var(--carte);border:1px solid var(--trait);border-radius:14px;padding:18px clamp(16px,4vw,32px);display:grid;gap:12px;margin-top:12px}
 #seq-commun .sq-sur{font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;color:var(--doux);font-weight:700;margin:0;text-align:center}
 #seq-commun h3{margin:0;font-size:1.2rem}#seq-commun p{margin:0}
@@ -153,6 +154,7 @@
       if(sig === sigCommun) return;
       sigCommun = sig;
       boite.hidden = !blocs.length;
+      zone.classList.toggle("sq-partage", !!blocs.length);   // le partage remplace « 👀 Regarde le tableau »
       boite.replaceChildren(...(blocs.length ? [el("p", "sq-sur", "Au tableau en ce moment"), ...blocs] : []));
     }
 
@@ -179,8 +181,13 @@
           el("p", "sq-note", "Propose oralement où placer les mots et explique pourquoi. Le déplacement des mots est visible au tableau."));
         return;
       }
-      zone.append(el("p", "sq-oeil", "👀"), el("h2", "sq-grand", "Regarde le tableau"),
-        el("p", "sq-note", m.type === "tri" ? "On range vos mots ensemble. Prépare-toi à dire pourquoi." : "Rien à taper pour le moment."));
+      // « Regarde le tableau » : seulement quand le poste n'a rien à montrer. L'écran recopié sur le poste
+      // (ecransSurPostes) ou partagé par le professeur (« Aussi sur les postes ») le remplace (Vincent, 26/11/2026).
+      if(!m.lignes && !m.questions){
+        const oeil = el("p", "sq-oeil sq-regarde", "👀"), titre = el("h2", "sq-grand sq-regarde", "Regarde le tableau");
+        zone.append(oeil, titre);
+      }
+      zone.append(el("p", "sq-note", m.type === "tri" ? "On range vos mots ensemble. Prépare-toi à dire pourquoi." : "Rien à taper pour le moment."));
       // Écran collectif recopié sur le poste (cours avec « ecransSurPostes ») : à relire de près.
       if(m.lignes || m.questions){
         const copie = el("div", "sq-copie");
