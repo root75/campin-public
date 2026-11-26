@@ -769,6 +769,47 @@ function rappelDeSeance(debut){
 }
 
 let blocOuverture;
+/* Sablier de l'étape (Vincent, 26/11/2026 ; aménagement DYS « sablier à disposition pour structurer son temps »).
+   À disposition, jamais imposé : la durée du bloc (B.min) s'affiche sur un bouton, l'élève le lance s'il le veut.
+   Le temps restant se vide dans une barre ; à zéro, un rappel doux, rien de bloquant ni de sonore.
+   Le départ est gardé par bloc dans sessionStorage : un nouvel affichage du bloc ne remet pas le sablier à zéro.
+   Une fiche peut le retirer : const SABLIER = false. */
+const SAB_CLE = "sablier:"+COURS;
+function sabDeparts(){ try{ return JSON.parse(sessionStorage.getItem(SAB_CLE))||{}; }catch(e){ return {}; } }
+function sabEcrit(d){ try{ sessionStorage.setItem(SAB_CLE, JSON.stringify(d)); }catch(e){} }
+let sabDepartsMem = sabDeparts(), sabTic = null;
+function sablier(B){
+  if((typeof SABLIER!=="undefined" && !SABLIER) || !(B.min>0)) return null;
+  if(!document.getElementById("sablier-style")){
+    const st = document.createElement("style"); st.id = "sablier-style";
+    st.textContent = ".sablier{display:inline-flex;align-items:center;gap:8px;font:inherit;font-weight:700;letter-spacing:inherit;text-transform:none;color:inherit;background:none;border:1px solid currentColor;border-radius:999px;padding:2px 12px;cursor:pointer}"
+      + ".sablier .barre{display:inline-block;width:70px;height:8px;border-radius:4px;background:color-mix(in srgb,currentColor 20%,transparent);overflow:hidden}"
+      + ".sablier .barre i{display:block;height:100%;background:currentColor;transition:width 1s linear}"
+      + ".sablier.fini{border-style:dashed}";
+    document.head.append(st);
+  }
+  const cle = String(ici), b = el("button","sablier"); b.type = "button"; b.dataset.cle = cle; b.dataset.min = B.min;
+  b.addEventListener("click",()=>{
+    if(sabDepartsMem[cle]) delete sabDepartsMem[cle]; else sabDepartsMem[cle] = Date.now();
+    sabEcrit(sabDepartsMem); sabMaj();
+  });
+  if(!sabTic) sabTic = setInterval(sabMaj, 1000);
+  queueMicrotask(sabMaj);
+  return b;
+}
+function sabMaj(){
+  document.querySelectorAll("button.sablier").forEach(b=>{
+    const min = Number(b.dataset.min), depart = sabDepartsMem[b.dataset.cle];
+    b.classList.remove("fini");
+    if(!depart){ b.innerHTML = "⏳ "+min+" min · Lancer le sablier"; b.title = "Un minuteur pour cette étape, si tu veux t'en servir."; return; }
+    const reste = Math.max(0, Math.round((depart + min*60000 - Date.now())/1000));
+    if(!reste){ b.classList.add("fini"); b.innerHTML = "⌛ Temps prévu écoulé : finis ta case, puis passe à la suite"; b.title = "Clique pour remettre le sablier à zéro."; return; }
+    const mm = Math.floor(reste/60), ss = String(reste%60).padStart(2,"0");
+    b.innerHTML = "⏳ "+mm+":"+ss+' <span class="barre"><i style="width:'+(100*reste/(min*60)).toFixed(1)+'%"></i></span>';
+    b.title = "Clique pour arrêter le sablier.";
+  });
+}
+
 function affiche(){
   if(blocOuverture!==undefined && blocOuverture!==ici) blocOuverture = null;
   if(rappelCourant && rappelCourant.bloc!==ici) rappelCourant = null;
@@ -799,8 +840,9 @@ function affiche(){
     num.append(txt("span",null,groupe.titre));
     if(groupe.fin-groupe.debut>1)num.append(txt("span",null,"Étape "+(ici-groupe.debut+1)+" sur "+(groupe.fin-groupe.debut)));
   }
-  else num.append(txt("span",null,"Bloc "+(ici+1)+" sur "+BLOCS.length+" · Partie "+B.partie.split(" — ")[0]), txt("span",null,"⏱ "+B.min+" min"));
-  if(!LEGER || groupe) z.append(num);
+  else num.append(txt("span",null,"Bloc "+(ici+1)+" sur "+BLOCS.length+" · Partie "+B.partie.split(" — ")[0]));
+  const sab = sablier(B); if(sab) num.append(sab);
+  if(!LEGER || groupe) z.append(num); else if(sab) z.append(sab);
   z.append(txt("h2",null,groupe ? B.titre : (ici+1)+". "+B.titre));
   /* Un panneau de la page marqué data-etapes="2 3" ne s'affiche qu'à ces étapes (le texte à recopier du Rat). */
   document.querySelectorAll("[data-etapes]").forEach(d=>{ const vu = d.dataset.etapes.split(/\s+/).includes(String(ici+1)); d.hidden = !vu; if(!vu && d.open) d.open = false; });
