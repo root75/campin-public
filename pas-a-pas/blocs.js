@@ -568,7 +568,15 @@ function rythmeGestes(z){
       segment.classList.toggle("vient-de-remplir",cases[k]===gesteCoche);
     });
     majBoutons.forEach(f=>f());
-    if(gesteCoche){ const av = z.querySelector("details.avant-repliable"); if(av) av.open = false; }   // écran léger : « À observer » se replie au premier geste
+    if(gesteCoche){ const av = z.querySelector("details.avant-repliable"); if(av) av.open = false; }
+    /* Écran léger : tant qu'il reste des gestes, la question d'après (« À toi de jouer ») reste en retrait ; le dernier
+       geste coché, elle passe au premier plan (Vincent, 26/11/2026 : « on met en avant la tâche actuelle, puis le bloc
+       suivant est mis en évidence »). Une hypothèse (type enquete) se pose avant d'agir : jamais en retrait. */
+    if(LEGER){
+      z.classList.toggle("gestes-en-cours",courant>=0);
+      const p = courant<0 && gesteCoche ? z.querySelector(".preuve.apres-gestes") : null;
+      if(p) setTimeout(()=>p.scrollIntoView({block:"center",behavior:matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"}),350);
+    }   // écran léger : « À observer » se replie au premier geste
     etoile.classList.toggle("complete",courant<0);
     etoile.classList.toggle("celebre",courant<0 && gesteCoche!==null);
     aide.hidden = courant<0;
@@ -819,7 +827,7 @@ function affiche(){
   }
   partIci = 0; barre(); if(MISSIONS) bulle(); apercuDirect();
   queueMicrotask(recocheCases);   // une fois le bloc construit, ses animations comprises
-  const z = document.getElementById("bloc"); z.replaceChildren();
+  const z = document.getElementById("bloc"); z.replaceChildren(); z.classList.remove("gestes-en-cours");
   if(CONSTATE){ if(finBloc) finBloc.abort(); finBloc = new AbortController(); }
   const liste = document.getElementById("coince-liste"); liste.replaceChildren();
   document.getElementById("coince").open = false;
@@ -905,6 +913,7 @@ function affiche(){
   });
 
   const pr = el("div","preuve");
+  if(!(B.q && B.q.type==="enquete")) pr.classList.add("apres-gestes");
   const fait = DECLARATIF || (!APERCU && etat.atteint > ici);   // en aperçu, chaque version reste à essayer
   /* q.ouvre = le libellé d'un bouton à cliquer pour faire apparaître la question (« ↶ Répondre à Camille ») ;
      une rédaction déjà commencée se rouvre seule. */
