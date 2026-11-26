@@ -240,3 +240,8 @@ body.en-sequence #tresor.pot-classe{padding:8px 14px}
 .ecran-leger #bloc .preuve{border:2px solid var(--fromage,#b7791f);border-radius:12px;padding:14px 16px;background:color-mix(in srgb,var(--fromage,#b7791f) 8%,var(--carte,#fff))}
 .ecran-leger #bloc .preuve .question{font-size:1.2rem;line-height:1.4;padding-left:10px;border-left:4px solid var(--fromage,#b7791f)}
 .ecran-leger #bloc:has(.preuve:focus-within) > :not(.preuve):not(.actions){opacity:.4;transition:opacity .3s}
+
+/* Écran léger : la question attend la fin des gestes (Vincent, 26/11/2026). En retrait tant qu'un geste reste à cocher,
+   puis encadrée et amenée à l'écran quand le dernier est coché (blocs.js, gestes-en-cours). */
+.ecran-leger #bloc.gestes-en-cours .preuve.apres-gestes{opacity:.45;border-style:dashed;background:transparent}
+.ecran-leger #bloc.gestes-en-cours .preuve.apres-gestes::before{content:"⏳ D’abord les gestes au-dessus. Ensuite, c’est ici.";display:block;font-weight:700;margin-bottom:8px}
