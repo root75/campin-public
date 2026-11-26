@@ -1324,23 +1324,23 @@
   "labo-07": {
     "ecransSurPostes": true,
     "titre": "Labo 07 — Dans les coulisses du PC",
-    "objectif": "Trois missions et un défi final : enquêter sur son PC Windows avec hypothèses, manipulations personnelles et preuves mixtes. Le rapport reste court : tableau et capture, localisation, un seul incident rédigé, décision finale. Les trois autres incidents sont vérifiés à deux, sans passage professeur systématique ; le défi final reste individuel. Méthodes variées : prédire, voter, manipuler, choisir une réponse, remettre une démarche en ordre et justifier oralement.",
+    "objectif": "Trois missions et un défi final : enquêter sur son PC Windows avec hypothèses, manipulations personnelles et preuves mixtes. Le rapport reste court : tableau et capture, localisation, un incident par élève, rédigé, décision finale. Les quatre incidents sont expliqués à la mise en commun ; le défi final reste individuel. Méthodes variées : prédire, voter, manipuler, choisir une réponse, remettre une démarche en ordre et justifier oralement.",
     "competences": [
       "S3M4.1 « Différencier système d’exploitation et machine »",
       "S3M4.4 « Utiliser l’interface du système d’exploitation et les périphériques »",
       "Observation des ressources : prolongement. OneDrive : réactivation du Labo 06."
     ],
     "preparation": [
-      "Labo 07 : les blocs verts indiquent une hypothèse enregistrée (étapes internes 2, 6, 9) ou une étape déclarée faite. Les élèves voient six entrées (onze étapes) : préparer le rapport, trois missions, le défi final, remettre le rapport. Un seul incident est rédigé ; les trois autres sont vérifiés à deux ; le professeur garde le contrôle individuel final et intervient sur les blocages persistants. Preuves et conclusions dans le document Classroom : le site ne le lit pas et ne vérifie pas sa remise. Ne jamais projeter le Journal ou les copies.",
+      "Labo 07 : les blocs verts indiquent une hypothèse enregistrée (étapes internes 2, 6, 9) ou une étape déclarée faite. Les élèves voient six entrées (onze étapes) : préparer le rapport, trois missions, le défi final, remettre le rapport. Chaque élève teste et rédige un seul incident, attribué par le site ; les quatre sont expliqués à la mise en commun ; le professeur garde le contrôle individuel final et intervient sur les blocages persistants. Preuves et conclusions dans le document Classroom : le site ne le lit pas et ne vérifie pas sa remise. Ne jamais projeter le Journal ou les copies.",
       "Préparer un seul devoir Classroom « Labo 07 — Dans les coulisses du PC », /20, avec remise d’un document personnel à la fin du parcours. La préparation ne crée ni ne publie ce devoir. Ne pas distribuer de copie déjà mise en page.",
       "L’élève crée un rapport Google Docs à partir de la trame en texte brut avant les premières mesures. Il garde ce même document pendant tout le travail et ne le remet qu’une fois terminé.",
       "Prévoir un fichier déjà enregistré dans le dossier OneDrive scolaire de l’Explorateur, par exemple celui du Labo 06 ; un fichier de démonstration sans donnée privée si nécessaire. La mission ne dépend pas d’une autre séquence obligatoirement réalisée juste avant.",
-      "Correction : hypothèses initiales aux étapes internes 2, 6 et 9 du Journal privé ; preuves écrites courtes dans le rapport joint à Classroom, incidents d’entraînement vérifiés à deux et geste final vérifié individuellement par le professeur. Les autres blocs enregistrent uniquement « rapport:… », une déclaration d’avancement, sans lecture du document ni contrôle de remise.",
+      "Correction : hypothèses initiales aux étapes internes 2, 6 et 9 du Journal privé ; preuves écrites courtes dans le rapport joint à Classroom, incident expliqué à la mise en commun et geste final vérifié individuellement par le professeur. Les autres blocs enregistrent uniquement « rapport:… », une déclaration d’avancement, sans lecture du document ni contrôle de remise.",
       "Grille : enquête /14, document et remise /6. Mise en page (Titre et Sous-titre centrés, quatre parties en Titre 1) ; vrai tableau et capture légendée ; identification, nom du fichier et remise confirmée. Aucun calcul automatique de note.",
       "Compte scolaire : Mes cours ▸ classes et cours ouverts ▸ cocher labo-07 uniquement pour la classe concernée. Nouvelle séance au premier lancement ; conserver la séance pour les continuations.",
       "Vérifier sur un PC élève : Gestionnaire des tâches et ses totaux, Performance (processeur, mémoire, disque), GIMP (ouvert pour les élèves, temps d’ouverture, image 10000 × 10000), Banc d’essai labo-07/essai-charge.html (processeur près de 100 % pendant le calcul), Terminer la tâche sur GIMP, Calculatrice, Bloc-notes, fenêtres, chemin et Statut du fichier OneDrive. Seul arrêt de processus : GIMP, quand la fiche le demande ; aucune suppression ni changement de réglage.",
       "Projection : utiliser uniquement Lancer la séquence. Ne jamais projeter tableau nominatif, Journal, humeur, avis ou copies. Un vote initial recueille des choix ; seuls les effectifs agrégés sont projetés. Aucun texte libre d’élève n’est affiché.",
-      "Varier les méthodes : prédiction écrite, vote collectif, manipulation sur le poste, QCM après les ressources, chemin et statut à observer, quatre incidents puis ordre de la démarche, explication orale, transfert final individuel. Les exercices du site ne demandent pas de texte supplémentaire dans le rapport.",
+      "Varier les méthodes : prédiction écrite, vote collectif, manipulation sur le poste, QCM après les ressources, chemin et statut à observer, un incident par élève puis mise en commun des quatre, ordre de la démarche, explication orale, transfert final individuel. Les exercices du site ne demandent pas de texte supplémentaire dans le rapport.",
       "Autonomie : indices puis binôme, « J'attends de l'aide » si le blocage persiste. Pendant l’entraînement, cibler les blocages et désaccords au lieu de demander trois validations orales par élève. Le professeur conserve le contrôle individuel du défi final.",
       "Présenter une seule fois au groupe le bouton du moniteur externe, distinct du PC. Sur poste non identifié ou tout-en-un : cas simulé. Éviter une demande d’autorisation identique à chaque essai.",
       "Relecture entre pairs : trois critères annoncés, un point réussi et une correction possible ; l’auteur corrige lui-même. Aucun avis de camarade ne vaut note, validation de geste par le professeur ou remise. Le site ne collecte pas cette vérification."
@@ -1600,17 +1600,35 @@
       {
         "type": "atelier",
         "titre": "Mission 3 — Dépanner",
-        "min": 50,
-        "methode": "Individuel puis mise en commun",
+        "min": 20,
+        "methode": "Individuel : un incident par élève, attribué par le site",
         "lignes": [
-          "Quatre incidents à manipuler personnellement : fenêtre masquée, fenêtre active, fichier/application, écran éteint.",
-          "Un seul incident rédigé en quatre lignes. Pour les trois autres : chacun formule sa propre hypothèse, manipule et explique au binôme ; inversez acteur et observateur."
+          "Chacun teste un seul incident, celui que le site lui donne : fenêtre masquée, fenêtre active, fichier et application, ou écran éteint.",
+          "Hypothèse et test écrits dans le rapport avant d’agir ; puis observation et solution. Quatre lignes en tout."
         ],
         "blocs": [
           8,
           11
         ],
-        "repere": "Montrer une seule fois au groupe le bouton du moniteur externe. Les binômes vérifient les trois incidents non rédigés avec les critères annoncés ; le professeur intervient sur blocage persistant ou désaccord. Pas de passage obligatoire après chaque essai."
+        "repere": "Montrer une seule fois au groupe le bouton du moniteur externe (incident 4). Circuler : vérifier que l’hypothèse est écrite avant le test. Lancer la mise en commun quand la plupart ont écrit leurs quatre lignes ; les retardataires finissent après."
+      },
+      {
+        "type": "ecran",
+        "titre": "Mise en commun 3 — Les quatre incidents",
+        "min": 10,
+        "methode": "Collectif oral : un élève par incident, trente secondes chacun",
+        "lignes": [
+          "Pour ton incident : ton hypothèse, ton test, ce que tu as vu, ta solution.",
+          "1. La fenêtre a disparu : fermée, ou seulement cachée ?",
+          "2. Je tape dans la mauvaise fenêtre : laquelle reçoit le texte ?",
+          "3. Fermer l’application fait-il disparaître le fichier ?",
+          "4. Écran noir : le PC est-il arrêté ?"
+        ],
+        "questions": [
+          "Ton test était-il sans risque : peut-on revenir en arrière ?",
+          "Quel indice t’a permis de conclure ?"
+        ],
+        "repere": "Demander qui avait l’incident 1, puis 2, 3, 4 : un élève explique, les autres écoutent ; un second complète si besoin. Si personne n’a eu un incident, le montrer soi-même au projecteur. Attendus — 1 : l’icône reste dans la barre des tâches, clic dessus ou Alt + Tab, la fenêtre était réduite. 2 : le curseur de saisie suit le clic, pas la souris ; cliquer dans la zone de texte voulue. 3 : le fichier est toujours dans son dossier OneDrive ; l’application ne contient pas le fichier. 4 : l’écran rallumé montre les mêmes fenêtres ; l’écran est un périphérique, le PC n’était pas arrêté. Chacun corrige ensuite son propre rapport."
       },
       {
         "type": "mots",
@@ -1632,23 +1650,7 @@
           "À éviter"
         ],
         "repere": "Pour chaque test : que vérifie-t-il, et peut-on revenir en arrière ? « À éviter » : arrêter le PC, débrancher, supprimer, terminer une tâche au hasard. Faire dire quel indice le test a donné. Ne pas demander un deuxième incident rédigé.",
-        "source": 14
-      },
-      {
-        "type": "ecran",
-        "titre": "Mise en commun 3 — Le cas de Léo",
-        "min": 5,
-        "methode": "Collectif oral sur un cas fictif, après vos tests",
-        "lignes": [
-          "Explique un test qui départage deux hypothèses.",
-          "Un test sans danger, puis une preuve pour conclure."
-        ],
-        "questions": [
-          "Pourquoi ne fallait-il pas arrêter le PC ?",
-          "Quel indice montre que le fichier existe encore ?"
-        ],
-        "repere": "Ouvrir la synthèse de la mission 3. Faire justifier un test à l’oral sur cas fictif. Ne pas demander un deuxième incident rédigé. Attendu pour le cas de Léo : cliquer dans la zone de texte de Bloc-notes et retaper ; si le texte apparaît, c’était la fenêtre active. Si rien, regarder si les touches marchent ailleurs (barre de recherche). On ne débranche rien, on n’éteint rien.",
-        "exemple": "Cas fictif : Léo tape son texte, rien n’apparaît dans Bloc-notes. Hypothèse 1 : le clavier est débranché. Hypothèse 2 : une autre fenêtre est active. Quel test, sans risque, départage les deux ?"
+        "source": 15
       },
       {
         "type": "ecran",
@@ -1663,7 +1665,7 @@
           "Éteindre l’écran n’arrête pas nécessairement le PC.",
           "Windows reste le système qui permet d’utiliser la machine et ses applications."
         ],
-        "repere": "Afficher après la discussion, avant la relecture en binôme."
+        "repere": "Afficher après la discussion : chacun compare avec son rapport et le corrige lui-même."
       },
       {
         "type": "atelier",

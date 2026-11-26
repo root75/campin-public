@@ -29,7 +29,7 @@ const PARCOURS = [
  {titre:'Préparer mon rapport', court:'Rapport', rond:'📄', debut:0, fin:1, bulle:'Avant l’enquête : ton carnet d’enquêteur. Un seul document pour tout le labo.'},
  {titre:'Mission 1 — Observer ce qui tourne', court:'Mission 1', rond:'1', debut:1, fin:5, bulle:'Première mission : que fait le PC quand une application s’ouvre ?'},
  {titre:'Mission 2 — Retrouver ses données', court:'Mission 2', rond:'2', debut:5, fin:7, bulle:'Bien joué ! Maintenant, où vit ton fichier ?'},
- {titre:'Mission 3 — Dépanner', court:'Mission 3', rond:'3', debut:7, fin:8, bulle:'Quatre petites pannes à élucider, à deux.'},
+ {titre:'Mission 3 — Dépanner', court:'Mission 3', rond:'3', debut:7, fin:8, bulle:'Une panne à élucider seul, puis on met les quatre en commun.'},
  {titre:'Défi final individuel', court:'Défi', rond:'⭐', bouton:'Défi final →', debut:8, fin:10, bulle:'Dernier défi, seul : montre ta méthode d’enquêteur.'},
  {titre:'Remettre mon rapport', court:'Remise', rond:'📤', bouton:'Remettre mon rapport →', debut:10, fin:11, bulle:'Dernier geste : remettre ton rapport, une seule fois.'}
 ];
@@ -470,73 +470,27 @@ const BLOCS = [
   },
   {
     "partie": "3 — Dépanner",
-    "titre": "Quatre incidents à tester, un seul à rédiger",
-    "min": 12,
-    "veux": "Dépanner personnellement quatre incidents ; écrire un seul cas et vérifier les trois autres à deux, chacun à son tour.",
-    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\"><span>Choisis <b>l’incident</b> que tu expliqueras dans le rapport.</span></label></li><li><label><input type=\"checkbox\"><span>Ouvre les <b>quatre cartes</b> ci-dessous. Pour chacune, formule ton hypothèse et choisis ton test avant d’agir, puis fais l’essai toi-même.</span></label></li><li><label><input type=\"checkbox\"><span>Incident choisi : écris dans le rapport l’hypothèse, le test, l’observation et la solution justifiée, <b>quatre lignes courtes</b>.</span></label></li><li><label><input type=\"checkbox\"><span>Les trois autres : explique ton hypothèse et ton test <b>au binôme</b>, montre ton geste et justifie ta conclusion ; puis inversez les rôles. Rien de plus dans le rapport.</span></label><p class=\"attention\">⚠️ Le binôme ne touche ni ta souris ni ton clavier : il observe et il explique.</p></li><li><label><input type=\"checkbox\"><span>Écoute le <b>retour du binôme</b>, et refais toi-même le geste à corriger si nécessaire.</span></label></li><li><label><input type=\"checkbox\"><span>Participe à la <b>mise en commun</b> : quel test départageait deux explications ? Le professeur affiche ensuite la synthèse : compare-la à ce que tu as écrit dans ton rapport, et corrige-le toi-même si besoin. Relis aussi ta mise en page : titre de la partie en Titre 1, plus aucune ligne entre crochets.</span></label></li></ol>",
-    "vois": "J’ai manipulé personnellement les quatre incidents. Un seul est rédigé ; pour les autres, nous avons alterné acteur et observateur, avec un retour oral précis.",
+    "titre": "Mon incident : le tester, puis le mettre en commun",
+    "min": 20,
+    "veux": "Dépanner seul un incident en suivant la méthode : hypothèse, test, observation, solution. Puis découvrir les trois autres à la mise en commun.",
+    "fais": "<p class=\"mon-incident\">🔧 <b>Ton incident : n° 1 — la fenêtre a disparu</b><br>Le site en donne un seul par élève : ton voisin a peut-être un autre incident.<br>❓ La Calculatrice est-elle fermée, ou seulement cachée ?</p><ol class=\"etapes\"><li><label><input type=\"checkbox\"><span>Dans ton rapport, partie 3 : efface la phrase sous le titre ▸ à « Incident choisi », écris <b>fenêtre masquée</b>.</span></label></li><li><label><input type=\"checkbox\"><span><b>Prépare la panne</b> : ⊞ Démarrer ▸ tape Calculatrice ▸ clique sur l’application ▸ clique sur — <b>Réduire</b>, en haut à droite de sa fenêtre. La fenêtre disparaît.</span></label></li><li><label><input type=\"checkbox\"><span><b>Avant de toucher à quoi que ce soit</b>, écris dans le rapport ton hypothèse et le test que tu vas faire : deux lignes.</span></label></li><li><label><input type=\"checkbox\"><span><b>Fais ton test</b> pour retrouver la fenêtre de la Calculatrice.</span></label></li><li><label><input type=\"checkbox\"><span>Écris dans le rapport ce que tu as <b>observé</b> et la <b>solution</b>, avec ce qui la justifie : deux lignes.</span></label></li><li><label><input type=\"checkbox\"><span><b>Mise en commun</b>, quand le professeur la lance : explique ton incident en trente secondes ▸ écoute les trois autres ▸ compare avec la synthèse affichée et corrige ton rapport toi-même si besoin.</span></label></li></ol>",
+    "vois": "Mon incident est rédigé en quatre lignes dans le rapport, hypothèse et test écrits avant d’agir. À la mise en commun, j’ai expliqué le mien et entendu les trois autres.",
     "coince": [
-      "Pour le cas écrit : hypothèse et test avant d’agir ; observation et solution après. Pour les autres, prépare les mêmes éléments à l’oral.",
-      "Ouvre les indices de chaque carte, puis demande au binôme de montrer le critère qui bloque. Si le désaccord ou le blocage persiste, clique sur « J'attends de l'aide » et poursuis un autre essai possible. Un avis du binôme ne remplace pas la note du professeur."
+      "Observe la barre des tâches : la fenêtre a disparu, mais l’application est-elle encore présente ?",
+      "Clique sur l’icône Calculatrice dans la barre des tâches, ou affiche les vignettes avec Alt + Tab et sélectionne Calculatrice."
     ],
     "demos": {
-      "incident 1.1": [
+      "2": [
         "calculatrice",
         [
           0,
           1
         ]
       ],
-      "incident 1.2": [
-        "fenetres",
-        [
-          0
-        ]
-      ],
-      "incident 1.4": [
+      "4": [
         "fenetres",
         [
           1,
-          2
-        ]
-      ],
-      "incident 2.1": [
-        "blocnotes",
-        [
-          0,
-          1
-        ]
-      ],
-      "incident 2.3": [
-        "fenetres",
-        [
-          3
-        ]
-      ],
-      "incident 3.1": [
-        "onedrive",
-        [
-          0,
-          1,
-          2,
-          3
-        ]
-      ],
-      "incident 4.2": [
-        "moniteur",
-        [
-          0
-        ]
-      ],
-      "incident 4.3": [
-        "moniteur",
-        [
-          1
-        ]
-      ],
-      "incident 4.5": [
-        "moniteur",
-        [
           2
         ]
       ]
@@ -544,7 +498,7 @@ const BLOCS = [
     "indices": true,
     "q": {
       "type": "mixte",
-      "q": "Après les quatre essais : remets la démarche en ordre, puis confirme le cas écrit. Aucun paragraphe supplémentaire.",
+      "q": "Après ton test : remets la démarche en ordre, puis confirme ton cas écrit.",
       "activite": {
         "type": "ordre-gestes",
         "q": "Reconstruis une démarche de dépannage : quel ordre évite de cliquer au hasard ?",
@@ -554,22 +508,86 @@ const BLOCS = [
           "Manipuler et relever un indice",
           "Justifier la conclusion"
         ],
-        "juste": "Refais mentalement cet ordre pour un de tes essais. Quel indice t’a fait garder ou changer ton hypothèse ?"
+        "juste": "C’est l’ordre que tu viens de suivre. Quel indice t’a fait garder ou changer ton hypothèse ?"
       },
       "validation": {
         "type": "rapport",
-        "q": "Quatre essais personnels, un seul incident écrit. Les trois autres sont vérifiés à deux, puis chacun corrige son propre geste. Le professeur intervient si le blocage ou le désaccord persiste ; le défi final reste individuel.",
-        "confirmation": "J’ai réalisé les manipulations demandées et complété « 3 — Un incident rédigé » dans mon rapport.",
-        "trace": "rapport:3 — Un incident rédigé",
+        "q": "Un incident par élève, testé seul et rédigé en quatre lignes ; les quatre incidents sont expliqués à la mise en commun. Le défi final reste individuel.",
+        "confirmation": "J’ai testé mon incident moi-même et complété « 3 — Dépanner » dans mon rapport.",
+        "trace": "rapport:3 — Dépanner",
         "juste": "Le professeur examine les preuves et les gestes. Cette déclaration ne constitue ni une correction ni une remise.",
         "liste": [
-          "Les quatre incidents, manipulés moi-même.",
-          "Un seul incident écrit dans le rapport, en quatre lignes.",
-          "Les trois autres expliqués au binôme, puis les rôles inversés."
+          "Mon incident, testé moi-même.",
+          "Hypothèse et test écrits avant d’agir.",
+          "Observation et solution justifiée, deux lignes.",
+          "Mon incident expliqué à la mise en commun."
         ]
       }
     },
-    "extra": "<details id=\"verification-pairs\"><summary>À deux — vérifier un geste sans le faire à la place</summary><ol class=\"etapes\"><li>Acteur : formule ta première hypothèse et choisis un test avant de demander de l’aide.</li><li>Observateur : écoute cette proposition, puis vérifie « test sans risque », « manipulation personnelle » et « conclusion appuyée sur un indice ».</li><li>Donne un retour oral précis : « Je vois… » pour un point réussi ; « Tu pourrais… » pour une correction.</li><li>L’acteur corrige lui-même ou refait le test. L’observateur ne touche ni sa souris ni son clavier.</li><li>Inversez les rôles : chacun manipule sur son propre poste. Si vous hésitez encore après les indices, cliquez sur « J'attends de l'aide » et poursuivez ce qui reste possible.</li></ol><p>Cette vérification aide à progresser ; elle ne donne pas de note et n’est pas collectée par le site.</p></details><div class=\"incidents\"><details class=\"incident\"><summary>Incident 1 : la fenêtre a disparu</summary><ol class=\"etapes\"><li><label><input type=\"checkbox\">Ouvre la <b>Calculatrice</b> : ⊞ Démarrer ▸ tape Calculatrice ▸ clique sur l’application.</label></li><li><label><input type=\"checkbox\">Clique sur — <b>Réduire</b>, en haut à droite de la fenêtre.</label></li><li><label><input type=\"checkbox\">Formule une <b>hypothèse</b> et choisis ton test avant de le réaliser.</label></li><li><label><input type=\"checkbox\">Effectue ton test pour <b>retrouver la fenêtre</b>.</label></li><li><label><input type=\"checkbox\">Explique ce qui prouve qu’elle était <b>fermée ou seulement masquée</b>.</label></li></ol><details><summary>Indice 1</summary><p>Observe la barre des tâches : la fenêtre a disparu, mais l’application est-elle encore présente ?</p></details><details><summary>Indice 2</summary><p>Clique sur l’icône Calculatrice dans la barre des tâches, ou affiche les vignettes avec Alt + Tab et sélectionne Calculatrice.</p></details></details><details class=\"incident\"><summary>Incident 2 : je tape dans la mauvaise fenêtre</summary><ol class=\"etapes\"><li><label><input type=\"checkbox\">Ouvre Bloc-notes : ⊞ Démarrer ▸ tape Bloc-notes ▸ clique sur l’application ▸ dans Bloc-notes, Fichier ▸ <b>Nouvelle fenêtre</b> (ou Ctrl + Shift + N, si disponible).</label></li><li><label><input type=\"checkbox\">Place les deux fenêtres <b>côte à côte</b> en les déplaçant par leur barre de titre.</label></li><li><label><input type=\"checkbox\">Clique dans la seconde fenêtre : comment écrire <b>dans la première</b> ?</label></li><li><label><input type=\"checkbox\">Formule une <b>hypothèse</b> et choisis ton test avant de le réaliser.</label></li><li><label><input type=\"checkbox\"><b>Effectue ton test</b> avec le seul mot « test » dans ces fenêtres d’essai.</label></li><li><label><input type=\"checkbox\">Explique quel indice montre <b>où le texte est arrivé</b>.</label></li></ol><details><summary>Indice 1</summary><p>Le pointeur de la souris et le curseur de saisie ne sont pas la même chose. Déplacer la souris ne suffit pas à activer une fenêtre.</p></details><details><summary>Indice 2</summary><p>Clique dans la zone de texte de la fenêtre voulue, ou sélectionne sa vignette avec Alt + Tab, puis clique dans sa zone de texte. Le curseur de saisie y apparaît. Si Nouvelle fenêtre manque, utilise l’Explorateur comme autre fenêtre et reviens au Bloc-notes.</p></details></details><details class=\"incident\"><summary>Incident 3 : le fichier serait-il « dans » l’application ?</summary><ol class=\"etapes\"><li><label><input type=\"checkbox\"><span>Repère <span data-rappel=\"6:F\">ton fichier de la mission 2</span> dans son dossier <b>OneDrive scolaire</b>, dans l’Explorateur.</span></label><p class=\"attention\">⚠️ Ne l’ouvre pas : un double-clic peut le télécharger et changer son statut.</p></li><li><label><input type=\"checkbox\">Formule ton hypothèse : <b>fermer l’application</b> fera-t-il disparaître le fichier ?</label></li><li><label><input type=\"checkbox\">Choisis <b>le test</b> qui te permettra de vérifier, avant de le réaliser.</label></li><li><label><input type=\"checkbox\">Ferme seulement une fenêtre Bloc-notes d’essai par × ; si elle contient le seul mot « test », choisis <b>Ne pas enregistrer</b>.</label></li><li><label><input type=\"checkbox\"><b>Retrouve ton fichier</b> dans son dossier.</label><p class=\"attention\">⚠️ Ne déplace pas ton fichier, ne le renomme pas.</p></li><li><label><input type=\"checkbox\">Explique la différence entre <b>le fichier et l’application</b>.</label></li></ol><details><summary>Indice 1</summary><p>L’icône d’une application n’est pas ton document. Cherche le nom du fichier et son emplacement.</p></details><details><summary>Indice 2</summary><p>Le bouton × ferme une fenêtre. Reviens au dossier OneDrive choisi dans la mission 2 et vérifie si ton fichier est toujours là. Si c’est une démonstration, indique-le.</p></details></details><details class=\"incident\"><summary>Incident 4 : écran noir, PC arrêté ?</summary><ol class=\"etapes\"><li><label><input type=\"checkbox\">Repère le bouton ⏻ du <b>moniteur externe</b> montré au groupe par le professeur, distinct de celui du PC. Si aucun bouton n’a été identifié, utilise le cas simulé.</label></li><li><label><input type=\"checkbox\">Formule une <b>hypothèse</b> et choisis ton test avant de toucher au bouton.</label><p class=\"attention\">⚠️ Ne touche jamais au bouton ⏻ du PC : seulement à celui de l’écran externe, montré par le professeur.</p></li><li><label><input type=\"checkbox\">Sur un écran externe dont le bouton a été identifié pour le groupe, <b>éteins seulement cet écran</b> avec ce bouton.</label></li><li><label><input type=\"checkbox\"><b>Rallume</b> seulement l’écran avec le même bouton.</label></li><li><label><input type=\"checkbox\">Explique ce que le <b>retour de la session et des fenêtres</b> permet de conclure.</label></li><li><label><input type=\"checkbox\">Sur portable ou tout-en-un, utilise le <b>cas simulé</b> « écran externe éteint, puis mêmes fenêtres retrouvées » et précise que le cas est simulé.</label></li></ol><details><summary>Indice 1</summary><p>Un écran est un périphérique d’affichage. Un affichage noir peut avoir plusieurs causes.</p></details><details><summary>Indice 2</summary><p>Le seul test autorisé ici est le bouton de l’écran externe identifié par le professeur. Sur portable ou tout-en-un, utilise le cas simulé « écran externe éteint, puis mêmes fenêtres retrouvées » et explique le test que tu choisirais.</p></details></details></div>"
+    "variantes": [
+      {
+        "fais": "<p class=\"mon-incident\">🔧 <b>Ton incident : n° 2 — je tape dans la mauvaise fenêtre</b><br>Le site en donne un seul par élève : ton voisin a peut-être un autre incident.<br>❓ Comment choisir la fenêtre où arrive ce que je tape ?</p><ol class=\"etapes\"><li><label><input type=\"checkbox\"><span>Dans ton rapport, partie 3 : efface la phrase sous le titre ▸ à « Incident choisi », écris <b>fenêtre active</b>.</span></label></li><li><label><input type=\"checkbox\"><span><b>Prépare la panne</b> : ⊞ Démarrer ▸ tape Bloc-notes ▸ clique sur l’application ▸ Fichier ▸ <b>Nouvelle fenêtre</b> (ou Ctrl + Shift + N) ▸ place les deux fenêtres côte à côte par leur barre de titre ▸ clique dans la seconde.</span></label></li><li><label><input type=\"checkbox\"><span><b>Avant de toucher à quoi que ce soit</b>, écris dans le rapport ton hypothèse et le test que tu vas faire : deux lignes.</span></label></li><li><label><input type=\"checkbox\"><span><b>Fais ton test</b> : écris le seul mot « test » dans la <b>première</b> fenêtre.</span></label><p class=\"attention\">⚠️ N’enregistre rien : ce sont des fenêtres d’essai.</p></li><li><label><input type=\"checkbox\"><span>Écris dans le rapport ce que tu as <b>observé</b> et la <b>solution</b>, avec ce qui la justifie : deux lignes.</span></label></li><li><label><input type=\"checkbox\"><span><b>Mise en commun</b>, quand le professeur la lance : explique ton incident en trente secondes ▸ écoute les trois autres ▸ compare avec la synthèse affichée et corrige ton rapport toi-même si besoin.</span></label></li></ol>",
+        "coince": [
+          "Le pointeur de la souris et le curseur de saisie ne sont pas la même chose. Déplacer la souris ne suffit pas à activer une fenêtre.",
+          "Clique dans la zone de texte de la fenêtre voulue, ou sélectionne sa vignette avec Alt + Tab, puis clique dans sa zone de texte. Le curseur de saisie y apparaît."
+        ],
+        "demos": {
+          "2": [
+            "blocnotes",
+            [
+              0,
+              1
+            ]
+          ],
+          "4": [
+            "fenetres",
+            [
+              3
+            ]
+          ]
+        }
+      },
+      {
+        "fais": "<p class=\"mon-incident\">🔧 <b>Ton incident : n° 3 — le fichier serait-il « dans » l’application ?</b><br>Le site en donne un seul par élève : ton voisin a peut-être un autre incident.<br>❓ Si je ferme l’application, mon fichier disparaît-il ?</p><ol class=\"etapes\"><li><label><input type=\"checkbox\"><span>Dans ton rapport, partie 3 : efface la phrase sous le titre ▸ à « Incident choisi », écris <b>fichier et application</b>.</span></label></li><li><label><input type=\"checkbox\"><span><b>Prépare la panne</b> : dans l’Explorateur (Windows + E), repère <span data-rappel=\"6:F\">ton fichier de la mission 2</span> dans son dossier OneDrive scolaire ▸ ouvre aussi Bloc-notes (⊞ Démarrer ▸ tape Bloc-notes).</span></label><p class=\"attention\">⚠️ Ne double-clique pas sur ton fichier : l’ouvrir peut le télécharger et changer son statut.</p></li><li><label><input type=\"checkbox\"><span><b>Avant de toucher à quoi que ce soit</b>, écris dans le rapport ton hypothèse et le test que tu vas faire : deux lignes.</span></label></li><li><label><input type=\"checkbox\"><span><b>Fais ton test</b> : ferme Bloc-notes par le × (Ne pas enregistrer) ▸ retourne dans le dossier de ton fichier.</span></label><p class=\"attention\">⚠️ Ne déplace pas ton fichier, ne le renomme pas.</p></li><li><label><input type=\"checkbox\"><span>Écris dans le rapport ce que tu as <b>observé</b> et la <b>solution</b>, avec ce qui la justifie : deux lignes.</span></label></li><li><label><input type=\"checkbox\"><span><b>Mise en commun</b>, quand le professeur la lance : explique ton incident en trente secondes ▸ écoute les trois autres ▸ compare avec la synthèse affichée et corrige ton rapport toi-même si besoin.</span></label></li></ol>",
+        "coince": [
+          "L’icône d’une application n’est pas ton document. Cherche le nom du fichier et son emplacement.",
+          "Le bouton × ferme une fenêtre. Reviens au dossier OneDrive de la mission 2 et vérifie si ton fichier est toujours là."
+        ],
+        "demos": {
+          "2": [
+            "onedrive",
+            [
+              0,
+              1,
+              2,
+              3
+            ]
+          ]
+        }
+      },
+      {
+        "fais": "<p class=\"mon-incident\">🔧 <b>Ton incident : n° 4 — écran noir, PC arrêté ?</b><br>Le site en donne un seul par élève : ton voisin a peut-être un autre incident.<br>❓ L’écran noir veut-il dire que le PC est arrêté ?</p><ol class=\"etapes\"><li><label><input type=\"checkbox\"><span><b>Repère le bouton ⏻ de l’écran</b> que le professeur a montré, distinct de celui du PC. Sur un portable ou un tout-en-un, prends le cas simulé : « écran éteint, puis mêmes fenêtres retrouvées ».</span></label><p class=\"attention\">⚠️ Ne touche jamais au bouton ⏻ du PC : seulement à celui de l’écran.</p></li><li><label><input type=\"checkbox\"><span>Dans ton rapport, partie 3 : efface la phrase sous le titre ▸ à « Incident choisi », écris <b>écran éteint</b>.</span></label></li><li><label><input type=\"checkbox\"><span><b>Avant de toucher à quoi que ce soit</b>, écris dans le rapport ton hypothèse et le test que tu vas faire : deux lignes.</span></label></li><li><label><input type=\"checkbox\"><span><b>Fais ton test</b> : éteins l’écran avec son bouton ▸ rallume-le avec le même bouton ▸ regarde si tes fenêtres sont toujours là.</span></label></li><li><label><input type=\"checkbox\"><span>Écris dans le rapport ce que tu as <b>observé</b> et la <b>solution</b>, avec ce qui la justifie : deux lignes.</span></label></li><li><label><input type=\"checkbox\"><span><b>Mise en commun</b>, quand le professeur la lance : explique ton incident en trente secondes ▸ écoute les trois autres ▸ compare avec la synthèse affichée et corrige ton rapport toi-même si besoin.</span></label></li></ol>",
+        "coince": [
+          "Un écran est un périphérique d’affichage. Un affichage noir peut avoir plusieurs causes.",
+          "Le seul test autorisé est le bouton de l’écran montré par le professeur. Si tes fenêtres reviennent telles quelles, qu’est-ce qui ne s’est jamais arrêté ?"
+        ],
+        "demos": {
+          "1": [
+            "moniteur",
+            [
+              0
+            ]
+          ],
+          "4": [
+            "moniteur",
+            [
+              1,
+              2
+            ]
+          ]
+        }
+      }
+    ]
   },
   {
     "partie": "Final — Situation individuelle nouvelle",
@@ -609,7 +627,7 @@ const BLOCS = [
     "titre": "Montrer ma preuve et justifier ma décision",
     "min": 10,
     "veux": "Résoudre seul la nouvelle situation et justifier une décision en peu de mots.",
-    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\"><span>Réalise sur ton poste <b>le test que tu as choisi</b> (rappelé au-dessus) : l’Explorateur recouvert par une fenêtre d’essai, retrouve-le.</span></label></li><li><label><input type=\"checkbox\"><span>Lis le <b>chemin et le statut</b> de <span data-rappel=\"6:F\">ton fichier de la mission 2</span>.</span></label><p class=\"attention\">⚠️ Ne l’ouvre pas : l’ouvrir peut le télécharger et changer son statut.</p></li><li><label><input type=\"checkbox\"><span>Dans le rapport, note en une ligne <b>l’indice observé</b> ; distingue ton poste réel du nuage donné dans le scénario.</span></label></li><li><label><input type=\"checkbox\"><span>Dans le rapport, réponds au camarade en <b>deux phrases</b> au plus : ta décision, et ce qui la justifie.</span></label></li><li><label><input type=\"checkbox\"><span>Prépare ton geste et ton indice pour le <b>contrôle individuel</b> du professeur, en circulation ; explique-lui machine, Windows, application et fichier. En attendant, relis ta mise en page.</span></label></li><li><label><input type=\"checkbox\"><span>Participe à la <b>synthèse finale</b>. La remise du rapport est l’étape suivante.</span></label></li></ol>",
+    "fais": "<ol class=\"etapes\"><li><label><input type=\"checkbox\"><span>Réalise sur ton poste <b>le test que tu as choisi</b> (rappelé au-dessus) : l’Explorateur recouvert par une fenêtre d’essai, retrouve-le.</span></label></li><li><label><input type=\"checkbox\"><span>Lis le <b>chemin et le statut</b> de <span data-rappel=\"6:F\">ton fichier de la mission 2</span>.</span></label><p class=\"attention\">⚠️ Ne l’ouvre pas : l’ouvrir peut le télécharger et changer son statut.</p></li><li><label><input type=\"checkbox\"><span>Dans le rapport, note en une ligne <b>le statut que tu lis sur ton poste</b>. Le nuage bleu, lui, est sur l’autre PC du scénario : ce n’est pas ce que tu vois.</span></label></li><li><label><input type=\"checkbox\"><span>Dans le rapport, réponds au camarade en <b>deux phrases</b> au plus : ta décision, et ce qui la justifie.</span></label></li><li><label><input type=\"checkbox\"><span>Prépare ton geste et ton indice pour le <b>contrôle individuel</b> du professeur, en circulation ; explique-lui machine, Windows, application et fichier. En attendant, relis ta mise en page.</span></label></li><li><label><input type=\"checkbox\"><span>Participe à la <b>synthèse finale</b>. La remise du rapport est l’étape suivante.</span></label></li></ol>",
     "vois": "Une preuve en une ligne, une conclusion courte et une manipulation personnelle expliquée au professeur. La case du site ne remet pas le document.",
     "coince": [
       "Un nom de fichier visible ne suffit pas à prouver que son contenu est déjà téléchargé.",
