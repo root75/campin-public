@@ -46,6 +46,7 @@ const DECLARATIF = typeof MODE!=="undefined" && MODE==="declaratif";
    ligne « Bloc N sur M · Partie » disparaît, et « À observer » (B.avant) se replie dès la première case cochée de
    l'étape (un clic le rouvre). Les autres cours gardent leur affichage. */
 const LEGER = typeof ECRAN_LEGER!=="undefined" && ECRAN_LEGER;
+if(LEGER) document.documentElement.classList.add("ecran-leger");   // « À toi de jouer » mis en évidence (fiche.css, 26/11/2026)
 /* Méthode « je fais, la page constate, bravo » (Vincent, 23/11/2026), au choix de la fiche : const METHODE = 'constate'.
    Présentation « missions » seulement. Trois changements, et rien d'autre (le suivi, les preuves, le tableau restent) :
    - une case peut se cocher toute seule quand la page voit le geste : {geste:'…', compte:{sel:'.emo-part', attr:'data-emo', n:3}}
