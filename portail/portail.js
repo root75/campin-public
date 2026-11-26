@@ -32,7 +32,9 @@ function affiche(d){
   $("non-connecte").hidden = true;
   $("bonjour").textContent = "Bonjour " + (d.prenom || "") + ", par où commences-tu ?";
   $("compte").replaceChildren("Connecté avec ", gras(d.email), d.prof ? " · professeur" : d.classe ? " · classe " : " · classe à choisir dans « Mes cours »", d.prof || !d.classe ? "" : gras(d.classe));
+  if(d.apercu) $("compte").replaceChildren("Aperçu : tu vois le portail comme un élève de ", gras(d.apercu), " (rien n'est enregistré)");
   $("compte").hidden = false;
+  voirEnTantQue(d);
   $("porte-cours").href = d.mesCours;
   if(d.devoirs){
     $("porte-devoirs").href = d.devoirs;
@@ -451,6 +453,17 @@ function chargeDefi(maintenant){
     peintDefi();
   }).catch(() => {});
 }
+/** Professeur : « Voir en tant que » une classe, sous la ligne du compte. Chaque lien recharge le portail en aperçu. */
+function voirEnTantQue(d){
+  if(!d.prof || !Array.isArray(d.classes) || !d.classes.length || !d.mesCours) return;
+  const p = document.createElement("p"); p.className = "compte voir-comme";
+  p.append("Voir en tant que : ");
+  const lien = (texte, url, actif) => { const a = document.createElement("a"); a.textContent = texte; a.href = url; a.target = "_top";
+    if(actif) a.setAttribute("aria-current", "true"); p.append(a, " "); };
+  d.classes.forEach(c => lien(c, d.mesCours + "?vue=portail&classe=" + encodeURIComponent(c), c === d.apercu));
+  if(d.apercu) lien("Moi (professeur)", d.mesCours + "?vue=portail", false);
+  $("compte").after(p);
+}
 /** Connecté : l'élève gagne son point ; ses points viennent du serveur. Un professeur joue sans point. */
 function defiConnecte(d){
   if(d.prof || !SUIVI) return;
@@ -461,7 +474,7 @@ function defiConnecte(d){
 chargeDefi(new Date());
 
 if(SUIVI){
-  google.script.run.withSuccessHandler(affiche).withFailureHandler(() => {}).portail();
+  google.script.run.withSuccessHandler(affiche).withFailureHandler(() => {}).portail((document.body && document.body.dataset && document.body.dataset.apercu) || "");
 } else if(location.protocol === "https:" && !/[?&]public\b/.test(location.search)){
   // « ?public » garde la page publique, pour la montrer sans être redirigé.
   // Sans compte de l'école, Google répond par sa page de connexion : le navigateur la refuse comme script, rien ne se passe.
