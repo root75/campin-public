@@ -4,62 +4,21 @@ Prénom et nom : [à compléter]
 Classe : [à compléter]
 Date : [à compléter]
 
-1. Observer ce qui tourne
-Mes hypothèses initiales restent dans Mes cours : je ne les recopie pas.
-Mon PC — Processeur : [nom] ; Cœurs : [nombre] ; Mémoire : [Go] ; Disque C: : [capacité en Go]
-Deux applications identifiées : [à compléter]
+1. Mon PC
+Processeur : [nom] ; Cœurs : [nombre] ; Mémoire : [Go] ; Disque C: : [capacité en Go]
+
+2. Mes relevés
 [Insérer un vrai tableau de 3 colonnes et 5 lignes.]
 En-têtes : Moment ; Processeur (%) ; Mémoire (%)
-Lignes : Avant ; Pendant le calcul ; Après 1 min ; Après fin de tâche
-[Insérer une seule capture ciblée, prise après le relevé d’1 minute, GIMP encore ouvert.]
-Légende de la capture : [une phrase]
-Conclusion : [deux phrases : observation appuyée sur les relevés, puis autre cause possible ou limite]
+Lignes : Avant ; Avec GIMP ; Pendant le calcul ; Après fin de tâche
 
-2. Retrouver ses données
-Fichier choisi dans OneDrive (préciser « démo » si nécessaire) : [à compléter]
-Chemin : [à compléter]
-Statut exact : [à compléter]
-Disponible sans réseau ? [une phrase avec l’indice qui le justifie, ou l’information manquante]
+3. Ma capture
+[Coller ici la capture du Gestionnaire des tâches, Performance ▸ Mémoire.]
+Légende : [une phrase : ce que montre la capture]
 
-3. Dépanner — Mon incident
-Le site me donne un incident : je le teste seul ; les quatre sont expliqués à la mise en commun.
-Incident choisi : [fenêtre masquée / fenêtre active / fichier et application / écran éteint]
-Hypothèse AVANT le test : [une ligne]
-Test choisi AVANT de le réaliser : [une ligne]
-Observation APRÈS le test (indiquer si simulé) : [une ligne]
-Solution justifiée : [une ligne]
+4. Ma conclusion
+[Deux ou trois phrases : ce qui a changé dans mes relevés ; mon hypothèse de départ est-elle confirmée ? ; une limite ou une autre cause possible.]
 
-4. Défi final individuel — Le dossier de secours
-Mon hypothèse et mon test initial restent dans Mes cours.
-Statut lu sur mon poste (pas le nuage du scénario) : [une ligne]
-Ma décision justifiée pour le scénario : [deux phrases maximum]
-Je montre ma manipulation et distingue machine, Windows, application et fichier à l’oral au professeur, sans autre paragraphe à écrire.
-
-Grille critériée — Travail quotidien /20
-Enquête finale /14 ; document et remise /6.
-
-Hypothèse initiale (site, défi final) — /2
-2 : plausible et testable ; 1 : plausible mais imprécise ; 0 : absente ou hors sujet.
-
-Choix et réalisation du test — /4
-4 : pertinent, réversible, personnel ; 2 : pertinent mais incomplet ou encore guidé ; 0 : absent ou dangereux non corrigé.
-
-Preuve dans le rapport — /2
-2 : indice précis, réel et distingué du cas donné ; 1 : partiel ; 0 : inexploitable.
-
-Conclusion finale justifiée — /4
-4 : décision correcte liée à la preuve et au nuage donné, arrêt de Windows écarté avec raison ; 2 : décision pertinente mais justification partielle ; 0 : sans lien ou erronée.
-
-Machine / système / application / fichier — /2
-2 : quatre rôles distingués à l’oral dans le cas ; 1 : distinction partielle ; 0 : confusion persistante.
-
-Mise en page — /2
-1 : titre en style Titre et sous-titre en style Sous-titre, tous deux centrés ; 1 : les quatre parties dans le même style Titre 1.
-
-Tableau et capture — /2
-1 : vrai tableau 3×5, lisible, en-têtes avec % ; 1 : capture utile, lisible, pas étirée, légende juste dessous.
-
-Identification et remise — /2
-1 : prénom, nom, classe, date et fichier nommé LABO07_CoulissesPC_Prenom_Nom ; 1 : bon document joint, statut « Remis » dans Classroom.
-
-Total /20. Non observé faute de temps ou poste indisponible : à compléter, pas zéro. La vitesse et l’utilisation d’un indice ne sont pas pénalisées.
+Grille — rapport sur 10
+Contenu /6 : tableau avec mes relevés /2 ; capture lisible et légendée /2 ; conclusion appuyée sur les relevés /2.
+Mise en page /4 : titre et sous-titre centrés /1 ; les quatre parties en Titre 1 /1 ; un vrai tableau /1 ; fichier nommé LABO07_CoulissesPC_Prenom_Nom, prénom, nom, classe et date /1.
