@@ -27,7 +27,11 @@ a.btn{display:inline-block;margin-top:18px;background:var(--bleu);color:#fff;tex
 </main>
 <script>
 // Les liens élèves des trois Forms (« lien élève » dans le journal de creerEval). Vide = épreuve pas encore ouverte.
-const LIENS = { A: "", B: "", C: "" };
+const LIENS = {
+  A: "https://docs.google.com/forms/d/e/1FAIpQLSfD3w5LBjrNhgHMF_J29JIe4reLERtkC1v8WU6LwDRYzdKq-A/viewform",
+  B: "https://docs.google.com/forms/d/e/1FAIpQLSc_T5zNB1A0xMU_tGDiY9yZ9oOXC3kH637nnCZYi1Pa6eDq8g/viewform",
+  C: "https://docs.google.com/forms/d/e/1FAIpQLSeJm0TQ9eeeXteeLJEjnuV4T_Ii3ATCDFSzH8TnR5brH82oVg/viewform"
+};
 const champ = document.getElementById("poste"), sortie = document.getElementById("serie");
 champ.addEventListener("input", () => {
   const n = Number(champ.value.replace(/\D/g, ""));
