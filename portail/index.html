@@ -145,23 +145,8 @@ h1{font:800 clamp(28px,4.2vw,42px)/1.1 var(--titre);margin:0;text-wrap:balance}
 .pied a{color:var(--doux)}
 .auteur{margin-left:auto}
 
-/* Le lanceur d'applis Google (Vincent, 27/11/2026) : la même grille à 9 points, à la même place (en haut à droite),
-   pour que le geste appris ici serve tel quel sur n'importe quelle page Google. Ce n'est qu'une liste de liens :
-   le vrai lanceur ne peut pas s'intégrer, et le poste ou l'extension bloquent toujours ce que le mode du cours ferme. */
-.applis{position:relative;flex:none}
-.applis-bouton{width:48px;height:48px;border-radius:50%;border:0;background:transparent;display:grid;place-items:center;cursor:pointer;color:var(--doux);padding:0}
-.applis-bouton:hover,.applis-bouton[aria-expanded="true"]{background:rgba(127,140,170,.22)}
-.applis-bouton svg{width:24px;height:24px;fill:currentColor}
-.applis-panneau{position:absolute;right:0;top:54px;z-index:50;width:min(340px,calc(100vw - 32px));padding:8px;border-radius:28px;
-  background:var(--g-fond);box-shadow:0 4px 8px 3px rgba(0,0,0,.15),0 1px 3px rgba(0,0,0,.3)}
-.applis-grille{list-style:none;margin:0;padding:14px 8px;border-radius:20px;background:var(--g-carte);display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
-.applis-grille a{display:flex;flex-direction:column;align-items:center;gap:8px;padding:12px 4px 10px;border-radius:16px;text-decoration:none;
-  color:var(--g-texte);font:400 14px/1.2 "Google Sans",Roboto,Arial,sans-serif}
-.applis-grille a:hover,.applis-grille a:focus-visible{background:var(--g-survol)}
-.applis-grille img{width:40px;height:40px}
-:root{--g-fond:#1b1c1d;--g-carte:#282a2c;--g-texte:#e3e3e3;--g-survol:#37393b}
-:root[data-theme="light"]{--g-fond:#e9eef6;--g-carte:#ffffff;--g-texte:#1f1f1f;--g-survol:#e8ebee}
-
+/* Le lanceur d'applis (assets/lanceur.js) se pose dans le bandeau ; ses points prennent la couleur douce du portail. */
+.applis{--lanceur-icone:var(--doux)}
 @media (max-width:820px){.portes{grid-template-columns:1fr}
   .porte{display:grid;grid-template-columns:64px 1fr;justify-items:start;align-items:center;text-align:left;padding:16px;gap:2px 14px}
   .porte .rond{grid-row:1 / span 3;width:64px;height:64px;margin:0}.rond svg{width:36px;height:36px}.porte em{margin:2px 0 0}
@@ -179,25 +164,8 @@ h1{font:800 clamp(28px,4.2vw,42px)/1.1 var(--titre);margin:0;text-wrap:balance}
     <!-- La date du jour : l'élève en a besoin pour nommer son travail (AAAAMMJJ Titre – Prénom Nom). -->
     <p class="date" id="date" hidden><b id="date-jour"></b><span id="date-nommer" hidden>Pour nommer ton travail : <b id="date-nom"></b></span></p>
     <button class="pastille" id="theme" type="button">Mode clair</button>
-    <!-- Le lanceur d'applis, comme sur les pages Google : la grille à 9 points, tout en haut à droite. -->
-    <div class="applis">
-      <button class="applis-bouton" id="applis" type="button" aria-label="Applications Google" title="Applications Google" aria-expanded="false" aria-controls="applis-panneau">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="6" r="2"/><circle cx="12" cy="6" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="6" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="18" cy="12" r="2"/><circle cx="6" cy="18" r="2"/><circle cx="12" cy="18" r="2"/><circle cx="18" cy="18" r="2"/></svg>
-      </button>
-      <div class="applis-panneau" id="applis-panneau" hidden>
-      <ul class="applis-grille">
-        <li><a target="_top" href="https://classroom.google.com/"><img src="https://ssl.gstatic.com/images/branding/product/2x/classroom_48dp.png" alt="" width="40" height="40">Classroom</a></li>
-        <li><a target="_top" href="https://drive.google.com/"><img src="https://ssl.gstatic.com/images/branding/product/2x/drive_2020q4_48dp.png" alt="" width="40" height="40">Drive</a></li>
-        <li><a target="_top" href="https://docs.google.com/document/"><img src="https://ssl.gstatic.com/images/branding/product/2x/docs_2020q4_48dp.png" alt="" width="40" height="40">Docs</a></li>
-        <li><a target="_top" href="https://docs.google.com/spreadsheets/"><img src="https://ssl.gstatic.com/images/branding/product/2x/sheets_2020q4_48dp.png" alt="" width="40" height="40">Sheets</a></li>
-        <li><a target="_top" href="https://docs.google.com/presentation/"><img src="https://ssl.gstatic.com/images/branding/product/2x/slides_2020q4_48dp.png" alt="" width="40" height="40">Slides</a></li>
-        <li><a target="_top" href="https://docs.google.com/forms/"><img src="https://ssl.gstatic.com/images/branding/product/2x/forms_2020q4_48dp.png" alt="" width="40" height="40">Forms</a></li>
-        <li><a target="_top" href="https://calendar.google.com/"><img src="https://ssl.gstatic.com/images/branding/product/2x/calendar_2020q4_48dp.png" alt="" width="40" height="40">Agenda</a></li>
-        <li><a target="_top" href="https://keep.google.com/"><img src="https://ssl.gstatic.com/images/branding/product/2x/keep_2020q4_48dp.png" alt="" width="40" height="40">Keep</a></li>
-        <li><a target="_top" href="https://www.google.com/"><img src="https://ssl.gstatic.com/images/branding/product/2x/googleg_48dp.png" alt="" width="40" height="40">Recherche</a></li>
-      </ul>
-      </div>
-    </div>
+    <!-- Le lanceur d'applis, comme sur les pages Google : la grille à 9 points, tout en haut à droite (assets/lanceur.js). -->
+    <div data-lanceur-applis></div>
   </header>
 
   <div>
@@ -310,5 +278,6 @@ h1{font:800 clamp(28px,4.2vw,42px)/1.1 var(--titre);margin:0;text-wrap:balance}
 </div>
 <!-- Adresse absolue : Apps Script abîme un script écrit dans la page (outils/pas-a-pas/LISEZMOI.md). -->
 <script src="https://root75.github.io/campin-public/portail/portail.js"></script>
+<script src="https://root75.github.io/campin-public/assets/lanceur.js"></script>
 </body>
 </html>
