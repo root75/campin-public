@@ -154,6 +154,9 @@
 ||rawcdn.githack.com^$important
 ! 2026-11-20 block — serveur Minecraft (bloqué jusqu'ici par l'amont NextDNS, quitté)
 ||hypixel.net^$important
+! 2026-11-27 block — PS279 (jeux et proxys « unblocked » ; miroirs sur tout domaine contenant ps279)
+||ps279.org^$important
+/ps279/
 ! ==============================================================================
 ! === BLOCAGE — Anime & Streaming non autorisé (non couverts par regex) ===
 ! ==============================================================================
