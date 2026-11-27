@@ -547,6 +547,9 @@ function rythmeGestes(z){
     const obs = new MutationObserver(etatBouton); v.forEach(k=>obs.observe(cases[k],{attributes:true,attributeFilter:["disabled"]}));
     majBoutons.push(etatBouton);
   });
+  /* Décocher une case ne replie pas la liste : les autres gestes restent visibles, seule la case cliquée change
+     (Vincent, 27/11/2026, en classe : « tout le bloc se replie »). Vaut jusqu'au prochain affichage de l'étape. */
+  let garderTout = false;
   const maj = (deplace=false, gesteCoche=null)=>{
     const courant = cases.findIndex(c=>!c.checked), faits = cases.filter(c=>c.checked).length;
     const vue_ = courant<0 ? -1 : vueDe[courant], groupe = vues.length<cases.length;
@@ -558,7 +561,7 @@ function rythmeGestes(z){
     vue.setAttribute("aria-pressed",String(tousLesGestes));
     lignes.forEach((li,k)=>{
       li.value = k+1;
-      li.hidden = !tousLesGestes && courant>=0 && vueDe[k]!==vue_;
+      li.hidden = !tousLesGestes && !garderTout && courant>=0 && vueDe[k]!==vue_;
       if(li.hidden) li.querySelectorAll("details.demo-case[open]").forEach(d=>{ d.open = false; });
       li.classList.toggle("geste-actuel",k===courant && !boutonDe[k]);
       li.classList.toggle("geste-accompli",cases[k].checked);
@@ -593,7 +596,7 @@ function rythmeGestes(z){
     if(cible){ cible.open = true; const titre = cible.querySelector("summary"); if(titre) titre.focus(); cible.scrollIntoView({block:"nearest",behavior:matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"}); }
   });
   liste.addEventListener("change",e=>{
-    if(cases.includes(e.target)) maj(e.isTrusted, e.isTrusted && e.target.checked ? e.target : null);
+    if(cases.includes(e.target)){ if(e.isTrusted && !e.target.checked) garderTout = true; maj(e.isTrusted && !garderTout, e.isTrusted && e.target.checked ? e.target : null); }
   });
   maj();
   /* Écran léger : à l'ouverture, seule l'animation de la case à faire est ouverte. Le lecteur ouvre la première
