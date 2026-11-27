@@ -7,7 +7,7 @@
    Dans une case : <b>…</b> = le mot-clé ; <span class="a-ecrire"> = à écrire exactement.
    « demos » : "N" (N-ième case) → [clé de l'animation dans demos.js, numéros des images à montrer sous cette case]. */
 const COURS = 'rat-de-ville-formatif';
-const DECOUVERTES = [["📜", "Manuscrit ouvert"], ["🐀", "Les rats entrent en scène"], ["🧱", "Strophes en place"], ["🖋️", "Auteur signé"], ["🎨", "Polices choisies"], ["🔸", "Liste à puces"], ["🔢", "Gestes en ordre"], ["💬", "Méthode expliquée"], ["🔎", "Relecture terminée"], ["📚", "Fable remise"]];
+const DECOUVERTES = [["📜", "Manuscrit ouvert"], ["🐀", "Les rats entrent en scène"], ["🎨", "Fable mise en forme"], ["🔢", "Listes en place"], ["💬", "Méthode expliquée"], ["📚", "Fable vérifiée et remise"]];
 const PRESENTATION = 'missions';
 const MODE = 'declaratif';
 /* Pendant l'action, le moins possible d'autres éléments à l'écran (Vincent, 25/11/2026) : voir ECRAN_LEGER dans blocs.js.
@@ -231,10 +231,10 @@ const BLOCS = [
   "titre": "Une police par strophe",
   "min": 12,
   "bulle": "Déjà la moitié ! Le rat est fier de toi.",
-  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>Je repère le numéro de la strophe avant de choisir sa police et sa taille.</p><table class=\"repere-polices\"><caption>Police et taille attendues</caption><tr><th>Strophes</th><th>Police</th><th>Taille</th></tr><tr><td>1 et 2</td><td>EB Garamond</td><td>14</td></tr><tr><td>3 et 4</td><td>Arial</td><td>12</td></tr><tr><td>5</td><td>Calibri</td><td>10</td></tr><tr><td>6 et 7</td><td>Arial Black</td><td>8</td></tr></table></aside><p class=\"note\">Pour chaque strophe : je la sélectionne seule, je choisis la police dans le menu des polices, puis je tape la taille dans la case du nombre.</p>",
+  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>Je repère le numéro de la strophe avant de choisir sa police et sa taille.</p><table class=\"repere-polices\"><caption>Police et taille attendues</caption><tr><th>Strophes</th><th>Police</th><th>Taille</th></tr><tr><td>1 et 2</td><td>EB Garamond ou Garamond</td><td>14</td></tr><tr><td>3 et 4</td><td>Arial</td><td>12</td></tr><tr><td>5</td><td>Calibri</td><td>10</td></tr><tr><td>6 et 7</td><td>Arial Black</td><td>8</td></tr></table></aside><p class=\"note\">Pour chaque strophe : je la sélectionne seule, je choisis la police dans le menu des polices, puis je tape la taille dans la case du nombre.</p>",
   "gestes": [
-   "<img class=\"ico\" src=\"" + ICONES + "police.png\" alt=\"\"><img class=\"ico\" src=\"" + ICONES + "taille.png\" alt=\"\">Sélectionne seulement la <b>strophe 1</b> : <b>EB Garamond, taille 14</b>.",
-   "<img class=\"ico\" src=\"" + ICONES + "police.png\" alt=\"\"><img class=\"ico\" src=\"" + ICONES + "taille.png\" alt=\"\">Sélectionne seulement la <b>strophe 2</b> : <b>EB Garamond, taille 14</b>.",
+   "<img class=\"ico\" src=\"" + ICONES + "police.png\" alt=\"\"><img class=\"ico\" src=\"" + ICONES + "taille.png\" alt=\"\">Sélectionne seulement la <b>strophe 1</b> : <b>EB Garamond (ou Garamond), taille 14</b>.",
+   "<img class=\"ico\" src=\"" + ICONES + "police.png\" alt=\"\"><img class=\"ico\" src=\"" + ICONES + "taille.png\" alt=\"\">Sélectionne seulement la <b>strophe 2</b> : <b>EB Garamond (ou Garamond), taille 14</b>.",
    "<img class=\"ico\" src=\"" + ICONES + "police.png\" alt=\"\"><img class=\"ico\" src=\"" + ICONES + "taille.png\" alt=\"\">Sélectionne seulement la <b>strophe 3</b> : <b>Arial, taille 12</b>.",
    "<img class=\"ico\" src=\"" + ICONES + "police.png\" alt=\"\"><img class=\"ico\" src=\"" + ICONES + "taille.png\" alt=\"\">Sélectionne seulement la <b>strophe 4</b> : <b>Arial, taille 12</b>.",
    "<img class=\"ico\" src=\"" + ICONES + "police.png\" alt=\"\"><img class=\"ico\" src=\"" + ICONES + "taille.png\" alt=\"\">Sélectionne seulement la <b>strophe 5</b> : <b>Calibri, taille 10</b>.",
@@ -533,7 +533,7 @@ const BLOCS = [
   "min": 10,
   "ensembles": [[1, 2], [3, 4, 5], [6, 7, 8, 9], [10], [11]],
   "bulle": "Avant de remettre : je vérifie tout, une chose par case.",
-  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>J’ouvre la grille : les critères avec une étoile sont incontournables.</p></aside><p class=\"note\">Je vérifie une chose par case, dans mon document. Si une chose manque, je la corrige avant de cocher.</p>",
+  "avant": "<aside class=\"repere observation\"><h3>À observer</h3><p>J’ouvre la grille : les critères avec une étoile sont incontournables.</p></aside><figure class=\"attendu\"><a href=\"" + BASE + "attendu.png\" target=\"_blank\" rel=\"noopener\"><img class=\"ressource\" src=\"" + BASE + "attendu.png\" alt=\"Un document terminé : la fable mise en forme, le bloc-notes, Mes gestes et la phrase\"></a><figcaption>Voici l’attendu : je compare mon document, page par page.</figcaption></figure><p class=\"note\">Je vérifie une chose par case, dans mon document. Si une chose manque, je la corrige avant de cocher.</p>",
   "gestes": [
    "<img class=\"ico\" src=\"" + ICONES + "orthographe.png\" alt=\"\">Clique sur <b>Vérifier l’orthographe</b> (Ctrl + Alt + X) et corrige.",
    "Vérifie le <b>nom</b> : <span class=\"a-ecrire\" aria-label=\"À écrire exactement : AAAAMMJJ Le rat de ville – Prénom Nom\">AAAAMMJJ Le rat de ville – Prénom Nom</span>",
@@ -604,7 +604,7 @@ const GRILLE_CRITERES = [
  {
   "n": "2. Qualité de la production",
   "inc": true,
-  "regarde": "Document nommé « AAAAMMJJ Le rat de ville – Prénom Nom ». Fable complète et exacte, une majuscule à chaque vers, 7 strophes séparées. Titre centré, gras, en majuscules ; texte centré ; auteur à droite, italique, souligné. La bonne police et la bonne taille pour chaque strophe.",
+  "regarde": "Document nommé « AAAAMMJJ Le rat de ville – Prénom Nom ». Fable complète et exacte, une majuscule à chaque vers, 7 strophes séparées. Titre centré, gras, en majuscules ; texte centré ; auteur à droite, italique, souligné. La bonne police et la bonne taille pour chaque strophe (EB Garamond ou Garamond : les deux sont justes).",
   "A": "Tout est conforme et la copie est sans faute.",
   "B": "Conforme, avec au plus deux écarts légers (1 à 3 fautes, une taille, une strophe).",
   "C": "Plusieurs éléments manquent ou sont faux (une police sur plusieurs strophes, l'auteur mal placé, des vers oubliés…).",
@@ -683,6 +683,31 @@ const BAS_ETAPE = [
     { texte: '<b>Je mets le cours et mon document côte à côte :</b> je clique sur l’onglet du cours, puis clic droit sur l’onglet de mon document ▸ <b>Ajouter l’onglet à une nouvelle vue fractionnée</b>. <button class="btn vide" type="button" data-cote-a-cote hidden>🪟 Mettre côte à côte</button>', demo: 'cote' } ] }
 ];
 
+/* Six étapes au lieu de dix (Vincent, 27/11/2026 : trop d'étapes). Les parties ci-dessus restent écrites séparément,
+   lisibles une à une ; ici, chaque paire devient une seule étape : les gestes de la seconde suivent ceux de la première,
+   son « À observer » passe sous son premier geste, ses animations et ses vues sont renumérotées. Les cases sont donc
+   enregistrées sous les numéros des six étapes (cours.json). */
+function fusionne(A, B, titre, court) {
+  const n = A.gestes.length;
+  const g = B.gestes.map(x => typeof x === 'string' ? { geste: x } : Object.assign({}, x));
+  if (B.avant) g[0].sous = '<div class="avant">' + B.avant + '</div>' + (g[0].sous || '');
+  A.gestes = A.gestes.concat(g);
+  A.min += B.min;
+  A.vois = [A.vois, B.vois].filter(Boolean).join('<br>');
+  A.demos = Object.assign({}, A.demos);
+  Object.keys(B.demos || {}).forEach(k => { A.demos[n + Number(k)] = B.demos[k]; });
+  const ens = (A.ensembles || []).concat((B.ensembles || []).map(e => e.map(x => x + n)));
+  if (ens.length) A.ensembles = ens;
+  A.titre = titre; if (court) A.court = court; else delete A.court;
+  return A;
+}
+BLOCS.splice(0, BLOCS.length,
+  BLOCS[0],
+  fusionne(BLOCS[1], BLOCS[2], 'Je recopie la fable'),
+  fusionne(BLOCS[3], BLOCS[4], 'Je mets en forme'),
+  fusionne(BLOCS[5], BLOCS[6], 'Mes deux listes'),
+  BLOCS[7],
+  fusionne(BLOCS[8], BLOCS[9], 'Je vérifie et je remets', 'Je vérifie, je remets'));
 BLOCS.forEach((B, i) => {
-  B.coince = [].concat(i === 1 || i === 2 ? AIDES_FRAPPE : [], i >= 3 && i < 9 ? AIDES_FORME : [], i === 9 ? AIDES_REMISE : [], [AIDE_RETROUVER]);
+  B.coince = [].concat(i === 1 ? AIDES_FRAPPE : [], i >= 2 && i <= 5 ? AIDES_FORME : [], i === 5 ? AIDES_REMISE : [], [AIDE_RETROUVER]);
 });
