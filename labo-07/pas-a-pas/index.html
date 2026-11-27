@@ -63,6 +63,7 @@ ol.etapes input[type=checkbox]:checked{background:var(--vert);border-color:var(-
 ol.etapes input[type=checkbox]:checked::after{content:"✓";color:#fff;font-weight:900;font-size:1.2rem}
 @keyframes coche{50%{transform:scale(1.3)}}
 ol.etapes ul.styles{margin:8px 0 0 42px;padding-left:1.1rem;list-style:disc}ol.etapes ul.styles li{background:none;border:0;padding:0;margin:3px 0}
+table.notes-m1{border-collapse:collapse;margin:6px 0}table.notes-m1 th,table.notes-m1 td{border:1px solid currentColor;padding:3px 10px;text-align:left}
 #rapport ol.etapes li:not(:has(input)){background:none;padding:2px 0;list-style:decimal;margin-left:1.3rem}
 #rapport ol.etapes:not(:has(input)){list-style:decimal;padding-left:0}
 /* La cloche d'aide, toujours en haut à droite */
@@ -118,9 +119,9 @@ details.coince{border-radius:16px}
   <main class="panneau" id="bloc" aria-live="polite"></main>
   <!-- Les outils sous la tâche, repliés : l'étape arrive tout de suite (Vincent, 26/11/2026 : « beaucoup trop d'info avant d'arriver à la tâche »). -->
   <details class="panneau outils-cours" id="outils-cours"><summary>🧰 Mes outils : rapport, Je retiens, méthode, banc d’essai, animations</summary>
-    <p class="note">Je prépare mon rapport, je mène trois missions et un défi final, puis je remets mon rapport. Un seul document Google Docs pour tout le labo.</p>
-    <details><summary>Comment ça marche ?</summary><p class="note">Le site garde tes hypothèses de départ ; ton rapport contient les preuves courtes. En mission 3, tu testes et rédiges un seul incident ; les quatre sont expliqués à la mise en commun. Une case cochée = action faite ; elle ne corrige rien et ne donne pas de point.</p></details>
-    <div class="actions"><!-- Avec l'extension « Campin — cours », Docs s'ouvre à droite du cours tout seul au premier chargement (data-auto, lu même volet fermé), puis d'un clic. --><a class="btn vide" href="https://docs.google.com/document/" target="campin-travail" rel="noopener" data-a-cote data-auto>📄 Ouvrir mon rapport dans Docs ↗</a><button class="btn vide" type="button" id="rapport-btn">📄 Mon rapport : trame et critères</button><a class="btn vide" href="https://root75.github.io/campin-public/labo-07/je-retiens.html" target="_blank" rel="noopener">Je retiens</a><button class="btn vide" type="button" id="memo-btn">🔎 Ma méthode d’enquête</button><a class="btn vide" href="https://root75.github.io/campin-public/labo-07/essai-charge.html" target="_blank" rel="noopener">🧪 Banc d’essai</a></div>
+    <p class="note">Une tâche à la fois : je fais une manipulation, puis j’écris ce que je lis dans le site. Après la mission 1, je rédige mon rapport d’une page avec mes notes et je le remets. Les missions 2, 3 et le défi se font dans le site.</p>
+    <details><summary>Comment ça marche ?</summary><p class="note">Les champs du site remplacent les pointillés d’une feuille : le professeur voit tes réponses. En mission 3, tu prévois puis tu testes un seul incident ; les quatre sont expliqués à la mise en commun. Une case cochée = action faite ; elle ne corrige rien et ne donne pas de point.</p></details>
+    <div class="actions"><button class="btn vide" type="button" id="rapport-btn">📄 Mon rapport : trame et critères</button><a class="btn vide" href="https://root75.github.io/campin-public/labo-07/je-retiens.html" target="_blank" rel="noopener">Je retiens</a><button class="btn vide" type="button" id="memo-btn">🔎 Ma méthode d’enquête</button><a class="btn vide" href="https://root75.github.io/campin-public/labo-07/essai-charge.html" target="_blank" rel="noopener">🧪 Banc d’essai</a></div>
     <details class="demo-tout" id="demo-tout"><summary>👀 Toutes les animations « Regarde comment faire »</summary><p class="note">Un clic pour revoir un geste, sans changer d’étape ni toucher à ta progression.</p></details>
   </details>
 
@@ -163,9 +164,7 @@ details.coince{border-radius:16px}
 
 <dialog id="rapport" aria-labelledby="rapport-titre">
   <h2 id="rapport-titre">Mon rapport : trame et critères</h2>
-  <p>Un document personnel, le même pour les trois missions et le défi final. La trame donne le plan ; la mise en page est à faire.</p>
-  <h3>1. Créer mon document</h3>
-  <p>Les gestes sont dans la première étape du parcours, <b>« Préparer mon rapport »</b>, case par case avec l’animation. Ici : la trame, si tu dois la copier à nouveau.</p>
+  <p>Un rapport d’une page sur la mission 1, rédigé <b>après</b> les manipulations, avec ce que tu as noté dans le site. Les gestes sont à l’étape <b>« Je rédige mon rapport »</b>. Ici : la trame, si tu dois la copier à nouveau, et la grille.</p>
   <details><summary>Trame à copier, sans mise en forme</summary>
     <label for="trame-rapport">Plan du rapport (les réponses restent à écrire)</label>
     <textarea id="trame-rapport" rows="12" readonly></textarea>
@@ -173,65 +172,43 @@ details.coince{border-radius:16px}
     <p id="rapport-statut" class="note" role="status"></p>
     <p><a href="https://root75.github.io/campin-public/labo-07/pas-a-pas/trame-rapport.txt" target="_blank" rel="noopener">Trame en texte brut</a> si la copie ne fonctionne pas.</p>
   </details>
-  <h3>Un rapport court : ce qu’il contient</h3>
+  <h3>Ce qu’il contient</h3>
   <ul>
-    <li>Mission 1 : un tableau, une capture légendée et deux phrases de conclusion.</li>
-    <li>Mission 2 : fichier, chemin, statut et une phrase de justification.</li>
-    <li>Mission 3 : ton incident en quatre lignes (hypothèse, test, observation, solution), puis la mise en commun des quatre incidents.</li>
-    <li>Défi final : une ligne de preuve et deux phrases maximum ; manipulation montrée au professeur.</li>
+    <li>1. Mon PC : processeur, cœurs, mémoire, disque.</li>
+    <li>2. Mes relevés : un vrai tableau de 3 colonnes et 5 lignes.</li>
+    <li>3. Ma capture du Gestionnaire, avec sa légende.</li>
+    <li>4. Ma conclusion : deux ou trois phrases.</li>
   </ul>
-  <h3>2. Trois exigences de présentation et de remise — /6</h3>
-  <ul>
-    <li><b>Mise en page — /2 :</b> titre en style Titre et sous-titre en style Sous-titre, centrés ; les quatre parties dans le même style Titre 1.</li>
-    <li><b>Tableau et capture — /2 :</b> vrai tableau lisible de trois colonnes et cinq lignes pour les mesures, avec % dans les en-têtes ; capture ciblée, lisible, pas étirée, légende juste dessous.</li>
-    <li><b>Identification et remise — /2 :</b> prénom, nom, classe, date ; fichier correctement nommé ; le bon document est joint, sa remise est confirmée.</li>
-  </ul>
-  <details id="grille-criteree">
-    <summary>Grille critériée complète — travail quotidien /20</summary>
-    <p>L’enquête finale compte pour 14 points ; le document et sa remise pour 6 points. Le professeur examine les preuves et les gestes. Les cases du site ne donnent pas de point.</p>
+  <details id="grille-criteree" open>
+    <summary>Grille — rapport sur 10</summary>
     <div class="defile"><table class="grille">
       <caption>Critères, points et descripteurs de réussite</caption>
       <thead><tr><th scope="col">Critère</th><th scope="col">Points</th><th scope="col">Comment les points sont attribués</th></tr></thead>
       <tbody>
-      <tr><th scope="row">Hypothèse initiale (site, défi final)</th><td>/2</td><td>2 : plausible et testable ; 1 : plausible mais imprécise ; 0 : absente ou hors sujet.</td></tr>
-      <tr><th scope="row">Choix et réalisation du test</th><td>/4</td><td>4 : pertinent, réversible, personnel ; 2 : pertinent mais incomplet ou encore guidé ; 0 : absent ou dangereux non corrigé.</td></tr>
-      <tr><th scope="row">Preuve dans le rapport</th><td>/2</td><td>2 : indice précis, réel et distingué du cas donné ; 1 : partiel ; 0 : inexploitable.</td></tr>
-      <tr><th scope="row">Conclusion finale justifiée</th><td>/4</td><td>4 : décision correcte liée à la preuve et au nuage donné, arrêt de Windows écarté avec raison ; 2 : décision pertinente mais justification partielle ; 0 : sans lien ou erronée.</td></tr>
-      <tr><th scope="row">Machine / système / application / fichier</th><td>/2</td><td>2 : quatre rôles distingués à l’oral dans le cas ; 1 : distinction partielle ; 0 : confusion persistante.</td></tr>
-      <tr><th scope="row">Mise en page</th><td>/2</td><td>1 : titre en style Titre et sous-titre en style Sous-titre, tous deux centrés ; 1 : les quatre parties dans le même style Titre 1.</td></tr>
-      <tr><th scope="row">Tableau et capture</th><td>/2</td><td>1 : vrai tableau 3×5, lisible, en-têtes avec % ; 1 : capture utile, lisible, pas étirée, légende juste dessous.</td></tr>
-      <tr><th scope="row">Identification et remise</th><td>/2</td><td>1 : prénom, nom, classe, date et fichier nommé LABO07_CoulissesPC_Prenom_Nom ; 1 : bon document joint, statut « Remis » dans Classroom.</td></tr>
+      <tr><th scope="row">Tableau des relevés</th><td>/2</td><td>2 : les quatre moments, processeur et mémoire en % ; 1 : incomplet ; 0 : absent.</td></tr>
+      <tr><th scope="row">Capture légendée</th><td>/2</td><td>1 : capture lisible du Gestionnaire, pas étirée ; 1 : légende juste dessous, qui dit ce qu’elle montre.</td></tr>
+      <tr><th scope="row">Conclusion</th><td>/2</td><td>2 : ce qui change, appuyé sur les relevés, et l’hypothèse discutée ; 1 : une seule des deux ; 0 : sans lien avec les relevés.</td></tr>
+      <tr><th scope="row">Titre et sous-titre</th><td>/1</td><td>Style Titre et style Sous-titre, centrés.</td></tr>
+      <tr><th scope="row">Parties</th><td>/1</td><td>Les quatre parties dans le même style Titre 1.</td></tr>
+      <tr><th scope="row">Vrai tableau</th><td>/1</td><td>Un tableau Docs (Insertion ▸ Tableau), pas des colonnes faites avec des espaces.</td></tr>
+      <tr><th scope="row">Identification</th><td>/1</td><td>Prénom, nom, classe, date ; fichier nommé LABO07_CoulissesPC_Prenom_Nom.</td></tr>
       </tbody>
     </table></div>
-    <p><b>Total /20.</b> Non observé faute de temps ou poste indisponible : à compléter, pas zéro. La vitesse et l’utilisation d’un indice ne sont pas pénalisées. La qualité de l’enquête est distinguée de celle du document.</p>
-    <p class="attention">⚠️ Pas de copier-coller du voisin. Un rapport copié sur un autre élève, c’est 0 sur 20, pour les deux rapports.</p>
-
+    <p><b>Total /10.</b> La vitesse et l’utilisation d’un indice ne sont pas pénalisées.</p>
+    <p class="attention">⚠️ Pas de copier-coller du voisin. Un rapport copié sur un autre élève, c’est 0 sur 10, pour les deux rapports.</p>
   </details>
   <details><summary>Un geste à retrouver : titre, tableau ou image</summary>
     <ul>
       <li>Styles : clique dans la ligne ▸ liste « Normal », à gauche de la barre d’outils ▸ le style ▸ Appliquer le style. « Dans les coulisses du PC » : Titre ; « Mon rapport d’enquête » : Sous-titre ; les deux centrés (icône Aligner ▸ Aligner au centre, ou Ctrl + Shift + E). Les quatre parties : Titre 1 (ou Ctrl + Alt + 1). Une commande introuvable ? Alt + / ▸ tape son nom.</li>
       <li>Tableau : clique sur la ligne « [Insérer un vrai tableau…] » ▸ Insertion ▸ Tableau ▸ 3 colonnes × 5 lignes ; complète les en-têtes et les quatre relevés.<p class="attention">⚠️ Ne fais pas les colonnes avec des espaces.</p></li>
-      <li>Capture : après le dernier relevé, ⊞ Démarrer ▸ Outil Capture d’écran ▸ Nouveau (ou Windows + Shift + S), puis sélectionne la zone utile.</li>
-      <li>Dans le rapport, clique à l’emplacement de l’image ▸ Édition ▸ Coller (Ctrl + V). Si le presse-papiers échoue, enregistre la capture dans l’Outil Capture d’écran, puis Docs ▸ Insertion ▸ Image ▸ Importer depuis l’ordinateur.</li>
+      <li>Capture : Gestionnaire des tâches ▸ Performance ▸ Mémoire, puis Windows + Shift + S (ou ⊞ Démarrer ▸ Outil Capture d’écran ▸ Nouveau) ▸ sélectionne la zone utile.</li>
+      <li>Dans le rapport, clique à l’emplacement de l’image ▸ Édition ▸ Coller (Ctrl + V). Si le presse-papiers échoue : Docs ▸ Insertion ▸ Image ▸ Importer depuis l’ordinateur ▸ Images ▸ Captures d’écran.</li>
       <li>Image : redimensionne par un coin, sans étirer ; garde-la à l’intérieur de la page. Écris une légende juste dessous.<p class="attention">⚠️ Ne montre ni le travail d’un voisin ni une donnée personnelle inutile.</p></li>
     </ul>
   </details>
-  <details id="relecture-pairs"><summary>Avant le défi final — relire à deux avec trois critères</summary>
-    <p>Commence par ta propre réponse et ta vérification personnelle. Montre ensuite seulement les parties déjà travaillées de ton rapport à ton binôme, sur ton poste. La partie 4 reste individuelle.</p>
-    <ul>
-      <li>Montre les titres et le vrai tableau : sont-ils cohérents et lisibles ?</li>
-      <li>Montre la capture et sa légende : quel détail utile permettent-elles de lire ?</li>
-      <li>Montre une conclusion d’entraînement : quel indice la justifie ?</li>
-    </ul>
-    <p>Le binôme donne un point réussi et une correction possible à l’oral. Tu réalises toi-même la correction, puis vous inversez les rôles. Pas de note donnée par le camarade, pas de texte supplémentaire à écrire.</p>
-    <p>Le site ne collecte pas cette relecture. Le défi final est réalisé seul, sans correction par le binôme avant sa remise ; le professeur garde la responsabilité de la note.</p>
-  </details>
-  <h3>3. À la fin de l’heure de cours</h3>
-  <p>Vérifie l’indication « Enregistré » dans Docs. Au cours suivant, rouvre <b><span data-rappel="rapport">ton rapport</span></b> par Classroom ▸ Labo 07 ▸ Vos devoirs, où il est joint (ou par la gaufre ⋮⋮⋮ ▸ Docs). Mes cours te remet tout seul à ton étape.</p><p class="attention">⚠️ Ne remets pas le devoir à chaque cours : complète le même rapport jusqu’à la fin.</p>
-  <h3>4. Remettre une seule fois — quand le rapport est terminé</h3>
-  <p>Ton rapport est joint au devoir dès la première étape, sans être rendu. Les gestes de la remise sont dans la dernière étape du parcours, <b>« Remettre mon rapport »</b>. Si tu ne trouves pas le devoir dans Classroom, sonne la cloche 🔔 « J'attends de l'aide ».</p><p class="attention">⚠️ Ne crée pas un deuxième document et ne poste pas ton travail dans le flux.</p>
-  <p class="note">Les cases sont une aide personnelle. Le site ne lit ni les fichiers joints ni le statut Classroom. Seule la vérification dans Classroom confirme la remise.</p>
-  <p><b>Proposition de travail quotidien /20 :</b> enquête /14 : hypothèse 2, test 4, preuve 2, conclusion 4, distinction 2 ; document et remise /6.</p>
+  <h3>À la sonnerie, avant d’avoir fini</h3>
+  <p>Docs enregistre tout seul. Au cours suivant : gaufre ⋮⋮⋮ ▸ Drive ▸ Récents ▸ <b><span data-rappel="rapport">ton rapport</span></b>. Mes cours te remet tout seul à ton étape.</p><p class="attention">⚠️ Ne crée pas un deuxième document et ne poste pas ton travail dans le flux.</p>
+  <p class="note">Le site ne lit ni ton document ni le statut Classroom : seule la vérification dans Classroom confirme la remise.</p>
   <form method="dialog" class="actions"><button class="btn plein">Revenir à l’enquête</button></form>
 </dialog>
 
@@ -241,8 +218,8 @@ details.coince{border-radius:16px}
 <script src="https://root75.github.io/campin-public/pas-a-pas/demo-lecteur.js?v=sous-cases-20261112"></script>
 <script src="https://root75.github.io/campin-public/pas-a-pas/demos-communs.js?v=classroom-20261113"></script>
 <script src="https://root75.github.io/campin-public/labo-07/pas-a-pas/demos.js?v=sonnerie-20261116"></script>
-<script src="https://root75.github.io/campin-public/labo-07/pas-a-pas/fiche.js?v=sous-etapes-un-incident-leger-20261126"></script>
-<script src="https://root75.github.io/campin-public/labo-07/pas-a-pas/rapport.js?v=rapport-20261126"></script>
+<script src="https://root75.github.io/campin-public/labo-07/pas-a-pas/fiche.js?v=une-tache-20261127"></script>
+<script src="https://root75.github.io/campin-public/labo-07/pas-a-pas/rapport.js?v=une-tache-20261127"></script>
 <script src="https://root75.github.io/campin-public/pas-a-pas/phrase-fin.js?v=20261106"></script>
 <script src="https://root75.github.io/campin-public/pas-a-pas/cloche.js?v=mot-20261124"></script>
 <script src="https://root75.github.io/campin-public/pas-a-pas/blocs.js?v=scene-bloc-reprise-20261126-ordre-20261126-decoche-20261127-rond-20261127-recul-20261127"></script>

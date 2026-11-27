@@ -10,10 +10,10 @@ let n=0;const ok=()=>n++;
 
 assert.equal(F.COURS,'labo-07');
 // Les numéros de blocs ne bougent pas : le serveur compte les blocs validés (une séance en cours ne doit pas glisser).
-assert.equal(F.BLOCS.length,11);ok();
+assert.equal(F.BLOCS.length,12);ok();
 const cat=JSON.parse(fs.readFileSync(__dirname+'/../pas-a-pas/cours.json')).cours.find(c=>c.id==='labo-07');
-assert.ok(cat&&cat.etapes===11,'catalogue');ok();
-assert.equal(F.PARCOURS.at(-1).fin,11);ok();
+assert.ok(cat&&cat.etapes===12,'catalogue');ok();
+assert.equal(F.PARCOURS.at(-1).fin,12);ok();
 F.PARCOURS.forEach((g,k)=>k&&assert.equal(g.debut,F.PARCOURS[k-1].fin,'groupes jointifs'));ok();
 
 // Un cours ne dépend pas de l'année : ni nom de classe, ni date, ni jour. Touches en anglais.
@@ -22,9 +22,9 @@ assert.ok(!/\b[123][A-H]\b/.test(texte.replace(/Ctrl \+ [A-Z]|Shift \+ [A-Z]|Win
 assert.ok(!/lundi|mardi|mercredi|jeudi|vendredi|novembre|décembre/i.test(texte),'pas de date ni de jour');ok();
 assert.ok(!/\b(Suppr|Échap|Entrée|Maj)\b/.test(texte+demos),'touches en anglais');ok();
 
-// Des gestes, pas un clic à la fois : 7 cases au plus (créer le rapport, le remettre), 6 ailleurs.
+// Une tâche à la fois (27/11/2026) : 7 cases au plus pour le rapport, 4 ailleurs : une manipulation, puis sa preuve dans les champs.
 const cases=h=>(String(h).match(/type="checkbox"/g)||[]).length;
-F.BLOCS.forEach((B,i)=>{assert.ok(cases(B.fais)<=([0,10].includes(i)?7:6),'cases du bloc '+(i+1)+' : '+cases(B.fais));});ok();
+F.BLOCS.forEach((B,i)=>{assert.ok(cases(B.fais)<=(i===5?7:4),'cases du bloc '+(i+1)+' : '+cases(B.fais));});ok();
 // Au moins un mot-clé en gras par case à cocher : l'œil accroche le geste avant de lire la phrase (Vincent, 13/11/2026).
 F.BLOCS.forEach((B,i)=>{const h=String(B.fais||'')+String(B.extra||'');for(const m of h.matchAll(/type="checkbox">([\s\S]*?)<\/li>/g))assert.ok(/<b>/.test(m[1]),'case sans mot en gras, bloc '+(i+1)+' : '+sans(m[1]).slice(0,60));});ok();
 // Une hypothèse se lit d'un seul tenant : la question et sa zone de réponse juste sous les cases.
@@ -89,26 +89,33 @@ F.BLOCS.forEach((B,i)=>{const q=B.q.type==='mixte'?B.q.validation:B.q;if(q.type=
 const seq=JSON.parse(fs.readFileSync(__dirname+'/../pas-a-pas/sequences.json'))['labo-07'];
 const ateliers=seq.moments.filter(m=>m.type==='atelier');
 assert.deepEqual(ateliers[0].blocs,[1,5]);
-ateliers.slice(1).forEach(m=>assert.equal(m.blocs[1],11,m.titre));ok();
+ateliers.slice(1).forEach(m=>assert.equal(m.blocs[1],12,m.titre));ok();
 
 // Sous chaque étape : « À la sonnerie » puis « Je reprends mon cours », comme dans Le rat de ville (Vincent, 16/11/2026).
 const moteur=fs.readFileSync(__dirname+'/../pas-a-pas/blocs.js','utf8');
 const BAS=new Function(src+';return BAS_ETAPE;')();
 assert.deepEqual(BAS.map(e=>e.classe),['sonnerie','reprise']);ok();
-assert.deepEqual(BAS.flatMap(e=>e.gestes.map(g=>g.demo)),['fermer','deconnecter','retrouver','cote']);ok();
+assert.deepEqual(BAS.flatMap(e=>e.gestes.map(g=>g.demo)),['fermer','deconnecter','retrouver']);ok();
 BAS.forEach(e=>e.gestes.forEach(g=>assert.ok(listes.has(g.demo),'animation « '+g.demo+' » absente de demos.js')));ok();
 assert.ok(/z\.append\(nav\);\s*basEtape\(z\);/.test(moteur),'blocs.js : les encadrés tout en bas de l’étape');ok();
 assert.ok(!/labo|rapport/i.test(moteur.slice(moteur.indexOf('function basEtape'),moteur.indexOf('function basEtape')+1200)),'aucun cours nommé dans le moteur');ok();
 assert.ok(/\.repere\.reprise\{/.test(page)&&/blocs\.js\?v=(sous-etapes|scene-bloc)/.test(page),'style et nouvelle version de l’adresse');ok();
 assert.ok(!/\b(Suppr|Échap|Entrée|Maj)\b/.test(JSON.stringify(BAS)),'touches en anglais');ok();
 
-// Le rappel de Python, pour le rapport : copié sur un voisin = 0 sur 20 pour les deux (Vincent, 16/11/2026). Dès la première étape et sous la grille.
-const copie=/⚠️ Pas de copier-coller du voisin\. Un rapport copié sur un autre élève, c’est 0 sur 20, pour les deux rapports\./;
-assert.match(String(F.BLOCS[0].extra),copie);assert.match(page.slice(page.indexOf('id="grille-criteree"')),copie);ok();
+// Le rappel de Python, pour le rapport : copié sur un voisin = 0 pour les deux (Vincent, 16/11/2026). À l'étape du rapport et sous la grille, sur 10 (27/11/2026).
+const copie=/⚠️ Pas de copier-coller du voisin\. Un rapport copié sur un autre élève, c’est 0 sur 10, pour les deux rapports\./;
+assert.match(String(F.BLOCS[5].extra),copie);assert.match(page.slice(page.indexOf('id="grille-criteree"')),copie);ok();
 
 // Sous les pastilles des missions : les étapes de la mission affichée, par leur nom court (Vincent, 16/11/2026).
 const court=B=>B.court||B.titre.split(/ : |, /)[0];
-assert.deepEqual(F.BLOCS.slice(1,5).map(court),['Défi','Relever la mémoire','Faire calculer le PC','Capturer et conclure']);ok();
+assert.deepEqual(F.BLOCS.slice(0,5).map(court),['Mon PC','Avant','GIMP','Calcul','Fin de tâche']);ok();
+// Une tâche à la fois (Vincent, 27/11/2026) : chaque étape finit par une preuve écrite dans le site ; le rapport, une seule
+// étape après la mission 1 ; plus rien à écrire dans le rapport pendant les missions 2, 3 et le défi.
+F.BLOCS.forEach((B,i)=>assert.ok(B.q.type==='enquete'||i===5,'bloc '+(i+1)+' : une preuve dans les champs'));ok();
+assert.equal(F.BLOCS[5].q.type,'rapport');assert.equal(F.PARCOURS[1].court,'Rapport');ok();
+F.BLOCS.slice(6).forEach((B,i)=>assert.ok(!/rapport/i.test(JSON.stringify(B)),'bloc '+(i+7)+' parle encore du rapport'));ok();
+assert.equal(new Function(src+';return GRILLE;')().criteres.length,4);assert.equal(cat.criteres,4);ok();
+assert.ok(/Grille — rapport sur 10/.test(trame)&&!/\/20/.test(trame),'trame sur 10');ok();
 F.PARCOURS.filter(g=>g.fin-g.debut>1).forEach(g=>{const noms=F.BLOCS.slice(g.debut,g.fin).map(court);assert.equal(new Set(noms).size,noms.length,'noms courts distincts : '+noms);noms.forEach(x=>assert.ok(x.length<=45,x));});ok();
 assert.ok(/el\("div","sous-etapes"\)/.test(moteur)&&/n\.disabled = !APERCU && !DECLARATIF && i>etat\.atteint/.test(moteur),'blocs.js : étapes cliquables jusqu’à celle atteinte');ok();
 

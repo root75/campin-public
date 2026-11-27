@@ -1324,23 +1324,23 @@
   "labo-07": {
     "ecransSurPostes": true,
     "titre": "Labo 07 — Dans les coulisses du PC",
-    "objectif": "Trois missions et un défi final : enquêter sur son PC Windows avec hypothèses, manipulations personnelles et preuves mixtes. Le rapport reste court : tableau et capture, localisation, un incident par élève, rédigé, décision finale. Les quatre incidents sont expliqués à la mise en commun ; le défi final reste individuel. Méthodes variées : prédire, voter, manipuler, choisir une réponse, remettre une démarche en ordre et justifier oralement.",
+    "objectif": "Une tâche à la fois : mission 1 guidée (une manipulation, puis sa preuve écrite dans le site), un rapport d’une page rédigé et remis en une seule étape avec ces notes, puis missions 2, 3 et défi final en autonomie, réponses dans les champs du site. Les quatre incidents sont expliqués à la mise en commun ; le défi final reste individuel et s’explique aussi à l’oral.",
     "competences": [
       "S3M4.1 « Différencier système d’exploitation et machine »",
       "S3M4.4 « Utiliser l’interface du système d’exploitation et les périphériques »",
       "Observation des ressources : prolongement. OneDrive : réactivation du Labo 06."
     ],
     "preparation": [
-      "Labo 07 : les blocs verts indiquent une hypothèse enregistrée (étapes internes 2, 6, 9) ou une étape déclarée faite. Les élèves voient six entrées (onze étapes) : préparer le rapport, trois missions, le défi final, remettre le rapport. Chaque élève teste et rédige un seul incident, attribué par le site ; les quatre sont expliqués à la mise en commun ; le professeur garde le contrôle individuel final et intervient sur les blocages persistants. Preuves et conclusions dans le document Classroom : le site ne le lit pas et ne vérifie pas sa remise. Ne jamais projeter le Journal ou les copies.",
-      "Préparer un seul devoir Classroom « Labo 07 — Dans les coulisses du PC », /20, avec remise d’un document personnel à la fin du parcours. La préparation ne crée ni ne publie ce devoir. Ne pas distribuer de copie déjà mise en page.",
-      "L’élève crée un rapport Google Docs à partir de la trame en texte brut avant les premières mesures. Il garde ce même document pendant tout le travail et ne le remet qu’une fois terminé.",
+      "Labo 07 : douze étapes internes, cinq entrées pour l’élève : mission 1 (5 étapes), « Je rédige mon rapport », mission 2 (2), mission 3 (2 : prévoir, puis tester), défi final (2). Chaque étape finit par des champs à remplir (valeurs lues, hypothèse, test, observation) : ils remplacent les pointillés d’une feuille. Chaque élève teste un seul incident, attribué par le site.",
+      "Préparer un seul devoir Classroom « Labo 07 — Dans les coulisses du PC », /10, avec remise du rapport de la mission 1. La préparation ne crée ni ne publie ce devoir.",
+      "L’élève crée son rapport Google Docs seulement après la mission 1, à l’étape « Je rédige mon rapport » : le site lui rappelle ses relevés. Jamais de Docs ouvert pendant les manipulations.",
       "Prévoir un fichier déjà enregistré dans le dossier OneDrive scolaire de l’Explorateur, par exemple celui du Labo 06 ; un fichier de démonstration sans donnée privée si nécessaire. La mission ne dépend pas d’une autre séquence obligatoirement réalisée juste avant.",
-      "Correction : hypothèses initiales aux étapes internes 2, 6 et 9 du Journal privé ; preuves écrites courtes dans le rapport joint à Classroom, incident expliqué à la mise en commun et geste final vérifié individuellement par le professeur. Les autres blocs enregistrent uniquement « rapport:… », une déclaration d’avancement, sans lecture du document ni contrôle de remise.",
+      "Correction : rapport /10 dans Classroom (contenu /6, mise en page /4). Les réponses des missions 2 et 3 et du défi sont dans le Journal privé (champs du site) ; le défi s’explique aussi à l’oral au professeur. Rien de ces missions n’est rédigé dans le rapport.",
       "Grille : enquête /14, document et remise /6. Mise en page (Titre et Sous-titre centrés, quatre parties en Titre 1) ; vrai tableau et capture légendée ; identification, nom du fichier et remise confirmée. Aucun calcul automatique de note.",
       "Compte scolaire : Mes cours ▸ classes et cours ouverts ▸ cocher labo-07 uniquement pour la classe concernée. Nouvelle séance au premier lancement ; conserver la séance pour les continuations.",
       "Vérifier sur un PC élève : Gestionnaire des tâches et ses totaux, Performance (processeur, mémoire, disque), GIMP (ouvert pour les élèves, temps d’ouverture, image 10000 × 10000), Banc d’essai labo-07/essai-charge.html (processeur près de 100 % pendant le calcul), Terminer la tâche sur GIMP, Calculatrice, Bloc-notes, fenêtres, chemin et Statut du fichier OneDrive. Seul arrêt de processus : GIMP, quand la fiche le demande ; aucune suppression ni changement de réglage.",
       "Projection : utiliser uniquement Lancer la séquence. Ne jamais projeter tableau nominatif, Journal, humeur, avis ou copies. Un vote initial recueille des choix ; seuls les effectifs agrégés sont projetés. Aucun texte libre d’élève n’est affiché.",
-      "Varier les méthodes : prédiction écrite, vote collectif, manipulation sur le poste, QCM après les ressources, chemin et statut à observer, un incident par élève puis mise en commun des quatre, ordre de la démarche, explication orale, transfert final individuel. Les exercices du site ne demandent pas de texte supplémentaire dans le rapport.",
+      "Varier les méthodes : prédiction écrite, vote collectif, manipulation sur le poste, chemin et statut à observer, un incident par élève puis mise en commun des quatre, ordre de la démarche, explication orale, transfert final individuel. Les exercices du site ne demandent pas de texte supplémentaire dans le rapport.",
       "Autonomie : indices puis binôme, « J'attends de l'aide » si le blocage persiste. Pendant l’entraînement, cibler les blocages et désaccords au lieu de demander trois validations orales par élève. Le professeur conserve le contrôle individuel du défi final.",
       "Présenter une seule fois au groupe le bouton du moniteur externe, distinct du PC. Sur poste non identifié ou tout-en-un : cas simulé. Éviter une demande d’autorisation identique à chaque essai.",
       "Relecture entre pairs : trois critères annoncés, un point réussi et une correction possible ; l’auteur corrige lui-même. Aucun avis de camarade ne vaut note, validation de geste par le professeur ou remise. Le site ne collecte pas cette vérification."
@@ -1390,12 +1390,12 @@
           "Une fenêtre invisible signifie-t-elle que le logiciel ne tourne plus ?",
           "Hypothèse → test → preuve → conclusion.",
           "Chacun manipule. Première réponse seul, comparaison à deux ensuite.",
-          "Crée ton rapport personnel : première étape de la fiche, « Préparer mon rapport ». Garde le même document jusqu’à la fin."
+          "Mission 1 : une manipulation à la fois, et tu notes ce que tu lis dans le site. Le rapport vient après."
         ],
         "questions": [
           "Qu’est-ce qui ferait changer ton avis ?"
         ],
-        "repere": "Les moments sont organisés par contenu : reprendre selon les besoins. La trame du rapport donne la structure ; les élèves réalisent la mise en page."
+        "repere": "Les moments sont organisés par contenu : reprendre selon les besoins. Le rapport se rédige après la mission 1, en une seule étape guidée."
       },
       {
         "type": "atelier",
@@ -1404,14 +1404,14 @@
         "methode": "Individuel puis mise en commun",
         "lignes": [
           "Relève les caractéristiques de ton PC, puis formule ton hypothèse avant d’ouvrir l’application.",
-          "Complète le tableau et une seule capture légendée dans le rapport, puis deux phrases de conclusion.",
+          "Note chaque relevé dans le site : avant, avec GIMP, pendant le calcul, après la fin de tâche.",
           "Fin de tâche uniquement sur GIMP, quand la fiche le demande ; aucun réglage."
         ],
         "blocs": [
           1,
           5
         ],
-        "repere": "Guidage dégressif (fiche prof, « Conduite ») : cet atelier ferme la classe après le bloc 5, jusqu’à la mise en commun 1 ; les ateliers suivants laissent tout ouvert jusqu’à la remise. Le plafond est un filet, pas un rythme imposé."
+        "repere": "Guidage dégressif (fiche prof, « Conduite ») : cet atelier ferme la classe après le bloc 5, jusqu’à la mise en commun 1 ; ensuite, « Je rédige mon rapport » et la suite restent ouverts. Le plafond est un filet, pas un rythme imposé."
       },
       {
         "type": "mots",
@@ -1517,9 +1517,9 @@
         ],
         "blocs": [
           6,
-          11
+          12
         ],
-        "repere": "Le chemin à relever est celui du fichier dans OneDrive sur ce poste. Le rapport Docs est un document en ligne distinct ; Google Drive n’est pas un lecteur installé sur les PC de l’école."
+        "repere": "Le chemin à relever est celui du fichier dans OneDrive sur ce poste. Google Drive n’est pas un lecteur installé sur les PC de l’école."
       },
       {
         "type": "mots",
@@ -1604,11 +1604,11 @@
         "methode": "Individuel : un incident par élève, attribué par le site",
         "lignes": [
           "Chacun teste un seul incident, celui que le site lui donne : fenêtre masquée, fenêtre active, fichier et application, ou écran éteint.",
-          "Hypothèse et test écrits dans le rapport avant d’agir ; puis observation et solution. Quatre lignes en tout."
+          "Hypothèse et test écrits dans le site avant d’agir (étape « Prévoir ») ; puis observation et solution (étape « Tester »)."
         ],
         "blocs": [
-          8,
-          11
+          9,
+          12
         ],
         "repere": "Montrer une seule fois au groupe le bouton du moniteur externe (incident 4). Circuler : vérifier que l’hypothèse est écrite avant le test. Lancer la mise en commun quand la plupart ont écrit leurs quatre lignes ; les retardataires finissent après."
       },
@@ -1665,7 +1665,7 @@
           "Éteindre l’écran n’arrête pas nécessairement le PC.",
           "Windows reste le système qui permet d’utiliser la machine et ses applications."
         ],
-        "repere": "Afficher après la discussion : chacun compare avec son rapport et le corrige lui-même."
+        "repere": "Afficher après la discussion : chacun compare avec ses réponses du site."
       },
       {
         "type": "atelier",
@@ -1678,8 +1678,8 @@
           "Un point réussi, une correction possible. L’auteur corrige lui-même, puis inversez les rôles."
         ],
         "blocs": [
-          8,
-          11
+          9,
+          12
         ],
         "repere": "Les élèves gardent leur souris. Aucun nouveau paragraphe, note ou partage de document demandé. Le site ne recueille pas cette relecture. La partie finale reste individuelle ; aucune correction entre pairs avant sa remise."
       },
@@ -1690,14 +1690,14 @@
         "methode": "Individuel puis mise en commun",
         "lignes": [
           "Défi final individuel : hypothèse et test initial sur le site.",
-          "Une ligne de preuve et deux phrases de décision dans le rapport.",
+          "Le statut lu sur ton poste et deux phrases de décision, dans le site.",
           "Montre ta manipulation et explique la distinction machine / Windows / application / fichier à l’oral."
         ],
         "blocs": [
-          9,
-          11
+          11,
+          12
         ],
-        "repere": "Travail quotidien /20 : enquête /14, document/remise /6. Hypothèse et test sur le site (étape interne 9), preuve et décision courtes dans le rapport. Observer le geste et faire justifier oralement ; aucune validation orale collectée par le site."
+        "repere": "Non coté (le rapport /10 porte sur la mission 1). Hypothèse et test à l’étape interne 11, statut et décision à la 12. Observer le geste et faire justifier oralement."
       },
       {
         "type": "ecran",
@@ -1708,7 +1708,7 @@
           "Ouvre « Je retiens » : réponds aux trois situations avant de consulter les corrections, puis relis la synthèse.",
           "Qu’est-ce qui t’a fait revoir une hypothèse ?",
           "Je distingue machine, Windows, applications et fichiers.",
-          "Vérifie l’enregistrement Docs. Quand tout est terminé, dernière étape de la fiche « Remettre mon rapport » : joindre le bon document, confirmer la remise dans Classroom."
+          "Si ton rapport n’est pas encore remis : étape « Je rédige mon rapport », dernier geste."
         ],
         "questions": [
           "Quelle preuve manque pour être plus sûr ?"
@@ -1722,7 +1722,7 @@
         "methode": "Collectif oral, sans réponse individuelle projetée",
         "lignes": [
           "La fiche reste disponible pour relire les synthèses et la checklist de remise.",
-          "Le professeur examine le rapport individuel ; l’avancement déclaré sur le site ne vaut ni remise ni note."
+          "Le professeur corrige le rapport remis dans Classroom ; les réponses du site montrent le travail des missions 2 et 3."
         ]
       }
     ]
