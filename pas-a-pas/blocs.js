@@ -1814,7 +1814,13 @@ if(APERCU){
       ici = s.position>=1 && s.position<=BLOCS.length ? s.position-1 : Math.min(premierManque(), BLOCS.length-1);
       repriseVue = Object.keys(etat.cases).length>0 && !!s.derniere && Date.now()-s.derniere > 5*60000;
       placeNotee = ici;   // demarre() l'envoie (« ouvert »)
-    } else { if(s && s.moi && typeof GRILLE!=="undefined") etat.moi = s.moi; if(s && s.atteint){ etat.atteint = s.atteint; etat.fini = s.atteint >= BLOCS.length; ici = Math.min(s.atteint, BLOCS.length); } }
+    } else { if(s && s.moi && typeof GRILLE!=="undefined") etat.moi = s.moi;
+      /* Les réponses à champs déjà envoyées reviennent du Journal (etat().reponses) : un rappel (data-rappel) les
+         retrouve sur n'importe quel poste (Labo 07, 27/11/2026 : « aucun aller-retour dans le site »). Le poste garde
+         la priorité, il est le plus récent ; le serveur comble ce qui manque. */
+      if(s && s.reponses && !APERCU){ const r = reponsesGardees(); Object.entries(s.reponses).forEach(([b,v])=>{ r[b] = Object.assign({}, v, r[b]||{}); });
+        try{ localStorage.setItem(cleReponses(), JSON.stringify(r)); }catch(e){} }
+      if(s && s.atteint){ etat.atteint = s.atteint; etat.fini = s.atteint >= BLOCS.length; ici = Math.min(s.atteint, BLOCS.length); } }
     const demarre = () => { affiche(); envoie({ etape:Math.min(ici,BLOCS.length-1)+1, type:"ouvert" }); restaureAide(); };
     if(typeof PREUVES==="undefined") demarre(); else pretPreuves.then(variantesServeur).then(demarre);
   }).withFailureHandler(()=>{
