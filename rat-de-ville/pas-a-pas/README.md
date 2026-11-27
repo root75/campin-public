@@ -1,5 +1,13 @@
 # Suivi du formatif « Le rat de ville »
 
+**27/11/2026 — six étapes, nouvel identifiant `rat-de-ville-6` (Vincent).** Trop d'étapes, trop de choses en haut et
+en bas : recopier + structurer, titre + polices, bloc-notes + Mes gestes, vérifier + remettre deviennent chacune une
+étape (fusion au chargement, en fin de `fiche.js` : les parties restent écrites séparément). Les cases changent de
+numéro, d'où un nouvel identifiant : tout le monde repart proprement, l'ancien suivi en dix étapes reste au Journal
+sous `rat-de-ville-formatif` (entrée retirée du catalogue, historique gardé). L'image `attendu.png` (copie d'élève
+corrigée, anonyme) est à l'étape 6 et en miniature sur la première page. Garamond vaut EB Garamond.
+Les clés de suivi du quiz (`quiz:rat-de-ville-formatif`) ne changent pas.
+
 > **Depuis la migration vers le moteur commun** : cette fiche n'a plus de moteur à elle. `fiche.js` ne contient que
 > des données (`BLOCS`, `GRILLE`, `FIN`, mode déclaratif) ; l'affichage, l'enregistrement des cases, la cloche,
 > le cadenas et le cours collectif viennent de `pas-a-pas/blocs.js` — mode d'emploi : `pas-a-pas/MOTEUR.md`, section

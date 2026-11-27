@@ -10,7 +10,7 @@ for(const f of ['pas-a-pas/blocs.js','pas-a-pas/sequence-eleve.js','pas-a-pas/cl
 assert.ok(!/google\.script|addEventListener|suiviFormatif/.test(fiche),'fiche.js : des données, pas de moteur');
 assert.ok(!fs.existsSync(base+'contenu.js')&&!fs.existsSync(__dirname+'/../pas-a-pas/formatif-prof.js'),'ancien moteur retiré');
 // Les cases sont enregistrées sous « étape.rang » : le catalogue (lu par le serveur) doit compter les mêmes.
-const c=JSON.parse(fs.readFileSync(__dirname+'/../pas-a-pas/cours.json','utf8')).cours.find(x=>x.id==='rat-de-ville-formatif');
+const c=JSON.parse(fs.readFileSync(__dirname+'/../pas-a-pas/cours.json','utf8')).cours.find(x=>x.id==='rat-de-ville-6');
 assert.equal(c.etapes,BLOCS.length);
 assert.deepEqual(c.cases,Object.fromEntries(BLOCS.map((b,i)=>[i+1,b.gestes.length])),'cours.json « cases » = cases de fiche.js');
 assert.equal(c.criteres,GRILLE.criteres.length);assert.deepEqual(Object.keys(GRILLE.niveaux),['A','B','C','D']);
@@ -58,10 +58,10 @@ assert.ok(!/colonne/.test(FIN.texte)&&!actions.some(([,t])=>/colonne « Moi »/.
 // Étape 10 : un bouton vers « Travaux et devoirs » de la classe, en plus du chemin par les menus (Vincent, 24/11/2026 :
 // la gaufre n'est pas toujours visible). Le moteur remplace l'adresse par celle du cours Classroom de la classe.
 {
-  const remise=BLOCS[9].gestes[1];
-  assert.match(remise.sous,/<a [^>]*data-classroom="travaux"[^>]*href="https:\/\/classroom\.google\.com\/"[^>]*target="_blank"/,'étape 10 : le lien Travaux et devoirs');
-  assert.ok(/03 EVAL Formatif Le rat de ville/.test(remise.geste),'étape 10 : la case nomme le devoir à ouvrir');
-  assert.ok(/gaufre/.test(remise.sous)&&/classroom\.google\.com<\/b>/.test(remise.sous),'étape 10 : la gaufre et l’adresse restent en secours');
+  const remise=BLOCS[5].gestes[12];   // 6 étapes depuis le 27/11/2026 : la remise suit les 11 vérifications
+  assert.match(remise.sous,/<a [^>]*data-classroom="travaux"[^>]*href="https:\/\/classroom\.google\.com\/"[^>]*target="_blank"/,'étape 6 : le lien Travaux et devoirs');
+  assert.ok(/03 EVAL Formatif Le rat de ville/.test(remise.geste),'étape 6 : la case nomme le devoir à ouvrir');
+  assert.ok(/gaufre/.test(remise.sous)&&/classroom\.google\.com<\/b>/.test(remise.sous),'étape 6 : la gaufre et l’adresse restent en secours');
   const moteur=fs.readFileSync(__dirname+'/../pas-a-pas/blocs.js','utf8');
   const lienTravaux=new Function(moteur.match(/const lienTravaux = .*\n/)[0]+';return lienTravaux;')();
   assert.equal(lienTravaux({devoirs:'https://classroom.google.com/w/ABC/t/all'}),'https://classroom.google.com/w/ABC/t/all');

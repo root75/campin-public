@@ -1,7 +1,7 @@
 {
   "note": "Une grille par cours : la clé est l'identifiant du cours dans pas-a-pas/cours.json. Les mots viennent du « je révise » du cours. Dans la grille, un mot s'écrit en majuscules, sans accent ni espace.",
   "grilles": {
-    "rat-de-ville-formatif": {
+    "rat-de-ville-6": {
       "titre": "Le rat de ville",
       "sujet": "Mise en forme dans Google Docs",
       "niveau": 1,

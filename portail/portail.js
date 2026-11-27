@@ -24,7 +24,7 @@ function dateJour(d){ const t = d.toLocaleDateString("fr-BE", { weekday:"long", 
 
 /* Les cours (identifiants de pas-a-pas/cours.json) où l'élève crée un document et le nomme « AAAAMMJJ Titre – Prénom Nom ».
    Ajouter un cours ici = la ligne « Pour nommer ton travail » apparaît pour les classes qui le suivent. */
-const NOMMER = ["rat-de-ville-formatif"];
+const NOMMER = ["rat-de-ville-formatif", "rat-de-ville-6"];
 
 /* ----- État connecté : tout vient du serveur. ----- */
 function affiche(d){

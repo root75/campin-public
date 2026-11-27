@@ -855,6 +855,9 @@ function affiche(){
   const loin = document.getElementById("plus-loin"); if(loin){ loin.hidden = true; loin.open = false; }
   /* « Comment ça marche ? » (#intro) : sur la première page seulement, pour ne garder à l'écran que le nécessaire (Vincent, 20/11/2026). */
   const intro = document.getElementById("intro"); if(intro){ intro.hidden = ici!==0; if(ici!==0) intro.open = false; }
+  /* Écran léger : passé la première page, l'en-tête se resserre (petite mascotte, ni surtitre) pour que l'étape
+     monte en haut de l'écran (Vincent, 27/11/2026 : trop de choses en haut). */
+  if(LEGER) document.documentElement.classList.toggle("au-travail", ici!==0);
   if(enPause()){ pause(z); return; }
   if(ici >= BLOCS.length){ fin(z); return; }
   const B = blocVu(ici);
@@ -1657,9 +1660,12 @@ const HUMEURS = [["😄","Super"],["🙂","Bien"],["😐","Bof"],["🙁","Pas to
 function humeur(changer){
   const h = document.getElementById("humeur"); h.replaceChildren(); h.hidden = false;
   if(etat.humeur && !changer){
+    /* Une fois choisie, l'humeur n'est plus qu'un petit smiley dans le coin : un clic pour la changer
+       (Vincent, 27/11/2026 : une ligne entière, c'était trop). */
     h.className = "humeur faite";
-    h.append(txt("span",null,"Mon humeur du jour : "+etat.humeur));
-    const c = txt("button","lien","changer"); c.type="button";
+    const c = txt("button","coin",etat.humeur.split(" ")[0]); c.type="button";
+    c.title = "Mon humeur du jour : "+etat.humeur+" — cliquer pour la changer";
+    c.setAttribute("aria-label", c.title);
     c.addEventListener("click",()=>humeur(true));
     h.append(c); return;
   }
