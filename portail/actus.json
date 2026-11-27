@@ -1,5 +1,5 @@
 {
- "maj": "2026-11-25",
+ "maj": "2026-11-27",
  "actus": [
   {
    "titre": "Tes 3 infos de la semaine : les Restos du cœur, l’eau manque en Guyane, le succès mondial du jeu vidéo GTA 6",
@@ -42,6 +42,11 @@
    "source": "1jour1actu"
   },
   {
+   "titre": "Marc Marquez arrête sa carrière en MotoGP",
+   "lien": "https://www.lejde.be/sports/2026/11/27/marc-marquez-arrete-sa-carriere-en-motogp-47921/",
+   "source": "Le JDE"
+  },
+  {
    "titre": "Eddy Merckx a été reçu par le pape Léon XIV au Vatican",
    "lien": "https://www.lejde.be/monde/2026/11/25/eddy-merckx-a-ete-recu-par-le-pape-leon-xiv-au-vatican-47901/",
    "source": "Le JDE"
@@ -74,11 +79,6 @@
   {
    "titre": "Au revoir Lukaku",
    "lien": "https://www.lejde.be/sports/2026/11/18/au-revoir-lukaku-47734/",
-   "source": "Le JDE"
-  },
-  {
-   "titre": "Nelle, 16 ans, veut faire entendre la voix des jeunes dans sa chanson",
-   "lien": "https://www.lejde.be/belgique/2026/11/18/nelle-16-ans-veut-faire-entendre-la-voix-des-jeunes-dans-sa-chanson-47733/",
    "source": "Le JDE"
   }
  ]
