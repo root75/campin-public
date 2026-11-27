@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Labo 07 — Révision papier</title>
+<!-- Révision imprimable du Labo 07 : mots croisés (la même grille que mots-croises/?cours=labo-07) et quiz.
+     Deux pages A4, recto. Le PDF se tire avec Chromium (pied de page « Page x / n » ajouté à l'impression). -->
+<style>
+  @page { size: A4; margin: 14mm 14mm 16mm; }
+  * { box-sizing: border-box; }
+  body { font: 11pt/1.35 Calibri, Carlito, Arial, sans-serif; color: #111; margin: 0; background: #fff; }
+  main { max-width: 182mm; margin: 0 auto; }
+  .page { break-after: page; }
+  .page:last-child { break-after: auto; }
+  .entete { display: flex; gap: 6mm; font-size: 10.5pt; margin-bottom: 3mm; }
+  .entete span { flex: 1; border-bottom: 1px dotted #555; padding-bottom: 1mm; }
+  h1 { font-size: 16pt; margin: 2mm 0 1mm; }
+  h2 { font-size: 12.5pt; margin: 3mm 0 1.5mm; }
+  .consigne { margin: 0 0 3mm; }
+  .grille { display: grid; margin: 2mm auto 4mm; width: max-content; }
+  .grille div { width: 8mm; height: 8mm; position: relative; }
+  .grille .c { border: 1px solid #000; margin: -0.5px; background: #fff; }
+  .grille .c b { position: absolute; top: 0.2mm; left: 0.6mm; font-size: 6pt; font-weight: 700; }
+  .indices { columns: 2; column-gap: 8mm; font-size: 10pt; }
+  .indices section { break-inside: avoid; }
+  .indices p { margin: 0 0 1.2mm; break-inside: avoid; }
+  .indices i { color: #555; font-size: 8.5pt; }
+  ol.quiz { padding-left: 6mm; margin: 0; }
+  ol.quiz > li { margin-bottom: 1.5mm; font-size: 10.5pt; break-inside: avoid; }
+  ol.quiz ul { list-style: none; padding: 0; margin: 0.8mm 0 0; display: grid; grid-template-columns: 1fr 1fr; gap: 0.6mm 6mm; }
+  ol.quiz ul li::before { content: "☐ "; }
+  .corrige { margin-top: 3mm; font-size: 8.5pt; color: #444; border-top: 1px solid #bbb; padding-top: 1.5mm; }
+</style>
+</head>
+<body>
+<main>
+<div class="page">
+  <div class="entete"><span>Nom :</span><span>Classe :</span><span>Date :</span></div>
+  <h1>Labo 07 — Dans les coulisses du PC · Je révise</h1>
+  <h2>1. Mots croisés</h2>
+  <p class="consigne">Écris les mots <b>sans accent</b>, une lettre par case. La même grille se joue aussi en ligne, depuis la page « Je retiens » du Labo 07.</p>
+  <div id="grille" class="grille"></div>
+  <div id="indices" class="indices"></div>
+</div>
+<div class="page">
+  <div class="entete"><span>Nom :</span><span>Classe :</span><span>Date :</span></div>
+  <h2>2. Quiz — coche la bonne réponse</h2>
+  <p class="consigne">Une seule bonne réponse par question. Réponds seul, puis vérifie avec le corrigé en bas de la page.</p>
+  <ol class="quiz" id="quiz"></ol>
+  <p class="corrige" id="corrige"></p>
+</div>
+</main>
+<script src="../mots-croises/grille.js"></script>
+<script>
+/* Le quiz : la bonne réponse est toujours écrite en premier ici ; l'ordre affiché est fixe (mélangé une fois pour toutes). */
+const QUIZ = [
+  ['Sur notre PC scolaire, Windows est…', ['le système d’exploitation', 'une application', 'un périphérique', 'un fichier'], [1, 0, 3, 2]],
+  ['Bloc-notes et la Calculatrice sont…', ['des applications', 'du matériel', 'des systèmes d’exploitation', 'des dossiers'], [2, 1, 0, 3]],
+  ['Le clavier est un périphérique…', ['d’entrée : il transmet ma saisie', 'de sortie : il affiche le résultat', 'de stockage : il garde les fichiers', 'qui remplace le système'], [0, 1, 2, 3]],
+  ['Je ferme Bloc-notes après avoir enregistré mon texte. Mon fichier…', ['reste dans son dossier', 'est supprimé', 'part dans la corbeille', 'devient un nuage bleu'], [3, 0, 1, 2]],
+  ['Je tape, mais rien ne s’écrit dans Bloc-notes, resté visible. Première hypothèse :', ['Bloc-notes n’est pas la fenêtre active', 'le clavier est cassé', 'Windows est arrêté', 'le fichier est supprimé'], [1, 3, 0, 2]],
+  ['Une fenêtre réduite…', ['est masquée, pas fermée', 'est fermée sans enregistrer', 'est supprimée', 'est envoyée dans OneDrive'], [2, 0, 3, 1]],
+  ['Pour retrouver une fenêtre réduite :', ['son icône dans la barre des tâches, ou Alt + Tab', 'redémarrer le PC', 'Ctrl + Alt + Delete', 'Terminer la tâche'], [0, 2, 1, 3]],
+  ['Dans OneDrive, un fichier porte un nuage bleu. Sans Internet…', ['je ne peux pas l’ouvrir sur ce PC', 'je peux l’ouvrir, il est téléchargé', 'il est supprimé', 'il est en cours de synchronisation'], [3, 1, 0, 2]],
+  ['Une coche verte sur fond blanc veut dire que le contenu est…', ['téléchargé, disponible sans Internet', 'uniquement en ligne', 'en erreur de synchronisation', 'dans la corbeille'], [1, 0, 2, 3]],
+  ['Dans l’Explorateur, où lire l’emplacement complet d’un fichier ?', ['dans la barre d’adresse (Ctrl + L)', 'dans la barre des tâches', 'dans le Gestionnaire des tâches', 'dans le menu ⊞ Démarrer'], [2, 3, 0, 1]],
+  ['L’écran est noir. Que puis-je conclure ?', ['rien encore : le moniteur est peut-être éteint', 'le PC est arrêté', 'Windows est effacé', 'le fichier est perdu'], [0, 3, 2, 1]],
+  ['Dans l’ordre, la démarche de dépannage :', ['observer, hypothèse, test réversible, preuve, conclusion', 'test, conclusion, hypothèse, observer', 'conclusion, puis test', 'Terminer la tâche d’abord'], [1, 2, 0, 3]],
+];
+const L = 'abcd';
+const quiz = document.getElementById('quiz'), corr = [];
+QUIZ.forEach(([q, rep, ordre], i) => {
+  const li = document.createElement('li'); li.append(q);
+  const ul = document.createElement('ul');
+  ordre.forEach((k, j) => { const r = document.createElement('li'); r.textContent = L[j] + ') ' + rep[k]; ul.append(r); if (k === 0) corr.push((i + 1) + L[j]); });
+  li.append(ul); quiz.append(li);
+});
+document.getElementById('corrige').textContent = 'Corrigé : ' + corr.join(' · ') + '. Une erreur ? Relis la partie du « Je retiens » qui en parle.';
+
+fetch('../mots-croises/grilles.json').then(r => r.json()).then(d => {
+  const g = GrilleMotsCroises.construit(d.grilles['labo-07'].mots, 'labo-07');   // même graine que le jeu en ligne
+  const el = document.getElementById('grille');
+  el.style.gridTemplateColumns = `repeat(${g.largeur}, 8mm)`;
+  const cases = new Map();
+  g.mots.forEach(m => { for (let i = 0; i < m.mot.length; i++) { const x = m.sens === 'h' ? m.x + i : m.x, y = m.sens === 'h' ? m.y : m.y + i; cases.set(x + ',' + y, cases.get(x + ',' + y) || ''); }
+    cases.set(m.x + ',' + m.y, String(m.numero)); });
+  for (let y = 0; y < g.hauteur; y++) for (let x = 0; x < g.largeur; x++) {
+    const d = document.createElement('div'); const k = x + ',' + y;
+    if (cases.has(k)) { d.className = 'c'; if (cases.get(k)) { const b = document.createElement('b'); b.textContent = cases.get(k); d.append(b); } }
+    el.append(d);
+  }
+  const ind = document.getElementById('indices');
+  for (const [sens, titre] of [['h', 'Horizontalement →'], ['v', 'Verticalement ↓']]) {
+    const s = document.createElement('section'); const h = document.createElement('h2'); h.textContent = titre; s.append(h);
+    g.mots.filter(m => m.sens === sens).forEach(m => { const p = document.createElement('p'); p.innerHTML = '<b>' + m.numero + '.</b> '; p.append(m.indice + ' '); const i = document.createElement('i'); i.textContent = '(' + m.mot.length + ' lettres)'; p.append(i); s.append(p); });
+    ind.append(s);
+  }
+  document.body.dataset.pret = '1';
+});
+</script>
+</body>
+</html>
