@@ -14,6 +14,11 @@ assert.match(html, /Professeur : M\. Louviaux/);
 assert.match(html, /src="https:\/\/root75\.github\.io\/campin-public\/assets\/logo-campin\.png"/);
 assert.ok(fs.existsSync(require.resolve('../assets/logo-campin.png')));
 assert.match(html, /id="bandeau-extension" hidden/);
+// Le lanceur d'applis Google : la grille à 9 points en haut à droite, neuf applis, fermé au repos.
+assert.match(html, /<header class="bandeau">[\s\S]*id="applis"[\s\S]*<\/header>/);
+assert.match(html, /id="applis-panneau" hidden/);
+assert.equal((html.match(/id="applis"[\s\S]*?<\/svg>/)[0].match(/<circle /g) || []).length, 9);
+assert.equal((html.match(/class="applis-grille">([\s\S]*?)<\/ul>/)[1].match(/<li>/g) || []).length, 9);
 
 function noeud(id){ return { id, hidden: /^(compte|maintenant|meteo|lien-prof|devoirs|annonces|date-nommer|devoirs-plie)$/.test(id), textContent:'', href:'', children:[],
   addEventListener(){}, replaceChildren(...e){ this.children = e; } }; }
@@ -23,7 +28,7 @@ function lance(reponse, { suivi = true, devoirs, annonces } = {}){
   const pont = { withSuccessHandler(f){ this.f = f; return this; }, withFailureHandler(){ return this; }, portail(){ this.f(reponse); } };
   if(devoirs !== undefined) pont.mesDevoirs = function(){ this.f({ liste: devoirs }); };
   if(annonces !== undefined) pont.mesAnnonces = function(){ this.f({ liste: annonces }); };
-  const ctx = { document:{ documentElement:{ dataset:{} }, getElementById:$, createElement:t=>({ tag:t, textContent:'', enfants:[], append(...e){ this.enfants.push(...e); } }), head:{ append:s=>ajoutes.push(s) } },
+  const ctx = { document:{ documentElement:{ dataset:{} }, getElementById:$, addEventListener(){}, createElement:t=>({ tag:t, textContent:'', enfants:[], append(...e){ this.enfants.push(...e); } }), head:{ append:s=>ajoutes.push(s) } },
     location:{ protocol:'https:', search:'', replace(u){ ctx.parti = u; } }, localStorage:{ getItem(){ throw Error('bloqué'); }, setItem(){} } };
   ctx.guets = []; ctx.setInterval = (f, ms) => ctx.guets.push({ f, ms }); ctx.clearInterval = () => {}; ctx.document.hidden = false;
   ctx.window = ctx; ctx.globalThis = ctx;
@@ -255,7 +260,7 @@ console.log('portail : page publique, élève reconnu, hors école, redirection 
     const els = new Map(), $ = id => { if(!els.has(id)) els.set(id, noeud(id)); return els.get(id); };
     const pont = { withSuccessHandler(f){ this.f = f; return this; }, withFailureHandler(){ return this; },
       portail(){ this.f({ ...d, seance }); }, rejoindreSeance(){ demandes.push(1); this.f(fiche); } };
-    const ctx = { document:{ documentElement:{ dataset:{} }, getElementById:$, createElement:t=>({ tag:t, textContent:'', enfants:[], append(){} }), head:{ append(){} } },
+    const ctx = { document:{ documentElement:{ dataset:{} }, getElementById:$, addEventListener(){}, createElement:t=>({ tag:t, textContent:'', enfants:[], append(){} }), head:{ append(){} } },
       location:{ protocol:'https:', search:'' }, localStorage:{ getItem(){ return null; }, setItem(){} }, sessionStorage:ss, guets:[],
       google:{ script:{ run:pont } } };
     ctx.setInterval = (f, ms) => ctx.guets.push({ f, ms }); ctx.clearInterval = () => {};
