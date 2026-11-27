@@ -494,8 +494,15 @@ function rythmeGestes(z){
   /* Écran léger (Vincent, 25/11/2026 : « que l'élève n'ait que la consigne ») : ni « Voir tous les gestes », qui
      prêtait à confusion (ce qui doit se voir ensemble est regroupé en une vue), ni « Un coup de pouce », qui faisait
      double emploi : l'animation du geste en cours est déjà ouverte, et l'aide écrite reste « Ça coince ? », puis la cloche. */
-  if(LEGER) outils.append(statut, piste);
-  else { actions.append(vue, aide); outils.append(statut, piste, actions); }
+  /* Revenir à un geste déjà coché (Vincent, 27/11/2026, en classe : « impossible de retourner sur geste 2 ») : sans
+     « Voir tous les gestes », l'écran léger n'avait aucun chemin vers un geste fait. « ← Geste précédent » le remontre,
+     avec sa case : on le relit, on peut le décocher ; « Geste suivant → » ramène au geste en cours. */
+  const recul = el("div","recul-gestes");
+  const avant = txt("button","btn vide","← Geste précédent"); avant.type = "button";
+  const apres = txt("button","btn vide","Geste suivant →"); apres.type = "button";
+  recul.append(avant, apres);
+  if(LEGER) outils.append(statut, piste, recul);
+  else { actions.append(avant, apres, vue, aide); outils.append(statut, piste, actions); }
   liste.before(outils);
   const consignes = BLOCS[ici].libelleConsigne;
   /* B.ensembles = [[1,2,3],[4],[5,6,7]] : les cases d'un même geste de sens s'affichent ensemble, sur une seule vue
@@ -551,14 +558,18 @@ function rythmeGestes(z){
   });
   /* Décocher une case ne replie pas la liste : les autres gestes restent visibles, seule la case cliquée change
      (Vincent, 27/11/2026, en classe : « tout le bloc se replie »). Vaut jusqu'au prochain affichage de l'étape. */
-  let garderTout = false;
+  let garderTout = false, relue = null;   // relue = la vue d'un geste déjà fait, remontrée par « ← Geste précédent »
   const maj = (deplace=false, gesteCoche=null)=>{
     const courant = cases.findIndex(c=>!c.checked), faits = cases.filter(c=>c.checked).length;
-    const vue_ = courant<0 ? -1 : vueDe[courant], groupe = vues.length<cases.length;
+    if(gesteCoche || courant<0 || garderTout || (relue!==null && relue>=vueDe[courant])) relue = null;
+    const enCours = courant<0 ? -1 : vueDe[courant], vue_ = relue!==null ? relue : enCours, groupe = vues.length<cases.length;
     const vuesFaites = vues.filter(v=>v.every(k=>cases[k].checked)).length;
     statut.textContent = courant<0 ? (consignes ? "Toutes les consignes sont cochées." : "Tous les gestes sont cochés.")
       : groupe ? "Partie "+(vue_+1)+" sur "+vues.length+" · "+vuesFaites+" faite"+(vuesFaites>1 ? "s" : "")+". Fais les gestes dans l’ordre, puis coche."
       : (consignes || "Geste")+" "+(courant+1)+" sur "+cases.length+" · "+faits+(consignes ? " accomplie" : " accompli")+(faits>1 ? "s" : "")+". Coche après avoir fait l’action.";
+    if(relue!==null) statut.textContent = "Tu relis "+(groupe ? "la partie "+(relue+1) : (consignes ? "la consigne " : "le geste ")+(vues[relue][0]+1))+" (case déjà cochée). Pour le refaire, décoche sa case.";
+    avant.hidden = tousLesGestes || garderTout || courant<0 || vue_<=0;
+    apres.hidden = relue===null;
     vue.textContent = tousLesGestes ? (consignes ? "Une consigne à la fois" : "Un geste à la fois") : (consignes ? "Voir toutes les consignes" : "Voir tous les gestes");
     vue.setAttribute("aria-pressed",String(tousLesGestes));
     lignes.forEach((li,k)=>{
@@ -591,6 +602,9 @@ function rythmeGestes(z){
     }
   };
   vue.addEventListener("click",()=>{ tousLesGestes = !tousLesGestes; maj(); });
+  const enCoursVue = ()=>{ const c = cases.findIndex(x=>!x.checked); return c<0 ? -1 : vueDe[c]; };
+  avant.addEventListener("click",()=>{ const v = (relue!==null ? relue : enCoursVue())-1; if(v<0) return; relue = v; maj(); (avant.hidden ? apres : avant).focus({preventScroll:true}); });
+  apres.addEventListener("click",()=>{ if(relue===null) return; relue = relue+1>=enCoursVue() ? null : relue+1; maj(); (apres.hidden ? avant : apres).focus({preventScroll:true}); });
   aide.addEventListener("click",()=>{
     const courant = cases.findIndex(c=>!c.checked);
     const demo = courant<0 ? null : demoDe[courant] || lignes[courant].querySelector("details.demo-case");
