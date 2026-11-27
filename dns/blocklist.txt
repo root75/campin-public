@@ -10,6 +10,7 @@
 ! ==============================================================================
 @@||accounts.youtube.com^$important
 @@||app.diagrams.net^$important
+@@||cdn.cookielaw.org^$important
 @@||cdpn.io^$important
 @@||codenames.game^$important
 @@||codepen.io^$important
@@ -29,6 +30,10 @@
 @@||gvt2.com^$important
 @@||gvt3.com^$important
 @@||jeunesingenieux.be^$important
+@@||ka-cs-scratchpad-audio.s3.amazonaws.com^$important
+@@||kasandbox.org^$important
+@@||kastatic.org^$important
+@@||khanacademy.org^$important
 @@||microsoft.com^$important
 @@||milan-jeunesse.com^$important
 @@||nextdns.io^$important
