@@ -255,7 +255,9 @@ function bravo(t, grand){
    l'infobulle (survol) ; celui de l'étape affichée reste écrit sous les pastilles. Cliquable jusqu'au premier
    bloc non validé : on revient relire, puis on repart en avant.
    PARCOURS : g.rond = ce qui s'écrit dans la pastille du groupe (sinon son numéro). */
-let partIci = 0;   // part des cases cochées dans le bloc affiché, de 0 à 1
+let partIci = null;   // part des cases cochées dans le bloc affiché, de 0 à 1 ; null tant qu'aucune case n'a bougé à l'affichage
+/* Le bloc affiché suit ses cases, même déjà validé : décocher fait reculer la pastille (Vincent, 27/11/2026, en classe :
+   « les ronds jaunes en haut ne reculent pas quand on décoche »). La mission validée garde son ✓ vert. */
 function barre(){
   const b = document.getElementById("progres"); b.replaceChildren();
   const groupes = typeof PARCOURS!=="undefined";
@@ -266,7 +268,7 @@ function barre(){
     let fait = etat.atteint>=fin;
     if(DECLARATIF){ fait = true; for(let i=debut;i<fin;i++) fait = fait && complet(i); }
     const ferme = !!plafond && !APERCU && !fait && debut>=plafond.bloc && (DECLARATIF || debut>=etat.atteint);   // pas encore ouvert par le professeur
-    let p = 0; for(let i=debut;i<fin;i++) p += DECLARATIF ? cochees(i)/Math.max(1,nbCases(i)) : i<etat.atteint ? 1 : i===ici ? partIci : partCases(i);
+    let p = 0; for(let i=debut;i<fin;i++) p += DECLARATIF ? cochees(i)/Math.max(1,nbCases(i)) : i===ici && partIci!==null ? partIci : i<etat.atteint ? 1 : partCases(i);
     const n = txt("button", fait ? "fait" : ferme ? "ferme" : "", fait ? "✓" : signe);
     n.type = "button"; n.title = nom+(ferme ? " — pas encore ouvert" : "");
     n.style.setProperty("--p", Math.round(100*p/(fin-debut)));
@@ -828,7 +830,7 @@ function affiche(){
     if(placeNotee>=0) envoie({ etape:Math.min(ici,BLOCS.length-1)+1, type:"ouvert" });
     placeNotee = ici; etat.ici = ici; ecrit(etat);
   }
-  partIci = 0; barre(); if(MISSIONS) bulle(); apercuDirect();
+  partIci = null; barre(); if(MISSIONS) bulle(); apercuDirect();
   queueMicrotask(recocheCases);   // une fois le bloc construit, ses animations comprises
   const z = document.getElementById("bloc"); z.replaceChildren(); z.classList.remove("gestes-en-cours");
   if(CONSTATE){ if(finBloc) finBloc.abort(); finBloc = new AbortController(); }
