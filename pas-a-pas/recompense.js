@@ -31,7 +31,14 @@ body.en-sequence #tresor:not(.pot-classe){display:none}
     if (qui) qui.after(zone); else document.body.prepend(zone);
     document.head.append(s);
   }
-  let precedent = null;
+  let precedent = null, detailOuvert = false;
+  function ouvreDetail(o){
+    detailOuvert = o; if(!zone) return;
+    const b = zone.querySelector('.pot-bouton'), d = zone.querySelector('.pot-texte');
+    if(b) b.setAttribute('aria-expanded', String(o)); if(d) d.hidden = !o;
+  }
+  document.addEventListener('click', e => { if(detailOuvert && zone && !zone.contains(e.target)) ouvreDetail(false); });
+  document.addEventListener('keydown', e => { if(detailOuvert && e.key==='Escape') ouvreDetail(false); });
   const surprises = ['🌠 Pluie d’étoiles','🪐 Une planète découverte','🌌 Une nouvelle constellation','🚀 Décollage collectif'];
   function dessinePot(r){
     const ancien = precedent;
@@ -46,20 +53,29 @@ body.en-sequence #tresor:not(.pot-classe){display:none}
     const memeSeance = ancien && ancien.tresorSeance===r.tresorSeance;
     const ouvre = memeSeance && r.tresorPaliers>ancien.tresorPaliers;
     const gagne = memeSeance && r.tresor>ancien.tresor;
+    /* Le pot ne prend plus qu'une pastille en haut à droite, à côté du smiley, de la grille et de la cloche
+       (Vincent, 27/11/2026 : dégager le cours) : le bocal et le nombre d'étoiles, le détail au clic. */
     const pot = document.createElement('span'); pot.className='bocal'; pot.setAttribute('aria-hidden','true');
     const niveau = document.createElement('i'); niveau.style.height=(100*r.tresorPot/r.tresorPresents)+'%';
     const piece = document.createElement('span'); piece.textContent='★'; pot.append(niveau,piece);
+    const nombre = document.createElement('b'); nombre.className='pot-nombre'; nombre.textContent=r.tresor;
+    const bouton = document.createElement('button'); bouton.type='button'; bouton.className='pot-bouton';
+    bouton.setAttribute('aria-expanded', String(detailOuvert)); bouton.setAttribute('aria-controls','pot-detail');
+    bouton.title = 'Le pot de la classe : '+r.tresor+' étoile'+(r.tresor>1?'s':'')+' gagnée'+(r.tresor>1?'s':'')+' par l’équipe';
+    bouton.setAttribute('aria-label', bouton.title);
+    bouton.append(pot,nombre);
     const titre = document.createElement('strong'); titre.textContent='Le pot de la classe';
     const compte = document.createElement('span'); compte.textContent=r.tresorPot+' / '+r.tresorPresents+' étoiles pour la prochaine surprise';
     const groupe = document.createElement('small'); groupe.textContent=r.tresorPresents+' élève'+(r.tresorPresents>1?'s':'')+' en séance · '+r.tresor+' ⭐ au total';
-    const texte = document.createElement('span'); texte.className='pot-texte'; texte.append(titre,compte,groupe);
+    const texte = document.createElement('span'); texte.className='pot-texte'; texte.id='pot-detail'; texte.hidden=!detailOuvert; texte.append(titre,compte,groupe);
     if(r.tresorPaliers){
       const prix=document.createElement('span'); prix.className='pot-prix';
       prix.textContent='Surprise '+r.tresorPaliers+' · '+surprises[(r.tresorPaliers-1)%surprises.length]; texte.append(prix);
       const choix=document.createElement('small'); choix.textContent='Jeu collectif disponible pour la fin de l’heure.'; texte.append(choix);
     }
+    bouton.addEventListener('click', e => { e.stopPropagation(); ouvreDetail(!detailOuvert); });
     zone.className='pot-classe'+(ouvre?' pot-ouvert':gagne?' pot-gain':'');
-    zone.replaceChildren(pot,texte);
+    zone.replaceChildren(bouton,texte);
 
   }
   function montre(r) {

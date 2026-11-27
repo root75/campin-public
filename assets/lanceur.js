@@ -9,18 +9,20 @@
    à gauche de la cloche 🔔 quand la page en a une. */
 if (document.getElementById("applis")) return;
 const EXEC = "https://script.google.com/a/macros/arcampin.be/s/AKfycbyOPTaq-L1PuittB1rkkiL9OOtShFc2WpiD8H_pH_INaw9ePWenCzhlIPlHu4zBOgLk/exec";
-const ICO = "https://ssl.gstatic.com/images/branding/product/2x/";
-// Ajouter ou retirer une appli = une ligne. Neuf tuiles : la grille reste carrée, comme chez Google.
+// Le même ordre que la vraie grille Google d'un compte de l'école (capture de Vincent, 27/11/2026), « Mes cours » à la
+// place de « Compte ». Icônes : celles de cette grille, détourées (assets/applis/). Ajouter ou retirer une appli = une ligne.
+const ICO = "https://root75.github.io/campin-public/assets/applis/";
 const APPLIS = [
   ["Mes cours", EXEC, "https://root75.github.io/campin-public/assets/logo-campin.png", "chouette"],
-  ["Classroom", "https://classroom.google.com/", ICO + "classroom_48dp.png"],
-  ["Drive", "https://drive.google.com/", ICO + "drive_2020q4_48dp.png"],
-  ["Docs", "https://docs.google.com/document/", ICO + "docs_2020q4_48dp.png"],
-  ["Sheets", "https://docs.google.com/spreadsheets/", ICO + "sheets_2020q4_48dp.png"],
-  ["Slides", "https://docs.google.com/presentation/", ICO + "slides_2020q4_48dp.png"],
-  ["Forms", "https://docs.google.com/forms/", ICO + "forms_2020q4_48dp.png"],
-  ["Agenda", "https://calendar.google.com/", ICO + "calendar_2020q4_48dp.png"],
-  ["Recherche", "https://www.google.com/", ICO + "googleg_48dp.png"]
+  ["Drive", "https://drive.google.com/", ICO + "drive.png"],
+  ["Classroom", "https://classroom.google.com/", ICO + "classroom.png"],
+  ["Docs", "https://docs.google.com/document/", ICO + "docs.png"],
+  ["Sheets", "https://docs.google.com/spreadsheets/", ICO + "sheets.png"],
+  ["Slides", "https://docs.google.com/presentation/", ICO + "slides.png"],
+  ["Agenda", "https://calendar.google.com/", ICO + "agenda.png"],
+  // Gmail ne marche pas pour les élèves et Gemini n'est pas pour eux (Vincent, 27/11/2026) : Forms et la recherche à leur place.
+  ["Forms", "https://docs.google.com/forms/", "https://ssl.gstatic.com/images/branding/product/2x/forms_2020q4_48dp.png"],
+  ["Recherche", "https://www.google.com/", "https://ssl.gstatic.com/images/branding/product/2x/googleg_48dp.png"]
 ];
 
 const css = `

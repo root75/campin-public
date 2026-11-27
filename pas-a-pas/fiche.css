@@ -127,7 +127,7 @@ table.trace input.faux{border-color:var(--faux);background:var(--faux-pale)} tab
 .panneau>*{min-width:0} .ligne dd,.chemin{overflow-wrap:anywhere}
 
 .humeur{background:var(--carte);border:1px solid var(--trait);border-radius:14px;padding:14px clamp(16px,4vw,28px);display:grid;gap:10px}
-.humeur.faite{position:fixed;top:14px;right:76px;z-index:5;padding:0;border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,.18)}
+.humeur.faite{position:fixed;top:14px;right:134px;z-index:5;padding:0;border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,.18)}
 .humeur.faite .coin{width:48px;height:48px;border:0;border-radius:50%;background:transparent;font-size:1.6rem;line-height:1;cursor:pointer}
 .humeur.faite .coin:focus-visible{outline:3px solid var(--fromage,#e3a922);outline-offset:2px}
 .smileys{display:flex;flex-wrap:wrap;gap:8px}
@@ -207,10 +207,23 @@ form.bilan label>input[type=checkbox]{width:24px;height:24px;flex:none;margin:1p
 }
 
 /* Le niveau du bocal représente le palier en cours. */
-#tresor.pot-classe{display:flex;gap:16px;align-items:center;border:2px solid #c89128;border-radius:17px;background:linear-gradient(110deg,#fff2c9,#fffaf0);color:#342a1c;padding:12px 18px}
+/* Une pastille en haut à droite, de droite à gauche : la cloche, la grille d'applis (assets/lanceur.js), le smiley
+   de l'humeur, le pot. Le détail s'ouvre au clic sous la pastille (Vincent, 27/11/2026). */
+#tresor.pot-classe{position:fixed;top:14px;right:134px;z-index:30;display:block;margin:0;padding:0;border:0;background:none;color:#342a1c}
+body:has(.humeur.faite) #tresor.pot-classe{right:190px}
 #tresor[hidden]{display:none!important}
-body.en-sequence #tresor.pot-classe{padding:8px 14px}
-.pot-texte{display:grid;gap:2px}.pot-texte strong{font:800 1.25rem var(--display,Georgia,serif)}.pot-prix{font-weight:700;color:#6b4212}
+body.en-sequence #tresor.pot-classe{padding:0}
+.pot-bouton{display:flex;align-items:center;gap:6px;height:48px;padding:0 12px 0 8px;border:2px solid #c89128;border-radius:24px;
+  background:linear-gradient(110deg,#fff2c9,#fffaf0);box-shadow:0 2px 8px rgba(0,0,0,.18);cursor:pointer;font:inherit;color:#342a1c}
+.pot-bouton:focus-visible{outline:3px solid var(--fromage,#e3a922);outline-offset:2px}
+.pot-nombre{font:800 1.2rem/1 var(--display,Georgia,serif);font-variant-numeric:tabular-nums}
+.pot-classe .bocal{width:26px;height:28px;border-width:2px;border-radius:5px 5px 9px 9px;box-shadow:none}
+.pot-classe .bocal::before{top:-5px;height:5px;left:-2px;right:-2px}
+.pot-classe .bocal span{font-size:.9rem}
+.pot-texte{position:absolute;right:0;top:56px;width:min(300px,calc(100vw - 24px));display:grid;gap:2px;padding:12px 16px;border:2px solid #c89128;border-radius:16px;
+  background:linear-gradient(110deg,#fff2c9,#fffaf0);box-shadow:0 4px 12px rgba(0,0,0,.2)}
+.pot-texte[hidden]{display:none}
+.pot-texte strong{font:800 1.25rem var(--display,Georgia,serif)}.pot-prix{font-weight:700;color:#6b4212}
 .bocal{position:relative;isolation:isolate;flex:none;width:49px;height:53px;box-sizing:border-box;border:3px solid #825a24;border-radius:8px 8px 16px 16px;background:#fffef3;box-shadow:inset 4px 0 #f1e7ca}
 .bocal::before{position:absolute;content:"";left:-3px;right:-3px;top:-7px;height:8px;border-radius:4px;background:#81512a;transform-origin:left bottom}
 .bocal i{position:absolute;z-index:-1;bottom:0;left:0;right:0;border-radius:0 0 12px 12px;background:repeating-linear-gradient(145deg,#f7c74b 0 8px,#f3b533 8px 12px)}
