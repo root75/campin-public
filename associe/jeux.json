@@ -5,7 +5,7 @@
       "titre": "Les boutons de Google Docs",
       "sujet": "Reconnais les boutons de mise en forme.",
       "niveau": 1,
-      "cours": "rat-de-ville-formatif",
+      "cours": "rat-de-ville-6",
       "paires": [
         { "image": "gras", "nom": "Gras", "aide": "Le texte sélectionné devient plus épais." },
         { "image": "italique", "nom": "Italique", "aide": "Le texte sélectionné se penche." },

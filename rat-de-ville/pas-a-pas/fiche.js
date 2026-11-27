@@ -6,7 +6,7 @@
    tests/rat-de-ville.cjs vérifie que les deux sont égaux.
    Dans une case : <b>…</b> = le mot-clé ; <span class="a-ecrire"> = à écrire exactement.
    « demos » : "N" (N-ième case) → [clé de l'animation dans demos.js, numéros des images à montrer sous cette case]. */
-const COURS = 'rat-de-ville-formatif';
+const COURS = 'rat-de-ville-6';   // 6 étapes depuis le 27/11/2026 ; l'ancien suivi en 10 étapes reste au Journal sous rat-de-ville-formatif
 const DECOUVERTES = [["📜", "Manuscrit ouvert"], ["🐀", "Les rats entrent en scène"], ["🎨", "Fable mise en forme"], ["🔢", "Listes en place"], ["💬", "Méthode expliquée"], ["📚", "Fable vérifiée et remise"]];
 const PRESENTATION = 'missions';
 const MODE = 'declaratif';

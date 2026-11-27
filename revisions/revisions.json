@@ -1,7 +1,7 @@
 {
   "note": "Les révisions, par cours (identifiant de pas-a-pas/cours.json). La page revisions/ et le portail se construisent d'ici : ajouter une activité = une ligne, sans rien republier. « suivi » = la clé notée dans le navigateur quand l'activité est faite (assets/progres.js). « jeu » = l'activité s'ouvre aussi dans le portail, sans changer de page. « autres » = les entraînements qui ne dépendent pas d'un cours.",
   "cours": {
-    "rat-de-ville-formatif": {
+    "rat-de-ville-6": {
       "titre": "Le rat de ville",
       "sujet": "Mise en forme dans Google Docs",
       "niveau": 1,
@@ -21,8 +21,8 @@
         },
         {
           "genre": "Mots croisés",
-          "chemin": "mots-croises/?cours=rat-de-ville-formatif",
-          "suivi": "mots-croises:rat-de-ville-formatif",
+          "chemin": "mots-croises/?cours=rat-de-ville-6",
+          "suivi": "mots-croises:rat-de-ville-6",
           "jeu": "mots-croises"
         },
         {

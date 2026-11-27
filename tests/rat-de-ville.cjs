@@ -10,7 +10,7 @@ for(const f of ['pas-a-pas/blocs.js','pas-a-pas/sequence-eleve.js','pas-a-pas/cl
 assert.ok(!/google\.script|addEventListener|suiviFormatif/.test(fiche),'fiche.js : des données, pas de moteur');
 assert.ok(!fs.existsSync(base+'contenu.js')&&!fs.existsSync(__dirname+'/../pas-a-pas/formatif-prof.js'),'ancien moteur retiré');
 // Les cases sont enregistrées sous « étape.rang » : le catalogue (lu par le serveur) doit compter les mêmes.
-const c=JSON.parse(fs.readFileSync(__dirname+'/../pas-a-pas/cours.json','utf8')).cours.find(x=>x.id==='rat-de-ville-formatif');
+const c=JSON.parse(fs.readFileSync(__dirname+'/../pas-a-pas/cours.json','utf8')).cours.find(x=>x.id==='rat-de-ville-6');
 assert.equal(c.etapes,BLOCS.length);
 assert.deepEqual(c.cases,Object.fromEntries(BLOCS.map((b,i)=>[i+1,b.gestes.length])),'cours.json « cases » = cases de fiche.js');
 assert.equal(c.criteres,GRILLE.criteres.length);assert.deepEqual(Object.keys(GRILLE.niveaux),['A','B','C','D']);
