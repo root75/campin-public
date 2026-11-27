@@ -17,6 +17,14 @@ $("theme").addEventListener("click", () => {
   theme(t); try { localStorage.setItem("portail-theme", t); } catch(e) {}
 });
 
+/* ----- Le lanceur d'applis Google : s'ouvre au clic, se ferme par Esc, par un clic ailleurs ou un second clic. ----- */
+{ const b = $("applis"), pan = $("applis-panneau");
+  const ouvre = o => { pan.hidden = !o; b.setAttribute("aria-expanded", String(o)); if (o) pan.querySelector("a").focus(); };
+  b.addEventListener("click", e => { e.stopPropagation(); ouvre(pan.hidden); });
+  document.addEventListener("click", e => { if (!pan.hidden && !pan.contains(e.target)) ouvre(false); });
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && !pan.hidden) { ouvre(false); b.focus(); } });
+}
+
 /* ----- La date du jour, en toutes lettres, et sous la forme qui sert à nommer un travail. ----- */
 function dateNom(d){ return String(d.getFullYear()) + String(d.getMonth() + 1).padStart(2, "0") + String(d.getDate()).padStart(2, "0"); }
 function dateJour(d){ const t = d.toLocaleDateString("fr-BE", { weekday:"long", day:"numeric", month:"long", year:"numeric" }); return t.charAt(0).toUpperCase() + t.slice(1); }

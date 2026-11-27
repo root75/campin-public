@@ -21,7 +21,7 @@ assert.equal(new Set(t.beoi.map(b => b.url)).size, t.beoi.length, 'pas de tâche
 // Les fonctions du portail.
 const noeud = id => ({ id, hidden: false, textContent: '', href: '', addEventListener(){}, replaceChildren(){} });
 const els = new Map(), $ = id => { if(!els.has(id)) els.set(id, noeud(id)); return els.get(id); };
-const ctx = { document: { documentElement: { dataset: {} }, getElementById: $, createElement: () => ({}), head: { append(){} } },
+const ctx = { document: { documentElement: { dataset: {} }, getElementById: $, addEventListener(){}, createElement: () => ({}), head: { append(){} } },
   location: { protocol: 'file:', search: '' }, localStorage: { getItem(){ return null; }, setItem(){} } };
 ctx.window = ctx; ctx.globalThis = ctx;
 vm.runInNewContext(script, ctx);
