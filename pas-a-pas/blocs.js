@@ -1657,9 +1657,12 @@ const HUMEURS = [["😄","Super"],["🙂","Bien"],["😐","Bof"],["🙁","Pas to
 function humeur(changer){
   const h = document.getElementById("humeur"); h.replaceChildren(); h.hidden = false;
   if(etat.humeur && !changer){
+    /* Une fois choisie, l'humeur n'est plus qu'un petit smiley dans le coin : un clic pour la changer
+       (Vincent, 27/11/2026 : une ligne entière, c'était trop). */
     h.className = "humeur faite";
-    h.append(txt("span",null,"Mon humeur du jour : "+etat.humeur));
-    const c = txt("button","lien","changer"); c.type="button";
+    const c = txt("button","coin",etat.humeur.split(" ")[0]); c.type="button";
+    c.title = "Mon humeur du jour : "+etat.humeur+" — cliquer pour la changer";
+    c.setAttribute("aria-label", c.title);
     c.addEventListener("click",()=>humeur(true));
     h.append(c); return;
   }

@@ -127,7 +127,9 @@ table.trace input.faux{border-color:var(--faux);background:var(--faux-pale)} tab
 .panneau>*{min-width:0} .ligne dd,.chemin{overflow-wrap:anywhere}
 
 .humeur{background:var(--carte);border:1px solid var(--trait);border-radius:14px;padding:14px clamp(16px,4vw,28px);display:grid;gap:10px}
-.humeur.faite{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:center;padding:8px clamp(16px,4vw,28px);font-size:1rem;color:var(--doux)}
+.humeur.faite{position:fixed;top:14px;right:76px;z-index:5;padding:0;border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,.18)}
+.humeur.faite .coin{width:48px;height:48px;border:0;border-radius:50%;background:transparent;font-size:1.6rem;line-height:1;cursor:pointer}
+.humeur.faite .coin:focus-visible{outline:3px solid var(--fromage,#e3a922);outline-offset:2px}
 .smileys{display:flex;flex-wrap:wrap;gap:8px}
 .smileys button{flex:1 1 5.5rem;display:grid;justify-items:center;gap:2px;padding:8px 6px;border-radius:12px;border:2px solid var(--trait);
   background:var(--carte);color:var(--encre);cursor:pointer;font-size:.95rem}
