@@ -270,6 +270,7 @@ body.en-sequence #tresor.pot-classe{padding:0}
 .ecran-leger.au-travail .entete .mascotte{width:52px;height:52px}
 .ecran-leger.au-travail .entete h1{font-size:1.5rem}
 .ecran-leger.au-travail .qui:empty{display:none}
+.ecran-leger.au-travail .lien-document{display:none}
 /* « Besoin d'aide ? » : un seul tiroir pour « Ça coince ? », le mémo et les animations (Rat de ville). */
 .coince .aide-outils{display:grid;gap:10px;margin-top:12px}
 .coince .aide-outils #tutos{margin:0}

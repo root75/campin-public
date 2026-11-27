@@ -623,6 +623,15 @@ function rythmeGestes(z){
     const d0 = c<0 ? null : demoDe[c] || lignes[c].querySelector(":scope > details.demo-case"); if(d0 && !d0.open) d0.open = true;
   }
 }
+/* Une seule fois : copie du lien data-a-cote du haut de page dans « Ça coince ? » (.aide-outils), en petit.
+   La copie garde data-a-cote (l'extension écoute les clics sur tout le document) mais perd data-auto. */
+function rangeLienDocument(){
+  const haut = document.querySelector(".page > .actions > a[data-a-cote]"), outils = document.querySelector("#coince .aide-outils");
+  if(!haut || !outils || outils.querySelector("a[data-a-cote]")) return;
+  haut.parentNode.classList.add("lien-document");
+  const c = haut.cloneNode(true); c.removeAttribute("data-auto"); c.className = "btn vide";
+  const d = el("div","actions"); d.append(c); outils.prepend(d);
+}
 /* La case de l'accord du professeur (mode déclaratif, Rat de ville, Vincent, 20/11/2026) : {geste:'…', accord:true}.
    L'élève ne la coche pas lui-même : le bouton « Je demande l'accord du professeur » sonne la cloche avec le motif
    « accord » (pastille verte au tableau, hors « Où le groupe bute », hors limite des 3 sonneries). Quand le professeur
@@ -858,6 +867,10 @@ function affiche(){
   /* Écran léger : passé la première page, l'en-tête se resserre (petite mascotte, ni surtitre) pour que l'étape
      monte en haut de l'écran (Vincent, 27/11/2026 : trop de choses en haut). */
   if(LEGER) document.documentElement.classList.toggle("au-travail", ici!==0);
+  /* Le gros bouton « Retrouver mon document » (un lien data-a-cote posé au-dessus des étapes) ne sert qu'avant de
+     commencer : au travail, le document est déjà ouvert à côté. Il passe dans « Ça coince ? », où on le cherche quand
+     on a perdu son onglet (Vincent, 27/11/2026 : « le bouton retrouver mon doc reste apparent »). */
+  if(LEGER) rangeLienDocument();
   if(enPause()){ pause(z); return; }
   if(ici >= BLOCS.length){ fin(z); return; }
   const B = blocVu(ici);
