@@ -14,11 +14,9 @@ assert.match(html, /Professeur : M\. Louviaux/);
 assert.match(html, /src="https:\/\/root75\.github\.io\/campin-public\/assets\/logo-campin\.png"/);
 assert.ok(fs.existsSync(require.resolve('../assets/logo-campin.png')));
 assert.match(html, /id="bandeau-extension" hidden/);
-// Le lanceur d'applis Google : la grille à 9 points en haut à droite, neuf applis, fermé au repos.
-assert.match(html, /<header class="bandeau">[\s\S]*id="applis"[\s\S]*<\/header>/);
-assert.match(html, /id="applis-panneau" hidden/);
-assert.equal((html.match(/id="applis"[\s\S]*?<\/svg>/)[0].match(/<circle /g) || []).length, 9);
-assert.equal((html.match(/class="applis-grille">([\s\S]*?)<\/ul>/)[1].match(/<li>/g) || []).length, 9);
+// Le lanceur d'applis (assets/lanceur.js) : sa place dans le bandeau, et le script par son adresse absolue.
+assert.match(html, /<header class="bandeau">[\s\S]*<div data-lanceur-applis><\/div>[\s\S]*<\/header>/);
+assert.match(html, /<script src="https:\/\/root75\.github\.io\/campin-public\/assets\/lanceur\.js"><\/script>/);
 
 function noeud(id){ return { id, hidden: /^(compte|maintenant|meteo|lien-prof|devoirs|annonces|date-nommer|devoirs-plie)$/.test(id), textContent:'', href:'', children:[],
   addEventListener(){}, replaceChildren(...e){ this.children = e; } }; }
