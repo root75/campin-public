@@ -14,14 +14,15 @@ const EXEC = "https://script.google.com/a/macros/arcampin.be/s/AKfycbyOPTaq-L1Pu
 const ICO = "https://root75.github.io/campin-public/assets/applis/";
 const APPLIS = [
   ["Mes cours", EXEC, "https://root75.github.io/campin-public/assets/logo-campin.png", "chouette"],
-  ["Gmail", "https://mail.google.com/", ICO + "gmail.png"],
   ["Drive", "https://drive.google.com/", ICO + "drive.png"],
   ["Classroom", "https://classroom.google.com/", ICO + "classroom.png"],
   ["Docs", "https://docs.google.com/document/", ICO + "docs.png"],
-  ["Gemini", "https://gemini.google.com/", ICO + "gemini.png"],
   ["Sheets", "https://docs.google.com/spreadsheets/", ICO + "sheets.png"],
   ["Slides", "https://docs.google.com/presentation/", ICO + "slides.png"],
-  ["Agenda", "https://calendar.google.com/", ICO + "agenda.png"]
+  ["Agenda", "https://calendar.google.com/", ICO + "agenda.png"],
+  // Gmail ne marche pas pour les élèves et Gemini n'est pas pour eux (Vincent, 27/11/2026) : Forms et la recherche à leur place.
+  ["Forms", "https://docs.google.com/forms/", "https://ssl.gstatic.com/images/branding/product/2x/forms_2020q4_48dp.png"],
+  ["Recherche", "https://www.google.com/", "https://ssl.gstatic.com/images/branding/product/2x/googleg_48dp.png"]
 ];
 
 const css = `
