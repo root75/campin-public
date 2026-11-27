@@ -250,3 +250,13 @@ body.en-sequence #tresor.pot-classe{padding:8px 14px}
 .recul-gestes{display:flex;flex-wrap:wrap;gap:8px;margin:0}
 .recul-gestes .btn{min-height:36px;padding:4px 12px;font-size:.9rem}
 .recul-gestes:not(:has(button:not([hidden]))){display:none}
+
+/* Écran léger, passé la première page (blocs.js, 27/11/2026) : en-tête resserré. */
+.ecran-leger.au-travail .entete{padding-top:0;gap:10px}
+.ecran-leger.au-travail .entete .surtitre{display:none}
+.ecran-leger.au-travail .entete .mascotte{width:52px;height:52px}
+.ecran-leger.au-travail .entete h1{font-size:1.5rem}
+.ecran-leger.au-travail .qui:empty{display:none}
+/* « Besoin d'aide ? » : un seul tiroir pour « Ça coince ? », le mémo et les animations (Rat de ville). */
+.coince .aide-outils{display:grid;gap:10px;margin-top:12px}
+.coince .aide-outils #tutos{margin:0}

@@ -855,6 +855,9 @@ function affiche(){
   const loin = document.getElementById("plus-loin"); if(loin){ loin.hidden = true; loin.open = false; }
   /* « Comment ça marche ? » (#intro) : sur la première page seulement, pour ne garder à l'écran que le nécessaire (Vincent, 20/11/2026). */
   const intro = document.getElementById("intro"); if(intro){ intro.hidden = ici!==0; if(ici!==0) intro.open = false; }
+  /* Écran léger : passé la première page, l'en-tête se resserre (petite mascotte, ni surtitre) pour que l'étape
+     monte en haut de l'écran (Vincent, 27/11/2026 : trop de choses en haut). */
+  if(LEGER) document.documentElement.classList.toggle("au-travail", ici!==0);
   if(enPause()){ pause(z); return; }
   if(ici >= BLOCS.length){ fin(z); return; }
   const B = blocVu(ici);
