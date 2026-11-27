@@ -12,7 +12,7 @@ function noeud(tag) {
   return n;
 }
 const qui = noeud('p'), minuteries = [];
-const ctx = vm.createContext({ document: { createElement: noeud, getElementById: id => id === 'qui' ? qui : null, head: noeud('head'), body: noeud('body') },
+const ctx = vm.createContext({ document: { createElement: noeud, getElementById: id => id === 'qui' ? qui : null, addEventListener(){}, head: noeud('head'), body: noeud('body') },
   window: {}, setTimeout: f => { minuteries.push(f); return minuteries.length; }, clearTimeout() {} });
 vm.runInContext(lis('pas-a-pas/recompense.js') + '\nglobalThis.T = Tresor; globalThis.R = Recompense;', ctx);
 const texte = () => qui.suivant ? qui.suivant.enfants.map(e => e.textContent).join(' ') : '';
