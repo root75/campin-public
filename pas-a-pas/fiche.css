@@ -245,3 +245,6 @@ body.en-sequence #tresor.pot-classe{padding:8px 14px}
    puis encadrée et amenée à l'écran quand le dernier est coché (blocs.js, gestes-en-cours). */
 .ecran-leger #bloc.gestes-en-cours .preuve.apres-gestes{opacity:.45;border-style:dashed;background:transparent}
 .ecran-leger #bloc.gestes-en-cours .preuve.apres-gestes::before{content:"⏳ D’abord les gestes au-dessus. Ensuite, c’est ici.";display:block;font-weight:700;margin-bottom:8px}
+.recul-gestes{display:flex;flex-wrap:wrap;gap:8px;margin:0}
+.recul-gestes .btn{min-height:36px;padding:4px 12px;font-size:.9rem}
+.recul-gestes:not(:has(button:not([hidden]))){display:none}
