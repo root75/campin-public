@@ -323,7 +323,18 @@ jamais dans le cours ; la liste des vues et de leurs options est en tête de ce 
 
 ```bash
 node tests/<cours>.cjs && node tests/catalogue.cjs
+node outils/verifier-cours.cjs <id-du-cours>      # sans id : tous les cours du catalogue
 ```
+
+**`outils/verifier-cours.cjs`** ouvre chaque étape du cours dans Chromium, comme la voit un élève connecté qui y est
+arrivé (faux serveur, site lu dans le dépôt, aucun réseau), et relève : une erreur JavaScript ou le bandeau rouge,
+un fichier ou un lien du site qui n'existe pas, une image qui ne s'affiche pas, un nombre d'étapes différent du
+catalogue, un « Ça coince ? » vide, un défilement horizontal à 375 px, et **tout bouton ou lien affiché au-dessus de
+la tâche pendant le travail** qui n'est pas dans sa liste `HAUT_PERMIS` (menu, pastilles, cloche, grille, smiley, pot).
+Il donne aussi la hauteur où commence la tâche sur un écran de 1366 × 768. `--reseau` teste les liens vers d'autres
+sites (signalés, jamais bloquants). Il tourne sur chaque PR (travail « cours » de `.github/workflows/tests.yml`) :
+un constat nouveau la fait échouer. Un constat accepté s'écrit dans `outils/verifier-cours.connus.json`, avec sa
+raison ; rien n'y est propre à un cours, un nouveau cours est vérifié dès qu'il est au catalogue.
 
 Puis la fiche dans Chromium, avec Playwright, en interceptant `https://root75.github.io/**` vers le
 dépôt local (exemple : l'essai de la Messagerie 02 décrit dans sa PR). Avec un faux
