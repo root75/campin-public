@@ -24,6 +24,15 @@ const APPLIS = [
   ["Forms", "https://docs.google.com/forms/", "https://ssl.gstatic.com/images/branding/product/2x/forms_2020q4_48dp.png"],
   ["Recherche", "https://www.google.com/", "https://ssl.gstatic.com/images/branding/product/2x/googleg_48dp.png"]
 ];
+// Les quatre applis Microsoft 365 du compte de l'école (Vincent, 28/11/2026) : la messagerie des élèves est Outlook, et
+// leurs fichiers du labo sont dans OneDrive. Une rangée à part, sous la grille Google qui reste carrée. Icônes : celles de
+// Microsoft (assets/applis/*.svg). OneDrive ouvre droit celui de l'école, sans passer par le choix d'un compte.
+const MICROSOFT = [
+  ["Outlook", "https://outlook.cloud.microsoft/mail/", ICO + "outlook.svg"],
+  ["OneDrive", "https://arcampinbe-my.sharepoint.com/", ICO + "onedrive.svg"],
+  ["Word", "https://word.cloud.microsoft/", ICO + "word.svg"],
+  ["Excel", "https://excel.cloud.microsoft/", ICO + "excel.svg"]
+];
 
 const css = `
 .applis{--g-fond:#e9eef6;--g-carte:#fff;--g-texte:#1f1f1f;--g-survol:#e8ebee;position:relative;flex:none;z-index:40}
@@ -36,13 +45,16 @@ const css = `
 .applis-bouton:hover,.applis-bouton[aria-expanded="true"]{background:rgba(127,140,170,.22)}
 .applis-bouton svg{width:24px;height:24px;fill:currentColor}
 .applis-panneau{position:absolute;right:0;top:54px;width:min(340px,calc(100vw - 24px));padding:8px;border-radius:28px;
-  background:var(--g-fond);box-shadow:0 4px 8px 3px rgba(0,0,0,.15),0 1px 3px rgba(0,0,0,.3)}
+  background:var(--g-fond);box-shadow:0 4px 8px 3px rgba(0,0,0,.15),0 1px 3px rgba(0,0,0,.3);max-height:calc(100vh - 70px);overflow-y:auto}
 .applis-panneau[hidden]{display:none}
 .applis-grille{list-style:none;margin:0;padding:14px 8px;border-radius:20px;background:var(--g-carte);display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
+.applis-grille.microsoft{grid-template-columns:repeat(4,1fr);gap:0;margin-top:8px;padding:8px}
 .applis-grille a{display:flex;flex-direction:column;align-items:center;gap:8px;padding:12px 4px 10px;border-radius:16px;text-decoration:none;
   color:var(--g-texte);font:400 14px/1.2 "Google Sans",Roboto,Arial,sans-serif}
 .applis-grille a:hover,.applis-grille a:focus-visible{background:var(--g-survol)}
+.applis-grille.microsoft a{font-size:13px;padding:10px 0 8px}
 .applis-grille img{width:40px;height:40px;object-fit:contain}
+.applis-grille.microsoft img{width:44px;height:44px;margin:-2px 0}
 .applis-grille img.chouette{border-radius:50%;background:#fff;padding:2px}
 @media print{.applis{display:none}}`;
 const st = document.createElement("style"); st.textContent = css; document.head.appendChild(st);
@@ -50,11 +62,13 @@ const st = document.createElement("style"); st.textContent = css; document.head.
 const ici = document.querySelector("[data-lanceur-applis]");
 const boite = document.createElement("div");
 boite.className = "applis" + (ici ? "" : " flotte suit-systeme");
+const tuile = ([nom, url, ico, cl]) =>
+  `<li><a target="_top" href="${url}"><img src="${ico}" alt="" width="40" height="40" loading="lazy"${cl ? ` class="${cl}"` : ""}>${nom}</a></li>`;
 const points = [6, 12, 18].flatMap(y => [6, 12, 18].map(x => `<circle cx="${x}" cy="${y}" r="2"/>`)).join("");
 boite.innerHTML = `<button class="applis-bouton" id="applis" type="button" aria-label="Applications" title="Applications" aria-expanded="false" aria-controls="applis-panneau">
 <svg viewBox="0 0 24 24" aria-hidden="true">${points}</svg></button>
-<div class="applis-panneau" id="applis-panneau" hidden><ul class="applis-grille">${APPLIS.map(([nom, url, ico, cl]) =>
-  `<li><a target="_top" href="${url}"><img src="${ico}" alt="" width="40" height="40" loading="lazy"${cl ? ` class="${cl}"` : ""}>${nom}</a></li>`).join("")}</ul></div>`;
+<div class="applis-panneau" id="applis-panneau" hidden><ul class="applis-grille">${APPLIS.map(tuile).join("")}</ul>
+<ul class="applis-grille microsoft" aria-label="Microsoft 365">${MICROSOFT.map(tuile).join("")}</ul></div>`;
 (ici || document.body).appendChild(boite);
 
 /* Sur une page de cours, la cloche 🔔 tient déjà le coin : le lanceur se range à sa gauche, centré sur elle. */
