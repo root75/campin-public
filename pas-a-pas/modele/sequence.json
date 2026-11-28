@@ -1,0 +1,131 @@
+{
+  "_lisezmoi": "FICHE DE SÉQUENCE : un cours pas à pas complet se crée en remplissant ce fichier, sans toucher au moteur. Copier ce fichier dans <dossier>/pas-a-pas/sequence.json, le remplir, puis : node outils/nouveau-cours.cjs <dossier>/pas-a-pas/sequence.json. La commande contrôle la fiche, écrit la page, la fiche du moteur, les preuves, et inscrit le cours au catalogue, aux révisions et aux mots croisés. Pour changer le cours ensuite : changer ce fichier et relancer. Mode d'emploi : pas-a-pas/MOTEUR.md, section « Créer un cours en remplissant une fiche ».",
+
+  "id": "modele",
+  "dossier": "pas-a-pas/modele-genere",
+  "titre": "Sujet 01 — Titre du cours",
+  "surtitre": "Matière · chapitre · Sujet 01",
+  "accueil": "Aujourd’hui : ce que tu sauras faire à la fin, en une phrase.",
+  "mascotte": "🧭",
+  "sujet": "Le sujet du cours, en quelques mots (pour les révisions)",
+  "niveau": 1,
+
+  "reperes": [
+    ["À l’écran", "Ce que ça veut dire"],
+    ["<b>Gras</b> dans la liste", "un message non lu"],
+    ["Le bouton <b>Nouveau</b>", "en haut à gauche de Drive"]
+  ],
+
+  "etapes": [
+    {
+      "partie": "A — Je découvre",
+      "titre": "Des champs qui prouvent le geste",
+      "min": 5,
+      "but": "Lire une information à l’écran et la recopier.",
+      "gestes": [
+        "Ouvre <b class=\"chemin\">Drive ▸ Mon Drive</b>.",
+        "Repère le <b>nom</b> de ton premier dossier."
+      ],
+      "coince": [
+        "Je ne trouve pas Drive : la grille ⋮⋮⋮ en haut à droite ▸ Drive.",
+        "Mon Drive est vide : crée un dossier avec le bouton Nouveau, en haut à gauche ▸ Nouveau dossier."
+      ],
+      "preuve": {
+        "q": "Recopie ce que tu lis dans ton Drive.",
+        "champs": [
+          { "cle": "DOSSIER", "nom": "Le nom de ton premier dossier", "max": 60 },
+          { "cle": "NOMBRE", "nom": "Le nombre de fichiers qu’il contient, avec le mot (3 fichiers)", "max": 20, "exemple": "3 fichiers" }
+        ]
+      }
+    },
+    {
+      "partie": "A — Je découvre",
+      "titre": "Une question à choix, en trois versions",
+      "min": 5,
+      "but": "Reconnaître le bon bouton.",
+      "gestes": [
+        "Regarde la <b>barre d’outils</b> de ton document.",
+        "Survole chaque <b>icône</b> : son nom s’affiche."
+      ],
+      "coince": [
+        "Aucun nom ne s’affiche : laisse la souris immobile une seconde sur l’icône."
+      ],
+      "preuve": [
+        { "type": "qcm", "q": "Quel bouton met le texte en gras ?", "c": ["Le bouton B", "Le bouton I", "Le bouton U"], "p": [null, "I, c’est l’italique.", "U, c’est le souligné."] },
+        { "type": "qcm", "q": "Quel bouton met le texte en italique ?", "c": ["Le bouton I", "Le bouton B", "Le bouton U"], "p": [null, "B, c’est le gras.", "U, c’est le souligné."] },
+        { "type": "qcm", "q": "Quel bouton souligne le texte ?", "c": ["Le bouton U", "Le bouton B", "Le bouton I"], "p": [null, "B, c’est le gras.", "I, c’est l’italique."] }
+      ]
+    },
+    {
+      "partie": "B — Je m’exerce",
+      "titre": "Une réponse à taper, en trois versions",
+      "min": 5,
+      "but": "Utiliser un raccourci clavier.",
+      "gestes": [
+        "Sélectionne un <b>mot</b> de ton texte.",
+        "Essaie le <b>raccourci</b> affiché dans la question."
+      ],
+      "coince": [
+        "Rien ne se passe : le mot doit être sélectionné (surligné en bleu) avant le raccourci."
+      ],
+      "preuve": [
+        { "type": "saisie", "q": "Tu as appuyé sur Ctrl + B. Ton mot est devenu… (un mot)", "regle": { "egal": ["gras", "en gras"] }, "faux": "Regarde ton mot : il est plus épais.", "juste": "Ctrl + B : gras (B comme bold)." },
+        { "type": "saisie", "q": "Tu as appuyé sur Ctrl + I. Ton mot est devenu… (un mot)", "regle": { "egal": ["italique", "en italique"] }, "faux": "Regarde ton mot : il penche.", "juste": "Ctrl + I : italique." },
+        { "type": "saisie", "q": "Tu as appuyé sur Ctrl + U. Ton mot est devenu… (un mot)", "regle": { "egal": ["souligné", "souligne"] }, "faux": "Regarde ton mot : il y a un trait dessous.", "juste": "Ctrl + U : souligné (U comme underline)." }
+      ]
+    }
+  ],
+
+  "moi": [
+    { "n": "1. Sais-tu retrouver une information à l’écran ?", "regarde": "Critère : intitulé exact du critère de la grille",
+      "A": "Je la retrouve seul, et j’aide un camarade à la retrouver.",
+      "B": "Je la retrouve seul.",
+      "C": "Je la retrouve avec de l’aide.",
+      "D": "Je ne sais pas encore où regarder." },
+    { "n": "2. Sais-tu mettre un mot en forme ?", "regarde": "Critère : intitulé exact du critère de la grille",
+      "A": "Je mets en forme avec les boutons et avec les raccourcis.",
+      "B": "Je mets en forme avec les boutons.",
+      "C": "Je dois encore chercher le bon bouton.",
+      "D": "Je n’y arrive pas encore." }
+  ],
+
+  "fin": {
+    "titre": "Bravo, c’est terminé",
+    "bulle": "Fini !",
+    "texte": "Ce que tu as réussi, en une phrase.",
+    "citation": { "texte": "Une citation réelle.", "auteur": "Son auteur", "source": "L’œuvre (date)", "lien": "Le lien avec ce qu’on vient de faire." },
+    "plus": "Ce que tu fais si tu as fini avant les autres."
+  },
+
+  "essentiel": [
+    "Avant de mettre en forme, je <strong>sélectionne</strong> le texte.",
+    "<strong>B</strong> : gras. <strong>I</strong> : italique. <strong>U</strong> : souligné.",
+    "Un raccourci fait la même chose qu’un bouton : <span class=\"touche\">Ctrl + B</span>, <span class=\"touche\">Ctrl + I</span>, <span class=\"touche\">Ctrl + U</span>."
+  ],
+
+  "quiz": [
+    { "q": "Que fais-tu avant de cliquer sur le bouton B ?", "c": ["Je sélectionne le texte.", "Je ferme le document.", "Je clique deux fois sur B.", "Rien de spécial."],
+      "p": [null, "Fermer le document ne met rien en forme.", "Deux clics : le gras s’allume puis s’éteint.", "Sans sélection, le bouton ne sait pas quoi changer."],
+      "h": "Le bouton agit sur…", "e": "Je sélectionne d’abord, je clique ensuite." },
+    { "q": "Quel raccourci met un mot en gras ?", "c": ["Ctrl + B", "Ctrl + I", "Ctrl + U", "Ctrl + G"],
+      "p": [null, "Ctrl + I : l’italique.", "Ctrl + U : le souligné.", "G comme gras ? Non : le clavier parle anglais, bold."],
+      "h": "En anglais, gras se dit bold.", "e": "Ctrl + B : gras." },
+    { "q": "Un mot penche vers la droite. Il est en…", "c": ["italique", "gras", "souligné", "majuscules"],
+      "p": [null, "Le gras est plus épais, il ne penche pas.", "Souligné : un trait dessous.", "Les majuscules sont de grandes lettres, droites."],
+      "h": "Le bouton I.", "e": "Italique : le texte penche." },
+    { "q": "À quoi sert un dossier ?", "c": ["À ranger des fichiers.", "À écrire un texte.", "À envoyer un message.", "À éteindre l’ordinateur."],
+      "p": [null, "Un texte s’écrit dans un document.", "Un message s’envoie avec la messagerie.", "On éteint par le menu Démarrer."],
+      "h": "Comme une farde.", "e": "Un dossier range des fichiers." }
+  ],
+
+  "mots_croises": [
+    { "mot": "gras", "indice": "Le bouton B." },
+    { "mot": "italique", "indice": "Le bouton I." },
+    { "mot": "souligné", "indice": "Le bouton U." },
+    { "mot": "dossier", "indice": "Il range des fichiers." },
+    { "mot": "fichier", "indice": "Un document enregistré." },
+    { "mot": "raccourci", "indice": "Deux touches à la place d’un clic." },
+    { "mot": "icône", "indice": "Le petit dessin d’un bouton." },
+    { "mot": "sélection", "indice": "Ce qui est surligné en bleu." }
+  ]
+}

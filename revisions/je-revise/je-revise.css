@@ -1,0 +1,100 @@
+/* « Je révise » commun (revisions/je-revise/) : le style des pages « je révise », repris tel quel de messagerie-3/. */
+/* Page d'entraînement : bandeau titre, onglets, une carte de travail centrée (largeur de lecture). */
+:root{
+  --papier:#f3f5f7; --carte:#ffffff; --encre:#1f2a33; --doux:#5b6873;
+  --trait:#d5dce2; --encre-bouton:#1d5a73; --fromage:#e3a922; --fromage-pale:#fbf0d4;
+  --juste:#1f7a4d; --juste-pale:#e2f3ea; --faux:#b23a2e; --faux-pale:#f8e3e0;
+  --display:"Alegreya", Georgia, "Times New Roman", serif;
+  --texte:"Atkinson Hyperlegible", "Segoe UI", Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --papier:#141a1f; --carte:#1d252c; --encre:#e8edf1; --doux:#a3b0ba;
+  --trait:#33404a; --encre-bouton:#7cc3de; --fromage:#e9b84a; --fromage-pale:#3a3120;
+  --juste:#6fd0a0; --juste-pale:#183427; --faux:#f08b7f; --faux-pale:#3d2120; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --papier:#141a1f; --carte:#1d252c; --encre:#e8edf1; --doux:#a3b0ba;
+  --trait:#33404a; --encre-bouton:#7cc3de; --fromage:#e9b84a; --fromage-pale:#3a3120;
+  --juste:#6fd0a0; --juste-pale:#183427; --faux:#f08b7f; --faux-pale:#3d2120; color-scheme:dark }
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--papier);color:var(--encre);font-family:var(--texte);font-size:1.125rem;line-height:1.55;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:0 48px}
+.page{max-width:44rem;margin:0 auto;display:grid;gap:20px}
+header{padding-top:28px;display:grid;gap:4px}
+.surtitre{font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;color:var(--doux);font-weight:700}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(2rem,7vw,2.8rem);line-height:1.05;margin:0;text-wrap:balance}
+h1 em{font-style:italic;font-weight:600;color:var(--doux)}
+.consigne{margin:6px 0 0;color:var(--doux);font-size:1rem}
+
+nav{display:flex;flex-wrap:wrap;gap:8px}
+nav button{font:inherit;font-size:1rem;font-weight:700;padding:10px 16px;border-radius:999px;border:2px solid var(--trait);
+  background:var(--carte);color:var(--encre);cursor:pointer}
+nav button[aria-selected="true"]{background:var(--encre-bouton);border-color:var(--encre-bouton);color:var(--carte)}
+button:focus-visible{outline:3px solid var(--fromage);outline-offset:2px}
+
+.panneau{background:var(--carte);border:1px solid var(--trait);border-radius:14px;padding:22px clamp(16px,4vw,28px);display:grid;gap:16px;min-width:0}
+h2{font-family:var(--display);font-weight:800;font-size:1.6rem;margin:0;line-height:1.15}
+h3{font-family:var(--display);font-weight:600;font-size:1.25rem;margin:0}
+p{margin:0}
+
+/* Les boutons de la barre Docs, en petites touches */
+.touche{display:inline-flex;align-items:center;justify-content:center;min-width:1.7em;padding:0 .4em;height:1.6em;
+  border:1px solid var(--trait);border-bottom-width:3px;border-radius:6px;background:var(--papier);
+  font-family:var(--texte);font-size:.95em;font-weight:700;line-height:1;white-space:nowrap;vertical-align:.08em}
+.touche.i{font-style:italic}.touche.u{text-decoration:underline}
+
+ol.resume{margin:0;padding:0;list-style:none;display:grid;gap:12px;counter-reset:r}
+ol.resume li{display:grid;grid-template-columns:2rem 1fr;gap:10px;align-items:start}
+ol.resume li::before{counter-increment:r;content:counter(r);font-family:var(--display);font-weight:800;font-size:1.4rem;
+  color:var(--encre-bouton);line-height:1.1;text-align:right}
+.note{font-size:.95rem;color:var(--doux)}
+
+.progres{display:flex;gap:6px}
+.progres span{flex:1;height:6px;border-radius:3px;background:var(--trait)}
+.progres span.fait{background:var(--encre-bouton)}
+.progres span.ok{background:var(--juste)}
+.progres span.ko{background:var(--faux)}
+.numero{font-size:.9rem;font-weight:700;color:var(--doux);letter-spacing:.04em;text-transform:uppercase}
+.question{font-size:1.2rem;font-weight:700;margin:0}
+.choix{display:grid;gap:10px}
+.choix button{font:inherit;text-align:left;padding:12px 14px;border-radius:10px;border:2px solid var(--trait);
+  background:var(--carte);color:var(--encre);cursor:pointer;display:grid;grid-template-columns:1.8rem 1fr;gap:8px;align-items:start}
+.choix button:hover:not(:disabled){border-color:var(--encre-bouton)}
+.choix button .lettre{font-weight:700;color:var(--doux)}
+.choix button:disabled{cursor:default}
+.choix button.juste{border-color:var(--juste);background:var(--juste-pale)}
+.choix button.faux{border-color:var(--faux);background:var(--faux-pale)}
+.choix button.estompe{opacity:.55}
+
+.indice{background:var(--fromage-pale);border-left:5px solid var(--fromage);border-radius:6px;padding:10px 14px;font-size:1rem}
+.retour{border-radius:10px;padding:12px 14px;display:grid;gap:6px;font-size:1rem}
+.retour.juste{background:var(--juste-pale)} .retour.faux{background:var(--faux-pale)}
+.retour strong{font-size:1.05rem}
+.actions{display:flex;flex-wrap:wrap;gap:10px}
+.btn{font:inherit;font-weight:700;font-size:1rem;padding:10px 18px;border-radius:10px;cursor:pointer;border:2px solid var(--encre-bouton)}
+.btn.plein{background:var(--encre-bouton);color:var(--carte)}
+.btn.vide{background:transparent;color:var(--encre-bouton)}
+.btn:disabled{opacity:.4;cursor:default}
+
+.score{font-family:var(--display);font-weight:800;font-size:3.2rem;line-height:1;color:var(--encre-bouton)}
+
+/* Cartes mémoire */
+.carte-memoire{perspective:1200px;min-height:18rem}
+.carte-memoire .tourne{position:relative;width:100%;min-height:18rem;transition:transform .45s ease;transform-style:preserve-3d;cursor:pointer;border:0;padding:0;background:none;font:inherit;color:inherit;text-align:left;display:block}
+.carte-memoire .tourne.verso{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;border-radius:14px;padding:20px;display:grid;align-content:center;gap:10px;
+  border:2px solid var(--trait);background:var(--papier)}
+.face.dos{transform:rotateY(180deg);background:var(--fromage-pale);border-color:var(--fromage)}
+.face .etiquette{font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:var(--doux)}
+.face .grand{font-size:1.2rem;font-weight:700}
+.compteur{font-variant-numeric:tabular-nums;color:var(--doux);font-weight:700;align-self:center}
+
+.deux{display:grid;gap:16px}
+.bloc{border:1px solid var(--trait);border-radius:12px;padding:16px;display:grid;gap:12px;min-width:0}
+.bloc.coince{border-top:5px solid var(--encre-bouton)}
+.bloc.fini{border-top:5px solid var(--fromage)}
+.etapes{margin:0;padding-left:1.4rem;display:grid;gap:4px}
+
+footer{font-size:.9rem;color:var(--doux);text-align:center}
+@media (prefers-reduced-motion: reduce){.carte-memoire .tourne{transition:none}}

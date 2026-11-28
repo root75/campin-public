@@ -27,9 +27,12 @@ for (const a of d.autres) {
 }
 // Le quiz d'une page « je révise » note sa fin sous la clé que revisions.json attend.
 for (const [id, c] of Object.entries(d.cours)) for (const a of c.activites) if (a.suivi && a.suivi.startsWith('quiz:')) {
-  const f = a.chemin.replace(/#.*$/, '') + 'index.html', source = lis(f);
-  assert.ok(source.includes('assets/progres.js" data-quiz="' + a.suivi + '"'), f + ' : ne note pas ' + a.suivi);
-  assert.ok(/id="quiz"/.test(source) && /"score"/.test(source), f + ' : le score du quiz ne serait pas vu');
+  // La page commune revisions/je-revise/?cours=<id> (cours créés par outils/nouveau-cours.cjs) note elle-même « quiz:<id> ».
+  const commune = a.chemin.startsWith('revisions/je-revise/?cours=' + id + '#');
+  const f = a.chemin.replace(/[?#].*$/, '') + 'index.html', source = lis(f);
+  if (commune) assert.ok(a.suivi === 'quiz:' + id && lis('revisions/je-revise/je-revise.js').includes("Progres.marque('quiz:' + id, 'fait')"), f + ' : ne note pas ' + a.suivi);
+  else assert.ok(source.includes('assets/progres.js" data-quiz="' + a.suivi + '"'), f + ' : ne note pas ' + a.suivi);
+  assert.ok(/id="quiz"/.test(source) && (commune || /"score"/.test(source)), f + ' : le score du quiz ne serait pas vu');
   assert.ok(source.includes('"' + a.chemin.split('#')[1] + '"') || source.includes('t-' + a.chemin.split('#')[1]), f + ' : onglet #' + a.chemin.split('#')[1] + ' inconnu');
 }
 // Le jeu d'images rattaché à un cours existe, pour la bonne année.
