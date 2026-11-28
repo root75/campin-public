@@ -1,5 +1,5 @@
 {
-  "note": "« Un coup de pouce en maths », la tuile du portail (portail/portail.js). Elle mène l'élève droit au cours de Khan Academy de son année, pour s'entraîner à son rythme en plus de son cours de maths. « cours » : les cours de Khan Academy, des liens seulement (adresses données par le professeur). « annees » : les cours montrés à chaque année, dans l'ordre ; une classe dont le nom commence par 1, 2 ou 3 a son année. Sans classe connue (page publique, professeur), tous les cours sont proposés. « encouragements » : une phrase tirée au hasard à chaque visite. « exercices » : par année, de petits échauffements joués dans la tuile, écrits pour le site (aucun énoncé de Khan Academy recopié) ; chaque question a un indice et trois variantes, « reponse » est le texte exact d'un des choix, « suite » est l'exercice de Khan Academy où continuer. Avec plusieurs échauffements pour une année, il en vient un autre chaque jour d'école. Rien n'est coté ni enregistré. Changer un lien ou une phrase = changer une ligne ici.",
+  "note": "« Un coup de pouce en maths », la tuile du portail (portail/portail.js). Elle mène l'élève droit au cours de Khan Academy de son année, pour s'entraîner à son rythme en plus de son cours de maths. « cours » : les cours de Khan Academy, des liens seulement (adresses données par le professeur). « annees » : les cours montrés à chaque année, dans l'ordre ; une classe dont le nom commence par 1, 2 ou 3 a son année. Sans classe connue (page publique, professeur), tous les cours sont proposés. « encouragements » : une phrase tirée au hasard à chaque visite. « exercices » : par année, un petit échauffement par chapitre du cours de Khan Academy (titres et adresses des chapitres relevés dans le cours), joué dans la tuile ; les questions sont écrites pour le site, aucun énoncé de Khan Academy n'est recopié. Chaque question a un indice et trois variantes ; « reponse » est le texte exact d'un des choix ; « suite » est le chapitre de Khan Academy où continuer. « verif » (un calcul) ou « vrai » (une condition sur x, le choix essayé) sert au test tests/portail-maths.cjs, qui recalcule chaque réponse. Le chapitre est tiré au sort à chaque visite, et l'élève peut en demander un autre. Rien n'est coté ni enregistré. Changer un lien ou une phrase = changer une ligne ici.",
   "cours": {
     "1": {
       "titre": "1re année secondaire",
@@ -9,13 +9,13 @@
       "titre": "2e année secondaire",
       "url": "https://fr.khanacademy.org/math/be-2eme-secondaire2"
     },
-    "ce1d": {
-      "titre": "Révisions pour le CE1D",
-      "url": "https://fr.khanacademy.org/math/revisions-ce1dv2"
-    },
     "3": {
       "titre": "3e année secondaire",
       "url": "https://fr.khanacademy.org/math/3eme-annee-secondaire"
+    },
+    "ce1d": {
+      "titre": "Révisions pour le CE1D",
+      "url": "https://fr.khanacademy.org/math/revisions-ce1dv2"
     }
   },
   "annees": {
@@ -31,7 +31,2169 @@
     ]
   },
   "exercices": {
+    "1": [
+      {
+        "id": "1-nombres-introduction-et-rappels-sur-les-naturels",
+        "titre": "Nombres : Introduction et rappels sur les naturels",
+        "suite": "https://fr.khanacademy.org/math/be-1ere-secondaire2/xe5303a9b201c0f84:nombres-introduction-et-rappels-sur-les-naturels",
+        "questions": [
+          {
+            "indice": "I vaut 1, V vaut 5, X vaut 10. Un I placé avant se retire, placé après s'ajoute.",
+            "variantes": [
+              {
+                "q": "Comment écrit-on 14 en chiffres romains ?",
+                "choix": [
+                  "XIV",
+                  "XVI",
+                  "XIIII"
+                ],
+                "reponse": "XIV",
+                "explication": "14 = 10 + 4 : X, puis IV (5 − 1).",
+                "verif": "14"
+              },
+              {
+                "q": "Comment écrit-on 9 en chiffres romains ?",
+                "choix": [
+                  "IX",
+                  "XI",
+                  "VIIII"
+                ],
+                "reponse": "IX",
+                "explication": "9 = 10 − 1 : le I placé avant le X se retire.",
+                "verif": "9"
+              },
+              {
+                "q": "Comment écrit-on 26 en chiffres romains ?",
+                "choix": [
+                  "XXVI",
+                  "XXIV",
+                  "XVVI"
+                ],
+                "reponse": "XXVI",
+                "explication": "26 = 10 + 10 + 5 + 1 : XX, puis V, puis I.",
+                "verif": "26"
+              }
+            ]
+          },
+          {
+            "indice": "Lis le nombre de droite à gauche : unités, dizaines, centaines, milliers.",
+            "variantes": [
+              {
+                "q": "Dans 3 482, quel est le chiffre des centaines ?",
+                "choix": [
+                  "4",
+                  "8",
+                  "3"
+                ],
+                "reponse": "4",
+                "explication": "3 482 : 2 unités, 8 dizaines, 4 centaines, 3 milliers.",
+                "verif": "(3482 - 3482 % 100) / 100 % 10"
+              },
+              {
+                "q": "Dans 7 915, quel est le chiffre des dizaines ?",
+                "choix": [
+                  "1",
+                  "9",
+                  "5"
+                ],
+                "reponse": "1",
+                "explication": "7 915 : 5 unités, 1 dizaine, 9 centaines, 7 milliers.",
+                "verif": "(7915 - 7915 % 10) / 10 % 10"
+              },
+              {
+                "q": "Dans 6 208, quel est le chiffre des milliers ?",
+                "choix": [
+                  "6",
+                  "2",
+                  "8"
+                ],
+                "reponse": "6",
+                "explication": "6 208 : 8 unités, 0 dizaine, 2 centaines, 6 milliers.",
+                "verif": "(6208 - 6208 % 1000) / 1000 % 10"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "1-nombres-les-operations",
+        "titre": "Nombres : Les opérations",
+        "suite": "https://fr.khanacademy.org/math/be-1ere-secondaire2/xe5303a9b201c0f84:nombres-les-operations",
+        "questions": [
+          {
+            "indice": "La multiplication et la division passent avant l'addition et la soustraction.",
+            "variantes": [
+              {
+                "q": "3 + 4 × 2 = ?",
+                "choix": [
+                  "11",
+                  "14",
+                  "9"
+                ],
+                "reponse": "11",
+                "explication": "D'abord 4 × 2 = 8, puis 3 + 8 = 11.",
+                "verif": "3 + 4 * 2"
+              },
+              {
+                "q": "20 − 2 × 5 = ?",
+                "choix": [
+                  "10",
+                  "90",
+                  "13"
+                ],
+                "reponse": "10",
+                "explication": "D'abord 2 × 5 = 10, puis 20 − 10 = 10.",
+                "verif": "20 - 2 * 5"
+              },
+              {
+                "q": "6 + 12 : 3 = ?",
+                "choix": [
+                  "10",
+                  "6",
+                  "9"
+                ],
+                "reponse": "10",
+                "explication": "D'abord 12 : 3 = 4, puis 6 + 4 = 10.",
+                "verif": "6 + 12 / 3"
+              }
+            ]
+          },
+          {
+            "indice": "On calcule d'abord ce qui est entre parenthèses.",
+            "variantes": [
+              {
+                "q": "(3 + 4) × 2 = ?",
+                "choix": [
+                  "14",
+                  "11",
+                  "9"
+                ],
+                "reponse": "14",
+                "explication": "D'abord la parenthèse : 3 + 4 = 7, puis 7 × 2 = 14.",
+                "verif": "(3 + 4) * 2"
+              },
+              {
+                "q": "(20 − 2) × 5 = ?",
+                "choix": [
+                  "90",
+                  "10",
+                  "23"
+                ],
+                "reponse": "90",
+                "explication": "D'abord la parenthèse : 20 − 2 = 18, puis 18 × 5 = 90.",
+                "verif": "(20 - 2) * 5"
+              },
+              {
+                "q": "(6 + 12) : 3 = ?",
+                "choix": [
+                  "6",
+                  "10",
+                  "15"
+                ],
+                "reponse": "6",
+                "explication": "D'abord la parenthèse : 6 + 12 = 18, puis 18 : 3 = 6.",
+                "verif": "(6 + 12) / 3"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "1-nombres-diviseurs-et-multiples",
+        "titre": "Nombres : Diviseurs et multiples",
+        "suite": "https://fr.khanacademy.org/math/be-1ere-secondaire2/xe5303a9b201c0f84:nombres-diviseurs-et-multiples",
+        "questions": [
+          {
+            "indice": "Les multiples d'un nombre, ce sont les résultats de sa table de multiplication.",
+            "variantes": [
+              {
+                "q": "Lequel est un multiple de 6 : 42, 44 ou 46 ?",
+                "choix": [
+                  "42",
+                  "44",
+                  "46"
+                ],
+                "reponse": "42",
+                "explication": "42 = 6 × 7 : il est dans la table de 6.",
+                "vrai": "x % 6 == 0"
+              },
+              {
+                "q": "Lequel est un multiple de 4 : 26, 30 ou 36 ?",
+                "choix": [
+                  "36",
+                  "26",
+                  "30"
+                ],
+                "reponse": "36",
+                "explication": "36 = 4 × 9 : il est dans la table de 4.",
+                "vrai": "x % 4 == 0"
+              },
+              {
+                "q": "Lequel est un multiple de 9 : 48, 54 ou 56 ?",
+                "choix": [
+                  "54",
+                  "48",
+                  "56"
+                ],
+                "reponse": "54",
+                "explication": "54 = 9 × 6 : il est dans la table de 9.",
+                "vrai": "x % 9 == 0"
+              }
+            ]
+          },
+          {
+            "indice": "Un nombre premier a exactement deux diviseurs : 1 et lui-même.",
+            "variantes": [
+              {
+                "q": "Lequel est un nombre premier : 15, 17 ou 21 ?",
+                "choix": [
+                  "17",
+                  "15",
+                  "21"
+                ],
+                "reponse": "17",
+                "explication": "17 ne se divise que par 1 et par 17. Mais 15 = 3 × 5 et 21 = 3 × 7.",
+                "vrai": "premier(x)"
+              },
+              {
+                "q": "Lequel est un nombre premier : 9, 13 ou 27 ?",
+                "choix": [
+                  "13",
+                  "9",
+                  "27"
+                ],
+                "reponse": "13",
+                "explication": "13 ne se divise que par 1 et par 13. Mais 9 = 3 × 3 et 27 = 3 × 9.",
+                "vrai": "premier(x)"
+              },
+              {
+                "q": "Lequel est un nombre premier : 23, 25 ou 33 ?",
+                "choix": [
+                  "23",
+                  "25",
+                  "33"
+                ],
+                "reponse": "23",
+                "explication": "23 ne se divise que par 1 et par 23. Mais 25 = 5 × 5 et 33 = 3 × 11.",
+                "vrai": "premier(x)"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "1-nombres-les-entiers-relatifs",
+        "titre": "Nombres : Les entiers (relatifs)",
+        "suite": "https://fr.khanacademy.org/math/be-1ere-secondaire2/xe5303a9b201c0f84:nombres-les-entiers-relatifs",
+        "questions": [
+          {
+            "indice": "Sur la droite graduée : ajouter, c'est avancer vers la droite ; soustraire, c'est reculer vers la gauche.",
+            "variantes": [
+              {
+                "q": "−3 + 5 = ?",
+                "choix": [
+                  "2",
+                  "−2",
+                  "−8"
+                ],
+                "reponse": "2",
+                "explication": "Pars de −3 et avance de 5 : tu arrives à 2.",
+                "verif": "-3 + 5"
+              },
+              {
+                "q": "2 − 6 = ?",
+                "choix": [
+                  "−4",
+                  "4",
+                  "−8"
+                ],
+                "reponse": "−4",
+                "explication": "Pars de 2 et recule de 6 : tu arrives à −4.",
+                "verif": "2 - 6"
+              },
+              {
+                "q": "−4 + 1 = ?",
+                "choix": [
+                  "−3",
+                  "3",
+                  "−5"
+                ],
+                "reponse": "−3",
+                "explication": "Pars de −4 et avance de 1 : tu arrives à −3.",
+                "verif": "-4 + 1"
+              }
+            ]
+          },
+          {
+            "indice": "Deux signes pareils donnent un résultat positif ; deux signes différents, un résultat négatif.",
+            "variantes": [
+              {
+                "q": "(−3) × 4 = ?",
+                "choix": [
+                  "−12",
+                  "12",
+                  "1"
+                ],
+                "reponse": "−12",
+                "explication": "3 × 4 = 12, et les deux signes sont différents : −12.",
+                "verif": "(-3) * 4"
+              },
+              {
+                "q": "(−5) × (−2) = ?",
+                "choix": [
+                  "10",
+                  "−10",
+                  "−7"
+                ],
+                "reponse": "10",
+                "explication": "5 × 2 = 10, et les deux signes sont pareils : 10.",
+                "verif": "(-5) * (-2)"
+              },
+              {
+                "q": "(−12) : 3 = ?",
+                "choix": [
+                  "−4",
+                  "4",
+                  "−9"
+                ],
+                "reponse": "−4",
+                "explication": "12 : 3 = 4, et les deux signes sont différents : −4.",
+                "verif": "(-12) / 3"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "1-nombres-les-fractions",
+        "titre": "Nombres : Les fractions",
+        "suite": "https://fr.khanacademy.org/math/be-1ere-secondaire2/xe5303a9b201c0f84:nombres-les-fractions",
+        "questions": [
+          {
+            "indice": "Divise le numérateur (en haut) et le dénominateur (en bas) par le même nombre.",
+            "variantes": [
+              {
+                "q": "Simplifie la fraction 6/8.",
+                "choix": [
+                  "3/4",
+                  "2/4",
+                  "6/4"
+                ],
+                "reponse": "3/4",
+                "explication": "6 et 8 se divisent tous les deux par 2 : 6/8 = 3/4.",
+                "verif": "6 / 8"
+              },
+              {
+                "q": "Simplifie la fraction 10/15.",
+                "choix": [
+                  "2/3",
+                  "1/5",
+                  "5/10"
+                ],
+                "reponse": "2/3",
+                "explication": "10 et 15 se divisent tous les deux par 5 : 10/15 = 2/3.",
+                "verif": "10 / 15"
+              },
+              {
+                "q": "Simplifie la fraction 9/12.",
+                "choix": [
+                  "3/4",
+                  "3/6",
+                  "1/3"
+                ],
+                "reponse": "3/4",
+                "explication": "9 et 12 se divisent tous les deux par 3 : 9/12 = 3/4.",
+                "verif": "9 / 12"
+              }
+            ]
+          },
+          {
+            "indice": "Avec le même dénominateur (en bas), on additionne seulement les numérateurs (en haut).",
+            "variantes": [
+              {
+                "q": "1/5 + 2/5 = ?",
+                "choix": [
+                  "3/5",
+                  "3/10",
+                  "2/5"
+                ],
+                "reponse": "3/5",
+                "explication": "Le dénominateur reste 5, et 1 + 2 = 3 : cela fait 3/5.",
+                "verif": "1 / 5 + 2 / 5"
+              },
+              {
+                "q": "2/7 + 3/7 = ?",
+                "choix": [
+                  "5/7",
+                  "5/14",
+                  "6/7"
+                ],
+                "reponse": "5/7",
+                "explication": "Le dénominateur reste 7, et 2 + 3 = 5 : cela fait 5/7.",
+                "verif": "2 / 7 + 3 / 7"
+              },
+              {
+                "q": "3/8 + 2/8 = ?",
+                "choix": [
+                  "5/8",
+                  "5/16",
+                  "6/8"
+                ],
+                "reponse": "5/8",
+                "explication": "Le dénominateur reste 8, et 3 + 2 = 5 : cela fait 5/8.",
+                "verif": "3 / 8 + 2 / 8"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "1-nombres-les-decimaux",
+        "titre": "Nombres : Les décimaux",
+        "suite": "https://fr.khanacademy.org/math/be-1ere-secondaire2/xe5303a9b201c0f84:nombres-les-decimaux",
+        "questions": [
+          {
+            "indice": "Aligne les virgules : les unités sous les unités, les dixièmes sous les dixièmes.",
+            "variantes": [
+              {
+                "q": "2,5 + 1,3 = ?",
+                "choix": [
+                  "3,8",
+                  "2,8",
+                  "38"
+                ],
+                "reponse": "3,8",
+                "explication": "5 dixièmes + 3 dixièmes = 8 dixièmes, et 2 + 1 = 3 : cela fait 3,8.",
+                "verif": "2.5 + 1.3"
+              },
+              {
+                "q": "4,7 + 2,6 = ?",
+                "choix": [
+                  "7,3",
+                  "6,13",
+                  "6,3"
+                ],
+                "reponse": "7,3",
+                "explication": "7 dixièmes + 6 dixièmes = 13 dixièmes, soit 1 unité et 3 dixièmes. Et 4 + 2 + 1 = 7 : cela fait 7,3.",
+                "verif": "4.7 + 2.6"
+              },
+              {
+                "q": "3,4 + 0,25 = ?",
+                "choix": [
+                  "3,65",
+                  "5,9",
+                  "3,29"
+                ],
+                "reponse": "3,65",
+                "explication": "0,25, c'est 2 dixièmes et 5 centièmes. 3,4 + 0,2 = 3,6, puis 5 centièmes de plus : 3,65.",
+                "verif": "3.4 + 0.25"
+              }
+            ]
+          },
+          {
+            "indice": "Multiplier par 10 décale la virgule d'un rang vers la droite ; diviser par 10, d'un rang vers la gauche.",
+            "variantes": [
+              {
+                "q": "3,45 × 10 = ?",
+                "choix": [
+                  "34,5",
+                  "345",
+                  "3,450"
+                ],
+                "reponse": "34,5",
+                "explication": "Multiplier par 10 décale la virgule d'un rang vers la droite : 34,5.",
+                "verif": "3.45 * 10"
+              },
+              {
+                "q": "0,7 × 100 = ?",
+                "choix": [
+                  "70",
+                  "7",
+                  "0,700"
+                ],
+                "reponse": "70",
+                "explication": "Multiplier par 100 décale la virgule de deux rangs vers la droite : 70.",
+                "verif": "0.7 * 100"
+              },
+              {
+                "q": "52 : 10 = ?",
+                "choix": [
+                  "5,2",
+                  "0,52",
+                  "520"
+                ],
+                "reponse": "5,2",
+                "explication": "Diviser par 10 décale la virgule d'un rang vers la gauche : 5,2.",
+                "verif": "52 / 10"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "1-nombres-proportionnalite-et-pourcentages",
+        "titre": "Nombres : Proportionnalité et pourcentages",
+        "suite": "https://fr.khanacademy.org/math/be-1ere-secondaire2/xe5303a9b201c0f84:nombres-proportionnalite-et-pourcentages",
+        "questions": [
+          {
+            "indice": "50 %, c'est la moitié ; 25 %, c'est le quart ; 10 %, c'est le dixième.",
+            "variantes": [
+              {
+                "q": "50 % de 80 = ?",
+                "choix": [
+                  "40",
+                  "30",
+                  "130"
+                ],
+                "reponse": "40",
+                "explication": "50 %, c'est la moitié : 80 : 2 = 40.",
+                "verif": "50 / 100 * 80"
+              },
+              {
+                "q": "10 % de 250 = ?",
+                "choix": [
+                  "25",
+                  "10",
+                  "240"
+                ],
+                "reponse": "25",
+                "explication": "10 %, c'est le dixième : 250 : 10 = 25.",
+                "verif": "10 / 100 * 250"
+              },
+              {
+                "q": "25 % de 40 = ?",
+                "choix": [
+                  "10",
+                  "15",
+                  "25"
+                ],
+                "reponse": "10",
+                "explication": "25 %, c'est le quart : 40 : 4 = 10.",
+                "verif": "25 / 100 * 40"
+              }
+            ]
+          },
+          {
+            "indice": "Cherche d'abord le prix d'un seul, ou regarde par combien la quantité est multipliée.",
+            "variantes": [
+              {
+                "q": "3 cahiers coûtent 6 €. Combien coûtent 5 cahiers ?",
+                "choix": [
+                  "10 €",
+                  "8 €",
+                  "30 €"
+                ],
+                "reponse": "10 €",
+                "explication": "Un cahier coûte 6 : 3 = 2 €. Donc 5 cahiers coûtent 5 × 2 = 10 €.",
+                "verif": "6 / 3 * 5"
+              },
+              {
+                "q": "4 stylos coûtent 12 €. Combien coûtent 6 stylos ?",
+                "choix": [
+                  "18 €",
+                  "14 €",
+                  "72 €"
+                ],
+                "reponse": "18 €",
+                "explication": "Un stylo coûte 12 : 4 = 3 €. Donc 6 stylos coûtent 6 × 3 = 18 €.",
+                "verif": "12 / 4 * 6"
+              },
+              {
+                "q": "2 kg de pommes coûtent 5 €. Combien coûtent 6 kg ?",
+                "choix": [
+                  "15 €",
+                  "9 €",
+                  "30 €"
+                ],
+                "reponse": "15 €",
+                "explication": "6 kg, c'est 3 fois 2 kg. Le prix est aussi multiplié par 3 : 3 × 5 = 15 €.",
+                "verif": "5 / 2 * 6"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "1-organisation-de-donnees",
+        "titre": "Organisation de données",
+        "suite": "https://fr.khanacademy.org/math/be-1ere-secondaire2/xe5303a9b201c0f84:organisation-de-donnees",
+        "questions": [
+          {
+            "indice": "Dans des coordonnées, le premier nombre se lit sur l'axe horizontal, le second sur l'axe vertical.",
+            "variantes": [
+              {
+                "q": "Le point A a pour coordonnées (3 ; 5). Quelle est son abscisse, sa position sur l'axe horizontal ?",
+                "choix": [
+                  "3",
+                  "5",
+                  "8"
+                ],
+                "reponse": "3",
+                "explication": "L'abscisse est le premier nombre : 3. Le second, 5, est l'ordonnée.",
+                "verif": "3"
+              },
+              {
+                "q": "Le point B a pour coordonnées (2 ; 7). Quelle est son ordonnée, sa position sur l'axe vertical ?",
+                "choix": [
+                  "7",
+                  "2",
+                  "9"
+                ],
+                "reponse": "7",
+                "explication": "L'ordonnée est le second nombre : 7. Le premier, 2, est l'abscisse.",
+                "verif": "7"
+              },
+              {
+                "q": "Le point C a pour coordonnées (−4 ; 1). Quelle est son abscisse, sa position sur l'axe horizontal ?",
+                "choix": [
+                  "−4",
+                  "1",
+                  "4"
+                ],
+                "reponse": "−4",
+                "explication": "L'abscisse est le premier nombre : −4. Le second, 1, est l'ordonnée.",
+                "verif": "-4"
+              }
+            ]
+          },
+          {
+            "indice": "Chaque bâton compte des élèves : additionne les hauteurs de tous les bâtons.",
+            "variantes": [
+              {
+                "q": "Un diagramme en bâtons montre le sport préféré d'une classe : foot 8 élèves, basket 5, natation 7. Combien d'élèves ont répondu ?",
+                "choix": [
+                  "20",
+                  "8",
+                  "3"
+                ],
+                "reponse": "20",
+                "explication": "On additionne les trois bâtons : 8 + 5 + 7 = 20 élèves.",
+                "verif": "8 + 5 + 7"
+              },
+              {
+                "q": "Un diagramme en bâtons montre l'animal préféré d'une classe : chien 6 élèves, chat 9, poisson 3. Combien d'élèves ont répondu ?",
+                "choix": [
+                  "18",
+                  "9",
+                  "3"
+                ],
+                "reponse": "18",
+                "explication": "On additionne les trois bâtons : 6 + 9 + 3 = 18 élèves.",
+                "verif": "6 + 9 + 3"
+              },
+              {
+                "q": "Un diagramme en bâtons montre le fruit préféré d'une classe : pomme 4 élèves, banane 10, fraise 8. Combien d'élèves ont répondu ?",
+                "choix": [
+                  "22",
+                  "10",
+                  "3"
+                ],
+                "reponse": "22",
+                "explication": "On additionne les trois bâtons : 4 + 10 + 8 = 22 élèves.",
+                "verif": "4 + 10 + 8"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "1-algebre-les-expressions-litterales",
+        "titre": "Algèbre : Les expressions littérales",
+        "suite": "https://fr.khanacademy.org/math/be-1ere-secondaire2/xe5303a9b201c0f84:algebre-les-expressions-litterales",
+        "questions": [
+          {
+            "indice": "Remplace la lettre par le nombre : 3x veut dire 3 × x.",
+            "variantes": [
+              {
+                "q": "Si x = 4, combien vaut 3x + 2 ?",
+                "choix": [
+                  "14",
+                  "9",
+                  "36"
+                ],
+                "reponse": "14",
+                "explication": "3x = 3 × 4 = 12, puis 12 + 2 = 14.",
+                "verif": "3 * 4 + 2"
+              },
+              {
+                "q": "Si x = 5, combien vaut 2x − 1 ?",
+                "choix": [
+                  "9",
+                  "6",
+                  "24"
+                ],
+                "reponse": "9",
+                "explication": "2x = 2 × 5 = 10, puis 10 − 1 = 9.",
+                "verif": "2 * 5 - 1"
+              },
+              {
+                "q": "Si x = 2, combien vaut 5x + 3 ?",
+                "choix": [
+                  "13",
+                  "10",
+                  "55"
+                ],
+                "reponse": "13",
+                "explication": "5x = 5 × 2 = 10, puis 10 + 3 = 13.",
+                "verif": "5 * 2 + 3"
+              }
+            ]
+          },
+          {
+            "indice": "Les x se comptent ensemble, comme des objets pareils : 2 pommes + 3 pommes = 5 pommes.",
+            "variantes": [
+              {
+                "q": "Réduis : 2x + 3x",
+                "choix": [
+                  "5x",
+                  "6x",
+                  "5x²"
+                ],
+                "reponse": "5x",
+                "explication": "2 fois x plus 3 fois x, cela fait 5 fois x : 5x.",
+                "verif": "2 * x + 3 * x"
+              },
+              {
+                "q": "Réduis : 4x + x",
+                "choix": [
+                  "5x",
+                  "4x",
+                  "4x²"
+                ],
+                "reponse": "5x",
+                "explication": "x tout seul, c'est 1x : 4x + 1x = 5x.",
+                "verif": "4 * x + x"
+              },
+              {
+                "q": "Réduis : 7x − 2x",
+                "choix": [
+                  "5x",
+                  "9x",
+                  "5"
+                ],
+                "reponse": "5x",
+                "explication": "7 fois x moins 2 fois x, il reste 5 fois x : 5x.",
+                "verif": "7 * x - 2 * x"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "1-algebre-equations-et-problemes",
+        "titre": "Algèbre : Équations et problèmes",
+        "suite": "https://fr.khanacademy.org/math/be-1ere-secondaire2/xe5303a9b201c0f84:algebre-equations-et-problemes",
+        "questions": [
+          {
+            "indice": "Pour trouver x, fais l'opération inverse : + devient −, × devient :.",
+            "variantes": [
+              {
+                "q": "x + 5 = 12. Combien vaut x ?",
+                "choix": [
+                  "7",
+                  "17",
+                  "60"
+                ],
+                "reponse": "7",
+                "explication": "On retire 5 des deux côtés : x = 12 − 5 = 7.",
+                "vrai": "x + 5 == 12"
+              },
+              {
+                "q": "x − 4 = 9. Combien vaut x ?",
+                "choix": [
+                  "13",
+                  "5",
+                  "36"
+                ],
+                "reponse": "13",
+                "explication": "On ajoute 4 des deux côtés : x = 9 + 4 = 13.",
+                "vrai": "x - 4 == 9"
+              },
+              {
+                "q": "3x = 18. Combien vaut x ?",
+                "choix": [
+                  "6",
+                  "15",
+                  "54"
+                ],
+                "reponse": "6",
+                "explication": "On divise les deux côtés par 3 : x = 18 : 3 = 6.",
+                "vrai": "3 * x == 18"
+              }
+            ]
+          },
+          {
+            "indice": "Deux étapes : occupe-toi d'abord du nombre tout seul, puis divise.",
+            "variantes": [
+              {
+                "q": "2x + 1 = 9. Combien vaut x ?",
+                "choix": [
+                  "4",
+                  "5",
+                  "8"
+                ],
+                "reponse": "4",
+                "explication": "2x + 1 = 9, donc 2x = 8, donc x = 4.",
+                "vrai": "2 * x + 1 == 9"
+              },
+              {
+                "q": "3x + 2 = 17. Combien vaut x ?",
+                "choix": [
+                  "5",
+                  "15",
+                  "6"
+                ],
+                "reponse": "5",
+                "explication": "3x + 2 = 17, donc 3x = 15, donc x = 5.",
+                "vrai": "3 * x + 2 == 17"
+              },
+              {
+                "q": "4x − 3 = 9. Combien vaut x ?",
+                "choix": [
+                  "3",
+                  "12",
+                  "6"
+                ],
+                "reponse": "3",
+                "explication": "4x − 3 = 9, donc 4x = 12, donc x = 3.",
+                "vrai": "4 * x - 3 == 9"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "1-geometrie-les-transformations-dans-le-plan",
+        "titre": "Géométrie : Les transformations dans le plan",
+        "suite": "https://fr.khanacademy.org/math/be-1ere-secondaire2/xe5303a9b201c0f84:geometrie-les-transformations-dans-le-plan",
+        "questions": [
+          {
+            "indice": "Un axe de symétrie coupe la figure en deux moitiés qui se superposent quand on plie.",
+            "variantes": [
+              {
+                "q": "Combien d'axes de symétrie a un carré ?",
+                "choix": [
+                  "4",
+                  "2",
+                  "1"
+                ],
+                "reponse": "4",
+                "explication": "Les deux médianes et les deux diagonales : 4 axes.",
+                "verif": "4"
+              },
+              {
+                "q": "Combien d'axes de symétrie a un rectangle qui n'est pas un carré ?",
+                "choix": [
+                  "2",
+                  "4",
+                  "0"
+                ],
+                "reponse": "2",
+                "explication": "Les deux médianes seulement : plié sur une diagonale, le rectangle ne se superpose pas.",
+                "verif": "2"
+              },
+              {
+                "q": "Combien d'axes de symétrie a un triangle équilatéral ?",
+                "choix": [
+                  "3",
+                  "1",
+                  "6"
+                ],
+                "reponse": "3",
+                "explication": "Un axe par sommet, qui passe par le milieu du côté d'en face : 3 axes.",
+                "verif": "3"
+              }
+            ]
+          },
+          {
+            "indice": "Vers la droite, le premier nombre augmente (vers la gauche, il diminue). Vers le haut, c'est le second qui augmente.",
+            "variantes": [
+              {
+                "q": "Le point A(2 ; 3) glisse de 4 unités vers la droite. Quelle est sa nouvelle abscisse (le premier nombre) ?",
+                "choix": [
+                  "6",
+                  "7",
+                  "2"
+                ],
+                "reponse": "6",
+                "explication": "Vers la droite, l'abscisse augmente : 2 + 4 = 6. Le point arrive en (6 ; 3).",
+                "verif": "2 + 4"
+              },
+              {
+                "q": "Le point B(1 ; 5) glisse de 3 unités vers le haut. Quelle est sa nouvelle ordonnée (le second nombre) ?",
+                "choix": [
+                  "8",
+                  "4",
+                  "5"
+                ],
+                "reponse": "8",
+                "explication": "Vers le haut, l'ordonnée augmente : 5 + 3 = 8. Le point arrive en (1 ; 8).",
+                "verif": "5 + 3"
+              },
+              {
+                "q": "Le point C(6 ; 2) glisse de 4 unités vers la gauche. Quelle est sa nouvelle abscisse (le premier nombre) ?",
+                "choix": [
+                  "2",
+                  "10",
+                  "−2"
+                ],
+                "reponse": "2",
+                "explication": "Vers la gauche, l'abscisse diminue : 6 − 4 = 2. Le point arrive en (2 ; 2).",
+                "verif": "6 - 4"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "1-geometrie-les-angles-les-points-les-droites-et-les-plans",
+        "titre": "Géométrie : Les angles, les points, les droites et les plans",
+        "suite": "https://fr.khanacademy.org/math/be-1ere-secondaire2/xe5303a9b201c0f84:geometrie-les-angles-les-points-les-droites-et-les-plans",
+        "questions": [
+          {
+            "indice": "Deux angles complémentaires font ensemble un angle droit : 90°.",
+            "variantes": [
+              {
+                "q": "Un angle mesure 30°. Combien mesure son complémentaire ?",
+                "choix": [
+                  "60°",
+                  "150°",
+                  "70°"
+                ],
+                "reponse": "60°",
+                "explication": "Ensemble, ils font 90° : 90 − 30 = 60°.",
+                "verif": "90 - 30"
+              },
+              {
+                "q": "Un angle mesure 55°. Combien mesure son complémentaire ?",
+                "choix": [
+                  "35°",
+                  "125°",
+                  "45°"
+                ],
+                "reponse": "35°",
+                "explication": "Ensemble, ils font 90° : 90 − 55 = 35°.",
+                "verif": "90 - 55"
+              },
+              {
+                "q": "Un angle mesure 72°. Combien mesure son complémentaire ?",
+                "choix": [
+                  "18°",
+                  "108°",
+                  "28°"
+                ],
+                "reponse": "18°",
+                "explication": "Ensemble, ils font 90° : 90 − 72 = 18°.",
+                "verif": "90 - 72"
+              }
+            ]
+          },
+          {
+            "indice": "Deux angles supplémentaires font ensemble un angle plat : 180°.",
+            "variantes": [
+              {
+                "q": "Un angle mesure 120°. Combien mesure son supplémentaire ?",
+                "choix": [
+                  "60°",
+                  "240°",
+                  "80°"
+                ],
+                "reponse": "60°",
+                "explication": "Ensemble, ils font 180° : 180 − 120 = 60°.",
+                "verif": "180 - 120"
+              },
+              {
+                "q": "Un angle mesure 45°. Combien mesure son supplémentaire ?",
+                "choix": [
+                  "135°",
+                  "45°",
+                  "145°"
+                ],
+                "reponse": "135°",
+                "explication": "Ensemble, ils font 180° : 180 − 45 = 135°.",
+                "verif": "180 - 45"
+              },
+              {
+                "q": "Un angle mesure 100°. Combien mesure son supplémentaire ?",
+                "choix": [
+                  "80°",
+                  "260°",
+                  "90°"
+                ],
+                "reponse": "80°",
+                "explication": "Ensemble, ils font 180° : 180 − 100 = 80°.",
+                "verif": "180 - 100"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "1-geometrie-les-figures-planes",
+        "titre": "Géométrie : Les figures planes",
+        "suite": "https://fr.khanacademy.org/math/be-1ere-secondaire2/xe5303a9b201c0f84:geometrie-les-figures-planes",
+        "questions": [
+          {
+            "indice": "Aire d'un rectangle = longueur × largeur. Le périmètre, lui, c'est le tour.",
+            "variantes": [
+              {
+                "q": "Un rectangle mesure 5 cm sur 3 cm. Quelle est son aire ?",
+                "choix": [
+                  "15 cm²",
+                  "16 cm²",
+                  "8 cm²"
+                ],
+                "reponse": "15 cm²",
+                "explication": "5 × 3 = 15 cm².",
+                "verif": "5 * 3"
+              },
+              {
+                "q": "Un rectangle mesure 6 cm sur 4 cm. Quelle est son aire ?",
+                "choix": [
+                  "24 cm²",
+                  "20 cm²",
+                  "10 cm²"
+                ],
+                "reponse": "24 cm²",
+                "explication": "6 × 4 = 24 cm².",
+                "verif": "6 * 4"
+              },
+              {
+                "q": "Un rectangle mesure 7 cm sur 2 cm. Quelle est son aire ?",
+                "choix": [
+                  "14 cm²",
+                  "18 cm²",
+                  "9 cm²"
+                ],
+                "reponse": "14 cm²",
+                "explication": "7 × 2 = 14 cm².",
+                "verif": "7 * 2"
+              }
+            ]
+          },
+          {
+            "indice": "Aire d'un triangle = base × hauteur, puis on divise par 2.",
+            "variantes": [
+              {
+                "q": "Un triangle a une base de 6 cm et une hauteur de 4 cm. Quelle est son aire ?",
+                "choix": [
+                  "12 cm²",
+                  "24 cm²",
+                  "10 cm²"
+                ],
+                "reponse": "12 cm²",
+                "explication": "6 × 4 = 24, puis 24 : 2 = 12 cm².",
+                "verif": "6 * 4 / 2"
+              },
+              {
+                "q": "Un triangle a une base de 8 cm et une hauteur de 5 cm. Quelle est son aire ?",
+                "choix": [
+                  "20 cm²",
+                  "40 cm²",
+                  "13 cm²"
+                ],
+                "reponse": "20 cm²",
+                "explication": "8 × 5 = 40, puis 40 : 2 = 20 cm².",
+                "verif": "8 * 5 / 2"
+              },
+              {
+                "q": "Un triangle a une base de 10 cm et une hauteur de 3 cm. Quelle est son aire ?",
+                "choix": [
+                  "15 cm²",
+                  "30 cm²",
+                  "13 cm²"
+                ],
+                "reponse": "15 cm²",
+                "explication": "10 × 3 = 30, puis 30 : 2 = 15 cm².",
+                "verif": "10 * 3 / 2"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "1-geometrie-les-solides",
+        "titre": "Géométrie : Les solides",
+        "suite": "https://fr.khanacademy.org/math/be-1ere-secondaire2/xe5303a9b201c0f84:geometrie-les-solides",
+        "questions": [
+          {
+            "indice": "Imagine un dé à jouer : ses faces sont les côtés plats, ses sommets les coins, ses arêtes les bords.",
+            "variantes": [
+              {
+                "q": "Combien de faces a un cube ?",
+                "choix": [
+                  "6",
+                  "8",
+                  "12"
+                ],
+                "reponse": "6",
+                "explication": "6 faces, comme un dé : le dessus, le dessous et quatre côtés.",
+                "verif": "6"
+              },
+              {
+                "q": "Combien de sommets a un cube ?",
+                "choix": [
+                  "8",
+                  "6",
+                  "12"
+                ],
+                "reponse": "8",
+                "explication": "8 sommets : 4 coins en haut et 4 coins en bas.",
+                "verif": "8"
+              },
+              {
+                "q": "Combien d'arêtes a un cube ?",
+                "choix": [
+                  "12",
+                  "6",
+                  "8"
+                ],
+                "reponse": "12",
+                "explication": "12 arêtes : 4 en haut, 4 en bas et 4 debout.",
+                "verif": "12"
+              }
+            ]
+          },
+          {
+            "indice": "Volume d'un pavé droit (une boîte) = longueur × largeur × hauteur.",
+            "variantes": [
+              {
+                "q": "Une boîte mesure 4 cm de long, 3 cm de large et 2 cm de haut. Quel est son volume ?",
+                "choix": [
+                  "24 cm³",
+                  "9 cm³",
+                  "12 cm³"
+                ],
+                "reponse": "24 cm³",
+                "explication": "4 × 3 × 2 = 24 cm³.",
+                "verif": "4 * 3 * 2"
+              },
+              {
+                "q": "Une boîte mesure 5 cm de long, 2 cm de large et 2 cm de haut. Quel est son volume ?",
+                "choix": [
+                  "20 cm³",
+                  "9 cm³",
+                  "10 cm³"
+                ],
+                "reponse": "20 cm³",
+                "explication": "5 × 2 × 2 = 20 cm³.",
+                "verif": "5 * 2 * 2"
+              },
+              {
+                "q": "Une boîte mesure 5 cm de long, 4 cm de large et 2 cm de haut. Quel est son volume ?",
+                "choix": [
+                  "40 cm³",
+                  "11 cm³",
+                  "20 cm³"
+                ],
+                "reponse": "40 cm³",
+                "explication": "5 × 4 × 2 = 40 cm³.",
+                "verif": "5 * 4 * 2"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "2": [
+      {
+        "id": "2-nombres-puissances-et-notation-scientifique",
+        "titre": "Nombres : Puissances et notation scientifique",
+        "suite": "https://fr.khanacademy.org/math/be-2eme-secondaire2/x291d358f50a246d9:nombres-puissances-et-notation-scientifique",
+        "questions": [
+          {
+            "indice": "Quand on multiplie deux puissances du même nombre, on garde le nombre et on additionne les exposants.",
+            "variantes": [
+              {
+                "q": "2³ × 2⁴ = ?",
+                "choix": [
+                  "2⁷",
+                  "2¹²",
+                  "4⁷"
+                ],
+                "reponse": "2⁷",
+                "explication": "On garde le 2 et on additionne les exposants : 3 + 4 = 7. Cela fait 2⁷.",
+                "verif": "2**3 * 2**4"
+              },
+              {
+                "q": "5² × 5³ = ?",
+                "choix": [
+                  "5⁵",
+                  "5⁶",
+                  "25⁵"
+                ],
+                "reponse": "5⁵",
+                "explication": "On garde le 5 et on additionne les exposants : 2 + 3 = 5. Cela fait 5⁵.",
+                "verif": "5**2 * 5**3"
+              },
+              {
+                "q": "10⁴ × 10² = ?",
+                "choix": [
+                  "10⁶",
+                  "10⁸",
+                  "100⁶"
+                ],
+                "reponse": "10⁶",
+                "explication": "On garde le 10 et on additionne les exposants : 4 + 2 = 6. Cela fait 10⁶.",
+                "verif": "10**4 * 10**2"
+              }
+            ]
+          },
+          {
+            "indice": "En notation scientifique : un nombre entre 1 et 10, multiplié par une puissance de 10.",
+            "variantes": [
+              {
+                "q": "Écris 3 000 en notation scientifique.",
+                "choix": [
+                  "3 × 10³",
+                  "3 × 10⁴",
+                  "3 × 10²"
+                ],
+                "reponse": "3 × 10³",
+                "explication": "3 000 = 3 × 1 000, et 1 000 = 10³.",
+                "verif": "3000"
+              },
+              {
+                "q": "Écris 45 000 en notation scientifique.",
+                "choix": [
+                  "4,5 × 10⁴",
+                  "4,5 × 10³",
+                  "4,5 × 10⁵"
+                ],
+                "reponse": "4,5 × 10⁴",
+                "explication": "45 000 = 4,5 × 10 000, et 10 000 = 10⁴.",
+                "verif": "45000"
+              },
+              {
+                "q": "Écris 700 000 en notation scientifique.",
+                "choix": [
+                  "7 × 10⁵",
+                  "7 × 10⁶",
+                  "7 × 10⁴"
+                ],
+                "reponse": "7 × 10⁵",
+                "explication": "700 000 = 7 × 100 000, et 100 000 = 10⁵.",
+                "verif": "700000"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "2-nombres-diviseurs-et-multiples",
+        "titre": "Nombres : Diviseurs et multiples",
+        "suite": "https://fr.khanacademy.org/math/be-2eme-secondaire2/x291d358f50a246d9:nombres-diviseurs-et-multiples",
+        "questions": [
+          {
+            "indice": "Le PGCD est le plus grand nombre qui divise les deux à la fois.",
+            "variantes": [
+              {
+                "q": "Quel est le PGCD de 12 et 18 ?",
+                "choix": [
+                  "6",
+                  "3",
+                  "36"
+                ],
+                "reponse": "6",
+                "explication": "6 divise 12 (6 × 2) et 18 (6 × 3), et aucun nombre plus grand ne divise les deux.",
+                "verif": "pgcd(12, 18)"
+              },
+              {
+                "q": "Quel est le PGCD de 20 et 30 ?",
+                "choix": [
+                  "10",
+                  "5",
+                  "60"
+                ],
+                "reponse": "10",
+                "explication": "10 divise 20 (10 × 2) et 30 (10 × 3), et aucun nombre plus grand ne divise les deux.",
+                "verif": "pgcd(20, 30)"
+              },
+              {
+                "q": "Quel est le PGCD de 8 et 12 ?",
+                "choix": [
+                  "4",
+                  "2",
+                  "24"
+                ],
+                "reponse": "4",
+                "explication": "4 divise 8 (4 × 2) et 12 (4 × 3), et aucun nombre plus grand ne divise les deux.",
+                "verif": "pgcd(8, 12)"
+              }
+            ]
+          },
+          {
+            "indice": "Division euclidienne : cherche combien de fois le diviseur entre en entier, puis ce qui reste.",
+            "variantes": [
+              {
+                "q": "Quel est le reste de la division de 17 par 5 ?",
+                "choix": [
+                  "2",
+                  "3",
+                  "12"
+                ],
+                "reponse": "2",
+                "explication": "17 = 5 × 3 + 2 : le quotient est 3 et le reste est 2.",
+                "verif": "17 % 5"
+              },
+              {
+                "q": "Quel est le reste de la division de 23 par 4 ?",
+                "choix": [
+                  "3",
+                  "5",
+                  "19"
+                ],
+                "reponse": "3",
+                "explication": "23 = 4 × 5 + 3 : le quotient est 5 et le reste est 3.",
+                "verif": "23 % 4"
+              },
+              {
+                "q": "Quel est le reste de la division de 29 par 6 ?",
+                "choix": [
+                  "5",
+                  "4",
+                  "23"
+                ],
+                "reponse": "5",
+                "explication": "29 = 6 × 4 + 5 : le quotient est 4 et le reste est 5.",
+                "verif": "29 % 6"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "2-nombres-manipulation-de-fractions",
+        "titre": "Nombres : Manipulation de fractions",
+        "suite": "https://fr.khanacademy.org/math/be-2eme-secondaire2/x291d358f50a246d9:nombres-manipulation-de-fractions",
+        "questions": [
+          {
+            "indice": "Une fraction, c'est une division : le numérateur (en haut) divisé par le dénominateur (en bas).",
+            "variantes": [
+              {
+                "q": "Écris 1/4 sous forme décimale.",
+                "choix": [
+                  "0,25",
+                  "0,4",
+                  "1,4"
+                ],
+                "reponse": "0,25",
+                "explication": "1 : 4 = 0,25. C'est un quart.",
+                "verif": "1 / 4"
+              },
+              {
+                "q": "Écris 3/5 sous forme décimale.",
+                "choix": [
+                  "0,6",
+                  "0,35",
+                  "3,5"
+                ],
+                "reponse": "0,6",
+                "explication": "3 : 5 = 0,6.",
+                "verif": "3 / 5"
+              },
+              {
+                "q": "Écris 1/8 sous forme décimale.",
+                "choix": [
+                  "0,125",
+                  "0,8",
+                  "1,8"
+                ],
+                "reponse": "0,125",
+                "explication": "1 : 8 = 0,125. C'est la moitié d'un quart.",
+                "verif": "1 / 8"
+              }
+            ]
+          },
+          {
+            "indice": "Mets les fractions au même dénominateur avant de les comparer.",
+            "variantes": [
+              {
+                "q": "Quelle est la plus grande : 1/2, 2/5 ou 3/10 ?",
+                "choix": [
+                  "1/2",
+                  "2/5",
+                  "3/10"
+                ],
+                "reponse": "1/2",
+                "explication": "Sur 10 : 1/2 = 5/10, 2/5 = 4/10, et 3/10. La plus grande est 5/10, c'est-à-dire 1/2.",
+                "vrai": "x >= 1/2 && x >= 2/5 && x >= 3/10"
+              },
+              {
+                "q": "Quelle est la plus grande : 2/3, 1/2 ou 5/6 ?",
+                "choix": [
+                  "5/6",
+                  "2/3",
+                  "1/2"
+                ],
+                "reponse": "5/6",
+                "explication": "Sur 6 : 2/3 = 4/6, 1/2 = 3/6, et 5/6. La plus grande est 5/6.",
+                "vrai": "x >= 2/3 && x >= 1/2 && x >= 5/6"
+              },
+              {
+                "q": "Quelle est la plus grande : 1/2, 5/8 ou 3/4 ?",
+                "choix": [
+                  "3/4",
+                  "5/8",
+                  "1/2"
+                ],
+                "reponse": "3/4",
+                "explication": "Sur 8 : 1/2 = 4/8, 5/8, et 3/4 = 6/8. La plus grande est 6/8, c'est-à-dire 3/4.",
+                "vrai": "x >= 1/2 && x >= 5/8 && x >= 3/4"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "2-nombres-operations-avec-des-fractions",
+        "titre": "Nombres : Opérations avec des fractions",
+        "suite": "https://fr.khanacademy.org/math/be-2eme-secondaire2/x291d358f50a246d9:nombres-operations-avec-des-fractions",
+        "questions": [
+          {
+            "indice": "Pour multiplier deux fractions : numérateur × numérateur, dénominateur × dénominateur.",
+            "variantes": [
+              {
+                "q": "2/3 × 1/5 = ?",
+                "choix": [
+                  "2/15",
+                  "3/8",
+                  "2/8"
+                ],
+                "reponse": "2/15",
+                "explication": "En haut : 2 × 1 = 2. En bas : 3 × 5 = 15. Cela fait 2/15.",
+                "verif": "(2 / 3) * (1 / 5)"
+              },
+              {
+                "q": "3/4 × 1/2 = ?",
+                "choix": [
+                  "3/8",
+                  "4/6",
+                  "3/6"
+                ],
+                "reponse": "3/8",
+                "explication": "En haut : 3 × 1 = 3. En bas : 4 × 2 = 8. Cela fait 3/8.",
+                "verif": "(3 / 4) * (1 / 2)"
+              },
+              {
+                "q": "2/5 × 3/7 = ?",
+                "choix": [
+                  "6/35",
+                  "5/12",
+                  "6/12"
+                ],
+                "reponse": "6/35",
+                "explication": "En haut : 2 × 3 = 6. En bas : 5 × 7 = 35. Cela fait 6/35.",
+                "verif": "(2 / 5) * (3 / 7)"
+              }
+            ]
+          },
+          {
+            "indice": "Avec des dénominateurs différents, mets d'abord les fractions au même dénominateur.",
+            "variantes": [
+              {
+                "q": "1/2 + 1/4 = ?",
+                "choix": [
+                  "3/4",
+                  "2/6",
+                  "1/6"
+                ],
+                "reponse": "3/4",
+                "explication": "1/2 = 2/4, et 2/4 + 1/4 = 3/4.",
+                "verif": "1 / 2 + 1 / 4"
+              },
+              {
+                "q": "1/3 + 1/6 = ?",
+                "choix": [
+                  "1/2",
+                  "2/9",
+                  "1/9"
+                ],
+                "reponse": "1/2",
+                "explication": "1/3 = 2/6, et 2/6 + 1/6 = 3/6, c'est-à-dire 1/2.",
+                "verif": "1 / 3 + 1 / 6"
+              },
+              {
+                "q": "1/2 + 1/3 = ?",
+                "choix": [
+                  "5/6",
+                  "2/5",
+                  "1/5"
+                ],
+                "reponse": "5/6",
+                "explication": "1/2 = 3/6 et 1/3 = 2/6. Donc 3/6 + 2/6 = 5/6.",
+                "verif": "1 / 2 + 1 / 3"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "2-resolution-de-problemes",
+        "titre": "Résolution de problèmes",
+        "suite": "https://fr.khanacademy.org/math/be-2eme-secondaire2/x291d358f50a246d9:resolution-de-problemes",
+        "questions": [
+          {
+            "indice": "1 km = 1 000 m, 1 m = 100 cm, 1 h = 60 min.",
+            "variantes": [
+              {
+                "q": "Combien de mètres font 2,5 km ?",
+                "choix": [
+                  "2 500 m",
+                  "250 m",
+                  "25 000 m"
+                ],
+                "reponse": "2 500 m",
+                "explication": "1 km = 1 000 m, donc 2,5 km = 2,5 × 1 000 = 2 500 m.",
+                "verif": "2.5 * 1000"
+              },
+              {
+                "q": "Combien de minutes font 1,5 h ?",
+                "choix": [
+                  "90 min",
+                  "150 min",
+                  "65 min"
+                ],
+                "reponse": "90 min",
+                "explication": "1 h = 60 min, et une demi-heure = 30 min : 60 + 30 = 90 min.",
+                "verif": "1.5 * 60"
+              },
+              {
+                "q": "Combien de centimètres font 3,2 m ?",
+                "choix": [
+                  "320 cm",
+                  "32 cm",
+                  "3 200 cm"
+                ],
+                "reponse": "320 cm",
+                "explication": "1 m = 100 cm, donc 3,2 m = 3,2 × 100 = 320 cm.",
+                "verif": "3.2 * 100"
+              }
+            ]
+          },
+          {
+            "indice": "À vitesse constante, la distance est proportionnelle au temps : deux fois plus de temps, deux fois plus de distance.",
+            "variantes": [
+              {
+                "q": "Une voiture roule à 60 km/h. Quelle distance parcourt-elle en 3 heures ?",
+                "choix": [
+                  "180 km",
+                  "63 km",
+                  "20 km"
+                ],
+                "reponse": "180 km",
+                "explication": "60 km chaque heure, pendant 3 heures : 3 × 60 = 180 km.",
+                "verif": "60 * 3"
+              },
+              {
+                "q": "Un cycliste roule à 20 km/h. Quelle distance parcourt-il en 2 heures ?",
+                "choix": [
+                  "40 km",
+                  "22 km",
+                  "10 km"
+                ],
+                "reponse": "40 km",
+                "explication": "20 km chaque heure, pendant 2 heures : 2 × 20 = 40 km.",
+                "verif": "20 * 2"
+              },
+              {
+                "q": "Un train roule à 120 km/h. Quelle distance parcourt-il en une demi-heure ?",
+                "choix": [
+                  "60 km",
+                  "240 km",
+                  "120 km"
+                ],
+                "reponse": "60 km",
+                "explication": "En une heure, 120 km. En une demi-heure, la moitié : 120 : 2 = 60 km.",
+                "verif": "120 / 2"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "2-algebre-expressions-litterales",
+        "titre": "Algèbre : Expressions littérales",
+        "suite": "https://fr.khanacademy.org/math/be-2eme-secondaire2/x291d358f50a246d9:algebre-expressions-litterales",
+        "questions": [
+          {
+            "indice": "Distribuer : le nombre devant la parenthèse multiplie chaque terme à l'intérieur.",
+            "variantes": [
+              {
+                "q": "Développe : 3(x + 2)",
+                "choix": [
+                  "3x + 6",
+                  "3x + 2",
+                  "3x + 5"
+                ],
+                "reponse": "3x + 6",
+                "explication": "3 × x = 3x et 3 × 2 = 6. Cela fait 3x + 6.",
+                "verif": "3 * (x + 2)"
+              },
+              {
+                "q": "Développe : 2(x − 5)",
+                "choix": [
+                  "2x − 10",
+                  "2x − 5",
+                  "2x − 7"
+                ],
+                "reponse": "2x − 10",
+                "explication": "2 × x = 2x et 2 × 5 = 10. Cela fait 2x − 10.",
+                "verif": "2 * (x - 5)"
+              },
+              {
+                "q": "Développe : 5(x + 1)",
+                "choix": [
+                  "5x + 5",
+                  "5x + 1",
+                  "5x + 6"
+                ],
+                "reponse": "5x + 5",
+                "explication": "5 × x = 5x et 5 × 1 = 5. Cela fait 5x + 5.",
+                "verif": "5 * (x + 1)"
+              }
+            ]
+          },
+          {
+            "indice": "Le carré d'une somme a trois termes : (a + b)² = a² + 2ab + b². Avec un moins : (a − b)² = a² − 2ab + b².",
+            "variantes": [
+              {
+                "q": "Développe : (x + 3)²",
+                "choix": [
+                  "x² + 6x + 9",
+                  "x² + 9",
+                  "x² + 3x + 9"
+                ],
+                "reponse": "x² + 6x + 9",
+                "explication": "x², puis 2 × x × 3 = 6x, puis 3² = 9. Cela fait x² + 6x + 9.",
+                "verif": "(x + 3) * (x + 3)"
+              },
+              {
+                "q": "Développe : (x + 5)²",
+                "choix": [
+                  "x² + 10x + 25",
+                  "x² + 25",
+                  "x² + 5x + 25"
+                ],
+                "reponse": "x² + 10x + 25",
+                "explication": "x², puis 2 × x × 5 = 10x, puis 5² = 25. Cela fait x² + 10x + 25.",
+                "verif": "(x + 5) * (x + 5)"
+              },
+              {
+                "q": "Développe : (x − 2)²",
+                "choix": [
+                  "x² − 4x + 4",
+                  "x² − 4",
+                  "x² + 4"
+                ],
+                "reponse": "x² − 4x + 4",
+                "explication": "x², puis 2 × x × 2 = 4x avec un moins, puis 2² = 4. Cela fait x² − 4x + 4.",
+                "verif": "(x - 2) * (x - 2)"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "2-algebre-equations",
+        "titre": "Algèbre : Équations",
+        "suite": "https://fr.khanacademy.org/math/be-2eme-secondaire2/x291d358f50a246d9:algebre-equations",
+        "questions": [
+          {
+            "indice": "Deux étapes : occupe-toi d'abord du nombre tout seul, puis divise.",
+            "variantes": [
+              {
+                "q": "3x + 4 = 19. Combien vaut x ?",
+                "choix": [
+                  "5",
+                  "15",
+                  "7"
+                ],
+                "reponse": "5",
+                "explication": "3x + 4 = 19, donc 3x = 15, donc x = 5.",
+                "vrai": "3 * x + 4 == 19"
+              },
+              {
+                "q": "5x − 2 = 18. Combien vaut x ?",
+                "choix": [
+                  "4",
+                  "20",
+                  "3"
+                ],
+                "reponse": "4",
+                "explication": "5x − 2 = 18, donc 5x = 20, donc x = 4.",
+                "vrai": "5 * x - 2 == 18"
+              },
+              {
+                "q": "2x + 7 = 19. Combien vaut x ?",
+                "choix": [
+                  "6",
+                  "12",
+                  "13"
+                ],
+                "reponse": "6",
+                "explication": "2x + 7 = 19, donc 2x = 12, donc x = 6.",
+                "vrai": "2 * x + 7 == 19"
+              }
+            ]
+          },
+          {
+            "indice": "Rassemble les x d'un côté et les nombres de l'autre.",
+            "variantes": [
+              {
+                "q": "5x = 2x + 12. Combien vaut x ?",
+                "choix": [
+                  "4",
+                  "12",
+                  "6"
+                ],
+                "reponse": "4",
+                "explication": "On retire 2x des deux côtés : 3x = 12, donc x = 4.",
+                "vrai": "5 * x == 2 * x + 12"
+              },
+              {
+                "q": "4x + 1 = x + 10. Combien vaut x ?",
+                "choix": [
+                  "3",
+                  "9",
+                  "11"
+                ],
+                "reponse": "3",
+                "explication": "On retire x des deux côtés : 3x + 1 = 10. Donc 3x = 9, donc x = 3.",
+                "vrai": "4 * x + 1 == x + 10"
+              },
+              {
+                "q": "6x = 4x + 10. Combien vaut x ?",
+                "choix": [
+                  "5",
+                  "10",
+                  "1"
+                ],
+                "reponse": "5",
+                "explication": "On retire 4x des deux côtés : 2x = 10, donc x = 5.",
+                "vrai": "6 * x == 4 * x + 10"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "2-geometrie-les-transformations-dans-le-plan",
+        "titre": "Géométrie : Les transformations dans le plan",
+        "suite": "https://fr.khanacademy.org/math/be-2eme-secondaire2/x291d358f50a246d9:geometrie-les-transformations-dans-le-plan",
+        "questions": [
+          {
+            "indice": "Symétrie par rapport à l'axe vertical : l'abscisse (le premier nombre) change de signe. Par rapport à l'axe horizontal : c'est l'ordonnée (le second).",
+            "variantes": [
+              {
+                "q": "Le point A(3 ; 2) est retourné par symétrie par rapport à l'axe vertical. Quelle est l'abscisse de son image ?",
+                "choix": [
+                  "−3",
+                  "3",
+                  "2"
+                ],
+                "reponse": "−3",
+                "explication": "Par rapport à l'axe vertical, l'abscisse change de signe : 3 devient −3. L'image est (−3 ; 2).",
+                "verif": "-3"
+              },
+              {
+                "q": "Le point B(4 ; 1) est retourné par symétrie par rapport à l'axe horizontal. Quelle est l'ordonnée de son image ?",
+                "choix": [
+                  "−1",
+                  "1",
+                  "−4"
+                ],
+                "reponse": "−1",
+                "explication": "Par rapport à l'axe horizontal, l'ordonnée change de signe : 1 devient −1. L'image est (4 ; −1).",
+                "verif": "-1"
+              },
+              {
+                "q": "Le point C(−2 ; 5) est retourné par symétrie par rapport à l'axe vertical. Quelle est l'abscisse de son image ?",
+                "choix": [
+                  "2",
+                  "−2",
+                  "−5"
+                ],
+                "reponse": "2",
+                "explication": "Par rapport à l'axe vertical, l'abscisse change de signe : −2 devient 2. L'image est (2 ; 5).",
+                "verif": "2"
+              }
+            ]
+          },
+          {
+            "indice": "Une homothétie de rapport k multiplie toutes les longueurs par k.",
+            "variantes": [
+              {
+                "q": "Un segment de 4 cm est agrandi par une homothétie de rapport 3. Combien mesure son image ?",
+                "choix": [
+                  "12 cm",
+                  "7 cm",
+                  "64 cm"
+                ],
+                "reponse": "12 cm",
+                "explication": "Toutes les longueurs sont multipliées par 3 : 4 × 3 = 12 cm.",
+                "verif": "4 * 3"
+              },
+              {
+                "q": "Un segment de 5 cm est agrandi par une homothétie de rapport 2. Combien mesure son image ?",
+                "choix": [
+                  "10 cm",
+                  "7 cm",
+                  "25 cm"
+                ],
+                "reponse": "10 cm",
+                "explication": "Toutes les longueurs sont multipliées par 2 : 5 × 2 = 10 cm.",
+                "verif": "5 * 2"
+              },
+              {
+                "q": "Un segment de 6 cm est réduit par une homothétie de rapport 0,5. Combien mesure son image ?",
+                "choix": [
+                  "3 cm",
+                  "12 cm",
+                  "6,5 cm"
+                ],
+                "reponse": "3 cm",
+                "explication": "Toutes les longueurs sont multipliées par 0,5, c'est-à-dire divisées par 2 : 3 cm.",
+                "verif": "6 * 0.5"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "2-geometrie-les-couples-d-angles",
+        "titre": "Géométrie : Les couples d'angles",
+        "suite": "https://fr.khanacademy.org/math/be-2eme-secondaire2/x291d358f50a246d9:geometrie-les-couples-d-angles",
+        "questions": [
+          {
+            "indice": "Deux angles opposés par le sommet ont la même mesure.",
+            "variantes": [
+              {
+                "q": "Deux droites se coupent. Un des angles mesure 40°. Combien mesure l'angle opposé par le sommet ?",
+                "choix": [
+                  "40°",
+                  "140°",
+                  "50°"
+                ],
+                "reponse": "40°",
+                "explication": "Deux angles opposés par le sommet sont égaux : 40°.",
+                "verif": "40"
+              },
+              {
+                "q": "Deux droites se coupent. Un des angles mesure 65°. Combien mesure l'angle opposé par le sommet ?",
+                "choix": [
+                  "65°",
+                  "115°",
+                  "25°"
+                ],
+                "reponse": "65°",
+                "explication": "Deux angles opposés par le sommet sont égaux : 65°.",
+                "verif": "65"
+              },
+              {
+                "q": "Deux droites se coupent. Un des angles mesure 110°. Combien mesure l'angle opposé par le sommet ?",
+                "choix": [
+                  "110°",
+                  "70°",
+                  "20°"
+                ],
+                "reponse": "110°",
+                "explication": "Deux angles opposés par le sommet sont égaux : 110°.",
+                "verif": "110"
+              }
+            ]
+          },
+          {
+            "indice": "Deux angles côte à côte sur une même droite font ensemble un angle plat : 180°.",
+            "variantes": [
+              {
+                "q": "Deux droites se coupent. Un des angles mesure 40°. Combien mesure l'angle juste à côté ?",
+                "choix": [
+                  "140°",
+                  "40°",
+                  "50°"
+                ],
+                "reponse": "140°",
+                "explication": "Côte à côte, ils font 180° : 180 − 40 = 140°.",
+                "verif": "180 - 40"
+              },
+              {
+                "q": "Deux droites se coupent. Un des angles mesure 65°. Combien mesure l'angle juste à côté ?",
+                "choix": [
+                  "115°",
+                  "65°",
+                  "25°"
+                ],
+                "reponse": "115°",
+                "explication": "Côte à côte, ils font 180° : 180 − 65 = 115°.",
+                "verif": "180 - 65"
+              },
+              {
+                "q": "Deux droites se coupent. Un des angles mesure 110°. Combien mesure l'angle juste à côté ?",
+                "choix": [
+                  "70°",
+                  "110°",
+                  "250°"
+                ],
+                "reponse": "70°",
+                "explication": "Côte à côte, ils font 180° : 180 − 110 = 70°.",
+                "verif": "180 - 110"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "2-geometrie-les-polygones",
+        "titre": "Géométrie : Les polygones",
+        "suite": "https://fr.khanacademy.org/math/be-2eme-secondaire2/x291d358f50a246d9:geometrie-les-polygones",
+        "questions": [
+          {
+            "indice": "La somme des trois angles d'un triangle vaut toujours 180°.",
+            "variantes": [
+              {
+                "q": "Dans un triangle, deux angles mesurent 60° et 70°. Combien mesure le troisième ?",
+                "choix": [
+                  "50°",
+                  "130°",
+                  "60°"
+                ],
+                "reponse": "50°",
+                "explication": "60 + 70 = 130, et 180 − 130 = 50°.",
+                "verif": "180 - 60 - 70"
+              },
+              {
+                "q": "Dans un triangle, deux angles mesurent 90° et 35°. Combien mesure le troisième ?",
+                "choix": [
+                  "55°",
+                  "125°",
+                  "45°"
+                ],
+                "reponse": "55°",
+                "explication": "90 + 35 = 125, et 180 − 125 = 55°.",
+                "verif": "180 - 90 - 35"
+              },
+              {
+                "q": "Dans un triangle, deux angles mesurent 40° et 40°. Combien mesure le troisième ?",
+                "choix": [
+                  "100°",
+                  "80°",
+                  "140°"
+                ],
+                "reponse": "100°",
+                "explication": "40 + 40 = 80, et 180 − 80 = 100°.",
+                "verif": "180 - 40 - 40"
+              }
+            ]
+          },
+          {
+            "indice": "Dans un triangle, chaque côté est plus court que la somme des deux autres, et plus long que leur différence.",
+            "variantes": [
+              {
+                "q": "Deux côtés d'un triangle mesurent 3 cm et 4 cm. Quelle longueur est possible pour le troisième : 5 cm, 7 cm ou 9 cm ?",
+                "choix": [
+                  "5 cm",
+                  "7 cm",
+                  "9 cm"
+                ],
+                "reponse": "5 cm",
+                "explication": "Le troisième côté doit être plus court que 3 + 4 = 7 cm : seul 5 cm convient.",
+                "vrai": "x < 3 + 4 && x > 4 - 3"
+              },
+              {
+                "q": "Deux côtés d'un triangle mesurent 5 cm et 6 cm. Quelle longueur est possible pour le troisième : 8 cm, 11 cm ou 12 cm ?",
+                "choix": [
+                  "8 cm",
+                  "11 cm",
+                  "12 cm"
+                ],
+                "reponse": "8 cm",
+                "explication": "Le troisième côté doit être plus court que 5 + 6 = 11 cm : seul 8 cm convient.",
+                "vrai": "x < 5 + 6 && x > 6 - 5"
+              },
+              {
+                "q": "Deux côtés d'un triangle mesurent 2 cm et 6 cm. Quelle longueur est possible pour le troisième : 4 cm, 7 cm ou 9 cm ?",
+                "choix": [
+                  "7 cm",
+                  "4 cm",
+                  "9 cm"
+                ],
+                "reponse": "7 cm",
+                "explication": "Le troisième côté doit être plus court que 2 + 6 = 8 cm et plus long que 6 − 2 = 4 cm : seul 7 cm convient.",
+                "vrai": "x < 2 + 6 && x > 6 - 2"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "2-geometrie-demontrer-et-utiliser-des-proprietes",
+        "titre": "Géométrie : Démontrer et utiliser des propriétés",
+        "suite": "https://fr.khanacademy.org/math/be-2eme-secondaire2/x291d358f50a246d9:geometrie-demontrer-et-utiliser-des-proprietes",
+        "questions": [
+          {
+            "indice": "Dans un triangle isocèle, les deux angles à la base sont égaux, et la somme des trois angles vaut 180°.",
+            "variantes": [
+              {
+                "q": "Un triangle isocèle a un angle au sommet de 40°. Combien mesure chacun des deux angles à la base ?",
+                "choix": [
+                  "70°",
+                  "140°",
+                  "40°"
+                ],
+                "reponse": "70°",
+                "explication": "Il reste 180 − 40 = 140° pour deux angles égaux : 140 : 2 = 70°.",
+                "verif": "(180 - 40) / 2"
+              },
+              {
+                "q": "Un triangle isocèle a un angle au sommet de 100°. Combien mesure chacun des deux angles à la base ?",
+                "choix": [
+                  "40°",
+                  "80°",
+                  "50°"
+                ],
+                "reponse": "40°",
+                "explication": "Il reste 180 − 100 = 80° pour deux angles égaux : 80 : 2 = 40°.",
+                "verif": "(180 - 100) / 2"
+              },
+              {
+                "q": "Un triangle isocèle a un angle au sommet de 80°. Combien mesure chacun des deux angles à la base ?",
+                "choix": [
+                  "50°",
+                  "100°",
+                  "40°"
+                ],
+                "reponse": "50°",
+                "explication": "Il reste 180 − 80 = 100° pour deux angles égaux : 100 : 2 = 50°.",
+                "verif": "(180 - 80) / 2"
+              }
+            ]
+          },
+          {
+            "indice": "La somme des quatre angles d'un quadrilatère vaut 360°.",
+            "variantes": [
+              {
+                "q": "Dans un quadrilatère, trois angles mesurent 90°, 90° et 100°. Combien mesure le quatrième ?",
+                "choix": [
+                  "80°",
+                  "100°",
+                  "90°"
+                ],
+                "reponse": "80°",
+                "explication": "90 + 90 + 100 = 280, et 360 − 280 = 80°.",
+                "verif": "360 - 90 - 90 - 100"
+              },
+              {
+                "q": "Dans un quadrilatère, trois angles mesurent 80°, 100° et 120°. Combien mesure le quatrième ?",
+                "choix": [
+                  "60°",
+                  "120°",
+                  "100°"
+                ],
+                "reponse": "60°",
+                "explication": "80 + 100 + 120 = 300, et 360 − 300 = 60°.",
+                "verif": "360 - 80 - 100 - 120"
+              },
+              {
+                "q": "Dans un quadrilatère, trois angles mesurent 90°, 70° et 110°. Combien mesure le quatrième ?",
+                "choix": [
+                  "90°",
+                  "70°",
+                  "110°"
+                ],
+                "reponse": "90°",
+                "explication": "90 + 70 + 110 = 270, et 360 − 270 = 90°.",
+                "verif": "360 - 90 - 70 - 110"
+              }
+            ]
+          }
+        ]
+      }
+    ],
     "3": [
+      {
+        "id": "3-algebre-puissances-et-racines",
+        "titre": "Algèbre : Puissances et racines",
+        "suite": "https://fr.khanacademy.org/math/3eme-annee-secondaire/xd903d14ae2b1276e:algebre-puissances-et-racines",
+        "questions": [
+          {
+            "indice": "La racine carrée d'un nombre, c'est le nombre positif qui, multiplié par lui-même, redonne ce nombre.",
+            "variantes": [
+              {
+                "q": "√49 = ?",
+                "choix": [
+                  "7",
+                  "24,5",
+                  "8"
+                ],
+                "reponse": "7",
+                "explication": "7 × 7 = 49, donc √49 = 7.",
+                "vrai": "x * x == 49"
+              },
+              {
+                "q": "√81 = ?",
+                "choix": [
+                  "9",
+                  "40,5",
+                  "8"
+                ],
+                "reponse": "9",
+                "explication": "9 × 9 = 81, donc √81 = 9.",
+                "vrai": "x * x == 81"
+              },
+              {
+                "q": "√144 = ?",
+                "choix": [
+                  "12",
+                  "72",
+                  "14"
+                ],
+                "reponse": "12",
+                "explication": "12 × 12 = 144, donc √144 = 12.",
+                "vrai": "x * x == 144"
+              }
+            ]
+          },
+          {
+            "indice": "Cherche les deux carrés parfaits qui entourent le nombre : 1, 4, 9, 16, 25, 36, 49, 64, 81…",
+            "variantes": [
+              {
+                "q": "√20 se trouve entre deux entiers qui se suivent. Quel est le plus petit des deux ?",
+                "choix": [
+                  "4",
+                  "5",
+                  "10"
+                ],
+                "reponse": "4",
+                "explication": "16 < 20 < 25, donc √20 est entre √16 = 4 et √25 = 5.",
+                "vrai": "x * x <= 20 && (x + 1) * (x + 1) > 20"
+              },
+              {
+                "q": "√50 se trouve entre deux entiers qui se suivent. Quel est le plus petit des deux ?",
+                "choix": [
+                  "7",
+                  "8",
+                  "25"
+                ],
+                "reponse": "7",
+                "explication": "49 < 50 < 64, donc √50 est entre √49 = 7 et √64 = 8.",
+                "vrai": "x * x <= 50 && (x + 1) * (x + 1) > 50"
+              },
+              {
+                "q": "√30 se trouve entre deux entiers qui se suivent. Quel est le plus petit des deux ?",
+                "choix": [
+                  "5",
+                  "6",
+                  "15"
+                ],
+                "reponse": "5",
+                "explication": "25 < 30 < 36, donc √30 est entre √25 = 5 et √36 = 6.",
+                "vrai": "x * x <= 30 && (x + 1) * (x + 1) > 30"
+              }
+            ]
+          }
+        ]
+      },
       {
         "id": "puissances-exposants-entiers",
         "titre": "Les puissances à exposant entier",
@@ -174,6 +2336,919 @@
                 ],
                 "reponse": "1000",
                 "explication": "(1/10)⁻³ = 10³ = 1000 : l'exposant négatif retourne la fraction."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "3-algebre-polynomes-definitions-et-operations",
+        "titre": "Algèbre : Polynômes : Définitions et opérations",
+        "suite": "https://fr.khanacademy.org/math/3eme-annee-secondaire/xd903d14ae2b1276e:algebre-polynomes-definitions-et-operations",
+        "questions": [
+          {
+            "indice": "On additionne les termes semblables : les x² ensemble, les x ensemble, les nombres ensemble.",
+            "variantes": [
+              {
+                "q": "Réduis : (2x + 3) + (4x − 1)",
+                "choix": [
+                  "6x + 2",
+                  "6x + 4",
+                  "8x + 2"
+                ],
+                "reponse": "6x + 2",
+                "explication": "Les x : 2x + 4x = 6x. Les nombres : 3 − 1 = 2. Cela fait 6x + 2.",
+                "verif": "(2 * x + 3) + (4 * x - 1)"
+              },
+              {
+                "q": "Réduis : (x² + 2x) + (3x² + x)",
+                "choix": [
+                  "4x² + 3x",
+                  "3x² + 3x",
+                  "4x² + 2x"
+                ],
+                "reponse": "4x² + 3x",
+                "explication": "Les x² : x² + 3x² = 4x². Les x : 2x + x = 3x. Cela fait 4x² + 3x.",
+                "verif": "(x * x + 2 * x) + (3 * x * x + x)"
+              },
+              {
+                "q": "Réduis : (5x + 4) − (2x + 1)",
+                "choix": [
+                  "3x + 3",
+                  "3x + 5",
+                  "7x + 3"
+                ],
+                "reponse": "3x + 3",
+                "explication": "Les x : 5x − 2x = 3x. Les nombres : 4 − 1 = 3. Cela fait 3x + 3.",
+                "verif": "(5 * x + 4) - (2 * x + 1)"
+              }
+            ]
+          },
+          {
+            "indice": "Double distributivité : chaque terme de la première parenthèse multiplie chaque terme de la seconde.",
+            "variantes": [
+              {
+                "q": "Développe : (x + 2)(x + 3)",
+                "choix": [
+                  "x² + 5x + 6",
+                  "x² + 6",
+                  "x² + 6x + 5"
+                ],
+                "reponse": "x² + 5x + 6",
+                "explication": "x × x = x², x × 3 = 3x, 2 × x = 2x et 2 × 3 = 6. On réduit : x² + 5x + 6.",
+                "verif": "(x + 2) * (x + 3)"
+              },
+              {
+                "q": "Développe : (x + 1)(x + 4)",
+                "choix": [
+                  "x² + 5x + 4",
+                  "x² + 4",
+                  "x² + 4x + 5"
+                ],
+                "reponse": "x² + 5x + 4",
+                "explication": "x × x = x², x × 4 = 4x, 1 × x = x et 1 × 4 = 4. On réduit : x² + 5x + 4.",
+                "verif": "(x + 1) * (x + 4)"
+              },
+              {
+                "q": "Développe : (x − 2)(x + 5)",
+                "choix": [
+                  "x² + 3x − 10",
+                  "x² − 10",
+                  "x² + 7x − 10"
+                ],
+                "reponse": "x² + 3x − 10",
+                "explication": "x × x = x², x × 5 = 5x, −2 × x = −2x et −2 × 5 = −10. On réduit : x² + 3x − 10.",
+                "verif": "(x - 2) * (x + 5)"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "3-algebre-factorisation-de-polynomes-et-fractions-rationnelles",
+        "titre": "Algèbre : Factorisation de polynômes et fractions rationnelles",
+        "suite": "https://fr.khanacademy.org/math/3eme-annee-secondaire/xd903d14ae2b1276e:algebre-factorisation-de-polynomes-et-fractions-rationnelles",
+        "questions": [
+          {
+            "indice": "Cherche le facteur commun aux deux termes et mets-le devant une parenthèse.",
+            "variantes": [
+              {
+                "q": "Factorise : 6x + 9",
+                "choix": [
+                  "3(2x + 3)",
+                  "3(2x + 9)",
+                  "6(x + 9)"
+                ],
+                "reponse": "3(2x + 3)",
+                "explication": "6x = 3 × 2x et 9 = 3 × 3 : le facteur commun est 3. Cela fait 3(2x + 3).",
+                "verif": "6 * x + 9"
+              },
+              {
+                "q": "Factorise : 4x + 10",
+                "choix": [
+                  "2(2x + 5)",
+                  "2(2x + 10)",
+                  "4(x + 10)"
+                ],
+                "reponse": "2(2x + 5)",
+                "explication": "4x = 2 × 2x et 10 = 2 × 5 : le facteur commun est 2. Cela fait 2(2x + 5).",
+                "verif": "4 * x + 10"
+              },
+              {
+                "q": "Factorise : 5x − 15",
+                "choix": [
+                  "5(x − 3)",
+                  "5(x − 15)",
+                  "5(x − 10)"
+                ],
+                "reponse": "5(x − 3)",
+                "explication": "5x = 5 × x et 15 = 5 × 3 : le facteur commun est 5. Cela fait 5(x − 3).",
+                "verif": "5 * x - 15"
+              }
+            ]
+          },
+          {
+            "indice": "Différence de deux carrés : a² − b² = (a − b)(a + b).",
+            "variantes": [
+              {
+                "q": "Factorise : x² − 9",
+                "choix": [
+                  "(x − 3)(x + 3)",
+                  "(x − 3)²",
+                  "(x − 9)(x + 1)"
+                ],
+                "reponse": "(x − 3)(x + 3)",
+                "explication": "9 = 3², donc x² − 9 = x² − 3² = (x − 3)(x + 3).",
+                "verif": "x * x - 9"
+              },
+              {
+                "q": "Factorise : x² − 25",
+                "choix": [
+                  "(x − 5)(x + 5)",
+                  "(x − 5)²",
+                  "(x − 25)(x + 1)"
+                ],
+                "reponse": "(x − 5)(x + 5)",
+                "explication": "25 = 5², donc x² − 25 = x² − 5² = (x − 5)(x + 5).",
+                "verif": "x * x - 25"
+              },
+              {
+                "q": "Factorise : x² − 16",
+                "choix": [
+                  "(x − 4)(x + 4)",
+                  "(x − 4)²",
+                  "(x − 8)(x + 2)"
+                ],
+                "reponse": "(x − 4)(x + 4)",
+                "explication": "16 = 4², donc x² − 16 = x² − 4² = (x − 4)(x + 4).",
+                "verif": "x * x - 16"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "3-algebre-equations",
+        "titre": "Algèbre : Équations",
+        "suite": "https://fr.khanacademy.org/math/3eme-annee-secondaire/xd903d14ae2b1276e:algebre-equations",
+        "questions": [
+          {
+            "indice": "Remplace x par chaque nombre et regarde si les deux côtés sont égaux.",
+            "variantes": [
+              {
+                "q": "Lequel de ces nombres est solution de 3x − 5 = 10 : 3, 5 ou 15 ?",
+                "choix": [
+                  "5",
+                  "3",
+                  "15"
+                ],
+                "reponse": "5",
+                "explication": "Avec x = 5 : 3 × 5 − 5 = 15 − 5 = 10. C'est bien égal.",
+                "vrai": "3 * x - 5 == 10"
+              },
+              {
+                "q": "Lequel de ces nombres est solution de 2x + 7 = 15 : 4, 8 ou 11 ?",
+                "choix": [
+                  "4",
+                  "8",
+                  "11"
+                ],
+                "reponse": "4",
+                "explication": "Avec x = 4 : 2 × 4 + 7 = 8 + 7 = 15. C'est bien égal.",
+                "vrai": "2 * x + 7 == 15"
+              },
+              {
+                "q": "Lequel de ces nombres est solution de 4x − 6 = 2x : 1, 3 ou 6 ?",
+                "choix": [
+                  "3",
+                  "1",
+                  "6"
+                ],
+                "reponse": "3",
+                "explication": "Avec x = 3 : 4 × 3 − 6 = 6, et 2 × 3 = 6. C'est bien égal.",
+                "vrai": "4 * x - 6 == 2 * x"
+              }
+            ]
+          },
+          {
+            "indice": "Un produit est nul quand un de ses facteurs est nul.",
+            "variantes": [
+              {
+                "q": "(x − 2)(x + 5) = 0. Laquelle de ces valeurs est une solution : 2, 5 ou 10 ?",
+                "choix": [
+                  "2",
+                  "5",
+                  "10"
+                ],
+                "reponse": "2",
+                "explication": "Avec x = 2, le premier facteur vaut 2 − 2 = 0, donc le produit est nul. L'autre solution est −5.",
+                "vrai": "(x - 2) * (x + 5) == 0"
+              },
+              {
+                "q": "(x − 4)(x + 1) = 0. Laquelle de ces valeurs est une solution : 1, 4 ou −4 ?",
+                "choix": [
+                  "4",
+                  "1",
+                  "−4"
+                ],
+                "reponse": "4",
+                "explication": "Avec x = 4, le premier facteur vaut 4 − 4 = 0, donc le produit est nul. L'autre solution est −1.",
+                "vrai": "(x - 4) * (x + 1) == 0"
+              },
+              {
+                "q": "(x + 3)(x − 7) = 0. Laquelle de ces valeurs est une solution : 3, 7 ou 21 ?",
+                "choix": [
+                  "7",
+                  "3",
+                  "21"
+                ],
+                "reponse": "7",
+                "explication": "Avec x = 7, le second facteur vaut 7 − 7 = 0, donc le produit est nul. L'autre solution est −3.",
+                "vrai": "(x + 3) * (x - 7) == 0"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "3-algebre-inequations-a-une-inconnue",
+        "titre": "Algèbre : Inéquations à une inconnue",
+        "suite": "https://fr.khanacademy.org/math/3eme-annee-secondaire/xd903d14ae2b1276e:algebre-inequations-a-une-inconnue",
+        "questions": [
+          {
+            "indice": "Remplace x par chaque nombre et regarde si l'inégalité est vraie. Attention : 9 > 9 est faux.",
+            "variantes": [
+              {
+                "q": "Lequel de ces nombres vérifie 2x + 1 > 9 : 3, 4 ou 5 ?",
+                "choix": [
+                  "5",
+                  "3",
+                  "4"
+                ],
+                "reponse": "5",
+                "explication": "Avec x = 5 : 2 × 5 + 1 = 11, et 11 > 9. Avec x = 4, on obtient 9, et 9 > 9 est faux.",
+                "vrai": "2 * x + 1 > 9"
+              },
+              {
+                "q": "Lequel de ces nombres vérifie x − 3 < 2 : 4, 5 ou 6 ?",
+                "choix": [
+                  "4",
+                  "5",
+                  "6"
+                ],
+                "reponse": "4",
+                "explication": "Avec x = 4 : 4 − 3 = 1, et 1 < 2. Avec x = 5, on obtient 2, et 2 < 2 est faux.",
+                "vrai": "x - 3 < 2"
+              },
+              {
+                "q": "Lequel de ces nombres vérifie 3x ≥ 12 : 2, 3 ou 4 ?",
+                "choix": [
+                  "4",
+                  "2",
+                  "3"
+                ],
+                "reponse": "4",
+                "explication": "Avec x = 4 : 3 × 4 = 12, et 12 ≥ 12 est vrai, car ≥ accepte l'égalité.",
+                "vrai": "3 * x >= 12"
+              }
+            ]
+          },
+          {
+            "indice": "Résous comme une équation. Puis regarde le signe : < et > refusent le nombre lui-même, ≤ et ≥ l'acceptent.",
+            "variantes": [
+              {
+                "q": "Quel est le plus grand entier x qui vérifie 2x < 10 ?",
+                "choix": [
+                  "4",
+                  "5",
+                  "6"
+                ],
+                "reponse": "4",
+                "explication": "2x < 10 donne x < 5. Le plus grand entier plus petit que 5 est 4.",
+                "vrai": "2 * x < 10 && !(2 * (x + 1) < 10)"
+              },
+              {
+                "q": "Quel est le plus petit entier x qui vérifie x + 4 > 9 ?",
+                "choix": [
+                  "6",
+                  "5",
+                  "4"
+                ],
+                "reponse": "6",
+                "explication": "x + 4 > 9 donne x > 5. Le plus petit entier plus grand que 5 est 6.",
+                "vrai": "x + 4 > 9 && !(x - 1 + 4 > 9)"
+              },
+              {
+                "q": "Quel est le plus grand entier x qui vérifie 3x ≤ 12 ?",
+                "choix": [
+                  "4",
+                  "3",
+                  "5"
+                ],
+                "reponse": "4",
+                "explication": "3x ≤ 12 donne x ≤ 4. Le nombre 4 lui-même convient, car ≤ accepte l'égalité.",
+                "vrai": "3 * x <= 12 && !(3 * (x + 1) <= 12)"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "3-fonctions-definition-et-approche-graphique",
+        "titre": "Fonctions : Définition et approche graphique",
+        "suite": "https://fr.khanacademy.org/math/3eme-annee-secondaire/xd903d14ae2b1276e:fonctions-definition-et-approche-graphique",
+        "questions": [
+          {
+            "indice": "L'image d'un nombre par f se calcule en remplaçant x par ce nombre dans la formule.",
+            "variantes": [
+              {
+                "q": "f(x) = 2x + 1. Combien vaut f(3) ?",
+                "choix": [
+                  "7",
+                  "6",
+                  "24"
+                ],
+                "reponse": "7",
+                "explication": "f(3) = 2 × 3 + 1 = 6 + 1 = 7.",
+                "verif": "2 * 3 + 1"
+              },
+              {
+                "q": "f(x) = x² − 1. Combien vaut f(4) ?",
+                "choix": [
+                  "15",
+                  "7",
+                  "9"
+                ],
+                "reponse": "15",
+                "explication": "f(4) = 4² − 1 = 16 − 1 = 15.",
+                "verif": "4 * 4 - 1"
+              },
+              {
+                "q": "f(x) = 3x − 2. Combien vaut f(5) ?",
+                "choix": [
+                  "13",
+                  "33",
+                  "6"
+                ],
+                "reponse": "13",
+                "explication": "f(5) = 3 × 5 − 2 = 15 − 2 = 13.",
+                "verif": "3 * 5 - 2"
+              }
+            ]
+          },
+          {
+            "indice": "Cherche le nombre x pour lequel la formule donne ce résultat : c'est résoudre une équation.",
+            "variantes": [
+              {
+                "q": "f(x) = 2x + 1. Quel nombre a pour image 9 ?",
+                "choix": [
+                  "4",
+                  "19",
+                  "5"
+                ],
+                "reponse": "4",
+                "explication": "2x + 1 = 9, donc 2x = 8, donc x = 4. On vérifie : f(4) = 9.",
+                "vrai": "2 * x + 1 == 9"
+              },
+              {
+                "q": "f(x) = x + 6. Quel nombre a pour image 13 ?",
+                "choix": [
+                  "7",
+                  "19",
+                  "6"
+                ],
+                "reponse": "7",
+                "explication": "x + 6 = 13, donc x = 7. On vérifie : f(7) = 13.",
+                "vrai": "x + 6 == 13"
+              },
+              {
+                "q": "f(x) = 3x. Quel nombre a pour image 15 ?",
+                "choix": [
+                  "5",
+                  "45",
+                  "12"
+                ],
+                "reponse": "5",
+                "explication": "3x = 15, donc x = 5. On vérifie : f(5) = 15.",
+                "vrai": "3 * x == 15"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "3-le-premier-degre-fonctions-affines-droites",
+        "titre": "Le premier degré : Fonctions affines - Droites",
+        "suite": "https://fr.khanacademy.org/math/3eme-annee-secondaire/xd903d14ae2b1276e:le-premier-degre-fonctions-affines-droites",
+        "questions": [
+          {
+            "indice": "Dans y = ax + b, le nombre a est la pente : de combien y change quand x augmente de 1.",
+            "variantes": [
+              {
+                "q": "Quelle est la pente de la droite d'équation y = 3x + 2 ?",
+                "choix": [
+                  "3",
+                  "2",
+                  "5"
+                ],
+                "reponse": "3",
+                "explication": "La pente est le nombre qui multiplie x : 3. Quand x augmente de 1, y monte de 3.",
+                "verif": "(3 * (x + 1) + 2) - (3 * x + 2)"
+              },
+              {
+                "q": "Quelle est la pente de la droite d'équation y = −2x + 5 ?",
+                "choix": [
+                  "−2",
+                  "5",
+                  "2"
+                ],
+                "reponse": "−2",
+                "explication": "La pente est le nombre qui multiplie x : −2. Quand x augmente de 1, y descend de 2.",
+                "verif": "(-2 * (x + 1) + 5) - (-2 * x + 5)"
+              },
+              {
+                "q": "Quelle est la pente de la droite d'équation y = x − 4 ?",
+                "choix": [
+                  "1",
+                  "−4",
+                  "0"
+                ],
+                "reponse": "1",
+                "explication": "x tout seul, c'est 1x : la pente est 1. Quand x augmente de 1, y monte de 1.",
+                "verif": "((x + 1) - 4) - (x - 4)"
+              }
+            ]
+          },
+          {
+            "indice": "Quand x = 0, il ne reste que le nombre tout seul : c'est là que la droite coupe l'axe vertical.",
+            "variantes": [
+              {
+                "q": "Sur la droite d'équation y = 3x + 2, combien vaut y quand x = 0 ?",
+                "choix": [
+                  "2",
+                  "3",
+                  "5"
+                ],
+                "reponse": "2",
+                "explication": "y = 3 × 0 + 2 = 2. La droite coupe l'axe vertical en 2.",
+                "verif": "3 * 0 + 2"
+              },
+              {
+                "q": "Sur la droite d'équation y = −2x + 5, combien vaut y quand x = 0 ?",
+                "choix": [
+                  "5",
+                  "−2",
+                  "3"
+                ],
+                "reponse": "5",
+                "explication": "y = −2 × 0 + 5 = 5. La droite coupe l'axe vertical en 5.",
+                "verif": "-2 * 0 + 5"
+              },
+              {
+                "q": "Sur la droite d'équation y = x − 4, combien vaut y quand x = 0 ?",
+                "choix": [
+                  "−4",
+                  "1",
+                  "4"
+                ],
+                "reponse": "−4",
+                "explication": "y = 0 − 4 = −4. La droite coupe l'axe vertical en −4.",
+                "verif": "0 - 4"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "3-algebre-systemes-d-equations",
+        "titre": "Algèbre : Systèmes d'équations",
+        "suite": "https://fr.khanacademy.org/math/3eme-annee-secondaire/xd903d14ae2b1276e:algebre-systemes-d-equations",
+        "questions": [
+          {
+            "indice": "Additionne les deux équations membre à membre : les y disparaissent.",
+            "variantes": [
+              {
+                "q": "x + y = 5 et x − y = 1. Combien vaut x ?",
+                "choix": [
+                  "3",
+                  "2",
+                  "4"
+                ],
+                "reponse": "3",
+                "explication": "En additionnant : 2x = 6, donc x = 3. Et alors y = 2.",
+                "vrai": "2 * x == 5 + 1"
+              },
+              {
+                "q": "x + y = 10 et x − y = 4. Combien vaut x ?",
+                "choix": [
+                  "7",
+                  "3",
+                  "6"
+                ],
+                "reponse": "7",
+                "explication": "En additionnant : 2x = 14, donc x = 7. Et alors y = 3.",
+                "vrai": "2 * x == 10 + 4"
+              },
+              {
+                "q": "x + y = 8 et x − y = 2. Combien vaut x ?",
+                "choix": [
+                  "5",
+                  "3",
+                  "6"
+                ],
+                "reponse": "5",
+                "explication": "En additionnant : 2x = 10, donc x = 5. Et alors y = 3.",
+                "vrai": "2 * x == 8 + 2"
+              }
+            ]
+          },
+          {
+            "indice": "Substitution : remplace y par son expression dans l'autre équation.",
+            "variantes": [
+              {
+                "q": "y = 2x et x + y = 9. Combien vaut x ?",
+                "choix": [
+                  "3",
+                  "6",
+                  "9"
+                ],
+                "reponse": "3",
+                "explication": "On remplace y par 2x : x + 2x = 9, donc 3x = 9, donc x = 3. Et alors y = 6.",
+                "vrai": "x + 2 * x == 9"
+              },
+              {
+                "q": "y = x + 1 et x + y = 7. Combien vaut x ?",
+                "choix": [
+                  "3",
+                  "4",
+                  "6"
+                ],
+                "reponse": "3",
+                "explication": "On remplace y par x + 1 : x + x + 1 = 7, donc 2x = 6, donc x = 3. Et alors y = 4.",
+                "vrai": "x + (x + 1) == 7"
+              },
+              {
+                "q": "y = 3x et x + y = 8. Combien vaut x ?",
+                "choix": [
+                  "2",
+                  "6",
+                  "4"
+                ],
+                "reponse": "2",
+                "explication": "On remplace y par 3x : x + 3x = 8, donc 4x = 8, donc x = 2. Et alors y = 6.",
+                "vrai": "x + 3 * x == 8"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "3-algebre-pour-aller-plus-loin-avec-des-inequations",
+        "titre": "Algèbre : Pour aller plus loin avec des inéquations",
+        "suite": "https://fr.khanacademy.org/math/3eme-annee-secondaire/xd903d14ae2b1276e:algebre-pour-aller-plus-loin-avec-des-inequations",
+        "questions": [
+          {
+            "indice": "Remplace x et y par leurs valeurs et regarde si l'inégalité est vraie. Attention : 5 > 5 est faux.",
+            "variantes": [
+              {
+                "q": "Si x = 2, lequel de ces y vérifie x + y > 5 : 1, 3 ou 4 ?",
+                "choix": [
+                  "4",
+                  "1",
+                  "3"
+                ],
+                "reponse": "4",
+                "explication": "Avec y = 4 : 2 + 4 = 6, et 6 > 5. Avec y = 3, on obtient 5, et 5 > 5 est faux.",
+                "vrai": "2 + x > 5"
+              },
+              {
+                "q": "Si x = 1, lequel de ces y vérifie 2x + y < 6 : 3, 4 ou 5 ?",
+                "choix": [
+                  "3",
+                  "4",
+                  "5"
+                ],
+                "reponse": "3",
+                "explication": "Avec y = 3 : 2 × 1 + 3 = 5, et 5 < 6. Avec y = 4, on obtient 6, et 6 < 6 est faux.",
+                "vrai": "2 * 1 + x < 6"
+              },
+              {
+                "q": "Si x = 3, lequel de ces y vérifie y ≥ 2x : 4, 5 ou 6 ?",
+                "choix": [
+                  "6",
+                  "4",
+                  "5"
+                ],
+                "reponse": "6",
+                "explication": "2x = 6. Avec y = 6 : 6 ≥ 6 est vrai, car ≥ accepte l'égalité.",
+                "vrai": "x >= 2 * 3"
+              }
+            ]
+          },
+          {
+            "indice": "Traduis par une inéquation : le prix total ne peut pas dépasser ce que tu as.",
+            "variantes": [
+              {
+                "q": "Un ticket coûte 3 €. Tu as 20 €. Combien de tickets peux-tu acheter au maximum ?",
+                "choix": [
+                  "6",
+                  "7",
+                  "17"
+                ],
+                "reponse": "6",
+                "explication": "3x ≤ 20. Avec 6 tickets : 18 €, ça passe. Avec 7 : 21 €, c'est trop.",
+                "vrai": "3 * x <= 20 && 3 * (x + 1) > 20"
+              },
+              {
+                "q": "Une pizza coûte 8 €. Tu as 30 €. Combien de pizzas peux-tu acheter au maximum ?",
+                "choix": [
+                  "3",
+                  "4",
+                  "22"
+                ],
+                "reponse": "3",
+                "explication": "8x ≤ 30. Avec 3 pizzas : 24 €, ça passe. Avec 4 : 32 €, c'est trop.",
+                "vrai": "8 * x <= 30 && 8 * (x + 1) > 30"
+              },
+              {
+                "q": "Un jeu coûte 12 €. Tu as 50 €. Combien de jeux peux-tu acheter au maximum ?",
+                "choix": [
+                  "4",
+                  "5",
+                  "38"
+                ],
+                "reponse": "4",
+                "explication": "12x ≤ 50. Avec 4 jeux : 48 €, ça passe. Avec 5 : 60 €, c'est trop.",
+                "vrai": "12 * x <= 50 && 12 * (x + 1) > 50"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "3-geometrie-outils-pour-determiner-des-angles",
+        "titre": "Géométrie : Outils pour déterminer des angles",
+        "suite": "https://fr.khanacademy.org/math/3eme-annee-secondaire/xd903d14ae2b1276e:geometrie-outils-pour-determiner-des-angles",
+        "questions": [
+          {
+            "indice": "Un angle inscrit mesure la moitié de l'angle au centre qui intercepte le même arc.",
+            "variantes": [
+              {
+                "q": "Un angle au centre mesure 80°. Combien mesure un angle inscrit qui intercepte le même arc ?",
+                "choix": [
+                  "40°",
+                  "160°",
+                  "80°"
+                ],
+                "reponse": "40°",
+                "explication": "L'angle inscrit est la moitié de l'angle au centre : 80 : 2 = 40°.",
+                "verif": "80 / 2"
+              },
+              {
+                "q": "Un angle au centre mesure 120°. Combien mesure un angle inscrit qui intercepte le même arc ?",
+                "choix": [
+                  "60°",
+                  "240°",
+                  "120°"
+                ],
+                "reponse": "60°",
+                "explication": "L'angle inscrit est la moitié de l'angle au centre : 120 : 2 = 60°.",
+                "verif": "120 / 2"
+              },
+              {
+                "q": "Un angle inscrit mesure 35°. Combien mesure l'angle au centre qui intercepte le même arc ?",
+                "choix": [
+                  "70°",
+                  "17,5°",
+                  "35°"
+                ],
+                "reponse": "70°",
+                "explication": "L'angle au centre est le double de l'angle inscrit : 35 × 2 = 70°.",
+                "verif": "35 * 2"
+              }
+            ]
+          },
+          {
+            "indice": "Deux droites parallèles coupées par une sécante : les angles alternes-internes sont égaux, les angles correspondants aussi.",
+            "variantes": [
+              {
+                "q": "Deux droites parallèles sont coupées par une sécante. Un angle mesure 70°. Combien mesure son angle alterne-interne ?",
+                "choix": [
+                  "70°",
+                  "110°",
+                  "20°"
+                ],
+                "reponse": "70°",
+                "explication": "Avec des droites parallèles, deux angles alternes-internes sont égaux : 70°.",
+                "verif": "70"
+              },
+              {
+                "q": "Deux droites parallèles sont coupées par une sécante. Un angle mesure 55°. Combien mesure son angle correspondant ?",
+                "choix": [
+                  "55°",
+                  "125°",
+                  "35°"
+                ],
+                "reponse": "55°",
+                "explication": "Avec des droites parallèles, deux angles correspondants sont égaux : 55°.",
+                "verif": "55"
+              },
+              {
+                "q": "Deux droites parallèles sont coupées par une sécante. Un angle mesure 130°. Combien mesure son angle alterne-interne ?",
+                "choix": [
+                  "130°",
+                  "50°",
+                  "40°"
+                ],
+                "reponse": "130°",
+                "explication": "Avec des droites parallèles, deux angles alternes-internes sont égaux : 130°.",
+                "verif": "130"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "3-geometri-puthagore-triangle-rectangle-et-trigonometrie",
+        "titre": "Géométrie : Pythagore, triangle rectangle et trigonométrie",
+        "suite": "https://fr.khanacademy.org/math/3eme-annee-secondaire/xd903d14ae2b1276e:geometri-puthagore-triangle-rectangle-et-trigonometrie",
+        "questions": [
+          {
+            "indice": "Pythagore : dans un triangle rectangle, le carré de l'hypoténuse vaut la somme des carrés des deux autres côtés.",
+            "variantes": [
+              {
+                "q": "Les côtés de l'angle droit d'un triangle rectangle mesurent 3 cm et 4 cm. Combien mesure l'hypoténuse ?",
+                "choix": [
+                  "5 cm",
+                  "7 cm",
+                  "25 cm"
+                ],
+                "reponse": "5 cm",
+                "explication": "3² + 4² = 9 + 16 = 25, et √25 = 5 cm.",
+                "vrai": "x * x == 3 * 3 + 4 * 4"
+              },
+              {
+                "q": "Les côtés de l'angle droit d'un triangle rectangle mesurent 6 cm et 8 cm. Combien mesure l'hypoténuse ?",
+                "choix": [
+                  "10 cm",
+                  "14 cm",
+                  "100 cm"
+                ],
+                "reponse": "10 cm",
+                "explication": "6² + 8² = 36 + 64 = 100, et √100 = 10 cm.",
+                "vrai": "x * x == 6 * 6 + 8 * 8"
+              },
+              {
+                "q": "Les côtés de l'angle droit d'un triangle rectangle mesurent 5 cm et 12 cm. Combien mesure l'hypoténuse ?",
+                "choix": [
+                  "13 cm",
+                  "17 cm",
+                  "169 cm"
+                ],
+                "reponse": "13 cm",
+                "explication": "5² + 12² = 25 + 144 = 169, et √169 = 13 cm.",
+                "vrai": "x * x == 5 * 5 + 12 * 12"
+              }
+            ]
+          },
+          {
+            "indice": "Sinus = côté opposé / hypoténuse. Cosinus = côté adjacent / hypoténuse. Tangente = côté opposé / côté adjacent.",
+            "variantes": [
+              {
+                "q": "Dans un triangle rectangle, le côté opposé à un angle mesure 3 cm et l'hypoténuse 5 cm. Combien vaut le sinus de cet angle ?",
+                "choix": [
+                  "3/5",
+                  "5/3",
+                  "2/5"
+                ],
+                "reponse": "3/5",
+                "explication": "Sinus = côté opposé / hypoténuse = 3/5.",
+                "verif": "3 / 5"
+              },
+              {
+                "q": "Dans un triangle rectangle, le côté adjacent à un angle mesure 4 cm et l'hypoténuse 5 cm. Combien vaut le cosinus de cet angle ?",
+                "choix": [
+                  "4/5",
+                  "5/4",
+                  "1/5"
+                ],
+                "reponse": "4/5",
+                "explication": "Cosinus = côté adjacent / hypoténuse = 4/5.",
+                "verif": "4 / 5"
+              },
+              {
+                "q": "Dans un triangle rectangle, le côté opposé à un angle mesure 3 cm et le côté adjacent 4 cm. Combien vaut la tangente de cet angle ?",
+                "choix": [
+                  "3/4",
+                  "4/3",
+                  "1/4"
+                ],
+                "reponse": "3/4",
+                "explication": "Tangente = côté opposé / côté adjacent = 3/4.",
+                "verif": "3 / 4"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "3-geometrie-triangles-isometriques-ou-semblables-theoreme-de-thales",
+        "titre": "Géométrie : Triangles isométriques ou semblables, théorème de Thalès",
+        "suite": "https://fr.khanacademy.org/math/3eme-annee-secondaire/xd903d14ae2b1276e:geometrie-triangles-isometriques-ou-semblables-theoreme-de-thales",
+        "questions": [
+          {
+            "indice": "Dans deux triangles semblables, toutes les longueurs sont multipliées par le même nombre.",
+            "variantes": [
+              {
+                "q": "Deux triangles sont semblables. Les côtés du petit mesurent 3 cm, 4 cm et 5 cm. Le plus petit côté du grand mesure 6 cm. Combien mesure son plus grand côté ?",
+                "choix": [
+                  "10 cm",
+                  "8 cm",
+                  "15 cm"
+                ],
+                "reponse": "10 cm",
+                "explication": "De 3 cm à 6 cm, on multiplie par 2. Le plus grand côté : 5 × 2 = 10 cm.",
+                "verif": "5 * 6 / 3"
+              },
+              {
+                "q": "Deux triangles sont semblables. Les côtés du petit mesurent 2 cm, 3 cm et 4 cm. Le plus petit côté du grand mesure 6 cm. Combien mesure son plus grand côté ?",
+                "choix": [
+                  "12 cm",
+                  "8 cm",
+                  "9 cm"
+                ],
+                "reponse": "12 cm",
+                "explication": "De 2 cm à 6 cm, on multiplie par 3. Le plus grand côté : 4 × 3 = 12 cm.",
+                "verif": "4 * 6 / 2"
+              },
+              {
+                "q": "Deux triangles sont semblables. Les côtés du petit mesurent 4 cm, 5 cm et 6 cm. Le plus petit côté du grand mesure 8 cm. Combien mesure son plus grand côté ?",
+                "choix": [
+                  "12 cm",
+                  "10 cm",
+                  "14 cm"
+                ],
+                "reponse": "12 cm",
+                "explication": "De 4 cm à 8 cm, on multiplie par 2. Le plus grand côté : 6 × 2 = 12 cm.",
+                "verif": "6 * 8 / 4"
+              }
+            ]
+          },
+          {
+            "indice": "Thalès : la parallèle à (BC) dessine un petit triangle AMN semblable au grand. Donc MN / BC = AM / AB.",
+            "variantes": [
+              {
+                "q": "Dans le triangle ABC, M est le milieu de [AB]. La parallèle à (BC) passant par M coupe [AC] en N. Si BC = 10 cm, combien mesure MN ?",
+                "choix": [
+                  "5 cm",
+                  "10 cm",
+                  "20 cm"
+                ],
+                "reponse": "5 cm",
+                "explication": "AM est la moitié de AB, donc MN est la moitié de BC : 10 : 2 = 5 cm.",
+                "verif": "10 / 2"
+              },
+              {
+                "q": "Dans le triangle ABC, M est le milieu de [AB]. La parallèle à (BC) passant par M coupe [AC] en N. Si BC = 14 cm, combien mesure MN ?",
+                "choix": [
+                  "7 cm",
+                  "14 cm",
+                  "28 cm"
+                ],
+                "reponse": "7 cm",
+                "explication": "AM est la moitié de AB, donc MN est la moitié de BC : 14 : 2 = 7 cm.",
+                "verif": "14 / 2"
+              },
+              {
+                "q": "Dans le triangle ABC, M est sur [AB] et AM vaut le tiers de AB. La parallèle à (BC) passant par M coupe [AC] en N. Si BC = 12 cm, combien mesure MN ?",
+                "choix": [
+                  "4 cm",
+                  "6 cm",
+                  "36 cm"
+                ],
+                "reponse": "4 cm",
+                "explication": "AM est le tiers de AB, donc MN est le tiers de BC : 12 : 3 = 4 cm.",
+                "verif": "12 / 3"
               }
             ]
           }
