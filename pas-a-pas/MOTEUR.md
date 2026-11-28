@@ -366,7 +366,8 @@ arrivé (faux serveur, site lu dans le dépôt, aucun réseau), et relève : une
 un fichier ou un lien du site qui n'existe pas, une image qui ne s'affiche pas, un nombre d'étapes différent du
 catalogue, un « Ça coince ? » vide, un défilement horizontal à 375 px, et **tout bouton ou lien affiché au-dessus de
 la tâche pendant le travail** qui n'est pas dans sa liste `HAUT_PERMIS` (menu, pastilles, cloche, grille, smiley, pot).
-Il donne aussi la hauteur où commence la tâche sur un écran de 1366 × 768. `--reseau` teste les liens vers d'autres
+Il donne aussi la hauteur où commence la tâche sur un écran de 1366 × 768 et, à l'ouverture du cours, le nombre de
+fichiers, leur poids compressé et le nombre d'appels au serveur ; plus de 8 appels ou de 400 Ko est un constat. `--reseau` teste les liens vers d'autres
 sites (signalés, jamais bloquants). Il tourne sur chaque PR (travail « cours » de `.github/workflows/tests.yml`) :
 un constat nouveau la fait échouer. Un constat accepté s'écrit dans `outils/verifier-cours.connus.json`, avec sa
 raison ; rien n'y est propre à un cours, un nouveau cours est vérifié dès qu'il est au catalogue.

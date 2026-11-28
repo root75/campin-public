@@ -195,17 +195,27 @@ function chargePreuves(){
   return fetch(PREUVES).then(r=>{ if(!r.ok) throw new Error(); return r.json(); }).then(d=>{ preuvesData = d; })
     .catch(()=>{ preuvesRatees = "⚠ Les questions n’ont pas pu se charger : recharge la page (F5). Ton travail validé est gardé."; qui.textContent = preuvesRatees; });
 }
-/* La variante de chaque élève, demandée une fois au démarrage. */
-function variantesServeur(){
-  if(!SUIVI || APERCU || !preuvesData) return Promise.resolve();
-  return Promise.all(BLOCS.map((B,i)=>{
-    const l = preuvesData.blocs[i];
-    if(!B.q || !B.q.serveur || !l || l.length<2) return null;
-    return new Promise(ok=>google.script.run.withSuccessHandler(a=>{
+/* La variante de l'élève : demandée au serveur pour le bloc affiché, puis d'avance pour le suivant.
+   Jusqu'au 28/11/2026, elle était demandée pour TOUS les blocs au démarrage, en une fois : dix appels de plus par
+   élève à l'ouverture de Messagerie 02, et la fiche attendait le plus lent. Un seul essai par bloc et par
+   chargement de page, comme avant ; sans réponse du serveur, la version 1. */
+const varianteDemandee = {}, varianteSue = {};
+const besoinVariante = i => !!(SUIVI && !APERCU && preuvesData && BLOCS[i] && BLOCS[i].q && BLOCS[i].q.serveur && (preuvesData.blocs[i]||[]).length>=2);
+function varianteDuBloc(i){
+  if(!besoinVariante(i)) return Promise.resolve();
+  const l = preuvesData.blocs[i];
+  return varianteDemandee[i] || (varianteDemandee[i] = new Promise(ok=>google.script.run.withSuccessHandler(a=>{
       const k = a && l[a.v-1] && l[a.v-1].q===a.q ? a.v : l.findIndex(x=>a && x.q===a.q)+1;
-      if(k>0) varianteServeur[i] = k; ok();
-    }).withFailureHandler(()=>ok()).preuve(COURS, i+1));
-  }));
+      if(k>0) varianteServeur[i] = k; varianteSue[i] = true; ok();
+    }).withFailureHandler(()=>{ varianteSue[i] = true; ok(); }).preuve(COURS, i+1)));
+}
+function variantesServeur(){ return varianteDuBloc(Math.min(ici, BLOCS.length-1)); }
+/* Au moment d'afficher un bloc : true = sa version est en route, affiche() sera rappelée à son arrivée. */
+function attendVariante(){
+  const i = ici;
+  if(!besoinVariante(i) || varianteSue[i]){ varianteDuBloc(i+1); return false; }
+  varianteDuBloc(i).then(()=>{ if(ici===i) affiche(); });
+  return true;
 }
 function correctionServeur(Q, reponse, essais){
   return new Promise((ok, ko)=>google.script.run.withSuccessHandler(r=>ok(r||{})).withFailureHandler(()=>ko(new Error("Le suivi ne répond pas. Ta réponse reste ici : réessaie dans un instant."))).verifier(COURS, ici+1, reponse, essais));
@@ -847,6 +857,7 @@ function sabMaj(){
 }
 
 function affiche(){
+  if(attendVariante()) return;
   if(blocOuverture!==undefined && blocOuverture!==ici) blocOuverture = null;
   if(rappelCourant && rappelCourant.bloc!==ici) rappelCourant = null;
   if(DECLARATIF && ici!==placeNotee){   // la place de l'élève : gardée, et visible au tableau (« ouvert »)

@@ -1,4 +1,6 @@
 {
   "labo-07 | deborde | défilement horizontal à 375 px de large": "Largeur de téléphone seulement : le nom de fichier LABO07_CoulissesPC_Prenom_Nom ne se coupe pas (étape 6). À reprendre avec le cours.",
-  "python-2 | deborde | défilement horizontal à 375 px de large": "Largeur de téléphone seulement (étape 5) ; les postes de l'école ne sont pas concernés. À reprendre avec le cours."
+  "python-1 | poids | plus de 400 Ko à l’ouverture": "Python tourne dans la page dès la première étape (Pyodide, 5,7 Mo) : nécessaire, téléchargé une fois puis gardé par le navigateur.",
+  "python-2 | deborde | défilement horizontal à 375 px de large": "Largeur de téléphone seulement (étape 5) ; les postes de l'école ne sont pas concernés. À reprendre avec le cours.",
+  "python-bugs | poids | plus de 400 Ko à l’ouverture": "Python tourne dans la page dès la première étape (Pyodide, 5,7 Mo) : nécessaire, téléchargé une fois puis gardé par le navigateur."
 }
