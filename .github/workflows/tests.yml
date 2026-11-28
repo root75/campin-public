@@ -1,6 +1,8 @@
 # Vérification automatique : chaque PR (et chaque fusion dans main) lance tous les tests de tests/.
 # Aucun secret, aucune dépendance : les tests n'utilisent que Node.
-# Les essais avec Chromium et le vrai Code.gs tournent dans campin-pedagogique (dépôt privé).
+# Les essais avec le vrai Code.gs tournent dans campin-pedagogique (dépôt privé).
+# Second travail, « cours » : chaque étape de chaque cours du catalogue est ouverte dans Chromium
+# (outils/verifier-cours.cjs) ; un constat nouveau fait échouer la PR.
 name: Tests
 
 on:
@@ -30,3 +32,18 @@ jobs:
             echo "::endgroup::"
           done
           exit $echec
+
+  cours:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Chromium
+        run: |
+          npm install --no-save --no-audit --no-fund playwright@1.63.0
+          npx playwright install --with-deps chromium
+      - name: node outils/verifier-cours.cjs --reseau
+        run: node outils/verifier-cours.cjs --reseau
