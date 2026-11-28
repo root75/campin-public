@@ -1,0 +1,492 @@
+{
+ "_lisezmoi": "Révision express avant l'évaluation Python 01 et 02 : cinq étapes, une par point évalué. Générée par outils/nouveau-cours.cjs ; les nombres des questions sont vérifiés avec un vrai Python avant d'être écrits ici.",
+ "id": "python-revision-express",
+ "dossier": "python-revision-express",
+ "titre": "Python 01 et 02 — Révision express",
+ "surtitre": "Logique et programmation · 3e · LogProg 04",
+ "accueil": "Aujourd’hui : cinq questions pour revoir Python 01 et 02 avant l’évaluation.",
+ "mascotte": "🎯",
+ "sujet": "La trace, print, le message rouge, le pseudo-code",
+ "niveau": 3,
+ "reperes": [
+  [
+   "Dans le programme",
+   "Ce que ça veut dire"
+  ],
+  [
+   "<b>x = 5</b>",
+   "range 5 dans la boîte x"
+  ],
+  [
+   "<b>x = x + 2</b>",
+   "calcule à droite du =, puis range le résultat dans x"
+  ],
+  [
+   "<b>x + 2</b>, tout seul",
+   "calcule, puis oublie le résultat"
+  ],
+  [
+   "<b>print(x)</b>",
+   "affiche le contenu de la boîte x"
+  ],
+  [
+   "<b>print(\"x\")</b>",
+   "affiche le mot x"
+  ]
+ ],
+ "etapes": [
+  {
+   "partie": "A — Je lis un programme",
+   "titre": "La trace",
+   "min": 1,
+   "but": "Trouver ce qu’un programme affiche, une instruction après l’autre.",
+   "gestes": [
+    "Lis le programme de la question, <b>une instruction à la fois</b>.",
+    "Note la <b>valeur de la variable</b> après chaque instruction, sur ta feuille de brouillon."
+   ],
+   "coince": [
+    "Je me perds : je recommence à la première instruction et je note chaque valeur.",
+    "Python fait les instructions dans l’ordre où elles sont écrites, jamais dans un autre ordre."
+   ],
+   "preuve": [
+    {
+     "type": "qcm",
+     "q": "Un programme fait, dans l’ordre : total = 7, puis total = total - 2, puis total = total * 4, puis print(total). Qu’affiche-t-il ?",
+     "c": [
+      "20",
+      "5",
+      "26",
+      "7"
+     ],
+     "p": [
+      null,
+      "5, c’est la valeur après la deuxième instruction. Il en reste une : total = total * 4.",
+      "Tu as fait les deux calculs dans l’autre ordre. Python suit les instructions dans l’ordre où elles sont écrites.",
+      "7 est la valeur de départ : chaque instruction avec un = change ensuite la boîte."
+     ]
+    },
+    {
+     "type": "qcm",
+     "q": "Un programme fait, dans l’ordre : jetons = 3, puis jetons = jetons + 6, puis jetons = jetons * 2, puis print(jetons). Qu’affiche-t-il ?",
+     "c": [
+      "18",
+      "9",
+      "12",
+      "3"
+     ],
+     "p": [
+      null,
+      "9, c’est la valeur après la deuxième instruction. Il en reste une : jetons = jetons * 2.",
+      "Tu as fait les deux calculs dans l’autre ordre. Python suit les instructions dans l’ordre où elles sont écrites.",
+      "3 est la valeur de départ : chaque instruction avec un = change ensuite la boîte."
+     ]
+    },
+    {
+     "type": "qcm",
+     "q": "Un programme fait, dans l’ordre : niveau = 9, puis niveau = niveau - 3, puis niveau = niveau * 5, puis print(niveau). Qu’affiche-t-il ?",
+     "c": [
+      "30",
+      "6",
+      "42",
+      "9"
+     ],
+     "p": [
+      null,
+      "6, c’est la valeur après la deuxième instruction. Il en reste une : niveau = niveau * 5.",
+      "Tu as fait les deux calculs dans l’autre ordre. Python suit les instructions dans l’ordre où elles sont écrites.",
+      "9 est la valeur de départ : chaque instruction avec un = change ensuite la boîte."
+     ]
+    }
+   ]
+  },
+  {
+   "partie": "A — Je lis un programme",
+   "titre": "Le calcul qui n’est pas rangé",
+   "min": 1,
+   "but": "Voir qu’un calcul sans = ne change pas la variable.",
+   "gestes": [
+    "Cherche l’instruction qui n’a <b>pas de signe =</b>.",
+    "Demande-toi si son résultat est <b>rangé</b> dans la variable."
+   ],
+   "coince": [
+    "Une instruction comme x + 4 calcule, mais ne range rien : la variable garde sa valeur.",
+    "Pour garder le résultat, on écrit x = x + 4."
+   ],
+   "preuve": [
+    {
+     "type": "qcm",
+     "q": "Un programme fait, dans l’ordre : energie = 6, puis energie + 4, puis print(energie). Qu’affiche-t-il ?",
+     "c": [
+      "6",
+      "10",
+      "4",
+      "Un message d’erreur"
+     ],
+     "p": [
+      null,
+      "La deuxième instruction calcule 10, mais elle ne le range nulle part : il n’y a pas de =.",
+      "4 n’est rangé dans aucune boîte : energie garde sa valeur de départ.",
+      "Python accepte un calcul tout seul : il le fait, puis il oublie le résultat."
+     ]
+    },
+    {
+     "type": "qcm",
+     "q": "Un programme fait, dans l’ordre : billes = 15, puis billes - 5, puis print(billes). Qu’affiche-t-il ?",
+     "c": [
+      "15",
+      "10",
+      "5",
+      "Un message d’erreur"
+     ],
+     "p": [
+      null,
+      "La deuxième instruction calcule 10, mais elle ne le range nulle part : il n’y a pas de =.",
+      "5 n’est rangé dans aucune boîte : billes garde sa valeur de départ.",
+      "Python accepte un calcul tout seul : il le fait, puis il oublie le résultat."
+     ]
+    },
+    {
+     "type": "qcm",
+     "q": "Un programme fait, dans l’ordre : points = 4, puis points * 3, puis print(points). Qu’affiche-t-il ?",
+     "c": [
+      "4",
+      "12",
+      "3",
+      "Un message d’erreur"
+     ],
+     "p": [
+      null,
+      "La deuxième instruction calcule 12, mais elle ne le range nulle part : il n’y a pas de =.",
+      "3 n’est rangé dans aucune boîte : points garde sa valeur de départ.",
+      "Python accepte un calcul tout seul : il le fait, puis il oublie le résultat."
+     ]
+    }
+   ]
+  },
+  {
+   "partie": "A — Je lis un programme",
+   "titre": "Avec ou sans guillemets",
+   "min": 1,
+   "but": "Distinguer le nom d’une variable et un texte.",
+   "gestes": [
+    "Regarde ce qui est écrit <b>entre les parenthèses</b> de print.",
+    "Cherche les <b>guillemets</b>."
+   ],
+   "coince": [
+    "Avec des guillemets, Python affiche le mot tel quel.",
+    "Sans guillemets, Python affiche le contenu de la variable."
+   ],
+   "preuve": [
+    {
+     "type": "qcm",
+     "q": "Un programme fait, dans l’ordre : age = 14, puis print(\"age\"). Qu’affiche-t-il ?",
+     "c": [
+      "Le mot age",
+      "Le nombre 14",
+      "Le mot age, avec ses guillemets",
+      "Un message d’erreur"
+     ],
+     "p": [
+      null,
+      "14, ce serait print(age), sans guillemets : le contenu de la boîte.",
+      "Les guillemets servent à écrire le texte dans le programme : Python ne les affiche pas.",
+      "Un texte entre guillemets est toujours accepté par print."
+     ]
+    },
+    {
+     "type": "qcm",
+     "q": "Un programme fait, dans l’ordre : taille = 150, puis print(\"taille\"). Qu’affiche-t-il ?",
+     "c": [
+      "Le mot taille",
+      "Le nombre 150",
+      "Le mot taille, avec ses guillemets",
+      "Un message d’erreur"
+     ],
+     "p": [
+      null,
+      "150, ce serait print(taille), sans guillemets : le contenu de la boîte.",
+      "Les guillemets servent à écrire le texte dans le programme : Python ne les affiche pas.",
+      "Un texte entre guillemets est toujours accepté par print."
+     ]
+    },
+    {
+     "type": "qcm",
+     "q": "Un programme fait, dans l’ordre : prix = 20, puis print(\"prix\"). Qu’affiche-t-il ?",
+     "c": [
+      "Le mot prix",
+      "Le nombre 20",
+      "Le mot prix, avec ses guillemets",
+      "Un message d’erreur"
+     ],
+     "p": [
+      null,
+      "20, ce serait print(prix), sans guillemets : le contenu de la boîte.",
+      "Les guillemets servent à écrire le texte dans le programme : Python ne les affiche pas.",
+      "Un texte entre guillemets est toujours accepté par print."
+     ]
+    }
+   ]
+  },
+  {
+   "partie": "B — Je corrige et je traduis",
+   "titre": "Le message rouge",
+   "min": 1,
+   "but": "Lire un message d’erreur et trouver quoi corriger.",
+   "gestes": [
+    "Lis le <b>nom de l’erreur</b>, puis le nom que Python ne connaît pas.",
+    "Compare ce nom avec celui de la variable, <b>lettre par lettre</b>."
+   ],
+   "coince": [
+    "NameError veut dire : Python ne connaît pas ce nom.",
+    "Python distingue les majuscules et les minuscules : Score n’est pas score."
+   ],
+   "preuve": [
+    {
+     "type": "qcm",
+     "q": "Un programme fait, dans l’ordre : bonus = 2, puis print(Bonus). Python affiche en rouge : NameError: name 'Bonus' is not defined. Que faut-il corriger ?",
+     "c": [
+      "Écrire bonus avec une minuscule dans print.",
+      "Ajouter une parenthèse à la fin de print.",
+      "Mettre le 2 entre guillemets.",
+      "Écrire Print avec une majuscule."
+     ],
+     "p": [
+      null,
+      "Les parenthèses vont déjà par deux : une qui ouvre, une qui ferme.",
+      "Le message parle du nom Bonus, pas du nombre 2.",
+      "Print avec une majuscule serait un deuxième nom inconnu : print s’écrit en minuscules."
+     ]
+    },
+    {
+     "type": "qcm",
+     "q": "Un programme fait, dans l’ordre : temps = 30, puis print(Temps). Python affiche en rouge : NameError: name 'Temps' is not defined. Que faut-il corriger ?",
+     "c": [
+      "Écrire temps avec une minuscule dans print.",
+      "Ajouter une parenthèse à la fin de print.",
+      "Mettre le 30 entre guillemets.",
+      "Écrire Print avec une majuscule."
+     ],
+     "p": [
+      null,
+      "Les parenthèses vont déjà par deux : une qui ouvre, une qui ferme.",
+      "Le message parle du nom Temps, pas du nombre 30.",
+      "Print avec une majuscule serait un deuxième nom inconnu : print s’écrit en minuscules."
+     ]
+    },
+    {
+     "type": "qcm",
+     "q": "Un programme fait, dans l’ordre : lots = 6, puis print(Lots). Python affiche en rouge : NameError: name 'Lots' is not defined. Que faut-il corriger ?",
+     "c": [
+      "Écrire lots avec une minuscule dans print.",
+      "Ajouter une parenthèse à la fin de print.",
+      "Mettre le 6 entre guillemets.",
+      "Écrire Print avec une majuscule."
+     ],
+     "p": [
+      null,
+      "Les parenthèses vont déjà par deux : une qui ouvre, une qui ferme.",
+      "Le message parle du nom Lots, pas du nombre 6.",
+      "Print avec une majuscule serait un deuxième nom inconnu : print s’écrit en minuscules."
+     ]
+    }
+   ]
+  },
+  {
+   "partie": "B — Je corrige et je traduis",
+   "titre": "Du pseudo-code à Python",
+   "min": 1,
+   "but": "Traduire une instruction de pseudo-code en Python.",
+   "gestes": [
+    "Repère la <b>flèche ←</b> : en Python, elle s’écrit avec le signe =.",
+    "Repère le <b>signe du calcul</b> : en Python, multiplier s’écrit avec l’étoile *."
+   ],
+   "coince": [
+    "La variable qui reçoit le résultat s’écrit à gauche du = , le calcul à droite.",
+    "« Afficher x » s’écrit print(x), sans guillemets."
+   ],
+   "preuve": [
+    {
+     "type": "qcm",
+     "q": "Le pseudo-code dit : billes ← billes × 3. Quelle instruction Python écris-tu ?",
+     "c": [
+      "billes = billes * 3",
+      "billes * 3",
+      "billes * 3 = billes",
+      "billes ← billes * 3"
+     ],
+     "p": [
+      null,
+      "Sans = , le résultat du calcul est perdu : la boîte billes ne change pas.",
+      "La boîte qui reçoit le résultat s’écrit à gauche du = , le calcul à droite.",
+      "La flèche ← n’existe pas en Python : ranger dans une boîte s’écrit avec = ."
+     ]
+    },
+    {
+     "type": "qcm",
+     "q": "Le pseudo-code dit : jetons ← jetons + 5. Quelle instruction Python écris-tu ?",
+     "c": [
+      "jetons = jetons + 5",
+      "jetons + 5",
+      "jetons + 5 = jetons",
+      "jetons ← jetons + 5"
+     ],
+     "p": [
+      null,
+      "Sans = , le résultat du calcul est perdu : la boîte jetons ne change pas.",
+      "La boîte qui reçoit le résultat s’écrit à gauche du = , le calcul à droite.",
+      "La flèche ← n’existe pas en Python : ranger dans une boîte s’écrit avec = ."
+     ]
+    },
+    {
+     "type": "qcm",
+     "q": "Le pseudo-code dit : points ← points − 2. Quelle instruction Python écris-tu ?",
+     "c": [
+      "points = points - 2",
+      "points - 2",
+      "points - 2 = points",
+      "points ← points - 2"
+     ],
+     "p": [
+      null,
+      "Sans = , le résultat du calcul est perdu : la boîte points ne change pas.",
+      "La boîte qui reçoit le résultat s’écrit à gauche du = , le calcul à droite.",
+      "La flèche ← n’existe pas en Python : ranger dans une boîte s’écrit avec = ."
+     ]
+    }
+   ]
+  }
+ ],
+ "moi": [
+  {
+   "n": "1. Sais-tu trouver ce qu’un programme affiche ?",
+   "regarde": "Critère : Reconnaître et manipuler des variables, des constantes et des types d'affectation.",
+   "A": "Je fais la trace seul, et j’explique à un camarade pourquoi un calcul qui n’est pas rangé est perdu.",
+   "B": "Je fais la trace seul, sans me tromper.",
+   "C": "Je fais la trace quand on me rappelle de noter chaque valeur.",
+   "D": "Je ne sais pas encore par où commencer."
+  },
+  {
+   "n": "2. Sais-tu dire ce que print affiche, avec ou sans guillemets ?",
+   "regarde": "Critère : Appliquer les instructions d'entrée et de sortie.",
+   "A": "Je le dis à coup sûr, et je l’explique à un camarade.",
+   "B": "Je le dis à coup sûr.",
+   "C": "J’hésite encore entre le mot et le contenu de la variable.",
+   "D": "Je ne vois pas encore la différence."
+  },
+  {
+   "n": "3. Sais-tu traduire du pseudo-code en Python ?",
+   "regarde": "Critère : Traduire un algorithme dans un langage informatique structuré.",
+   "A": "Je traduis seul, et je corrige un message rouge en le lisant.",
+   "B": "Je traduis seul.",
+   "C": "Je traduis avec l’aide-mémoire sous les yeux.",
+   "D": "Je ne sais pas encore remplacer la flèche ni le signe du calcul."
+  }
+ ],
+ "fin": {
+  "titre": "Révision terminée",
+  "bulle": "Prêt !",
+  "texte": "Tu as revu les cinq points de Python 01 et 02 : la trace, le calcul rangé, les guillemets, le message rouge et le pseudo-code.",
+  "citation": {
+   "texte": "Nous sommes ce que nous faisons de manière répétée. L’excellence n’est donc pas un acte, mais une habitude.",
+   "auteur": "Will Durant",
+   "source": "The Story of Philosophy (1926), à propos d’Aristote, traduit de l’anglais",
+   "lien": "Réviser, c’est refaire : cinq questions de plus, et le geste devient une habitude."
+  },
+  "plus": "Dans Thonny : écris un programme de quatre instructions. Il range 12 dans billes, en enlève 5, double le résultat, puis l’affiche. Il doit afficher 14."
+ },
+ "essentiel": [
+  "Une variable est une <strong>boîte</strong> avec un nom : billes = 8 range 8 dans la boîte billes.",
+  "billes = billes + 5 : Python calcule à droite du = , puis <strong>range</strong> le résultat dans la boîte.",
+  "Pour savoir ce qu’un programme affiche, je fais la <strong>trace</strong> : la valeur de la variable après chaque instruction.",
+  "Un calcul qui n’est <strong>pas rangé</strong> est perdu : billes + 5 tout seul ne change pas la boîte.",
+  "print(billes) affiche le <strong>contenu</strong> de la boîte ; print(\"billes\") affiche le <strong>mot</strong> billes.",
+  "<strong>NameError</strong> : un nom inconnu. Billes n’est pas billes. Je lis le message, je compare les noms, je corrige."
+ ],
+ "quiz": [
+  {
+   "q": "Un programme fait, dans l’ordre : score = 8, puis score = score - 3, puis score = score * 2, puis print(score). Qu’affiche-t-il ?",
+   "c": [
+    "10",
+    "5",
+    "13",
+    "8"
+   ],
+   "p": [
+    null,
+    "5, c’est la valeur après la deuxième instruction. Il en reste une : score = score * 2.",
+    "Tu as fait les deux calculs dans l’autre ordre. Python suit les instructions dans l’ordre où elles sont écrites.",
+    "8 est la valeur de départ : chaque instruction avec un = change ensuite la boîte."
+   ],
+   "h": "Note la valeur après chaque instruction.",
+   "e": "Je fais la trace : la valeur de la variable après chaque instruction, dans l’ordre."
+  },
+  {
+   "q": "Un programme fait, dans l’ordre : vies = 7, puis vies - 2, puis print(vies). Qu’affiche-t-il ?",
+   "c": [
+    "7",
+    "5",
+    "2",
+    "Un message d’erreur"
+   ],
+   "p": [
+    null,
+    "La deuxième instruction calcule 5, mais elle ne le range nulle part : il n’y a pas de =.",
+    "2 n’est rangé dans aucune boîte : vies garde sa valeur de départ.",
+    "Python accepte un calcul tout seul : il le fait, puis il oublie le résultat."
+   ],
+   "h": "Y a-t-il un = dans la deuxième instruction ?",
+   "e": "Un calcul qui n’est pas rangé avec = est perdu : la variable garde sa valeur."
+  },
+  {
+   "q": "Un programme fait, dans l’ordre : score = 12, puis print(\"score\"). Qu’affiche-t-il ?",
+   "c": [
+    "Le mot score",
+    "Le nombre 12",
+    "Le mot score, avec ses guillemets",
+    "Un message d’erreur"
+   ],
+   "p": [
+    null,
+    "12, ce serait print(score), sans guillemets : le contenu de la boîte.",
+    "Les guillemets servent à écrire le texte dans le programme : Python ne les affiche pas.",
+    "Un texte entre guillemets est toujours accepté par print."
+   ],
+   "h": "Entre guillemets : un texte ou le nom d’une boîte ?",
+   "e": "Entre guillemets, c’est un texte : Python affiche le mot, pas le contenu de la variable."
+  },
+  {
+   "q": "Un programme fait, dans l’ordre : vies = 4, puis print(Vies). Python affiche en rouge : NameError: name 'Vies' is not defined. Que faut-il corriger ?",
+   "c": [
+    "Écrire vies avec une minuscule dans print.",
+    "Ajouter une parenthèse à la fin de print.",
+    "Mettre le 4 entre guillemets.",
+    "Écrire Print avec une majuscule."
+   ],
+   "p": [
+    null,
+    "Les parenthèses vont déjà par deux : une qui ouvre, une qui ferme.",
+    "Le message parle du nom Vies, pas du nombre 4.",
+    "Print avec une majuscule serait un deuxième nom inconnu : print s’écrit en minuscules."
+   ],
+   "h": "Quel nom Python ne connaît-il pas ?",
+   "e": "NameError : un nom inconnu. Python distingue les majuscules et les minuscules."
+  },
+  {
+   "q": "Le pseudo-code dit : score ← score × 2. Quelle instruction Python écris-tu ?",
+   "c": [
+    "score = score * 2",
+    "score * 2",
+    "score * 2 = score",
+    "score ← score * 2"
+   ],
+   "p": [
+    null,
+    "Sans = , le résultat du calcul est perdu : la boîte score ne change pas.",
+    "La boîte qui reçoit le résultat s’écrit à gauche du = , le calcul à droite.",
+    "La flèche ← n’existe pas en Python : ranger dans une boîte s’écrit avec = ."
+   ],
+   "h": "Deux signes changent entre le pseudo-code et Python.",
+   "e": "La flèche ← devient = , le signe × devient * , et « Afficher x » devient print(x)."
+  }
+ ]
+}

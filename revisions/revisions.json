@@ -272,6 +272,26 @@
           "jeu": "mots-croises"
         }
       ]
+    },
+    "python-revision-express": {
+      "titre": "Python 01 et 02 — Révision express",
+      "sujet": "La trace, print, le message rouge, le pseudo-code",
+      "niveau": 3,
+      "activites": [
+        {
+          "genre": "L'essentiel",
+          "chemin": "revisions/je-revise/?cours=python-revision-express#resume"
+        },
+        {
+          "genre": "Quiz",
+          "chemin": "revisions/je-revise/?cours=python-revision-express#quiz",
+          "suivi": "quiz:python-revision-express"
+        },
+        {
+          "genre": "Cartes",
+          "chemin": "revisions/je-revise/?cours=python-revision-express#cartes"
+        }
+      ]
     }
   },
   "autres": [
