@@ -1,0 +1,151 @@
+{
+ "_lisezmoi": "Python — La chasse aux bugs — l’essentiel, le quiz et les cartes de la page commune revisions/je-revise/?cours=python-bugs. Se modifie ici.",
+ "titre": "Python — La chasse aux bugs",
+ "surtitre": "Logique et programmation · 3e",
+ "essentiel": [
+  "Un bug <strong>qui crie</strong> arrête le programme avec une ligne rouge. Un bug <strong>silencieux</strong> le laisse tourner : c’est le résultat qui est faux.",
+  "<strong>SyntaxError</strong> : un signe manque (guillemet, parenthèse, virgule). <strong>NameError</strong> : un nom mal écrit. <strong>TypeError</strong> : un texte là où Python attend un nombre.",
+  "<code>input( )</code> rend toujours un <strong>texte</strong>. Pour calculer, j’écris <code>int(input( ))</code>.",
+  "L’<strong>ordre</strong> des lignes fait partie du programme : Python les exécute de haut en bas.",
+  "La méthode : j’<strong>exécute</strong>, je <strong>lis</strong>, je <strong>compare</strong> avec ce qui est attendu, je change <strong>une seule chose</strong> à la fois."
+ ],
+ "quiz": [
+  {
+   "q": "Python affiche SyntaxError. Que cherches-tu d’abord ?",
+   "c": [
+    "Un signe qui manque : guillemet, parenthèse ou virgule.",
+    "Un nom mal écrit.",
+    "Un calcul faux.",
+    "Une ligne au mauvais endroit."
+   ],
+   "p": [
+    null,
+    "Un nom mal écrit donne une NameError.",
+    "Un calcul faux ne donne aucun message.",
+    "Des lignes dans le mauvais ordre ne donnent pas de SyntaxError."
+   ],
+   "h": "Syntax : la façon d’écrire.",
+   "e": "SyntaxError : un signe manque. Python n’a même pas commencé à exécuter le programme."
+  },
+  {
+   "q": "score = score + bonnus donne une NameError. Pourquoi ?",
+   "c": [
+    "Python ne connaît pas le nom bonnus : il est mal écrit.",
+    "On ne peut pas additionner deux nombres.",
+    "Il manque une parenthèse.",
+    "score est un texte."
+   ],
+   "p": [
+    null,
+    "Additionner deux nombres est permis.",
+    "Une parenthèse oubliée donne une SyntaxError.",
+    "Un texte pris pour un nombre donne une TypeError."
+   ],
+   "h": "Relis chaque nom, lettre par lettre.",
+   "e": "NameError : un nom que Python ne connaît pas, souvent une faute de frappe ou une majuscule en trop."
+  },
+  {
+   "q": "pieces = input(\"Combien de pièces ? \"), puis score = pieces + 5. Quel message s’affiche ?",
+   "c": [
+    "TypeError",
+    "NameError",
+    "SyntaxError",
+    "Aucun message"
+   ],
+   "p": [
+    null,
+    "Tous les noms sont bien écrits.",
+    "Aucun signe ne manque.",
+    "Un texte + un nombre : Python s’arrête."
+   ],
+   "h": "input( ) rend un texte.",
+   "e": "input( ) rend un texte : texte + nombre arrête le programme. Il faut int(input( ))."
+  },
+  {
+   "q": "On tape 7. pieces = input( ), puis print(pieces * 3) affiche…",
+   "c": [
+    "777",
+    "21",
+    "Une ligne rouge",
+    "7 * 3"
+   ],
+   "p": [
+    null,
+    "21, ce serait avec int(input( )).",
+    "Un texte × 3 est permis : aucun message.",
+    "print affiche le résultat, pas le calcul."
+   ],
+   "h": "Un texte multiplié est répété.",
+   "e": "Le texte \"7\" répété 3 fois : 777. Aucun message rouge : c’est un bug silencieux."
+  },
+  {
+   "q": "Un programme s’exécute sans ligne rouge, mais le résultat est faux. C’est un bug…",
+   "c": [
+    "silencieux",
+    "qui crie",
+    "de frappe",
+    "impossible"
+   ],
+   "p": [
+    null,
+    "Un bug qui crie arrête le programme avec une ligne rouge.",
+    "Une faute de frappe dans un nom donne une NameError.",
+    "Si le résultat est faux, il y a bien un bug."
+   ],
+   "h": "Il ne dit rien.",
+   "e": "Un bug silencieux se trouve en comparant ce qui s’affiche avec ce qui est attendu."
+  },
+  {
+   "q": "vies = 5, degats = 2, puis vies = vies + degats. Le joueur vient d’être touché : que faut-il corriger ?",
+   "c": [
+    "Le signe : vies = vies - degats.",
+    "Le nom vies.",
+    "Ajouter int( ).",
+    "Rien, 7 est juste."
+   ],
+   "p": [
+    null,
+    "Les noms sont bien écrits : aucun message rouge.",
+    "5 et 2 sont déjà des nombres.",
+    "Touché, il doit perdre des vies : 3, pas 7."
+   ],
+   "h": "Compare 7 avec ce qui est attendu.",
+   "e": "Mauvais calcul : aucun message, mais 7 au lieu de 3."
+  },
+  {
+   "q": "Pourquoi changer une seule chose à la fois ?",
+   "c": [
+    "Pour savoir quelle correction a réparé le bug.",
+    "Pour aller plus vite.",
+    "Parce que Python l’exige.",
+    "Pour éviter les messages rouges."
+   ],
+   "p": [
+    null,
+    "Ce n’est pas plus rapide, mais c’est plus sûr.",
+    "Python accepte plusieurs changements.",
+    "Un message rouge aide : il dit où chercher."
+   ],
+   "h": "Si je change trois choses et que ça marche…",
+   "e": "Une chose à la fois, puis j’exécute : je sais ce qui a marché."
+  },
+  {
+   "q": "Les mêmes lignes, dans un autre ordre, donnent…",
+   "c": [
+    "un autre programme, qui peut afficher autre chose.",
+    "exactement le même résultat.",
+    "toujours une SyntaxError.",
+    "un programme plus rapide."
+   ],
+   "p": [
+    null,
+    "Python exécute de haut en bas : l’ordre change le résultat.",
+    "L’ordre ne fait manquer aucun signe.",
+    "La vitesse ne change pas."
+   ],
+   "h": "Python lit de haut en bas.",
+   "e": "L’ordre des lignes fait partie du programme."
+  }
+ ],
+ "mots_croises": true
+}

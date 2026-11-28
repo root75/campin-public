@@ -1,0 +1,152 @@
+{
+ "_lisezmoi": "Python 04 — Si… alors, sinon — l’essentiel, le quiz et les cartes de la page commune revisions/je-revise/?cours=python-4. Se modifie ici.",
+ "titre": "Python 04 — Si… alors, sinon",
+ "surtitre": "Logique et programmation · 3e",
+ "essentiel": [
+  "Une <strong>comparaison</strong> vaut <code>True</code> (vrai) ou <code>False</code> (faux) : <code>&gt;</code> plus grand, <code>&gt;=</code> plus grand ou égal, <code>==</code> égal.",
+  "<code>=</code> range une valeur dans une variable. <code>==</code> compare. Dans un <code>if</code>, c’est toujours <code>==</code>.",
+  "Trois règles du <code>if</code> : la condition, les <strong>deux-points</strong>, puis la ligne <strong>décalée</strong> en dessous.",
+  "Une ligne décalée sous le <code>if</code> ne s’exécute que si la condition est vraie. Une ligne non décalée s’exécute <strong>toujours</strong>.",
+  "<code>else</code> donne l’autre route : une réponse, deux chemins.",
+  "Je teste <strong>au bord</strong> : avec <code>&gt; 50</code>, 50 ne passe pas ; avec <code>&gt;= 50</code>, 50 passe."
+ ],
+ "quiz": [
+  {
+   "q": "print(5 > 3) affiche…",
+   "c": [
+    "True",
+    "False",
+    "5 > 3",
+    "Une erreur"
+   ],
+   "p": [
+    null,
+    "5 est bien plus grand que 3.",
+    "print affiche la valeur de la comparaison.",
+    "Comparer deux nombres est permis."
+   ],
+   "h": "Une comparaison est vraie ou fausse.",
+   "e": "Une comparaison vaut True ou False."
+  },
+  {
+   "q": "score vaut 50. La condition score > 50 est…",
+   "c": [
+    "fausse : 50 n’est pas plus grand que 50.",
+    "vraie : 50 atteint le seuil.",
+    "une erreur.",
+    "vraie une fois sur deux."
+   ],
+   "p": [
+    null,
+    "Atteindre le seuil suffit avec >=, pas avec >.",
+    "La comparaison est permise.",
+    "La même comparaison donne toujours la même valeur."
+   ],
+   "h": "Plus grand, ou plus grand ou égal ?",
+   "e": "50 > 50 est faux, 50 >= 50 est vrai."
+  },
+  {
+   "q": "Quel signe compare deux valeurs pour savoir si elles sont égales ?",
+   "c": [
+    "==",
+    "=",
+    "=>",
+    "><"
+   ],
+   "p": [
+    null,
+    "Un seul = range une valeur dans une variable.",
+    "=> n’existe pas en Python.",
+    "Ce signe n’existe pas en Python."
+   ],
+   "h": "Deux fois le même signe.",
+   "e": "== compare, = range une valeur."
+  },
+  {
+   "q": "Que manque-t-il à cette ligne : if vies == 0",
+   "c": [
+    "Les deux-points, à la fin.",
+    "Une parenthèse.",
+    "Un guillemet.",
+    "Rien."
+   ],
+   "p": [
+    null,
+    "Un if n’a pas besoin de parenthèses.",
+    "Il n’y a pas de texte dans cette ligne.",
+    "Sans les deux-points, Python s’arrête : SyntaxError."
+   ],
+   "h": "La ligne du if finit toujours par le même signe.",
+   "e": "if, la condition, les deux-points, puis la ligne décalée."
+  },
+  {
+   "q": "Sous un if, quelle ligne ne s’exécute que si la condition est vraie ?",
+   "c": [
+    "La ligne décalée vers la droite.",
+    "La ligne juste au-dessus du if.",
+    "Toutes les lignes du programme.",
+    "La dernière ligne du programme."
+   ],
+   "p": [
+    null,
+    "Elle s’exécute avant le if, toujours.",
+    "Les lignes non décalées s’exécutent toujours.",
+    "Si elle n’est pas décalée, elle s’exécute toujours."
+   ],
+   "h": "Regarde le début des lignes.",
+   "e": "Le décalage dit à Python ce qui dépend de la condition."
+  },
+  {
+   "q": "À quoi sert else ?",
+   "c": [
+    "À dire quoi faire quand la condition est fausse.",
+    "À répéter le if.",
+    "À arrêter le programme.",
+    "À comparer deux nombres."
+   ],
+   "p": [
+    null,
+    "else ne répète rien.",
+    "Le programme continue après le else.",
+    "Comparer, c’est le rôle de >, >= et ==."
+   ],
+   "h": "En français : sinon.",
+   "e": "if pour une route, else pour tout le reste."
+  },
+  {
+   "q": "pieces vaut 7 et score = pieces * 10. Puis : if score > 50, alors score = score + 100. Que vaut score ?",
+   "c": [
+    "170",
+    "70",
+    "100",
+    "50"
+   ],
+   "p": [
+    null,
+    "70 > 50 est vrai : le bonus s’ajoute.",
+    "Le bonus s’ajoute au score, il ne le remplace pas.",
+    "50 est le seuil, pas le score."
+   ],
+   "h": "70 > 50 ?",
+   "e": "70 > 50 est vrai : 70 + 100 = 170."
+  },
+  {
+   "q": "Pour vérifier un if avec score > 50, quel essai est le plus utile ?",
+   "c": [
+    "Pile sur le seuil : un score de 50.",
+    "Un très grand score.",
+    "Un score de 0.",
+    "N’importe lequel."
+   ],
+   "p": [
+    null,
+    "Un grand score passe avec > comme avec >=.",
+    "0 échoue avec > comme avec >=.",
+    "Seul l’essai au bord distingue > de >=."
+   ],
+   "h": "Là où > et >= ne donnent pas la même réponse.",
+   "e": "L’essai au bord montre si le signe est le bon."
+  }
+ ],
+ "mots_croises": true
+}

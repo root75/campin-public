@@ -129,6 +129,46 @@
         { "mot": "point", "indice": "Un nombre à virgule s'écrit avec lui : 3.5." }
       ]
     },
+    "python-bugs": {
+      "titre": "Python — La chasse aux bugs",
+      "sujet": "SyntaxError, NameError, TypeError, bugs silencieux",
+      "niveau": 3,
+      "revision": "revisions/je-revise/?cours=python-bugs",
+      "mots": [
+        { "mot": "SyntaxError", "indice": "Le message rouge quand un signe manque." },
+        { "mot": "NameError", "indice": "Le message rouge quand un nom est mal écrit." },
+        { "mot": "TypeError", "indice": "Le message rouge quand un texte est pris pour un nombre." },
+        { "mot": "silencieux", "indice": "Un bug sans ligne rouge : le programme tourne, le résultat est faux." },
+        { "mot": "guillemet", "indice": "Il ouvre et ferme un texte. Oublié, il arrête le programme." },
+        { "mot": "parenthèse", "indice": "Ouverte après print, elle doit se refermer." },
+        { "mot": "ordre", "indice": "Python lit de haut en bas : les lignes doivent être dans le bon …" },
+        { "mot": "attendu", "indice": "Je compare ce qui s’affiche avec ce qui est …" },
+        { "mot": "prédire", "indice": "Dire ce que le programme va afficher, avant de le lancer." },
+        { "mot": "exécuter", "indice": "Lancer le programme pour voir ce qu’il fait." },
+        { "mot": "seule", "indice": "La méthode : je change une … chose à la fois." },
+        { "mot": "int", "indice": "Elle transforme le texte tapé en nombre." }
+      ]
+    },
+    "python-4": {
+      "titre": "Python 04 — Si… alors, sinon",
+      "sujet": "comparaisons, if, else",
+      "niveau": 3,
+      "revision": "revisions/je-revise/?cours=python-4",
+      "mots": [
+        { "mot": "condition", "indice": "Ce que Python vérifie après le mot if : vraie ou fausse." },
+        { "mot": "True", "indice": "La valeur d’une comparaison vraie, en Python." },
+        { "mot": "False", "indice": "La valeur d’une comparaison fausse, en Python." },
+        { "mot": "else", "indice": "Le mot Python qui veut dire « sinon »." },
+        { "mot": "losange", "indice": "Dans un logigramme, la forme qui pose une question." },
+        { "mot": "décalée", "indice": "Sous un if, la ligne qui dépend de la condition est … vers la droite." },
+        { "mot": "deux-points", "indice": "Le signe qui termine la ligne du if." },
+        { "mot": "seuil", "indice": "Le nombre à partir duquel la condition change de valeur." },
+        { "mot": "comparer", "indice": "Ce que font les signes >, >= et == avec deux valeurs." },
+        { "mot": "branche", "indice": "Un losange en a deux : oui et non." },
+        { "mot": "bonus", "indice": "Des points en plus, seulement si la condition est vraie." },
+        { "mot": "trace", "indice": "Suivre un programme ligne par ligne en notant les valeurs : faire la …" }
+      ]
+    },
     "labo-07": {
       "titre": "Labo 07 — Dans les coulisses du PC",
       "sujet": "Machine, Windows, application et fichier",
