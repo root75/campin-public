@@ -67,7 +67,14 @@
       "titre": "Mise en forme 03 — Le rat de ville (formatif)",
       "chemin": "rat-de-ville/pas-a-pas/",
       "etapes": 6,
-      "cases": { "1": 3, "2": 12, "3": 14, "4": 12, "5": 2, "6": 18 },
+      "cases": {
+        "1": 3,
+        "2": 12,
+        "3": 14,
+        "4": 12,
+        "5": 2,
+        "6": 18
+      },
       "criteres": 4
     },
     {
@@ -77,6 +84,14 @@
       "etapes": 7,
       "preuves": "derriere-lecran/pas-a-pas/preuves.json",
       "criteres": 4
+    },
+    {
+      "id": "python-revision-express",
+      "titre": "Python 01 et 02 — Révision express",
+      "chemin": "python-revision-express/pas-a-pas/",
+      "etapes": 5,
+      "preuves": "python-revision-express/pas-a-pas/preuves.json",
+      "criteres": 3
     }
   ]
 }
