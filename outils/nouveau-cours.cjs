@@ -8,7 +8,11 @@
    La fiche à remplir : pas-a-pas/modele/sequence.json. La commande écrit, dans <dossier>/pas-a-pas/ :
      index.html     la page, tirée de pas-a-pas/modele/index.html
      fiche.js       les données lues par le moteur (blocs.js)
-     preuves.json   les questions corrigées par le serveur, trois versions par étape
+     preuves.json   les questions corrigées par le serveur, trois versions par étape — seulement quand TOUTES les
+                    étapes ont une question : dès qu'une étape se prouve par des champs, les questions sont tirées
+                    et corrigées dans la page (trois versions, tirées de l'adresse de l'élève). Raison : avec un
+                    fichier de preuves, Code.gs n'accepte un « juste » que de sa propre correction, et une étape à
+                    champs ne serait jamais comptée.
      revision.json  l'essentiel, le quiz et les cartes de la page commune revisions/je-revise/?cours=<id>
    et inscrit le cours dans pas-a-pas/cours.json, revisions/revisions.json (avec la ligne de secours de
    revisions/index.html) et mots-croises/grilles.json.
@@ -123,11 +127,11 @@ function controle(F) {
 /* ---------- Ce qu'on écrit ---------- */
 function construit(F, modele) {
   const dossier = (F.dossier || F.id) + '/pas-a-pas/', base = SITE + dossier;
-  const serveur = F.etapes.some(e => Array.isArray(e.preuve)), jeRevise = 'revisions/je-revise/?cours=' + F.id;
+  const serveur = F.etapes.every(e => Array.isArray(e.preuve)), jeRevise = 'revisions/je-revise/?cours=' + F.id;
   const revision = JSON.stringify({ _lisezmoi: F.titre + ' — ' + MARQUE + ' depuis sequence.json : ne pas modifier ici. Lu par revisions/je-revise/.',
     titre: F.titre, surtitre: F.surtitre, essentiel: F.essentiel, quiz: F.quiz || [], mots_croises: !!F.mots_croises }, null, 1) + '\n';
-  const preuves = { _lisezmoi: F.titre + ' — ' + MARQUE + ' depuis sequence.json : ne pas modifier ici. Une liste par étape ; trois versions tirées et corrigées par le serveur ; liste vide = étape à champs.',
-    blocs: F.etapes.map(e => Array.isArray(e.preuve) ? e.preuve : []) };
+  const preuves = { _lisezmoi: F.titre + ' — ' + MARQUE + ' depuis sequence.json : ne pas modifier ici. Une liste par étape : trois versions, tirées et corrigées par le serveur.',
+    blocs: F.etapes.map(e => e.preuve) };
   const preuvesJson = JSON.stringify(preuves, null, 1) + '\n';
   const blocs = F.etapes.map(e => {
     const B = { partie: e.partie, titre: e.titre, min: Number(e.min), veux: e.but };
@@ -135,7 +139,9 @@ function construit(F, modele) {
     B.gestes = e.gestes;
     if (e.vois) B.vois = e.vois;
     B.coince = e.coince;
-    B.q = Array.isArray(e.preuve) ? { serveur: true } : { type: 'enquete', q: e.preuve.q, champs: e.preuve.champs };
+    if (!Array.isArray(e.preuve)) B.q = { type: 'enquete', q: e.preuve.q, champs: e.preuve.champs };
+    else if (serveur) B.q = { serveur: true };
+    else { B.q = e.preuve[0]; B.variantes = e.preuve.slice(1).map(q => ({ q })); }
     return B;
   });
   const grille = { intro: '<p><b>Avant de partir : où en es-tu ?</b> Pour chaque question, lis les quatre phrases, de A à D, et clique sur celle qui te ressemble le plus. Ce n’est pas coté : ta réponse t’aide à voir ce qu’il te reste à travailler, et ton professeur voit où t’aider.</p>',

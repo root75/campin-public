@@ -23,7 +23,7 @@ node outils/verifier-cours.cjs <id>                                          # l
 | `id`, `dossier`, `titre`, `surtitre`, `accueil`, `mascotte`, `reperes` | la page du cours (`index.html`, tirée de `modele/index.html`) et son entrée au catalogue |
 | `etapes` : `partie`, `titre`, `min`, `but`, `observe` (facultatif), `gestes`, `coince`, `preuve` | les blocs de `fiche.js` |
 | `preuve` = `{ q, champs:[{cle, nom, max, exemple, pourcent}] }` | **des champs qui prouvent le geste** (l'élève recopie ce qu'il lit à son écran ; gardé, non corrigé) |
-| `preuve` = trois versions `qcm`, `saisie` ou `trous` | une question tirée et corrigée par le serveur (`preuves.json`, règle anti-recopie) |
+| `preuve` = trois versions `qcm`, `saisie` ou `trous` | une question en trois versions (règle anti-recopie). Toutes les étapes ont une question : tirée et corrigée **par le serveur** (`preuves.json`). Une étape au moins se prouve par des champs : tirée de l'adresse de l'élève et corrigée **dans la page**, sans fichier de preuves — avec lui, `Code.gs` n'accepte un « juste » que de sa propre correction, et l'étape à champs ne serait jamais comptée |
 | `moi` | l'auto-évaluation de fin (`GRILLE`, et `criteres` au catalogue) |
 | `fin` | l'écran de fin, avec sa citation |
 | `essentiel`, `quiz` | la page « je révise » du cours : `revisions/je-revise/?cours=<id>` (page commune, lit `revision.json`) |
@@ -38,8 +38,9 @@ catalogue, aux révisions (avec la ligne de secours de `revisions/index.html`) e
 **La fiche reste la seule source** : pour changer le cours, changer `sequence.json` et relancer la commande, qui
 réécrit ses fichiers à l'identique près. Elle n'écrase jamais un fichier écrit à la main. Un cours qui demande plus
 que la fiche ne sait dire (un simulateur, une rédaction contrôlée, du Python) s'écrit comme avant, ci-dessous ; ce
-qui manque à la fiche s'ajoute à la commande, jamais dans un cours. Contrôle : `tests/nouveau-cours.cjs`, et le
-travail « cours » des PR génère le modèle puis l'ouvre dans Chromium.
+qui manque à la fiche s'ajoute à la commande, jamais dans un cours. Contrôle : `tests/nouveau-cours.cjs`, le
+travail « cours » des PR (génère le modèle puis l'ouvre dans Chromium), et devant le vrai `Code.gs`
+`campin-pedagogique/outils/pas-a-pas/essai-cours-genere.cjs` (les deux façons de corriger).
 
 ## Les quatre fichiers d'un cours
 
