@@ -1,12 +1,186 @@
 {
-  "note": "« Un coup de pouce en maths », la tuile du portail (portail/portail.js). Elle mène l'élève droit au cours de Khan Academy de son année, pour s'entraîner à son rythme en plus de son cours de maths. « cours » : les cours de Khan Academy, des liens seulement (adresses données par le professeur). « annees » : les cours montrés à chaque année, dans l'ordre ; une classe dont le nom commence par 1, 2 ou 3 a son année. Sans classe connue (page publique, professeur), tous les cours sont proposés. « encouragements » : une phrase tirée au hasard à chaque visite. Rien n'est coté ni enregistré. Changer un lien ou une phrase = changer une ligne ici.",
+  "note": "« Un coup de pouce en maths », la tuile du portail (portail/portail.js). Elle mène l'élève droit au cours de Khan Academy de son année, pour s'entraîner à son rythme en plus de son cours de maths. « cours » : les cours de Khan Academy, des liens seulement (adresses données par le professeur). « annees » : les cours montrés à chaque année, dans l'ordre ; une classe dont le nom commence par 1, 2 ou 3 a son année. Sans classe connue (page publique, professeur), tous les cours sont proposés. « encouragements » : une phrase tirée au hasard à chaque visite. « exercices » : par année, de petits échauffements joués dans la tuile, écrits pour le site (aucun énoncé de Khan Academy recopié) ; chaque question a un indice et trois variantes, « reponse » est le texte exact d'un des choix, « suite » est l'exercice de Khan Academy où continuer. Avec plusieurs échauffements pour une année, il en vient un autre chaque jour d'école. Rien n'est coté ni enregistré. Changer un lien ou une phrase = changer une ligne ici.",
   "cours": {
-    "1": { "titre": "1re année secondaire", "url": "https://fr.khanacademy.org/math/be-1ere-secondaire2" },
-    "2": { "titre": "2e année secondaire", "url": "https://fr.khanacademy.org/math/be-2eme-secondaire2" },
-    "ce1d": { "titre": "Révisions pour le CE1D", "url": "https://fr.khanacademy.org/math/revisions-ce1dv2" },
-    "3": { "titre": "3e année secondaire", "url": "https://fr.khanacademy.org/math/3eme-annee-secondaire" }
+    "1": {
+      "titre": "1re année secondaire",
+      "url": "https://fr.khanacademy.org/math/be-1ere-secondaire2"
+    },
+    "2": {
+      "titre": "2e année secondaire",
+      "url": "https://fr.khanacademy.org/math/be-2eme-secondaire2"
+    },
+    "ce1d": {
+      "titre": "Révisions pour le CE1D",
+      "url": "https://fr.khanacademy.org/math/revisions-ce1dv2"
+    },
+    "3": {
+      "titre": "3e année secondaire",
+      "url": "https://fr.khanacademy.org/math/3eme-annee-secondaire"
+    }
   },
-  "annees": { "1": ["1"], "2": ["2", "ce1d"], "3": ["3"] },
+  "annees": {
+    "1": [
+      "1"
+    ],
+    "2": [
+      "2",
+      "ce1d"
+    ],
+    "3": [
+      "3"
+    ]
+  },
+  "exercices": {
+    "3": [
+      {
+        "id": "puissances-exposants-entiers",
+        "titre": "Les puissances à exposant entier",
+        "suite": "https://fr.khanacademy.org/math/3eme-annee-secondaire/xd903d14ae2b1276e:algebre-puissances-et-racines/xd903d14ae2b1276e:rappels-puissances-a-exposants-entiers/e/exponents_2",
+        "questions": [
+          {
+            "indice": "Un exposant négatif ne rend pas le nombre négatif : il veut dire « 1 sur ».",
+            "variantes": [
+              {
+                "q": "2⁻³ = ?",
+                "choix": [
+                  "−8",
+                  "1/8",
+                  "−6"
+                ],
+                "reponse": "1/8",
+                "explication": "2⁻³ = 1/2³ = 1/8."
+              },
+              {
+                "q": "5⁻² = ?",
+                "choix": [
+                  "−25",
+                  "1/25",
+                  "−10"
+                ],
+                "reponse": "1/25",
+                "explication": "5⁻² = 1/5² = 1/25."
+              },
+              {
+                "q": "10⁻² = ?",
+                "choix": [
+                  "−100",
+                  "1/100",
+                  "−20"
+                ],
+                "reponse": "1/100",
+                "explication": "10⁻² = 1/10² = 1/100."
+              }
+            ]
+          },
+          {
+            "indice": "Un nombre différent de zéro, à l'exposant 0, vaut toujours la même chose.",
+            "variantes": [
+              {
+                "q": "7⁰ = ?",
+                "choix": [
+                  "0",
+                  "1",
+                  "7"
+                ],
+                "reponse": "1",
+                "explication": "Tout nombre différent de zéro, à l'exposant 0, vaut 1."
+              },
+              {
+                "q": "(−4)⁰ = ?",
+                "choix": [
+                  "0",
+                  "1",
+                  "−4"
+                ],
+                "reponse": "1",
+                "explication": "Tout nombre différent de zéro, à l'exposant 0, vaut 1, même s'il est négatif."
+              },
+              {
+                "q": "125⁰ = ?",
+                "choix": [
+                  "0",
+                  "1",
+                  "125"
+                ],
+                "reponse": "1",
+                "explication": "Tout nombre différent de zéro, à l'exposant 0, vaut 1, même s'il est grand."
+              }
+            ]
+          },
+          {
+            "indice": "Écris la multiplication en entier et compte les signes moins : deux signes moins donnent un plus.",
+            "variantes": [
+              {
+                "q": "(−2)³ = ?",
+                "choix": [
+                  "8",
+                  "−8",
+                  "−6"
+                ],
+                "reponse": "−8",
+                "explication": "(−2)³ = (−2) × (−2) × (−2) = −8 : trois signes moins, le résultat est négatif."
+              },
+              {
+                "q": "(−3)² = ?",
+                "choix": [
+                  "−9",
+                  "9",
+                  "−6"
+                ],
+                "reponse": "9",
+                "explication": "(−3)² = (−3) × (−3) = 9 : deux signes moins, le résultat est positif."
+              },
+              {
+                "q": "(−2)⁴ = ?",
+                "choix": [
+                  "−16",
+                  "16",
+                  "−8"
+                ],
+                "reponse": "16",
+                "explication": "(−2)⁴ = (−2) × (−2) × (−2) × (−2) = 16 : quatre signes moins, le résultat est positif."
+              }
+            ]
+          },
+          {
+            "indice": "Un exposant négatif retourne la fraction : (1/2)⁻¹ = 2.",
+            "variantes": [
+              {
+                "q": "(1/2)⁻² = ?",
+                "choix": [
+                  "1/4",
+                  "4",
+                  "−4"
+                ],
+                "reponse": "4",
+                "explication": "(1/2)⁻² = 2² = 4 : l'exposant négatif retourne la fraction."
+              },
+              {
+                "q": "(1/3)⁻² = ?",
+                "choix": [
+                  "1/9",
+                  "9",
+                  "−9"
+                ],
+                "reponse": "9",
+                "explication": "(1/3)⁻² = 3² = 9 : l'exposant négatif retourne la fraction."
+              },
+              {
+                "q": "(1/10)⁻³ = ?",
+                "choix": [
+                  "1/1000",
+                  "1000",
+                  "−1000"
+                ],
+                "reponse": "1000",
+                "explication": "(1/10)⁻³ = 10³ = 1000 : l'exposant négatif retourne la fraction."
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
   "encouragements": [
     "Dix minutes aujourd'hui, c'est déjà un pas.",
     "Sur Khan Academy, tu peux te tromper et recommencer autant de fois que tu veux.",

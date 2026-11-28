@@ -1,9 +1,10 @@
 /* « Un coup de pouce en maths » du portail, ouvert dans Chromium pour une 1re, une 2e, une 3e et la page publique :
-   chaque classe voit droit son cours de Khan Academy, sans question ni score.
+   chaque classe voit droit son cours de Khan Academy, et une 3e joue son échauffement dans la tuile. Aucun score.
    node outils/essai-portail-maths.cjs   (demande Playwright ; le fichier lui-même : tests/portail-maths.cjs) */
 const fs = require('node:fs'), path = require('node:path'), assert = require('node:assert/strict');
 const racine = path.join(__dirname, '..');
 const t = JSON.parse(fs.readFileSync(path.join(racine, 'portail/maths.json'), 'utf8'));
+const { fraction, egal, puissance } = require('../tests/portail-maths.cjs');
 
 (async () => {
   const { chromium } = require('playwright');
@@ -40,7 +41,7 @@ const t = JSON.parse(fs.readFileSync(path.join(racine, 'portail/maths.json'), 'u
       assert.deepEqual(await liens(page, 'a'), url(...miens), classe + ' : rien d’autre au départ');
       assert.ok(await page.locator('#maths-zone a').evaluateAll(l => l.every(a => a.target === '_blank' && a.rel === 'noopener')));
       // Ni question, ni score, ni niveau : un lien direct et un encouragement.
-      assert.doesNotMatch(await texte(page), /question|score|niveau|faux|\?/i);
+      assert.doesNotMatch(await texte(page), /score|niveau|faux|point/i);
       const lu = await texte(page);
       assert.ok(lu.includes('en plus de ton cours de maths') && t.encouragements.some(m => lu.includes(m)), 'une phrase d’encouragement');
       await page.getByRole('button', { name: 'Voir les autres cours' }).click();
@@ -51,6 +52,47 @@ const t = JSON.parse(fs.readFileSync(path.join(racine, 'portail/maths.json'), 'u
     await verifie('1B', ['1'], 'Ton cours de maths sur Khan Academy');
     await verifie('2CB', ['2', 'ce1d'], 'Tes cours de maths sur Khan Academy');
     await verifie('3F', ['3'], 'Ton cours de maths sur Khan Academy');
+
+    // L'échauffement d'une 3e, joué dans la tuile : une question à la fois, un indice si ça coince, l'explication
+    // quand c'est trouvé, puis la suite chez Khan Academy. Une 1re et une 2e n'en ont pas (aucun dans le fichier).
+    for (const c of ['1B', '2CB']) { const p = await ouvre(c); assert.equal(await p.locator('.maths-exo').count(), 0, c); await p.close(); }
+    {
+      const exo = t.exercices['3'][0], n = exo.questions.length, p = await ouvre('3F'), boite = p.locator('.maths-exo');
+      assert.match(await boite.innerText(), new RegExp('Pour t.échauffer\\s+' + exo.titre));
+      const vues = [];
+      const joue = async () => {
+        for (let i = 1; i <= n; i++) {
+          assert.match(await boite.innerText(), new RegExp('question ' + i + ' sur ' + n));
+          const q = (await boite.locator('.maths-question').innerText()).trim(); vues.push(q);
+          const choix = await boite.locator('.maths-choix button').allInnerTexts();
+          const bon = choix.find(c => egal(fraction(c), puissance(q))), autre = choix.find(c => c !== bon);
+          assert.equal(choix.length, 3); assert.ok(bon, q);
+          const clic = c => boite.locator('.maths-choix button').nth(choix.indexOf(c)).click();
+          if (i === 1) {   // à côté d'abord : un indice, pas de « faux », et on peut réessayer
+            await clic(autre);
+            assert.match(await boite.locator('.maths-retour').innerText(), /^Pas encore\. /);
+            assert.equal(await boite.getByRole('button', { name: /Question suivante|Terminer/ }).count(), 0);
+          }
+          await clic(bon);
+          assert.match(await boite.locator('.maths-retour').innerText(), /^Oui ! /);
+          await boite.getByRole('button', { name: i < n ? 'Question suivante' : 'Terminer' }).click();
+        }
+      };
+      await p.getByRole('button', { name: 'Essayer ' + n + ' questions' }).click();
+      await joue();
+      assert.match(await boite.innerText(), /Bravo/);
+      assert.doesNotMatch(await boite.innerText(), /score|sur 4|point|\d\s*\/\s*\d/i);
+      assert.equal(await boite.locator('a.bouton').getAttribute('href'), exo.suite);
+      assert.equal(await boite.locator('a.bouton').getAttribute('target'), '_blank');
+      // Recommencer : d'autres nombres à chaque question.
+      const premier = vues.slice();
+      await p.getByRole('button', { name: 'Recommencer avec d\'autres nombres' }).click();
+      vues.length = 0; await joue();
+      for (let i = 0; i < n; i++) assert.notEqual(vues[i], premier[i]);
+      // Rien n'est gardé : ni dans le navigateur, ni ailleurs.
+      assert.equal(await p.evaluate(() => Object.keys(localStorage).filter(k => /math/i.test(k)).length), 0);
+      await p.close();
+    }
 
     // Page publique (aucune classe) : la tuile est là, avec tous les cours.
     const page = await ouvre('');

@@ -10,8 +10,42 @@ for (const c of Object.values(t.cours)) { assert.match(c.url, /^https:\/\/fr\.kh
 assert.equal(new Set(Object.values(t.cours).map(c => c.url)).size, Object.keys(t.cours).length, 'pas de cours en double');
 for (const a of ['1', '2', '3']) { assert.ok(t.annees[a].length >= 1, 'année ' + a); for (const c of t.annees[a]) assert.ok(t.cours[c], 'cours connu : ' + c); }
 assert.ok(t.encouragements.length >= 3);
-// Pas de quiz ni de score dans ce fichier : le lien est direct (Vincent, 28/11/2026).
+// Pas de quiz de placement dans ce fichier : le lien vers le cours est direct (Vincent, 28/11/2026).
 assert.equal(t.paliers, undefined); assert.equal(t.questions, undefined);
+
+// Les échauffements : écrits pour le site, une suite chez Khan Academy, trois variantes par question, un indice,
+// une explication ; et chaque réponse est recalculée ici, pas recopiée.
+const EXP = { '⁰': 0, '¹': 1, '²': 2, '³': 3, '⁴': 4, '⁵': 5, '⁶': 6, '⁷': 7, '⁸': 8, '⁹': 9 };
+const fraction = s => { const [n, d] = String(s).replace('−', '-').split('/').map(Number); return [n, d === undefined ? 1 : d]; };
+const egal = (a, b) => a[0] * b[1] === b[0] * a[1];
+/** « 2⁻³ = ? », « (−4)⁰ = ? », « (1/2)⁻² = ? » ▸ la valeur, en fraction [numérateur, dénominateur]. */
+const puissance = q => {
+  const m = q.match(/^\(?(−?\d+(?:\/\d+)?)\)?(⁻?)([⁰¹²³⁴⁵⁶⁷⁸⁹]+) = \?$/);
+  if (!m) throw new Error('question que le test ne sait pas recalculer : ' + q);
+  if (m[1].startsWith('−')) assert.ok(q.startsWith('('), 'une base négative s’écrit entre parenthèses : ' + q);
+  const [n, d] = fraction(m[1]), e = Number([...m[3]].map(c => EXP[c]).join(''));
+  return m[2] ? [d ** e, n ** e] : [n ** e, d ** e];
+};
+assert.ok(egal(puissance('2⁻³ = ?'), [1, 8])); assert.ok(egal(puissance('(−2)³ = ?'), [-8, 1])); assert.ok(egal(puissance('(1/2)⁻² = ?'), [4, 1]));
+for (const [annee, liste] of Object.entries(t.exercices)) {
+  assert.match(annee, /^[123]$/);
+  for (const e of liste) {
+    assert.ok(e.id && e.titre, 'échauffement nommé');
+    assert.match(e.suite, /^https:\/\/fr\.khanacademy\.org\/math\/[\w:\/-]+$/, e.id);
+    assert.ok(e.questions.length >= 3 && e.questions.length <= 5, e.id + ' : un échauffement court');
+    for (const q of e.questions) {
+      assert.ok(q.indice, e.id + ' : un indice par question');
+      assert.equal(q.variantes.length, 3, e.id + ' : trois variantes par question');
+      assert.equal(new Set(q.variantes.map(x => x.q)).size, 3);
+      for (const x of q.variantes) {
+        assert.equal(x.choix.length, 3, x.q); assert.equal(new Set(x.choix).size, 3, x.q);
+        assert.ok(x.choix.includes(x.reponse), x.q); assert.ok(x.explication, x.q);
+        assert.ok(egal(fraction(x.reponse), puissance(x.q)), 'réponse juste : ' + x.q);
+        assert.equal(x.choix.filter(c => egal(fraction(c), puissance(x.q))).length, 1, 'une seule bonne réponse : ' + x.q);
+      }
+    }
+  }
+}
 
 // Les fonctions du portail.
 const noeud = id => ({ id, hidden: false, textContent: '', href: '', addEventListener(){}, replaceChildren(){} });
@@ -34,4 +68,20 @@ assert.deepEqual(titres(''), []);
 assert.equal(P.mathsLues({ cours: { x: { titre: 'Ailleurs', url: 'https://exemple.be/math/' } } }), null);
 assert.equal(P.mathsLues(null), null);
 assert.deepEqual(Array.from(P.coursPour({ cours: lu.cours, annees: { '3': ['3', 'inconnu'] } }, '3')), ['3']);
-console.log('Coup de pouce en maths : ' + Object.keys(t.cours).length + ' cours de Khan Academy, une année ▸ ses cours.');
+// L'échauffement d'une année : celui du jour ; aucun pour une année sans exercice ni sans classe connue.
+const jour = new Date('2026-11-30T10:00:00');
+assert.equal(P.echauffementPour(lu, '3', jour).id, t.exercices['3'][0].id);
+assert.equal(P.echauffementPour(lu, '1', jour), null); assert.equal(P.echauffementPour(lu, '', jour), null);
+// Un passage : une question par notion, la variante du tour ; le tour suivant change tous les nombres.
+const tour0 = P.questionsEchauffement(t.exercices['3'][0], 0, () => 0.5), tour1 = P.questionsEchauffement(t.exercices['3'][0], 1, () => 0.5);
+assert.equal(tour0.length, 4);
+for (const [i, q] of tour0.entries()) { assert.ok(q.choix.includes(q.reponse) && q.indice && q.explication); assert.notEqual(q.q, tour1[i].q); }
+assert.equal(P.questionsEchauffement(t.exercices['3'][0], 3, () => 0.5)[0].q, tour0[0].q, 'après trois tours, on revient au premier');
+// Un échauffement qui sortirait de Khan Academy, ou sans réponse parmi ses choix, n'est pas gardé.
+const bon = t.exercices['3'][0];
+assert.ok(P.echauffementValide(bon));
+assert.ok(!P.echauffementValide({ ...bon, suite: 'https://exemple.be/math/x' }));
+assert.ok(!P.echauffementValide({ ...bon, questions: [{ variantes: [{ q: '2² = ?', choix: ['3', '5'], reponse: '4' }] }] }));
+assert.equal(P.mathsLues({ ...t, exercices: { '3': [{ ...bon, suite: 'https://exemple.be/' }] } }).exercices['3'], undefined);
+module.exports = { fraction, egal, puissance };
+console.log('Coup de pouce en maths : ' + Object.keys(t.cours).length + ' cours de Khan Academy, une année ▸ ses cours ; ' + Object.values(t.exercices).flat().length + ' échauffement recalculé.');
