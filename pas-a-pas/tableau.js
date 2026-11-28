@@ -259,7 +259,7 @@ function dessine(d){
   const vus = filtreEleves ? el.filter(e=>FILTRES[filtreEleves].garde(e,d)) : el;
   if(el.length && !vus.length){ const tr=txt("tr"); const td=txt("td","vide","Personne dans « "+FILTRES[filtreEleves].titre+" ». Clique à nouveau sur le compteur pour revoir toute la classe."); td.colSpan=8; tr.append(td); tb.append(tr); }
   vus.forEach(e=>{
-    const tr = txt("tr", e.aide ? "aide" : e.fini ? "fini" : "");
+    const tr = txt("tr", e.aide ? "aide" : e.fini ? "fini" : ""); tr.dataset.email = e.email;
     const td = (cls,t) => { const c=txt("td",cls,t); tr.append(c); return c; };
     const n1 = td("nom", nom(e.email)); n1.title = e.email;
     if(d._classes){ const c = txt("span","qui"," · "+e.classe); c.style.cssText = "color:var(--doux);font-weight:400"; n1.append(c); }
@@ -349,6 +349,27 @@ const MOTIFS_CLOCHE = {consigne:"consigne", ecran:"écran", accord:"accord"};
 const enPanne = e => !!e.aide && e.aide.motif!=="accord";
 const estCoince = (e,d) => !e.fini && (enPanne(e) || e.erreursIci>=3 || estSilencieux(e,d));
 const blocDe = e => e.aide ? Number(e.aide.bloc) : e.position || e.atteint+1;   // position : la place d'un élève en cours déclaratif
+/* « Où est la classe » nomme les élèves : le prénom suffit, deux élèves du même prénom reçoivent l'initiale du nom. */
+function prenoms(el){
+  const mots = e => nom(e.email).split(" "), vus = {};
+  el.forEach(e=>{ const k = mots(e)[0]; vus[k] = (vus[k]||0)+1; });
+  return e => { const m = mots(e); return vus[m[0]]>1 && m[1] ? m[0]+" "+m[1][0]+"." : m[0]; };
+}
+/* Un élève sur son bloc : les couleurs et les signes de la liste (cloche, bute, sans sonner, fini) ; en pointillé, l'inactif. */
+function puceEleve(e, d, prenom){
+  const accord = !!e.aide && e.aide.motif==="accord", dort = estInactif(e,d) && !e.aide;
+  const [cls, signe, quoi] = e.fini ? ["fini","","a fini"] : accord ? ["aide accord","🔔 ","attend ton accord"] : e.aide ? ["aide","🔔 ","attend de l’aide"]
+    : e.erreursIci>=3 ? ["bute","",e.erreursIci+" erreurs sur ce bloc"] : estSilencieux(e,d) ? ["silence","⏳ ","longtemps sur ce bloc, sans sonner"] : ["","",""];
+  const b = txt("button","pastille puce"+(cls ? " "+cls : "")+(dort ? " dort" : ""), signe+prenom(e)); b.type = "button";
+  b.title = [nom(e.email), quoi, dort ? "aucune action "+ilya(d.maintenant-e.derniere) : ""].filter(Boolean).join(" — ")+" · clic : sa ligne";
+  b.addEventListener("click",()=>montreEleve(e.email));
+  return b;
+}
+function montreEleve(email){
+  if(filtreEleves) filtreCompteur(filtreEleves);   // toute la classe : sous un filtre, sa ligne peut manquer
+  const tr = [...$("lignes").rows].find(r=>r.dataset.email===email); if(!tr) return;
+  tr.scrollIntoView({block:"center"}); tr.classList.add("vise"); setTimeout(()=>tr.classList.remove("vise"), 2500);
+}
 function ouEstLaClasse(d, el, n){
   const pli = $("pli-classe"); if(pli) pli.hidden = !d;
   let ban = $("bandeau-commun");
@@ -362,22 +383,18 @@ function ouEstLaClasse(d, el, n){
     if(!estCoince(e,d)) return;
     coinces[b]++; detail[b][enPanne(e) ? "aide" : e.erreursIci>=3 ? "bute" : "silence"]++;
   });
-  const finis = el.filter(e=>e.fini).length, max = Math.max(1, finis, ...ici);
+  const finis = el.filter(e=>e.fini).length;
   const z = $("ou-classe");
   if(z){
     z.replaceChildren();
-    for(let b=1;b<=n;b++){
-      const r = txt("div","bl ou"), j = txt("div","jauge"), w = txt("div");
-      j.style.width = (ici[b]/max*100)+"%"; if(!ici[b]) j.style.opacity = ".15";
-      const c = txt("span","coince"), reste = txt("span","reste");
-      c.style.width = (ici[b] ? coinces[b]/ici[b]*100 : 0)+"%"; reste.style.width = (ici[b] ? 100-coinces[b]/ici[b]*100 : 100)+"%";
-      j.append(c, reste); w.append(j);
-      if(coinces[b]) w.title = coinces[b]+" sur "+ici[b]+" coincé"+(coinces[b]>1?"s":"");
-      r.append(lienBloc(b, "Bloc "+b), w, txt("span","num",ici[b] || "")); z.append(r);
-    }
-    const r = txt("div","bl ou"), j = txt("div","jauge"), w = txt("div");
-    j.style.width = (finis/max*100)+"%"; j.style.background = "var(--juste)"; if(!finis) j.style.opacity = ".15";
-    w.append(j); r.append(txt("span",null,"Fini"), w, txt("span","num",finis || "")); z.append(r);
+    const prenom = prenoms(el), rang = e => estCoince(e,d) ? 0 : estInactif(e,d) ? 2 : 1;
+    const ligne = (tete, qui) => {
+      const r = txt("div","bl ou"), w = txt("div","qui");
+      qui.slice().sort((a,b)=>rang(a)-rang(b)).forEach(e=>w.append(puceEleve(e, d, prenom)));
+      r.append(tete, w, txt("span","num",qui.length || "")); z.append(r);
+    };
+    for(let b=1;b<=n;b++) ligne(lienBloc(b, "Bloc "+b), el.filter(e=>!e.fini && Math.min(n, Math.max(1, blocDe(e)))===b));
+    ligne(txt("span",null,"Fini"), el.filter(e=>e.fini));
   }
   let haut = 0; for(let b=1;b<=n;b++) if(ici[b] > ici[haut]) haut = b;   // ici[0] vaut toujours 0
   resume("resume-classe", haut ? "le plus d’élèves : bloc "+haut+" ("+ici[haut]+(coinces[haut] ? ", dont "+coinces[haut]+" coincé"+(coinces[haut]>1?"s":"") : "")+")" : (finis ? "tout le monde a fini" : "personne n’a commencé"));

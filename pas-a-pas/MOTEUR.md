@@ -354,6 +354,15 @@ Charger dans l'ordre : `demo-lecteur.js`, `demos-communs.js`, puis le `demos.js`
 élément `.cote` (une liste `ol.etapes` dans `avant`). Une vue qui manque s'écrit dans `demos-communs.js`,
 jamais dans le cours ; la liste des vues et de leurs options est en tête de ce fichier.
 
+## Fin de séquence : les révisions et les jeux du cours
+
+L'écran de fin propose, dans l'encart « Je révise en jouant », **un bouton par activité du cours** : mots croisés,
+quiz, cartes, jeux. Le moteur les lit dans `revisions/revisions.json`, le catalogue de la page « Révisions et
+entraînements » (clé : l'identifiant du cours). Ajouter une activité à un cours, c'est donc une ligne dans ce
+catalogue : elle apparaît à la fin du cours, sur la page des révisions et au portail, sans toucher à la fiche.
+`FIN.revision` (`titre`, `texte`, `url`) reste permis : son texte sert d'introduction, et son lien ne s'affiche que
+si le catalogue ne connaît aucune activité pour ce cours.
+
 ## Vérifier avant de publier
 
 ```bash
@@ -367,7 +376,8 @@ un fichier ou un lien du site qui n'existe pas, une image qui ne s'affiche pas, 
 catalogue, un « Ça coince ? » vide, un défilement horizontal à 375 px, et **tout bouton ou lien affiché au-dessus de
 la tâche pendant le travail** qui n'est pas dans sa liste `HAUT_PERMIS` (menu, pastilles, cloche, grille, smiley, pot).
 Il donne aussi la hauteur où commence la tâche sur un écran de 1366 × 768 et, à l'ouverture du cours, le nombre de
-fichiers, leur poids compressé et le nombre d'appels au serveur ; plus de 8 appels ou de 400 Ko est un constat. `--reseau` teste les liens vers d'autres
+fichiers, leur poids compressé et le nombre d'appels au serveur ; plus de 8 appels ou de 400 Ko est un constat. Il ouvre enfin
+**l'écran de fin** avec les mêmes contrôles, et vérifie qu'il propose toutes les activités de révision du cours. `--reseau` teste les liens vers d'autres
 sites (signalés, jamais bloquants). Il tourne sur chaque PR (travail « cours » de `.github/workflows/tests.yml`) :
 un constat nouveau la fait échouer. Un constat accepté s'écrit dans `outils/verifier-cours.connus.json`, avec sa
 raison ; rien n'y est propre à un cours, un nouveau cours est vérifié dès qu'il est au catalogue.

@@ -1605,17 +1605,31 @@ function redaction(zone, Q, reussi, rate, juge){
    Si une page ancienne ne charge pas ce fichier, l'écran de fin s'affiche sans la citation. */
 function citation(c){ return typeof PhraseFin!=="undefined" ? PhraseFin.figure(c) : null; }
 
+/* Fin de séquence : les révisions du cours, telles que le site les connaît (revisions/revisions.json, le catalogue de
+   « Révisions et entraînements ») : mots croisés, quiz, cartes, jeux. Une activité ajoutée au catalogue apparaît ici sans
+   toucher à la fiche. Catalogue illisible ou cours sans révision : il reste le lien écrit dans la fiche (FIN.revision),
+   s'il y en a un. Le catalogue n'est demandé qu'ici, à l'écran de fin, une fois. */
+const SITE_REVISIONS = "https://root75.github.io/campin-public/";
+let revisionsDuCours = null;
+function encartRevisions(){
+  const R = FIN.revision, zone = el("div","encart revisions"), liens = el("div","actions");
+  const bouton = (titre, url) => { const a = txt("a","btn vide",titre); a.href = url; a.target = "_blank"; a.rel = "noopener"; return a; };
+  zone.append(txt("h3",null,MISSIONS ? "🧩 Révise en jouant" : "🧩 Je révise en jouant"),
+    txt("p",null,R && R.texte || "Pour retenir ce cours, choisis une activité. Rien n’est coté."), liens);
+  if(R) liens.append(bouton(R.titre, R.url)); else zone.hidden = true;
+  (revisionsDuCours || (revisionsDuCours = fetch(SITE_REVISIONS+"revisions/revisions.json").then(r=>r.ok ? r.json() : {})
+    .then(d=>(((d.cours||{})[COURS]||{}).activites||[]).filter(a=>a && a.genre && /^[\w\-./?=#]+$/.test(a.chemin||""))).catch(()=>[])))
+    .then(a=>{ if(!a.length) return; liens.replaceChildren(...a.map(x=>bouton(x.genre+" ↗", SITE_REVISIONS+x.chemin))); zone.hidden = false; });
+  return zone;
+}
+
 function fin(z){
   const loin = document.getElementById("plus-loin"); if(loin) loin.hidden = false;
   if(DECLARATIF) z.append(txt("div","numero","Étape finale · après les "+BLOCS.length+" étapes"));
   z.append(txt("h2",null,FIN.titre), txt("p",null,FIN.texte));
   if(typeof FIN.diplome==="function"){ try { const d = FIN.diplome({ email:emailMoteur, classe:classeMoteur, valeurs:lisPartage() }); if(d) z.append(d); } catch(e){} }   // au choix de la fiche : un élément de plus sous le titre
   if(typeof GRILLE!=="undefined") z.append(grilleMoi());
-  if(FIN.revision){
-    const revision=el("div","encart"),lien=txt("a","btn vide",FIN.revision.titre);
-    lien.href=FIN.revision.url;lien.target="_blank";lien.rel="noopener";
-    revision.append(txt("p",null,FIN.revision.texte),lien);z.append(revision);
-  }
+  z.append(encartRevisions());
   // Déclaratif : la phrase de la fin attend que toutes les étapes soient terminées (on vient ici librement).
   const phrase = FIN.citation && (!DECLARATIF || premierManque()>=BLOCS.length) && citation(FIN.citation); if(phrase) z.append(phrase);
   const plus = el("div","encart");
