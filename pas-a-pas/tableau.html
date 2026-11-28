@@ -197,9 +197,10 @@ details.replie>summary h2::before{content:"▸ ";color:var(--doux)}
 details.replie[open]>summary h2::before{content:"▾ "}
 details.replie[open]>summary{margin-bottom:12px}
 details.replie .resume{color:var(--doux);font-size:.95rem}
-.ou .jauge{display:flex;height:14px;border-radius:3px;overflow:hidden;min-width:2px}
-.ou .jauge span{display:block;height:100%}
-.ou .jauge .reste{background:var(--encre-bouton);opacity:.85}.ou .jauge .coince{background:var(--fromage)}
+.bl.ou{align-items:start}.ou .qui{display:flex;flex-wrap:wrap;gap:4px 5px;min-height:1.6rem}
+.puce{font-family:inherit;border:1px solid var(--trait);background:var(--carte);color:var(--encre);cursor:pointer}
+.puce.dort{color:var(--doux);border-style:dashed;font-weight:400}
+tr.vise{outline:3px solid var(--encre-bouton);outline-offset:-3px}
 .bandeau-commun{display:flex;align-items:center;gap:10px 14px;flex-wrap:wrap;background:var(--fromage-pale);border:2px solid var(--fromage);border-radius:12px;padding:10px 16px;margin:4px 0 12px;font-size:1.05rem}
 .bandeau-commun .espace{flex:1}
 .outils-secondaires>details{flex:1;min-width:220px;font-size:.94rem}
@@ -290,6 +291,13 @@ header{display:grid;grid-template-columns:minmax(0,1fr);gap:12px;align-items:str
   </section>
   <div class="chiffres" id="chiffres"></div>
 
+  <!-- Au-dessus de la liste : ouverte, elle montre toute la classe sur un écran ; repliée, une ligne. -->
+  <details class="panneau replie" id="pli-classe">
+    <summary><h2>Où est la classe — chaque élève sur son bloc</h2><span class="resume" id="resume-classe"></span></summary>
+    <p class="astuce">Chaque élève sur son bloc, en ce moment. Les signes sont ceux de la liste : 🔔 cloche, fond rouge pâle = 3 erreurs ou plus, ⏳ = 10 min sans sonner, pointillé gris = aucune action depuis 8 min. Clic sur un prénom : sa ligne dans la liste. Clic sur « Bloc N » : la fiche à ce bloc, en aperçu, pour la projeter.</p>
+    <div class="blocs" id="ou-classe"></div>
+  </details>
+
   <section class="panneau">
     <div class="entete-panneau"><h2>Les élèves</h2><div id="filtres-eleves"></div></div>
     <div class="defile"><table>
@@ -299,12 +307,6 @@ header{display:grid;grid-template-columns:minmax(0,1fr);gap:12px;align-items:str
   </section>
 
   <!-- Repliées par défaut, un résumé d'une ligne dans le titre ; le navigateur retient ce qui est ouvert. -->
-  <details class="panneau replie" id="pli-classe">
-    <summary><h2>Où est la classe — élèves sur chaque bloc</h2><span class="resume" id="resume-classe"></span></summary>
-    <p class="astuce">Élèves sur chaque bloc en ce moment ; en jaune, ceux qui coincent (cloche, 3 erreurs ou plus, 10 min sans sonner). Clic sur « Bloc N » : la fiche à ce bloc, en aperçu, pour la projeter.</p>
-    <div class="blocs" id="ou-classe"></div>
-  </details>
-
   <details class="panneau replie" id="pli-humeur">
     <summary><h2>Humeur de la classe</h2><span class="resume" id="resume-humeur"></span></summary>
     <div class="blocs" id="humeurs"></div>
@@ -368,7 +370,7 @@ header{display:grid;grid-template-columns:minmax(0,1fr);gap:12px;align-items:str
   </form>
 </dialog>
 
-<script defer src="https://root75.github.io/campin-public/messagerie/pas-a-pas/visuels.js?v=enveloppe-20261117"></script><script defer src="https://root75.github.io/campin-public/derriere-lecran/emotions.js?v=20261123b"></script><script defer src="https://root75.github.io/campin-public/derriere-lecran/visuels.js?v=20261123"></script><script defer src="https://root75.github.io/campin-public/pas-a-pas/tableau.js?v=intervenir-20261125"></script>
+<script defer src="https://root75.github.io/campin-public/messagerie/pas-a-pas/visuels.js?v=enveloppe-20261117"></script><script defer src="https://root75.github.io/campin-public/derriere-lecran/emotions.js?v=20261123b"></script><script defer src="https://root75.github.io/campin-public/derriere-lecran/visuels.js?v=20261123"></script><script defer src="https://root75.github.io/campin-public/pas-a-pas/tableau.js?v=ou-classe-20261128"></script>
 <script defer src="https://root75.github.io/campin-public/pas-a-pas/python-couleurs.js"></script>
 </body>
 </html>

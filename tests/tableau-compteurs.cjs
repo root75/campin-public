@@ -23,6 +23,25 @@ assert.equal(coince(e({aide:{bloc:6,motif:'consigne'}}),d),true,'motif consigne 
 assert.equal(coince(e({aide:{bloc:9,motif:'accord'},erreursIci:3}),d),true,'accord demandé mais bute encore : coincé');assert.equal(F.aide.garde(e({aide:{bloc:9,motif:'accord'}})),true,'un accord attend quand même le professeur');
 assert.equal(blocDe(e({atteint:4})),5,'bloc en cours = atteint + 1');assert.equal(blocDe(e({atteint:4,aide:{bloc:6}})),6,'la cloche dit son bloc');
 console.log('Compteurs et bandeau : coincés sans sonner, inactifs, butent, bloc de chaque élève vérifiés.');
+{ // « Où est la classe » nomme les élèves : le prénom, l'initiale du nom pour deux prénoms pareils, les signes de la liste.
+  const o=vm.createContext({document:{createElement:tag=>({tag,addEventListener(){}})}});
+  vm.runInContext(bout('const INACTIF','const SUIVI')+bout('const txt','const derniereAction')+bout('const estInactif','function filtreCompteur')+bout('const SEUIL_COMMUN','function ouEstLaClasse'),o);
+  const el=[e({email:'wesley.dupont@arcampin.be'}),e({email:'wesley.martin@arcampin.be'}),e({email:'lea.vandenberghe@arcampin.be'})];
+  const prenom=vm.runInContext('prenoms',o)(el);
+  assert.deepEqual(el.map(prenom),['Wesley D.','Wesley M.','Lea']);
+  const puce=x=>vm.runInContext('puceEleve',o)(e(Object.assign({email:'lea.vandenberghe@arcampin.be'},x)),d,()=>'Lea');
+  assert.equal(puce({}).className,'pastille puce');assert.equal(puce({}).textContent,'Lea');
+  assert.equal(puce({aide:{bloc:3}}).className,'pastille puce aide');assert.equal(puce({aide:{bloc:3}}).textContent,'🔔 Lea');
+  assert.equal(puce({aide:{bloc:9,motif:'accord'}}).className,'pastille puce aide accord');
+  assert.equal(puce({erreursIci:3}).className,'pastille puce bute');
+  assert.equal(puce({depuisBloc:85*m}).className,'pastille puce silence');assert.equal(puce({depuisBloc:85*m}).textContent,'⏳ Lea');
+  assert.equal(puce({derniere:80*m}).className,'pastille puce dort');assert.match(puce({derniere:80*m}).title,/Lea Vandenberghe — aucune action il y a 20 min/);
+  assert.equal(puce({derniere:80*m,aide:{bloc:3}}).className,'pastille puce aide','la cloche passe avant l’inactivité');
+  assert.equal(puce({fini:true}).className,'pastille puce fini');
+  const html=fs.readFileSync(require.resolve('../pas-a-pas/tableau.html'),'utf8');
+  assert.ok(html.indexOf('id="pli-classe"')>html.indexOf('id="chiffres"')&&html.indexOf('id="pli-classe"')<html.indexOf('id="lignes"'),'« Où est la classe » : sous les compteurs, au-dessus de la liste');
+  console.log('Où est la classe : prénoms, signes et place vérifiés.');
+}
 { // Mesure affichée à côté de « Mis à jour à … »
   const m=vm.createContext({});vm.runInContext(bout('const secondes','const resume'),m);
   const f=vm.runInContext('mesure',m);
