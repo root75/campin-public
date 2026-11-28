@@ -47,3 +47,8 @@ jobs:
           npx playwright install --with-deps chromium
       - name: node outils/verifier-cours.cjs --reseau
         run: node outils/verifier-cours.cjs --reseau
+      - name: Le cours modèle, généré depuis sa fiche puis ouvert étape par étape
+        run: |
+          cp -r . "$RUNNER_TEMP/essai"
+          node outils/nouveau-cours.cjs pas-a-pas/modele/sequence.json --racine "$RUNNER_TEMP/essai"
+          cd "$RUNNER_TEMP/essai" && node outils/verifier-cours.cjs modele

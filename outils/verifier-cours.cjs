@@ -6,6 +6,7 @@
      --reseau        teste aussi les liens vers d'autres sites (signalés, jamais bloquants)
      --connus        réécrit outils/verifier-cours.connus.json avec les constats du jour
      --json <f>      écrit tous les constats dans un fichier
+     --racine <dir>  vérifie une autre copie du dépôt (un cours tout juste généré, avant de le poser ici)
 
    Chaque étape de chaque cours est ouverte dans Chromium comme la voit un élève connecté qui y est arrivé
    (faux serveur : aucune donnée, aucun réseau ; le site est lu dans le dépôt local). Rien n'est propre à un
@@ -26,7 +27,7 @@
    Un constat déjà accepté est écrit dans outils/verifier-cours.connus.json avec sa raison : seul un constat
    NOUVEAU fait échouer la vérification. Un constat connu qui a disparu est signalé, pour nettoyer la liste. */
 const fs = require('node:fs'), path = require('node:path'), { execFile } = require('node:child_process');
-const RACINE = path.resolve(__dirname, '..'), BASE = 'https://root75.github.io/campin-public/';
+const RACINE = process.argv.includes('--racine') ? path.resolve(process.argv[process.argv.indexOf('--racine') + 1]) : path.resolve(__dirname, '..'), BASE = 'https://root75.github.io/campin-public/';
 const CONNUS = path.join(__dirname, 'verifier-cours.connus.json');
 const ECRAN = { width: 1366, height: 768 }, ETROIT = { width: 375, height: 700 };
 
@@ -101,7 +102,7 @@ const code = url => new Promise(ok => execFile('curl', ['-sS', '-L', '-o', '/dev
 (async () => {
   const args = process.argv.slice(2), option = n => args.includes(n);
   const fichierJson = option('--json') ? args[args.indexOf('--json') + 1] : null;
-  const demandes = args.filter((a, i) => !a.startsWith('--') && args[i - 1] !== '--json');
+  const demandes = args.filter((a, i) => !a.startsWith('--') && args[i - 1] !== '--json' && args[i - 1] !== '--racine');
   const catalogue = JSON.parse(fs.readFileSync(path.join(RACINE, 'pas-a-pas/cours.json'), 'utf8')).cours;
   const cours = demandes.length ? catalogue.filter(c => demandes.includes(c.id)) : catalogue;
   const inconnus = demandes.filter(d => !catalogue.some(c => c.id === d));

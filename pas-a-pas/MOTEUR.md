@@ -7,6 +7,41 @@ un autre poste, l'humeur, l'avis et la phrase de fin sont faits par le moteur co
 Le mode séquence est commun lui aussi : [`sequence-eleve.js`](sequence-eleve.js) ; une fiche lui passe ses champs
 facultatifs par `const SEQUENCE = { contenus:true, classe:'…' }` (décrits en tête de ce fichier).
 
+## Créer un cours en remplissant une fiche
+
+Le chemin court pour un nouveau cours : **une fiche de séquence**, un seul fichier à remplir, sans toucher au moteur.
+
+```bash
+cp pas-a-pas/modele/sequence.json <dossier>/pas-a-pas/sequence.json     # puis le remplir
+node outils/nouveau-cours.cjs <dossier>/pas-a-pas/sequence.json --controle   # contrôle seul, n'écrit rien
+node outils/nouveau-cours.cjs <dossier>/pas-a-pas/sequence.json              # écrit le cours
+node outils/verifier-cours.cjs <id>                                          # l'ouvre étape par étape
+```
+
+| Rubrique de la fiche | Ce qu'elle donne |
+|---|---|
+| `id`, `dossier`, `titre`, `surtitre`, `accueil`, `mascotte`, `reperes` | la page du cours (`index.html`, tirée de `modele/index.html`) et son entrée au catalogue |
+| `etapes` : `partie`, `titre`, `min`, `but`, `observe` (facultatif), `gestes`, `coince`, `preuve` | les blocs de `fiche.js` |
+| `preuve` = `{ q, champs:[{cle, nom, max, exemple, pourcent}] }` | **des champs qui prouvent le geste** (l'élève recopie ce qu'il lit à son écran ; gardé, non corrigé) |
+| `preuve` = trois versions `qcm`, `saisie` ou `trous` | une question en trois versions (règle anti-recopie). Toutes les étapes ont une question : tirée et corrigée **par le serveur** (`preuves.json`). Une étape au moins se prouve par des champs : tirée de l'adresse de l'élève et corrigée **dans la page**, sans fichier de preuves — avec lui, `Code.gs` n'accepte un « juste » que de sa propre correction, et l'étape à champs ne serait jamais comptée |
+| `moi` | l'auto-évaluation de fin (`GRILLE`, et `criteres` au catalogue) |
+| `fin` | l'écran de fin, avec sa citation |
+| `essentiel`, `quiz` | la page « je révise » du cours : `revisions/je-revise/?cours=<id>` (page commune, lit `revision.json`) |
+| `mots_croises` | la grille du cours dans `mots-croises/grilles.json` |
+
+La commande **contrôle la fiche avant d'écrire** et refuse, avec la raison : une preuve qui n'a pas trois versions du
+même type, une étape sans « Ça coince ? » ou de plus de six gestes, un geste sans mot-clé en gras, une consigne qui
+demande une photo, « je lève la main », pas d'auto-évaluation, pas de citation. Elle signale « à relire » : un nom de
+touche en français, un nom de classe ou une date, l'absence de quiz ou de mots croisés. Elle inscrit le cours au
+catalogue, aux révisions (avec la ligne de secours de `revisions/index.html`) et aux mots croisés.
+
+**La fiche reste la seule source** : pour changer le cours, changer `sequence.json` et relancer la commande, qui
+réécrit ses fichiers à l'identique près. Elle n'écrase jamais un fichier écrit à la main. Un cours qui demande plus
+que la fiche ne sait dire (un simulateur, une rédaction contrôlée, du Python) s'écrit comme avant, ci-dessous ; ce
+qui manque à la fiche s'ajoute à la commande, jamais dans un cours. Contrôle : `tests/nouveau-cours.cjs`, le
+travail « cours » des PR (génère le modèle puis l'ouvre dans Chromium), et devant le vrai `Code.gs`
+`campin-pedagogique/outils/pas-a-pas/essai-cours-genere.cjs` (les deux façons de corriger).
+
 ## Les quatre fichiers d'un cours
 
 | Fichier | Rôle | Départ |

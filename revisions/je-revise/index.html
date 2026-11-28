@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- « Je révise » commun : une seule page pour tous les cours, ?cours=<id du catalogue>.
+     L'essentiel, le quiz et les cartes viennent de <dossier du cours>/pas-a-pas/revision.json,
+     écrit par outils/nouveau-cours.cjs depuis la fiche de séquence. Rien n'est propre à un cours ici. -->
+<title>Je révise</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,600;0,800;1,600&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
+<link rel="stylesheet" href="je-revise.css">
+<link rel="stylesheet" href="../../assets/navigation.css">
+</head>
+<body>
+<nav class="campin-navigation" aria-label="Navigation du site"><a href="https://root75.github.io/campin-public/" target="_top"><span aria-hidden="true">⌂</span> Accueil</a></nav>
+
+<div class="page">
+  <header>
+    <div class="surtitre" id="surtitre"></div>
+    <h1><span id="titre">Je révise</span> <em>je révise</em></h1>
+    <p class="consigne">Pour t'entraîner après le cours. Rien n'est coté.</p>
+  </header>
+
+  <nav role="tablist" aria-label="Parties de la page">
+    <button role="tab" id="t-resume" aria-controls="p-resume" aria-selected="true">L'essentiel</button>
+    <button role="tab" id="t-quiz" aria-controls="p-quiz" aria-selected="false" hidden>Quiz</button>
+    <button role="tab" id="t-cartes" aria-controls="p-cartes" aria-selected="false" hidden>Cartes</button>
+  </nav>
+
+  <section class="panneau" id="p-resume" role="tabpanel" aria-labelledby="t-resume">
+    <h2 id="resume-titre">L'essentiel</h2>
+    <ol class="resume" id="resume"></ol>
+    <p class="note" id="resume-note"></p>
+    <div class="actions" id="resume-actions"></div>
+    <noscript><p class="note">Cette page a besoin de JavaScript. <a href="../">Retour aux révisions</a></p></noscript>
+  </section>
+
+  <section class="panneau" id="p-quiz" role="tabpanel" aria-labelledby="t-quiz" hidden>
+    <div id="quiz"></div>
+  </section>
+
+  <section class="panneau" id="p-cartes" role="tabpanel" aria-labelledby="t-cartes" hidden>
+    <h2>Cartes mémoire</h2>
+    <p class="note">Lis la question, réponds dans ta tête, puis clique sur la carte pour la retourner.</p>
+    <div class="carte-memoire">
+      <button class="tourne" id="carte" type="button" aria-live="polite">
+        <div class="face"><span class="etiquette">Question</span><span class="grand" id="carte-q"></span></div>
+        <div class="face dos"><span class="etiquette">Réponse</span><span class="grand" id="carte-r"></span><span id="carte-e"></span></div>
+      </button>
+    </div>
+    <div class="actions">
+      <button class="btn vide" type="button" id="carte-avant">← Précédente</button>
+      <button class="btn plein" type="button" id="carte-retourne">Retourner</button>
+      <button class="btn vide" type="button" id="carte-apres">Suivante →</button>
+      <span class="compteur" id="carte-n"></span>
+    </div>
+  </section>
+
+  <footer>Rien n'est coté. <a href="../">Toutes les révisions</a></footer>
+</div>
+
+<script src="../../assets/progres.js"></script>
+<script src="je-revise.js"></script>
+</body>
+</html>
