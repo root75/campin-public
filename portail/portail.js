@@ -532,80 +532,41 @@ function defiConnecte(d){
 }
 chargeDefi(new Date());
 
-/* ----- Un coup de pouce en maths (Vincent, 28/11/2026) : vers le cours de Khan Academy qui convient à l'élève. -----
-   Quelques questions sur les bases des années d'avant, une à la fois (portail/maths.json). La première qui arrête
-   l'élève donne son point de départ ; s'il passe tout, c'est le cours de son année. Une 1re n'a pas de question :
-   son cours, tout de suite. Jamais de score ni de « faux » : rien n'est coté, rien n'est envoyé. Le point de
-   départ reste dans le navigateur, pour le retrouver à la visite suivante. */
+/* ----- Un coup de pouce en maths (Vincent, 28/11/2026) : droit au cours de Khan Academy de son année. -----
+   Une 1re voit le cours de 1re, une 2e le cours de 2e et les révisions pour le CE1D, une 3e le cours de 3e
+   (portail/maths.json). Pas de quiz : le lien est direct, pour s'entraîner à son rythme en plus du cours de maths,
+   avec une phrase d'encouragement qui change à chaque visite. Rien n'est coté ni enregistré. Sans classe connue
+   (page publique, professeur), tous les cours sont proposés. */
 const MATHS = SITE + "portail/maths.json", KHAN = "https://fr.khanacademy.org/math/";
 function anneeDe(classe){ return /^[123]/.test(classe || "") ? classe[0] : ""; }
-/** Un palier qui tient debout : pour chaque notion, des variantes dont la réponse est l'un des choix. */
-function palierValide(p){
-  return !!p && !!p.pour && Array.isArray(p.questions) && p.questions.length > 0 && p.questions.every(v => Array.isArray(v) && v.length > 0 &&
-    v.every(x => x && typeof x.q === "string" && Array.isArray(x.choix) && x.choix.includes(x.reponse)));
-}
-/** Les paliers posés à une année, dans l'ordre (année inconnue : la clé vide). */
-function paliersPour(t, annee){ return ((t && t.paliers) || []).filter(p => palierValide(p) && typeof p.pour[annee] === "string"); }
-/** Les questions d'un passage : une par notion, tirée parmi ses variantes, ses choix mélangés. */
-function questionsMaths(paliers, hasard = Math.random){
-  const melange = l => { const a = l.slice(); for(let i = a.length - 1; i > 0; i--){ const j = Math.floor(hasard() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
-  return paliers.flatMap((p, rang) => p.questions.map(v => { const x = v[Math.floor(hasard() * v.length)]; return { palier: rang, q: x.q, choix: melange(x.choix), reponse: x.reponse }; }));
-}
-/** Le cours où commencer : celui du palier qui a arrêté l'élève, sinon celui de son année ("" : à lui de choisir). */
-function departMaths(t, annee, palier){ const c = palier ? palier.pour[annee] : (t.annees || {})[annee]; return c && t.cours[c] ? c : ""; }
 /** Du fichier, ce qui est sûr : des cours de Khan Academy seulement (jamais une autre adresse). */
 function mathsLues(t){
   const cours = {};
   Object.keys((t && t.cours) || {}).forEach(c => { const x = t.cours[c]; if(x && typeof x.titre === "string" && typeof x.url === "string" && x.url.startsWith(KHAN)) cours[c] = x; });
   if(!Object.keys(cours).length) return null;
-  return { cours, annees: t.annees || {}, paliers: Array.isArray(t.paliers) ? t.paliers : [], encouragements: Array.isArray(t.encouragements) ? t.encouragements.filter(x => typeof x === "string") : [] };
+  return { cours, annees: t.annees || {}, encouragements: Array.isArray(t.encouragements) ? t.encouragements.filter(x => typeof x === "string") : [] };
 }
+/** Les cours d'une année, dans l'ordre du fichier ; sans année connue (ou sans cours pour elle) : aucun, tout est proposé. */
+function coursPour(t, annee){ const l = t && t.annees && t.annees[annee]; return Array.isArray(l) ? l.filter(c => t.cours[c]) : []; }
 
 // Servie par Apps Script, la tuile attend de savoir la classe de l'élève ; publique, elle s'affiche tout de suite.
 let MATHS_T = null, MATHS_ANNEE = "", MATHS_PRET = !SUIVI;
-function gardeMaths(x){ try { if(x) localStorage.setItem("portail-maths", JSON.stringify(x)); else localStorage.removeItem("portail-maths"); } catch(e) {} }
-function mathsGarde(){ try { const x = JSON.parse(localStorage.getItem("portail-maths") || "null"); if(x && x.annee === MATHS_ANNEE && MATHS_T.cours[x.cours]) return x; } catch(e) {} return null; }
 function peintMaths(){
   if(!MATHS_T || !MATHS_PRET || !$("maths")) return;
-  const t = MATHS_T, annee = MATHS_ANNEE, zone = $("maths-zone"), paliers = paliersPour(t, annee);
+  const t = MATHS_T, zone = $("maths-zone"), miens = coursPour(t, MATHS_ANNEE), autres = Object.keys(t.cours).filter(c => !miens.includes(c));
   const cree = (tag, classe, texte) => { const e = document.createElement(tag); if(classe) e.className = classe; if(texte != null) e.textContent = texte; return e; };
-  const bouton = (classe, texte, action) => { const b = cree("button", classe, texte); b.type = "button"; b.addEventListener("click", action); return b; };
-  const versKhan = (c, classe, texte) => { const a = cree("a", classe, texte); a.href = t.cours[c].url; a.target = "_blank"; a.rel = "noopener"; return a; };
-  const liens = (...l) => { const p = cree("p", "maths-liens"); l.filter(Boolean).forEach((x, i) => p.append(i ? " · " : "", x)); return p; };
-  const refaire = () => paliers.length ? bouton("lien", "Refaire les questions", () => { gardeMaths(null); question(questionsMaths(paliers), 0); }) : null;
-  const choisir = titre => {
-    const liste = cree("div", "maths-cours");
-    Object.keys(t.cours).forEach(c => liste.append(versKhan(c, "", t.cours[c].titre + " ↗")));
-    zone.replaceChildren(cree("p", "maths-pas", titre), liste, liens(bouton("lien", "Retour", peintMaths)));
-  };
-  const resultat = x => {
-    const mot = t.encouragements.length ? t.encouragements[Math.floor(Math.random() * t.encouragements.length)] : "";
-    const avant = x.raison === "palier" ? "Une question t'a résisté : c'est par là qu'on commence. " : x.raison === "reussi" ? "Tu as les bases : place au cours de ton année. " : "";
-    zone.replaceChildren(cree("p", "maths-pas", x.raison === "direct" ? "Ton cours de maths sur Khan Academy" : "Ton point de départ"),
-      cree("p", "maths-depart", t.cours[x.cours].titre), cree("p", null, avant + mot),
-      versKhan(x.cours, "bouton", "Commencer sur Khan Academy ↗"),
-      liens(bouton("lien", "Choisir un autre cours", () => choisir("Choisis ton cours")), refaire()));
-  };
-  const fini = (c, raison) => {
-    if(!c) return choisir("Tu as les bases : choisis ton cours");
-    const x = { annee, cours: c, raison }; gardeMaths(x); resultat(x);
-  };
-  const question = (liste, i) => {
-    const x = liste[i], choix = cree("div", "maths-choix");
-    const repond = juste => !juste ? fini(departMaths(t, annee, paliers[x.palier]), "palier")
-      : i + 1 < liste.length ? question(liste, i + 1) : fini(departMaths(t, annee, null), "reussi");
-    x.choix.forEach(c => choix.append(bouton("", c, () => repond(c === x.reponse))));
-    zone.replaceChildren(cree("p", "maths-pas", "Question " + (i + 1) + " · " + liste.length + " au plus"), cree("p", "maths-question", x.q), choix,
-      liens(bouton("lien", "Je ne sais pas encore", () => repond(false))));
-  };
+  const versKhan = (c, classe) => { const a = cree("a", classe, t.cours[c].titre + " ↗"); a.href = t.cours[c].url; a.target = "_blank"; a.rel = "noopener"; return a; };
+  const liste = (cours, classe) => { const d = cree("div", "maths-cours"); cours.forEach(c => d.append(versKhan(c, classe))); return d; };
+  const mot = t.encouragements.length ? t.encouragements[Math.floor(Math.random() * t.encouragements.length)] : "";
+  const suite = [cree("p", null, "Pour t'entraîner à ton rythme, en plus de ton cours de maths. " + mot)];
+  if(miens.length && autres.length){
+    const p = cree("p", "maths-liens"), b = cree("button", "lien", "Voir les autres cours"); b.type = "button";
+    b.addEventListener("click", () => p.replaceWith(liste(autres, "")));
+    p.append(b); suite.push(p);
+  }
+  zone.replaceChildren(cree("p", "maths-pas", !miens.length ? "Choisis ton cours sur Khan Academy" : miens.length > 1 ? "Tes cours de maths sur Khan Academy" : "Ton cours de maths sur Khan Academy"),
+    miens.length ? liste(miens, "bouton") : liste(autres, ""), ...suite);
   $("maths").hidden = false;
-  const garde = mathsGarde();
-  if(garde) return resultat(garde);
-  if(!paliers.length){ const c = departMaths(t, annee, null); return c ? resultat({ annee, cours: c, raison: "direct" }) : choisir("Choisis ton cours"); }
-  zone.replaceChildren(cree("p", "maths-depart", "Quelques questions, deux minutes."),
-    cree("p", null, "Je te montre par où commencer sur Khan Academy. Rien n'est coté, rien n'est envoyé au professeur."),
-    bouton("bouton", "Trouver mon point de départ ▸", () => question(questionsMaths(paliers), 0)),
-    liens(bouton("lien", "Choisir moi-même", () => choisir("Choisis ton cours"))));
 }
 /** La classe est connue (ou ne le sera pas) : la tuile peut s'afficher pour cette année. */
 function mathsAnnee(annee){ MATHS_ANNEE = annee || ""; MATHS_PRET = true; peintMaths(); }
@@ -675,5 +636,5 @@ if(typeof fetch === "function"){
   }).catch(() => {});
 }
 globalThis.PortailEssai = { tire, ciel, conseil, dateNom, dateJour, revisionsDe, devoirsA, annoncesA, miseEnForme, cote, jourDefi, aTour, reponseJuste, normalise, pointsDefis,
-  anneeDe, palierValide, paliersPour, questionsMaths, departMaths, mathsLues };
+  anneeDe, mathsLues, coursPour };
 })();

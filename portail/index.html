@@ -139,12 +139,10 @@ h1{font:800 clamp(28px,4.2vw,42px)/1.1 var(--titre);margin:0;text-wrap:balance}
 .defi .defi-points{color:var(--ok);font-weight:700}
 .defi-plus a{color:var(--accent)}
 .maths .maths-pas{font-size:14px;color:var(--doux);margin:0}
-.maths .maths-depart{font:600 20px/1.25 var(--titre);color:var(--texte);margin:0}
-.maths .maths-question{font:600 24px/1.2 var(--titre);color:var(--texte);margin:8px 0 0}
-.maths-choix,.maths-cours{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
-.maths-choix button,.maths-cours a{font:inherit;font-size:17px;min-height:44px;min-width:64px;display:inline-flex;align-items:center;justify-content:center;padding:6px 16px;border-radius:10px;border:1px solid var(--trait);background:var(--fond2);color:var(--texte);text-decoration:none;cursor:pointer}
-.maths-choix button:hover,.maths-cours a:hover{border-color:var(--accent)}
-.maths .bouton{border:0;cursor:pointer;font-size:17px;padding:10px 16px;margin-top:12px}
+.maths-cours{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.maths-cours a{font:inherit;font-size:17px;min-height:44px;display:inline-flex;align-items:center;padding:6px 16px;border-radius:10px;border:1px solid var(--trait);background:var(--fond2);color:var(--texte);text-decoration:none}
+.maths-cours a:hover{border-color:var(--accent)}
+.maths-cours a.bouton{border:0;background:var(--accent);color:var(--sur-accent);font:600 18px var(--titre);padding:10px 16px}
 .maths .maths-liens{font-size:14px;margin-top:10px}
 .meteo{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
 .meteo b{font:800 40px/1 var(--titre);font-variant-numeric:tabular-nums}
@@ -280,8 +278,8 @@ h1{font:800 clamp(28px,4.2vw,42px)/1.1 var(--titre);margin:0;text-wrap:balance}
       <p class="defi-points" id="defi-points" hidden></p>
       <p class="defi-plus" id="defi-plus" hidden>Pour aller plus loin : <a id="defi-beoi" target="_top" href="#"></a></p>
     </div>
-    <!-- Un coup de pouce en maths (Vincent, 28/11/2026) : quelques questions, puis le cours de Khan Academy où commencer
-         (portail/maths.json). Rien n'est coté ni envoyé ; le point de départ reste dans le navigateur. -->
+    <!-- Un coup de pouce en maths (Vincent, 28/11/2026) : droit au cours de Khan Academy de son année (portail/maths.json),
+         pour s'entraîner en plus du cours de maths. Rien n'est coté ni enregistré. -->
     <div class="panneau maths" id="maths" hidden aria-labelledby="maths-h">
       <h2 id="maths-h">🧮 Un coup de pouce en maths</h2>
       <div id="maths-zone" aria-live="polite"></div>

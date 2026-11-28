@@ -1,10 +1,9 @@
-/* « Un coup de pouce en maths » du portail, joué de bout en bout dans Chromium : une question à la fois, le point de
-   départ, « Refaire », « Choisir un autre cours », pour une 1re, une 2e, une 3e et la page publique.
-   node outils/essai-portail-maths.cjs   (demande Playwright ; le fichier et les calculs : tests/portail-maths.cjs) */
+/* « Un coup de pouce en maths » du portail, ouvert dans Chromium pour une 1re, une 2e, une 3e et la page publique :
+   chaque classe voit droit son cours de Khan Academy, sans question ni score.
+   node outils/essai-portail-maths.cjs   (demande Playwright ; le fichier lui-même : tests/portail-maths.cjs) */
 const fs = require('node:fs'), path = require('node:path'), assert = require('node:assert/strict');
 const racine = path.join(__dirname, '..');
 const t = JSON.parse(fs.readFileSync(path.join(racine, 'portail/maths.json'), 'utf8'));
-const { calcule } = require('../tests/portail-maths.cjs');
 
 (async () => {
   const { chromium } = require('playwright');
@@ -31,70 +30,33 @@ const { calcule } = require('../tests/portail-maths.cjs');
       return page;
     };
     const texte = page => page.locator('#maths-zone').innerText();
-    /** Répond à la question affichée : juste, ou à côté. */
-    const reponds = async (page, juste) => {
-      const q = (await page.locator('.maths-question').innerText()).trim();
-      const bon = String(calcule(q)).replace('-', '−');
-      const choix = await page.locator('.maths-choix button').allInnerTexts();
-      assert.equal(choix.length, 3); assert.ok(choix.includes(bon), q);
-      await page.locator('.maths-choix button', { hasText: new RegExp('^' + (juste ? bon : choix.find(c => c !== bon)) + '$') }).click();
+    const liens = (page, sel) => page.locator('#maths-zone ' + sel).evaluateAll(l => l.map(a => a.href));
+    const url = (...ids) => ids.map(c => t.cours[c].url);
+    /** Ce que voit une classe : ses cours en gros boutons, puis les autres derrière « Voir les autres cours ». */
+    const verifie = async (classe, miens, titre) => {
+      const page = await ouvre(classe);
+      assert.match(await texte(page), new RegExp('^' + titre));
+      assert.deepEqual(await liens(page, 'a.bouton'), url(...miens), classe);
+      assert.deepEqual(await liens(page, 'a'), url(...miens), classe + ' : rien d’autre au départ');
+      assert.ok(await page.locator('#maths-zone a').evaluateAll(l => l.every(a => a.target === '_blank' && a.rel === 'noopener')));
+      // Ni question, ni score, ni niveau : un lien direct et un encouragement.
+      assert.doesNotMatch(await texte(page), /question|score|niveau|faux|\?/i);
+      const lu = await texte(page);
+      assert.ok(lu.includes('en plus de ton cours de maths') && t.encouragements.some(m => lu.includes(m)), 'une phrase d’encouragement');
+      await page.getByRole('button', { name: 'Voir les autres cours' }).click();
+      assert.deepEqual((await liens(page, 'a')).sort(), Object.values(t.cours).map(c => c.url).sort(), classe + ' : tous les cours après le clic');
+      assert.deepEqual(await liens(page, 'a.bouton'), url(...miens));
+      await page.close();
     };
-    const khan = page => page.locator('#maths-zone a.bouton').getAttribute('href');
+    await verifie('1B', ['1'], 'Ton cours de maths sur Khan Academy');
+    await verifie('2CB', ['2', 'ce1d'], 'Tes cours de maths sur Khan Academy');
+    await verifie('3F', ['3'], 'Ton cours de maths sur Khan Academy');
 
-    // 1re : pas de question, son cours tout de suite.
-    let page = await ouvre('1B');
-    assert.match(await texte(page), /Ton cours de maths sur Khan Academy\s+1re année secondaire/);
-    assert.equal(await khan(page), t.cours['1'].url);
-    assert.equal(await page.locator('#maths-zone', { hasText: 'Refaire les questions' }).count(), 0);
-    await page.close();
-
-    // 3e : la première question à côté ▸ les révisions du CE1D ; aucun « faux », aucun score à l'écran.
-    page = await ouvre('3F');
-    assert.match(await texte(page), /Quelques questions, deux minutes\./);
-    await page.getByRole('button', { name: 'Trouver mon point de départ' }).click();
-    assert.match(await texte(page), /Question 1 · 4 au plus/);
-    await reponds(page, false);
-    assert.match(await texte(page), /Ton point de départ\s+Révisions pour le CE1D/);
-    assert.equal(await khan(page), t.cours.ce1d.url);
-    assert.doesNotMatch(await texte(page), /faux|erreur|score|\/ ?4|niveau/i);
-    assert.equal(await page.locator('#maths-zone a.bouton').getAttribute('target'), '_blank');
-    // Le point de départ est retrouvé à la visite suivante, dans ce navigateur.
-    await page.reload(); await page.waitForSelector('#maths:not([hidden])');
-    assert.match(await texte(page), /Ton point de départ\s+Révisions pour le CE1D/);
-    // Refaire : quatre réponses justes ▸ le cours de 3e.
-    await page.getByRole('button', { name: 'Refaire les questions' }).click();
-    for (let i = 1; i <= 4; i++) { assert.match(await texte(page), new RegExp('Question ' + i + ' · 4 au plus')); await reponds(page, true); }
-    assert.match(await texte(page), /Ton point de départ\s+3e année secondaire\s+Tu as les bases/);
-    assert.equal(await khan(page), t.cours['3'].url);
-    // Une question du second palier arrête encore vers le CE1D ; « Je ne sais pas encore » vaut une question qui résiste.
-    await page.getByRole('button', { name: 'Refaire les questions' }).click();
-    await reponds(page, true); await reponds(page, true);
-    await page.getByRole('button', { name: 'Je ne sais pas encore' }).click();
-    assert.equal(await khan(page), t.cours.ce1d.url);
-    // Choisir un autre cours : les quatre cours, tous chez Khan Academy, puis retour.
-    await page.getByRole('button', { name: 'Choisir un autre cours' }).click();
-    assert.deepEqual(await page.locator('.maths-cours a').evaluateAll(l => l.map(a => a.href)), Object.values(t.cours).map(c => c.url));
-    await page.getByRole('button', { name: 'Retour' }).click();
-    assert.match(await texte(page), /Ton point de départ/);
-    await page.close();
-
-    // 2e : deux questions ; à côté ▸ le cours de 1re, tout juste ▸ le cours de 2e.
-    page = await ouvre('2CB');
-    await page.getByRole('button', { name: 'Trouver mon point de départ' }).click();
-    assert.match(await texte(page), /Question 1 · 2 au plus/);
-    await reponds(page, true); await reponds(page, false);
-    assert.equal(await khan(page), t.cours['1'].url);
-    await page.getByRole('button', { name: 'Refaire les questions' }).click();
-    await reponds(page, true); await reponds(page, true);
-    assert.equal(await khan(page), t.cours['2'].url);
-    await page.close();
-
-    // Page publique (aucune classe) : la tuile est là ; tout juste ▸ à l'élève de choisir son cours.
-    page = await ouvre('');
-    await page.getByRole('button', { name: 'Trouver mon point de départ' }).click();
-    for (let i = 0; i < 4; i++) await reponds(page, true);
-    assert.match(await texte(page), /Tu as les bases : choisis ton cours/);
-    assert.equal(await page.locator('.maths-cours a').count(), 4);
+    // Page publique (aucune classe) : la tuile est là, avec tous les cours.
+    const page = await ouvre('');
+    assert.match(await texte(page), /^Choisis ton cours sur Khan Academy/);
+    assert.equal((await liens(page, 'a')).length, Object.keys(t.cours).length);
+    assert.equal(await page.getByRole('button', { name: 'Voir les autres cours' }).count(), 0);
     await page.close();
     console.log('essai-portail-maths : tout passe');
   } finally { await nav.close(); }
