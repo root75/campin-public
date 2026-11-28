@@ -150,7 +150,7 @@ const code = url => new Promise(ok => execFile('curl', ['-sS', '-L', '-o', '/dev
         }
         await page.setViewportSize(ETROIT); await page.waitForTimeout(120);
         const large = await page.evaluate(() => document.documentElement.scrollWidth);
-        if (large > ETROIT.width + 1) note(c.id, etape, 'deborde', 'à 375 px, la page fait ' + large + ' px de large');
+        if (large > ETROIT.width + 1) note(c.id, etape, 'deborde', 'défilement horizontal à 375 px de large');   // sans le nombre de pixels : il dépend des polices de la machine
       } catch (e) { note(c.id, etape, 'erreur', 'la page ne s’ouvre pas : ' + String(e.message).split('\n')[0].slice(0, 120)); }
       await contexte.close();
     }
