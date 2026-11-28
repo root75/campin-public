@@ -204,6 +204,58 @@
         }
       ]
     },
+    "python-bugs": {
+      "titre": "Python — La chasse aux bugs",
+      "sujet": "SyntaxError, NameError, TypeError, bugs silencieux",
+      "niveau": 3,
+      "activites": [
+        {
+          "genre": "L'essentiel",
+          "chemin": "revisions/je-revise/?cours=python-bugs#resume"
+        },
+        {
+          "genre": "Quiz",
+          "chemin": "revisions/je-revise/?cours=python-bugs#quiz",
+          "suivi": "quiz:python-bugs"
+        },
+        {
+          "genre": "Cartes",
+          "chemin": "revisions/je-revise/?cours=python-bugs#cartes"
+        },
+        {
+          "genre": "Mots croisés",
+          "chemin": "mots-croises/?cours=python-bugs",
+          "suivi": "mots-croises:python-bugs",
+          "jeu": "mots-croises"
+        }
+      ]
+    },
+    "python-4": {
+      "titre": "Python 04 — Si… alors, sinon",
+      "sujet": "comparaisons, if, else",
+      "niveau": 3,
+      "activites": [
+        {
+          "genre": "L'essentiel",
+          "chemin": "revisions/je-revise/?cours=python-4#resume"
+        },
+        {
+          "genre": "Quiz",
+          "chemin": "revisions/je-revise/?cours=python-4#quiz",
+          "suivi": "quiz:python-4"
+        },
+        {
+          "genre": "Cartes",
+          "chemin": "revisions/je-revise/?cours=python-4#cartes"
+        },
+        {
+          "genre": "Mots croisés",
+          "chemin": "mots-croises/?cours=python-4",
+          "suivi": "mots-croises:python-4",
+          "jeu": "mots-croises"
+        }
+      ]
+    },
     "labo-07": {
       "titre": "Labo 07 — Dans les coulisses du PC",
       "sujet": "Machine, Windows, application et fichier",
