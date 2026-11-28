@@ -28,7 +28,7 @@ const NOMMER = ["rat-de-ville-formatif", "rat-de-ville-6"];
 
 /* ----- État connecté : tout vient du serveur. ----- */
 function affiche(d){
-  if(!d || !d.email) return;            // compte hors école : la page reste dans son état public
+  if(!d || !d.email){ mathsAnnee(""); return; }   // compte hors école : la page reste dans son état public
   $("non-connecte").hidden = true;
   $("bonjour").textContent = "Bonjour " + (d.prenom || "") + ", par où commences-tu ?";
   $("compte").replaceChildren("Connecté avec ", gras(d.email), d.prof ? " · professeur" : d.classe ? " · classe " : " · classe à choisir dans « Mes cours »", d.prof || !d.classe ? "" : gras(d.classe));
@@ -48,6 +48,7 @@ function affiche(d){
   if(d.prof && d.tableau){ $("lien-prof").href = d.tableau; $("lien-prof").hidden = false; }
   const annee = /^[123]/.test(d.classe || "") ? d.classe[0] : "";
   if(annee) $("porte-revise").href = SITE + "revisions/?niveau=" + annee;
+  mathsAnnee(annee);
   mesRevisions(d.cours);
   // La date sous la forme AAAAMMJJ : seulement pour une classe qui suit un cours où l'on crée et nomme un document.
   if(Array.isArray(d.cours) && d.cours.some(c => NOMMER.includes(c))) $("date-nommer").hidden = false;
@@ -531,8 +532,52 @@ function defiConnecte(d){
 }
 chargeDefi(new Date());
 
+/* ----- Un coup de pouce en maths (Vincent, 28/11/2026) : droit au cours de Khan Academy de son année. -----
+   Une 1re voit le cours de 1re, une 2e le cours de 2e et les révisions pour le CE1D, une 3e le cours de 3e
+   (portail/maths.json). Pas de quiz : le lien est direct, pour s'entraîner à son rythme en plus du cours de maths,
+   avec une phrase d'encouragement qui change à chaque visite. Rien n'est coté ni enregistré. Sans classe connue
+   (page publique, professeur), tous les cours sont proposés. */
+const MATHS = SITE + "portail/maths.json", KHAN = "https://fr.khanacademy.org/math/";
+function anneeDe(classe){ return /^[123]/.test(classe || "") ? classe[0] : ""; }
+/** Du fichier, ce qui est sûr : des cours de Khan Academy seulement (jamais une autre adresse). */
+function mathsLues(t){
+  const cours = {};
+  Object.keys((t && t.cours) || {}).forEach(c => { const x = t.cours[c]; if(x && typeof x.titre === "string" && typeof x.url === "string" && x.url.startsWith(KHAN)) cours[c] = x; });
+  if(!Object.keys(cours).length) return null;
+  return { cours, annees: t.annees || {}, encouragements: Array.isArray(t.encouragements) ? t.encouragements.filter(x => typeof x === "string") : [] };
+}
+/** Les cours d'une année, dans l'ordre du fichier ; sans année connue (ou sans cours pour elle) : aucun, tout est proposé. */
+function coursPour(t, annee){ const l = t && t.annees && t.annees[annee]; return Array.isArray(l) ? l.filter(c => t.cours[c]) : []; }
+
+// Servie par Apps Script, la tuile attend de savoir la classe de l'élève ; publique, elle s'affiche tout de suite.
+let MATHS_T = null, MATHS_ANNEE = "", MATHS_PRET = !SUIVI;
+function peintMaths(){
+  if(!MATHS_T || !MATHS_PRET || !$("maths")) return;
+  const t = MATHS_T, zone = $("maths-zone"), miens = coursPour(t, MATHS_ANNEE), autres = Object.keys(t.cours).filter(c => !miens.includes(c));
+  const cree = (tag, classe, texte) => { const e = document.createElement(tag); if(classe) e.className = classe; if(texte != null) e.textContent = texte; return e; };
+  const versKhan = (c, classe) => { const a = cree("a", classe, t.cours[c].titre + " ↗"); a.href = t.cours[c].url; a.target = "_blank"; a.rel = "noopener"; return a; };
+  const liste = (cours, classe) => { const d = cree("div", "maths-cours"); cours.forEach(c => d.append(versKhan(c, classe))); return d; };
+  const mot = t.encouragements.length ? t.encouragements[Math.floor(Math.random() * t.encouragements.length)] : "";
+  const suite = [cree("p", null, "Pour t'entraîner à ton rythme, en plus de ton cours de maths. " + mot)];
+  if(miens.length && autres.length){
+    const p = cree("p", "maths-liens"), b = cree("button", "lien", "Voir les autres cours"); b.type = "button";
+    b.addEventListener("click", () => p.replaceWith(liste(autres, "")));
+    p.append(b); suite.push(p);
+  }
+  zone.replaceChildren(cree("p", "maths-pas", !miens.length ? "Choisis ton cours sur Khan Academy" : miens.length > 1 ? "Tes cours de maths sur Khan Academy" : "Ton cours de maths sur Khan Academy"),
+    miens.length ? liste(miens, "bouton") : liste(autres, ""), ...suite);
+  $("maths").hidden = false;
+}
+/** La classe est connue (ou ne le sera pas) : la tuile peut s'afficher pour cette année. */
+function mathsAnnee(annee){ MATHS_ANNEE = annee || ""; MATHS_PRET = true; peintMaths(); }
+function chargeMaths(){
+  if(typeof fetch !== "function") return;
+  fetch(MATHS).then(r => r.ok ? r.json() : Promise.reject()).then(t => { MATHS_T = mathsLues(t); peintMaths(); }).catch(() => {});
+}
+chargeMaths();
+
 if(SUIVI){
-  google.script.run.withSuccessHandler(affiche).withFailureHandler(() => {}).portail((document.body && document.body.dataset && document.body.dataset.apercu) || "");
+  google.script.run.withSuccessHandler(affiche).withFailureHandler(() => mathsAnnee("")).portail((document.body && document.body.dataset && document.body.dataset.apercu) || "");
 } else if(location.protocol === "https:" && !/[?&]public\b/.test(location.search)){
   // « ?public » garde la page publique, pour la montrer sans être redirigé.
   // Sans compte de l'école, Google répond par sa page de connexion : le navigateur la refuse comme script, rien ne se passe.
@@ -590,5 +635,6 @@ if(typeof fetch === "function"){
     montre();
   }).catch(() => {});
 }
-globalThis.PortailEssai = { tire, ciel, conseil, dateNom, dateJour, revisionsDe, devoirsA, annoncesA, miseEnForme, cote, jourDefi, aTour, reponseJuste, normalise, pointsDefis };
+globalThis.PortailEssai = { tire, ciel, conseil, dateNom, dateJour, revisionsDe, devoirsA, annoncesA, miseEnForme, cote, jourDefi, aTour, reponseJuste, normalise, pointsDefis,
+  anneeDe, mathsLues, coursPour };
 })();

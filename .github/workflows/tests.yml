@@ -49,6 +49,8 @@ jobs:
           npx playwright install chromium
       - name: node outils/verifier-cours.cjs --reseau
         run: node outils/verifier-cours.cjs --reseau
+      - name: La tuile « maths » du portail, jouée dans Chromium
+        run: node outils/essai-portail-maths.cjs
       - name: Le cours modèle, généré depuis sa fiche puis ouvert étape par étape
         run: |
           cp -r . "$RUNNER_TEMP/essai"

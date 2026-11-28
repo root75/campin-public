@@ -1,0 +1,17 @@
+{
+  "note": "« Un coup de pouce en maths », la tuile du portail (portail/portail.js). Elle mène l'élève droit au cours de Khan Academy de son année, pour s'entraîner à son rythme en plus de son cours de maths. « cours » : les cours de Khan Academy, des liens seulement (adresses données par le professeur). « annees » : les cours montrés à chaque année, dans l'ordre ; une classe dont le nom commence par 1, 2 ou 3 a son année. Sans classe connue (page publique, professeur), tous les cours sont proposés. « encouragements » : une phrase tirée au hasard à chaque visite. Rien n'est coté ni enregistré. Changer un lien ou une phrase = changer une ligne ici.",
+  "cours": {
+    "1": { "titre": "1re année secondaire", "url": "https://fr.khanacademy.org/math/be-1ere-secondaire2" },
+    "2": { "titre": "2e année secondaire", "url": "https://fr.khanacademy.org/math/be-2eme-secondaire2" },
+    "ce1d": { "titre": "Révisions pour le CE1D", "url": "https://fr.khanacademy.org/math/revisions-ce1dv2" },
+    "3": { "titre": "3e année secondaire", "url": "https://fr.khanacademy.org/math/3eme-annee-secondaire" }
+  },
+  "annees": { "1": ["1"], "2": ["2", "ce1d"], "3": ["3"] },
+  "encouragements": [
+    "Dix minutes aujourd'hui, c'est déjà un pas.",
+    "Sur Khan Academy, tu peux te tromper et recommencer autant de fois que tu veux.",
+    "Personne n'est « nul en maths » : il y a des bases à reconstruire, une à la fois.",
+    "Un exercice réussi aujourd'hui, c'est un exercice de moins qui te fera peur demain.",
+    "Tu avances à ton rythme : personne ne regarde par-dessus ton épaule."
+  ]
+}
