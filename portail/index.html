@@ -144,6 +144,16 @@ h1{font:800 clamp(28px,4.2vw,42px)/1.1 var(--titre);margin:0;text-wrap:balance}
 .maths-cours a:hover{border-color:var(--accent)}
 .maths-cours a.bouton{border:0;background:var(--accent);color:var(--sur-accent);font:600 18px var(--titre);padding:10px 16px}
 .maths .maths-liens{font-size:14px;margin-top:10px}
+.maths-exo{margin-top:14px;padding-top:12px;border-top:1px dashed var(--trait)}
+.maths-exo .maths-exo-titre{font:600 18px/1.25 var(--titre);color:var(--texte);margin:0}
+.maths-exo .maths-question{font:600 26px/1.2 var(--titre);color:var(--texte);margin:8px 0 0}
+.maths-choix{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.maths-choix button,.maths-jouer{font:inherit;font-size:17px;min-height:44px;min-width:64px;padding:6px 16px;border-radius:10px;border:1px solid var(--trait);background:var(--fond2);color:var(--texte);cursor:pointer}
+.maths-choix button:hover:enabled,.maths-jouer:hover{border-color:var(--accent)}
+.maths-choix button.oui{border-color:var(--ok);color:var(--ok);font-weight:700}
+.maths-choix button.non{opacity:.45;text-decoration:line-through;cursor:default}
+.maths-jouer{margin-top:10px;border-color:var(--accent);color:var(--accent);font-weight:700}
+.maths-exo .maths-retour{color:var(--texte)}.maths-exo .bouton{display:inline-block;margin-top:12px;font-size:17px;padding:10px 16px}
 .meteo{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
 .meteo b{font:800 40px/1 var(--titre);font-variant-numeric:tabular-nums}
 

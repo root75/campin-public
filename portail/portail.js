@@ -536,7 +536,11 @@ chargeDefi(new Date());
    Une 1re voit le cours de 1re, une 2e le cours de 2e et les révisions pour le CE1D, une 3e le cours de 3e
    (portail/maths.json). Pas de quiz : le lien est direct, pour s'entraîner à son rythme en plus du cours de maths,
    avec une phrase d'encouragement qui change à chaque visite. Rien n'est coté ni enregistré. Sans classe connue
-   (page publique, professeur), tous les cours sont proposés. */
+   (page publique, professeur), tous les cours sont proposés.
+   Sous le cours, un petit échauffement se joue dans la tuile (« exercices » du fichier, écrits pour le site) : un
+   chapitre du cours tiré au sort à chaque visite (« Un autre chapitre » en donne un autre), une question à la fois,
+   un indice si ça coince, l'explication quand c'est trouvé, puis ce chapitre chez Khan Academy.
+   Ni score ni trace : rien n'est compté, rien n'est gardé. */
 const MATHS = SITE + "portail/maths.json", KHAN = "https://fr.khanacademy.org/math/";
 function anneeDe(classe){ return /^[123]/.test(classe || "") ? classe[0] : ""; }
 /** Du fichier, ce qui est sûr : des cours de Khan Academy seulement (jamais une autre adresse). */
@@ -544,10 +548,56 @@ function mathsLues(t){
   const cours = {};
   Object.keys((t && t.cours) || {}).forEach(c => { const x = t.cours[c]; if(x && typeof x.titre === "string" && typeof x.url === "string" && x.url.startsWith(KHAN)) cours[c] = x; });
   if(!Object.keys(cours).length) return null;
-  return { cours, annees: t.annees || {}, encouragements: Array.isArray(t.encouragements) ? t.encouragements.filter(x => typeof x === "string") : [] };
+  const exercices = {};
+  Object.keys(t.exercices || {}).forEach(a => { const l = (Array.isArray(t.exercices[a]) ? t.exercices[a] : []).filter(echauffementValide); if(l.length) exercices[a] = l; });
+  return { cours, annees: t.annees || {}, exercices, encouragements: Array.isArray(t.encouragements) ? t.encouragements.filter(x => typeof x === "string") : [] };
+}
+/** Un échauffement qui tient debout : un titre, une suite chez Khan Academy, des questions dont chaque variante a sa réponse parmi ses choix. */
+function echauffementValide(e){
+  return !!e && typeof e.titre === "string" && typeof e.suite === "string" && e.suite.startsWith(KHAN) && Array.isArray(e.questions) && e.questions.length > 0 &&
+    e.questions.every(q => q && Array.isArray(q.variantes) && q.variantes.length > 0 && q.variantes.every(x => x && typeof x.q === "string" && Array.isArray(x.choix) && x.choix.includes(x.reponse)));
+}
+/** L'échauffement d'une année, tiré au sort à chaque visite : un chapitre, jamais « sauf » quand il y en a d'autres (null : aucun). */
+function echauffementPour(t, annee, hasard = Math.random, sauf){
+  const tous = (t && t.exercices && t.exercices[annee]) || [], l = tous.length > 1 ? tous.filter(e => e !== sauf) : tous;
+  return l.length ? l[Math.min(l.length - 1, Math.floor(hasard() * l.length))] : null;
+}
+/** Les questions d'un passage : pour chaque question la variante de ce tour, ses choix mélangés. */
+function questionsEchauffement(e, tour, hasard = Math.random){
+  const melange = l => { const a = l.slice(); for(let i = a.length - 1; i > 0; i--){ const j = Math.floor(hasard() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+  return e.questions.map(q => { const x = aTour(q.variantes, tour); return { q: x.q, choix: melange(x.choix), reponse: x.reponse, explication: x.explication || "", indice: q.indice || "" }; });
 }
 /** Les cours d'une année, dans l'ordre du fichier ; sans année connue (ou sans cours pour elle) : aucun, tout est proposé. */
 function coursPour(t, annee){ const l = t && t.annees && t.annees[annee]; return Array.isArray(l) ? l.filter(c => t.cours[c]) : []; }
+
+/** L'échauffement dans la tuile : l'invitation, les questions une à la fois, puis la suite chez Khan Academy.
+    « autre » (s'il y a d'autres chapitres) rend la boîte d'un autre chapitre, qui prend la place de celle-ci. */
+function echauffement(exo, cree, autre){
+  const boite = cree("div", "maths-exo"), n = exo.questions.length;
+  const bouton = (classe, texte, action) => { const b = cree("button", classe, texte); b.type = "button"; b.addEventListener("click", action); return b; };
+  let tour = Math.floor(Math.random() * 3);
+  const change = () => { const p = cree("p", "maths-liens"); if(autre) p.append(bouton("lien", "Un autre chapitre ▸", () => boite.replaceWith(autre(exo)))); return p; };
+  const invite = () => boite.replaceChildren(cree("p", "maths-pas", "Pour t'échauffer"), cree("p", "maths-exo-titre", exo.titre),
+    bouton("maths-jouer", "Essayer " + n + " question" + (n > 1 ? "s" : "") + " ▸", () => question(questionsEchauffement(exo, tour), 0)), change());
+  const fin = () => {
+    const a = cree("a", "bouton", "Continuer sur Khan Academy ↗"); a.href = exo.suite; a.target = "_blank"; a.rel = "noopener";
+    const p = change(); p.prepend(bouton("lien", "Recommencer avec d'autres nombres", () => { tour++; question(questionsEchauffement(exo, tour), 0); }), autre ? " · " : "");
+    boite.replaceChildren(cree("p", "maths-exo-titre", "Bravo, tu es échauffé !"), cree("p", null, "La suite est sur Khan Academy : les leçons et les exercices de ce chapitre, à ton rythme."), a, p);
+  };
+  const question = (liste, i) => {
+    const x = liste[i], choix = cree("div", "maths-choix"), retour = cree("p", "maths-retour");
+    retour.setAttribute("aria-live", "polite"); retour.hidden = true;
+    x.choix.forEach(c => { const b = bouton("", c, () => {
+      if(c !== x.reponse){ b.disabled = true; b.className = "non"; retour.replaceChildren(gras("Pas encore. "), x.indice); retour.hidden = false; return; }
+      [...choix.children].forEach(k => { k.disabled = true; }); b.className = "oui";
+      retour.replaceChildren(gras("Oui ! "), x.explication); retour.hidden = false;
+      boite.append(bouton("maths-jouer", i + 1 < n ? "Question suivante ▸" : "Terminer ▸", () => i + 1 < n ? question(liste, i + 1) : fin()));
+    }); choix.append(b); });
+    boite.replaceChildren(cree("p", "maths-pas", exo.titre + " · question " + (i + 1) + " sur " + n), cree("p", "maths-question", x.q), choix, retour);
+  };
+  invite();
+  return boite;
+}
 
 // Servie par Apps Script, la tuile attend de savoir la classe de l'élève ; publique, elle s'affiche tout de suite.
 let MATHS_T = null, MATHS_ANNEE = "", MATHS_PRET = !SUIVI;
@@ -564,6 +614,10 @@ function peintMaths(){
     b.addEventListener("click", () => p.replaceWith(liste(autres, "")));
     p.append(b); suite.push(p);
   }
+  const plusieurs = (t.exercices[MATHS_ANNEE] || []).length > 1;
+  const boite = e => echauffement(e, cree, plusieurs ? courant => boite(echauffementPour(t, MATHS_ANNEE, Math.random, courant)) : null);
+  const exo = echauffementPour(t, MATHS_ANNEE);
+  if(exo) suite.push(boite(exo));
   zone.replaceChildren(cree("p", "maths-pas", !miens.length ? "Choisis ton cours sur Khan Academy" : miens.length > 1 ? "Tes cours de maths sur Khan Academy" : "Ton cours de maths sur Khan Academy"),
     miens.length ? liste(miens, "bouton") : liste(autres, ""), ...suite);
   $("maths").hidden = false;
@@ -636,5 +690,5 @@ if(typeof fetch === "function"){
   }).catch(() => {});
 }
 globalThis.PortailEssai = { tire, ciel, conseil, dateNom, dateJour, revisionsDe, devoirsA, annoncesA, miseEnForme, cote, jourDefi, aTour, reponseJuste, normalise, pointsDefis,
-  anneeDe, mathsLues, coursPour };
+  anneeDe, mathsLues, coursPour, echauffementValide, echauffementPour, questionsEchauffement };
 })();
