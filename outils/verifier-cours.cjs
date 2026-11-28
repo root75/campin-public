@@ -15,13 +15,16 @@
    Ce qui est contrôlé, étape par étape :
      erreur        une erreur JavaScript, ou le bandeau rouge « Erreur dans la page »
      absent        un fichier du site demandé par la page et qui n'existe pas
-     lien          un lien vers une page du site qui n'existe pas (ou une ancre absente)
+     lien          un lien vers une page du site qui n'existe pas (ou une ancre absente ; #quiz vaut pour l'onglet
+                   id="p-quiz" d'une page « je révise »)
      image         une image qui ne s'affiche pas
      etapes        le nombre d'étapes du catalogue ≠ celui de la page
      haut          au travail (étape 2 et suivantes), un bouton ou un lien affiché au-dessus de la tâche qui
                    n'est pas dans la liste HAUT_PERMIS (le « Retrouver mon document » de la PR 313)
      coince        une étape sans aucune réponse dans « Ça coince ? »
      deborde       un défilement horizontal à 375 px de large
+     fin           l'écran de fin (ouvert après la dernière étape, avec les mêmes contrôles) propose moins d'activités
+                   de révision que le catalogue revisions/revisions.json n'en compte pour ce cours
      appels        à l'ouverture du cours, plus de APPELS_MAX appels au serveur (chaque appel coûte environ 1,3 s
                    d'aller-retour, et toute la classe ouvre le cours en même temps)
      poids         à l'ouverture du cours, plus de POIDS_MAX Ko à télécharger (fichiers du site, compressés)
@@ -98,6 +101,7 @@ function releve({ permis, base }) {
     images: [...document.images].filter(i => i.complete && !i.naturalWidth && i.getAttribute('src')).map(i => i.currentSrc || i.src).filter(u => u.startsWith(base)),
     coince: document.querySelector('#coince') ? document.querySelectorAll('#coince-liste li, #coince .aide-outils > *').length : null,
     fini: !!z && z.childElementCount > 0,
+    revisions: [...document.querySelectorAll('.encart.revisions:not([hidden]) .actions a')].map(a => a.href),
   };
 }
 
@@ -116,6 +120,7 @@ const code = url => new Promise(ok => execFile('curl', ['-sS', '-L', '-o', '/dev
   const fichierJson = option('--json') ? args[args.indexOf('--json') + 1] : null;
   const demandes = args.filter((a, i) => !a.startsWith('--') && args[i - 1] !== '--json' && args[i - 1] !== '--racine');
   const catalogue = JSON.parse(fs.readFileSync(path.join(RACINE, 'pas-a-pas/cours.json'), 'utf8')).cours;
+  const revisions = (() => { try { return JSON.parse(fs.readFileSync(path.join(RACINE, 'revisions/revisions.json'), 'utf8')).cours || {}; } catch (e) { return {}; } })();
   const cours = demandes.length ? catalogue.filter(c => demandes.includes(c.id)) : catalogue;
   const inconnus = demandes.filter(d => !catalogue.some(c => c.id === d));
   if (inconnus.length) { console.error('Cours absent du catalogue : ' + inconnus.join(', ')); process.exit(2); }
@@ -128,53 +133,59 @@ const code = url => new Promise(ok => execFile('curl', ['-sS', '-L', '-o', '/dev
   for (const c of cours) {
     const adresse = BASE + c.chemin.replace(/\/?$/, '/');
     const hauteurs = [], ouverture = { fichiers: 0, octets: 0, appels: 0 }; let n = Math.max(1, Number(c.etapes) || 1), compte = false;
-    for (let etape = 1; etape <= n; etape++) {
+    let aLaFin = null;
+    for (let etape = 1; etape <= n + 1; etape++) {
+      const fin = etape > n, ou = fin ? 0 : etape, dit = t => fin ? 'écran de fin : ' + t : t;   // le dernier tour : l'élève a tout réussi
       const contexte = await navigateur.newContext({ viewport: ECRAN, locale: 'fr-BE', timezoneId: 'Europe/Brussels' });
       await contexte.route('**/*', r => {
         const u = r.request().url();
         if (!u.startsWith(BASE)) { if (r.request().resourceType() === 'image' && !externes.has(u)) externes.set(u, c.id + ' ' + etape); return r.abort(); }   // rien ne sort
         const f = fichierLocal(u);
-        if (!f) { note(c.id, etape, 'absent', u.replace(BASE, '').replace(/[?#].*$/, '')); return r.fulfill({ status: 404, body: 'absent' }); }
+        if (!f) { note(c.id, ou, 'absent', dit(u.replace(BASE, '').replace(/[?#].*$/, ''))); return r.fulfill({ status: 404, body: 'absent' }); }
         if (etape === 1) { ouverture.fichiers++; ouverture.octets += poids(f); }
         return r.fulfill({ status: 200, contentType: TYPES[path.extname(f).toLowerCase()] || 'application/octet-stream', body: fs.readFileSync(f) });
       });
       const page = await contexte.newPage();
       await page.addInitScript(fauxServeur, { etape });
-      page.on('pageerror', e => note(c.id, etape, 'erreur', String(e.message).slice(0, 160)));
+      page.on('pageerror', e => note(c.id, ou, 'erreur', dit(String(e.message).slice(0, 160))));
       try {
         await page.goto(adresse, { waitUntil: 'load', timeout: 30000 });
         await page.waitForFunction(() => { const z = document.querySelector('#bloc'); return z && z.childElementCount > 0; }, null, { timeout: 8000 }).catch(() => {});
-        await page.waitForTimeout(etape === 1 ? 900 : 250);
+        if (fin) await page.evaluate(() => { try { if (ici < BLOCS.length) { ici = BLOCS.length; affiche(); } } catch (e) {} });   // cours à cases : la fin s'ouvre par sa pastille
+        await page.waitForTimeout(etape === 1 ? 900 : fin ? 500 : 250);
         const r = await page.evaluate(releve, { permis: HAUT_PERMIS, base: BASE });
         if (etape === 1) {
           const appels = await page.evaluate(() => window.__appels || []); ouverture.appels = appels.length;
           if (appels.length > APPELS_MAX) note(c.id, 0, 'appels', 'plus de ' + APPELS_MAX + ' appels au serveur à l’ouverture');
           if (ouverture.octets > POIDS_MAX * 1024) note(c.id, 0, 'poids', 'plus de ' + POIDS_MAX + ' Ko à l’ouverture');
         }
-        if (!r.fini) note(c.id, etape, 'erreur', 'l’étape ne s’affiche pas (zone #bloc vide)');
-        r.bandeau.forEach(t => note(c.id, etape, 'erreur', t));
-        r.images.forEach(i => note(c.id, etape, 'image', i.replace(BASE, '')));
+        if (!r.fini) note(c.id, ou, 'erreur', fin ? 'l’écran de fin ne s’affiche pas (zone #bloc vide)' : 'l’étape ne s’affiche pas (zone #bloc vide)');
+        r.bandeau.forEach(t => note(c.id, ou, 'erreur', dit(t)));
+        r.images.forEach(i => note(c.id, ou, 'image', dit(i.replace(BASE, ''))));
         if (!compte && r.blocs !== null) { compte = true;
           if (r.blocs !== Number(c.etapes)) note(c.id, 0, 'etapes', 'catalogue : ' + c.etapes + ' étape(s) ; page : ' + r.blocs);
           n = Math.min(Math.max(n, r.blocs), 60); }
-        if (r.coince === 0) note(c.id, etape, 'coince', '« Ça coince ? » est vide');
-        if (etape >= 2) { hauteurs.push(r.haut); r.intrus.forEach(t => note(c.id, etape, 'haut', t)); }
+        if (fin) { aLaFin = r.revisions.length;
+          const prevues = ((revisions[c.id] || {}).activites || []).length;
+          if (r.revisions.length < prevues) note(c.id, 0, 'fin', 'l’écran de fin propose ' + r.revisions.length + ' activité(s) de révision, le catalogue en compte ' + prevues); }
+        if (!fin && r.coince === 0) note(c.id, etape, 'coince', '« Ça coince ? » est vide');
+        if (!fin && etape >= 2) { hauteurs.push(r.haut); r.intrus.forEach(t => note(c.id, etape, 'haut', t)); }
         for (const l of r.liens) {
           if (!l.startsWith(BASE)) { if (!externes.has(l)) externes.set(l, c.id + ' ' + etape); continue; }
           const f = fichierLocal(l), ancre = decodeURIComponent(new URL(l).hash.slice(1));
-          if (!f) note(c.id, etape, 'lien', l.replace(BASE, '') + ' : page absente');
+          if (!f) note(c.id, ou, 'lien', dit(l.replace(BASE, '') + ' : page absente'));
           else if (ancre && /\.html$/.test(f) && !/^bloc=\d+$/.test(ancre) && path.resolve(f) !== path.resolve(fichierLocal(adresse) || '')
-            && !new RegExp('id=["\']' + ancre.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '["\']').test(fs.readFileSync(f, 'utf8')))
-            note(c.id, etape, 'lien', l.replace(BASE, '') + ' : ancre absente de la page');
+            && !new RegExp('id=["\'](?:p-)?' + ancre.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '["\']').test(fs.readFileSync(f, 'utf8')))
+            note(c.id, ou, 'lien', dit(l.replace(BASE, '') + ' : ancre absente de la page'));
         }
         await page.setViewportSize(ETROIT); await page.waitForTimeout(120);
         const large = await page.evaluate(() => document.documentElement.scrollWidth);
-        if (large > ETROIT.width + 1) note(c.id, etape, 'deborde', 'défilement horizontal à 375 px de large');   // sans le nombre de pixels : il dépend des polices de la machine
-      } catch (e) { note(c.id, etape, 'erreur', 'la page ne s’ouvre pas : ' + String(e.message).split('\n')[0].slice(0, 120)); }
+        if (large > ETROIT.width + 1) note(c.id, ou, 'deborde', dit('défilement horizontal à 375 px de large'));   // sans le nombre de pixels : il dépend des polices de la machine
+      } catch (e) { note(c.id, ou, 'erreur', dit('la page ne s’ouvre pas : ') + String(e.message).split('\n')[0].slice(0, 120)); }
       await contexte.close();
     }
     hauteurs.sort((a, b) => a - b);
-    mesures[c.id] = { etapes: n, ouverture, haut: hauteurs.length ? { min: hauteurs[0], mediane: hauteurs[hauteurs.length >> 1], max: hauteurs[hauteurs.length - 1] } : null };
+    mesures[c.id] = { etapes: n, ouverture, aLaFin, haut: hauteurs.length ? { min: hauteurs[0], mediane: hauteurs[hauteurs.length >> 1], max: hauteurs[hauteurs.length - 1] } : null };
   }
   await navigateur.close();
 
@@ -202,11 +213,11 @@ const code = url => new Promise(ok => execFile('curl', ['-sS', '-L', '-o', '/dev
   const lignes = [];
   lignes.push('Vérification des cours : ' + cours.length + ' cours, ' + Object.values(mesures).reduce((t, m) => t + m.etapes, 0) + ' étapes ouvertes.');
   lignes.push('');
-  lignes.push('| Cours | Étapes | La tâche commence à (px, écran 1366 × 768) | À l’ouverture : fichiers, poids, appels au serveur | Constats nouveaux | Connus |');
+  lignes.push('| Cours | Étapes | La tâche commence à (px, écran 1366 × 768) | À l’ouverture : fichiers, poids, appels au serveur | À la fin : activités de révision | Constats nouveaux | Connus |');
   lignes.push('|---|---|---|---|---|---|');
   for (const c of cours) { const m = mesures[c.id], g = [...groupes.values()].filter(x => x.cours === c.id);
     lignes.push('| ' + c.id + ' | ' + m.etapes + ' | ' + (m.haut ? m.haut.mediane + ' (de ' + m.haut.min + ' à ' + m.haut.max + ')' : '—') + ' | '
-      + m.ouverture.fichiers + ' fichiers, ' + Math.round(m.ouverture.octets / 1024) + ' Ko, ' + m.ouverture.appels + ' appels | '
+      + m.ouverture.fichiers + ' fichiers, ' + Math.round(m.ouverture.octets / 1024) + ' Ko, ' + m.ouverture.appels + ' appels | ' + (m.aLaFin == null ? '—' : m.aLaFin) + ' | '
       + g.filter(x => !(cle(x) in connus)).length + ' | ' + g.filter(x => cle(x) in connus).length + ' |'); }
   const ecrit = (titre, liste) => { if (!liste.length) return; lignes.push('', titre);
     liste.forEach(g => lignes.push('- ' + g.cours + ' · ' + g.type + ' · ' + g.detail + (g.etapes && g.etapes.length ? ' (étape' + (g.etapes.length > 1 ? 's ' : ' ') + g.etapes.join(', ') + ')' : ''))); };
