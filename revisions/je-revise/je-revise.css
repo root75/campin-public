@@ -98,3 +98,6 @@ ol.resume li::before{counter-increment:r;content:counter(r);font-family:var(--di
 
 footer{font-size:.9rem;color:var(--doux);text-align:center}
 @media (prefers-reduced-motion: reduce){.carte-memoire .tourne{transition:none}}
+/* Propres à la page commune : un lien habillé en bouton, et le lien du pied de page. */
+a.btn{text-decoration:none;display:inline-flex;align-items:center}
+footer a{color:var(--encre-bouton)}
