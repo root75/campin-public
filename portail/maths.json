@@ -1,0 +1,51 @@
+{
+  "note": "« Un coup de pouce en maths », la tuile du portail (portail/portail.js). Elle envoie l'élève vers le cours de Khan Academy qui lui convient. « cours » : les cours de Khan Academy, des liens seulement (adresses données par le professeur). « annees » : le cours de chaque année ; une classe dont le nom commence par 1, 2 ou 3 a son année. « paliers » : dans l'ordre, les bases vérifiées avant d'envoyer l'élève dans le cours de son année. « pour » dit à qui un palier est posé et où va l'élève qu'une question arrête : année ▸ cours (la clé vide vaut pour une année inconnue). Chaque palier pose une question par notion, tirée parmi trois variantes ; « reponse » est le texte exact d'un des choix. Rien n'est coté ni envoyé : le point de départ reste dans le navigateur. Changer un lien, une question ou une phrase = changer une ligne ici.",
+  "cours": {
+    "1": { "titre": "1re année secondaire", "url": "https://fr.khanacademy.org/math/be-1ere-secondaire2" },
+    "2": { "titre": "2e année secondaire", "url": "https://fr.khanacademy.org/math/be-2eme-secondaire2" },
+    "ce1d": { "titre": "Révisions pour le CE1D", "url": "https://fr.khanacademy.org/math/revisions-ce1dv2" },
+    "3": { "titre": "3e année secondaire", "url": "https://fr.khanacademy.org/math/3eme-annee-secondaire" }
+  },
+  "annees": { "1": "1", "2": "2", "3": "3" },
+  "paliers": [
+    {
+      "titre": "Les nombres négatifs et l'ordre des calculs",
+      "pour": { "2": "1", "3": "ce1d", "": "ce1d" },
+      "questions": [
+        [
+          { "q": "−3 + 8 = ?", "choix": ["−11", "5", "−5"], "reponse": "5" },
+          { "q": "4 − 9 = ?", "choix": ["5", "−5", "−13"], "reponse": "−5" },
+          { "q": "−2 − 5 = ?", "choix": ["−7", "3", "−3"], "reponse": "−7" }
+        ],
+        [
+          { "q": "2 + 3 × 4 = ?", "choix": ["20", "14", "24"], "reponse": "14" },
+          { "q": "10 − 2 × 3 = ?", "choix": ["24", "4", "16"], "reponse": "4" },
+          { "q": "6 + 4 × 2 = ?", "choix": ["20", "14", "16"], "reponse": "14" }
+        ]
+      ]
+    },
+    {
+      "titre": "Les puissances et les équations",
+      "pour": { "3": "ce1d", "": "ce1d" },
+      "questions": [
+        [
+          { "q": "2³ = ?", "choix": ["6", "8", "9"], "reponse": "8" },
+          { "q": "5² = ?", "choix": ["10", "25", "7"], "reponse": "25" },
+          { "q": "10³ = ?", "choix": ["30", "1000", "100"], "reponse": "1000" }
+        ],
+        [
+          { "q": "3x = 18, donc x = ?", "choix": ["15", "6", "54"], "reponse": "6" },
+          { "q": "x + 7 = 12, donc x = ?", "choix": ["19", "5", "84"], "reponse": "5" },
+          { "q": "2x + 1 = 9, donc x = ?", "choix": ["5", "4", "8"], "reponse": "4" }
+        ]
+      ]
+    }
+  ],
+  "encouragements": [
+    "Dix minutes aujourd'hui, c'est déjà un pas.",
+    "Sur Khan Academy, tu peux te tromper et recommencer autant de fois que tu veux.",
+    "Personne n'est « nul en maths » : il y a des bases à reconstruire, une à la fois.",
+    "Un exercice réussi aujourd'hui, c'est un exercice de moins qui te fera peur demain.",
+    "Tu avances à ton rythme : personne ne regarde par-dessus ton épaule."
+  ]
+}
