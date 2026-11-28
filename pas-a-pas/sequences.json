@@ -1825,5 +1825,152 @@
         ]
       }
     ]
+  },
+  "python-revision-express": {
+    "titre": "Python 01 et 02 — Révision express",
+    "objectif": "Revoir ensemble, en cinq questions, la trace, l'affectation, print() et le message NameError.",
+    "competences": [
+      "S3M10.3 — Reconnaître et manipuler des variables, des constantes et des types d'affectation.",
+      "S3M10.4 — Appliquer les instructions d'entrée et de sortie.",
+      "S3M10.5 — Traduire un algorithme dans un langage informatique structuré."
+    ],
+    "preparation": [
+      "Tableau professeur → Cours : Python 01 et 02 — Révision express. Ouvrir pour une classe… → la classe.",
+      "Lancer le cours collectif tout de suite : les postes n'affichent plus que le moment en cours.",
+      "Pour chaque question : laisser voter, Clore le vote, faire expliquer, puis Montrer la bonne réponse."
+    ],
+    "moments": [
+      {
+        "type": "ecran",
+        "titre": "Cinq questions, ensemble",
+        "min": 1,
+        "methode": "Collectif",
+        "lignes": [
+          "Cinq questions, une à la fois.",
+          "Tu votes seul sur ton poste. Ensuite, on corrige ensemble.",
+          "Rien n'est coté."
+        ],
+        "repere": "Suivant ouvre la première question. Pour chacune : laisser voter, Clore le vote, faire expliquer les choix, puis Montrer la bonne réponse."
+      },
+      {
+        "type": "vote",
+        "titre": "Question 1 — La trace",
+        "min": 2,
+        "methode": "Voter seul sur son poste, expliquer, puis corriger ensemble",
+        "question": "Qu'affiche ce programme ?",
+        "choix": [
+          "20",
+          "5",
+          "26",
+          "7"
+        ],
+        "situations": [
+          {
+            "texte": "total = 7\ntotal = total - 2\ntotal = total * 4\nprint(total)",
+            "bonne": 0,
+            "explication": "La trace : total vaut 7, puis 5, puis 20. print(total) affiche le contenu de la boîte : 20."
+          }
+        ],
+        "repere": "Vote clos : « Qui a choisi 5 ? Que fait la 3e ligne ? » « Qui a choisi 26 ? Dans quel ordre Python lit-il les lignes ? » Faire dire la valeur de total après chaque ligne avant de montrer la bonne réponse."
+      },
+      {
+        "type": "vote",
+        "titre": "Question 2 — Le calcul qui n'est pas rangé",
+        "min": 2,
+        "methode": "Voter seul sur son poste, expliquer, puis corriger ensemble",
+        "question": "Qu'affiche ce programme ?",
+        "choix": [
+          "10",
+          "4",
+          "6",
+          "Une erreur"
+        ],
+        "situations": [
+          {
+            "texte": "energie = 6\nenergie + 4\nprint(energie)",
+            "bonne": 2,
+            "explication": "La 2e ligne calcule 10, mais ne le range nulle part : il n'y a pas de = . energie vaut toujours 6. Pour garder le résultat : energie = energie + 4."
+          }
+        ],
+        "repere": "Vote clos : « Qui a choisi 10 ? Dans quelle boîte ce 10 est-il rangé ? » « Que faut-il écrire à la 2e ligne pour que le programme affiche 10 ? »"
+      },
+      {
+        "type": "vote",
+        "titre": "Question 3 — Avec ou sans guillemets",
+        "min": 2,
+        "methode": "Voter seul sur son poste, expliquer, puis corriger ensemble",
+        "question": "Qu'affiche ce programme ?",
+        "choix": [
+          "14",
+          "age",
+          "\"age\"",
+          "Une erreur"
+        ],
+        "situations": [
+          {
+            "texte": "age = 14\nprint(\"age\")",
+            "bonne": 1,
+            "explication": "Entre guillemets, c'est un texte : Python affiche le mot age, sans les guillemets. print(age), sans guillemets, afficherait le contenu de la boîte : 14."
+          }
+        ],
+        "repere": "Vote clos : « Qui a choisi 14 ? Que faudrait-il écrire pour afficher 14 ? » « Python affiche-t-il les guillemets ? »"
+      },
+      {
+        "type": "vote",
+        "titre": "Question 4 — Le message rouge",
+        "min": 2,
+        "methode": "Voter seul sur son poste, expliquer, puis corriger ensemble",
+        "question": "NameError: name 'Bonus' is not defined. Par quoi remplacer la ligne 2 ?",
+        "choix": [
+          "print(BONUS)",
+          "Print(bonus)",
+          "print bonus",
+          "print(bonus)"
+        ],
+        "situations": [
+          {
+            "texte": "bonus = 2\nprint(Bonus)",
+            "bonne": 3,
+            "explication": "Python distingue majuscules et minuscules : la boîte s'appelle bonus, pas Bonus. print s'écrit aussi en minuscules, avec ses parenthèses."
+          }
+        ],
+        "repere": "Vote clos : « Quel nom Python ne connaît-il pas ? » « À quelle ligne ce nom est-il écrit ? » Faire comparer les deux noms lettre par lettre."
+      },
+      {
+        "type": "vote",
+        "titre": "Question 5 — Du pseudo-code à Python",
+        "min": 2,
+        "methode": "Voter seul sur son poste, expliquer, puis corriger ensemble",
+        "question": "Quelle ligne Python traduit ce pseudo-code ?",
+        "choix": [
+          "billes * 3",
+          "billes = billes x 3",
+          "billes = billes * 3",
+          "billes ← billes * 3"
+        ],
+        "situations": [
+          {
+            "texte": "billes ← billes × 3",
+            "bonne": 2,
+            "explication": "La flèche ← devient = , et × devient * . Sans = , le résultat du calcul serait perdu."
+          }
+        ],
+        "repere": "Vote clos : « Quels sont les deux signes qui changent ? » « Qui a choisi billes * 3 ? Que devient le résultat ? »"
+      },
+      {
+        "type": "ecran",
+        "titre": "Place à l'évaluation",
+        "min": 1,
+        "methode": "Collectif",
+        "lignes": [
+          "Fais la trace, ligne par ligne.",
+          "Un calcul sans = est perdu.",
+          "Avec guillemets : le mot. Sans guillemets : le contenu de la boîte.",
+          "Un message rouge : lis sa dernière ligne."
+        ],
+        "exemple": "Lâche la souris et le clavier : l'évaluation arrive sur ton poste.",
+        "repere": "Dernier moment : les postes restent sur « Regarde le tableau » jusqu'au lancement de l'évaluation."
+      }
+    ]
   }
 }
