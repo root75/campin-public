@@ -22,14 +22,19 @@
                    n'est pas dans la liste HAUT_PERMIS (le « Retrouver mon document » de la PR 313)
      coince        une étape sans aucune réponse dans « Ça coince ? »
      deborde       un défilement horizontal à 375 px de large
-   Et une mesure, sans échec : à quelle hauteur commence la tâche sur un écran de 1366 × 768.
+     appels        à l'ouverture du cours, plus de APPELS_MAX appels au serveur (chaque appel coûte environ 1,3 s
+                   d'aller-retour, et toute la classe ouvre le cours en même temps)
+     poids         à l'ouverture du cours, plus de POIDS_MAX Ko à télécharger (fichiers du site, compressés)
+   Et trois mesures, sans échec : à quelle hauteur commence la tâche sur un écran de 1366 × 768, et, à l'ouverture
+   du cours, le nombre de fichiers du site, leur poids compressé et le nombre d'appels au serveur.
 
    Un constat déjà accepté est écrit dans outils/verifier-cours.connus.json avec sa raison : seul un constat
    NOUVEAU fait échouer la vérification. Un constat connu qui a disparu est signalé, pour nettoyer la liste. */
-const fs = require('node:fs'), path = require('node:path'), { execFile } = require('node:child_process');
+const fs = require('node:fs'), path = require('node:path'), zlib = require('node:zlib'), { execFile } = require('node:child_process');
 const RACINE = process.argv.includes('--racine') ? path.resolve(process.argv[process.argv.indexOf('--racine') + 1]) : path.resolve(__dirname, '..'), BASE = 'https://root75.github.io/campin-public/';
 const CONNUS = path.join(__dirname, 'verifier-cours.connus.json');
 const ECRAN = { width: 1366, height: 768 }, ETROIT = { width: 375, height: 700 };
+const APPELS_MAX = 8, POIDS_MAX = 400;
 
 /* Ce qui a le droit d'être affiché au-dessus de la tâche quand l'élève travaille (Vincent, 27/11/2026 :
    « haut de page minimal »). Tout le reste est un constat « haut ». */
@@ -96,6 +101,13 @@ function releve({ permis, base }) {
   };
 }
 
+/* Le poids d'un fichier tel que GitHub Pages l'envoie : compressé, sauf les images et les archives qui le sont déjà. */
+const poidsVus = new Map();
+function poids(f) {
+  if (!poidsVus.has(f)) poidsVus.set(f, /\.(png|jpe?g|webp|gif|woff2|zip|wasm|mp3|pdf)$/i.test(f) && !/\.wasm$/i.test(f) ? fs.statSync(f).size : zlib.gzipSync(fs.readFileSync(f)).length);
+  return poidsVus.get(f);
+}
+
 const code = url => new Promise(ok => execFile('curl', ['-sS', '-L', '-o', '/dev/null', '-w', '%{http_code}', '--max-time', '20',
   '-A', 'Mozilla/5.0 (verification des liens)', url], (e, sortie) => ok(e ? 0 : Number(sortie) || 0)));
 
@@ -115,7 +127,7 @@ const code = url => new Promise(ok => execFile('curl', ['-sS', '-L', '-o', '/dev
 
   for (const c of cours) {
     const adresse = BASE + c.chemin.replace(/\/?$/, '/');
-    const hauteurs = []; let n = Math.max(1, Number(c.etapes) || 1), compte = false;
+    const hauteurs = [], ouverture = { fichiers: 0, octets: 0, appels: 0 }; let n = Math.max(1, Number(c.etapes) || 1), compte = false;
     for (let etape = 1; etape <= n; etape++) {
       const contexte = await navigateur.newContext({ viewport: ECRAN, locale: 'fr-BE', timezoneId: 'Europe/Brussels' });
       await contexte.route('**/*', r => {
@@ -123,6 +135,7 @@ const code = url => new Promise(ok => execFile('curl', ['-sS', '-L', '-o', '/dev
         if (!u.startsWith(BASE)) { if (r.request().resourceType() === 'image' && !externes.has(u)) externes.set(u, c.id + ' ' + etape); return r.abort(); }   // rien ne sort
         const f = fichierLocal(u);
         if (!f) { note(c.id, etape, 'absent', u.replace(BASE, '').replace(/[?#].*$/, '')); return r.fulfill({ status: 404, body: 'absent' }); }
+        if (etape === 1) { ouverture.fichiers++; ouverture.octets += poids(f); }
         return r.fulfill({ status: 200, contentType: TYPES[path.extname(f).toLowerCase()] || 'application/octet-stream', body: fs.readFileSync(f) });
       });
       const page = await contexte.newPage();
@@ -131,8 +144,13 @@ const code = url => new Promise(ok => execFile('curl', ['-sS', '-L', '-o', '/dev
       try {
         await page.goto(adresse, { waitUntil: 'load', timeout: 30000 });
         await page.waitForFunction(() => { const z = document.querySelector('#bloc'); return z && z.childElementCount > 0; }, null, { timeout: 8000 }).catch(() => {});
-        await page.waitForTimeout(250);
+        await page.waitForTimeout(etape === 1 ? 900 : 250);
         const r = await page.evaluate(releve, { permis: HAUT_PERMIS, base: BASE });
+        if (etape === 1) {
+          const appels = await page.evaluate(() => window.__appels || []); ouverture.appels = appels.length;
+          if (appels.length > APPELS_MAX) note(c.id, 0, 'appels', 'plus de ' + APPELS_MAX + ' appels au serveur à l’ouverture');
+          if (ouverture.octets > POIDS_MAX * 1024) note(c.id, 0, 'poids', 'plus de ' + POIDS_MAX + ' Ko à l’ouverture');
+        }
         if (!r.fini) note(c.id, etape, 'erreur', 'l’étape ne s’affiche pas (zone #bloc vide)');
         r.bandeau.forEach(t => note(c.id, etape, 'erreur', t));
         r.images.forEach(i => note(c.id, etape, 'image', i.replace(BASE, '')));
@@ -156,7 +174,7 @@ const code = url => new Promise(ok => execFile('curl', ['-sS', '-L', '-o', '/dev
       await contexte.close();
     }
     hauteurs.sort((a, b) => a - b);
-    mesures[c.id] = { etapes: n, haut: hauteurs.length ? { min: hauteurs[0], mediane: hauteurs[hauteurs.length >> 1], max: hauteurs[hauteurs.length - 1] } : null };
+    mesures[c.id] = { etapes: n, ouverture, haut: hauteurs.length ? { min: hauteurs[0], mediane: hauteurs[hauteurs.length >> 1], max: hauteurs[hauteurs.length - 1] } : null };
   }
   await navigateur.close();
 
@@ -184,10 +202,11 @@ const code = url => new Promise(ok => execFile('curl', ['-sS', '-L', '-o', '/dev
   const lignes = [];
   lignes.push('Vérification des cours : ' + cours.length + ' cours, ' + Object.values(mesures).reduce((t, m) => t + m.etapes, 0) + ' étapes ouvertes.');
   lignes.push('');
-  lignes.push('| Cours | Étapes | La tâche commence à (px, écran 1366 × 768) | Constats nouveaux | Connus |');
-  lignes.push('|---|---|---|---|---|');
+  lignes.push('| Cours | Étapes | La tâche commence à (px, écran 1366 × 768) | À l’ouverture : fichiers, poids, appels au serveur | Constats nouveaux | Connus |');
+  lignes.push('|---|---|---|---|---|---|');
   for (const c of cours) { const m = mesures[c.id], g = [...groupes.values()].filter(x => x.cours === c.id);
     lignes.push('| ' + c.id + ' | ' + m.etapes + ' | ' + (m.haut ? m.haut.mediane + ' (de ' + m.haut.min + ' à ' + m.haut.max + ')' : '—') + ' | '
+      + m.ouverture.fichiers + ' fichiers, ' + Math.round(m.ouverture.octets / 1024) + ' Ko, ' + m.ouverture.appels + ' appels | '
       + g.filter(x => !(cle(x) in connus)).length + ' | ' + g.filter(x => cle(x) in connus).length + ' |'); }
   const ecrit = (titre, liste) => { if (!liste.length) return; lignes.push('', titre);
     liste.forEach(g => lignes.push('- ' + g.cours + ' · ' + g.type + ' · ' + g.detail + (g.etapes && g.etapes.length ? ' (étape' + (g.etapes.length > 1 ? 's ' : ' ') + g.etapes.join(', ') + ')' : ''))); };

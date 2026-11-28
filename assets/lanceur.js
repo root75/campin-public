@@ -54,7 +54,7 @@ const points = [6, 12, 18].flatMap(y => [6, 12, 18].map(x => `<circle cx="${x}" 
 boite.innerHTML = `<button class="applis-bouton" id="applis" type="button" aria-label="Applications" title="Applications" aria-expanded="false" aria-controls="applis-panneau">
 <svg viewBox="0 0 24 24" aria-hidden="true">${points}</svg></button>
 <div class="applis-panneau" id="applis-panneau" hidden><ul class="applis-grille">${APPLIS.map(([nom, url, ico, cl]) =>
-  `<li><a target="_top" href="${url}"><img src="${ico}" alt="" width="40" height="40"${cl ? ` class="${cl}"` : ""}>${nom}</a></li>`).join("")}</ul></div>`;
+  `<li><a target="_top" href="${url}"><img src="${ico}" alt="" width="40" height="40" loading="lazy"${cl ? ` class="${cl}"` : ""}>${nom}</a></li>`).join("")}</ul></div>`;
 (ici || document.body).appendChild(boite);
 
 /* Sur une page de cours, la cloche 🔔 tient déjà le coin : le lanceur se range à sa gauche, centré sur elle. */

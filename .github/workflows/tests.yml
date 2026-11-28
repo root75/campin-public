@@ -44,7 +44,9 @@ jobs:
       - name: Chromium
         run: |
           npm install --no-save --no-audit --no-fund playwright@1.63.0
-          npx playwright install --with-deps chromium
+          # Sans --with-deps : le runner a déjà les bibliothèques de Chromium (leçon du dépôt privé : le job tombait
+          # quand le miroir Ubuntu ne répondait pas).
+          npx playwright install chromium
       - name: node outils/verifier-cours.cjs --reseau
         run: node outils/verifier-cours.cjs --reseau
       - name: Le cours modèle, généré depuis sa fiche puis ouvert étape par étape
